@@ -5,7 +5,6 @@ from pathlib import Path
 
 import cv2
 import numpy as np
-import tensorflow as tf
 
 from helpers import get_logger
 from transnetv2 import TransNetV2

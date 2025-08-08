@@ -7,7 +7,7 @@ pack-pretest
 pack1-groupA
 pack2-groupA
 submission
-
+.vscode
 tmp
 app.log
 

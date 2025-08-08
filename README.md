@@ -1,23 +1,131 @@
-## Installation
+# 🎬 float19 Video Search - Keyframe Edition
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install. Highly recommend using python package manager like [conda](https://docs.conda.io/en/latest/)
+A state-of-the-art video retrieval system that uses keyframe-based semantic search for efficient video content discovery. The system extracts representative keyframes from videos and enables both text-based and image-based similarity search using CLIP embeddings.
 
-Tested on python 3.10
+## ✨ Features
 
-(optional for conda user)
+- **🔤 Text Search**: Find keyframes using natural language descriptions
+- **⚡ Fast Retrieval**: Optimized FAISS indexing for real-time search
+- **📊 Smart Scoring**: Advanced similarity metrics for ranking results
+- **📄 Export Support**: Download search results in CSV format
+- **🎥 Video Playback**: Jump directly to specific moments in videos
 
-```bash
-conda create -n AIChallenge2024 python=3.10
-conda activate AIChallenge2024
+## 🏗️ Architecture
+
+The system consists of three main components:
+
+1. **Keyframe Extraction**: Uses TransNetV2 to intelligently extract representative frames
+2. **Embedding Generation**: CLIP model encodes keyframes into semantic vectors
+3. **Search Engine**: FAISS index enables fast similarity search for queries
+
+```
+Videos → Keyframe Extraction → CLIP Encoding → FAISS Index → Search Results
 ```
 
-install all requirements
+## 📦 Installation
 
+**Requirements**: Python 3.10+ (tested on Python 3.10)
+
+### Option 1: Using Conda (Recommended)
 ```bash
+conda create -n video_search python=3.12
+conda activate video_search
 pip install -r requirements.txt
 ```
 
-optional faster mirror: https://gist.github.com/schnell18/d0ed716917905d2c142a370906cfa32f
+### Option 2: Using Virtual Environment
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+
+## 📁 Data Structure
+
+Your project structure should look like this:
+
+```
+float97_Video_Search/
+├── data-source/           # Source videos (read-only)
+│   └── videos/           # Place your .mp4 files here
+├── data-staging/         # Processing artifacts
+│   ├── keyframes/        # Extracted keyframe images
+│   ├── preprocessing/    # TransNetV2 scene detection
+│   ├── map-keyframes/    # Frame mapping metadata
+│   └── clip-features/    # CLIP embeddings per video
+├── data-index/           # Search index files
+│   ├── embedding.index   # FAISS index
+│   └── embedding_info.npy # Keyframe metadata
+├── run-pipeline.sh       # Main processing pipeline
+├── create-dir.sh       # Create directories
+├── web_app.py           # Streamlit web interface
+└── ...
+```
+
+### Setup Data Directories
+```bash
+# Create required directories
+mkdir -p data-source/videos
+mkdir -p data-staging/{keyframes,preprocessing,map-keyframes,clip-features}
+mkdir -p data-index
+mkdir -p submission
+```
+or run:
+```bash
+bash create-dir.sh
+```
+
+### Add Your Videos
+Place your MP4 video files in `data-source/videos/`:
+```bash
+# Example
+cp /path/to/your/videos/*.mp4 data-source/videos/
+```
+
+## 🚀 Quick Start
+
+### 1. Process Videos (Indexing)
+Run the complete pipeline to extract keyframes and generate embeddings:
+```bash
+bash run-pipeline.sh
+```
+
+This will:
+- Extract keyframes from all videos in `data-source/videos/`
+- Generate CLIP embeddings for each keyframe
+- Build a FAISS search index
+
+### 2. Start the Web Interface
+Launch the Streamlit web application:
+```bash
+streamlit run web_app.py
+```
+
+Or for external access:
+```bash
+streamlit run web_app.py --server.address 0.0.0.0
+```
+
+### 3. Search Your Videos
+- **Text Search**: Describe what you're looking for (e.g., "person walking")
+- **Export Results**: Select keyframes and download as CSV
+
+## 🔍 How It Works
+
+1. **Video Processing**: TransNetV2 analyzes videos to detect scene boundaries
+2. **Keyframe Selection**: Representative frames are extracted from each scene
+3. **Feature Extraction**: CLIP model generates 512-dimensional embeddings for each keyframe
+4. **Index Building**: FAISS creates an efficient search index from all embeddings
+5. **Query Processing**: Text queries are encoded and matched against the index
+6. **Result Ranking**: Results are ranked by cosine similarity and returned
+
+## 🙏 Acknowledgments
+
+- **OpenAI CLIP** for powerful vision-language embeddings
+- **TransNetV2** for intelligent shot boundary detection  
+- **FAISS** for efficient similarity search
+- **Streamlit** for the intuitive web interface
     
 ## Managing dependencies
 
@@ -29,109 +137,3 @@ uv pip compile requirements.in --output-file requirements.txt
 # sync
 uv pip sync requirements.txt
 ```
-
-## Data Folder Structure
-
-
-your projects structure should look like this
-
-```
-tree -L 2 -l .
-
-.
-├── app.log
-├── cli.py
-├── data-index
-│   └── ...
-├── data-source ->
-│   └── videos
-├── data-staging
-│   ├── audio-chunk-timestamps
-│   ├── clip-features
-│   ├── map-keyframes
-│   ├── preprocessing
-│   ├── transcripts
-│   └── transcripts-en
-├── document_embedding.py
-├── format-code.sh
-├── helpers.py
-├── hybrid_search.py
-├── keyframe_embedding.py
-├── keyframe_extractor.py
-├── loading_dict.py
-├── mapping.py
-├── models
-├── README.md
-├── requirements.in
-├── requirements.txt
-├── run-pipline.sh
-
-```
-
-1. data-source: read only folder, source data should be placed here, at the moment, it should only have source video only
-
-```bash
-mkdir data-source
-# downloaded data here
-wget url1 url2 url3...
-unzip *.zip
-mv video/* videos/
-```
-
-Download from https://drive.google.com/drive/folders/1wzM8PtgxXgDDeQJtzGXmmEn1x43YDL9l and place inside that `./data-source` directory.
-
-2. data-staging: all transformation should go there
-```bash
-mkdir data-staging
-mkdir data-staging/audio-chunk-timestamps
-mkdir data-staging/keyframes
-mkdir data-staging/preprocessing
-mkdir data-staging/map-keyframes
-mkdir data-staging/transcripts
-mkdir data-staging/transcripts-en
-mkdir data-staging/clip-features
-```
-
-3. data-index: artifact of index process go here
-```bash
-mkdir data-index
-```
-
-## Usage
-
-### Indexing Stage
-
-TLDR: using `bash run-pipline.sh`
-
-### Retrieval Stage
-
-Running the web_app version
-```bash
-streamlit run web_app.py
-# or
-streamlit run web_app.py --browser.serverAddress '0.0.0.0'
-```
-
-Testing the model and sample data
-```bash
-python cli.py
-```
-
-
-# Coding style
-
-PEP-8 with black formatter and isort
-
-```
-black .
-isort .
-
-# or
-
-./format-code.sh
-```
-
-# run on CPU
-
-best is to use with GPU (NVIDIA) machine, but if you want to experiment on CPU machine, by default it will try to check `torch.cuda.is_available()` and use the suitable model 
-
