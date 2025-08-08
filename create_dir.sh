@@ -1,15 +1,12 @@
 #!/bin/bash
 set -euxo pipefail
 
-mkdir -p data-source
+echo "🎬 Setting up float19 Video Search directory structure..."
 
+# Create main data directories
+echo "📁 Creating data directories..."
+mkdir -p data-source/videos
+mkdir -p data-staging/{keyframes,preprocessing,map-keyframes,clip-features}
 mkdir -p data-index
-
-mkdir -p data-staging/keyframes
-mkdir -p data-staging/audio
-mkdir -p data-staging/audio-chunk-timestamps
-mkdir -p data-staging/clip-features
-mkdir -p data-staging/transcripts
-mkdir -p data-staging/transcripts-en
-mkdir -p data-staging/preprocessing
+mkdir -p submission
 
