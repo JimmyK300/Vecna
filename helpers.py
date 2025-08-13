@@ -69,5 +69,5 @@ def is_exits(fp) -> bool:
 #     return ret
 
 
-def get_logger() -> loguru.logger:
-    return logger
+def get_logger():
+  return logger
