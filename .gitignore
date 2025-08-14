@@ -1,15 +1,12 @@
-datasets
-datasets_*
 data-staging
 data-source
 data-index
-pack-pretest
 pack*-groupA
-query
 submission
 .vscode
-tmp
 app.log
+# Want to hide any files? use _
+_* 
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
