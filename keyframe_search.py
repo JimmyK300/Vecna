@@ -108,14 +108,11 @@ class KeyframeSearchEngine:
 
 
 # Initialize global search engine instance
-search_engine = None
+search_engine = KeyframeSearchEngine()
 
 
 def get_search_engine():
     """Get or create the global search engine instance."""
-    global search_engine
-    if search_engine is None:
-        search_engine = KeyframeSearchEngine()
     return search_engine
 
 
