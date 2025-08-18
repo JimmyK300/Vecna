@@ -62,7 +62,7 @@ def main():
         for i, k in enumerate(video_keyframe_dict[v]):
             embedding_dict[v][k] = a[i]
 
-    # Save to embedding.index
+    # Save to keyframe_embedding.index
     embedding_list = []
     embedding_info = []
     for v in all_video:
@@ -75,10 +75,10 @@ def main():
     # Build the faiss index
     index = faiss.IndexFlatL2(embedding_array.shape[1])
     index.add(embedding_array)
-    faiss.write_index(index, "./data-index/embedding.index")
+    faiss.write_index(index, "./data-index/keyframe_embedding.index")
 
     # Save info_array into a npy file
-    np.save("./data-index/embedding_info.npy", info_array)
+    np.save("./data-index/keyframe_metadata.npy", info_array)
 
 
 if __name__ == "__main__":

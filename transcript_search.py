@@ -86,8 +86,8 @@ class TranscriptSearchEngine:
             tuple: A tuple containing the embeddings array and the metadata list.
                    Returns (None, None) if files are not found.
         """
-        embeddings_path = os.path.join(input_dir, "all_transcript_embeddings.npy")
-        metadata_path = os.path.join(input_dir, "all_transcript_metadata.json")
+        embeddings_path = os.path.join(input_dir, "transcript_embeddings.npy")
+        metadata_path = os.path.join(input_dir, "transcript_metadata.json")
 
         if not os.path.exists(embeddings_path) or not os.path.exists(metadata_path):
             print("Error: Embeddings or metadata file not found.")
