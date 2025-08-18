@@ -11,11 +11,11 @@ from helpers import get_logger
 logger = get_logger()
 
 
-def search_by_temporal(queries: str, limit: int = 100, sequence_gap: int = 1) -> List[Tuple[str, List[str], float]]:
+def search_by_temporal(queries: str, limit: int = 100, sequence_gap: int = 1) -> List[Tuple[str, List[str], List[float], float]]:
     """
     Search for a temporal sequence of events by finding the first event,
     and then looking for subsequent events in the following keyframes.
-    Returns a list of (video_id, [keyframe_ids], average_similarity).
+    Returns a list of (video_id, [keyframe_ids], [scores], average_similarity).
     """
     logger.info(f"Temporal search for: {queries}")
     search_engine = KeyframeSearchEngine()
@@ -48,39 +48,27 @@ def search_by_temporal(queries: str, limit: int = 100, sequence_gap: int = 1) ->
             continue
 
         # Now, look for the rest of the queries in sequence
-        for i, text_feature in enumerate(text_features[1:]):
+        for i, text_query in enumerate(queries[1:]):
             last_found_kf_id = current_sequence[-1][0]
 
             # Define a search window for the next keyframe
             start_window = last_found_kf_id + 1
             end_window = start_window + sequence_gap
 
-            best_match_in_window = None  # (keyframe_id, score)
+            # Use the keyframe_search to find potential candidates for the next step
+            # We search with a high limit to increase the chance of finding a match in the desired window
+            candidate_results = search_engine.search_by_text(text_query, limit=500)
 
-            # Iterate through the keyframes in the window
-            for kf_to_check in range(start_window, end_window):
-                
-                # Find the embedding for this keyframe
-                try:
-                    if kf_to_check >= len(embedding_list):
-                        # Avoid index out of bounds if the window extends beyond the number of keyframes
-                        break
-                    
-                    image_feature = embedding_list[kf_to_check]
+            best_match_in_window = None
 
-                    # Calculate similarity
-                    similarity = np.dot(text_feature, image_feature)
-
-                    if (
-                        best_match_in_window is None
-                        or similarity > best_match_in_window[1]
-                    ):
-                        best_match_in_window = (kf_to_check, similarity)
-
-                except Exception as e:
-                    # Could be an out of bounds error or other issue.
-                    # logger.debug(f"Could not check keyframe {kf_to_check_id} for video {video_id}: {e}")
-                    pass
+            # Filter the candidates to find the best one within the same video and the correct time window
+            for cand_video_id, cand_kf_id, cand_score in candidate_results:
+                if cand_video_id == video_id:
+                    kf_index = int(cand_kf_id)
+                    if start_window <= kf_index < end_window:
+                        # This is the best possible match in the window since results are sorted by score
+                        best_match_in_window = (kf_index, cand_score)
+                        break  # Found the best match
 
             if best_match_in_window:
                 current_sequence.append(best_match_in_window)
@@ -94,10 +82,11 @@ def search_by_temporal(queries: str, limit: int = 100, sequence_gap: int = 1) ->
             keyframe_ids = [str(item[0]) for item in current_sequence]
             scores = [item[1] for item in current_sequence]
             avg_score = sum(scores) / len(scores)
-            all_sequences.append((video_id, keyframe_ids, avg_score))
-
+            all_sequences.append((video_id, keyframe_ids, scores, avg_score))
+            if video_id == 'L01_V005':
+                print(video_id, keyframe_ids, scores)
     # Sort sequences by average score
-    all_sequences.sort(key=lambda x: x[2], reverse=True)
+    all_sequences.sort(key=lambda x: x[3], reverse=True)
     
     logger.info(f"Found {len(all_sequences)} temporal sequences.")
     return all_sequences[:limit]
@@ -105,14 +94,14 @@ def search_by_temporal(queries: str, limit: int = 100, sequence_gap: int = 1) ->
 
 if __name__ == "__main__":
     # Test the search functionality
-    test_query = "A person in a red and white suit underwater. He is wearing a snorkel or diving mask and appears to be swimming in a body of water. The water is a bright, clear blue, and there are some small, yellow fish visible in the background.\nA crowd of people gathered inside a curved, glass-walled underwater tunnel. People are looking out at the marine life, and some are taking photos."
+    test_query = "A pair of red sneakers shoes\nMultiple sneakers are being displayed on the shelves\nA tennis ball being placed in front of a white shoes"
     logger.info(f"Testing search with query: {test_query}")
     
-    results = search_by_temporal(test_query, 50)
+    results = search_by_temporal(test_query, 10)
 
     logger.info(f"Found {len(results)} results:")
-    for video, keyframe, score in results:
-        logger.info(f"Video: {video}, Keyframe: {keyframe}, Score: {score:.4f}")
+    for video, keyframes, scores, avg_score in results:
+        logger.info(f"Video: {video}, Keyframes: {keyframes}, Scores: {scores}, Avg Score: {avg_score:.4f}")
         
         # Optionally display the image
         # file_path = f"./data-staging/keyframes/{video}/{keyframe}.jpg"
