@@ -202,7 +202,7 @@ def display_temporal_results():
 
     st.write(f"Found {len(results)} temporal sequences.")
 
-    for i, (video_id, kf_ids, avg_similarity) in enumerate(results):
+    for i, (video_id, kf_ids, scores, avg_similarity) in enumerate(results):
         st.markdown("---")
         
         col1, col2 = st.columns([0.9, 0.1])
@@ -215,13 +215,16 @@ def display_temporal_results():
                 "Select", key=f"select_seq_{i}"
             )
 
-        cols = st.columns(len(kf_ids))
+        num_columns = 4 
+        cols = st.columns(num_columns)
+
         for j, kf_id in enumerate(kf_ids):
-            with cols[j]:
+            with cols[j % num_columns]:
+                score = scores[j]
                 kf_id_str = str(kf_id).zfill(4)
                 file_path = f"./data-staging/keyframes/{video_id}/{kf_id_str}.jpg"
                 if os.path.exists(file_path):
-                    st.image(file_path, caption=f"kf: {kf_id_str}", width=WIDTH)
+                    st.image(file_path, caption=f"kf: {kf_id_str} | score: {score:.4f}", width=WIDTH)
                 else:
                     st.warning(f"Not found:\n{file_path}")
 
@@ -343,7 +346,7 @@ def handle_export(search_option, query_id, download_placeholder):
             writer = csv.writer(f)
             
             def write_sequences_to_csv(sequences):
-                for video_id, kf_ids, _ in sequences:
+                for video_id, kf_ids, _, _ in sequences:
                     map_path = f"./data-staging/map-keyframes/{video_id}.csv"
                     try:
                         with open(map_path) as map_file:
