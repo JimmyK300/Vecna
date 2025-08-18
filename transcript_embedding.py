@@ -49,8 +49,8 @@ def process_all_transcripts(transcript_dir, output_dir="data-index"):
                 "sentence_index": i,
             })
 
-    embeddings_path = os.path.join(output_dir, "all_transcript_embeddings.npy")
-    metadata_path = os.path.join(output_dir, "all_transcript_metadata.json")
+    embeddings_path = os.path.join(output_dir, "transcript_embeddings.npy")
+    metadata_path = os.path.join(output_dir, "transcript_metadata.json")
 
     np.save(embeddings_path, np.array(all_embeddings))
     with open(metadata_path, 'w', encoding='utf-8') as f:

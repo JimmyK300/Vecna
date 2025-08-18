@@ -28,8 +28,8 @@ class KeyframeSearchEngine:
         self.tokenizer = open_clip.get_tokenizer("ViT-B-32")
         
         # Load the keyframe embedding from the FAISS index
-        self.keyframe_index = faiss.read_index("./data-index/embedding.index")
-        self.embedding_info = np.load("./data-index/embedding_info.npy")
+        self.keyframe_index = faiss.read_index("./data-index/keyframe_embedding.index")
+        self.embedding_info = np.load("./data-index/keyframe_metadata.npy")
         
         logger.info(f"Loaded {self.keyframe_index.ntotal} keyframes")
 

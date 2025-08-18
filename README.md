@@ -55,8 +55,8 @@ float97_Video_Search/
 │   ├── map-keyframes/    # Frame mapping metadata
 │   └── clip-features/    # CLIP embeddings per video
 ├── data-index/           # Search index files
-│   ├── embedding.index   # FAISS index
-│   └── embedding_info.npy # Keyframe metadata
+│   ├── keyframe_embedding.index   # FAISS index
+│   └── keyframe_metadata.npy # Keyframe metadata
 ├── run-pipeline.sh       # Main processing pipeline
 ├── create-dir.sh       # Create directories
 ├── web_app.py           # Streamlit web interface
