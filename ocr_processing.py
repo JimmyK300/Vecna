@@ -9,7 +9,7 @@ from load_all_video_keyframes_info import load_all_video_keyframes_info
 all_video, video_keyframe_dict = load_all_video_keyframes_info()
 reader = easyocr.Reader(["vi", "en"], gpu=True)
 
-media_info_df = pd.read_csv("./_data-source/media-info.csv")
+media_info_df = pd.read_csv("./data-source/media-info.csv")
 videos_need_to_preprocess = media_info_df[media_info_df["author"] == "60 Giây Official"]["source_file"].tolist()
 videos_need_to_preprocess = [os.path.splitext(v)[0] for v in videos_need_to_preprocess]
 

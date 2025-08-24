@@ -16,7 +16,7 @@ batch_size = 1  # reduce if low on GPU mem
 # )
 whisperx_model = whisperx.load_model(
     # "large-v2", "cpu", compute_type="int8", language="vi"
-    "turbo", "cpu", compute_type="int8", language="vi"
+    "turbo", "cuda", compute_type="int8", language="vi"
 )
 
 translator = Translator()
@@ -67,22 +67,23 @@ async def whisperx_speech_to_text(audio_path, video_path, transcript_path):
     with open(transcript_path, "w") as f:
         f.write(text)
     
-if __name__ == "__main__":
+async def main_async():
     all_video, video_keyframe_dict = load_all_video_keyframes_info()
     for v in all_video:
         video_path = f"./data-source/videos/{v}.mp4"
         audio_path = os.path.basename(video_path)
         audio_path = f"./data-staging/audios/{audio_path[:-4]}.wav"
         transcript_path = f"./data-staging/transcripts/{v}.txt"
-    
+
         if helpers.is_exits(transcript_path):
             logger.debug(f"ignore {transcript_path}")
             continue
 
-        if helpers.is_exits(audio_path):
-            pass
-        else:
+        if not helpers.is_exits(audio_path):
             video_to_audio(video_path, audio_path)
 
         logger.info(f"running speech to text from {audio_path} to {transcript_path} ...")
-        asyncio.run(whisperx_speech_to_text(audio_path, video_path, transcript_path))
+        await whisperx_speech_to_text(audio_path, video_path, transcript_path)
+
+if __name__ == "__main__":
+    asyncio.run(main_async())

@@ -47,7 +47,10 @@ class KeyframeSearchEngine:
         logger.debug(f"Searching for: {query}")
         
         # Encode the text query
-        query_feature = self.model.encode_text(self.tokenizer(query))
+        tokenized = self.tokenizer(query)
+        if hasattr(tokenized, 'to'):
+            tokenized = tokenized.to(self.device)
+        query_feature = self.model.encode_text(tokenized)
         query_embedding = query_feature.detach().cpu().numpy().reshape(1, -1).astype("float32")
         query_embedding = normalize(query_embedding, axis=1)
         

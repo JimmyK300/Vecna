@@ -11,6 +11,7 @@ whisperx
 sentence_transformers
 tf-keras
 googletrans
+easyocr
 
 # FAISS for vector search
 faiss-cpu
