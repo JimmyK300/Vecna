@@ -28,8 +28,8 @@ Videos → Keyframe Extraction → CLIP Encoding → FAISS Index → Search Resu
 
 ### Option 1: Using Conda (Recommended)
 ```bash
-conda create -n video_search python=3.12
-conda activate video_search
+conda create -n aic python=3.10
+conda activate aic
 pip install -r requirements.txt
 ```
 
