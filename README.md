@@ -67,7 +67,7 @@ float97_Video_Search/
 ```bash
 # Create required directories
 mkdir -p data-source/videos
-mkdir -p data-staging/{keyframes,preprocessing,map-keyframes,clip-features,audios,audio-chunk-timestamps}
+mkdir -p data-staging/{keyframes,preprocessing,map-keyframes,clip-features,audios,audio-chunk-timestamps,transcripts}
 mkdir -p data-index
 mkdir -p submission
 ```
