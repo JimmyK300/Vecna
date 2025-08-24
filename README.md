@@ -99,12 +99,7 @@ This will:
 ### 2. Start the Web Interface
 Launch the Streamlit web application:
 ```bash
-streamlit run web_app.py
-```
-
-Or for external access:
-```bash
-streamlit run web_app.py --server.address 0.0.0.0
+streamlit run web_app.py --server.headless true
 ```
 
 ### 3. Search Your Videos
