@@ -16,8 +16,8 @@ logger = get_logger()
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 clip_model, _, preprocess = open_clip.create_model_and_transforms(
-    "ViT-B-32",
-    pretrained="openai",
+    "ViT-SO400M-14-SigLIP-384",
+    pretrained="webli",
     device=device,
 )
 clip_model.eval()  # model in train mode by default, impacts some models with BatchNorm or stochastic depth active
@@ -37,9 +37,9 @@ def main():
     all_video, video_keyframe_dict = load_all_video_keyframes_info()
 
     for v in tqdm(all_video, desc="Processing videos"):
-        # Initialize an empty array with shape (0, 512)
+        # Initialize an empty array with shape (0, 1152)
         np_out = f"./data-staging/clip-features/{v}.npy"
-        keyframe_array = np.empty((0, 512))
+        keyframe_array = np.empty((0, 1152))
         if helpers.is_exits(np_out):
             logger.info(f"{np_out} exists, skip")
             continue
