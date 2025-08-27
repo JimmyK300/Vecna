@@ -17,14 +17,16 @@ def search_by_temporal(queries: str, limit: int = 100, sequence_gap: int = 1) ->
     and then looking for subsequent events in the following keyframes.
     Returns a list of (video_id, [keyframe_ids], [scores], average_similarity).
     """
+    device = "cuda" if torch.cuda.is_available() else "cpu"
     logger.info(f"Temporal search for: {queries}")
     search_engine = KeyframeSearchEngine()
+    search_engine.model.to(device)
 
     queries = queries.split('\n') if isinstance(queries, str) else queries
 
     # Encode all text queries first
     text_features = [
-        search_engine.model.encode_text(search_engine.tokenizer(q)) for q in queries
+        search_engine.model.encode_text(search_engine.tokenizer(q).to(device)) for q in queries
     ]
     text_features = [
         normalize(feature.detach().cpu().numpy()).squeeze() for feature in text_features
