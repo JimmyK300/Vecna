@@ -22,10 +22,12 @@ class KeyframeSearchEngine:
         
         # Load CLIP model
         self.model, _, self.preprocess = open_clip.create_model_and_transforms(
-            "ViT-B-32", pretrained="openai", device=self.device
+            "ViT-SO400M-14-SigLIP-384",
+            pretrained="webli",
+            device=self.device,
         )
         self.model.eval()
-        self.tokenizer = open_clip.get_tokenizer("ViT-B-32")
+        self.tokenizer = open_clip.get_tokenizer("ViT-SO400M-14-SigLIP-384")
         
         # Load the keyframe embedding from the FAISS index
         self.keyframe_index = faiss.read_index("./data-index/keyframe_embedding.index")
