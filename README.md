@@ -101,6 +101,14 @@ Launch the Streamlit web application:
 ```bash
 streamlit run web_app.py --server.headless true
 ```
+Or, set up the remote server, then run this command on the server:
+```bash
+streamlit run web_app.py --server.address 0.0.0.0 --server.port 8501 --server.headless true
+```
+Then on your client device, go to
+```bash
+http://<tailscale-ip>:8501
+```
 
 ### 3. Search Your Videos
 - **Text Search**: Describe what you're looking for (e.g., "person walking")
