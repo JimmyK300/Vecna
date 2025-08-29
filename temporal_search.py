@@ -11,7 +11,7 @@ from helpers import get_logger
 logger = get_logger()
 
 
-def search_by_temporal(queries: str, limit: int = 100, sequence_gap: int = 1) -> List[Tuple[str, List[str], List[float], float]]:
+def search_by_temporal(queries: str, limit: int = 100, sequence_gap: int = 30) -> List[Tuple[str, List[str], List[float], float]]:
     """
     Search for a temporal sequence of events by finding the first event,
     and then looking for subsequent events in the following keyframes.
@@ -33,7 +33,7 @@ def search_by_temporal(queries: str, limit: int = 100, sequence_gap: int = 1) ->
     ]
 
     # Start search with the first query
-    initial_results = search_engine.search_by_text(queries[0], limit=200)
+    initial_results = search_engine.search_by_text(queries[0], limit=1000)
 
     all_sequences = []
 
