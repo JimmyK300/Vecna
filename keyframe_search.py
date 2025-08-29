@@ -30,9 +30,18 @@ class KeyframeSearchEngine:
         self.tokenizer = open_clip.get_tokenizer("ViT-SO400M-14-SigLIP-384")
         
         # Load the keyframe embedding from the FAISS index
-        self.keyframe_index = faiss.read_index("./data-index/keyframe_embedding.index")
+        cpu_index = faiss.read_index("./data-index/keyframe_embedding.index")
         self.embedding_info = np.load("./data-index/keyframe_metadata.npy")
         
+        # Try to move FAISS index to GPU if available
+        if faiss.get_num_gpus() > 0:
+            res = faiss.StandardGpuResources()
+            self.keyframe_index = faiss.index_cpu_to_gpu(res, 0, cpu_index)
+            logger.info("FAISS index moved to GPU.")
+        else:
+            self.keyframe_index = cpu_index
+            logger.info("FAISS index running on CPU.")
+
         logger.info(f"Loaded {self.keyframe_index.ntotal} keyframes")
 
     def search_by_text(self, query: str, limit: int = 100) -> List[Tuple[str, str, float]]:
