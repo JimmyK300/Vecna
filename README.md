@@ -97,6 +97,7 @@ This will:
 - Build a FAISS search index
 
 ### 2. Start the Web Interface
+With GPU: LD_LIBRARY_PATH=$CONDA_PREFIX/lib:/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
 Launch the Streamlit web application:
 ```bash
 streamlit run web_app.py --server.headless true
