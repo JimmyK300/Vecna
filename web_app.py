@@ -133,9 +133,9 @@ def handle_search(search_option, search_term, query_id):
         elif search_option == "ocr":
             st.session_state["ocr_results"] = search_by_ocr(search_term)
         elif search_option == "temporal":
-            st.session_state["temporal_results"] = search_by_temporal(search_term, limit=50)
+            st.session_state["temporal_results"] = search_by_temporal(search_term, limit=100)
         elif search_option == "transcript":
-            st.session_state["transcript_results"] = transcript_search(search_term, top_k=50)
+            st.session_state["transcript_results"] = transcript_search(search_term, top_k=100)
 
 
 def display_transcript_results():
@@ -434,12 +434,12 @@ if __name__ == "__main__":
 
     if search_button:
         handle_search(search_option, search_term, query_id)
-
-    if st.session_state["search_results"] or st.session_state["ocr_results"]:
+    
+    if st.session_state.get("search_results") or st.session_state.get("ocr_results"):
         display_results(search_option)
-    elif st.session_state["temporal_results"]:
+    elif st.session_state.get("temporal_results"):
         display_temporal_results()
-    elif st.session_state["transcript_results"]:
+    elif st.session_state.get("transcript_results"):
         display_transcript_results()
 
     if export_button:
