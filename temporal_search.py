@@ -5,7 +5,7 @@ import torch
 from sklearn.preprocessing import normalize
 import numpy as np
 
-from keyframe_search import KeyframeSearchEngine
+from keyframe_search import keyframe_search
 from helpers import get_logger
 
 logger = get_logger()
@@ -19,79 +19,63 @@ def search_by_temporal(queries: str, limit: int = 100, sequence_gap: int = 30) -
     """
     device = "cuda" if torch.cuda.is_available() else "cpu"
     logger.info(f"Temporal search for: {queries}")
-    search_engine = KeyframeSearchEngine()
-    search_engine.model.to(device)
 
     queries = queries.split('\n') if isinstance(queries, str) else queries
 
-    # Encode all text queries first
-    text_features = [
-        search_engine.model.encode_text(search_engine.tokenizer(q).to(device)) for q in queries
-    ]
-    text_features = [
-        normalize(feature.detach().cpu().numpy()).squeeze() for feature in text_features
-    ]
+    # Get search results for each query part.
+    results_by_query = [keyframe_search(q, limit=1000) for q in queries]
 
-    # Start search with the first query
-    initial_results = search_engine.search_by_text(queries[0], limit=1000)
+    # Organize results by video ID for easier lookup.
+    video_results = {}
+    for i, results in enumerate(results_by_query):
+        for video_id, kf_id, score in results:
+            if video_id not in video_results:
+                video_results[video_id] = [[] for _ in range(len(queries))]
+            video_results[video_id][i].append((int(kf_id), score))
 
     all_sequences = []
+    for video_id, query_results in video_results.items():
+        # Sort keyframes by ID for each query part to ensure chronological order.
+        for qr in query_results:
+            qr.sort()
 
-    for video_id, start_kf_id, score1 in initial_results:
-        # This list will hold the sequence of keyframe IDs found for this video, starting with the result from the first query.
-        # Each element will be a tuple: (keyframe_id, score)
-        current_sequence = [(int(start_kf_id), score1)]
-
-        try:
-            embedding_list = np.load(f"./data-staging/clip-features/{video_id}.npy")
-        except FileNotFoundError:
-            # If the embedding file for this video doesn't exist, skip it.
-            logger.warning(f"Embedding file not found for video: {video_id}")
-            continue
-
-        # Now, look for the rest of the queries in sequence
-        for i, text_query in enumerate(queries[1:]):
-            last_found_kf_id = current_sequence[-1][0]
-
-            # Define a search window for the next keyframe
-            start_window = last_found_kf_id + 1
-            end_window = start_window + sequence_gap
-
-            # Use the keyframe_search to find potential candidates for the next step
-            # We search with a high limit to increase the chance of finding a match in the desired window
-            candidate_results = search_engine.search_by_text(text_query, limit=500)
-
-            best_match_in_window = None
-
-            # Filter the candidates to find the best one within the same video and the correct time window
-            for cand_video_id, cand_kf_id, cand_score in candidate_results:
-                if cand_video_id == video_id:
-                    kf_index = int(cand_kf_id)
-                    if start_window <= kf_index < end_window:
-                        # This is the best possible match in the window since results are sorted by score
-                        best_match_in_window = (kf_index, cand_score)
-                        break  # Found the best match
-
-            if best_match_in_window:
-                current_sequence.append(best_match_in_window)
-            else:
-                # If we can't find the next item in the sequence, this sequence is broken.
-                current_sequence = []  # Clear the sequence
-                break  # Stop searching for this initial result.
-
-        if current_sequence and len(current_sequence) == len(queries):
-            # We found a full sequence
-            keyframe_ids = [str(item[0]) for item in current_sequence]
-            scores = [item[1] for item in current_sequence]
+        # Find all valid sequences in this video.
+        sequences = find_sequences_in_video(query_results, sequence_gap)
+        for seq in sequences:
+            keyframe_ids = [str(item[0]) for item in seq]
+            scores = [item[1] for item in seq]
             avg_score = sum(scores) / len(scores)
             all_sequences.append((video_id, keyframe_ids, scores, avg_score))
-            if video_id == 'L01_V005':
-                print(video_id, keyframe_ids, scores)
-    # Sort sequences by average score
+
+    # Sort all found sequences by their average score.
     all_sequences.sort(key=lambda x: x[3], reverse=True)
-    
+
     logger.info(f"Found {len(all_sequences)} temporal sequences.")
     return all_sequences[:limit]
+
+
+def find_sequences_in_video(query_results, gap):
+    if not query_results or not query_results[0]:
+        return []
+
+    # Start with sequences of length 1 from the first query's results.
+    sequences = [[item] for item in query_results[0]]
+
+    # Iteratively build longer sequences.
+    for i in range(1, len(query_results)):
+        new_sequences = []
+        for seq in sequences:
+            last_kf_id, _ = seq[-1]
+            # Find the next keyframe in the sequence from the next query's results.
+            for kf_id, score in query_results[i]:
+                if last_kf_id < kf_id <= last_kf_id + gap:
+                    new_seq = seq + [(kf_id, score)]
+                    new_sequences.append(new_seq)
+                    # Since the lists are sorted, the first match is the one immediately following.
+                    break
+        sequences = new_sequences
+
+    return sequences
 
 
 if __name__ == "__main__":
