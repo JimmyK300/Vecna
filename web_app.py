@@ -95,9 +95,15 @@ def setup_page():
 def render_search_ui():
     search_option = st.radio("Search by:", ("keyframe", "ocr", "temporal", "transcript"))
     search_term = st.text_area("Ask a question here:", height=100)
-    query_id = st.text_input(
-        "Unique query id (used for export filename)", value="query-0-kis"
-    )
+    col1, col2 = st.columns(2)
+    with col1:
+        query_id = st.text_input(
+            "Unique query id (used for export filename)", value="query-0-kis"
+        )
+    with col2:
+        qa_answer = st.text_input(
+            "QA query answer"
+        )
     col1, col2 = st.columns(2)
     with col1:
         search_button = st.button("SEARCH", type="primary")
@@ -106,7 +112,7 @@ def render_search_ui():
     
     download_placeholder = st.empty()
     
-    return search_option, search_term, query_id, search_button, export_button, download_placeholder
+    return search_option, search_term, query_id, qa_answer, search_button, export_button, download_placeholder
 
 
 def handle_search(search_option, search_term, query_id):
@@ -127,13 +133,13 @@ def handle_search(search_option, search_term, query_id):
             else:
                 logger.info("fetch from source")
                 st.session_state["search_results"] = keyframe_search(
-                    search_term, limit=300
+                    search_term, limit=1000
                 )
                 st.session_state["cached"][search_term] = st.session_state["search_results"]
         elif search_option == "ocr":
             st.session_state["ocr_results"] = search_by_ocr(search_term)
         elif search_option == "temporal":
-            st.session_state["temporal_results"] = search_by_temporal(search_term, limit=100)
+            st.session_state["temporal_results"] = search_by_temporal(search_term, limit=200)
         elif search_option == "transcript":
             st.session_state["transcript_results"] = transcript_search(search_term, top_k=100)
 
@@ -188,10 +194,10 @@ def display_transcript_results():
                 # Use two columns for the buttons to place them side-by-side
                 button_col1, button_col2 = st.columns([1, 1])
                 with button_col1:
-                    if st.button(f"view {key}", key=f"view_transcript_{i}_{j}"):
+                    if st.button(f"view", key=f"view_transcript_{i}_{j}"):
                         play_dialog(video_id, kf_id)
                 with button_col2:
-                    if st.button(f"zoom {key}", key=f"zoom_transcript_{i}_{j}"):
+                    if st.button(f"zoom", key=f"zoom_transcript_{i}_{j}"):
                         zoom_image(file_path, video_id, kf_id, option="keyframe")
 
 
@@ -231,10 +237,10 @@ def display_temporal_results():
                 key = f"{video_id}/{kf_id}"
                 button_col1, button_col2 = st.columns([1, 1])
                 with button_col1:
-                    if st.button(f"view {key}", key=f"view_temporal_{i}_{j}"):
+                    if st.button(f"view", key=f"view_temporal_{i}_{j}"):
                         play_dialog(video_id, kf_id)
                 with button_col2:
-                    if st.button(f"zoom {key}", key=f"zoom_temporal_{i}_{j}"):
+                    if st.button(f"zoom", key=f"zoom_temporal_{i}_{j}"):
                         zoom_image(file_path, video_id, kf_id, option="temporal")
 
 
@@ -266,13 +272,13 @@ def display_results(search_option):
 
             button_col1, button_col2 = st.columns([1, 1])
             with button_col1:
-                if st.button(f"view {key}", key=f"view_{key}"):
+                if st.button(f"view", key=f"view_{key}"):
                     play_dialog(
                         video if search_option == "keyframe" else subfolder,
                         kf if search_option == "keyframe" else file_name.split(".")[0],
                     )
             with button_col2:
-                if st.button(f"zoom {key}", key=f"zoom_{key}"):
+                if st.button(f"zoom", key=f"zoom_{key}"):
                     zoom_image(
                         file_path,
                         video if search_option == "keyframe" else subfolder,
@@ -281,7 +287,7 @@ def display_results(search_option):
                     )
 
 
-def handle_export(search_option, query_id, download_placeholder):
+def handle_export(search_option, query_id, qa_answer, download_placeholder):
     os.makedirs("submission", exist_ok=True)
     outpath = f"submission/{query_id}.csv"
     is_qa = "qa" in query_id
@@ -307,7 +313,6 @@ def handle_export(search_option, query_id, download_placeholder):
 
         with open(outpath, "w", newline="") as f:
             writer = csv.writer(f)
-            
             def write_keyframes_to_csv(keyframes_list):
                 for video_id, kf_id in keyframes_list:
                     map_path = f"./data-staging/map-keyframes/{video_id}.csv"
@@ -318,7 +323,7 @@ def handle_export(search_option, query_id, download_placeholder):
                             if k < len(mapping):
                                 _, _, _, frame_idx = mapping[k]
                                 if is_qa:
-                                    writer.writerow([video_id, frame_idx, ""])
+                                    writer.writerow([video_id, frame_idx, qa_answer])
                                 else:
                                     writer.writerow([video_id, frame_idx])
                     except (FileNotFoundError, IndexError, ValueError) as e:
@@ -356,7 +361,7 @@ def handle_export(search_option, query_id, download_placeholder):
                                 if k < len(mapping):
                                     _, _, _, frame_idx = mapping[k]
                                     if is_qa:
-                                        writer.writerow([video_id, frame_idx, ""])
+                                        writer.writerow([video_id, frame_idx, qa_answer])
                                     else:
                                         writer.writerow([video_id, frame_idx])
                     except FileNotFoundError:
@@ -408,13 +413,13 @@ def handle_export(search_option, query_id, download_placeholder):
                         map_file = csv.reader(map_file)
                         _, _, _, frame_idx = list(islice(map_file, k + 1))[k]
                     if is_qa:
-                        f.write(f"{vid},{frame_idx},\n")
+                        f.write(f"{vid},{frame_idx},\"{qa_answer}\"\n")
                     else:
                         f.write(f"{vid},{frame_idx}\n")
                 else:  # For ocr_results
                     subfolder, file_name, frame_idx, _ = result
                     if is_qa:
-                        f.write(f"{subfolder},{frame_idx},\n")
+                        f.write(f"{subfolder},{frame_idx},\"{qa_answer}\"\n")
                     else:
                         f.write(f"{subfolder},{frame_idx}\n")
         logger.info(f"Exported {len(selected_results)} selected keyframes to the top of {outpath}")
@@ -430,7 +435,7 @@ def handle_export(search_option, query_id, download_placeholder):
 
 if __name__ == "__main__":
     setup_page()
-    search_option, search_term, query_id, search_button, export_button, download_placeholder = render_search_ui()
+    search_option, search_term, query_id, qa_answer, search_button, export_button, download_placeholder = render_search_ui()
 
     if search_button:
         handle_search(search_option, search_term, query_id)
@@ -443,4 +448,4 @@ if __name__ == "__main__":
         display_transcript_results()
 
     if export_button:
-        handle_export(search_option, query_id, download_placeholder)
+        handle_export(search_option, query_id, qa_answer, download_placeholder)
