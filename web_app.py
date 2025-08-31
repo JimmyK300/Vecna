@@ -95,6 +95,7 @@ def setup_page():
 def render_search_ui():
     search_option = st.radio("Search by:", ("keyframe", "ocr", "temporal", "transcript"))
     search_term = st.text_area("Ask a question here:", height=100)
+    excluded_video = st.text_input("Excluded video IDs (comma-separated)", "")
     col1, col2 = st.columns(2)
     with col1:
         query_id = st.text_input(
@@ -112,10 +113,11 @@ def render_search_ui():
     
     download_placeholder = st.empty()
     
-    return search_option, search_term, query_id, qa_answer, search_button, export_button, download_placeholder
+    return search_option, search_term, excluded_video, query_id, qa_answer, search_button, export_button, download_placeholder
 
 
-def handle_search(search_option, search_term, query_id):
+def handle_search(search_option, search_term, query_id, excluded_video):
+    excluded_video = excluded_video.split(",") if excluded_video else []
     with st.spinner("Fetching Answer..."):
         st.session_state["ocr_results"] = []
         st.session_state["search_results"] = []
@@ -139,7 +141,7 @@ def handle_search(search_option, search_term, query_id):
         elif search_option == "ocr":
             st.session_state["ocr_results"] = search_by_ocr(search_term)
         elif search_option == "temporal":
-            st.session_state["temporal_results"] = search_by_temporal(search_term, limit=200)
+            st.session_state["temporal_results"] = search_by_temporal(search_term, limit=200, excluded_video=excluded_video)
         elif search_option == "transcript":
             st.session_state["transcript_results"] = transcript_search(search_term, top_k=100)
 
@@ -435,10 +437,10 @@ def handle_export(search_option, query_id, qa_answer, download_placeholder):
 
 if __name__ == "__main__":
     setup_page()
-    search_option, search_term, query_id, qa_answer, search_button, export_button, download_placeholder = render_search_ui()
+    search_option, search_term, excluded_video, query_id, qa_answer, search_button, export_button, download_placeholder = render_search_ui()
 
     if search_button:
-        handle_search(search_option, search_term, query_id)
+        handle_search(search_option, search_term, query_id, excluded_video)
     
     if st.session_state.get("search_results") or st.session_state.get("ocr_results"):
         display_results(search_option)
