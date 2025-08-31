@@ -11,7 +11,7 @@ from helpers import get_logger
 logger = get_logger()
 
 
-def search_by_temporal(queries: str, limit: int = 100, sequence_gap: int = 30) -> List[Tuple[str, List[str], List[float], float]]:
+def search_by_temporal(queries: str, limit: int = 100, sequence_gap: int = 30, excluded_video: List[str] = None) -> List[Tuple[str, List[str], List[float], float]]:
     """
     Search for a temporal sequence of events by finding the first event,
     and then looking for subsequent events in the following keyframes.
@@ -34,7 +34,11 @@ def search_by_temporal(queries: str, limit: int = 100, sequence_gap: int = 30) -
             video_results[video_id][i].append((int(kf_id), score))
 
     all_sequences = []
+    if excluded_video is None:
+        excluded_video = []
     for video_id, query_results in video_results.items():
+        if video_id in excluded_video:
+            continue
         # Sort keyframes by ID for each query part to ensure chronological order.
         for qr in query_results:
             qr.sort()
@@ -66,13 +70,11 @@ def find_sequences_in_video(query_results, gap):
         new_sequences = []
         for seq in sequences:
             last_kf_id, _ = seq[-1]
-            # Find the next keyframe in the sequence from the next query's results.
+            # Find all valid next keyframes in the sequence from the next query's results.
             for kf_id, score in query_results[i]:
                 if last_kf_id < kf_id <= last_kf_id + gap:
                     new_seq = seq + [(kf_id, score)]
                     new_sequences.append(new_seq)
-                    # Since the lists are sorted, the first match is the one immediately following.
-                    break
         sequences = new_sequences
 
     return sequences
@@ -80,7 +82,8 @@ def find_sequences_in_video(query_results, gap):
 
 if __name__ == "__main__":
     # Test the search functionality
-    test_query = "A pair of red sneakers shoes\nMultiple sneakers are being displayed on the shelves\nA tennis ball being placed in front of a white shoes"
+    # test_query = "A pair of red sneakers shoes\nMultiple sneakers are being displ[ayed on the shelves\nA tennis ball being placed in front of a white shoes"
+    test_query = "A flycam shot of a bridge in Ho Chi Minh City\na shot of Bitexco Tower\nHoan Kiem Lake in Hanoi"
     logger.info(f"Testing search with query: {test_query}")
     
     results = search_by_temporal(test_query, 10)
