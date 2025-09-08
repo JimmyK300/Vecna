@@ -22,25 +22,26 @@ class KeyframeSearchEngine:
         
         # Load CLIP model
         self.model, _, self.preprocess = open_clip.create_model_and_transforms(
-            "ViT-SO400M-14-SigLIP-384",
+            "ViT-gopt-16-SigLIP2-384",
             pretrained="webli",
             device=self.device,
         )
         self.model.eval()
-        self.tokenizer = open_clip.get_tokenizer("ViT-SO400M-14-SigLIP-384")
+        self.tokenizer = open_clip.get_tokenizer("ViT-gopt-16-SigLIP2-384")
         
+        self.keyframe_index = faiss.read_index("./data-index/keyframe_embedding.index")
         # Load the keyframe embedding from the FAISS index
         cpu_index = faiss.read_index("./data-index/keyframe_embedding.index")
         self.embedding_info = np.load("./data-index/keyframe_metadata.npy")
         
-        # Try to move FAISS index to GPU if available
-        if faiss.get_num_gpus() > 0:
-            res = faiss.StandardGpuResources()
-            self.keyframe_index = faiss.index_cpu_to_gpu(res, 0, cpu_index)
-            logger.info("FAISS index moved to GPU.")
-        else:
-            self.keyframe_index = cpu_index
-            logger.info("FAISS index running on CPU.")
+        # # Try to move FAISS index to GPU if available
+        # if faiss.get_num_gpus() > 0:
+        #     res = faiss.StandardGpuResources()
+        #     self.keyframe_index = faiss.index_cpu_to_gpu(res, 0, cpu_index)
+        #     logger.info("FAISS index moved to GPU.")
+        # else:
+        #     self.keyframe_index = cpu_index
+        #     logger.info("FAISS index running on CPU.")
 
         logger.info(f"Loaded {self.keyframe_index.ntotal} keyframes")
 
