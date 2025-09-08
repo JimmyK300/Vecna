@@ -4,13 +4,13 @@ numpy==1.23.5
 torch
 torchvision
 torchaudio
-tensorflow
 ffmpeg-python
 opencv-python==4.8.0.74
+pillow
 
+git+https://github.com/YangTuanAnh/transnetv2_pytorch.git#egg=transnetv2_pytorch
 whisperx
 sentence_transformers
-tf-keras
 googletrans
 easyocr
 

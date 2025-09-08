@@ -37,6 +37,17 @@ if "selected_keyframes" not in st.session_state:
 if "selected_sequences" not in st.session_state:
     st.session_state["selected_sequences"] = {}
 
+# Pagination state
+if "current_page" not in st.session_state:
+    st.session_state["current_page"] = 0
+
+if "results_per_page" not in st.session_state:
+    st.session_state["results_per_page"] = 20
+
+# Cache for loaded images
+if "image_cache" not in st.session_state:
+    st.session_state["image_cache"] = {}
+
 logger = get_logger()
 
 
@@ -73,7 +84,7 @@ def zoom_image(file_path, video, kf, option = "keyframe"):
     if option == "ocr":
         display_search_results(search_term, kf, video)
 
-    st.image(file_path, caption=f"{video},{frame_idx}", use_column_width=True)
+    st.image(file_path, caption=f"{video} | frame: {frame_idx}", use_column_width=True)
 
 
 def setup_page():
@@ -96,6 +107,14 @@ def render_search_ui():
     search_option = st.radio("Search by:", ("keyframe", "ocr", "temporal", "transcript"))
     search_term = st.text_area("Ask a question here:", height=100)
     excluded_video = st.text_input("Excluded video IDs (comma-separated)", "")
+    
+    # Results per page setting
+    st.session_state["results_per_page"] = st.selectbox(
+        "Results per page", 
+        [10, 20, 50, 100], 
+        index=[10, 20, 50, 100].index(st.session_state["results_per_page"])
+    )
+    
     col1, col2 = st.columns(2)
     with col1:
         query_id = st.text_input(
@@ -125,6 +144,7 @@ def handle_search(search_option, search_term, query_id, excluded_video):
         st.session_state["transcript_results"] = []
         st.session_state["selected_keyframes"] = {}
         st.session_state["selected_sequences"] = {}
+        st.session_state["current_page"] = 0  # Reset to first page
         search_term = search_term.strip()
         logger.info("searching...", search_term)
 
@@ -146,21 +166,71 @@ def handle_search(search_option, search_term, query_id, excluded_video):
             st.session_state["transcript_results"] = transcript_search(search_term, top_k=100)
 
 
+def render_pagination_controls(total_results, position="top"):
+    """Render pagination controls"""
+    if total_results == 0:
+        return
+    
+    results_per_page = st.session_state["results_per_page"]
+    total_pages = (total_results - 1) // results_per_page + 1
+    current_page = st.session_state["current_page"]
+    
+    col1, col2, col3, col4, col5 = st.columns([1, 1, 2, 1, 1])
+    
+    with col1:
+        if st.button("⏮️ First", disabled=(current_page == 0), key=f"first_{position}"):
+            st.session_state["current_page"] = 0
+            st.rerun()
+    
+    with col2:
+        if st.button("⬅️ Prev", disabled=(current_page == 0), key=f"prev_{position}"):
+            st.session_state["current_page"] = max(0, current_page - 1)
+            st.rerun()
+    
+    with col3:
+        st.write(f"Page {current_page + 1} of {total_pages} ({total_results} results)")
+    
+    with col4:
+        if st.button("Next ➡️", disabled=(current_page >= total_pages - 1), key=f"next_{position}"):
+            st.session_state["current_page"] = min(total_pages - 1, current_page + 1)
+            st.rerun()
+    
+    with col5:
+        if st.button("Last ⏭️", disabled=(current_page >= total_pages - 1), key=f"last_{position}"):
+            st.session_state["current_page"] = total_pages - 1
+            st.rerun()
+
+
 def display_transcript_results():
     results = st.session_state.get("transcript_results", [])
     if not results:
         return
 
-    st.write(f"Found {len(results)} relevant transcript sentences.")
+    total_results = len(results)
+    results_per_page = st.session_state["results_per_page"]
+    current_page = st.session_state["current_page"]
+    
+    # Calculate pagination
+    start_idx = current_page * results_per_page
+    end_idx = min(start_idx + results_per_page, total_results)
+    current_results = results[start_idx:end_idx]
 
-    for i, result in enumerate(results):
+    st.write(f"Found {total_results} relevant transcript sentences.")
+    
+    # Render pagination controls at the top
+    render_pagination_controls(total_results, "transcript_top")
+    
+    st.markdown("---")
+
+    for i, result in enumerate(current_results):
+        actual_idx = start_idx + i  # Actual index in the full results list
         st.markdown("---")
         video_id = result['video_id']
         sentence = result['sentence']
         score = result['similarity_score']
         keyframes = result.get('keyframes', [])
 
-        st.subheader(f"Result {i+1}: Video `{video_id}` | Similarity: `{score:.4f}`")
+        st.subheader(f"Result {actual_idx + 1}: Video `{video_id}` | Similarity: `{score:.4f}`")
         st.markdown(f"> {sentence}")
 
         if not keyframes:
@@ -168,7 +238,7 @@ def display_transcript_results():
             continue
 
         # Create a selection box for the entire result group
-        group_key = f"transcript_group_{i}"
+        group_key = f"transcript_group_{actual_idx}"
         if group_key not in st.session_state["selected_keyframes"]:
             st.session_state["selected_keyframes"][group_key] = False
         
@@ -188,7 +258,19 @@ def display_transcript_results():
                 kf_id = kf_name.split('.')[0]
                 
                 if os.path.exists(file_path):
-                    st.image(file_path, caption=f"kf: {kf_id} @ {kf_info['timestamp']}", width=WIDTH)
+                    # Get frame_idx from mapping for caption
+                    try:
+                        map_path = f"./data-staging/map-keyframes/{video_id}.csv"
+                        with open(map_path) as map_file:
+                            mapping = list(csv.reader(map_file))
+                            k = int(kf_id)
+                            if k < len(mapping):
+                                _, _, _, frame_idx = mapping[k]
+                                st.image(file_path, caption=f"{video_id} | frame: {frame_idx} | score: {score:.4f}", width=WIDTH)
+                            else:
+                                st.image(file_path, caption=f"{video_id} | kf: {kf_id} | score: {score:.4f}", width=WIDTH)
+                    except (FileNotFoundError, IndexError, ValueError):
+                        st.image(file_path, caption=f"{video_id} | kf: {kf_id} | score: {score:.4f}", width=WIDTH)
                 else:
                     st.warning(f"Not found:\n{file_path}")
 
@@ -196,11 +278,15 @@ def display_transcript_results():
                 # Use two columns for the buttons to place them side-by-side
                 button_col1, button_col2 = st.columns([1, 1])
                 with button_col1:
-                    if st.button(f"view", key=f"view_transcript_{i}_{j}"):
+                    if st.button(f"view", key=f"view_transcript_{actual_idx}_{j}"):
                         play_dialog(video_id, kf_id)
                 with button_col2:
-                    if st.button(f"zoom", key=f"zoom_transcript_{i}_{j}"):
+                    if st.button(f"zoom", key=f"zoom_transcript_{actual_idx}_{j}"):
                         zoom_image(file_path, video_id, kf_id, option="keyframe")
+    
+    # Render pagination controls at the bottom
+    st.markdown("---")
+    render_pagination_controls(total_results, "transcript_bottom")
 
 
 def display_temporal_results():
@@ -208,19 +294,34 @@ def display_temporal_results():
     if not results:
         return
 
-    st.write(f"Found {len(results)} temporal sequences.")
+    total_results = len(results)
+    results_per_page = st.session_state["results_per_page"]
+    current_page = st.session_state["current_page"]
+    
+    # Calculate pagination
+    start_idx = current_page * results_per_page
+    end_idx = min(start_idx + results_per_page, total_results)
+    current_results = results[start_idx:end_idx]
 
-    for i, (video_id, kf_ids, scores, avg_similarity) in enumerate(results):
+    st.write(f"Found {total_results} temporal sequences.")
+    
+    # Render pagination controls at the top
+    render_pagination_controls(total_results, "temporal_top")
+    
+    st.markdown("---")
+
+    for i, (video_id, kf_ids, scores, avg_similarity) in enumerate(current_results):
+        actual_idx = start_idx + i  # Actual index in the full results list
         st.markdown("---")
         
         col1, col2 = st.columns([0.9, 0.1])
         with col1:
-            st.subheader(f"Sequence {i+1}: Video `{video_id}` | Avg. Similarity: `{avg_similarity:.4f}`")
+            st.subheader(f"Sequence {actual_idx + 1}: Video `{video_id}` | Avg. Similarity: `{avg_similarity:.4f}`")
         with col2:
-            if i not in st.session_state["selected_sequences"]:
-                st.session_state["selected_sequences"][i] = False
-            st.session_state["selected_sequences"][i] = st.checkbox(
-                "Select", key=f"select_seq_{i}"
+            if actual_idx not in st.session_state["selected_sequences"]:
+                st.session_state["selected_sequences"][actual_idx] = False
+            st.session_state["selected_sequences"][actual_idx] = st.checkbox(
+                "Select", key=f"select_seq_{actual_idx}"
             )
 
         num_columns = 4 
@@ -232,25 +333,63 @@ def display_temporal_results():
                 kf_id_str = str(kf_id).zfill(4)
                 file_path = f"./data-staging/keyframes/{video_id}/{kf_id_str}.jpg"
                 if os.path.exists(file_path):
-                    st.image(file_path, caption=f"kf: {kf_id_str} | score: {score:.4f}", width=WIDTH)
+                    # Get frame_idx from mapping for caption
+                    try:
+                        map_path = f"./data-staging/map-keyframes/{video_id}.csv"
+                        with open(map_path) as map_file:
+                            mapping = list(csv.reader(map_file))
+                            k = int(kf_id)
+                            if k < len(mapping):
+                                _, _, _, frame_idx = mapping[k]
+                                st.image(file_path, caption=f"{video_id} | frame: {frame_idx} | score: {score:.4f}", width=WIDTH)
+                            else:
+                                st.image(file_path, caption=f"{video_id} | kf: {kf_id_str} | score: {score:.4f}", width=WIDTH)
+                    except (FileNotFoundError, IndexError, ValueError):
+                        st.image(file_path, caption=f"{video_id} | kf: {kf_id_str} | score: {score:.4f}", width=WIDTH)
                 else:
                     st.warning(f"Not found:\n{file_path}")
 
                 key = f"{video_id}/{kf_id}"
                 button_col1, button_col2 = st.columns([1, 1])
                 with button_col1:
-                    if st.button(f"view", key=f"view_temporal_{i}_{j}"):
+                    if st.button(f"view", key=f"view_temporal_{actual_idx}_{j}"):
                         play_dialog(video_id, kf_id)
                 with button_col2:
-                    if st.button(f"zoom", key=f"zoom_temporal_{i}_{j}"):
+                    if st.button(f"zoom", key=f"zoom_temporal_{actual_idx}_{j}"):
                         zoom_image(file_path, video_id, kf_id, option="temporal")
+    
+    # Render pagination controls at the bottom
+    st.markdown("---")
+    render_pagination_controls(total_results, "temporal_bottom")
 
 
 def display_results(search_option):
-    col1, col2, col3, col4 = st.columns(4)
     results = st.session_state["search_results"] or st.session_state["ocr_results"]
+    if not results:
+        return
+    
+    total_results = len(results)
+    results_per_page = st.session_state["results_per_page"]
+    current_page = st.session_state["current_page"]
+    
+    # Calculate pagination
+    start_idx = current_page * results_per_page
+    end_idx = min(start_idx + results_per_page, total_results)
+    current_results = results[start_idx:end_idx]
 
-    for i, result in enumerate(results):
+    st.write(f"Found {total_results} results.")
+    
+    # Render pagination controls at the top
+    render_pagination_controls(total_results, "results_top")
+    
+    st.markdown("---")
+    
+    # Display results in a 4-column grid
+    col1, col2, col3, col4 = st.columns(4)
+    
+    for i, result in enumerate(current_results):
+        actual_idx = start_idx + i  # Actual index in the full results list
+        
         if search_option == "keyframe":
             video, kf, similarity = result
             file_path = f"./data-staging/keyframes/{video}/{kf}.jpg"
@@ -264,29 +403,51 @@ def display_results(search_option):
         column = [col1, col2, col3, col4][i % 4]
 
         with column:
-            st.image(file_path, caption=similarity, width=WIDTH)
+            if os.path.exists(file_path):
+                if search_option == "keyframe":
+                    # Get frame_idx from mapping for keyframe results
+                    try:
+                        map_path = f"./data-staging/map-keyframes/{video}.csv"
+                        with open(map_path) as map_file:
+                            mapping = list(csv.reader(map_file))
+                            k = int(kf)
+                            if k < len(mapping):
+                                _, _, _, frame_idx = mapping[k]
+                                st.image(file_path, caption=f"{video} | frame: {frame_idx} | score: {similarity}", width=WIDTH)
+                            else:
+                                st.image(file_path, caption=f"{video} | kf: {kf} | score: {similarity}", width=WIDTH)
+                    except (FileNotFoundError, IndexError, ValueError):
+                        st.image(file_path, caption=f"{video} | kf: {kf} | score: {similarity}", width=WIDTH)
+                else:  # For ocr_results, frame_idx is already available
+                    st.image(file_path, caption=f"{subfolder} | frame: {frame_idx} | score: {similarity}", width=WIDTH)
+            else:
+                st.warning(f"Image not found:\n{file_path}")
 
             if key not in st.session_state["selected_keyframes"]:
                 st.session_state["selected_keyframes"][key] = False
             st.session_state["selected_keyframes"][key] = st.checkbox(
-                f"Select {key}", key=f"checkbox_{key}"
+                f"Select", key=f"checkbox_{actual_idx}_{key}"
             )
 
             button_col1, button_col2 = st.columns([1, 1])
             with button_col1:
-                if st.button(f"view", key=f"view_{key}"):
+                if st.button(f"view", key=f"view_{actual_idx}_{key}"):
                     play_dialog(
                         video if search_option == "keyframe" else subfolder,
                         kf if search_option == "keyframe" else file_name.split(".")[0],
                     )
             with button_col2:
-                if st.button(f"zoom", key=f"zoom_{key}"):
+                if st.button(f"zoom", key=f"zoom_{actual_idx}_{key}"):
                     zoom_image(
                         file_path,
                         video if search_option == "keyframe" else subfolder,
                         kf if search_option == "keyframe" else file_name.split(".")[0],
                         search_option,
                     )
+    
+    # Render pagination controls at the bottom
+    st.markdown("---")
+    render_pagination_controls(total_results, "results_bottom")
 
 
 def handle_export(search_option, query_id, qa_answer, download_placeholder):

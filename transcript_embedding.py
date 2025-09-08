@@ -2,9 +2,14 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 import os
 import json
+import torch
+
+# Use CUDA if available
+device = "cuda" if torch.cuda.is_available() else "cpu"
+print(f"Using device: {device}")
 
 # Load a pre-trained model
-model = SentenceTransformer('all-MiniLM-L6-v2')
+model = SentenceTransformer('all-MiniLM-L6-v2', device=device)
 
 def process_all_transcripts(transcript_dir, output_dir="data-index"):
     """

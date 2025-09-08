@@ -16,7 +16,7 @@ logger = get_logger()
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 clip_model, _, preprocess = open_clip.create_model_and_transforms(
-    "ViT-SO400M-14-SigLIP-384",
+    "ViT-gopt-16-SigLIP2-384",
     pretrained="webli",
     device=device,
 )
@@ -39,7 +39,7 @@ def main():
     for v in tqdm(all_video, desc="Processing videos"):
         # Initialize an empty array with shape (0, 1152)
         np_out = f"./data-staging/clip-features/{v}.npy"
-        keyframe_array = np.empty((0, 1152))
+        keyframe_array = np.empty((0, 1536))
         if helpers.is_exits(np_out):
             logger.info(f"{np_out} exists, skip")
             continue
@@ -69,7 +69,7 @@ def main():
         for k in video_keyframe_dict[v]:
             embedding_list.append(embedding_dict[v][k])
             embedding_info.append((v, k))
-    embedding_array = np.array(embedding_list)
+    embedding_array = np.array(embedding_list, dtype=np.float32)
     info_array = np.array(embedding_info)
 
     # Build the faiss index
