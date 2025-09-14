@@ -40,17 +40,26 @@ def process_file(file_path, image_folder):
     }
 
 def perform_ocr_on_images(image_folder, output_csv):
-    data = []
     print("Starting OCR process...")
-
+    
+    # Check if output file exists to determine if we need to write headers
+    write_headers = not os.path.exists(output_csv)
+    
     for v in tqdm(all_video, desc="Processing videos"):
         for kf in tqdm(video_keyframe_dict[v], desc=f"Processing {v}", leave=False):
             file_path = f"./data-staging/keyframes/{v}/{kf}.jpg"
             result = process_file(file_path, image_folder)
-            data.append(result)
+            
+            # Create DataFrame for this single result
+            df = pd.DataFrame([result])
+            
+            # Write to CSV with proper header handling
+            if write_headers:
+                df.to_csv(output_csv, mode='w', header=True, index=False)
+                write_headers = False  # Only write header once
+            else:
+                df.to_csv(output_csv, mode='a', header=False, index=False)
 
-    df = pd.DataFrame(data)
-    df.to_csv(output_csv, index=False)
     print(f"OCR process completed. Results saved to {output_csv}.")
 
 

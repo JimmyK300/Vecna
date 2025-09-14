@@ -2,6 +2,10 @@ import csv
 import os
 from itertools import islice
 from typing import Tuple
+import subprocess
+import tempfile
+import io
+import shutil
 
 import numpy as np
 import streamlit as st
@@ -48,7 +52,195 @@ if "results_per_page" not in st.session_state:
 if "image_cache" not in st.session_state:
     st.session_state["image_cache"] = {}
 
+# Frame viewer session state
+if "frame_viewer_video" not in st.session_state:
+    st.session_state["frame_viewer_video"] = None
+
+if "frame_number" not in st.session_state:
+    st.session_state["frame_number"] = 0
+
+if "show_frame_dialog" not in st.session_state:
+    st.session_state["show_frame_dialog"] = False
+
+if "last_search_term" not in st.session_state:
+    st.session_state["last_search_term"] = ""
+
 logger = get_logger()
+
+
+@st.cache_data
+def get_video_info(video_path):
+    """Get video information using ffprobe."""
+    try:
+        cmd = [
+            'ffprobe', 
+            '-v', 'quiet',
+            '-count_frames',
+            '-select_streams', 'v:0',
+            '-show_entries', 'stream=nb_frames',
+            '-of', 'csv=p=0',
+            video_path
+        ]
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        total_frames = int(result.stdout.strip())
+        return total_frames
+    except (subprocess.CalledProcessError, ValueError):
+        # Fallback method to estimate frames
+        try:
+            cmd = [
+                'ffprobe',
+                '-v', 'quiet',
+                '-show_entries', 'stream=duration,r_frame_rate',
+                '-select_streams', 'v:0',
+                '-of', 'csv=p=0',
+                video_path
+            ]
+            result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+            duration, frame_rate = result.stdout.strip().split(',')
+            
+            # Parse frame rate (could be like "30/1" or "29.97")
+            if '/' in frame_rate:
+                num, den = map(float, frame_rate.split('/'))
+                fps = num / den
+            else:
+                fps = float(frame_rate)
+            
+            total_frames = int(float(duration) * fps)
+            return total_frames
+        except:
+            return 1000  # Default fallback
+
+
+def extract_frames_batch(video_path, temp_dir, total_frames, frame_interval=10):
+    """Extract frames at specified intervals using ffmpeg."""
+    try:
+        # Extract every nth frame with low quality
+        cmd = [
+            'ffmpeg',
+            '-i', video_path,
+            '-vf', f'select=not(mod(n\\,{frame_interval}))',
+            '-vsync', 'vfr',
+            '-q:v', '10',  # Low quality (1-31, higher = lower quality)
+            '-s', '640x360',  # Reduce resolution for speed
+            os.path.join(temp_dir, 'frame_%06d.jpg')
+        ]
+        
+        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        
+        if result.returncode == 0:
+            return True
+        else:
+            st.error(f"FFmpeg error: {result.stderr}")
+            return False
+            
+    except Exception as e:
+        st.error(f"Error extracting frames: {str(e)}")
+        return False
+
+
+def get_frame_from_folder(temp_dir, frame_number, frame_interval=10):
+    """Get frame from pre-extracted folder."""
+    try:
+        # Calculate which extracted frame to use
+        extracted_frame_index = frame_number // frame_interval
+        frame_filename = f'frame_{extracted_frame_index + 1:06d}.jpg'
+        frame_path = os.path.join(temp_dir, frame_filename)
+        
+        if os.path.exists(frame_path):
+            with Image.open(frame_path) as img:
+                img_bytes = io.BytesIO()
+                img.save(img_bytes, format='JPEG')
+                return img_bytes.getvalue()
+        else:
+            # Find closest available frame
+            available_frames = [f for f in os.listdir(temp_dir) if f.startswith('frame_') and f.endswith('.jpg')]
+            if available_frames:
+                # Get the closest frame
+                frame_numbers = [int(f.split('_')[1].split('.')[0]) for f in available_frames]
+                closest_frame_num = min(frame_numbers, key=lambda x: abs(x - (extracted_frame_index + 1)))
+                closest_frame_file = f'frame_{closest_frame_num:06d}.jpg'
+                closest_frame_path = os.path.join(temp_dir, closest_frame_file)
+                
+                with Image.open(closest_frame_path) as img:
+                    img_bytes = io.BytesIO()
+                    img.save(img_bytes, format='JPEG')
+                    return img_bytes.getvalue()
+            
+        return None
+        
+    except Exception as e:
+        st.error(f"Error loading frame: {str(e)}")
+        return None
+
+
+@st.dialog("Video Frame Viewer")
+def frame_viewer_dialog():
+    video_id = st.session_state["frame_viewer_video"]
+    video_path = f"./data-source/videos/{video_id}.mp4"
+    
+    # Get total frames once (cached)
+    total_frames = get_video_info(video_path)
+    
+    # Initialize temp directory in session state if not exists for this video
+    temp_dir_key = f'temp_dir_{video_id}'
+    frames_extracted_key = f'frames_extracted_{video_id}'
+    
+    if temp_dir_key not in st.session_state or not os.path.exists(st.session_state[temp_dir_key]):
+        st.session_state[temp_dir_key] = tempfile.mkdtemp(prefix=f'video_frames_{video_id}_')
+        st.session_state[frames_extracted_key] = False
+    
+    # Extract frames if not done yet
+    if not st.session_state[frames_extracted_key]:
+        with st.spinner('Extracting frames... This may take a moment.'):
+            success = extract_frames_batch(video_path, st.session_state[temp_dir_key], total_frames, frame_interval=10)
+            if success:
+                st.session_state[frames_extracted_key] = True
+                st.rerun()
+            else:
+                st.error("Failed to extract frames")
+                return
+    
+    # Get the current frame bytes
+    frame_bytes = get_frame_from_folder(st.session_state[temp_dir_key], st.session_state["frame_number"], frame_interval=10)
+
+    if frame_bytes is not None:
+        st.image(frame_bytes, use_column_width=True)
+        st.write(f"Video: {video_id} | Frame: {st.session_state['frame_number'] + 1} of {total_frames}")
+        st.caption("Note: Showing nearest extracted frame (every 10th frame)")
+        st.caption("⚠️ Please use the 'Close' button below to properly exit and clean up temporary files.")
+    else:
+        st.error("Error: Could not read frame.")
+
+    # Add a slider to navigate frames
+    new_frame_number = st.slider("Frame", 0, total_frames - 1, st.session_state["frame_number"])
+    if new_frame_number != st.session_state["frame_number"]:
+        st.session_state["frame_number"] = new_frame_number
+        st.rerun()
+
+    col1, col2, col3 = st.columns([1, 1, 1])
+
+    with col1:
+        if st.button("⬅️ Previous"):
+            if st.session_state["frame_number"] > 0:
+                st.session_state["frame_number"] -= 10
+                st.rerun()
+
+    with col2:
+        if st.button("Next ➡️"):
+            if st.session_state["frame_number"] < total_frames - 1:
+                st.session_state["frame_number"] += 10
+                st.rerun()
+    
+    with col3:
+        if st.button("🔒 Close"):
+            # Clean up temporary directory when closing
+            if temp_dir_key in st.session_state and os.path.exists(st.session_state[temp_dir_key]):
+                shutil.rmtree(st.session_state[temp_dir_key])
+                del st.session_state[temp_dir_key]
+                if frames_extracted_key in st.session_state:
+                    del st.session_state[frames_extracted_key]
+            st.session_state["show_frame_dialog"] = False
+            st.rerun()
 
 
 @st.dialog("Playing source video")
@@ -66,8 +258,8 @@ def play_dialog(video, kf):
     st.video(
         f"./data-source/videos/{video}.mp4",
         autoplay=True,
-        start_time=int(start) / int(fps[:-2]),
-        end_time=int(end) / int(fps[:-2]),
+        start_time=int(start) / float(fps),
+        end_time=int(end) / float(fps),
     )
 
 @st.dialog("Zoom keyframe")
@@ -82,7 +274,10 @@ def zoom_image(file_path, video, kf, option = "keyframe"):
         start, end = list(islice(time_file, k))[k - 1]
     
     if option == "ocr":
-        display_search_results(search_term, kf, video)
+        # Get search term from session state if available for OCR results
+        search_term = st.session_state.get("last_search_term", "")
+        if search_term:
+            display_search_results(search_term, kf, video)
 
     st.image(file_path, caption=f"{video} | frame: {frame_idx}", use_column_width=True)
 
@@ -106,7 +301,7 @@ def setup_page():
 def render_search_ui():
     search_option = st.radio("Search by:", ("keyframe", "ocr", "temporal", "transcript"))
     search_term = st.text_area("Ask a question here:", height=100)
-    excluded_video = st.text_input("Excluded video IDs (comma-separated)", "")
+    excluded_video = st.text_input("Excluded video IDs (comma-separated), used for temporal search only", "")
     
     # Results per page setting
     st.session_state["results_per_page"] = st.selectbox(
@@ -146,6 +341,7 @@ def handle_search(search_option, search_term, query_id, excluded_video):
         st.session_state["selected_sequences"] = {}
         st.session_state["current_page"] = 0  # Reset to first page
         search_term = search_term.strip()
+        st.session_state["last_search_term"] = search_term  # Store for later use
         logger.info("searching...", search_term)
 
         if search_option == "keyframe":
@@ -275,14 +471,20 @@ def display_transcript_results():
                     st.warning(f"Not found:\n{file_path}")
 
                 key = f"{video_id}/{kf_id}"
-                # Use two columns for the buttons to place them side-by-side
-                button_col1, button_col2 = st.columns([1, 1])
+                # Use three columns for the buttons to place them side-by-side
+                button_col1, button_col2, button_col3 = st.columns([1, 1, 1])
                 with button_col1:
                     if st.button(f"view", key=f"view_transcript_{actual_idx}_{j}"):
                         play_dialog(video_id, kf_id)
                 with button_col2:
                     if st.button(f"zoom", key=f"zoom_transcript_{actual_idx}_{j}"):
                         zoom_image(file_path, video_id, kf_id, option="keyframe")
+                with button_col3:
+                    if st.button(f"frame", key=f"frame_transcript_{actual_idx}_{j}"):
+                        st.session_state["frame_viewer_video"] = video_id
+                        st.session_state["frame_number"] = 0
+                        st.session_state["show_frame_dialog"] = True
+                        st.rerun()
     
     # Render pagination controls at the bottom
     st.markdown("---")
@@ -350,13 +552,19 @@ def display_temporal_results():
                     st.warning(f"Not found:\n{file_path}")
 
                 key = f"{video_id}/{kf_id}"
-                button_col1, button_col2 = st.columns([1, 1])
+                button_col1, button_col2, button_col3 = st.columns([1, 1, 1])
                 with button_col1:
                     if st.button(f"view", key=f"view_temporal_{actual_idx}_{j}"):
                         play_dialog(video_id, kf_id)
                 with button_col2:
                     if st.button(f"zoom", key=f"zoom_temporal_{actual_idx}_{j}"):
                         zoom_image(file_path, video_id, kf_id, option="temporal")
+                with button_col3:
+                    if st.button(f"frame", key=f"frame_temporal_{actual_idx}_{j}"):
+                        st.session_state["frame_viewer_video"] = video_id
+                        st.session_state["frame_number"] = 0
+                        st.session_state["show_frame_dialog"] = True
+                        st.rerun()
     
     # Render pagination controls at the bottom
     st.markdown("---")
@@ -429,7 +637,7 @@ def display_results(search_option):
                 f"Select", key=f"checkbox_{actual_idx}_{key}"
             )
 
-            button_col1, button_col2 = st.columns([1, 1])
+            button_col1, button_col2, button_col3 = st.columns([1, 1, 1])
             with button_col1:
                 if st.button(f"view", key=f"view_{actual_idx}_{key}"):
                     play_dialog(
@@ -444,6 +652,12 @@ def display_results(search_option):
                         kf if search_option == "keyframe" else file_name.split(".")[0],
                         search_option,
                     )
+            with button_col3:
+                if st.button(f"frame", key=f"frame_{actual_idx}_{key}"):
+                    st.session_state["frame_viewer_video"] = video if search_option == "keyframe" else subfolder
+                    st.session_state["frame_number"] = 0
+                    st.session_state["show_frame_dialog"] = True
+                    st.rerun()
     
     # Render pagination controls at the bottom
     st.markdown("---")
@@ -612,3 +826,7 @@ if __name__ == "__main__":
 
     if export_button:
         handle_export(search_option, query_id, qa_answer, download_placeholder)
+    
+    # Show frame viewer dialog if requested
+    if st.session_state.get("show_frame_dialog", False):
+        frame_viewer_dialog()
