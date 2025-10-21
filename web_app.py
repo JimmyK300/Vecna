@@ -255,11 +255,15 @@ def play_dialog(video, kf):
         start, end = list(islice(time_file, k))[k - 1]
     st.write(f"{video},{frame_idx}")
     st.write(f"FPS: {fps}")
+    start_time = int(start) / float(fps)
+    end_time = int(end) / float(fps)
+    if int(start_time) == int(end_time):
+        end_time = end_time + 1
     st.video(
         f"./data-source/videos/{video}.mp4",
         autoplay=True,
-        start_time=int(start) / float(fps),
-        end_time=int(end) / float(fps),
+        start_time=start_time,
+        end_time=end_time,
     )
 
 @st.dialog("Zoom keyframe")
@@ -299,7 +303,23 @@ def setup_page():
 
 
 def render_search_ui():
-    search_option = st.radio("Search by:", ("keyframe", "ocr", "temporal", "transcript"))
+    col1, col2, _, _ = st.columns(4)
+    with col1:
+        search_option = st.radio("Search by:", ("keyframe", "ocr", "temporal", "transcript"))
+    with col2:
+        id_to_watch = st.text_input("Watch a video given its ID?")
+        col21, col22 = st.columns(2)
+        with col21:
+            watch_vid_button = st.button("view")
+            if watch_vid_button:
+                play_dialog(id_to_watch,"0001")
+        with col22:
+            frame_vid_button = st.button("frame")
+            if frame_vid_button:
+                st.session_state["frame_viewer_video"] = id_to_watch
+                st.session_state["frame_number"] = 0
+                st.session_state["show_frame_dialog"] = True
+                st.rerun()
     search_term = st.text_area("Ask a question here:", height=100)
     excluded_video = st.text_input("Excluded video IDs (comma-separated), used for temporal search only", "")
     
@@ -327,7 +347,7 @@ def render_search_ui():
     
     download_placeholder = st.empty()
     
-    return search_option, search_term, excluded_video, query_id, qa_answer, search_button, export_button, download_placeholder
+    return search_option, id_to_watch, watch_vid_button, frame_vid_button, search_term, excluded_video, query_id, qa_answer, search_button, export_button, download_placeholder
 
 
 def handle_search(search_option, search_term, query_id, excluded_video):
@@ -812,7 +832,7 @@ def handle_export(search_option, query_id, qa_answer, download_placeholder):
 
 if __name__ == "__main__":
     setup_page()
-    search_option, search_term, excluded_video, query_id, qa_answer, search_button, export_button, download_placeholder = render_search_ui()
+    search_option, vid_to_watch, watch_vid_button, frame_vid_button, search_term, excluded_video, query_id, qa_answer, search_button, export_button, download_placeholder = render_search_ui()
 
     if search_button:
         handle_search(search_option, search_term, query_id, excluded_video)
