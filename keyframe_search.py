@@ -163,10 +163,10 @@ def image_search(image_path: str, limit: int = 100) -> List[Tuple[str, str, floa
 
 if __name__ == "__main__":
     # Test the search functionality
-    test_query = "person walking"
+    test_query = "News about durian. At the end of the video is an overhead shot, with a man pushing a cart filled with durian going right, and a man pushing an empty cart going left."
     logger.info(f"Testing search with query: {test_query}")
     
-    results = keyframe_search(test_query, 10)
+    results = keyframe_search(test_query, 500)
     
     logger.info(f"Found {len(results)} results:")
     for video, keyframe, score in results:
