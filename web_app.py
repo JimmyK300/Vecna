@@ -16,6 +16,7 @@ from helpers import get_logger
 from ocr_search import display_search_results, search_by_ocr
 from temporal_search import search_by_temporal
 from transcript_search import transcript_search
+from dinov3_search import recommend
 
 WIDTH = 350
 
@@ -264,6 +265,41 @@ def play_dialog(video, kf):
         end_time=end_time,
     )
 
+def handle_recommend(video_id, kf_id):
+    with st.spinner("Finding similar images..."):
+        results = recommend(video_id, kf_id)
+        st.session_state["search_results"] = results
+        st.session_state["ocr_results"] = []
+        st.session_state["temporal_results"] = []
+        st.session_state["transcript_results"] = []
+        st.session_state["current_page"] = 0
+        st.session_state["last_search_option"] = "keyframe"
+        st.rerun()
+
+@st.dialog("Similar Images")
+def recommend_dialog(video_id, kf_id):
+    st.image(f"./data-staging/keyframes/{video_id}/{kf_id}.jpg", caption="Source Image", use_column_width=True)
+    st.write("Top 100 similar images:")
+    
+    with st.spinner("Finding similar images..."):
+        results = recommend(video_id, kf_id) # Returns list of (image_path, score)
+
+    if not results:
+        st.warning("No similar images found.")
+        return
+
+    # Display results in a grid
+    num_columns = 4
+    cols = st.columns(num_columns)
+    
+    for i, (video_id, keyframe_id, score) in enumerate(results):
+        path = f"data-staging/keyframes/{video_id}/{keyframe_id}.jpg"
+        with cols[i % num_columns]:
+            if os.path.exists(path):
+                st.image(path, caption=f"Score: {score:.4f}", width=WIDTH)
+            else:
+                st.warning(f"Not found: {path}")
+
 @st.dialog("Zoom keyframe")
 def zoom_image(file_path, video, kf, option = "keyframe"):
     map_path = f"./data-staging/map-keyframes/{video}.csv"
@@ -487,8 +523,8 @@ def display_transcript_results():
                     if st.button(f"view", key=f"view_transcript_{actual_idx}_{j}"):
                         play_dialog(video_id, kf_id)
                 with button_col2:
-                    if st.button(f"zoom", key=f"zoom_transcript_{actual_idx}_{j}"):
-                        zoom_image(file_path, video_id, kf_id, option="keyframe")
+                    if st.button(f"similar", key=f"similar_transcript_{actual_idx}_{j}"):
+                        handle_recommend(video_id, kf_id)
                 with button_col3:
                     if st.button(f"frame", key=f"frame_transcript_{actual_idx}_{j}"):
                         st.session_state["frame_viewer_video"] = video_id
@@ -567,8 +603,8 @@ def display_temporal_results():
                     if st.button(f"view", key=f"view_temporal_{actual_idx}_{j}"):
                         play_dialog(video_id, kf_id)
                 with button_col2:
-                    if st.button(f"zoom", key=f"zoom_temporal_{actual_idx}_{j}"):
-                        zoom_image(file_path, video_id, kf_id, option="temporal")
+                    if st.button(f"similar", key=f"similar_temporal_{actual_idx}_{j}"):
+                        handle_recommend(video_id, str(kf_id).zfill(4))
                 with button_col3:
                     if st.button(f"frame", key=f"frame_temporal_{actual_idx}_{j}"):
                         st.session_state["frame_viewer_video"] = video_id
@@ -631,13 +667,13 @@ def display_results(search_option):
                             k = int(kf)
                             if k < len(mapping):
                                 _, _, _, frame_idx = mapping[k]
-                                st.image(file_path, caption=f"{video} | frame: {frame_idx} | score: {similarity}", width=WIDTH)
+                                st.image(file_path, caption=f"{video} | frame: {frame_idx} | score: {similarity:.4f}", width=WIDTH)
                             else:
-                                st.image(file_path, caption=f"{video} | kf: {kf} | score: {similarity}", width=WIDTH)
+                                st.image(file_path, caption=f"{video} | kf: {kf} | score: {similarity:.4f}", width=WIDTH)
                     except (FileNotFoundError, IndexError, ValueError):
-                        st.image(file_path, caption=f"{video} | kf: {kf} | score: {similarity}", width=WIDTH)
+                        st.image(file_path, caption=f"{video} | kf: {kf} | score: {similarity:.4f}", width=WIDTH)
                 else:  # For ocr_results, frame_idx is already available
-                    st.image(file_path, caption=f"{subfolder} | frame: {frame_idx} | score: {similarity}", width=WIDTH)
+                    st.image(file_path, caption=f"{subfolder} | frame: {frame_idx} | score: {similarity:.4f}", width=WIDTH)
             else:
                 st.warning(f"Image not found:\n{file_path}")
 
@@ -655,13 +691,10 @@ def display_results(search_option):
                         kf if search_option == "keyframe" else file_name.split(".")[0],
                     )
             with button_col2:
-                if st.button(f"zoom", key=f"zoom_{actual_idx}_{key}"):
-                    zoom_image(
-                        file_path,
-                        video if search_option == "keyframe" else subfolder,
-                        kf if search_option == "keyframe" else file_name.split(".")[0],
-                        search_option,
-                    )
+                if st.button(f"similar", key=f"similar_{actual_idx}_{key}"):
+                    video_id = video if search_option == "keyframe" else subfolder
+                    kf_id = kf if search_option == "keyframe" else file_name.split(".")[0]
+                    handle_recommend(video_id, kf_id)
             with button_col3:
                 if st.button(f"frame", key=f"frame_{actual_idx}_{key}"):
                     st.session_state["frame_viewer_video"] = video if search_option == "keyframe" else subfolder
@@ -824,11 +857,16 @@ if __name__ == "__main__":
     setup_page()
     search_option, vid_to_watch, watch_vid_button, frame_vid_button, search_term, excluded_video, query_id, qa_answer, search_button, export_button, download_placeholder = render_search_ui()
 
+    if "last_search_option" not in st.session_state:
+        st.session_state["last_search_option"] = "keyframe"
+
     if search_button:
+        st.session_state["last_search_option"] = search_option
         handle_search(search_option, search_term, query_id, excluded_video)
     
+    display_option = st.session_state["last_search_option"]
     if st.session_state.get("search_results") or st.session_state.get("ocr_results"):
-        display_results(search_option)
+        display_results(display_option)
     elif st.session_state.get("temporal_results"):
         display_temporal_results()
     elif st.session_state.get("transcript_results"):
