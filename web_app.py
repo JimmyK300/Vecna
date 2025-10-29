@@ -20,8 +20,6 @@ from transcript_search import transcript_search
 WIDTH = 350
 
 # Initialize session state
-if "cached" not in st.session_state:
-    st.session_state["cached"] = {}
 
 if "search_results" not in st.session_state:
     st.session_state["search_results"] = []
@@ -365,15 +363,7 @@ def handle_search(search_option, search_term, query_id, excluded_video):
         logger.info("searching...", search_term)
 
         if search_option == "keyframe":
-            if st.session_state["cached"].get(search_term):
-                logger.info("fetch from cache")
-                st.session_state["search_results"] = st.session_state["cached"].get(search_term)
-            else:
-                logger.info("fetch from source")
-                st.session_state["search_results"] = keyframe_search(
-                    search_term, limit=1000
-                )
-                st.session_state["cached"][search_term] = st.session_state["search_results"]
+            st.session_state["search_results"] = keyframe_search(search_term, limit=1000)
         elif search_option == "ocr":
             st.session_state["ocr_results"] = search_by_ocr(search_term)
         elif search_option == "temporal":
