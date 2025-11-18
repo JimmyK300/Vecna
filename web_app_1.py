@@ -6,7 +6,6 @@ import subprocess
 import tempfile
 import io
 import shutil
-import json
 
 import numpy as np
 import streamlit as st
@@ -14,7 +13,7 @@ from PIL import Image
 
 from keyframe_search import keyframe_search
 from helpers import get_logger
-from ocr_search import display_search_results, search_ocr_vintern, find_frame_idx_from_keyframe_id
+from ocr_search import display_search_results, search_by_ocr
 from temporal_search import search_by_temporal
 from transcript_search import transcript_search
 from dinov3_search import recommend
@@ -42,10 +41,6 @@ if "selected_keyframes" not in st.session_state:
 if "selected_sequences" not in st.session_state:
     st.session_state["selected_sequences"] = {}
 
-# Store OCR text mapping for display
-if "ocr_text_mapping" not in st.session_state:
-    st.session_state["ocr_text_mapping"] = {}
-
 # Pagination state
 if "current_page" not in st.session_state:
     st.session_state["current_page"] = 0
@@ -69,9 +64,6 @@ if "show_frame_dialog" not in st.session_state:
 
 if "last_search_term" not in st.session_state:
     st.session_state["last_search_term"] = ""
-
-if "api_client" not in st.session_state:
-    st.session_state["api_client"] = None
 
 logger = get_logger()
 
@@ -344,31 +336,10 @@ def setup_page():
         "Welcome to float19 Video Search. You can blah blah blah here. And blah blah blah there also."
     )
 
-
 def render_submission_ui():
     st.subheader("Submission")
     username = st.text_input("Username", value="team018")
     password = st.text_input("Password", value="u9K98nA67Q", type="password")
-
-    col1, col2 = st.columns([1, 4])
-    with col1:
-        login_button = st.button("Login")
-    
-    if login_button:
-        with st.spinner("Logging in..."):
-            client = EventRetrievalClient(username, password)
-            if client.login() and client.get_evaluation_list():
-                st.session_state.api_client = client
-                st.success("Login successful!")
-                st.rerun()
-            else:
-                st.error("Login failed. Please check credentials or API status.")
-
-    # Display Session ID and Evaluation ID if available
-    session_id = st.session_state.api_client.session_id if st.session_state.api_client else ""
-    evaluation_id = st.session_state.api_client.evaluation_id if st.session_state.api_client else ""
-    st.text_input("Session ID", value=session_id, disabled=True)
-    evaluation_id_input = st.text_input("Evaluation ID", value=evaluation_id)
     
     submission_type = st.radio("Submission Type", ("KIS", "QA", "TRAKE"))
     
@@ -386,16 +357,19 @@ def render_submission_ui():
         if not submission_content:
             st.warning("Submission content is empty.")
             return
-        
-        if not st.session_state.api_client:
-            st.error("Please login first before submitting.")
-            return
 
         with st.spinner("Submitting to API..."):
             try:
-                client = st.session_state.api_client
-                # Update evaluation ID from the text box before submitting
-                client.evaluation_id = evaluation_id_input
+                # Initialize client and login
+                client = EventRetrievalClient(username, password)
+                if not client.login():
+                    st.error("Login failed. Please check credentials.")
+                    return
+
+                # Get evaluation list
+                if not client.get_evaluation_list():
+                    st.error("Failed to get evaluation list.")
+                    return
                 
                 parts = [p.strip() for p in submission_content.split(',')]
                 submission_response = None
@@ -501,24 +475,7 @@ def handle_search(search_option, search_term, query_id, excluded_video):
         if search_option == "keyframe":
             st.session_state["search_results"] = keyframe_search(search_term, limit=1000)
         elif search_option == "ocr":
-            # search_ocr_vintern returns list of tuples: (video_id, keyframe_id, ocr_text)
-            ocr_matches = search_ocr_vintern(search_term)
-            # Convert to format expected by display_results: (video_id, file_name, frame_idx, similarity)
-            result_data = []
-            ocr_text_mapping = {}
-            
-            for video_id, keyframe_id, ocr_text in ocr_matches:
-                # Find frame index
-                frame_idx = find_frame_idx_from_keyframe_id(video_id, keyframe_id)
-                if frame_idx:
-                    file_name = f"{keyframe_id}.jpg"
-                    result_data.append((video_id, file_name, frame_idx, 0.0))
-                    # Store OCR text for this keyframe
-                    key = f"{video_id}/{keyframe_id}"
-                    ocr_text_mapping[key] = ocr_text
-            
-            st.session_state["ocr_results"] = result_data
-            st.session_state["ocr_text_mapping"] = ocr_text_mapping
+            st.session_state["ocr_results"] = search_by_ocr(search_term)
         elif search_option == "temporal":
             st.session_state["temporal_results"] = search_by_temporal(search_term, limit=200, excluded_video=excluded_video)
         elif search_option == "transcript":
@@ -589,7 +546,7 @@ def display_transcript_results():
         score = result['similarity_score']
         keyframes = result.get('keyframes', [])
 
-        st.subheader(f"Result {actual_idx + 1}: Video {video_id} | Similarity: {score:.4f}")
+        st.subheader(f"Result {actual_idx + 1}: Video `{video_id}` | Similarity: `{score:.4f}`")
         st.markdown(f"> {sentence}")
 
         if not keyframes:
@@ -624,10 +581,8 @@ def display_transcript_results():
                             mapping = list(csv.reader(map_file))
                             k = int(kf_id)
                             if k < len(mapping):
-                                _, time_s, _, frame_idx = mapping[k]
-                                time_ms = int(float(time_s) * 1000)
-                                st.image(file_path, caption=f"{video_id} | frame: {frame_idx} | time: {time_ms}ms | score: {score:.4f}", width=WIDTH)
-                                st.caption(f"{video_id},{time_ms},{time_ms}")
+                                _, _, _, frame_idx = mapping[k]
+                                st.image(file_path, caption=f"{video_id} | frame: {frame_idx} | score: {score:.4f}", width=WIDTH)
                             else:
                                 st.image(file_path, caption=f"{video_id} | kf: {kf_id} | score: {score:.4f}", width=WIDTH)
                     except (FileNotFoundError, IndexError, ValueError):
@@ -683,7 +638,7 @@ def display_temporal_results():
         
         col1, col2 = st.columns([0.9, 0.1])
         with col1:
-            st.subheader(f"Sequence {actual_idx + 1}: Video {video_id} | Avg. Similarity: {avg_similarity:.4f}")
+            st.subheader(f"Sequence {actual_idx + 1}: Video `{video_id}` | Avg. Similarity: `{avg_similarity:.4f}`")
         with col2:
             if actual_idx not in st.session_state["selected_sequences"]:
                 st.session_state["selected_sequences"][actual_idx] = False
@@ -707,10 +662,8 @@ def display_temporal_results():
                             mapping = list(csv.reader(map_file))
                             k = int(kf_id)
                             if k < len(mapping):
-                                _, time_s, _, frame_idx = mapping[k]
-                                time_ms = int(float(time_s) * 1000)
-                                st.image(file_path, caption=f"{video_id} | frame: {frame_idx} | time: {time_ms}ms | score: {score:.4f}", width=WIDTH)
-                                st.caption(f"{video_id},{time_ms},{time_ms}")
+                                _, _, _, frame_idx = mapping[k]
+                                st.image(file_path, caption=f"{video_id} | frame: {frame_idx} | score: {score:.4f}", width=WIDTH)
                             else:
                                 st.image(file_path, caption=f"{video_id} | kf: {kf_id_str} | score: {score:.4f}", width=WIDTH)
                     except (FileNotFoundError, IndexError, ValueError):
@@ -770,9 +723,9 @@ def display_results(search_option):
             file_path = f"./data-staging/keyframes/{video}/{kf}.jpg"
             key = f"{video}/{kf}"
         else:  # For ocr_results
-            video_id, file_name, frame_idx, similarity = result
-            file_path = f"./data-staging/keyframes/{video_id}/{file_name}"
-            key = f"{video_id}/{file_name.split('.')[0]}"
+            subfolder, file_name, frame_idx, similarity = result
+            file_path = f"./data-staging/keyframes/{subfolder}/{file_name}"
+            key = f"{subfolder}/{file_name.split('.')[0]}"
 
         similarity = round(float(similarity), 5) if isinstance(similarity, (int, float)) else similarity
         column = [col1, col2, col3, col4][i % 4]
@@ -787,37 +740,14 @@ def display_results(search_option):
                             mapping = list(csv.reader(map_file))
                             k = int(kf)
                             if k < len(mapping):
-                                _, time_s, _, frame_idx = mapping[k]
-                                time_ms = int(float(time_s) * 1000)
-                                st.image(file_path, caption=f"{video} | frame: {frame_idx} | time: {time_ms}ms | score: {similarity:.4f}", width=WIDTH)
-                                st.caption(f"{video},{time_ms},{time_ms}")
+                                _, _, _, frame_idx = mapping[k]
+                                st.image(file_path, caption=f"{video} | frame: {frame_idx} | score: {similarity:.4f}", width=WIDTH)
                             else:
                                 st.image(file_path, caption=f"{video} | kf: {kf} | score: {similarity:.4f}", width=WIDTH)
                     except (FileNotFoundError, IndexError, ValueError):
                         st.image(file_path, caption=f"{video} | kf: {kf} | score: {similarity:.4f}", width=WIDTH)
                 else:  # For ocr_results, frame_idx is already available
-                    st.image(file_path, caption=f"{video_id} | frame: {frame_idx} | score: {similarity:.4f}", width=WIDTH)
-                    # Display OCR text if available
-                    if key in st.session_state.get("ocr_text_mapping", {}):
-                        ocr_text = st.session_state["ocr_text_mapping"][key]
-                        # Highlight the search term in the OCR text
-                        search_term = st.session_state.get("last_search_term", "")
-                        if search_term:
-                            highlighted_text = ocr_text.replace(
-                                search_term, 
-                                f"<mark style='background-color: yellow;'>{search_term}</mark>"
-                            )
-                            # Also try case-insensitive replacement
-                            if highlighted_text == ocr_text:
-                                import re
-                                pattern = re.compile(re.escape(search_term), re.IGNORECASE)
-                                highlighted_text = pattern.sub(
-                                    lambda m: f"<mark style='background-color: yellow;'>{m.group()}</mark>",
-                                    ocr_text
-                                )
-                            st.markdown(f"*OCR Text:* {highlighted_text}", unsafe_allow_html=True)
-                        else:
-                            st.markdown(f"*OCR Text:* {ocr_text}")
+                    st.image(file_path, caption=f"{subfolder} | frame: {frame_idx} | score: {similarity:.4f}", width=WIDTH)
             else:
                 st.warning(f"Image not found:\n{file_path}")
 
@@ -831,17 +761,17 @@ def display_results(search_option):
             with button_col1:
                 if st.button(f"view", key=f"view_{actual_idx}_{key}"):
                     play_dialog(
-                        video if search_option == "keyframe" else video_id,
+                        video if search_option == "keyframe" else subfolder,
                         kf if search_option == "keyframe" else file_name.split(".")[0],
                     )
             with button_col2:
                 if st.button(f"similar", key=f"similar_{actual_idx}_{key}"):
-                    video_id_param = video if search_option == "keyframe" else video_id
+                    video_id = video if search_option == "keyframe" else subfolder
                     kf_id = kf if search_option == "keyframe" else file_name.split(".")[0]
-                    handle_recommend(video_id_param, kf_id)
+                    handle_recommend(video_id, kf_id)
             with button_col3:
                 if st.button(f"frame", key=f"frame_{actual_idx}_{key}"):
-                    st.session_state["frame_viewer_video"] = video if search_option == "keyframe" else video_id
+                    st.session_state["frame_viewer_video"] = video if search_option == "keyframe" else subfolder
                     st.session_state["frame_number"] = 0
                     st.session_state["show_frame_dialog"] = True
                     st.rerun()
@@ -981,11 +911,11 @@ def handle_export(search_option, query_id, qa_answer, download_placeholder):
                     else:
                         f.write(f"{vid},{frame_idx}\n")
                 else:  # For ocr_results
-                    video_id, file_name, frame_idx, _ = result
+                    subfolder, file_name, frame_idx, _ = result
                     if is_qa:
-                        f.write(f"{video_id},{frame_idx},\"{qa_answer}\"\n")
+                        f.write(f"{subfolder},{frame_idx},\"{qa_answer}\"\n")
                     else:
-                        f.write(f"{video_id},{frame_idx}\n")
+                        f.write(f"{subfolder},{frame_idx}\n")
         logger.info(f"Exported {len(selected_results)} selected keyframes to the top of {outpath}")
 
     with download_placeholder:
