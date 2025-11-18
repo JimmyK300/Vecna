@@ -9,6 +9,7 @@ import csv
 import os
 import json
 import re
+import threading
 
 IMAGENET_MEAN = (0.485, 0.456, 0.406)
 IMAGENET_STD = (0.229, 0.224, 0.225)
@@ -84,18 +85,33 @@ def load_image(image_file, input_size=448, max_num=12):
     pixel_values = torch.stack(pixel_values)
     return pixel_values
 
-model = AutoModel.from_pretrained(
-    "5CD-AI/Vintern-1B-v3_5",
-    torch_dtype=torch.bfloat16,
-    low_cpu_mem_usage=True,
-    trust_remote_code=True,
-    use_flash_attn=False,
-).eval().cuda()
+model = None
+tokenizer = None
 
-tokenizer = AutoTokenizer.from_pretrained("5CD-AI/Vintern-1B-v3_5", trust_remote_code=True, use_fast=False)
+def init_model_and_tokenizer():
+    global model, tokenizer
+    # This function will be called once per worker process
+    print(f"Initializing model in process {os.getpid()}")
+    model = AutoModel.from_pretrained(
+        "5CD-AI/Vintern-1B-v3_5",
+        torch_dtype=torch.bfloat16,
+        low_cpu_mem_usage=True,
+        trust_remote_code=True,
+        use_flash_attn=False,
+    ).eval().cuda()
+
+    tokenizer = AutoTokenizer.from_pretrained("5CD-AI/Vintern-1B-v3_5", trust_remote_code=True, use_fast=False)
+
+def get_model_and_tokenizer():
+    # This ensures the model is initialized in the main process as well if needed
+    global model, tokenizer
+    if model is None or tokenizer is None:
+        init_model_and_tokenizer()
+    return model, tokenizer
+
 
 if __name__ == "__main__":
-    test_image = 'test-ocr-image3.jpg'
+    test_image = 'test-ocr-image1.jpg'
 
     pixel_values = load_image(test_image, max_num=6).to(torch.bfloat16).cuda()
     generation_config = dict(max_new_tokens= 1024, do_sample=False, num_beams = 3, repetition_penalty=2.5)
@@ -106,7 +122,8 @@ if __name__ == "__main__":
     '2.  **ocr**: Trích xuất toàn bộ văn bản (chữ) có thể nhận diện được từ hình ảnh. Nếu không có văn bản nào được nhận diện, hãy trả về "".\n' \
     'Đảm bảo rằng văn bản được trích xuất giữ nguyên định dạng và cấu trúc ban đầu.\n' \
     'Định dạng phản hồi phải là một đối tượng JSON với hai trường: "image-captioning" và "ocr".\n'
-
+    
+    model, tokenizer = get_model_and_tokenizer()
     response, history = model.chat(tokenizer, pixel_values, question, generation_config, history=None, return_history=True)
     print(f'User: {question}\nAssistant: {response}')
 
