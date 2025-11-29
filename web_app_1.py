@@ -331,9 +331,9 @@ def setup_page():
     </style>
     """
     st.markdown(hide_img_fs, unsafe_allow_html=True)
-    st.header("float19™ Video Search")
+    st.header("float97™ Video Search")
     st.write(
-        "Welcome to float19 Video Search. You can blah blah blah here. And blah blah blah there also."
+        "Welcome to float97 Video Search. You can blah blah blah here. And blah blah blah there also."
     )
 
 def render_submission_ui():
