@@ -1,4 +1,5 @@
-# 🎬 float19 Video Search - Keyframe Edition
+# 🎬 float97 - Multimodal Video Retrieval System
+## Ho Chi Minh City AI Challenge 2025
 
 This repository contains the implementation of the float97's video retrieval system, developed for the HCMC AI Challenge 2025. The system is designed to perform complex event retrieval on large, untrimmed video collections, covering domains such as news, sports, tourism, and cooking.
 
