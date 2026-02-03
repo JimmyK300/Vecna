@@ -1,17 +1,12 @@
-# 🎬 float97 - Multimodal Video Retrieval System
+# float97 - Multimodal Video Retrieval System
 ## Ho Chi Minh City AI Challenge 2025
 
 This repository contains the implementation of the float97's video retrieval system, developed for the HCMC AI Challenge 2025. The system is designed to perform complex event retrieval on large, untrimmed video collections, covering domains such as news, sports, tourism, and cooking.
 
-The solution addresses three primary competition tasks: Textual Known Item Search (KIS), Visual Question Answering (Q&A), and Temporal Retrieval and Alignment of Key Events (TRAKE).
-
-## ✨ Key Features
-
-- **Multimodal Search**: Retrieval is performed not just on visual features, but also on ASR transcripts, OCR text, and image captions.
-- **Temporal Alignment (TRAKE)**: Capable of handling complex temporal queries by decomposing events into sequential sub-queries to identify precise frame alignment.
-- **Visual Recommendation**: Includes a keyframe-based recommendation system leveraging DINOv3 to find visually similar moments.
-- **High-Performance Indexing**: Utilizes FAISS for efficient, large-scale vector similarity search.
-- **Interactive Interface**: A streamlined web application built with Streamlit that intelligently routes queries to the appropriate modality index.
+The solution addresses three primary competition tasks: 
+1. **Textual Known Item Search (KIS):** Identifying specific video segments based on natural language descriptions.
+2. **Visual Question Answering (Q&A):** Extracting contextual information from visual and auditory cues.
+3. **Temporal Retrieval and Alignment of Key Events (TRAKE):** Precise frame-level alignment through the decomposition of sequential event queries.
 
 ## Intended Pipeline
 
@@ -19,45 +14,25 @@ The solution addresses three primary competition tasks: Textual Known Item Searc
 
 > **⚠️ Work In Progress**: The components related to the **Vintern-1B-v3_5** model for OCR extraction and image captioning are currently under development. The related code has been moved to the `wip/` folder. The current system focuses on keyframe extraction, embedding generation, and multimodal search using SigLIP, DINOv3, and WhisperX.
 
-## 🏗️ System Architecture
+## System Architecture
 
-The architecture is divided into an Offline Processing Pipeline for indexing and an Online Retrieval Phase for user interaction.
+The architecture is divided into an **Offline Processing Pipeline** for indexing and an **Online Retrieval Phase** for user interaction.
 
 ### 1. Offline Indexing
 
-- **Keyframe Extraction**: Uses TransNetV2 (PyTorch implementation) to segment videos based on scene changes, reducing redundancy.
-- **Semantic Embeddings**: ViT-gopt-16-SigLIP2-384 encodes keyframes into rich semantic vectors.
-- **Audio Transcription**: WhisperX ("turbo" model) generates time-stamped Vietnamese transcripts.
-- **OCR & Captioning**: Vintern-1B-v3_5 extracts on-screen text and generates descriptive captions.
-- **Visual Similarity**: DINOv3 features are extracted to power the recommendation engine.
+- **Keyframe Extraction:** Uses **TransNetv2** (PyTorch implementation by [YangTuanAnh](https://github.com/YangTuanAnh/transnetv2_pytorch)) to segment videos based on scene changes, reducing redundancy.
+- **Semantic Embeddings:** **ViT-gopt-16-SigLIP2-384** encodes keyframes into rich semantic vectors.
+- **Audio Transcription:** **WhisperX** ("turbo" model) generates time-stamped Vietnamese transcripts.
+- **Visual Similarity:** **DINOv3** features are leveraged for recommendation systems and visual similarity searching.
+- **OCR & Captioning (WIP):** Integration of **Vintern-1B-v3_5** for extracting on-screen text and generating descriptive captions.
 
 ### 2. Online Retrieval
 
-- **Query Processing**: Text queries are embedded using SigLIP (for visual search) or all-MiniLM-L6-v2 (for transcript/OCR search).
-- **Search Engine**: FAISS indices are queried to retrieve the most relevant keyframes or video segments.
+- **Multimodal Routing:** Queries are dispatched to specific indices (Visual, ASR, or OCR) based on user intent.
+- **Vector Search**: **FAISS** provides similarity searches, enabling sub-second retrieval across datasets.
+- **User Interface:** A streamlined **Streamlit** dashboard for real-time interaction, result visualization, and submission formatting.
 
-## 📦 Installation
-
-**Requirements**: Python 3.10+ (tested on Python 3.10)
-
-### Option 1: Using Conda (Recommended)
-
-```bash
-conda create -n aic python=3.10
-conda activate aic
-pip install -r requirements.txt
-```
-
-### Option 2: Using Virtual Environment
-
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-
-## 📁 Project Structure
+## Project Structure
 
 Your project structure should look like this:
 
@@ -140,108 +115,52 @@ float97_Video_Search/
     └── submission/                      # Generated submission files
 ```
 
-### Processing Workflow
+## Deployment and Execution
 
-The system processes videos in the following stages:
+### Prerequisites
 
-1. **Scene Detection** (`transnetv2.py`)
-   - Analyzes videos to detect scene boundaries
-   - Outputs: `data-staging/preprocessing/*.npy`
+* Python 3.10+
+* NVIDIA GPU with CUDA support
 
-2. **Keyframe Extraction** (`keyframe_extractor.py`)
-   - Extracts representative frames from each scene
-   - Outputs: `data-staging/keyframes/*.jpg` and `data-staging/map-keyframes/*.csv`
-
-3. **Visual Embedding** (`keyframe_embedding.py`, `dinov3_embedding.py`)
-   - Generates semantic embeddings for visual search
-   - Outputs: `data-staging/siglip-features/*.npy`
-
-4. **Audio Processing** (`transcript_extractor.py`, `transcript_embedding.py`)
-   - Extracts audio and generates Vietnamese transcripts using WhisperX
-   - Creates embeddings for text-based search
-   - Outputs: `data-staging/transcripts/*.json`, `data-index/transcript_embeddings.npy`
-
-5. **Index Building**
-   - Creates FAISS indices for efficient similarity search
-   - Outputs: `data-index/*.index` files
-
-6. **Search & Retrieval** (`web_app.py`)
-   - Interactive web interface for querying the indexed data
-   - Supports visual search, transcript search, and temporal queries
-
-### Setup Data Directories
+### Installation
 
 ```bash
-# Create required directories
-mkdir -p data-source/videos
-mkdir -p data-staging/{keyframes,preprocessing,map-keyframes,clip-features,audios,audio-chunk-timestamps,transcripts}
-mkdir -p data-index
-mkdir -p submission
-```
+# Environment Setup
+conda create -n aic python=3.10 -y
+conda activate aic
+pip install -r requirements.txt
 
-Or run:
-
-```bash
+# Directory Initialization
 bash create-dir.sh
+
 ```
 
-### Add Your Videos
+### Pipeline Execution
 
-Place your MP4 video files in `data-source/videos/`:
-
-```bash
-# Example
-cp /path/to/your/videos/*.mp4 data-source/videos/
-```
-
-## �🚀 Quick Start
-
-### 1. Process Videos (Indexing)
-
-Run the complete pipeline to extract keyframes and generate embeddings:
+To process raw video data and generate the searchable index:
 
 ```bash
 bash run-pipeline.sh
+
 ```
 
-This will:
-
-- Extract keyframes from all videos in `data-source/videos/`
-- Generate CLIP embeddings for each keyframe
-- Build a FAISS search index
-
-### 2. Start the Web Interface
-
-**With GPU**: Set the library path first:
+### Launching the Web
 
 ```bash
-LD_LIBRARY_PATH=$CONDA_PREFIX/lib:/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
-```
+# Set library path for GPU optimization
+export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH
 
-Launch the Streamlit web application:
+# Execute web application
+streamlit run web_app.py --server.port 8501
 
-```bash
-streamlit run web_app.py --server.headless true
-```
-
-Or, set up the remote server, then run this command on the server:
-
-```bash
+# On the remote server, you might want to run this instead
 streamlit run web_app.py --server.address 0.0.0.0 --server.port 8501 --server.headless true
-```
-
-Then on your client device, go to:
 
 ```
-http://<tailscale-ip>:8501
-```
 
-### 3. Search Your Videos
+---
 
-- **Text Search**: Describe what you're looking for (e.g., "person walking")
-- **Export Results**: Select keyframes and download as CSV
-
-## 🔍 How It Works
+## Retrieval Methodology
 
 1. **Video Processing**: TransNetV2 analyzes videos to detect scene boundaries
 2. **Keyframe Selection**: Representative frames are extracted from each scene
@@ -249,15 +168,3 @@ http://<tailscale-ip>:8501
 4. **Index Building**: FAISS creates an efficient search index from all embeddings
 5. **Query Processing**: Text queries are encoded and matched against the index
 6. **Result Ranking**: Results are ranked by cosine similarity and returned
-
-## � Managing Dependencies
-
-We recommend using [uv](https://github.com/astral-sh/uv) for dependency management:
-
-```bash
-# Compile requirements
-uv pip compile requirements.in --output-file requirements.txt
-
-# Sync dependencies
-uv pip sync requirements.txt
-```
