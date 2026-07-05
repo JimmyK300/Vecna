@@ -38,3 +38,4 @@ Medium Priority
 Low Priority
 
 * **Supervised learning** to adjust the weights of late-fusion.
+* **ChatBot** to help with math problems/query expansion or to yap ;3
