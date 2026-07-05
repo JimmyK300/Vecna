@@ -12,27 +12,7 @@ This framing matters because the systems in this space differ not only in retrie
 
 ## Linked source table
 
-| Source | Link | What it is | Why it matters |
-| --- | --- | --- | --- |
-| VISIONE GitHub | https://github.com/aimh-lab/visione | Official codebase | Best current adoption-test candidate for a build-from-base path. |
-| VISIONE paper/system description | https://arxiv.org/abs/2008.02749 | System paper | Explains VISIONE's multimodal retrieval and indexing design. |
-| VISIONE 5.0 / VBS2024 | https://videobrowsershowdown.org/teams/ | Competition evidence | Supports treating VISIONE as a serious, competitive system. |
-| vitrivr official architecture | https://vitrivr.org/vitrivr.html | Official architecture page | Best source for understanding the vitrivr stack. |
-| vitrivr getting started | https://vitrivr.org/getting_started.html | Official setup doc | Important for adoption-risk and setup-friction scoring. |
-| Cineast GitHub | https://github.com/vitrivr/cineast | Retrieval engine repository | Important for sketch, example-object, and motion-query capabilities. |
-| vitrivr-engine 2025 | https://dbis.dmi.unibas.ch/publications/2025/feature-driven-video-segmentation-and-advanced-querying-with-vitrivr-engine/ | Modern system paper | Useful for understanding newer vitrivr direction. |
-| VERGE official page | https://m4d.iti.gr/verge-interactive-image-video-retrieval-engine/ | Older system page | Reference point for older multimodal system design. |
-| VBS Teams and Papers | https://videobrowsershowdown.org/teams/ | Competition index | Useful for source discovery and system legitimacy checks. |
-| VBS 2025 results report | https://arxiv.org/html/2509.12000v1 | Evaluation report | Provides modern competition context and task pressure. |
-| VBS 2024 results report | https://arxiv.org/html/2502.15683v1 | Evaluation report | Provides the year/context in which VISIONE performed strongly. |
-| Fusionista2.0 | https://arxiv.org/abs/2511.12255 | System paper | Good efficiency-focused design reference for later stages. |
-| NII-UIT VBS2025 | https://dl.acm.org/doi/10.1007/978-981-96-2074-6_38 | System paper | Relevant for later LLM query expansion and temporal search ideas. |
-| H-EAGLE | https://doras.dcu.ie/32449/1/Heagle.pdf | Research paper | Useful future architecture reference, not a v0 baseline. |
-| PraK / relevance feedback success analysis | https://dl.acm.org/doi/10.1145/3805622.3810635 | Analysis paper | Useful for future reranking and relevance-feedback ideas. |
-| diveXplore 2024 | https://arxiv.org/abs/2508.20560 | System paper | Strong reference for browsing UI and query/result orchestration. |
-| GQE | https://arxiv.org/abs/2408.07249 | Method paper | Useful query-expansion reference for later iterations. |
-| RRF original paper | https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf | Method paper | Best simple fusion baseline for a custom or extended system. |
-| MMMORRF | https://arxiv.org/abs/2503.20698 | Method paper | Strong modality-aware fusion reference for CLIP/OCR/ASR style systems. |
+See [query_ranking_ui_candidates.csv](./query_ranking_ui_candidates.csv).
 
 ## Candidate snapshot
 
