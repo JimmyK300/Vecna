@@ -15,7 +15,7 @@ The simplest runnable baseline is a **Zero-shot Keyframe Retrieval Pipeline usin
 ### 3. Which modalities matter most?
 
 * **Visual (Keyframes):** This is the core modality. Without visual embeddings, text-to-video search is impossible.
-* **Text (OCR/ASR):** These are secondary but highly impactful for specific queries (e.g., searching for a news broadcast or a specific street sign). They should be added *after* the visual baseline is stable.
+* **Text (OCR/ASR):** These are secondary but highly impactful for specific queries (e.g., searching for a news broadcast or a specific street sign). They should be added *after* the 	visual baseline is stable.
 * **Object Detection**: For highly specific query
 * **Facial Recognition/Sound Event detection**: for specialized query like, "happy face"/"cat meowing"
 
