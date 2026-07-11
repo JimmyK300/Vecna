@@ -75,7 +75,7 @@ def keyframe_extractor(v):
     if not use_ffmpeg:
         cap = cv2.VideoCapture(video_path)
 
-    with open(map_path, "w") as mapping_file, open(file_path, "r") as file:
+    with open(map_path, "w", newline="") as mapping_file, open(file_path, "r") as file:
         mapping = csv.writer(mapping_file)
         mapping.writerow(["n", "pts_time", "fps", "frame_idx"])
         lines = file.readlines()

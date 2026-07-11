@@ -1,6 +1,4 @@
 import numpy as np
-from sentence_transformers import SentenceTransformer
-from sklearn.metrics.pairwise import cosine_similarity
 import os
 import json
 import pandas as pd
@@ -17,6 +15,7 @@ class TranscriptSearchEngine:
             input_dir (str): Directory containing embedding and metadata files.
         """
         print("Initializing TranscriptSearchEngine...")
+        from sentence_transformers import SentenceTransformer
         self.model = SentenceTransformer('all-MiniLM-L6-v2')
         self.embeddings, self.metadata = self._load_all_data(input_dir)
         if self.embeddings is not None:
@@ -119,6 +118,8 @@ class TranscriptSearchEngine:
             return []
 
         # Generate embedding for the query
+        from sklearn.metrics.pairwise import cosine_similarity
+
         query_embedding = self.model.encode([query])
 
         # Compute cosine similarity and flatten to a 1D array
@@ -169,12 +170,15 @@ class TranscriptSearchEngine:
         return results
 
 # --- Singleton instance management ---
-search_engine_instance = TranscriptSearchEngine()
+search_engine_instance = None
 
 def get_search_engine():
     """
     Returns the singleton instance of the TranscriptSearchEngine.
     """
+    global search_engine_instance
+    if search_engine_instance is None:
+        search_engine_instance = TranscriptSearchEngine()
     return search_engine_instance
 
 def transcript_search(query, top_k=100):
@@ -189,7 +193,7 @@ def transcript_search(query, top_k=100):
         list: A list of top search results.
     """
     # The engine is now initialized when the module is imported.
-    return search_engine_instance.search(query, top_k=top_k)
+    return get_search_engine().search(query, top_k=top_k)
 
 
 if __name__ == '__main__':

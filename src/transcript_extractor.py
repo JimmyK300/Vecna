@@ -14,9 +14,12 @@ batch_size = 1  # reduce if low on GPU mem
 # whisperx_model = whisperx.load_model(
 #     "large-v2", "cuda", compute_type="float16", language="vi"
 # )
+# whisperx_model = whisperx.load_model(
+#     # "large-v2", "cpu", compute_type="int8", language="vi"
+#     "turbo", "cuda", compute_type="int8", language="vi"
+# )
 whisperx_model = whisperx.load_model(
-    # "large-v2", "cpu", compute_type="int8", language="vi"
-    "turbo", "cuda", compute_type="int8", language="vi"
+    "turbo", "cpu", compute_type="int8", language="vi"
 )
 
 translator = Translator()

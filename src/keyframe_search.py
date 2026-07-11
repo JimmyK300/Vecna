@@ -1,10 +1,7 @@
 import csv
 from typing import Tuple, List
-import faiss
 import numpy as np
-import open_clip
 import torch
-from sklearn.preprocessing import normalize
 from PIL import Image
 
 from src.helpers import get_logger
@@ -17,6 +14,9 @@ logger = get_logger()
 class KeyframeSearchEngine:
     def __init__(self):
         """Initialize the keyframe search engine with CLIP model and FAISS index."""
+        import faiss
+        import open_clip
+
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         logger.info(f"Using device: {self.device}")
         
@@ -64,6 +64,7 @@ class KeyframeSearchEngine:
             tokenized = tokenized.to(self.device)
         query_feature = self.model.encode_text(tokenized)
         query_embedding = query_feature.detach().cpu().numpy().reshape(1, -1).astype("float32")
+        from sklearn.preprocessing import normalize
         query_embedding = normalize(query_embedding, axis=1)
         
         # Search in FAISS index
@@ -104,6 +105,7 @@ class KeyframeSearchEngine:
             image_feature /= image_feature.norm(dim=-1, keepdim=True)
         
         query_embedding = image_feature.detach().cpu().numpy().astype("float32")
+        from sklearn.preprocessing import normalize
         query_embedding = normalize(query_embedding, axis=1)
         
         # Search in FAISS index
@@ -122,12 +124,16 @@ class KeyframeSearchEngine:
         return results
 
 
-# Initialize global search engine instance
-search_engine = KeyframeSearchEngine()
+# The model and index are large and are not included in the repository. Load
+# them only when a keyframe search is actually requested.
+search_engine = None
 
 
 def get_search_engine():
     """Get or create the global search engine instance."""
+    global search_engine
+    if search_engine is None:
+        search_engine = KeyframeSearchEngine()
     return search_engine
 
 

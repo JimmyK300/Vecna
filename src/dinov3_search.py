@@ -5,14 +5,15 @@ from PIL import Image, UnidentifiedImageError
 from typing import List, Tuple, Set, Dict
 from pathlib import Path
 import torch
-import faiss
-from transformers import AutoImageProcessor, AutoModel
 
 class DinoV3SearchEngine:
     def __init__(self, index_path: str, metadata_path: str):
         """
         Initializes the search engine by loading the FAISS index and metadata.
         """
+        import faiss
+        from transformers import AutoImageProcessor, AutoModel
+
         self.index = faiss.read_index(index_path)
         self.metadata = np.load(metadata_path, allow_pickle=True)
 

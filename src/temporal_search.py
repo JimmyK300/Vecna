@@ -1,9 +1,6 @@
 import itertools
 from typing import List, Tuple
-from PIL import Image
 import torch
-from sklearn.preprocessing import normalize
-import numpy as np
 
 from src.keyframe_search import keyframe_search
 from src.helpers import get_logger
