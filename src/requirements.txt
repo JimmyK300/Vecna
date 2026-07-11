@@ -1,0 +1,37 @@
+streamlit==1.38
+numpy==1.23.5
+--extra-index-url https://download.pytorch.org/whl/cu121
+torch
+torchvision
+torchaudio
+ffmpeg-python
+opencv-python==4.8.0.74
+pillow
+
+git+https://github.com/YangTuanAnh/transnetv2_pytorch.git#egg=transnetv2_pytorch
+whisperx
+sentence_transformers
+googletrans
+easyocr
+
+# FAISS for vector search
+faiss-gpu
+
+# CLIP for keyframe embedding
+open_clip_torch
+
+# Image processing
+Pillow
+
+# Scientific computing
+scikit-learn
+scipy
+
+# Utilities
+loguru
+tqdm
+pandas
+
+# Development tools
+black
+isort
