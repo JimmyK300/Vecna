@@ -1,0 +1,517 @@
+import hashlib
+import time
+from typing import Optional
+
+import torch
+from pymilvus import AnnSearchRequest, RRFRanker, WeightedRanker
+
+import aic51.packages.constant as constant
+from aic51.packages.analyse import FeatureExtractorFactory
+from aic51.packages.config import GlobalConfig
+from aic51.packages.index import MilvusDatabase
+from aic51.packages.logger import logger
+
+from . import constants
+from .utils import Query
+
+
+class Searcher(object):
+    cache = {}
+
+    def __init__(self, collection_name: str, device: torch.device = torch.device("cpu")):
+        self._database = MilvusDatabase(collection_name)
+        self._prepare_feature_extractors(device)
+
+    def to(self, device):
+        self._device = torch.device(device)
+        for e in self._extractors.values():
+            e.to(device)
+
+    def get(self, id):
+        return self._database.get(id)
+
+    @property
+    def features_extractor(self):
+        return list(self._extractors.keys())
+
+    @property
+    def target_features(self):
+        return list(self._features.keys())
+
+    @property
+    def support_ocr(self):
+        return self._ocr_name is not None
+
+    @property
+    def support_asr(self):
+        return self._asr_name is not None
+
+    def search_multimodal(
+        self,
+        q: str,
+        offset: int = 0,
+        limit: int = 50,
+        target_features: list = [],
+        /,
+        nprobe: int = 8,
+        temporal_k: int = 10000,
+        ocr_weight: float = 0.5,
+        asr_weight: float = 0.0,
+        max_interval: int = 250,
+        selected: str | None = None,
+    ):
+        start_time = time.time()
+        query = Query(q)
+
+        if query.simple:
+            logger.info(f"searcher: get video_ids={query.video_ids}")
+            res = self._get_videos(query.video_ids, offset, limit, selected)
+        elif query.advance and not query.temporal:
+            logger.info(f"searcher: advance_search query={query.data}")
+            res = self._advance_search(query, offset, limit, target_features, ocr_weight=ocr_weight, asr_weight=asr_weight, nprobe=nprobe)
+        else:
+            logger.info(f"searcher: temporal_search query={query.data}")
+            res = self._temporal_search(
+                query,
+                offset,
+                limit,
+                target_features,
+                ocr_weight=ocr_weight,
+                asr_weight=asr_weight,
+                nprobe=nprobe,
+                temporal_k=temporal_k,
+                max_interval=max_interval,
+            )
+
+        end_time = time.time()
+        logger.info(f"searcher: Take {end_time - start_time:.4f} to extract and search")
+        return res
+
+    def search_image(
+        self,
+        id: str,
+        offset: int = 0,
+        limit: int = 50,
+        target_features: list = [],
+        /,
+        nprobe: int = 8,
+    ):
+        record = self._database.get(id)
+        if len(record) == 0:
+            return {"results": [], "total": 0, "offset": 0}
+
+        reqs = []
+        subquery_limit = offset + limit
+
+        for target_name in target_features:
+            if target_name not in self._features:
+                logger.warning(f"searcher: {target_name} is invalid feature")
+                continue
+
+            target_param = {
+                "nprobe": nprobe,
+                "metric_type": "COSINE",
+            }
+
+            m = self._features[target_name]
+            image_embedding = record[0][self._database.process_field_name(target_name)]
+
+            reqs.append(
+                AnnSearchRequest(
+                    data=[image_embedding],
+                    anns_field=self._database.process_field_name(target_name),
+                    param=target_param,
+                    limit=subquery_limit,
+                )
+            )
+
+        ranker = RRFRanker()
+
+        if len(reqs) > 0:
+            results = self._database.hybrid_search(
+                reqs,
+                ranker,
+                offset,
+                limit,
+            )[0]
+        else:
+            results = []
+
+        res = {
+            "results": results,
+            "total": self._database.get_size(),
+            "offset": offset,
+        }
+        return res
+
+    def _get_video_filter(self, video_ids: list[str]):
+        video_ids_fitler = " || ".join([f'frame_id like "{x.strip()}#%"' for x in video_ids])
+        return video_ids_fitler
+
+    def _similarity_search(
+        self,
+        query_features: dict,
+        video_ids: list[str],
+        offset: int = 0,
+        limit: int = 50,
+        target_features: list = [],
+        /,
+        ocr_weight: float = 0.5,
+        asr_weight: float = 0.0,
+        nprobe: int = 8,
+    ):
+        ocr_weight = max(0, min(1, ocr_weight))
+        asr_weight = max(0, min(1 - ocr_weight, asr_weight))
+        video_filter = self._get_video_filter(video_ids)
+
+        reqs = []
+        weights = []
+        subquery_limit = offset + limit
+
+        # 1. CLIP Search (using general "text" query)
+        clip_weight = 1.0 - ocr_weight - asr_weight
+        if "text" in query_features and clip_weight > 0:
+            clip_reqs = []
+            text_embeddings = {}
+            for target_name in target_features:
+                if target_name not in self._features:
+                    logger.warning(f"searcher: {target_name} is invalid feature")
+                    continue
+
+                target_param = {
+                    "nprobe": nprobe,
+                    "metric_type": "COSINE",
+                }
+
+                m = self._features[target_name]
+                if m not in text_embeddings:
+                    text_embeddings[m] = (
+                        self._extractors[m]["feature_extractor"].get_text_features(query_features["text"]).tolist()[0]
+                    )
+
+                clip_reqs.append(
+                    AnnSearchRequest(
+                        data=[text_embeddings[m]],
+                        anns_field=self._database.process_field_name(target_name),
+                        param=target_param,
+                        limit=subquery_limit,
+                        expr=video_filter,
+                    )
+                )
+            
+            if len(clip_reqs) > 0:
+                reqs.extend(clip_reqs)
+                weights.extend([clip_weight / len(clip_reqs) for _ in clip_reqs])
+
+        # 2. OCR Search (explicit ocr if available, else fallback to text if available)
+        if self._ocr_name and ocr_weight > 0:
+            ocr_list = []
+            if "ocr" in query_features:
+                ocr_list = query_features["ocr"]
+            elif "text" in query_features:
+                ocr_list = [query_features["text"]]
+
+            if len(ocr_list) > 0:
+                ocr_reqs = []
+                for ocr in ocr_list:
+                    ocr_reqs.append(
+                        AnnSearchRequest(
+                            data=[ocr],
+                            anns_field=self._ocr_name,
+                            param={},
+                            limit=subquery_limit,
+                            expr=video_filter,
+                        )
+                    )
+                reqs.extend(ocr_reqs)
+                weights.extend([ocr_weight / len(ocr_reqs) for _ in ocr_reqs])
+
+        # 3. ASR Search (explicit asr if available, else fallback to text if available)
+        if self._asr_name and asr_weight > 0:
+            asr_list = []
+            if "asr" in query_features:
+                asr_list = query_features["asr"]
+            elif "text" in query_features:
+                asr_list = [query_features["text"]]
+
+            if len(asr_list) > 0:
+                asr_reqs = []
+                for asr in asr_list:
+                    asr_reqs.append(
+                        AnnSearchRequest(
+                            data=[asr],
+                            anns_field=self._asr_name,
+                            param={},
+                            limit=subquery_limit,
+                            expr=video_filter,
+                        )
+                    )
+                reqs.extend(asr_reqs)
+                weights.extend([asr_weight / len(asr_reqs) for _ in asr_reqs])
+
+        ranker = WeightedRanker(*weights)
+
+        if len(reqs) > 0:
+            results = self._database.hybrid_search(
+                reqs,
+                ranker,
+                offset,
+                limit,
+            )[0]
+        else:
+            results = []
+
+        return results
+
+    def _advance_search(
+        self,
+        query: Query,
+        offset: int = 0,
+        limit: int = 50,
+        target_features: list = [],
+        /,
+        ocr_weight: float = 0.5,
+        asr_weight: float = 0.0,
+        nprobe: int = 8,
+    ):
+        query_features = query.data[0]["features"]
+
+        if len(query.video_ids) > 0:
+            results = self._similarity_search(
+                query_features,
+                query.video_ids,
+                0,
+                10000,
+                target_features,
+                ocr_weight=ocr_weight,
+                asr_weight=asr_weight,
+                nprobe=nprobe,
+            )
+            total = len(results)
+            results = results[offset : offset + limit]
+        else:
+            results = self._similarity_search(
+                query_features,
+                [],
+                offset,
+                limit,
+                target_features,
+                ocr_weight=ocr_weight,
+                asr_weight=asr_weight,
+                nprobe=nprobe,
+            )
+            total = self._database.get_size()
+
+        res = {
+            "results": results,
+            "total": total,
+            "offset": offset,
+        }
+        return res
+
+    def _temporal_search(
+        self,
+        query: Query,
+        offset: int = 0,
+        limit: int = 50,
+        target_features: list = [],
+        /,
+        ocr_weight: float = 0.5,
+        asr_weight: float = 0.0,
+        nprobe: int = 8,
+        temporal_k: int = 100,
+        max_interval: int = 100,
+    ):
+        params = {
+            "query": query.data,
+            "filter": filter,
+            "target_features": target_features,
+            "ocr_weight": ocr_weight,
+            "asr_weight": asr_weight,
+            "nprobe": nprobe,
+            "temporal_k": temporal_k,
+            "max_interval": max_interval,
+        }
+        query_str = f"{constants.CACHE_TEMPORAL_SEARCH}:{repr(params)}"
+        query_hash = hashlib.sha256(query_str.encode("utf-8")).hexdigest()
+
+        if query_hash in self.cache:
+            temporal_results = self.cache[query_hash]
+        else:
+            st = time.time()
+            results_list = []
+            for q in query.data:
+                results = self._similarity_search(
+                    q["features"],
+                    query.video_ids,
+                    0,
+                    temporal_k,
+                    target_features,
+                    ocr_weight=ocr_weight,
+                    asr_weight=asr_weight,
+                    nprobe=nprobe,
+                )
+                results_list.append(results)
+
+            en = time.time()
+            logger.info(f"searcher: Take {en-st:.4f} seconds to search results")
+
+            st = time.time()
+            temporal_results = self._combine_temporal_results(results_list, max_interval)
+            en = time.time()
+            logger.info(f"searcher: Take {en-st:.4f} seconds to combine results")
+
+            self.cache[query_hash] = temporal_results
+
+        if temporal_results is not None and offset < len(temporal_results):
+            results = temporal_results[offset : offset + limit]
+        else:
+            results = []
+
+        res = {
+            "results": results,
+            "total": len(temporal_results or []),
+            "offset": offset,
+        }
+        return res
+
+    def _combine_temporal_results(self, results_list: list, max_interval: int):
+        best = None
+
+        for i in range(len(results_list)):
+            res = results_list[i]
+            for j in range(len(res)):
+                video_id, frame_id = results_list[i][j]["entity"]["frame_id"].split("#")
+                results_list[i][j]["_id"] = (video_id, int(frame_id))
+                results_list[i][j]["time_line"] = [frame_id]
+
+        for i, res in enumerate(results_list[::-1]):
+            if best is None:
+                best = res[: constant.TEMPORAL_QUEUE_SIZE]
+                continue
+
+            tmp = []
+            res = sorted(res, key=lambda x: x["_id"])
+            best = sorted(best, key=lambda x: x["_id"])
+            l = 0
+            r = 0
+            for cur in res:
+                cur_vid, cur_fid = cur["_id"]
+
+                low_id = (cur_vid, cur_fid)
+                high_id = (cur_vid, cur_fid + max_interval)
+
+                cur_fid = int(cur_fid)
+
+                while l < len(best):
+                    next_id = best[l]["_id"]
+
+                    if next_id > low_id:
+                        break
+                    else:
+                        l += 1
+
+                while r < len(best):
+                    next_id = best[r]["_id"]
+
+                    if next_id > high_id:
+                        break
+                    else:
+                        r += 1
+
+                if l < r:
+                    for next in best[l:r]:
+                        _, cur_fid = cur["_id"]
+                        tmp.append(
+                            {
+                                **cur,
+                                "distance": cur["distance"] + next["distance"],
+                                "time_line": [*cur["time_line"], *next["time_line"]],
+                            }
+                        )
+
+            tmp = sorted(tmp, key=lambda x: x["distance"], reverse=True)
+            best = tmp[: constant.TEMPORAL_QUEUE_SIZE]
+
+        return best
+
+    def _get_videos(self, video_ids: list[str], offset: int = 0, limit: int = 10000, selected: Optional[str] = None):
+        query_str = f"{constants.CACHE_GET_VIDEOS}:{repr(video_ids)}"
+        query_hash = hashlib.sha256(query_str.encode("utf-8")).hexdigest()
+
+        if query_hash in self.cache:
+            videos = self.cache[query_hash]
+        elif len(video_ids) == 0:
+            videos = []
+        else:
+            video_ids_fitler = " || ".join([f'frame_id like "{x.strip()}#%"' for x in video_ids])
+            videos = self._database.query(video_ids_fitler, 0, 10000)
+            videos = sorted(videos, key=lambda x: x["frame_id"])
+            videos = [{"entity": x} for x in videos]
+            self.cache[query_hash] = videos
+
+        if selected:
+            for i, video in enumerate(videos):
+                if selected == video["entity"]["frame_id"]:
+                    offset = (i // limit) * limit
+                    break
+        res = {
+            "results": videos[offset : offset + limit],
+            "total": len(videos),
+            "offset": offset,
+        }
+        return res
+
+    def _prepare_feature_extractors(self, device: torch.device):
+        self._extractors = {}
+        self._features = {}
+        if GlobalConfig.get("searcher", "ocr", "enable"):
+            self._ocr_name = GlobalConfig.get("searcher", "ocr", "ocr_field") or "ocr"
+        else:
+            self._ocr_name = None
+
+        if GlobalConfig.get("searcher", "asr", "enable"):
+            self._asr_name = GlobalConfig.get("searcher", "asr", "asr_field") or "asr"
+        else:
+            self._asr_name = None
+
+        language_models = GlobalConfig.get("searcher", "language_models") or {}
+
+        for m in language_models.keys():
+            source = GlobalConfig.get("searcher", "language_models", m, "source")
+            model_name = GlobalConfig.get("searcher", "language_models", m, "model")
+            arch_name = GlobalConfig.get("searcher", "language_models", m, "arch_name")
+            pretrained_model = GlobalConfig.get("searcher", "language_models", m, "pretrained_model")
+            target_features = GlobalConfig.get("searcher", "language_models", m, "target")
+            batch_size = 1
+
+            assert model_name is not None
+
+            feature_extractor_cls = FeatureExtractorFactory.get(model_name)
+            if feature_extractor_cls:
+                feature_extractor = feature_extractor_cls.from_pretrained(
+                    source=source,
+                    arch_name=arch_name,
+                    pretrained_model=pretrained_model,
+                    name=m,
+                    batch_size=batch_size,
+                    device=device,
+                )
+            else:
+                feature_extractor = None
+
+            polite_name = f"{model_name}" + (f' from "{pretrained_model}"' if pretrained_model else "")
+            if feature_extractor:
+                logger.info(f"searcher: Loaded {polite_name} for searching")
+            else:
+                logger.error(f"searcher: {polite_name}: invalid feature extractor")
+                continue
+
+            if target_features is None or len(target_features) == 0:
+                logger.error(f"searcher: {polite_name} does not have target features")
+                continue
+
+            for t in target_features:
+                self._features[t] = m
+
+            self._extractors[m] = {"feature_extractor": feature_extractor, "target_features": target_features}
