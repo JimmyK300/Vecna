@@ -1,0 +1,43 @@
+# CPU environment for the complete local pipeline.
+# Target: Python 3.12+
+
+# Streamlit 1.38 requires protobuf<6, which conflicts with TensorFlow 2.21.
+# Newer Streamlit releases support the protobuf 6.x line.
+streamlit>=1.55,<2
+protobuf>=6.31.1,<8
+numpy>=2.0,<3
+pandas>=2.2
+scipy>=1.13
+scikit-learn>=1.5
+
+# CPU PyTorch stack
+torch==2.8.0
+torchvision==0.23.0
+torchaudio==2.8.0
+
+# TensorFlow/TransNetV2 CPU stage
+tensorflow==2.21.0
+tf-keras>=2.20
+ffmpeg-python
+
+# Video, image, and vector processing
+opencv-python>=4.8
+pillow>=10
+faiss-cpu
+open_clip_torch==3.3.0
+
+# Speech/transcript pipeline
+whisperx==3.8.6
+sentence-transformers==3.4.1
+transformers==4.57.6
+googletrans
+
+# Optional OCR and utilities
+easyocr
+requests
+loguru
+tqdm
+
+# Development
+black
+isort
