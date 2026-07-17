@@ -138,16 +138,52 @@ export default function Search() {
   // Add hotkeys
   useEffect(() => {
     const handleKeyDown = (e) => {
-      switch (e.keyCode) {
-        case 191:
-          const filterBar = document.querySelector("#search-area");
-          filterBar.scrollIntoView();
-          const searchBar = document.querySelector("#search-bar");
-          if (searchBar !== document.activeElement) {
+      if (e.keyCode === 191) {
+        const filterBar = document.querySelector("#search-area");
+        if (filterBar) filterBar.scrollIntoView();
+        const searchBar = document.querySelector("#search-bar");
+        if (searchBar && searchBar !== document.activeElement) {
+          e.preventDefault();
+          searchBar.focus();
+          return false;
+        }
+      }
+
+      if (e.keyCode === 9) {
+        const searchBar = document.querySelector("#search-bar");
+        const queryInputs = Array.from(document.querySelectorAll(
+          '[data-query-input="main"], [data-query-input="ocr"], [data-query-input="speech"]'
+        ));
+        const activeElement = document.activeElement;
+
+        const cycleElements = [];
+        if (searchBar) cycleElements.push(searchBar);
+        cycleElements.push(...queryInputs);
+
+        if (cycleElements.length > 0) {
+          if (cycleElements.includes(activeElement)) {
             e.preventDefault();
-            searchBar.focus();
-            return false;
+            const currentIndex = cycleElements.indexOf(activeElement);
+            let nextIndex;
+            if (e.shiftKey) {
+              if (currentIndex === 0) {
+                activeElement.blur();
+              } else {
+                nextIndex = currentIndex - 1;
+                cycleElements[nextIndex].focus();
+              }
+            } else {
+              nextIndex = (currentIndex + 1) % cycleElements.length;
+              cycleElements[nextIndex].focus();
+            }
+          } else {
+            e.preventDefault();
+            const targetElement = queryInputs.length > 0 ? queryInputs[0] : searchBar;
+            if (targetElement) {
+              targetElement.focus();
+            }
           }
+        }
       }
     };
     document.addEventListener("keydown", handleKeyDown);
@@ -162,12 +198,16 @@ export default function Search() {
       
       switch (e.keyCode) {
         case 38: // Up arrow - Previous page
-          e.preventDefault();
-          goToPreviousPage();
+          if (!isInInput) {
+            e.preventDefault();
+            goToPreviousPage();
+          }
           return;
         case 40: // Down arrow - Next page
-          e.preventDefault();
-          goToNextPage();
+          if (!isInInput) {
+            e.preventDefault();
+            goToNextPage();
+          }
           return;
         case 37: // Left arrow - Go 5s back (placeholder for video)
           if (!isInInput) {
@@ -218,12 +258,29 @@ export default function Search() {
           }
           return;
       }
+
+      // Shift + 1-0 to play video 1 to 10
+      if (e.shiftKey && !isInInput && ((e.keyCode >= 49 && e.keyCode <= 57) || e.keyCode === 48)) {
+        e.preventDefault();
+        const index = e.keyCode === 48 ? 9 : e.keyCode - 49;
+        const allDisplayedItems = [];
+        frames.forEach((frame) => {
+          const timeLines = frame.time_line || [];
+          timeLines.forEach((keyframe) => {
+            allDisplayedItems.push({ frame, keyframe });
+          });
+        });
+        if (allDisplayedItems[index]) {
+          const { frame, keyframe } = allDisplayedItems[index];
+          handleOnPlay(frame, keyframe);
+        }
+      }
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [offset]);
+  }, [offset, frames]);
 
   const goToFirstPage = () => {
     submit({ ...query, ...params, offset: 0 });
@@ -454,6 +511,7 @@ export default function Search() {
                         frame_id={keyframe}
                         thumbnail={`http://127.0.0.1:6900/api/files/${frame.video_id}/${keyframe}`}
                         timelineColor={getTimelineColor(idx)}
+                        highlighted={selected === `${frame.video_id}#${keyframe}`}
                         onPlay={() => {
                           handleOnPlay(frame, keyframe);
                         }}

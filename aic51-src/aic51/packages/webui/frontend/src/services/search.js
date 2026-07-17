@@ -83,3 +83,15 @@ export async function getTargetFeatures() {
   const data = res.data;
   return data;
 }
+
+export async function getVideoTranscript(videoId) {
+  const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/transcript/${videoId}`);
+  const data = res.data;
+  return data;
+}
+
+export async function getVideoKeyframes(videoId) {
+  const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/keyframes/${videoId}`);
+  const data = res.data;
+  return data;
+}

@@ -744,7 +744,7 @@ function AnswerHeader({}) {
 }
 
 function SelectedFramesPreview() {
-    const { selected } = useSelected();
+    const { selected, removeSelected } = useSelected();
     
     if (selected.length === 0) {
         return null;
@@ -752,11 +752,23 @@ function SelectedFramesPreview() {
     
     return (
         <div className="p-2 bg-green-100 border border-green-300 rounded">
-            <div className="text-sm font-bold text-green-800 mb-1">
+            <div className="text-sm font-bold text-green-800 mb-1.5">
                 Selected Frames ({selected.length}):
             </div>
-            <div className="text-xs text-green-700 break-words">
-                {selected.join(", ")}
+            <div className="flex flex-wrap gap-1">
+                {selected.map((frameId) => (
+                    <span 
+                        key={frameId}
+                        onClick={() => removeSelected(frameId)}
+                        className="inline-flex items-center gap-1 bg-white hover:bg-red-50 hover:text-red-700 text-green-700 border border-green-200 hover:border-red-200 rounded px-1.5 py-0.5 text-[10px] font-medium font-mono cursor-pointer transition-colors duration-150 shadow-sm"
+                        title="Click to deselect"
+                    >
+                        {frameId}
+                        <svg className="w-2.5 h-2.5 opacity-60 hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </span>
+                ))}
             </div>
         </div>
     );
