@@ -45,6 +45,7 @@ export async function addAnswer(answer) {
   await localforage.setItem("id_ptr", id + 1);
   return res;
 }
+
 export async function updateAnswer(id, new_answer) {
   const answers = await getAnswers();
   processAnswer(new_answer);
