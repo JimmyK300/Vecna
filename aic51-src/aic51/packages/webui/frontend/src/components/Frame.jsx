@@ -1,5 +1,5 @@
+import { useState, useEffect, useRef } from "react";
 import classNames from "classnames";
-import { useState } from "react";
 
 import PlayButton from "../assets/play-btn.svg";
 import SearchButton from "../assets/search-btn.svg";
@@ -12,6 +12,7 @@ export function FrameItem({
   frame_id,
   thumbnail,
   timelineColor,
+  highlighted,
   onPlay,
   onSearchSimilar,
   onSearchNearby,
@@ -19,6 +20,30 @@ export function FrameItem({
   const { selected, addSelected, removeSelected } = useSelected();
   const isSelected = selected.includes(id);
   const [isZoomed, setIsZoomed] = useState(false);
+  const elementRef = useRef(null);
+
+  useEffect(() => {
+    if (highlighted && elementRef.current) {
+      // Small timeout to ensure DOM layout is ready
+      const timer = setTimeout(() => {
+        elementRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [highlighted]);
+
+  useEffect(() => {
+    if (!isZoomed) return;
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" || e.keyCode === 27) {
+        setIsZoomed(false);
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isZoomed]);
   
   const handleSelect = () => {
     if (isSelected) {
@@ -31,9 +56,11 @@ export function FrameItem({
   return (
     <>
       <div
+        ref={elementRef}
         className={classNames("relative flex flex-col space-y-2 p-1 border-l-4 transition-all duration-200", {
-          "bg-white hover:bg-gray-300": !isSelected && !timelineColor,
+          "bg-white hover:bg-gray-300": !isSelected && !timelineColor && !highlighted,
           "bg-black border-l-black scale-105 shadow-lg ring-4 ring-yellow-400": isSelected,
+          "scale-105 shadow-lg ring-4 ring-cyan-500 bg-cyan-50 border-l-cyan-500": highlighted && !isSelected,
         }, !isSelected ? timelineColor : "")}
         onClick={handleSelect}
       >
