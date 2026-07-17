@@ -59,7 +59,7 @@ export function TemporalQueryContainer({
     const ocrs = [];
     const speeches = [];
     
-    let ocrRegex = /\[OCR:((".*?")|\S+)\]\s?/gi;
+    let ocrRegex = /\s?\[OCR:((".*?")|\S+)\]/gi;
     const ocrMatches = q.matchAll(ocrRegex);
     for (const match of ocrMatches) {
       let content = match[1];
@@ -70,7 +70,7 @@ export function TemporalQueryContainer({
       q = q.replace(match[0], "");
     }
     
-    let speechRegex = /\[asr:((".*?")|\S+)\]\s?/gi;
+    let speechRegex = /\s?\[asr:((".*?")|\S+)\]/gi;
     const speechMatches = q.matchAll(speechRegex);
     for (const match of speechMatches) {
       let content = match[1];
@@ -81,7 +81,7 @@ export function TemporalQueryContainer({
       q = q.replace(match[0], "");
     }
     
-    return { text: q.trim(), ocrs, speeches };
+    return { text: q, ocrs, speeches };
   };
   
   const buildQuery = (text, ocrs, speeches) => {
@@ -126,6 +126,7 @@ export function TemporalQueryContainer({
         }}
        alt={"Delete Button"}/>
       <textarea
+        data-query-input="main"
         className="text-sm bg-slate-100 text-slate-400 focus:bg-white focus:text-black focus:outline-none"
         rows={2}
         value={q}
@@ -138,6 +139,7 @@ export function TemporalQueryContainer({
         }}
       />
       <textarea
+        data-query-input="ocr"
         className="text-sm bg-slate-100 text-slate-400 focus:bg-white focus:text-black focus:outline-none"
         rows={1}
         placeholder="OCR text"
@@ -154,6 +156,7 @@ export function TemporalQueryContainer({
         onChange={handleOnOCRChange}
       />
       <textarea
+        data-query-input="speech"
         className="text-sm bg-slate-100 text-slate-400 focus:bg-white focus:text-black focus:outline-none"
         rows={1}
         placeholder="Speech/Audio text"

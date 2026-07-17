@@ -1,4 +1,6 @@
 from pathlib import Path
+import re
+import numpy as np
 
 from fastapi import Header, Request, Response
 from fastapi.encoders import jsonable_encoder
@@ -96,3 +98,137 @@ async def get_video(request: Request, video_id: str, range: str = Header(None)):
             "Accept-Ranges": "bytes",
         }
     return Response(data, status_code=206, headers=headers, media_type=constant.VIDEO_MEDIA_TYPE)
+
+
+def split_into_sentences(segment):
+    text = segment["text"]
+    # Split by standard sentence punctuation (dot, question mark, exclamation mark)
+    # keeping the punctuation with the sentence
+    sentences = [s.strip() for s in re.split(r'(?<=[.!?])\s+', text) if s.strip()]
+    if len(sentences) <= 1:
+        return [segment]
+        
+    total_len = sum(len(s) for s in sentences)
+    if total_len == 0:
+        return [segment]
+        
+    start_time = segment["start_time"]
+    end_time = segment["end_time"]
+    duration = end_time - start_time
+    
+    start_frame = segment["start_frame"]
+    end_frame = segment["end_frame"]
+    frame_diff = end_frame - start_frame
+    
+    sub_segments = []
+    current_time = start_time
+    current_frame = start_frame
+    
+    for i, s in enumerate(sentences):
+        s_len = len(s)
+        ratio = s_len / total_len
+        s_duration = duration * ratio
+        s_frames = frame_diff * ratio
+        
+        s_end_time = current_time + s_duration
+        s_end_frame = int(round(current_frame + s_frames))
+        
+        # Ensure we don't overshoot
+        if i == len(sentences) - 1:
+            s_end_time = end_time
+            s_end_frame = end_frame
+            
+        sub_segments.append({
+            "start_frame": int(round(current_frame)),
+            "start_time": current_time,
+            "end_frame": s_end_frame,
+            "end_time": s_end_time,
+            "text": s
+        })
+        
+        current_time = s_end_time
+        current_frame = s_end_frame
+        
+    return sub_segments
+
+
+@app.get("/api/video/transcript/{video_id}")
+async def get_video_transcript(video_id: str):
+    fps = get_fps(video_id)
+    features_path = Path.cwd() / constant.FEATURE_DIR / video_id
+    if not features_path.exists():
+        return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
+    
+    transcript = []
+    # Find all frame directories
+    frame_dirs = sorted(features_path.glob("*"))
+    for d in frame_dirs:
+        if d.is_dir() and d.name.isdigit():
+            asr_file = d / "asr.npy"
+            if asr_file.exists():
+                try:
+                    # load whisper text
+                    text = str(np.load(asr_file, allow_pickle=True))
+                    frame_id = int(d.name)
+                    # compute timestamp
+                    timestamp = frame_id / fps if fps else 0.0
+                    transcript.append({
+                        "frame_id": frame_id,
+                        "timestamp": timestamp,
+                        "text": text
+                    })
+                except Exception as e:
+                    logger.error(f"Error reading ASR for {video_id} {d.name}: {e}")
+    
+    # Group consecutive identical texts to produce clean transcript segments
+    grouped_transcript = []
+    current_segment = None
+    for entry in transcript:
+        text = entry["text"].strip()
+        if not text:
+            continue
+        if current_segment is None:
+            current_segment = {
+                "start_frame": entry["frame_id"],
+                "start_time": entry["timestamp"],
+                "end_frame": entry["frame_id"],
+                "end_time": entry["timestamp"],
+                "text": text
+            }
+        elif current_segment["text"] == text:
+            current_segment["end_frame"] = entry["frame_id"]
+            current_segment["end_time"] = entry["timestamp"]
+        else:
+            grouped_transcript.append(current_segment)
+            current_segment = {
+                "start_frame": entry["frame_id"],
+                "start_time": entry["timestamp"],
+                "end_frame": entry["frame_id"],
+                "end_time": entry["timestamp"],
+                "text": text
+            }
+    if current_segment is not None:
+        grouped_transcript.append(current_segment)
+        
+    # Split large aggregated segments into sentence-level segments
+    final_transcript = []
+    for segment in grouped_transcript:
+        final_transcript.extend(split_into_sentences(segment))
+        
+    return final_transcript
+
+
+@app.get("/api/video/keyframes/{video_id}")
+async def get_video_keyframes(video_id: str):
+    features_path = Path.cwd() / constant.FEATURE_DIR / video_id
+    if not features_path.exists():
+        return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
+    
+    keyframes = []
+    # Find all frame directories
+    frame_dirs = sorted(features_path.glob("*"))
+    for d in frame_dirs:
+        if d.is_dir() and d.name.isdigit():
+            keyframes.append(d.name)
+            
+    return keyframes
