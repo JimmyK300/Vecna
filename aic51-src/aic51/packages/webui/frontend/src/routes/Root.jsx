@@ -2,6 +2,7 @@ import { useLoaderData, Outlet } from "react-router-dom";
 
 import VideoProvider from "../components/VideoPlayer.jsx";
 import SelectedProvider from "../components/SelectedProvider.jsx";
+import AuthProvider from "../components/AuthProvider.jsx";
 
 import AnswerSidebar from "../components/Answer.jsx";
 import SearchParams from "../components/SearchParams.jsx";
@@ -19,9 +20,10 @@ export async function loader() {
 export default function Root() {
   const { targetFeatureOptions } = useLoaderData();
   return (
-    <SelectedProvider>
-      <VideoProvider>
-        <div className="flex flex-row">
+    <AuthProvider>
+      <SelectedProvider>
+        <VideoProvider>
+          <div className="flex flex-row">
           <div className="flex flex-col">
             <SearchParams />
             <div className="w-96 z-10">
@@ -32,5 +34,6 @@ export default function Root() {
         </div>
       </VideoProvider>
     </SelectedProvider>
+    </AuthProvider>
   );
 }
