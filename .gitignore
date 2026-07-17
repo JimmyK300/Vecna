@@ -14,7 +14,7 @@ eggs/
 # Virtual environments
 venv/
 env/
-.venv/
+.venv**/
 
 # IDE
 .vscode/
@@ -33,6 +33,10 @@ Desktop.ini
 
 # Dataset (large files)
 dataset/
+data**/
+
+# Logs
+**.log
 
 # Workspace
 workspace/
