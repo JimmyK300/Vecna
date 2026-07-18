@@ -1,6 +1,7 @@
 data-staging
 data-source
 data-index
+data/
 pack*-groupA
 submission
 .vscode
@@ -134,7 +135,7 @@ celerybeat.pid
 
 # Environments
 .env
-.venv
+.venv**/
 env/
 venv/
 ENV/
