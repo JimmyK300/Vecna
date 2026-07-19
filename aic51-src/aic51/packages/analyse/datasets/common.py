@@ -9,8 +9,6 @@ from PIL import Image
 from torch.utils.data import Dataset
 
 from aic51.packages.logger import logger
-from aic51.packages.utils.files import get_path
-
 
 class ImageDataset(Dataset):
     def __init__(
@@ -19,7 +17,7 @@ class ImageDataset(Dataset):
         self.samples = []
         for image in images:
             if isinstance(image, (Path, str)):
-                image = get_path(image)
+                image = Path(image)
 
             self.samples.append(image)
 
@@ -47,7 +45,7 @@ class VideoDataset(Dataset):
         self.samples = []
         for video in videos:
             if isinstance(video, (Path, str)):
-                video = get_path(video)
+                video = Path(video)
 
             self.samples.append(video)
 
@@ -60,7 +58,7 @@ class VideoDataset(Dataset):
         sample = self.samples[index]
 
         if isinstance(sample, (Path, str)):
-            sample = self.__read_video(get_path(sample))
+            sample = self.__read_video(Path(sample))
 
         if self.transform:
             sample = self.transform(sample)

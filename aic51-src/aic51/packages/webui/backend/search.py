@@ -13,7 +13,6 @@ from aic51.packages.utils import get_device
 
 from .utils import create_app, process_searcher_results, process_search_results
 
-
 def setup_searcher():
     collection_name = GlobalConfig.get("backends", "search", "collection") or "milvus"
     do_gpu = GlobalConfig.get("backends", "search", "gpu") or False

@@ -12,6 +12,7 @@ class GlobalConfig:
 
     @staticmethod
     def __load_config():
+        # Ensure that only one exist
         if GlobalConfig.__config:
             return GlobalConfig.__config
 

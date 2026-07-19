@@ -8,7 +8,6 @@ import torch
 
 import aic51.packages.constant as constant
 from aic51.packages.logger import logger
-from aic51.packages.utils.files import get_path
 
 from .feature_extractor import FeatureExtractor, FeatureExtractorFactory
 
@@ -42,7 +41,7 @@ class WhisperX(ASR):
         self.name = name
         self._batch_size = batch_size
         self._arch_name = arch_name
-        self._work_dir = get_path(work_dir)
+        self._work_dir = Path(work_dir)
         self._compute_type_gpu = "float16"  # workaround bug int8 trên Blackwell sm_120
         self._model = None
         self.to(device)

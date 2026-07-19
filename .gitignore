@@ -40,7 +40,10 @@ data**/
 
 # Workspace
 workspace/
+aic51-src/workspace
 
 # Agents / AI tooling
 .agents/
 .web/
+
+drive-download-20260718T204638Z-1-001/
