@@ -1,5 +1,5 @@
 # max workers ratio defining how much CPU cores to use
-max_workers_ratio: 0.25
+max_workers_ratio: 0.5
 
 add:
   default_size: [1280, 720]
@@ -68,7 +68,23 @@ features: &analyse_features
     index:
       default_value: ""
       datatype: "VARCHAR"
-      max_length: 2048
+      max_length: 8192
+      index_type: "BM25"
+      params:
+        bm25_k1: 1.2
+        bm25_b: 0.75
+        inverted_index_algo: "TAAT_NAIVE"
+
+  asr:
+    model: "asr"
+    source: "whisperx"
+    arch_name: "large-v3-turbo"
+    analyse:
+      batch_size: 16   # đây là batch_size nội bộ của whisperx.transcribe (chunk theo VAD), KHÔNG phải số clip xử lý song song
+    index:
+      default_value: ""
+      datatype: "VARCHAR"
+      max_length: 8192
       index_type: "BM25"
       params:
         bm25_k1: 1.2
@@ -89,6 +105,10 @@ searcher:
 
   ocr:
     ocr_field: "ocr_sparse"
+    enable: true
+    
+  asr:
+    asr_field: "asr_sparse"
     enable: true
 
 frontend:
@@ -117,6 +137,3 @@ backends:
   file:
     port: 4200
     workers: 1
-
-
-
