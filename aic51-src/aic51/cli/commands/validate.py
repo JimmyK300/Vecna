@@ -17,7 +17,6 @@ from aic51.packages.logger import logger
 
 from .command import BaseCommand
 
-
 class ValidateCommand(BaseCommand):
     SUPPORTED_EXT = [
         ".mp4",

@@ -14,9 +14,7 @@ from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
 import aic51.packages.constant as constant
 from aic51.packages.config import GlobalConfig
 from aic51.packages.logger import logger
-
 from .command import BaseCommand
-
 
 class AddCommand(BaseCommand):
     SUPPORTED_EXT = [
