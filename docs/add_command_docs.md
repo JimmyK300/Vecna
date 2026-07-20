@@ -32,30 +32,34 @@ The command creates the following directory structure inside the workspace:
 ```
 data/
 ├── videos/
-│   └── <video>.mp4
+│   └── <video_id>.mp4
 ├── video_info/
-│   └── <video>.json
+│   └── <video_id>.json
 ├── keyframes/
-│   └── <video_name>/
+│   └── <video_id>/
+        └── <frame_id>.jpg
 ├── thumbnails/
-│   └── <video_name>/
+│   └── <video_id>/
+        └── <frame_id>.jpg
 ├── video_clip/
-│   └── <video_name>/
+│   └── <video_id>/
+        └── <frame_id>.mp4
 ├── audio/
-│   └── <video_name>.wav
+│   └── <video_id>.wav
 └── audio_clip/
-    └── <video_name>/
+    └── <video_id>/
+        └── <frame_id>.wav
 ```
 
 | Path | Description | Requires |
 |---|---|---|
 | `data/videos/` | Imported videos | — |
 | `data/video_info/` | Metadata for each video (currently FPS only) | — |
-| `data/keyframes/<video_name>/` | Extracted keyframes | `-k` |
-| `data/thumbnails/<video_name>/` | Thumbnail images | `-k` |
-| `data/video_clip/<video_name>/` | Video clips centered on keyframes | `-k -c` |
-| `data/audio/<video_name>.wav` | Extracted audio | `-a` |
-| `data/audio_clip/<video_name>/` | Audio corresponding to each video clip | `-k -c -a` |
+| `data/keyframes/<video_id>/` | Extracted keyframes | `-k` |
+| `data/thumbnails/<video_id>/` | Thumbnail images | `-k` |
+| `data/video_clip/<video_id>/` | Video clips centered on keyframes | `-k -c` |
+| `data/audio/<video_id>.wav` | Extracted audio | `-a` |
+| `data/audio_clip/<video_id>/` | Audio corresponding to each video clip | `-k -c -a` |
 
 ## Class: `AddCommand`
 

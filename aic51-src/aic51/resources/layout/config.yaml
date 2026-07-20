@@ -1,5 +1,5 @@
 # max workers ratio defining how much CPU cores to use
-max_workers_ratio: 0.5
+max_workers_ratio: 0.25
 
 add:
   default_size: [1280, 720]
@@ -45,20 +45,20 @@ features: &analyse_features
       params:
         nlist: 512
 
-  video_clip_pe-l-14-336:
-    model: "video_clip"
-    source: "open_clip"
-    arch_name: "PE-Core-L-14-336"
-    pretrained_model: "meta" 
-    analyse:
-      batch_size: 8
-    index:
-      datatype: "FLOAT_VECTOR"
-      dim: 1024 
-      metric_type: "COSINE"
-      index_type: "SCANN"
-      params:
-        nlist: 512
+  # video_clip_pe-l-14-336:
+  #   model: "video_clip"
+  #   source: "open_clip"
+  #   arch_name: "PE-Core-L-14-336"
+  #   pretrained_model: "meta" 
+  #   analyse:
+  #     batch_size: 8
+  #   index:
+  #     datatype: "FLOAT_VECTOR"
+  #     dim: 1024 
+  #     metric_type: "COSINE"
+  #     index_type: "SCANN"
+  #     params:
+  #       nlist: 512
 
   ocr:
     model: "ocr"
