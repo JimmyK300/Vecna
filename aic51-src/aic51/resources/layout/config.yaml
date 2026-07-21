@@ -80,7 +80,7 @@ features: &analyse_features
     source: "whisperx"
     arch_name: "large-v3-turbo"
     analyse:
-      batch_size: 16   # đây là batch_size nội bộ của whisperx.transcribe (chunk theo VAD), KHÔNG phải số clip xử lý song song
+      batch_size: 16   # This is the internal batch_size of whisperx.transcribe (VAD chunking), not the number parralel clip being processed
     index:
       default_value: ""
       datatype: "VARCHAR"
