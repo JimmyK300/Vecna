@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Loads video(s) into the workspace and performs preprocessing — extracting keyframes, cutting audio, and generating short video clips centered on each keyframe.
+Loads video(s) into the workspace and preprocess all loaded data. Preprocessing includes extracting keyframes, cutting audio, and generating short video clips centered on each keyframe.
 
 ## Usage
 
