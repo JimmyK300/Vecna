@@ -112,7 +112,10 @@ The core preprocessing step. Performs three tasks in a single pass over the vide
 3. **If `-c`/`do_clip` is set:** writes a short `.mp4` clip (and, if `-a` is also set, a corresponding `.wav` clip) centered on each keyframe, sampling every `video_clip_interval`-th frame across a `clip_length`-second window. *(Unused in current pipeline.)*
 
 #### `_get_keyframes_list`
-Runs `ffprobe` to list every frame's picture type (I/P/B) and returns the indices of I-frames only. I-frames are is a self-contained image, like a JPG or BMP image file, making them reliable, scene-representative candidates for keyframes. Learn more about I-frame [here.](https://en.wikipedia.org/wiki/Video_compression_picture_types)
+Runs `ffprobe` to inspect every frame’s picture type (I, P, or B) and returns only the indices of I-frames.
+Video codecs such as those used in MP4 files compress video using different frame types. I-frames are self-contained frames that can be decoded without referring to surrounding frames, while P-frames and B-frames store predictions based on other frames.
+Because I-frames are independently decodable and are often inserted at scene changes or regular keyframe intervals, they can serve as fast and reliable keyframe candidates.
+Learn more about I-frames [here](https://en.wikipedia.org/wiki/Video_compression_picture_types).
 
 #### `_extract_video_info`
 Runs `_get_fps` and writes `{fps: ...}` as JSON to `data/video_info/<video_id>.json`. This is currently the only metadata persisted per video.
