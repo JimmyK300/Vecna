@@ -3,7 +3,7 @@ import time
 from typing import Optional
 
 import torch
-from pymilvus import AnnSearchRequest, RRFRanker, WeightedRanker
+from pymilvus import AnnSearchRequest, RRFRanker
 
 import aic51.packages.constant as constant
 from aic51.packages.analyse import FeatureExtractorFactory
@@ -148,6 +148,18 @@ class Searcher(object):
         video_ids_fitler = " || ".join([f'frame_id like "{x.strip()}#%"' for x in video_ids])
         return video_ids_fitler
 
+    @staticmethod
+    def _normalize_scores(score_map: dict) -> dict:
+        """Min-max normalize scores to [0, 1] range."""
+        if not score_map:
+            return {}
+        scores = list(score_map.values())
+        min_s = min(scores)
+        max_s = max(scores)
+        if max_s == min_s:
+            return {k: 1.0 for k in score_map}
+        return {k: (v - min_s) / (max_s - min_s) for k, v in score_map.items()}
+
     def _similarity_search(
         self,
         query_features: dict,
@@ -164,24 +176,25 @@ class Searcher(object):
         asr_weight = max(0, min(1 - ocr_weight, asr_weight))
         video_filter = self._get_video_filter(video_ids)
 
-        reqs = []
-        weights = []
         subquery_limit = offset + limit
+
+        # Score maps: frame_id -> raw score (per component)
+        clip_raw_scores = {}  # frame_id -> sum of raw CLIP scores
+        ocr_raw_scores = {}   # frame_id -> sum of raw OCR scores
+        asr_raw_scores = {}   # frame_id -> sum of raw ASR scores
+        all_frame_ids = set()
+        # Store entity data for each frame_id
+        entity_data = {}
 
         # 1. CLIP Search (using general "text" query)
         clip_weight = 1.0 - ocr_weight - asr_weight
+        clip_req_count = 0
         if "text" in query_features and clip_weight > 0:
-            clip_reqs = []
             text_embeddings = {}
             for target_name in target_features:
                 if target_name not in self._features:
                     logger.warning(f"searcher: {target_name} is invalid feature")
                     continue
-
-                target_param = {
-                    "nprobe": nprobe,
-                    "metric_type": "COSINE",
-                }
 
                 m = self._features[target_name]
                 if m not in text_embeddings:
@@ -189,21 +202,26 @@ class Searcher(object):
                         self._extractors[m]["feature_extractor"].get_text_features(query_features["text"]).tolist()[0]
                     )
 
-                clip_reqs.append(
-                    AnnSearchRequest(
-                        data=[text_embeddings[m]],
-                        anns_field=self._database.process_field_name(target_name),
-                        param=target_param,
-                        limit=subquery_limit,
-                        expr=video_filter,
-                    )
+                search_results = self._database.search(
+                    data=[text_embeddings[m]],
+                    filter=video_filter,
+                    offset=0,
+                    limit=subquery_limit,
+                    anns_field=target_name,
+                    search_params={"nprobe": nprobe, "metric_type": "COSINE"},
                 )
-            
-            if len(clip_reqs) > 0:
-                reqs.extend(clip_reqs)
-                weights.extend([clip_weight / len(clip_reqs) for _ in clip_reqs])
+                clip_req_count += 1
 
-        # 2. OCR Search (explicit ocr if available, else fallback to text if available)
+                if search_results and len(search_results) > 0:
+                    for hit in search_results[0]:
+                        fid = hit["entity"]["frame_id"]
+                        all_frame_ids.add(fid)
+                        clip_raw_scores[fid] = clip_raw_scores.get(fid, 0) + hit["distance"]
+                        if fid not in entity_data:
+                            entity_data[fid] = hit["entity"]
+
+        # 2. OCR Search
+        ocr_req_count = 0
         if self._ocr_name and ocr_weight > 0:
             ocr_list = []
             if "ocr" in query_features:
@@ -212,21 +230,27 @@ class Searcher(object):
                 ocr_list = [query_features["text"]]
 
             if len(ocr_list) > 0:
-                ocr_reqs = []
                 for ocr in ocr_list:
-                    ocr_reqs.append(
-                        AnnSearchRequest(
-                            data=[ocr],
-                            anns_field=self._ocr_name,
-                            param={},
-                            limit=subquery_limit,
-                            expr=video_filter,
-                        )
+                    search_results = self._database.search(
+                        data=[ocr],
+                        filter=video_filter,
+                        offset=0,
+                        limit=subquery_limit,
+                        anns_field=self._ocr_name,
+                        search_params={"metric_type": "BM25"},
                     )
-                reqs.extend(ocr_reqs)
-                weights.extend([ocr_weight / len(ocr_reqs) for _ in ocr_reqs])
+                    ocr_req_count += 1
 
-        # 3. ASR Search (explicit asr if available, else fallback to text if available)
+                    if search_results and len(search_results) > 0:
+                        for hit in search_results[0]:
+                            fid = hit["entity"]["frame_id"]
+                            all_frame_ids.add(fid)
+                            ocr_raw_scores[fid] = ocr_raw_scores.get(fid, 0) + hit["distance"]
+                            if fid not in entity_data:
+                                entity_data[fid] = hit["entity"]
+
+        # 3. ASR Search
+        asr_req_count = 0
         if self._asr_name and asr_weight > 0:
             asr_list = []
             if "asr" in query_features:
@@ -235,31 +259,55 @@ class Searcher(object):
                 asr_list = [query_features["text"]]
 
             if len(asr_list) > 0:
-                asr_reqs = []
                 for asr in asr_list:
-                    asr_reqs.append(
-                        AnnSearchRequest(
-                            data=[asr],
-                            anns_field=self._asr_name,
-                            param={},
-                            limit=subquery_limit,
-                            expr=video_filter,
-                        )
+                    search_results = self._database.search(
+                        data=[asr],
+                        filter=video_filter,
+                        offset=0,
+                        limit=subquery_limit,
+                        anns_field=self._asr_name,
+                        search_params={"metric_type": "BM25"},
                     )
-                reqs.extend(asr_reqs)
-                weights.extend([asr_weight / len(asr_reqs) for _ in asr_reqs])
+                    asr_req_count += 1
 
-        ranker = WeightedRanker(*weights)
+                    if search_results and len(search_results) > 0:
+                        for hit in search_results[0]:
+                            fid = hit["entity"]["frame_id"]
+                            all_frame_ids.add(fid)
+                            asr_raw_scores[fid] = asr_raw_scores.get(fid, 0) + hit["distance"]
+                            if fid not in entity_data:
+                                entity_data[fid] = hit["entity"]
 
-        if len(reqs) > 0:
-            results = self._database.hybrid_search(
-                reqs,
-                ranker,
-                offset,
-                limit,
-            )[0]
-        else:
-            results = []
+        # Normalize scores per component
+        clip_norm = self._normalize_scores(clip_raw_scores)
+        ocr_norm = self._normalize_scores(ocr_raw_scores)
+        asr_norm = self._normalize_scores(asr_raw_scores)
+
+        # Compute final weighted score for each frame
+        results = []
+        for fid in all_frame_ids:
+            clip_s = clip_norm.get(fid, 0.0)
+            ocr_s = ocr_norm.get(fid, 0.0)
+            asr_s = asr_norm.get(fid, 0.0)
+
+            final_score = clip_weight * clip_s + ocr_weight * ocr_s + asr_weight * asr_s
+
+            results.append({
+                "entity": entity_data[fid],
+                "distance": final_score,
+                "scores": {
+                    "final": round(final_score, 6),
+                    "clip": round(clip_s, 6),
+                    "ocr": round(ocr_s, 6),
+                    "asr": round(asr_s, 6),
+                    "clip_raw": round(clip_raw_scores.get(fid, 0.0), 6),
+                    "ocr_raw": round(ocr_raw_scores.get(fid, 0.0), 6),
+                    "asr_raw": round(asr_raw_scores.get(fid, 0.0), 6),
+                },
+            })
+
+        # Sort by final score descending
+        results.sort(key=lambda x: x["distance"], reverse=True)
 
         return results
 
@@ -290,17 +338,20 @@ class Searcher(object):
             total = len(results)
             results = results[offset : offset + limit]
         else:
+            # Fetch candidate pool (e.g. max 200 or offset+limit) for fast hybrid ranking
+            candidate_limit = max(200, offset + limit)
             results = self._similarity_search(
                 query_features,
                 [],
-                offset,
-                limit,
+                0,
+                candidate_limit,
                 target_features,
                 ocr_weight=ocr_weight,
                 asr_weight=asr_weight,
                 nprobe=nprobe,
             )
             total = self._database.get_size()
+            results = results[offset : offset + limit]
 
         res = {
             "results": results,

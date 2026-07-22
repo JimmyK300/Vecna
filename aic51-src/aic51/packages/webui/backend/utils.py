@@ -56,7 +56,8 @@ def process_searcher_results(searcher_res: dict):
                 "video_id": video_id,
                 "frame_id": frame_id,
                 "time_line": time_line,
-                "fps": fps
+                "fps": fps,
+                "scores": record.get("scores", None),
             }
         )
 

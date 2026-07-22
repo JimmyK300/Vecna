@@ -512,6 +512,7 @@ export default function Search() {
                         thumbnail={`http://127.0.0.1:6900/api/files/${frame.video_id}/${keyframe}`}
                         timelineColor={getTimelineColor(idx)}
                         highlighted={selected === `${frame.video_id}#${keyframe}`}
+                        scores={frame.scores}
                         onPlay={() => {
                           handleOnPlay(frame, keyframe);
                         }}

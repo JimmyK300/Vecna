@@ -204,6 +204,7 @@ export default function SearchSimilar() {
                 frame_id={frame.frame_id}
                 thumbnail={`http://127.0.0.1:6900/api/files/${frame.video_id}/${frame.frame_id}`}
                 timelineColor={getTimelineColor(frame.frame_id)}
+                scores={frame.scores}
                 onPlay={() => {
                   handleOnPlay(frame);
                 }}
