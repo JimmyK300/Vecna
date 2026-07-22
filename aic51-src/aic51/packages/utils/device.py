@@ -2,7 +2,6 @@ import torch
 
 from aic51.packages.logger import logger
 
-
 def get_device(do_gpu: bool):
     device = torch.device("cpu")
     if do_gpu:

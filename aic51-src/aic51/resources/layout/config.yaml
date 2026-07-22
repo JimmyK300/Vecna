@@ -45,20 +45,20 @@ features: &analyse_features
       params:
         nlist: 512
 
-  video_clip_pe-l-14-336:
-    model: "video_clip"
-    source: "open_clip"
-    arch_name: "PE-Core-L-14-336"
-    pretrained_model: "meta" 
-    analyse:
-      batch_size: 8
-    index:
-      datatype: "FLOAT_VECTOR"
-      dim: 1024 
-      metric_type: "COSINE"
-      index_type: "SCANN"
-      params:
-        nlist: 512
+  # video_clip_pe-l-14-336:
+  #   model: "video_clip"
+  #   source: "open_clip"
+  #   arch_name: "PE-Core-L-14-336"
+  #   pretrained_model: "meta" 
+  #   analyse:
+  #     batch_size: 8
+  #   index:
+  #     datatype: "FLOAT_VECTOR"
+  #     dim: 1024 
+  #     metric_type: "COSINE"
+  #     index_type: "SCANN"
+  #     params:
+  #       nlist: 512
 
   ocr:
     model: "ocr"
@@ -68,7 +68,23 @@ features: &analyse_features
     index:
       default_value: ""
       datatype: "VARCHAR"
-      max_length: 2048
+      max_length: 8192
+      index_type: "BM25"
+      params:
+        bm25_k1: 1.2
+        bm25_b: 0.75
+        inverted_index_algo: "TAAT_NAIVE"
+
+  asr:
+    model: "asr"
+    source: "whisperx"
+    arch_name: "large-v3-turbo"
+    analyse:
+      batch_size: 16   # This is the internal batch_size of whisperx.transcribe (VAD chunking), not the number parralel clip being processed
+    index:
+      default_value: ""
+      datatype: "VARCHAR"
+      max_length: 8192
       index_type: "BM25"
       params:
         bm25_k1: 1.2
@@ -89,6 +105,10 @@ searcher:
 
   ocr:
     ocr_field: "ocr_sparse"
+    enable: true
+    
+  asr:
+    asr_field: "asr_sparse"
     enable: true
 
 frontend:
@@ -117,6 +137,3 @@ backends:
   file:
     port: 4200
     workers: 1
-
-
-

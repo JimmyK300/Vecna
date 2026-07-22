@@ -6,9 +6,9 @@ import aic51.packages.constant as constant
 from aic51.packages.analyse import FeatureExtractor, FeatureExtractorFactory
 from aic51.packages.config import GlobalConfig
 from aic51.packages.logger import logger
+from aic51.packages.utils import get_device
 
 from .command import BaseCommand
-
 
 class AnalyseCommand(BaseCommand):
     def __init__(self, *args, **kwargs):
@@ -70,7 +70,7 @@ class AnalyseCommand(BaseCommand):
         **kwargs,
     ):
         feature_infos = GlobalConfig.get("features")
-        device = self._get_device(do_gpu)
+        device = get_device(do_gpu)
 
         if feature_infos is None:
             raise RuntimeError(f"Features are not specified. Check your config file.")
@@ -134,18 +134,6 @@ class AnalyseCommand(BaseCommand):
             ):
                 for video_id in video_ids:
                     self._analyse_one_video(feature_extractor, video_id, progress, do_overwrite)
-
-    def _get_device(self, do_gpu: bool):
-        device = torch.device("cpu")
-        if do_gpu:
-            if torch.cuda.is_available():
-                device = torch.device("cuda")
-            elif torch.backends.mps.is_available():
-                device = torch.device("mps")
-            else:
-                logger.warning("GPU is not available, fallbacked to CPU")
-
-        return device
 
     def _get_video_ids(self):
         keyframes_dir = self._work_dir / constant.KEYFRAME_DIR
