@@ -40,6 +40,39 @@ data**/
 
 # Workspace
 workspace/
+aic51-src/workspace
+
+# Agents / AI tooling
+.agents/
+.web/
+
+drive-download-20260718T204638Z-1-001/
+.secrets
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Dataset (large files)
+dataset/
+data**/
+
+# Logs
+**.log
+
+# Workspace
+workspace/
 
 # Agents / AI tooling
 .agents/

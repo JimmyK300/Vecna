@@ -14,10 +14,7 @@ from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
 import aic51.packages.constant as constant
 from aic51.packages.config import GlobalConfig
 from aic51.packages.logger import logger
-from aic51.packages.utils.files import get_path
-
 from .command import BaseCommand
-
 
 class AddCommand(BaseCommand):
     SUPPORTED_EXT = [
@@ -107,7 +104,7 @@ class AddCommand(BaseCommand):
         *args,
         **kwargs,
     ):
-        video_path = get_path(video_path)
+        video_path = Path(video_path)
 
         if not video_path.exists():
             logger.error(f"{video_path}: No such file or directory")
