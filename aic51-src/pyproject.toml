@@ -1,18 +1,18 @@
 [build-system]
 requires = ["setuptools>=73.0.1", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
-
 [project]
 name = "aic51"
-version = "2.0.1"
+version = "3.0.0"
 requires-python = ">= 3.10"
 readme = {file = "README.md", content-type = "text/markdown"}
 license = {file = "LICENSE"}
 dependencies = [
   "rich",
-  "torch", 
+  "torch",
   "torchvision",
-  "numpy==1.26.4",
+  "torchaudio",
+  "numpy",
   "transformers",
   "python-dotenv",
   "pyyaml",
@@ -26,12 +26,16 @@ dependencies = [
   "open_clip_torch",
   "pytesseract",
   "apscheduler",
-  "deep-translator"
+  "deep-translator",
+  "faster-whisper",
+  "ctranslate2>=4.5.0",
+  "pyannote.audio",
+  "nltk",
+  "pandas",
+  "whisperx"
 ]
-
 [project.scripts]
 aic51-cli = "aic51.cli:__main__.main"
-
 [tool.setuptools]
 packages = [
   "aic51",

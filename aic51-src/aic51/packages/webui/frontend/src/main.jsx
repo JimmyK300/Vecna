@@ -8,9 +8,9 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import Root, { loader as RootLoader } from "./routes/root.jsx";
-import Search, { loader as SearchLoader } from "./routes/search.jsx";
-import { loader as SearchSimilarLoader } from "./routes/searchsimilar.jsx";
+import Root, { loader as RootLoader } from "./routes/Root.jsx";
+import Search, { loader as SearchLoader } from "./routes/Search.jsx";
+import { loader as SearchSimilarLoader } from "./routes/SearchSimilar.jsx";
 import {
   action as AnswerAction,
   loader as AnswerLoader,
@@ -22,12 +22,12 @@ import "./index.css";
 
 const router = createBrowserRouter(
   createRoutesFromElements([
-      // eslint-disable-next-line react/jsx-key
+    // eslint-disable-next-line react/jsx-key
     <Route path="/" element={<Root />} loader={RootLoader}>
       <Route path="search" element={<Search />} loader={SearchLoader} />
       <Route path="similar" element={<Search />} loader={SearchSimilarLoader} />
     </Route>,
-      // eslint-disable-next-line react/jsx-key
+    // eslint-disable-next-line react/jsx-key
     <Route path="answers" action={AnswerAction} loader={AnswerLoader}>
       <Route path=":answerId">
         <Route path="delete" action={AnswerDeleteAction} />
