@@ -180,7 +180,7 @@ class ServeCommand(BaseCommand):
 
     def _install_frontend(self):
         logger.info("Installing frontend dependencies")
-        install_cmd = ["npm", "install"]
+        install_cmd = "npm install"
         subprocess.run(
             install_cmd,
             cwd=str(self._frontend_dir),
@@ -189,7 +189,7 @@ class ServeCommand(BaseCommand):
 
     def _build_frontend(self):
         logger.info("Building frontend dist")
-        build_cmd = ["npm", "run", "build"]
+        build_cmd = "npm run build"
 
         subprocess.run(
             build_cmd,
