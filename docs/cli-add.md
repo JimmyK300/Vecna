@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Loads video(s) into the workspace and performs preprocessing — extracting keyframes, cutting audio, and generating short video clips centered on each keyframe.
+Loads video(s) into the workspace and preprocess all loaded data. Preprocessing includes extracting keyframes, cutting audio, and generating short video clips centered on each keyframe.
 
 ## Usage
 
@@ -32,30 +32,34 @@ The command creates the following directory structure inside the workspace:
 ```
 data/
 ├── videos/
-│   └── <video>.mp4
+│   └── <video_id>.mp4
 ├── video_info/
-│   └── <video>.json
+│   └── <video_id>.json
 ├── keyframes/
-│   └── <video_name>/
+│   └── <video_id>/
+        └── <frame_id>.jpg
 ├── thumbnails/
-│   └── <video_name>/
+│   └── <video_id>/
+        └── <frame_id>.jpg
 ├── video_clip/
-│   └── <video_name>/
+│   └── <video_id>/
+        └── <frame_id>.mp4
 ├── audio/
-│   └── <video_name>.wav
+│   └── <video_id>.wav
 └── audio_clip/
-    └── <video_name>/
+    └── <video_id>/
+        └── <frame_id>.wav
 ```
 
 | Path | Description | Requires |
 |---|---|---|
 | `data/videos/` | Imported videos | — |
 | `data/video_info/` | Metadata for each video (currently FPS only) | — |
-| `data/keyframes/<video_name>/` | Extracted keyframes | `-k` |
-| `data/thumbnails/<video_name>/` | Thumbnail images | `-k` |
-| `data/video_clip/<video_name>/` | Video clips centered on keyframes | `-k -c` |
-| `data/audio/<video_name>.wav` | Extracted audio | `-a` |
-| `data/audio_clip/<video_name>/` | Audio corresponding to each video clip | `-k -c -a` |
+| `data/keyframes/<video_id>/` | Extracted keyframes | `-k` |
+| `data/thumbnails/<video_id>/` | Thumbnail images | `-k` |
+| `data/video_clip/<video_id>/` | Video clips centered on keyframes | `-k -c` |
+| `data/audio/<video_id>.wav` | Extracted audio | `-a` |
+| `data/audio_clip/<video_id>/` | Audio corresponding to each video clip | `-k -c -a` |
 
 ## Class: `AddCommand`
 
@@ -108,16 +112,19 @@ The core preprocessing step. Performs three tasks in a single pass over the vide
 3. **If `-c`/`do_clip` is set:** writes a short `.mp4` clip (and, if `-a` is also set, a corresponding `.wav` clip) centered on each keyframe, sampling every `video_clip_interval`-th frame across a `clip_length`-second window. *(Unused in current pipeline.)*
 
 #### `_get_keyframes_list`
-Runs `ffprobe` to list every frame's picture type (I/P/B) and returns the indices of I-frames only. I-frames are self-contained (no inter-frame prediction), making them reliable, scene-representative candidates for keyframes.
+Runs `ffprobe` to inspect every frame’s picture type (I, P, or B) and returns only the indices of I-frames.
+Video codecs such as those used in MP4 files compress video using different frame types. I-frames are self-contained frames that can be decoded without referring to surrounding frames, while P-frames and B-frames store predictions based on other frames.
+Because I-frames are independently decodable and are often inserted at scene changes or regular keyframe intervals, they can serve as fast and reliable keyframe candidates.
+Learn more about I-frames [here](https://en.wikipedia.org/wiki/Video_compression_picture_types).
 
 #### `_extract_video_info`
 Runs `_get_fps` and writes `{fps: ...}` as JSON to `data/video_info/<video_id>.json`. This is currently the only metadata persisted per video.
 
 #### `_get_fps`
-Parses `ffprobe`'s `r_frame_rate` output (a fraction, e.g. `"30000/1001"`) into a rounded integer FPS value.
+Parses `ffprobe` to return the integer FPS of the video.
 
 #### `_extract_audio`
-Runs `ffmpeg` to extract mono, 11kHz, 160kbps `.wav` audio to `data/audio/<video_id>.wav`. *(Unused in current pipeline.)*
+Runs `ffmpeg` to extract audio to `data/audio/<video_id>.wav`. *(Unused in current pipeline.)*
 
 #### `_compress_video`
-Re-encodes the video via `ffmpeg` using NVENC hardware encoding (`h264_nvenc`) at a reduced resolution (`default_size × compress_size_rate`), overwriting the original in place (rename → re-encode → delete renamed original). *(Unused in current pipeline.)*
+Re-encodes the video via `ffmpeg` using NVENC hardware encoding (`h264_nvenc`) at a reduced resolution. Cannot be run on AMD due to not supporting NVENC. *(Unused in current pipeline.)*

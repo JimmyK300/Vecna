@@ -24,6 +24,11 @@ aic51-cli analyse [options]
 > **Behavior of `--use-*` flags:**
 > - If **none** of the `--use-*` flags are specified, all feature extractors defined in `config.yaml` are executed by default.
 > - If **one or more** of these flags are specified, only the selected extractor(s) will be executed.
+>
+> **Note on Testing Individual Modules:**
+> If you wish to test/run a specific module individually, you should either:
+> 1. Use the corresponding CLI flag (e.g., `--use-asr`), OR
+> 2. Comment out the unused extractors under the `features:` block in `config.yaml` if running `aic51-cli analyse` without selection flags.
 
 ## Output
 
