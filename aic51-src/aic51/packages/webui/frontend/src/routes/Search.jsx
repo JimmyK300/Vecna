@@ -54,6 +54,7 @@ export async function loader({ request }) {
   const max_interval = searchParams.get("max_interval") || max_interval_default;
 
   const target_features = searchParams.get("target_features") || "";
+  const auto_translate = searchParams.get("auto_translate") || "";
 
   try {
     const { total, frames, offset } = await search(
@@ -67,6 +68,7 @@ export async function loader({ request }) {
       max_interval,
       selected,
       target_features,
+      auto_translate,
     );
     const query = q ? { q } : {};
 
@@ -79,7 +81,8 @@ export async function loader({ request }) {
         ocr_weight,
         asr_weight,
         max_interval,
-        target_features
+        target_features,
+        auto_translate
       },
       selected,
       offset,
@@ -98,7 +101,8 @@ export async function loader({ request }) {
         ocr_weight,
         asr_weight,
         max_interval,
-        target_features
+        target_features,
+        auto_translate
       },
       selected,
       offset: _offset,
@@ -389,6 +393,14 @@ export default function Search() {
     } else if (params.target_features) {
       currentParams.target_features = params.target_features;
     }
+
+    const autoTranslateCheckbox = document.querySelector("#auto_translate");
+    if (autoTranslateCheckbox) {
+      currentParams.auto_translate = autoTranslateCheckbox.checked ? "true" : "false";
+    } else if (params.auto_translate) {
+      currentParams.auto_translate = params.auto_translate;
+    }
+
     return currentParams;
   };
 
@@ -500,9 +512,11 @@ export default function Search() {
           <FrameContainer id="result">
             {frames.map((frame, idx) => {
               let timeLines = frame.time_line || [];
+              let timeLineScores = frame.time_line_scores || [];
               return (
                 <>
-                  {timeLines.map((keyframe) => {
+                  {timeLines.map((keyframe, keyframeIdx) => {
+                    const itemScores = (timeLineScores && timeLineScores[keyframeIdx]) || frame.scores;
                     return (
                       <FrameItem
                         key={String(frame.id) + String(idx) + String(keyframe)}
@@ -512,7 +526,7 @@ export default function Search() {
                         thumbnail={`http://127.0.0.1:6900/api/files/${frame.video_id}/${keyframe}`}
                         timelineColor={getTimelineColor(idx)}
                         highlighted={selected === `${frame.video_id}#${keyframe}`}
-                        scores={frame.scores}
+                        scores={itemScores}
                         onPlay={() => {
                           handleOnPlay(frame, keyframe);
                         }}

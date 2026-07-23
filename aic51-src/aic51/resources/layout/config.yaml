@@ -109,10 +109,6 @@ searcher:
   asr:
     asr_field: "asr_sparse"
     enable: true
-    
-  asr:
-    asr_field: "asr_sparse"
-    enable: true
 
 frontend:
   dev_port: 5173

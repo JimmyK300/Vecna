@@ -59,9 +59,10 @@ class Searcher(object):
         asr_weight: float = 0.0,
         max_interval: int = 250,
         selected: str | None = None,
+        auto_translate: bool = False,
     ):
         start_time = time.time()
-        query = Query(q)
+        query = Query(q, auto_translate=auto_translate)
 
         if query.simple:
             logger.info(f"searcher: get video_ids={query.video_ids}")
@@ -224,8 +225,12 @@ class Searcher(object):
         ocr_req_count = 0
         if self._ocr_name and ocr_weight > 0:
             ocr_list = []
-            if "ocr" in query_features:
+            if "ocr_translated" in query_features:
+                ocr_list = query_features["ocr_translated"]
+            elif "ocr" in query_features:
                 ocr_list = query_features["ocr"]
+            elif "text_translated" in query_features:
+                ocr_list = [query_features["text_translated"]]
             elif "text" in query_features:
                 ocr_list = [query_features["text"]]
 
@@ -253,8 +258,12 @@ class Searcher(object):
         asr_req_count = 0
         if self._asr_name and asr_weight > 0:
             asr_list = []
-            if "asr" in query_features:
+            if "asr_translated" in query_features:
+                asr_list = query_features["asr_translated"]
+            elif "asr" in query_features:
                 asr_list = query_features["asr"]
+            elif "text_translated" in query_features:
+                asr_list = [query_features["text_translated"]]
             elif "text" in query_features:
                 asr_list = [query_features["text"]]
 
@@ -375,7 +384,7 @@ class Searcher(object):
     ):
         params = {
             "query": query.data,
-            "filter": filter,
+            "video_ids": query.video_ids,
             "target_features": target_features,
             "ocr_weight": ocr_weight,
             "asr_weight": asr_weight,
@@ -435,6 +444,7 @@ class Searcher(object):
                 video_id, frame_id = results_list[i][j]["entity"]["frame_id"].split("#")
                 results_list[i][j]["_id"] = (video_id, int(frame_id))
                 results_list[i][j]["time_line"] = [frame_id]
+                results_list[i][j]["time_line_scores"] = [results_list[i][j].get("scores", {})]
 
         for i, res in enumerate(results_list[::-1]):
             if best is None:
@@ -473,11 +483,28 @@ class Searcher(object):
                 if l < r:
                     for next in best[l:r]:
                         _, cur_fid = cur["_id"]
+                        combined_dist = cur["distance"] + next["distance"]
+                        cur_scores = cur.get("scores", {})
+                        next_scores = next.get("scores", {})
+
+                        combined_scores = {
+                            "final": round(combined_dist, 6),
+                            "clip": round(cur_scores.get("clip", 0.0) + next_scores.get("clip", 0.0), 6),
+                            "ocr": round(cur_scores.get("ocr", 0.0) + next_scores.get("ocr", 0.0), 6),
+                            "asr": round(cur_scores.get("asr", 0.0) + next_scores.get("asr", 0.0), 6),
+                            "clip_raw": round(cur_scores.get("clip_raw", 0.0) + next_scores.get("clip_raw", 0.0), 6),
+                            "ocr_raw": round(cur_scores.get("ocr_raw", 0.0) + next_scores.get("ocr_raw", 0.0), 6),
+                            "asr_raw": round(cur_scores.get("asr_raw", 0.0) + next_scores.get("asr_raw", 0.0), 6),
+                        }
+                        cur_tls = cur.get("time_line_scores", [cur_scores])
+                        next_tls = next.get("time_line_scores", [next_scores])
                         tmp.append(
                             {
                                 **cur,
-                                "distance": cur["distance"] + next["distance"],
+                                "distance": combined_dist,
+                                "scores": combined_scores,
                                 "time_line": [*cur["time_line"], *next["time_line"]],
+                                "time_line_scores": [*cur_tls, *next_tls],
                             }
                         )
 

@@ -25,7 +25,8 @@ dependencies = [
   "jupyter",
   "open_clip_torch",
   "pytesseract",
-  "apscheduler"
+  "apscheduler",
+  "deep-translator"
 ]
 
 [project.scripts]
