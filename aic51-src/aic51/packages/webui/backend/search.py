@@ -53,6 +53,7 @@ async def search_multimodal(
     temporal_k: int = 10000,
     ocr_weight: float = 0.5,
     asr_weight: float = 0,
+    yolo_weight: float = 0,
     max_interval: int = 1000,
     selected: str | None = None,
 ):
@@ -75,6 +76,7 @@ async def search_multimodal(
             temporal_k=temporal_k,
             ocr_weight=ocr_weight,
             asr_weight=asr_weight,
+            yolo_weight=yolo_weight,
             max_interval=max_interval,
             selected=selected,
         )
@@ -96,6 +98,7 @@ async def search_multimodal(
         "temporal_k": temporal_k,
         "ocr_weight": ocr_weight,
         "asr_weight": asr_weight,
+        "yolo_weight": yolo_weight,
         "max_interval": max_interval,
     }
     return JSONResponse(

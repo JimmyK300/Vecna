@@ -7,6 +7,7 @@ import {
   temporal_k_default,
   ocr_weight_default,
   asr_weight_default,
+  yolo_weight_default,
   max_interval_default,
 } from "../resources/options.js";
 import { getTargetFeatures } from "../services/search.js";
@@ -40,6 +41,7 @@ export default function SearchParams() {
       temporal_k: searchParams.get('temporal_k') || temporal_k_default,
       ocr_weight: searchParams.get('ocr_weight') || ocr_weight_default,
       asr_weight: searchParams.get('asr_weight') || asr_weight_default,
+      yolo_weight: searchParams.get('yolo_weight') || yolo_weight_default,
       max_interval: searchParams.get('max_interval') || max_interval_default,
     };
 
@@ -88,11 +90,13 @@ export default function SearchParams() {
     submit(submitData, { action });
   };
 
-  const setWeights = (ocr, asr) => {
+  const setWeights = (ocr, asr, yolo = 0.0) => {
     const ocrElement = document.querySelector("#ocr_weight");
     const asrElement = document.querySelector("#asr_weight");
+    const yoloElement = document.querySelector("#yolo_weight");
     if (ocrElement) ocrElement.value = ocr;
     if (asrElement) asrElement.value = asr;
+    if (yoloElement) yoloElement.value = yolo;
   };
 
   return (
@@ -105,6 +109,7 @@ export default function SearchParams() {
           <Editable name="max_interval" defaultValue={max_interval_default} />
           <Editable name="asr_weight" defaultValue={asr_weight_default} />
           <Editable name="ocr_weight" defaultValue={ocr_weight_default} />
+          <Editable name="yolo_weight" defaultValue={yolo_weight_default} />
         </div>
 
         <div className="flex flex-col space-y-1 mt-2">
@@ -112,38 +117,38 @@ export default function SearchParams() {
           <div className="grid grid-cols-3 gap-1">
             <button
               type="button"
-              onClick={() => setWeights(0.0, 0.0)}
+              onClick={() => setWeights(0.0, 0.0, 0.0)}
               className="px-2 py-1 text-xs bg-blue-100 hover:bg-blue-200 border rounded text-blue-700 font-medium"
             >
               CLIP only
             </button>
             <button
               type="button"
-              onClick={() => setWeights(1.0, 0.0)}
+              onClick={() => setWeights(1.0, 0.0, 0.0)}
               className="px-2 py-1 text-xs bg-blue-100 hover:bg-blue-200 border rounded text-blue-700 font-medium"
             >
               OCR only
             </button>
             <button
               type="button"
-              onClick={() => setWeights(0.0, 1.0)}
-              className="px-2 py-1 text-xs bg-blue-100 hover:bg-blue-200 border rounded text-blue-700 font-medium"
+              onClick={() => setWeights(0.0, 0.0, 1.0)}
+              className="px-2 py-1 text-xs bg-emerald-100 hover:bg-emerald-200 border rounded text-emerald-700 font-medium"
             >
-              ASR only
+              YOLO only
             </button>
             <button
               type="button"
-              onClick={() => setWeights(0.5, 0.0)}
+              onClick={() => setWeights(0.5, 0.0, 0.0)}
               className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 border rounded text-gray-700 font-medium"
             >
               Default
             </button>
             <button
               type="button"
-              onClick={() => setWeights(0.3, 0.2)}
+              onClick={() => setWeights(0.3, 0.0, 0.4)}
               className="px-2 py-1 text-xs bg-purple-100 hover:bg-purple-200 border rounded text-purple-700 font-medium col-span-2"
             >
-              Hybrid (OCR: 0.3, ASR: 0.2)
+              Hybrid (OCR: 0.3, YOLO: 0.4)
             </button>
           </div>
         </div>

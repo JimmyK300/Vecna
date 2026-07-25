@@ -46,6 +46,10 @@ class Searcher(object):
     def support_asr(self):
         return self._asr_name is not None
 
+    @property
+    def support_yolo(self):
+        return self._yolo_name is not None
+
     def search_multimodal(
         self,
         q: str,
@@ -57,6 +61,7 @@ class Searcher(object):
         temporal_k: int = 10000,
         ocr_weight: float = 0.5,
         asr_weight: float = 0.0,
+        yolo_weight: float = 0.0,
         max_interval: int = 250,
         selected: str | None = None,
     ):
@@ -68,7 +73,7 @@ class Searcher(object):
             res = self._get_videos(query.video_ids, offset, limit, selected)
         elif query.advance and not query.temporal:
             logger.info(f"searcher: advance_search query={query.data}")
-            res = self._advance_search(query, offset, limit, target_features, ocr_weight=ocr_weight, asr_weight=asr_weight, nprobe=nprobe)
+            res = self._advance_search(query, offset, limit, target_features, ocr_weight=ocr_weight, asr_weight=asr_weight, yolo_weight=yolo_weight, nprobe=nprobe)
         else:
             logger.info(f"searcher: temporal_search query={query.data}")
             res = self._temporal_search(
@@ -78,6 +83,7 @@ class Searcher(object):
                 target_features,
                 ocr_weight=ocr_weight,
                 asr_weight=asr_weight,
+                yolo_weight=yolo_weight,
                 nprobe=nprobe,
                 temporal_k=temporal_k,
                 max_interval=max_interval,
@@ -158,10 +164,12 @@ class Searcher(object):
         /,
         ocr_weight: float = 0.5,
         asr_weight: float = 0.0,
+        yolo_weight: float = 0.0,
         nprobe: int = 8,
     ):
         ocr_weight = max(0, min(1, ocr_weight))
         asr_weight = max(0, min(1 - ocr_weight, asr_weight))
+        yolo_weight = max(0, min(1 - ocr_weight - asr_weight, yolo_weight))
         video_filter = self._get_video_filter(video_ids)
 
         reqs = []
@@ -169,7 +177,7 @@ class Searcher(object):
         subquery_limit = offset + limit
 
         # 1. CLIP Search (using general "text" query)
-        clip_weight = 1.0 - ocr_weight - asr_weight
+        clip_weight = 1.0 - ocr_weight - asr_weight - yolo_weight
         if "text" in query_features and clip_weight > 0:
             clip_reqs = []
             text_embeddings = {}
@@ -249,6 +257,29 @@ class Searcher(object):
                 reqs.extend(asr_reqs)
                 weights.extend([asr_weight / len(asr_reqs) for _ in asr_reqs])
 
+        # 4. YOLO Search (explicit yolo if available, else fallback to text if available)
+        if self._yolo_name and yolo_weight > 0:
+            yolo_list = []
+            if "yolo" in query_features:
+                yolo_list = query_features["yolo"]
+            elif "text" in query_features:
+                yolo_list = [query_features["text"]]
+
+            if len(yolo_list) > 0:
+                yolo_reqs = []
+                for yolo_item in yolo_list:
+                    yolo_reqs.append(
+                        AnnSearchRequest(
+                            data=[yolo_item],
+                            anns_field=self._yolo_name,
+                            param={},
+                            limit=subquery_limit,
+                            expr=video_filter,
+                        )
+                    )
+                reqs.extend(yolo_reqs)
+                weights.extend([yolo_weight / len(yolo_reqs) for _ in yolo_reqs])
+
         ranker = WeightedRanker(*weights)
 
         if len(reqs) > 0:
@@ -272,6 +303,7 @@ class Searcher(object):
         /,
         ocr_weight: float = 0.5,
         asr_weight: float = 0.0,
+        yolo_weight: float = 0.0,
         nprobe: int = 8,
     ):
         query_features = query.data[0]["features"]
@@ -285,6 +317,7 @@ class Searcher(object):
                 target_features,
                 ocr_weight=ocr_weight,
                 asr_weight=asr_weight,
+                yolo_weight=yolo_weight,
                 nprobe=nprobe,
             )
             total = len(results)
@@ -298,6 +331,7 @@ class Searcher(object):
                 target_features,
                 ocr_weight=ocr_weight,
                 asr_weight=asr_weight,
+                yolo_weight=yolo_weight,
                 nprobe=nprobe,
             )
             total = self._database.get_size()
@@ -318,6 +352,7 @@ class Searcher(object):
         /,
         ocr_weight: float = 0.5,
         asr_weight: float = 0.0,
+        yolo_weight: float = 0.0,
         nprobe: int = 8,
         temporal_k: int = 100,
         max_interval: int = 100,
@@ -328,6 +363,7 @@ class Searcher(object):
             "target_features": target_features,
             "ocr_weight": ocr_weight,
             "asr_weight": asr_weight,
+            "yolo_weight": yolo_weight,
             "nprobe": nprobe,
             "temporal_k": temporal_k,
             "max_interval": max_interval,
@@ -349,6 +385,7 @@ class Searcher(object):
                     target_features,
                     ocr_weight=ocr_weight,
                     asr_weight=asr_weight,
+                    yolo_weight=yolo_weight,
                     nprobe=nprobe,
                 )
                 results_list.append(results)
@@ -474,6 +511,11 @@ class Searcher(object):
             self._asr_name = GlobalConfig.get("searcher", "asr", "asr_field") or "asr"
         else:
             self._asr_name = None
+
+        if GlobalConfig.get("searcher", "yolo", "enable"):
+            self._yolo_name = GlobalConfig.get("searcher", "yolo", "yolo_field") or "yolo"
+        else:
+            self._yolo_name = None
 
         language_models = GlobalConfig.get("searcher", "language_models") or {}
 

@@ -1,0 +1,459 @@
+{
+  "overall_metrics": {
+    "total_queries": 16,
+    "recall_at_1": 0.0,
+    "recall_at_5": 0.0,
+    "recall_at_20": 0.0,
+    "mrr": 0.0,
+    "median_rank": 0.0,
+    "avg_latency_ms": 133.29
+  },
+  "category_breakdown": {
+    "actions": {
+      "total_queries": 2,
+      "recall_at_1": 0.0,
+      "recall_at_5": 0.0,
+      "recall_at_20": 0.0,
+      "mrr": 0.0,
+      "median_rank": 0.0,
+      "avg_latency_ms": 169.36
+    },
+    "asr_dependent": {
+      "total_queries": 2,
+      "recall_at_1": 0.0,
+      "recall_at_5": 0.0,
+      "recall_at_20": 0.0,
+      "mrr": 0.0,
+      "median_rank": 0.0,
+      "avg_latency_ms": 8.69
+    },
+    "combined": {
+      "total_queries": 2,
+      "recall_at_1": 0.0,
+      "recall_at_5": 0.0,
+      "recall_at_20": 0.0,
+      "mrr": 0.0,
+      "median_rank": 0.0,
+      "avg_latency_ms": 159.19
+    },
+    "hard_negatives": {
+      "total_queries": 2,
+      "recall_at_1": 0.0,
+      "recall_at_5": 0.0,
+      "recall_at_20": 0.0,
+      "mrr": 0.0,
+      "median_rank": 0.0,
+      "avg_latency_ms": 170.28
+    },
+    "ocr_dependent": {
+      "total_queries": 2,
+      "recall_at_1": 0.0,
+      "recall_at_5": 0.0,
+      "recall_at_20": 0.0,
+      "mrr": 0.0,
+      "median_rank": 0.0,
+      "avg_latency_ms": 43.73
+    },
+    "people_and_attributes": {
+      "total_queries": 2,
+      "recall_at_1": 0.0,
+      "recall_at_5": 0.0,
+      "recall_at_20": 0.0,
+      "mrr": 0.0,
+      "median_rank": 0.0,
+      "avg_latency_ms": 159.36
+    },
+    "temporal": {
+      "total_queries": 2,
+      "recall_at_1": 0.0,
+      "recall_at_5": 0.0,
+      "recall_at_20": 0.0,
+      "mrr": 0.0,
+      "median_rank": 0.0,
+      "avg_latency_ms": 162.76
+    },
+    "visual_objects_and_scenes": {
+      "total_queries": 2,
+      "recall_at_1": 0.0,
+      "recall_at_5": 0.0,
+      "recall_at_20": 0.0,
+      "mrr": 0.0,
+      "median_rank": 0.0,
+      "avg_latency_ms": 192.93
+    }
+  },
+  "modality_breakdown": {
+    "image_clip": {
+      "total_queries": 10,
+      "recall_at_1": 0.0,
+      "recall_at_5": 0.0,
+      "recall_at_20": 0.0,
+      "mrr": 0.0,
+      "median_rank": 0.0,
+      "avg_latency_ms": 170.94
+    },
+    "ocr": {
+      "total_queries": 2,
+      "recall_at_1": 0.0,
+      "recall_at_5": 0.0,
+      "recall_at_20": 0.0,
+      "mrr": 0.0,
+      "median_rank": 0.0,
+      "avg_latency_ms": 43.73
+    },
+    "asr": {
+      "total_queries": 2,
+      "recall_at_1": 0.0,
+      "recall_at_5": 0.0,
+      "recall_at_20": 0.0,
+      "mrr": 0.0,
+      "median_rank": 0.0,
+      "avg_latency_ms": 8.69
+    },
+    "asr+image_clip": {
+      "total_queries": 1,
+      "recall_at_1": 0.0,
+      "recall_at_5": 0.0,
+      "recall_at_20": 0.0,
+      "mrr": 0.0,
+      "median_rank": 0.0,
+      "avg_latency_ms": 157.58
+    },
+    "image_clip+ocr": {
+      "total_queries": 1,
+      "recall_at_1": 0.0,
+      "recall_at_5": 0.0,
+      "recall_at_20": 0.0,
+      "mrr": 0.0,
+      "median_rank": 0.0,
+      "avg_latency_ms": 160.8
+    }
+  },
+  "failure_taxonomy_counts": {
+    "correct_result_outside_top_20": 16
+  },
+  "detailed_results": [
+    {
+      "query_id": "q_001",
+      "query": "A red car parked near a modern glass building.",
+      "primary_category": "visual_objects_and_scenes",
+      "expected_modalities": [
+        "image_clip"
+      ],
+      "correct_video_id": "V008",
+      "correct_timestamp": 15.0,
+      "correct_result_rank": null,
+      "top_1_correct": false,
+      "top_5_correct": false,
+      "top_20_correct": false,
+      "latency_ms": 224.41,
+      "failure_reason": "correct_result_outside_top_20",
+      "top_1_result": null,
+      "top_5_results": [],
+      "top_20_results": [],
+      "notes": "Visual scene check for red car outdoor background."
+    },
+    {
+      "query_id": "q_002",
+      "query": "A person standing inside a spacious wooden kitchen.",
+      "primary_category": "visual_objects_and_scenes",
+      "expected_modalities": [
+        "image_clip"
+      ],
+      "correct_video_id": "V008",
+      "correct_timestamp": 50.0,
+      "correct_result_rank": null,
+      "top_1_correct": false,
+      "top_5_correct": false,
+      "top_20_correct": false,
+      "latency_ms": 161.44,
+      "failure_reason": "correct_result_outside_top_20",
+      "top_1_result": null,
+      "top_5_results": [],
+      "top_20_results": [],
+      "notes": "Indoor scene retrieval."
+    },
+    {
+      "query_id": "q_003",
+      "query": "A man wearing a blue suit jacket and glasses giving a speech.",
+      "primary_category": "people_and_attributes",
+      "expected_modalities": [
+        "image_clip"
+      ],
+      "correct_video_id": "V008",
+      "correct_timestamp": 80.0,
+      "correct_result_rank": null,
+      "top_1_correct": false,
+      "top_5_correct": false,
+      "top_20_correct": false,
+      "latency_ms": 162.44,
+      "failure_reason": "correct_result_outside_top_20",
+      "top_1_result": null,
+      "top_5_results": [],
+      "top_20_results": [],
+      "notes": "Attribute fine-grained person detection."
+    },
+    {
+      "query_id": "q_004",
+      "query": "A woman with blonde hair wearing a yellow hat outdoors.",
+      "primary_category": "people_and_attributes",
+      "expected_modalities": [
+        "image_clip"
+      ],
+      "correct_video_id": "V008",
+      "correct_timestamp": 115.0,
+      "correct_result_rank": null,
+      "top_1_correct": false,
+      "top_5_correct": false,
+      "top_20_correct": false,
+      "latency_ms": 156.28,
+      "failure_reason": "correct_result_outside_top_20",
+      "top_1_result": null,
+      "top_5_results": [],
+      "top_20_results": [],
+      "notes": "Person attribute query."
+    },
+    {
+      "query_id": "q_005",
+      "query": "A street sign showing the word B\u1ebeN TH\u00c0NH.",
+      "primary_category": "ocr_dependent",
+      "expected_modalities": [
+        "ocr"
+      ],
+      "correct_video_id": "V008",
+      "correct_timestamp": 135.0,
+      "correct_result_rank": null,
+      "top_1_correct": false,
+      "top_5_correct": false,
+      "top_20_correct": false,
+      "latency_ms": 79.46,
+      "failure_reason": "correct_result_outside_top_20",
+      "top_1_result": null,
+      "top_5_results": [],
+      "top_20_results": [],
+      "notes": "OCR text extraction check."
+    },
+    {
+      "query_id": "q_006",
+      "query": "A banner displaying the logo and text H\u00c0 N\u1ed8I 2024.",
+      "primary_category": "ocr_dependent",
+      "expected_modalities": [
+        "ocr"
+      ],
+      "correct_video_id": "V008",
+      "correct_timestamp": 155.0,
+      "correct_result_rank": null,
+      "top_1_correct": false,
+      "top_5_correct": false,
+      "top_20_correct": false,
+      "latency_ms": 8.01,
+      "failure_reason": "correct_result_outside_top_20",
+      "top_1_result": null,
+      "top_5_results": [],
+      "top_20_results": [],
+      "notes": "Banner OCR test."
+    },
+    {
+      "query_id": "q_007",
+      "query": "The news anchor mentions the economic forecast for next year.",
+      "primary_category": "asr_dependent",
+      "expected_modalities": [
+        "asr"
+      ],
+      "correct_video_id": "V008",
+      "correct_timestamp": 187.5,
+      "correct_result_rank": null,
+      "top_1_correct": false,
+      "top_5_correct": false,
+      "top_20_correct": false,
+      "latency_ms": 9.48,
+      "failure_reason": "correct_result_outside_top_20",
+      "top_1_result": null,
+      "top_5_results": [],
+      "top_20_results": [],
+      "notes": "ASR spoken transcript search."
+    },
+    {
+      "query_id": "q_008",
+      "query": "A speaker talking about artificial intelligence and machine learning.",
+      "primary_category": "asr_dependent",
+      "expected_modalities": [
+        "asr"
+      ],
+      "correct_video_id": "V008",
+      "correct_timestamp": 217.5,
+      "correct_result_rank": null,
+      "top_1_correct": false,
+      "top_5_correct": false,
+      "top_20_correct": false,
+      "latency_ms": 7.89,
+      "failure_reason": "correct_result_outside_top_20",
+      "top_1_result": null,
+      "top_5_results": [],
+      "top_20_results": [],
+      "notes": "ASR key phrase query."
+    },
+    {
+      "query_id": "q_009",
+      "query": "A person riding a bicycle down a steep hill.",
+      "primary_category": "actions",
+      "expected_modalities": [
+        "image_clip"
+      ],
+      "correct_video_id": "V008",
+      "correct_timestamp": 245.0,
+      "correct_result_rank": null,
+      "top_1_correct": false,
+      "top_5_correct": false,
+      "top_20_correct": false,
+      "latency_ms": 155.38,
+      "failure_reason": "correct_result_outside_top_20",
+      "top_1_result": null,
+      "top_5_results": [],
+      "top_20_results": [],
+      "notes": "Single frame action detection."
+    },
+    {
+      "query_id": "q_010",
+      "query": "A chef cutting vegetables on a wooden cutting board.",
+      "primary_category": "actions",
+      "expected_modalities": [
+        "image_clip"
+      ],
+      "correct_video_id": "V008",
+      "correct_timestamp": 275.0,
+      "correct_result_rank": null,
+      "top_1_correct": false,
+      "top_5_correct": false,
+      "top_20_correct": false,
+      "latency_ms": 183.34,
+      "failure_reason": "correct_result_outside_top_20",
+      "top_1_result": null,
+      "top_5_results": [],
+      "top_20_results": [],
+      "notes": "Action with object interaction."
+    },
+    {
+      "query_id": "q_011",
+      "query": "A car driving through a tunnel and then exiting into bright sunlight.",
+      "primary_category": "temporal",
+      "expected_modalities": [
+        "image_clip"
+      ],
+      "correct_video_id": "V008",
+      "correct_timestamp": 307.5,
+      "correct_result_rank": null,
+      "top_1_correct": false,
+      "top_5_correct": false,
+      "top_20_correct": false,
+      "latency_ms": 166.34,
+      "failure_reason": "correct_result_outside_top_20",
+      "top_1_result": null,
+      "top_5_results": [],
+      "top_20_results": [],
+      "notes": "Sequential temporal event query."
+    },
+    {
+      "query_id": "q_012",
+      "query": "First a close-up of a cup of coffee, then a wide shot of a cafe.",
+      "primary_category": "temporal",
+      "expected_modalities": [
+        "image_clip"
+      ],
+      "correct_video_id": "V008",
+      "correct_timestamp": 337.5,
+      "correct_result_rank": null,
+      "top_1_correct": false,
+      "top_5_correct": false,
+      "top_20_correct": false,
+      "latency_ms": 159.19,
+      "failure_reason": "correct_result_outside_top_20",
+      "top_1_result": null,
+      "top_5_results": [],
+      "top_20_results": [],
+      "notes": "Multi-shot temporal order query."
+    },
+    {
+      "query_id": "q_013",
+      "query": "A man wearing a red shirt says the name of a city.",
+      "primary_category": "combined",
+      "expected_modalities": [
+        "image_clip",
+        "asr"
+      ],
+      "correct_video_id": "V008",
+      "correct_timestamp": 365.0,
+      "correct_result_rank": null,
+      "top_1_correct": false,
+      "top_5_correct": false,
+      "top_20_correct": false,
+      "latency_ms": 157.58,
+      "failure_reason": "correct_result_outside_top_20",
+      "top_1_result": null,
+      "top_5_results": [],
+      "top_20_results": [],
+      "notes": "Combined CLIP visual and ASR text query."
+    },
+    {
+      "query_id": "q_014",
+      "query": "A news presenter standing beside text showing a particular date.",
+      "primary_category": "combined",
+      "expected_modalities": [
+        "image_clip",
+        "ocr"
+      ],
+      "correct_video_id": "V008",
+      "correct_timestamp": 395.0,
+      "correct_result_rank": null,
+      "top_1_correct": false,
+      "top_5_correct": false,
+      "top_20_correct": false,
+      "latency_ms": 160.8,
+      "failure_reason": "correct_result_outside_top_20",
+      "top_1_result": null,
+      "top_5_results": [],
+      "top_20_results": [],
+      "notes": "Combined visual and OCR query."
+    },
+    {
+      "query_id": "q_015",
+      "query": "A red car with a person stepping out of the vehicle.",
+      "primary_category": "hard_negatives",
+      "expected_modalities": [
+        "image_clip"
+      ],
+      "correct_video_id": "V008",
+      "correct_timestamp": 425.0,
+      "correct_result_rank": null,
+      "top_1_correct": false,
+      "top_5_correct": false,
+      "top_20_correct": false,
+      "latency_ms": 181.57,
+      "failure_reason": "correct_result_outside_top_20",
+      "top_1_result": null,
+      "top_5_results": [],
+      "top_20_results": [],
+      "notes": "Hard negative distinguishing similar red cars without exit action."
+    },
+    {
+      "query_id": "q_016",
+      "query": "A presenter holding a white gift box with a red ribbon.",
+      "primary_category": "hard_negatives",
+      "expected_modalities": [
+        "image_clip"
+      ],
+      "correct_video_id": "V008",
+      "correct_timestamp": 455.0,
+      "correct_result_rank": null,
+      "top_1_correct": false,
+      "top_5_correct": false,
+      "top_20_correct": false,
+      "latency_ms": 159.0,
+      "failure_reason": "correct_result_outside_top_20",
+      "top_1_result": null,
+      "top_5_results": [],
+      "top_20_results": [],
+      "notes": "Hard negative object color attribute match."
+    }
+  ]
+}

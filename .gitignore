@@ -44,3 +44,7 @@ workspace/
 # Agents / AI tooling
 .agents/
 .web/
+
+# Local databases
+milvus.db/
+

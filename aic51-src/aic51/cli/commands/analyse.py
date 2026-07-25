@@ -54,6 +54,12 @@ class AnalyseCommand(BaseCommand):
             action="store_true",
             help="Use OCR feature extractor",
         )
+        parser.add_argument(
+            "--use-yolo",
+            dest="use_yolo",
+            action="store_true",
+            help="Use YOLO feature extractor",
+        )
 
         parser.set_defaults(func=self)
 
@@ -66,6 +72,7 @@ class AnalyseCommand(BaseCommand):
         use_video_clip: bool = False,
         use_asr: bool = False,
         use_ocr: bool = False,
+        use_yolo: bool = False,
         *args,
         **kwargs,
     ):
@@ -79,7 +86,7 @@ class AnalyseCommand(BaseCommand):
 
         logger.info(f"Starting analyse process with (device={device})")
 
-        any_use_flag = use_image_clip or use_video_clip or use_asr or use_ocr
+        any_use_flag = use_image_clip or use_video_clip or use_asr or use_ocr or use_yolo
         target_models = set()
         if use_image_clip:
             target_models.add("image_clip")
@@ -89,6 +96,8 @@ class AnalyseCommand(BaseCommand):
             target_models.add("asr")
         if use_ocr:
             target_models.add("ocr")
+        if use_yolo:
+            target_models.add("yolo")
 
         for feature_name in feature_infos.keys():
             source = GlobalConfig.get("features", feature_name, "source")
