@@ -6,7 +6,7 @@ import aic51.packages.constant as constant
 from aic51.packages.analyse import FeatureExtractor, FeatureExtractorFactory
 from aic51.packages.config import GlobalConfig
 from aic51.packages.logger import logger
-from aic51.packages.utils import get_device
+from aic51.packages.utils import get_device, get_progress, get_executor
 
 from .command import BaseCommand
 
@@ -75,14 +75,7 @@ class AnalyseCommand(BaseCommand):
                 continue
 
             with (
-                Progress(
-                    TextColumn("{task.fields[name]}"),
-                    TextColumn(":"),
-                    SpinnerColumn(),
-                    *Progress.get_default_columns(),
-                    TimeElapsedColumn(),
-                    disable=not verbose,
-                ) as progress,
+                get_progress(disable=not verbose) as progress
             ):
                 for video_id in video_ids:
                     self._analyse_one_video(feature_extractor, video_id, progress, do_overwrite)

@@ -9,8 +9,8 @@ from pathlib import Path
 from typing import Callable
 
 import cv2
-from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
 
+from aic51.packages.utils import get_executor, get_progress
 import aic51.packages.constant as constant
 from aic51.packages.config import GlobalConfig
 from aic51.packages.logger import logger
@@ -148,18 +148,9 @@ class AddCommand(BaseCommand):
         do_compress_first: bool,
         verbose: bool,
     ):
-        max_workers_ratio = GlobalConfig.get("max_workers_ratio") or 0
-        max_workers = max(1, max_workers_ratio * (os.cpu_count() or 0))
         with (
-            Progress(
-                TextColumn("{task.fields[name]}"),
-                TextColumn(":"),
-                SpinnerColumn(),
-                *Progress.get_default_columns(),
-                TimeElapsedColumn(),
-                disable=not verbose,
-            ) as progress,
-            ThreadPoolExecutor(max_workers) as executor,
+            get_progress(disable = not verbose) as progress,
+            get_executor() as executor,
         ):
 
             def show_progress(task_id):
