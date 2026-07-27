@@ -10,3 +10,4 @@ pip install numpy==2.5.1
 pip install whisperx --no-deps
 
 pip install faster-whisper "ctranslate2>=4.5.0" pyannote.audio nltk pandas
+    
