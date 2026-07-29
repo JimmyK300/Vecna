@@ -1,6 +1,10 @@
-# setup_gpu.ps1
+# setup gpu
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
-or pip install --force-reinstall torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
+
+or
+
+pip install --force-reinstall torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
+
 pip install -e .
 
 # download numpy

@@ -17,6 +17,8 @@ export default function SearchParams() {
   const [targetFeatures, setTargetFeatures] = useState([]);
   const [selectedFeatures, setSelectedFeatures] = useState([]);
   
+  const [autoTranslate, setAutoTranslate] = useState(false);
+
   useEffect(() => {
     const fetchTargetFeatures = async () => {
       try {
@@ -49,6 +51,9 @@ export default function SearchParams() {
         element.value = v;
       }
     }
+
+    const autoTranslateParam = searchParams.get('auto_translate');
+    setAutoTranslate(autoTranslateParam === 'true');
 
     const targetFeaturesParam = searchParams.get('target_features');
     if (targetFeaturesParam) {
@@ -105,6 +110,21 @@ export default function SearchParams() {
           <Editable name="max_interval" defaultValue={max_interval_default} />
           <Editable name="asr_weight" defaultValue={asr_weight_default} />
           <Editable name="ocr_weight" defaultValue={ocr_weight_default} />
+        </div>
+
+        <div className="flex items-center justify-between p-2 bg-blue-50 border border-blue-200 rounded-lg">
+          <label htmlFor="auto_translate" className="text-xs font-semibold text-blue-900 cursor-pointer">
+            Auto-Translate EN ➔ VI (OCR/ASR)
+          </label>
+          <input
+            type="checkbox"
+            id="auto_translate"
+            name="auto_translate"
+            value="true"
+            checked={autoTranslate}
+            onChange={(e) => setAutoTranslate(e.target.checked)}
+            className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer"
+          />
         </div>
 
         <div className="flex flex-col space-y-1 mt-2">

@@ -16,10 +16,12 @@ export function FrameItem({
   onPlay,
   onSearchSimilar,
   onSearchNearby,
+  scores,
 }) {
   const { selected, addSelected, removeSelected } = useSelected();
   const isSelected = selected.includes(id);
   const [isZoomed, setIsZoomed] = useState(false);
+  const [showScores, setShowScores] = useState(false);
   const elementRef = useRef(null);
 
   useEffect(() => {
@@ -64,7 +66,21 @@ export function FrameItem({
         }, !isSelected ? timelineColor : "")}
         onClick={handleSelect}
       >
-        <img src={thumbnail} draggable="false" className="w-full h-auto" />
+        <div
+          className="relative"
+          onMouseEnter={() => setShowScores(true)}
+          onMouseLeave={() => setShowScores(false)}
+        >
+          <img src={thumbnail} draggable="false" className="w-full h-auto" />
+          {showScores && scores && (
+            <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-80 text-white text-xs p-1.5 space-y-0.5 pointer-events-none">
+              <div className="flex justify-between"><span>Final:</span><span className="font-bold text-yellow-300">{scores.final?.toFixed(4) ?? '-'}</span></div>
+              <div className="flex justify-between"><span>CLIP:</span><span className="font-bold text-green-300">{scores.clip?.toFixed(4) ?? '-'}</span></div>
+              <div className="flex justify-between"><span>OCR:</span><span className="font-bold text-blue-300">{scores.ocr?.toFixed(4) ?? '-'}</span></div>
+              <div className="flex justify-between"><span>ASR:</span><span className="font-bold text-purple-300">{scores.asr?.toFixed(4) ?? '-'}</span></div>
+            </div>
+          )}
+        </div>
         <div className="absolute top-0 left-0 space-x-2 flex flex-row bg-black bg-opacity-50 px-1">
           <div className="text-sm text-white">{frame_id}</div>
           <div className="text-sm text-nowrap overflow-hidden text-white">
