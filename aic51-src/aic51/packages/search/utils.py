@@ -1,18 +1,35 @@
 import re
 from copy import deepcopy
+from functools import lru_cache
+from deep_translator import GoogleTranslator
 
+from aic51.packages.logger import logger
 import aic51.packages.constant as global_constant
 
 from . import constants
 
 
+@lru_cache(maxsize=1024)
+def translate_en_to_vi(text: str) -> str:
+    if not text or not text.strip():
+        return text
+    try:
+        translated = GoogleTranslator(source="auto", target="vi").translate(text)
+        logger.info(f"auto_translate: '{text}' -> OK")
+        return translated
+    except Exception as e:
+        logger.error(f"auto_translate failed for '{text}': {e}")
+        return text
+
+
 class Query:
-    def __init__(self, query: str):
+    def __init__(self, query: str, auto_translate: bool = False):
         self._raw_query = deepcopy(query)
 
         self._query = deepcopy(query)
         self._queries: list = []
         self._video_ids = []
+        self._auto_translate = auto_translate
 
         self._parse()
 
@@ -111,18 +128,23 @@ class Query:
         raw, ocr_list = self._extract_ocr(raw)
         raw, asr_list = self._extract_asr(raw)
 
-
         raw = raw.strip()
 
         features = {}
         if len(raw):
             features["text"] = raw
+            if self._auto_translate:
+                features["text_translated"] = translate_en_to_vi(raw)
 
         if len(ocr_list):
             features["ocr"] = ocr_list
+            if self._auto_translate:
+                features["ocr_translated"] = [translate_en_to_vi(x) for x in ocr_list]
 
         if len(asr_list):
             features["asr"] = asr_list
+            if self._auto_translate:
+                features["asr_translated"] = [translate_en_to_vi(x) for x in asr_list]
 
         if len(features) == 0:
             return None
@@ -130,3 +152,4 @@ class Query:
         new_q = deepcopy(q)
         new_q["features"] = features
         return new_q
+
