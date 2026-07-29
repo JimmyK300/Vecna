@@ -84,7 +84,7 @@ class ServeCommand(BaseCommand):
         core_port = GlobalConfig.get("backends", "core", "port") or constant.DEFAULT_CORE_PORT
         os.environ["VITE_PORT"] = str(core_port)
         if dev_mode:
-            dev_cmd = ["npm", "run", "dev"]
+            dev_cmd = "npm run dev"
 
             dev_env = os.environ.copy()
 

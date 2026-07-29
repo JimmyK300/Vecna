@@ -13,6 +13,7 @@ export async function search(
   max_interval,
   selected,
   target_features,
+  auto_translate,
 ) {
   const params = {
     q: q,
@@ -24,6 +25,10 @@ export async function search(
     asr_weight: asr_weight,
     max_interval: max_interval,
   };
+
+  if (auto_translate) {
+    params.auto_translate = auto_translate;
+  }
 
   if (selected) {
     params.selected = selected;

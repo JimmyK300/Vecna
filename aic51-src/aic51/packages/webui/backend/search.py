@@ -54,6 +54,7 @@ async def search_multimodal(
     asr_weight: float = 0,
     max_interval: int = 1000,
     selected: str | None = None,
+    auto_translate: bool = False,
 ):
     if "searcher" not in internal:
         return JSONResponse(
@@ -76,6 +77,7 @@ async def search_multimodal(
             asr_weight=asr_weight,
             max_interval=max_interval,
             selected=selected,
+            auto_translate=auto_translate,
         )
     except Exception as e:
         logger.exception(e)
@@ -96,6 +98,7 @@ async def search_multimodal(
         "ocr_weight": ocr_weight,
         "asr_weight": asr_weight,
         "max_interval": max_interval,
+        "auto_translate": auto_translate,
     }
     return JSONResponse(
         status_code=200,
