@@ -10,6 +10,7 @@ export async function search(
   temporal_k,
   ocr_weight,
   asr_weight,
+  yolo_weight,
   max_interval,
   selected,
   target_features,
@@ -22,6 +23,7 @@ export async function search(
     temporal_k: temporal_k,
     ocr_weight: ocr_weight,
     asr_weight: asr_weight,
+    yolo_weight: yolo_weight,
     max_interval: max_interval,
   };
 

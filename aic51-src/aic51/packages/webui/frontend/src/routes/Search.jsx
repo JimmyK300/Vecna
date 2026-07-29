@@ -25,6 +25,7 @@ import {
   temporal_k_default,
   ocr_weight_default,
   asr_weight_default,
+  yolo_weight_default,
   max_interval_default,
 } from "../resources/options.js";
 
@@ -51,6 +52,7 @@ export async function loader({ request }) {
   const temporal_k = searchParams.get("temporal_k") || temporal_k_default;
   const ocr_weight = searchParams.get("ocr_weight") || ocr_weight_default;
   const asr_weight = searchParams.get("asr_weight") || asr_weight_default;
+  const yolo_weight = searchParams.get("yolo_weight") || yolo_weight_default;
   const max_interval = searchParams.get("max_interval") || max_interval_default;
 
   const target_features = searchParams.get("target_features") || "";
@@ -64,6 +66,7 @@ export async function loader({ request }) {
       temporal_k,
       ocr_weight,
       asr_weight,
+      yolo_weight,
       max_interval,
       selected,
       target_features,
@@ -78,6 +81,7 @@ export async function loader({ request }) {
         temporal_k,
         ocr_weight,
         asr_weight,
+        yolo_weight,
         max_interval,
         target_features
       },
@@ -97,6 +101,7 @@ export async function loader({ request }) {
         temporal_k,
         ocr_weight,
         asr_weight,
+        yolo_weight,
         max_interval,
         target_features
       },
@@ -369,7 +374,7 @@ export default function Search() {
   };
   const getSearchParams = () => {
     const currentParams = {};
-    const paramKeys = ["limit", "nprobe", "temporal_k", "ocr_weight", "asr_weight", "max_interval"];
+    const paramKeys = ["limit", "nprobe", "temporal_k", "ocr_weight", "asr_weight", "yolo_weight", "max_interval"];
     for (const key of paramKeys) {
       const element = document.querySelector(`#${key}`);
       if (element) {

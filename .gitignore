@@ -48,3 +48,9 @@ workspace/
 # Local databases
 milvus.db/
 
+# Weights & Models
+*.pt
+*.pth
+*.onnx
+weights/
+
