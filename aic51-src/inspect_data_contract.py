@@ -126,6 +126,17 @@ def collect_files(root: Path, pattern: str = "*") -> list[Path]:
     return sorted(path for path in root.rglob(pattern) if path.is_file())
 
 
+def read_image_dimensions(path: Path) -> dict[str, Any]:
+    try:
+        from PIL import Image
+
+        with Image.open(path) as image:
+            width, height = image.size
+        return {"width": width, "height": height}
+    except Exception as error:  # noqa: BLE001 - report malformed external output
+        return {"error": str(error)}
+
+
 def summarize_videos(workspace: Path, include_content: bool) -> dict[str, Any]:
     root = workspace / "data" / "videos"
     files = collect_files(root, "*.mp4")
@@ -147,19 +158,41 @@ def summarize_videos(workspace: Path, include_content: bool) -> dict[str, Any]:
     }
 
 
-def summarize_keyframes(workspace: Path, include_content: bool) -> dict[str, Any]:
+def summarize_keyframes(
+    workspace: Path,
+    include_content: bool,
+    inspect_images: bool,
+) -> dict[str, Any]:
     root = workspace / "data" / "keyframes"
     videos: dict[str, Any] = {}
     if root.is_dir():
         for video_dir in sorted(path for path in root.iterdir() if path.is_dir()):
             files = collect_files(video_dir, "*.jpg")
+            image_dimensions = []
+            image_errors = []
+            if inspect_images:
+                for path in files:
+                    dimensions = read_image_dimensions(path)
+                    if "error" in dimensions:
+                        image_errors.append(
+                            {"path": str(path), "error": dimensions["error"]}
+                        )
+                    else:
+                        image_dimensions.append(dimensions)
             videos[video_dir.name] = {
                 "count": len(files),
                 "frame_ids": [path.stem for path in files],
                 "manifest_sha256": hash_manifest(files, video_dir, include_content),
-                "dimensions": sorted(
+                "file_sizes": sorted(
                     {f"{path.stat().st_size} bytes" for path in files}
                 ),
+                "image_dimensions": sorted(
+                    {
+                        f"{item['width']}x{item['height']}"
+                        for item in image_dimensions
+                    }
+                ),
+                "image_errors": image_errors,
             }
     return {
         "root": str(root),
@@ -181,7 +214,11 @@ def read_npy_header(path: Path) -> dict[str, Any]:
         return {"error": str(error)}
 
 
-def summarize_features(workspace: Path, configured_features: set[str]) -> dict[str, Any]:
+def summarize_features(
+    workspace: Path,
+    configured_features: set[str],
+    include_content: bool,
+) -> dict[str, Any]:
     root = workspace / "features"
     videos: dict[str, Any] = {}
     if root.is_dir():
@@ -190,12 +227,14 @@ def summarize_features(workspace: Path, configured_features: set[str]) -> dict[s
             counts: Counter[str] = Counter()
             headers: defaultdict[str, list[dict[str, Any]]] = defaultdict(list)
             frame_ids_by_feature: defaultdict[str, list[str]] = defaultdict(list)
+            paths_by_feature: defaultdict[str, list[Path]] = defaultdict(list)
 
             for frame_dir in frame_dirs:
                 for feature_path in sorted(frame_dir.glob("*.npy")):
                     feature_name = feature_path.stem
                     counts[feature_name] += 1
                     frame_ids_by_feature[feature_name].append(frame_dir.name)
+                    paths_by_feature[feature_name].append(feature_path)
                     if len(headers[feature_name]) < 3:
                         headers[feature_name].append(
                             {"path": str(feature_path), **read_npy_header(feature_path)}
@@ -213,6 +252,12 @@ def summarize_features(workspace: Path, configured_features: set[str]) -> dict[s
                     feature: frame_ids_by_feature[feature]
                     for feature in sorted(frame_ids_by_feature)
                 },
+                "feature_manifests": {
+                    feature: hash_manifest(
+                        paths_by_feature[feature], video_dir, include_content
+                    )
+                    for feature in sorted(paths_by_feature)
+                },
                 "samples": dict(sorted(headers.items())),
             }
 
@@ -227,6 +272,7 @@ def build_report(
     workspace: Path,
     repo_root: Path | None,
     include_content: bool,
+    inspect_images: bool,
 ) -> dict[str, Any]:
     config = load_config(workspace)
     configured_features = set(config.get("features", {}))
@@ -234,11 +280,12 @@ def build_report(
         "report_version": REPORT_VERSION,
         "workspace": str(workspace),
         "content_hashing": include_content,
+        "image_inspection": inspect_images,
         "producer": git_info(repo_root),
         "config": config,
         "videos": summarize_videos(workspace, include_content),
-        "keyframes": summarize_keyframes(workspace, include_content),
-        "features": summarize_features(workspace, configured_features),
+        "keyframes": summarize_keyframes(workspace, include_content, inspect_images),
+        "features": summarize_features(workspace, configured_features, include_content),
     }
 
 
@@ -262,6 +309,11 @@ def parse_args() -> argparse.Namespace:
         help="Hash video and keyframe contents; this can be expensive.",
     )
     parser.add_argument(
+        "--inspect-images",
+        action="store_true",
+        help="Read image headers to report keyframe dimensions.",
+    )
+    parser.add_argument(
         "--output",
         type=Path,
         help="Write JSON to this path instead of stdout.",
@@ -273,7 +325,7 @@ def main() -> int:
     args = parse_args()
     workspace = args.workspace.resolve()
     repo_root = args.repo_root.resolve() if args.repo_root else find_repo_root(workspace)
-    report = build_report(workspace, repo_root, args.hash_content)
+    report = build_report(workspace, repo_root, args.hash_content, args.inspect_images)
     rendered = json.dumps(report, indent=2, sort_keys=True) + "\n"
     if args.output:
         args.output.write_text(rendered, encoding="utf-8")
