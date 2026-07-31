@@ -159,6 +159,7 @@ class AddCommand(BaseCommand):
                 *Progress.get_default_columns(),
                 TimeElapsedColumn(),
                 disable=not verbose,
+                transient=True,
             ) as progress,
             ThreadPoolExecutor(max_workers) as executor,
         ):
@@ -200,14 +201,17 @@ class AddCommand(BaseCommand):
 
                     if status_ok and do_compress and not do_compress_first:
                         self._compress_video(video_id, show_progress(task_id))
-
-                    progress.remove_task(task_id)
                 except Exception as e:
                     logger.exception(e)
                     progress.update(
                         task_id,
                         description=f"Error: {str(e)}",
                     )
+                finally:
+                    try:
+                        progress.remove_task(task_id)
+                    except Exception:
+                        pass
 
             futures = []
             for path in video_paths:
@@ -272,6 +276,7 @@ class AddCommand(BaseCommand):
 
         update_progress(description=f"Finding keyframes", completed=0, total=1)
         keyframes_list = self._get_keyframes_list(raw_video_path)
+        keyframes_set = set(keyframes_list)
         update_progress(advance=1)
         video_fps = self._get_fps(video_path)
 
@@ -301,33 +306,92 @@ class AddCommand(BaseCommand):
 
         update_progress(description=f"Extracting keyframes", completed=0, total=len(keyframes_list))
 
+        default_size = GlobalConfig.get("add", "default_size") or [1280, 720]
+        target_w, target_h = default_size[0], default_size[1]
+        cap = cv2.VideoCapture(str(video_path))
+
+        # Fast path when video clips are not required (e.g. add -d -ka)
+        if not do_clip:
+            _frame_counter = 0
+            scene_length = 0
+
+            while True:
+                ret, frame = cap.read()
+                if not ret:
+                    break
+
+                if scene_length >= max_scene_length or _frame_counter in keyframes_set:
+                    if frame.shape[1] == target_w and frame.shape[0] == target_h:
+                        current_frame = frame
+                    else:
+                        current_frame = cv2.resize(frame, (target_w, target_h))
+
+                    if keyframe_ratio == 1.0 or abs(keyframe_ratio - 1.0) < 1e-5:
+                        keyframe_frame = current_frame
+                    else:
+                        keyframe_frame = cv2.resize(
+                            current_frame, None, fx=keyframe_ratio, fy=keyframe_ratio
+                        )
+
+                    cv2.imwrite(
+                        str(keyframe_dir / f"{_frame_counter:06d}.jpg"),
+                        keyframe_frame,
+                        [cv2.IMWRITE_JPEG_QUALITY, 50],
+                    )
+
+                    thumbnail = cv2.resize(current_frame, None, fx=thumbnail_ratio, fy=thumbnail_ratio)
+                    cv2.imwrite(
+                        str(thumbnail_dir / f"{_frame_counter:06d}.jpg"),
+                        thumbnail,
+                        [cv2.IMWRITE_JPEG_QUALITY, 50],
+                    )
+                    scene_length = 0
+
+                scene_length += 1
+                _frame_counter += 1
+
+            update_progress(completed=len(keyframes_list))
+            cap.release()
+            return
+
+        # Full sequential path with sliding window buffer when do_clip is True
         video_frames = []
         _frame_counter = 0
         scene_length = 0
-        default_size = GlobalConfig.get("add", "default_size") or [1280, 720]
-        for default_size_frame in self._read_frames_gpu_or_cpu(video_path, default_size):
-            if keyframe_ratio == 1.0 or abs(keyframe_ratio - 1.0) < 1e-5:
-                resized_frame = default_size_frame
+
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                break
+
+            if frame.shape[1] == target_w and frame.shape[0] == target_h:
+                default_size_frame = frame
             else:
-                resized_frame = cv2.resize(
-                    default_size_frame, None, fx=keyframe_ratio, fy=keyframe_ratio
-                )
-            video_frames.append(resized_frame)
+                default_size_frame = cv2.resize(frame, (target_w, target_h))
+
+            video_frames.append(default_size_frame)
 
             if len(video_frames) >= 2 * video_length:
                 video_frames.pop(0)
 
             video_frame_counter = _frame_counter - video_length + 1
 
-            if video_frame_counter in keyframes_list:
+            if video_frame_counter in keyframes_set:
                 update_progress(advance=1)
 
-            if scene_length >= max_scene_length or video_frame_counter in keyframes_list:
+            if scene_length >= max_scene_length or video_frame_counter in keyframes_set:
                 current_frame = video_frames[-video_length]
+
+                if keyframe_ratio == 1.0 or abs(keyframe_ratio - 1.0) < 1e-5:
+                    keyframe_frame = current_frame
+                else:
+                    keyframe_frame = cv2.resize(
+                        current_frame, None, fx=keyframe_ratio, fy=keyframe_ratio
+                    )
 
                 cv2.imwrite(
                     str(keyframe_dir / f"{video_frame_counter:06d}.jpg"),
-                    current_frame,
+                    keyframe_frame,
                     [cv2.IMWRITE_JPEG_QUALITY, 50],
                 )
 
@@ -338,144 +402,13 @@ class AddCommand(BaseCommand):
                     [cv2.IMWRITE_JPEG_QUALITY, 50],
                 )
 
-                if do_clip:
-                    video_frame_center = len(video_frames) - video_length + 1
-                    video_start_frame = max(0, video_frame_center - video_clip_interval * 3)
-                    video_end_frame = min(
-                        len(video_frames) - 1, video_start_frame + video_clip_interval * 7
-                    )
-
-                    video_writer = cv2.VideoWriter(
-                        str(video_clips_dir / f"{video_frame_counter:06d}.mp4"),
-                        cv2.VideoWriter_fourcc(*"mp4v"),
-                        video_clip_fps,
-                        current_frame.shape[:2][::-1],
-                    )
-                    for i in range(video_start_frame, video_end_frame + 1, video_clip_interval):
-                        video_writer.write(video_frames[i])
-                    video_writer.release()
-
-                    if do_audio:
-                        assert video_frame_counter is not None
-                        assert audio_fps is not None
-                        assert audio_clip_interval is not None
-                        assert audio_frames is not None
-                        assert audio_frame_size is not None
-                        assert wave_params is not None
-
-                        audio_frame_counter = round(video_frame_counter / video_fps * audio_fps)
-                        audio_start_frame = max(0, audio_frame_counter - audio_clip_interval * 3)
-                        audio_end_frame = min(
-                            len(audio_frames) - 1, audio_start_frame + audio_clip_interval * 7
-                        )
-
-                        with wave.open(
-                            str(audio_clips_dir / f"{video_frame_counter:06d}.wav"), "wb"
-                        ) as f:
-                            f.setparams(wave_params)
-                            f.writeframes(
-                                audio_frames[
-                                    audio_start_frame
-                                    * audio_frame_size : audio_end_frame
-                                    * audio_frame_size
-                                    + 1
-                                ]
-                            )
-
                 scene_length = 0
 
             if video_frame_counter >= 0:
                 scene_length += 1
             _frame_counter += 1
 
-    def _read_frames_gpu_or_cpu(self, video_path: Path, default_size: list[int]):
-        """Generator yielding default_size BGR frames using FFmpeg CUDA GPU acceleration when available, falling back to cv2.VideoCapture."""
-        width, height = default_size[0], default_size[1]
-        frame_bytes = width * height * 3
-
-        ffmpeg_cmd = [
-            "ffmpeg",
-            "-c:v",
-            "h264_cuvid",
-            "-resize",
-            f"{width}x{height}",
-            "-i",
-            str(video_path),
-            "-f",
-            "rawvideo",
-            "-pix_fmt",
-            "bgr24",
-            "-v",
-            "quiet",
-            "-",
-        ]
-
-        gpu_success = False
-        try:
-            proc = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
-            raw_frame = proc.stdout.read(frame_bytes)
-            if len(raw_frame) == frame_bytes:
-                gpu_success = True
-                frame = np.frombuffer(raw_frame, dtype=np.uint8).reshape((height, width, 3))
-                yield frame
-
-                while True:
-                    raw_frame = proc.stdout.read(frame_bytes)
-                    if len(raw_frame) != frame_bytes:
-                        break
-                    yield np.frombuffer(raw_frame, dtype=np.uint8).reshape((height, width, 3))
-
-            proc.stdout.close()
-            proc.wait()
-        except Exception as e:
-            logger.warning(f"GPU h264_cuvid frame reading failed ({e}), trying standard hwaccel cuda.")
-            gpu_success = False
-
-        if not gpu_success:
-            try:
-                ffmpeg_cmd_generic = [
-                    "ffmpeg",
-                    "-hwaccel",
-                    "cuda",
-                    "-i",
-                    str(video_path),
-                    "-vf",
-                    f"scale={width}:{height}",
-                    "-f",
-                    "rawvideo",
-                    "-pix_fmt",
-                    "bgr24",
-                    "-v",
-                    "quiet",
-                    "-",
-                ]
-                proc = subprocess.Popen(ffmpeg_cmd_generic, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
-                raw_frame = proc.stdout.read(frame_bytes)
-                if len(raw_frame) == frame_bytes:
-                    gpu_success = True
-                    frame = np.frombuffer(raw_frame, dtype=np.uint8).reshape((height, width, 3))
-                    yield frame
-
-                    while True:
-                        raw_frame = proc.stdout.read(frame_bytes)
-                        if len(raw_frame) != frame_bytes:
-                            break
-                        yield np.frombuffer(raw_frame, dtype=np.uint8).reshape((height, width, 3))
-
-                proc.stdout.close()
-                proc.wait()
-            except Exception as e:
-                logger.warning(f"GPU frame reading failed ({e}), falling back to CPU.")
-                gpu_success = False
-
-        if not gpu_success:
-            cap = cv2.VideoCapture(str(video_path))
-            while True:
-                ret, frame = cap.read()
-                if not ret:
-                    break
-                yield cv2.resize(frame, (width, height))
-            cap.release()
+        cap.release()
 
     def _get_keyframes_list(self, video_path: Path):
         ffprobe_cmd = [
