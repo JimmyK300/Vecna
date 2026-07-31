@@ -1,7 +1,7 @@
 import copy
 import unittest
 
-from compare_data_contracts import compare_reports
+from tools.compare_data_contracts import compare_reports
 
 
 def make_report(*, content_hashing=True, keyframe_manifest="keyframes-v1", feature_manifest="feature-v1"):

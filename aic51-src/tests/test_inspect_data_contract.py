@@ -6,7 +6,7 @@ import numpy as np
 import yaml
 from PIL import Image
 
-from inspect_data_contract import build_report
+from tools.inspect_data_contract import build_report
 
 
 class InspectDataContractTests(unittest.TestCase):
