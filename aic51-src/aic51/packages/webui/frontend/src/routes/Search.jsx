@@ -527,6 +527,7 @@ export default function Search() {
                         timelineColor={getTimelineColor(idx)}
                         highlighted={selected === `${frame.video_id}#${keyframe}`}
                         scores={itemScores}
+                        ocr={frame.ocr}
                         onPlay={() => {
                           handleOnPlay(frame, keyframe);
                         }}

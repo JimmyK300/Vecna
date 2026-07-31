@@ -149,9 +149,6 @@ export function TemporalQueryContainer({
             e.preventDefault();
             onSubmit();
           }
-          if (e.keyCode === 222 || e.keyCode === 13) {
-            e.preventDefault();
-          }
         }}
         onChange={handleOnOCRChange}
       />
@@ -165,9 +162,6 @@ export function TemporalQueryContainer({
           if (e.keyCode === 13 && e.shiftKey === false) {
             e.preventDefault();
             onSubmit();
-          }
-          if (e.keyCode === 222 || e.keyCode === 13) {
-            e.preventDefault();
           }
         }}
         onChange={handleOnSpeechChange}

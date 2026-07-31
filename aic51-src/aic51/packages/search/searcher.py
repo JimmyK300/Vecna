@@ -1,5 +1,7 @@
 import hashlib
+import re
 import time
+import unicodedata
 from typing import Optional
 
 import torch
@@ -13,6 +15,55 @@ from aic51.packages.logger import logger
 
 from . import constants
 from .utils import Query
+
+
+def remove_diacritics(text: str) -> str:
+    if not text:
+        return ""
+    text = unicodedata.normalize("NFD", text)
+    text = "".join(c for c in text if unicodedata.category(c) != "Mn")
+    text = text.replace("đ", "d").replace("Đ", "D")
+    return unicodedata.normalize("NFC", text)
+
+
+def check_exact_phrases(query_str: str, target_text: str, fallback_query: str = "") -> tuple[bool, int]:
+    """
+    Extracts double-quoted exact phrases from query_str or fallback_query (e.g. "câu 3").
+    Returns (is_valid, phrase_count).
+    If exact phrases exist, target_text must match them (case-insensitive, diacritic-insensitive, exact word boundaries).
+    """
+    phrases = re.findall(r'"([^"]+)"', query_str) if query_str else []
+    if not phrases and fallback_query:
+        phrases = re.findall(r'"([^"]+)"', fallback_query)
+
+    phrases = [p.strip() for p in phrases if p.strip()]
+    if not phrases:
+        return True, 0
+
+    if not target_text:
+        return False, len(phrases)
+
+    norm_target = re.sub(r"\s+", " ", str(target_text).lower())
+    norm_target_no_accent = remove_diacritics(norm_target)
+
+    for phrase in phrases:
+        norm_phrase = re.sub(r"\s+", " ", phrase.lower())
+        norm_phrase_no_accent = remove_diacritics(norm_phrase)
+
+        # Allow flexible spacing between word and digit boundaries (e.g. "cau 3" vs "cau3")
+        flex_phrase = re.sub(r"(\w)\s+(\d)", r"\1\\s*\2", norm_phrase)
+        flex_phrase = re.sub(r"(\d)\s+(\w)", r"\1\\s*\2", flex_phrase)
+
+        flex_phrase_no_accent = re.sub(r"(\w)\s+(\d)", r"\1\\s*\2", norm_phrase_no_accent)
+        flex_phrase_no_accent = re.sub(r"(\d)\s+(\w)", r"\1\\s*\2", flex_phrase_no_accent)
+
+        pattern_exact = r"(?<!\w)" + flex_phrase + r"(?!\w)"
+        pattern_no_accent = r"(?<!\w)" + flex_phrase_no_accent + r"(?!\w)"
+
+        if not (re.search(pattern_exact, norm_target) or re.search(pattern_no_accent, norm_target_no_accent)):
+            return False, len(phrases)
+
+    return True, len(phrases)
 
 
 class Searcher(object):
@@ -151,15 +202,14 @@ class Searcher(object):
 
     @staticmethod
     def _normalize_scores(score_map: dict) -> dict:
-        """Min-max normalize scores to [0, 1] range."""
+        """Max-scale normalize scores to [0, 1] range relative to the maximum raw score."""
         if not score_map:
             return {}
         scores = list(score_map.values())
-        min_s = min(scores)
         max_s = max(scores)
-        if max_s == min_s:
-            return {k: 1.0 for k in score_map}
-        return {k: (v - min_s) / (max_s - min_s) for k, v in score_map.items()}
+        if max_s <= 0:
+            return {k: 0.0 for k in score_map}
+        return {k: v / max_s for k, v in score_map.items()}
 
     def _similarity_search(
         self,
@@ -234,13 +284,19 @@ class Searcher(object):
             elif "text" in query_features:
                 ocr_list = [query_features["text"]]
 
+            raw_ocr_query = query_features.get("ocr", [query_features.get("text", "")])[0] if isinstance(query_features.get("ocr"), list) else query_features.get("text", "")
+
             if len(ocr_list) > 0:
                 for ocr in ocr_list:
+                    has_exact = bool(re.findall(r'"([^"]+)"', ocr) or re.findall(r'"([^"]+)"', raw_ocr_query))
+                    search_limit = max(subquery_limit * 5, 500) if has_exact else subquery_limit
+                    clean_ocr = re.sub(r'"', ' ', ocr).strip()
+
                     search_results = self._database.search(
-                        data=[ocr],
+                        data=[clean_ocr if clean_ocr else ocr],
                         filter=video_filter,
                         offset=0,
-                        limit=subquery_limit,
+                        limit=search_limit,
                         anns_field=self._ocr_name,
                         search_params={"metric_type": "BM25"},
                     )
@@ -249,8 +305,15 @@ class Searcher(object):
                     if search_results and len(search_results) > 0:
                         for hit in search_results[0]:
                             fid = hit["entity"]["frame_id"]
+                            doc_text = hit["entity"].get(self._ocr_name, "") or hit["entity"].get("ocr", "")
+
+                            is_valid, phrase_count = check_exact_phrases(ocr, doc_text, fallback_query=raw_ocr_query)
+                            if not is_valid:
+                                continue
+
                             all_frame_ids.add(fid)
-                            ocr_raw_scores[fid] = ocr_raw_scores.get(fid, 0) + hit["distance"]
+                            boost = 1.5 if phrase_count > 0 else 1.0
+                            ocr_raw_scores[fid] = ocr_raw_scores.get(fid, 0) + hit["distance"] * boost
                             if fid not in entity_data:
                                 entity_data[fid] = hit["entity"]
 
@@ -267,13 +330,19 @@ class Searcher(object):
             elif "text" in query_features:
                 asr_list = [query_features["text"]]
 
+            raw_asr_query = query_features.get("asr", [query_features.get("text", "")])[0] if isinstance(query_features.get("asr"), list) else query_features.get("text", "")
+
             if len(asr_list) > 0:
                 for asr in asr_list:
+                    has_exact = bool(re.findall(r'"([^"]+)"', asr) or re.findall(r'"([^"]+)"', raw_asr_query))
+                    search_limit = max(subquery_limit * 5, 500) if has_exact else subquery_limit
+                    clean_asr = re.sub(r'"', ' ', asr).strip()
+
                     search_results = self._database.search(
-                        data=[asr],
+                        data=[clean_asr if clean_asr else asr],
                         filter=video_filter,
                         offset=0,
-                        limit=subquery_limit,
+                        limit=search_limit,
                         anns_field=self._asr_name,
                         search_params={"metric_type": "BM25"},
                     )
@@ -282,8 +351,15 @@ class Searcher(object):
                     if search_results and len(search_results) > 0:
                         for hit in search_results[0]:
                             fid = hit["entity"]["frame_id"]
+                            doc_text = hit["entity"].get(self._asr_name, "") or hit["entity"].get("asr", "")
+
+                            is_valid, phrase_count = check_exact_phrases(asr, doc_text, fallback_query=raw_asr_query)
+                            if not is_valid:
+                                continue
+
                             all_frame_ids.add(fid)
-                            asr_raw_scores[fid] = asr_raw_scores.get(fid, 0) + hit["distance"]
+                            boost = 1.5 if phrase_count > 0 else 1.0
+                            asr_raw_scores[fid] = asr_raw_scores.get(fid, 0) + hit["distance"] * boost
                             if fid not in entity_data:
                                 entity_data[fid] = hit["entity"]
 

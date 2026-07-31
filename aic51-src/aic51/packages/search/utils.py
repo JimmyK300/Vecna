@@ -93,7 +93,7 @@ class Query:
 
             ocr_str = ocr_match.group()
             ocr_str = ocr_str.strip("[]")
-            ocr = ":".join(ocr_str.split(":")[1:])
+            ocr = ":".join(ocr_str.split(":")[1:]).strip()
 
             ocr_list.append(ocr.lower())
             new_query = new_query.replace(ocr_match.group(), "", 1)
@@ -112,7 +112,7 @@ class Query:
 
             asr_str = asr_match.group()
             asr_str = asr_str.strip("[]")
-            asr = ":".join(asr_str.split(":")[1:])
+            asr = ":".join(asr_str.split(":")[1:]).strip()
 
             asr_list.append(asr.lower())
             new_query = new_query.replace(asr_match.group(), "", 1)

@@ -59,6 +59,8 @@ def process_searcher_results(searcher_res: dict):
                 "time_line_scores": record.get("time_line_scores", [record.get("scores")]),
                 "fps": fps,
                 "scores": record.get("scores", None),
+                "ocr": data.get("ocr", ""),
+                "asr": data.get("asr", ""),
             }
         )
 

@@ -47,18 +47,17 @@ class Tesseract(OCR):
         with ThreadPoolExecutor(self._batch_size) as executor:
 
             def process_one_image(image):
-                name = image.stem
                 if isinstance(image, (str, Path)):
                     image = Image.open(image)
                     width, height = image.size
                     image = image.crop((0, 0, width, round(height * 8 / 9)))
 
-                eng_data = pytesseract.image_to_string(image, output_type=pytesseract.Output.DICT, lang="eng")
-                vie_data = pytesseract.image_to_string(image, output_type=pytesseract.Output.DICT, lang="vie")
-                res = self._normalize_text(eng_data["text"] + " " + vie_data["text"])
-
+                # Run OCR once with combined eng+vie language
+                text = pytesseract.image_to_string(image, lang="eng+vie")
+                res = self._normalize_text(text)
                 return res
 
+            step = max(1, num_batches // 50)
             for b in range(num_batches):
                 futures = []
                 for image in images[b * self._batch_size : (b + 1) * self._batch_size]:
@@ -68,7 +67,7 @@ class Tesseract(OCR):
                     data = future.result()
                     image_features.append(np.array(data))
 
-                if callback:
+                if callback and ((b + 1) % step == 0 or (b + 1) == num_batches):
                     callback(self, b + 1, num_batches, image_features)
 
         return np.array(image_features)

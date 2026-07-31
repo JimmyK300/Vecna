@@ -55,6 +55,18 @@ async def frame_info(request: Request, video_id: str, frame_id: str):
     )
 
 
+@app.get("/api/frame/ocr/{video_id}/{frame_id}")
+async def get_frame_ocr(video_id: str, frame_id: str):
+    ocr_file = Path.cwd() / constant.FEATURE_DIR / video_id / str(frame_id) / "ocr.npy"
+    if ocr_file.exists():
+        try:
+            text = str(np.load(ocr_file, allow_pickle=True))
+            return {"video_id": video_id, "frame_id": frame_id, "ocr": text}
+        except Exception as e:
+            logger.error(f"Error reading OCR for {video_id} {frame_id}: {e}")
+    return {"video_id": video_id, "frame_id": frame_id, "ocr": ""}
+
+
 @app.get(constant.FILE_ENDPOINT + "/{video_id}/{frame_id}")
 async def get_file(request: Request, video_id: str, frame_id: str):
     file_path = Path.cwd() / f"{constant.THUMBNAIL_DIR}/{video_id}/{frame_id}{constant.IMAGE_EXTENSION}"

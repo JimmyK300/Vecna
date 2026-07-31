@@ -45,6 +45,21 @@ features: &analyse_features
       params:
         nlist: 512
 
+  image_siglip_so400m-384:
+    model: "image_siglip"
+    source: "open_clip"
+    arch_name: "ViT-SO400M-14-SigLIP-384"
+    pretrained_model: "webli"
+    analyse:
+      batch_size: 64
+    index:
+      datatype: "FLOAT_VECTOR"
+      dim: 1152
+      metric_type: "COSINE"
+      index_type: "SCANN"
+      params:
+        nlist: 512
+
   video_clip_pe-l-14-336:
     model: "video_clip"
     source: "open_clip"
@@ -101,6 +116,14 @@ searcher:
       target:
         - image_clip_pe-l-14-336 
         - video_clip_pe-l-14-336 
+
+    language_siglip_so400m-384:
+      model: "image_siglip"
+      source: "open_clip"
+      arch_name: "ViT-SO400M-14-SigLIP-384"
+      pretrained_model: "webli"
+      target:
+        - image_siglip_so400m-384
 
   ocr:
     ocr_field: "ocr_sparse"

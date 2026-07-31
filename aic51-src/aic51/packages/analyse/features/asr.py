@@ -68,13 +68,20 @@ class WhisperX(ASR):
         video_id = images[0].parent.stem
         segments, fps = self._transcribe_video(video_id)
 
+        # Pre-normalize text for all segments once (Solution 3)
+        for seg in segments:
+            if "norm_text" not in seg:
+                seg["norm_text"] = self._normalize_text(seg.get("text", ""))
+
         text_features = []
+        # Throttle progress callbacks to at most ~50 updates per video (Solution 4)
+        step = max(1, num_frames // 50)
         for i, keyframe_path in enumerate(images):
             frame_idx = int(keyframe_path.stem)
             timestamp = frame_idx / fps if fps else 0.0
             text = self._find_segment_text(segments, timestamp)
             text_features.append(np.array(text))
-            if callback:
+            if callback and ((i + 1) % step == 0 or (i + 1) == num_frames):
                 callback(self, i + 1, num_frames, text_features)
 
         return np.array(text_features)
@@ -91,6 +98,10 @@ class WhisperX(ASR):
         result = self._model.transcribe(audio, batch_size=self._batch_size, print_progress=True)
         segments = result.get("segments", [])
 
+        # Pre-normalize text for segments
+        for seg in segments:
+            seg["norm_text"] = self._normalize_text(seg.get("text", ""))
+
         fps = self._get_fps(video_id)
         return segments, fps
 
@@ -104,19 +115,35 @@ class WhisperX(ASR):
         return round(int(fraction[0]) / int(fraction[1]))
 
     def _find_segment_text(self, segments: list, timestamp: float) -> str:
-        for seg in segments:
+        if not segments:
+            return ""
+
+        import bisect
+
+        start_times = [s["start"] for s in segments]
+        idx = bisect.bisect_right(start_times, timestamp)
+
+        candidates = []
+        if idx > 0:
+            candidates.append(segments[idx - 1])
+        if idx < len(segments):
+            candidates.append(segments[idx])
+        if idx + 1 < len(segments):
+            candidates.append(segments[idx + 1])
+
+        for seg in candidates:
             if seg["start"] <= timestamp <= seg["end"]:
-                return self._normalize_text(seg["text"])
+                return seg["norm_text"]
 
         # Rơi vào khoảng lặng giữa 2 segment -> lấy segment gần nhất (trong ngưỡng 2s)
         best, best_dist = None, None
-        for seg in segments:
+        for seg in candidates:
             dist = min(abs(seg["start"] - timestamp), abs(seg["end"] - timestamp))
             if best_dist is None or dist < best_dist:
                 best, best_dist = seg, dist
 
         if best is not None and best_dist is not None and best_dist <= 2.0:
-            return self._normalize_text(best["text"])
+            return best["norm_text"]
         return ""
 
     def _normalize_text(self, text: str) -> str:

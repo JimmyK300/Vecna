@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Callable
 
 import cv2
+import numpy as np
 from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
 
 import aic51.packages.constant as constant
@@ -149,7 +150,7 @@ class AddCommand(BaseCommand):
         verbose: bool,
     ):
         max_workers_ratio = GlobalConfig.get("max_workers_ratio") or 0
-        max_workers = max(1, max_workers_ratio * (os.cpu_count() or 0))
+        max_workers = max(1, min(int(max_workers_ratio * (os.cpu_count() or 0)), 8))  # Scale to 8 workers for 60-80% GPU utilization
         with (
             Progress(
                 TextColumn("{task.fields[name]}"),
@@ -301,20 +302,16 @@ class AddCommand(BaseCommand):
         update_progress(description=f"Extracting keyframes", completed=0, total=len(keyframes_list))
 
         video_frames = []
-        cap = cv2.VideoCapture(str(video_path))
         _frame_counter = 0
         scene_length = 0
         default_size = GlobalConfig.get("add", "default_size") or [1280, 720]
-        while True:
-            ret, frame = cap.read()
-            if not ret:
-                break
-
-            default_size_frame = cv2.resize(frame, default_size)
-
-            resized_frame = cv2.resize(
-                default_size_frame, None, fx=keyframe_ratio, fy=keyframe_ratio
-            )
+        for default_size_frame in self._read_frames_gpu_or_cpu(video_path, default_size):
+            if keyframe_ratio == 1.0 or abs(keyframe_ratio - 1.0) < 1e-5:
+                resized_frame = default_size_frame
+            else:
+                resized_frame = cv2.resize(
+                    default_size_frame, None, fx=keyframe_ratio, fy=keyframe_ratio
+                )
             video_frames.append(resized_frame)
 
             if len(video_frames) >= 2 * video_length:
@@ -390,24 +387,112 @@ class AddCommand(BaseCommand):
             if video_frame_counter >= 0:
                 scene_length += 1
             _frame_counter += 1
-        cap.release()
+
+    def _read_frames_gpu_or_cpu(self, video_path: Path, default_size: list[int]):
+        """Generator yielding default_size BGR frames using FFmpeg CUDA GPU acceleration when available, falling back to cv2.VideoCapture."""
+        width, height = default_size[0], default_size[1]
+        frame_bytes = width * height * 3
+
+        ffmpeg_cmd = [
+            "ffmpeg",
+            "-c:v",
+            "h264_cuvid",
+            "-resize",
+            f"{width}x{height}",
+            "-i",
+            str(video_path),
+            "-f",
+            "rawvideo",
+            "-pix_fmt",
+            "bgr24",
+            "-v",
+            "quiet",
+            "-",
+        ]
+
+        gpu_success = False
+        try:
+            proc = subprocess.Popen(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+            raw_frame = proc.stdout.read(frame_bytes)
+            if len(raw_frame) == frame_bytes:
+                gpu_success = True
+                frame = np.frombuffer(raw_frame, dtype=np.uint8).reshape((height, width, 3))
+                yield frame
+
+                while True:
+                    raw_frame = proc.stdout.read(frame_bytes)
+                    if len(raw_frame) != frame_bytes:
+                        break
+                    yield np.frombuffer(raw_frame, dtype=np.uint8).reshape((height, width, 3))
+
+            proc.stdout.close()
+            proc.wait()
+        except Exception as e:
+            logger.warning(f"GPU h264_cuvid frame reading failed ({e}), trying standard hwaccel cuda.")
+            gpu_success = False
+
+        if not gpu_success:
+            try:
+                ffmpeg_cmd_generic = [
+                    "ffmpeg",
+                    "-hwaccel",
+                    "cuda",
+                    "-i",
+                    str(video_path),
+                    "-vf",
+                    f"scale={width}:{height}",
+                    "-f",
+                    "rawvideo",
+                    "-pix_fmt",
+                    "bgr24",
+                    "-v",
+                    "quiet",
+                    "-",
+                ]
+                proc = subprocess.Popen(ffmpeg_cmd_generic, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+                raw_frame = proc.stdout.read(frame_bytes)
+                if len(raw_frame) == frame_bytes:
+                    gpu_success = True
+                    frame = np.frombuffer(raw_frame, dtype=np.uint8).reshape((height, width, 3))
+                    yield frame
+
+                    while True:
+                        raw_frame = proc.stdout.read(frame_bytes)
+                        if len(raw_frame) != frame_bytes:
+                            break
+                        yield np.frombuffer(raw_frame, dtype=np.uint8).reshape((height, width, 3))
+
+                proc.stdout.close()
+                proc.wait()
+            except Exception as e:
+                logger.warning(f"GPU frame reading failed ({e}), falling back to CPU.")
+                gpu_success = False
+
+        if not gpu_success:
+            cap = cv2.VideoCapture(str(video_path))
+            while True:
+                ret, frame = cap.read()
+                if not ret:
+                    break
+                yield cv2.resize(frame, (width, height))
+            cap.release()
 
     def _get_keyframes_list(self, video_path: Path):
-        ffprobe_cmd = (
-            ["ffprobe", "-v", "quiet"]
-            + [
-                "-select_streams",
-                "v",
-                "-show_frames",
-                "-show_entries",
-                "frame=pict_type",
-            ]
-            + ["-of", "csv", str(video_path)]
-        )
+        ffprobe_cmd = [
+            "ffprobe",
+            "-v",
+            "quiet",
+            "-select_streams",
+            "v:0",
+            "-show_entries",
+            "packet=flags",
+            "-of",
+            "csv",
+            str(video_path),
+        ]
         res = subprocess.run(ffprobe_cmd, capture_output=True, text=True)
-        keyframes_list = res.stdout.strip().split("\n")
-        keyframes_list = [x for x in keyframes_list if x.startswith("frame")]
-        keyframes_list = [i for i, x in enumerate(keyframes_list) if x.startswith("frame,I")]
+        lines = [x for x in res.stdout.strip().split("\n") if x.startswith("packet")]
+        keyframes_list = [i for i, line in enumerate(lines) if "K" in line]
         return keyframes_list
 
     def _extract_video_info(self, video_path: Path):
@@ -463,7 +548,7 @@ class AddCommand(BaseCommand):
         # ffmpeg -i input.mp4 -vf scale="iw:ih" -c:v libx264 -tune zerolatency -preset ultrafast -crf 40 -c:a aac -b:a 32k  output.mp4 -y
         default_size = GlobalConfig.get("add", "default_size") or [1280, 720]
         ffmpeg_cmd = (
-            ["ffmpeg", "-v", "quiet", "-y"]
+            ["ffmpeg", "-hwaccel", "cuda", "-v", "quiet", "-y"]
             + ["-i", str(video_path)]
             + [
                 "-vf",

@@ -191,7 +191,7 @@ Dynamic programming algorithm for sequence alignment across query steps.
 Fetches all keyframes belonging to specified `video_ids` from Milvus. Caches results using SHA-256 query hashing. Automatically calculates pagination offset if `selected` keyframe is supplied.
 
 #### `_normalize_scores` *(static method)*
-Applies min-max normalization to a map of raw scores, scaling them into the range `[0, 1]`.
+Applies max-scaling normalization (`v / max_score`) to a map of raw scores, scaling them into the range `[0, 1]` relative to the top match while preserving non-zero scores for lower-ranked matching frames.
 
 #### `_prepare_feature_extractors`
 Reads model configurations from `GlobalConfig`.

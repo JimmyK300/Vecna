@@ -30,10 +30,52 @@ class AnalyseCommand(BaseCommand):
             action="store_true",
             help="Skip overlapping videos",
         )
+        parser.add_argument(
+            "--use-image-clip",
+            dest="use_image_clip",
+            action="store_true",
+            help="Use image clip feature extractor",
+        )
+        parser.add_argument(
+            "--use-image-siglip",
+            dest="use_image_siglip",
+            action="store_true",
+            help="Use image siglip feature extractor",
+        )
+        parser.add_argument(
+            "--use-video-clip",
+            dest="use_video_clip",
+            action="store_true",
+            help="Use video clip feature extractor",
+        )
+        parser.add_argument(
+            "--use-asr",
+            dest="use_asr",
+            action="store_true",
+            help="Use ASR feature extractor",
+        )
+        parser.add_argument(
+            "--use-ocr",
+            dest="use_ocr",
+            action="store_true",
+            help="Use OCR feature extractor",
+        )
 
         parser.set_defaults(func=self)
 
-    def __call__(self, do_gpu: bool, do_overwrite: bool, verbose: bool, *args, **kwargs):
+    def __call__(
+        self,
+        do_gpu: bool,
+        do_overwrite: bool,
+        verbose: bool,
+        use_image_clip: bool = False,
+        use_image_siglip: bool = False,
+        use_video_clip: bool = False,
+        use_asr: bool = False,
+        use_ocr: bool = False,
+        *args,
+        **kwargs,
+    ):
         feature_infos = GlobalConfig.get("features")
         device = get_device(do_gpu)
 
@@ -44,6 +86,19 @@ class AnalyseCommand(BaseCommand):
 
         logger.info(f"Starting analyse process with (device={device})")
 
+        any_use_flag = use_image_clip or use_image_siglip or use_video_clip or use_asr or use_ocr
+        target_models = set()
+        if use_image_clip:
+            target_models.add("image_clip")
+        if use_image_siglip:
+            target_models.add("image_siglip")
+        if use_video_clip:
+            target_models.add("video_clip")
+        if use_asr:
+            target_models.add("asr")
+        if use_ocr:
+            target_models.add("ocr")
+
         for feature_name in feature_infos.keys():
             source = GlobalConfig.get("features", feature_name, "source")
             model_name = GlobalConfig.get("features", feature_name, "model")
@@ -52,6 +107,9 @@ class AnalyseCommand(BaseCommand):
             batch_size = GlobalConfig.get("features", feature_name, "analyse", "batch_size") or 1
 
             assert model_name is not None
+
+            if any_use_flag and not any(tm in model_name or tm in feature_name for tm in target_models):
+                continue
 
             feature_extractor_cls = FeatureExtractorFactory.get(model_name)
             if feature_extractor_cls:
