@@ -90,6 +90,7 @@ class InspectDataContractTests(unittest.TestCase):
             self.assertIsNotNone(
                 features["feature_manifests"]["image_siglip_so400m-384"]
             )
+            self.assertEqual(report["milvus"]["enabled"], False)
 
 
 if __name__ == "__main__":

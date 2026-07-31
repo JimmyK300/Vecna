@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import subprocess
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -268,11 +269,77 @@ def summarize_features(
     }
 
 
+def json_safe(value: Any) -> Any:
+    if value is None or isinstance(value, (bool, int, float, str)):
+        return value
+    if isinstance(value, dict):
+        return {str(key): json_safe(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [json_safe(item) for item in value]
+    return repr(value)
+
+
+def inspect_milvus(
+    uri: str,
+    collection_name: str,
+    token: str | None,
+) -> dict[str, Any]:
+    result: dict[str, Any] = {
+        "enabled": True,
+        "uri": uri,
+        "collection": collection_name,
+    }
+    try:
+        from pymilvus import MilvusClient
+    except ImportError as error:
+        result["error"] = f"pymilvus unavailable: {error}"
+        return result
+
+    client = None
+    try:
+        client = MilvusClient(uri=uri, token=token or "")
+        result["exists"] = bool(client.has_collection(collection_name))
+        if not result["exists"]:
+            return result
+
+        result["schema"] = json_safe(client.describe_collection(collection_name))
+
+        indexes: list[dict[str, Any]] = []
+        for index_name in client.list_indexes(collection_name):
+            try:
+                description = client.describe_index(collection_name, index_name)
+                indexes.append(
+                    {
+                        "name": index_name,
+                        "description": json_safe(description),
+                    }
+                )
+            except Exception as error:  # noqa: BLE001 - report external state
+                indexes.append({"name": index_name, "error": str(error)})
+        result["indexes"] = indexes
+
+        try:
+            result["stats"] = json_safe(client.get_collection_stats(collection_name))
+        except Exception as error:  # noqa: BLE001 - report external state
+            result["stats_error"] = str(error)
+    except Exception as error:  # noqa: BLE001 - report external connection state
+        result["error"] = str(error)
+    finally:
+        if client is not None:
+            close = getattr(client, "close", None)
+            if close is not None:
+                close()
+    return result
+
+
 def build_report(
     workspace: Path,
     repo_root: Path | None,
     include_content: bool,
     inspect_images: bool,
+    milvus_uri: str | None = None,
+    milvus_collection: str | None = None,
+    milvus_token: str | None = None,
 ) -> dict[str, Any]:
     config = load_config(workspace)
     configured_features = set(config.get("features", {}))
@@ -286,6 +353,14 @@ def build_report(
         "videos": summarize_videos(workspace, include_content),
         "keyframes": summarize_keyframes(workspace, include_content, inspect_images),
         "features": summarize_features(workspace, configured_features, include_content),
+        "milvus": (
+            inspect_milvus(milvus_uri, milvus_collection, milvus_token)
+            if milvus_collection
+            else {
+                "enabled": False,
+                "reason": "Pass --milvus-collection to inspect Milvus.",
+            }
+        ),
     }
 
 
@@ -318,6 +393,15 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         help="Write JSON to this path instead of stdout.",
     )
+    parser.add_argument(
+        "--milvus-uri",
+        default="http://localhost:19530",
+        help="Milvus URI used with --milvus-collection.",
+    )
+    parser.add_argument(
+        "--milvus-collection",
+        help="Inspect this Milvus collection using read-only metadata calls.",
+    )
     return parser.parse_args()
 
 
@@ -325,7 +409,15 @@ def main() -> int:
     args = parse_args()
     workspace = args.workspace.resolve()
     repo_root = args.repo_root.resolve() if args.repo_root else find_repo_root(workspace)
-    report = build_report(workspace, repo_root, args.hash_content, args.inspect_images)
+    report = build_report(
+        workspace,
+        repo_root,
+        args.hash_content,
+        args.inspect_images,
+        milvus_uri=args.milvus_uri,
+        milvus_collection=args.milvus_collection,
+        milvus_token=os.environ.get("MILVUS_TOKEN"),
+    )
     rendered = json.dumps(report, indent=2, sort_keys=True) + "\n"
     if args.output:
         args.output.write_text(rendered, encoding="utf-8")
