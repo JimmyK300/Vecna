@@ -6,6 +6,7 @@ from pymilvus import DataType, Function, FunctionType, MilvusClient
 import aic51.resources as resources
 from aic51.packages.config import GlobalConfig
 from aic51.packages.logger import logger
+from aic51.packages.provenance import enabled_feature_names
 
 
 class MilvusDatabase(object):
@@ -60,7 +61,7 @@ class MilvusDatabase(object):
         features = GlobalConfig.get("features")
         feature_fields = []
         if features:
-            for feature_name in features.keys():
+            for feature_name in enabled_feature_names(features):
                 datatype = GlobalConfig.get("features", feature_name, "index", "datatype")
                 assert datatype is not None, f"{feature_name} has unspecified datatype"
                 new_field = {"field_name": self.process_field_name(feature_name), "datatype": datatype}
@@ -123,7 +124,7 @@ class MilvusDatabase(object):
 
         features = GlobalConfig.get("features")
         if features:
-            for feature_name in features.keys():
+            for feature_name in enabled_feature_names(features):
                 index_type = GlobalConfig.get("features", feature_name, "index", "index_type")
                 if not index_type:
                     continue

@@ -33,6 +33,7 @@ milvus:
 # List of features
 features: &analyse_features
   image_clip_pe-l-14-336:
+    enabled: true
     model: "image_clip"
     source: "open_clip"
     arch_name: "PE-Core-L-14-336"
@@ -48,6 +49,7 @@ features: &analyse_features
         nlist: 512
 
   video_clip_pe-l-14-336:
+    enabled: true
     model: "video_clip"
     source: "open_clip"
     arch_name: "PE-Core-L-14-336"
@@ -63,6 +65,7 @@ features: &analyse_features
         nlist: 512
 
   ocr:
+    enabled: true
     model: "ocr"
     source: "tesseract"
     analyse:
@@ -78,6 +81,7 @@ features: &analyse_features
         inverted_index_algo: "TAAT_NAIVE"
 
   asr:
+    enabled: true
     model: "asr"
     source: "whisperx"
     arch_name: "large-v3-turbo"

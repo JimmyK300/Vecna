@@ -9,6 +9,7 @@ import aic51.packages.constant as constant
 from aic51.packages.analyse import FeatureExtractorFactory
 from aic51.packages.config import GlobalConfig
 from aic51.packages.index import MilvusDatabase
+from aic51.packages.provenance import is_feature_enabled
 from aic51.packages.logger import logger
 
 from . import constants
@@ -590,6 +591,8 @@ class Searcher(object):
                 continue
 
             for t in target_features:
+                if not is_feature_enabled(GlobalConfig.get("features"), t):
+                    continue
                 self._features[t] = m
 
             self._extractors[m] = {"feature_extractor": feature_extractor, "target_features": target_features}

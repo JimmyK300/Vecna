@@ -6,6 +6,7 @@ import aic51.packages.constant as constant
 from aic51.packages.analyse import FeatureExtractor, FeatureExtractorFactory
 from aic51.packages.config import GlobalConfig
 from aic51.packages.logger import logger
+from aic51.packages.provenance import is_feature_enabled
 from aic51.packages.utils import get_device
 
 from .command import BaseCommand
@@ -91,6 +92,9 @@ class AnalyseCommand(BaseCommand):
             target_models.add("ocr")
 
         for feature_name in feature_infos.keys():
+            if not is_feature_enabled(feature_infos, feature_name):
+                logger.info(f"Skipping disabled feature {feature_name}")
+                continue
             source = GlobalConfig.get("features", feature_name, "source")
             model_name = GlobalConfig.get("features", feature_name, "model")
             arch_name = GlobalConfig.get("features", feature_name, "arch_name")

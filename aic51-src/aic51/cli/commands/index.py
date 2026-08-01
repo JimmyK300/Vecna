@@ -12,7 +12,7 @@ import aic51.packages.constant as constant
 from aic51.packages.config import GlobalConfig
 from aic51.packages.index import MilvusDatabase
 from aic51.packages.logger import logger
-from aic51.packages.provenance import build_frame_record
+from aic51.packages.provenance import build_frame_record, enabled_feature_names
 
 from .command import BaseCommand
 
@@ -115,10 +115,7 @@ class IndexCommand(BaseCommand):
         data_list = []
         feature_list = GlobalConfig.get("features") or {}
         allow_partial_features = GlobalConfig.get("milvus", "allow_partial_features") or False
-        feature_fields = []
-        for feature_name in feature_list.keys():
-            if GlobalConfig.get("features", feature_name):
-                feature_fields.append(feature_name)
+        feature_fields = enabled_feature_names(feature_list)
 
         frame_features_paths = [x for x in video_features_dir.glob("*") if x.is_dir()]
 
