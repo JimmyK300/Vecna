@@ -55,6 +55,7 @@ class MilvusDatabase(object):
         logger.info(f'"{self._collection_name}": Creating schema')
         schema = MilvusClient.create_schema(auto_id=False, enable_dynamic_field=False)
         fields = GlobalConfig.get("milvus", "fields") or []
+        allow_partial_features = GlobalConfig.get("milvus", "allow_partial_features") or False
 
         features = GlobalConfig.get("features")
         feature_fields = []
@@ -63,6 +64,9 @@ class MilvusDatabase(object):
                 datatype = GlobalConfig.get("features", feature_name, "index", "datatype")
                 assert datatype is not None, f"{feature_name} has unspecified datatype"
                 new_field = {"field_name": self.process_field_name(feature_name), "datatype": datatype}
+
+                if allow_partial_features:
+                    new_field["nullable"] = True
 
                 default = GlobalConfig.get("features", feature_name, "index", "default_value")
 
@@ -80,7 +84,11 @@ class MilvusDatabase(object):
                 index_type = GlobalConfig.get("features", feature_name, "index", "index_type")
                 if index_type and index_type.lower() == "bm25":
                     new_field["enable_analyzer"] = True
-                    bm25_field = {"field_name": f"{feature_name}_sparse", "datatype": "SPARSE_FLOAT_VECTOR"}
+                    bm25_field = {
+                        "field_name": f"{feature_name}_sparse",
+                        "datatype": "SPARSE_FLOAT_VECTOR",
+                        "nullable": allow_partial_features,
+                    }
 
                     feature_fields.append(bm25_field)
 

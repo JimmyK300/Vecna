@@ -114,6 +114,7 @@ class IndexCommand(BaseCommand):
 
         data_list = []
         feature_list = GlobalConfig.get("features") or {}
+        allow_partial_features = GlobalConfig.get("milvus", "allow_partial_features") or False
         feature_fields = []
         for feature_name in feature_list.keys():
             if GlobalConfig.get("features", feature_name):
@@ -126,7 +127,8 @@ class IndexCommand(BaseCommand):
         for frame_features_path in frame_features_paths:
             data, availability = build_frame_record(frame_features_path, video_id, feature_fields)
 
-            if all(item["status"] == "ready" for item in availability.values()):
+            all_features_ready = all(item["status"] == "ready" for item in availability.values())
+            if all_features_ready or allow_partial_features:
                 data_list.append({database.process_field_name(k): v for k, v in data.items()})
             else:
                 missing = [name for name, item in availability.items() if item["status"] != "ready"]

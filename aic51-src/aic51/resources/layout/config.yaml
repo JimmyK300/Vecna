@@ -21,6 +21,8 @@ analyse:
   pin_memory: true
 
 milvus:
+  # Opt in to rows that may omit unavailable feature modalities.
+  allow_partial_features: false
   # Extra fields (apart from features)
   fields:
     - field_name: "frame_id"
