@@ -10,6 +10,7 @@ import aic51.packages.constant as constant
 from aic51.packages.logger import logger
 
 from .utils import create_app, get_fps
+from .range_utils import parse_byte_range
 
 app = create_app()
 
@@ -85,16 +86,22 @@ async def get_video(request: Request, video_id: str, range: str = Header(None)):
     if not file_path.exists() or file_path.is_dir():
         return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
 
-    start, end = range.replace("bytes=", "").split("-")
-    start = int(start)
-    end = int(end) if end else start + CHUNK_SIZE
+    filesize = file_path.stat().st_size
+    try:
+        requested_range = parse_byte_range(range, filesize)
+    except (TypeError, ValueError):
+        return Response(status_code=416, headers={"Content-Range": f"bytes */{filesize}"})
+
+    if requested_range is None:
+        return FileResponse(file_path, media_type=constant.VIDEO_MEDIA_TYPE)
+
+    start, end = requested_range
 
     with open(file_path, "rb") as video:
         video.seek(start)
-        data = video.read(end - start)
-        filesize = file_path.stat().st_size
+        data = video.read(end - start + 1)
         headers = {
-            "Content-Range": f"bytes {str(start)}-{str(min(end, filesize-1))}/{str(filesize)}",
+            "Content-Range": f"bytes {str(start)}-{str(end)}/{str(filesize)}",
             "Accept-Ranges": "bytes",
         }
     return Response(data, status_code=206, headers=headers, media_type=constant.VIDEO_MEDIA_TYPE)

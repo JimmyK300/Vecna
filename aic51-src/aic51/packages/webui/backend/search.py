@@ -9,6 +9,7 @@ import aic51.packages.constant as constant
 from aic51.packages.config import GlobalConfig
 from aic51.packages.logger import logger
 from aic51.packages.search import Searcher
+from aic51.packages.provenance import runtime_provenance
 from aic51.packages.utils import get_device
 
 from .utils import create_app, process_searcher_results, process_search_results
@@ -17,7 +18,7 @@ def setup_searcher():
     collection_name = GlobalConfig.get("backends", "search", "collection") or "milvus"
     do_gpu = GlobalConfig.get("backends", "search", "gpu") or False
     device = get_device(do_gpu)
-    return Searcher(collection_name, device)
+    return collection_name, Searcher(collection_name, device)
 
 
 internal = {}
@@ -25,7 +26,10 @@ internal = {}
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    internal["searcher"] = setup_searcher()
+    collection_name, searcher = setup_searcher()
+    internal["searcher"] = searcher
+    internal["collection_name"] = collection_name
+    internal["provenance"] = runtime_provenance(collection_name=collection_name)
 
     yield
 
@@ -36,7 +40,17 @@ app = create_app(lifespan=lifespan)
 @app.get(constant.HEALTH_ENDPOINT)
 async def health():
     if "searcher" in internal:
-        return JSONResponse(status_code=200, content=jsonable_encoder({constant.MESSAGE_KEY: "alive"}))
+        return JSONResponse(
+            status_code=200,
+            content=jsonable_encoder(
+                {
+                    constant.MESSAGE_KEY: "alive",
+                    "status": "ready",
+                    "collection": internal.get("collection_name"),
+                    **internal.get("provenance", {}),
+                }
+            ),
+        )
     else:
         return JSONResponse(status_code=500, content=jsonable_encoder({constant.MESSAGE_KEY: "dead"}))
 
@@ -87,6 +101,7 @@ async def search_multimodal(
             content=jsonable_encoder({constant.MESSAGE_KEY: "search_multimodal errors"}),
         )
 
+    searcher_res["collection_name"] = internal.get("collection_name")
     response = process_searcher_results(searcher_res)
     response = process_search_results(request, response)
 
@@ -144,6 +159,7 @@ async def search_image(
             content=jsonable_encoder({constant.MESSAGE_KEY: "search_image errors"}),
         )
 
+    searcher_res["collection_name"] = internal.get("collection_name")
     response = process_searcher_results(searcher_res)
     response = process_search_results(request, response)
 
