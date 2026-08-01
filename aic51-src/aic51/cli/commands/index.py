@@ -12,6 +12,7 @@ import aic51.packages.constant as constant
 from aic51.packages.config import GlobalConfig
 from aic51.packages.index import MilvusDatabase
 from aic51.packages.logger import logger
+from aic51.packages.provenance import build_frame_record
 
 from .command import BaseCommand
 
@@ -123,28 +124,13 @@ class IndexCommand(BaseCommand):
         update_progress(description="Indexing", completed=0, total=len(frame_features_paths))
 
         for frame_features_path in frame_features_paths:
-            frame_id = frame_features_path.stem
-            data = {
-                "frame_id": f"{video_id}#{frame_id}",  # This is because Milvus does not allow composite primary key
-            }
-            for feature_path in frame_features_path.glob("*"):
-                feature_name = feature_path.stem
-                if feature_name not in feature_fields:
-                    continue
-                if feature_path.is_dir():
-                    continue
+            data, availability = build_frame_record(frame_features_path, video_id, feature_fields)
 
-                feature = np.load(feature_path)
-
-                if feature.dtype.kind == "U":
-                    feature = feature.tolist()
-
-                data[feature_name] = feature
-
-            if all([f in data for f in feature_fields]):
+            if all(item["status"] == "ready" for item in availability.values()):
                 data_list.append({database.process_field_name(k): v for k, v in data.items()})
             else:
-                logger.warning(f"Skipping {data['frame_id']}: Lack of features")
+                missing = [name for name, item in availability.items() if item["status"] != "ready"]
+                logger.warning(f"Skipping {data['frame_id']}: unavailable features={missing}")
 
             update_progress(advance=1)
 
