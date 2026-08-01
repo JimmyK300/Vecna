@@ -5,6 +5,7 @@ from .records import build_frame_record
 from .feature_policy import enabled_feature_names, is_feature_enabled
 from .runtime import runtime_provenance
 from .evidence import normalize_text, project_timed_segments, write_json_artifact
+from .migration import assess_legacy_migration
 
 __all__ = [
     "build_legacy_manifest",
@@ -17,4 +18,5 @@ __all__ = [
     "normalize_text",
     "project_timed_segments",
     "write_json_artifact",
+    "assess_legacy_migration",
 ]
