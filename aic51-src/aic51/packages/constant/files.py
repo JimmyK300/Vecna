@@ -10,6 +10,8 @@ VIDEO_CLIP_DIR = f"{DATA_DIR}/video_clips"
 AUDIO_DIR = f"{DATA_DIR}/audio"
 AUDIO_CLIP_DIR = f"{DATA_DIR}/audio_clips"
 VIDEO_INFO_DIR = f"{DATA_DIR}/video_info"
+ASR_RAW_DIR = f"{DATA_DIR}/asr_raw"
+OCR_RAW_DIR = f"{DATA_DIR}/ocr_raw"
 
 FEATURE_DIR = "features"
 

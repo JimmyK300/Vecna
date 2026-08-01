@@ -8,6 +8,7 @@ import torch
 
 import aic51.packages.constant as constant
 from aic51.packages.logger import logger
+from aic51.packages.provenance import project_timed_segments, write_json_artifact
 
 from .feature_extractor import FeatureExtractor, FeatureExtractorFactory
 
@@ -67,12 +68,23 @@ class WhisperX(ASR):
 
         video_id = images[0].parent.stem
         segments, fps = self._transcribe_video(video_id)
+        frame_ids = [path.stem for path in images]
+        projected_text, projections = project_timed_segments(segments, frame_ids, fps)
+        write_json_artifact(
+            self._work_dir / constant.ASR_RAW_DIR / f"{video_id}.json",
+            {
+                "artifact_version": "asr-1",
+                "video_id": video_id,
+                "model": self._arch_name,
+                "fps": fps,
+                "segments": segments,
+                "projections": projections,
+                "projection_rule": "containing_segment_then_nearest_within_2s",
+            },
+        )
 
         text_features = []
-        for i, keyframe_path in enumerate(images):
-            frame_idx = int(keyframe_path.stem)
-            timestamp = frame_idx / fps if fps else 0.0
-            text = self._find_segment_text(segments, timestamp)
+        for i, text in enumerate(projected_text):
             text_features.append(np.array(text))
             if callback:
                 callback(self, i + 1, num_frames, text_features)
@@ -102,22 +114,6 @@ class WhisperX(ASR):
         res = subprocess.run(ffprobe_cmd, capture_output=True, text=True)
         fraction = str(res.stdout).split("=")[1].split("/")
         return round(int(fraction[0]) / int(fraction[1]))
-
-    def _find_segment_text(self, segments: list, timestamp: float) -> str:
-        for seg in segments:
-            if seg["start"] <= timestamp <= seg["end"]:
-                return self._normalize_text(seg["text"])
-
-        # Rơi vào khoảng lặng giữa 2 segment -> lấy segment gần nhất (trong ngưỡng 2s)
-        best, best_dist = None, None
-        for seg in segments:
-            dist = min(abs(seg["start"] - timestamp), abs(seg["end"] - timestamp))
-            if best_dist is None or dist < best_dist:
-                best, best_dist = seg, dist
-
-        if best is not None and best_dist is not None and best_dist <= 2.0:
-            return self._normalize_text(best["text"])
-        return ""
 
     def _normalize_text(self, text: str) -> str:
         res = text.strip().lower()

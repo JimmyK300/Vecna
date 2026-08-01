@@ -115,6 +115,7 @@ class AnalyseCommand(BaseCommand):
                     name=feature_name,
                     batch_size=batch_size,
                     device=device,
+                    work_dir=self._work_dir,
                 )
             else:
                 feature_extractor = None
