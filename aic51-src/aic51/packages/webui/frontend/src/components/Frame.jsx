@@ -17,9 +17,19 @@ export function FrameItem({
   onSearchSimilar,
   onSearchNearby,
   scores,
+  matchedModalities,
+  matchedText,
+  featureAvailability,
+  startMs,
+  endMs,
 }) {
   const { selected, addSelected, removeSelected } = useSelected();
   const isSelected = selected.includes(id);
+  const unavailableFeatures = featureAvailability
+    ? Object.entries(featureAvailability)
+        .filter(([, value]) => value?.status && value.status !== "ready")
+        .map(([name, value]) => `${name}:${value.status}`)
+    : [];
   const [isZoomed, setIsZoomed] = useState(false);
   const [showScores, setShowScores] = useState(false);
   const elementRef = useRef(null);
@@ -78,6 +88,16 @@ export function FrameItem({
               <div className="flex justify-between"><span>CLIP:</span><span className="font-bold text-green-300">{scores.clip?.toFixed(4) ?? '-'}</span></div>
               <div className="flex justify-between"><span>OCR:</span><span className="font-bold text-blue-300">{scores.ocr?.toFixed(4) ?? '-'}</span></div>
               <div className="flex justify-between"><span>ASR:</span><span className="font-bold text-purple-300">{scores.asr?.toFixed(4) ?? '-'}</span></div>
+              {matchedModalities?.length > 0 && <div>Matched: {matchedModalities.join(", ")}</div>}
+              {matchedText && Object.keys(matchedText).length > 0 && (
+                <div className="truncate">Text: {Object.values(matchedText).join(" | ")}</div>
+              )}
+              {unavailableFeatures.length > 0 && (
+                <div>Unavailable: {unavailableFeatures.join(", ")}</div>
+              )}
+              {(startMs !== null && startMs !== undefined) && (
+                <div>Evidence: {startMs}–{endMs ?? startMs} ms</div>
+              )}
             </div>
           )}
         </div>

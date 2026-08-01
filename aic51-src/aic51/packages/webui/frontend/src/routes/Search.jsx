@@ -527,6 +527,11 @@ export default function Search() {
                         timelineColor={getTimelineColor(idx)}
                         highlighted={selected === `${frame.video_id}#${keyframe}`}
                         scores={itemScores}
+                        matchedModalities={frame.matched_modalities}
+                        matchedText={frame.matched_text}
+                        featureAvailability={frame.feature_availability}
+                        startMs={frame.start_ms}
+                        endMs={frame.end_ms}
                         onPlay={() => {
                           handleOnPlay(frame, keyframe);
                         }}
