@@ -4,6 +4,7 @@ from typing import Annotated
 from fastapi import FastAPI, Query, Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel, Field
 
 import aic51.packages.constant as constant
 from aic51.packages.config import GlobalConfig
@@ -22,6 +23,19 @@ def setup_searcher():
 
 
 internal = {}
+
+
+class SearchContractRequest(BaseModel):
+    q: str
+    offset: int = Field(default=0, ge=0)
+    limit: int = Field(default=50, ge=1, le=1000)
+    target_features: list[str] = []
+    nprobe: int = Field(default=32, ge=1)
+    temporal_k: int = Field(default=10000, ge=1)
+    ocr_weight: float = Field(default=0.5, ge=0, le=1)
+    asr_weight: float = Field(default=0, ge=0, le=1)
+    max_interval: int = Field(default=1000, ge=0)
+    auto_translate: bool = False
 
 
 @asynccontextmanager
@@ -191,3 +205,49 @@ async def target_features():
         status_code=200,
         content=jsonable_encoder({constant.TARGET_FEATURES_KEY: searcher.target_features}),
     )
+
+
+@app.post("/api/search_contract")
+async def search_contract(request: Request, payload: SearchContractRequest):
+    """Stable structured boundary for future planners and evaluators."""
+
+    if "searcher" not in internal:
+        return JSONResponse(status_code=503, content={constant.MESSAGE_KEY: "searcher was not initialized"})
+
+    try:
+        searcher_res = internal["searcher"].search_multimodal(
+            payload.q,
+            payload.offset,
+            payload.limit,
+            payload.target_features,
+            nprobe=payload.nprobe,
+            temporal_k=payload.temporal_k,
+            ocr_weight=payload.ocr_weight,
+            asr_weight=payload.asr_weight,
+            max_interval=payload.max_interval,
+            auto_translate=payload.auto_translate,
+        )
+        searcher_res["collection_name"] = internal.get("collection_name")
+        response = process_search_results(request, process_searcher_results(searcher_res))
+        return JSONResponse(
+            status_code=200,
+            content=jsonable_encoder(
+                {
+                    "adapter_schema_version": "1",
+                    "abstained": len(response["frames"]) == 0,
+                    constant.MESSAGE_KEY: "success",
+                    **response,
+                }
+            ),
+        )
+    except Exception as error:
+        logger.exception(error)
+        return JSONResponse(
+            status_code=500,
+            content=jsonable_encoder(
+                {
+                    constant.MESSAGE_KEY: "search_contract error",
+                    "error_type": type(error).__name__,
+                }
+            ),
+        )

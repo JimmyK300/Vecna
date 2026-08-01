@@ -143,6 +143,7 @@ class Searcher(object):
             "results": results,
             "total": self._database.get_size(),
             "offset": offset,
+            "fusion_method": "RRFRanker",
         }
         return res
 
@@ -367,6 +368,7 @@ class Searcher(object):
             "results": results,
             "total": total,
             "offset": offset,
+            "fusion_method": "VecnaWeightedFusion",
         }
         return res
 
@@ -433,6 +435,7 @@ class Searcher(object):
             "results": results,
             "total": len(temporal_results or []),
             "offset": offset,
+            "fusion_method": "VecnaWeightedFusion+OrderedFrameJoin",
         }
         return res
 
@@ -538,6 +541,7 @@ class Searcher(object):
             "results": videos[offset : offset + limit],
             "total": len(videos),
             "offset": offset,
+            "fusion_method": "DirectFrameQuery",
         }
         return res
 
