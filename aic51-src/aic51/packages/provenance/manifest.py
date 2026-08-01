@@ -11,6 +11,8 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
+from yaml import safe_load
+
 
 def _git_commit(work_dir: Path) -> str | None:
     try:
@@ -80,13 +82,26 @@ def build_manifest(work_dir: str | Path, *, hash_content: bool = False) -> dict[
     config: dict[str, Any] = {"path": config_path.relative_to(root).as_posix(), "present": config_path.exists()}
     if config_path.exists():
         config["size_bytes"] = config_path.stat().st_size
-        if hash_content:
-            config["sha256"] = _sha256(config_path)
+        config["sha256"] = _sha256(config_path)
+
+    feature_policy: dict[str, dict[str, Any]] = {}
+    if config_path.exists():
+        with config_path.open("r", encoding="utf-8") as stream:
+            config_data = safe_load(stream) or {}
+        for name, details in (config_data.get("features") or {}).items():
+            feature_policy[name] = {
+                "enabled": details.get("enabled", True),
+                "model": details.get("model"),
+                "source": details.get("source"),
+                "arch_name": details.get("arch_name"),
+                "index": details.get("index") or {},
+            }
 
     return {
         "manifest_version": "1",
         "repo_commit": _git_commit(root),
         "config": config,
+        "feature_policy": feature_policy,
         "videos": {"count": len(videos), "files": videos},
         "features": {
             "video_count": len(features),
