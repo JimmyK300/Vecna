@@ -16,7 +16,7 @@ add:
 
 analyse:
   # num_workers of DataLoader
-  num_workers: 0
+  num_workers: 4
   # pin_memory of DataLoader
   pin_memory: true
 
@@ -60,20 +60,20 @@ features: &analyse_features
       params:
         nlist: 512
 
-  video_clip_pe-l-14-336:
-    model: "video_clip"
-    source: "open_clip"
-    arch_name: "PE-Core-L-14-336"
-    pretrained_model: "meta" 
-    analyse:
-      batch_size: 4
-    index:
-      datatype: "FLOAT_VECTOR"
-      dim: 1024 
-      metric_type: "COSINE"
-      index_type: "SCANN"
-      params:
-        nlist: 512
+  # video_clip_pe-l-14-336:
+  #   model: "video_clip"
+  #   source: "open_clip"
+  #   arch_name: "PE-Core-L-14-336"
+  #   pretrained_model: "meta" 
+  #   analyse:
+  #     batch_size: 4
+  #   index:
+  #     datatype: "FLOAT_VECTOR"
+  #     dim: 1024 
+  #     metric_type: "COSINE"
+  #     index_type: "SCANN"
+  #     params:
+  #       nlist: 512
 
   ocr:
     model: "ocr"
@@ -115,7 +115,7 @@ searcher:
       pretrained_model: "meta" 
       target:
         - image_clip_pe-l-14-336 
-        - video_clip_pe-l-14-336 
+        # - video_clip_pe-l-14-336 
 
     language_siglip_so400m-384:
       model: "image_siglip"
@@ -159,3 +159,4 @@ backends:
   file:
     port: 4200
     workers: 1
+    

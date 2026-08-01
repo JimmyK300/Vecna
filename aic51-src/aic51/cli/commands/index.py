@@ -138,6 +138,8 @@ class IndexCommand(BaseCommand):
 
                 if feature.dtype.kind == "U":
                     feature = feature.tolist()
+                elif feature.dtype.kind == "f":
+                    feature = feature.astype(np.float32)
 
                 data[feature_name] = feature
 

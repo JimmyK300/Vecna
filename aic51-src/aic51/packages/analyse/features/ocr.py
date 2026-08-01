@@ -1,4 +1,6 @@
+import os
 import re
+import tempfile
 from concurrent.futures import ThreadPoolExecutor
 from math import ceil
 from pathlib import Path
@@ -39,6 +41,8 @@ class Tesseract(OCR):
         images: list[Path | str] | np.ndarray | torch.Tensor | list[Image.Image],
         callback: Optional[Callable] = None,
     ) -> np.ndarray:
+        if len(images) == 0:
+            return np.array([])
         image_features = []
         num_batches = ceil(len(images) / self._batch_size)
         if callback:
@@ -52,9 +56,9 @@ class Tesseract(OCR):
                     width, height = image.size
                     image = image.crop((0, 0, width, round(height * 8 / 9)))
 
-                # Run OCR once with combined eng+vie language
-                text = pytesseract.image_to_string(image, lang="eng+vie")
-                res = self._normalize_text(text)
+                eng_data = pytesseract.image_to_string(image, output_type=pytesseract.Output.DICT, lang="eng")
+                vie_data = pytesseract.image_to_string(image, output_type=pytesseract.Output.DICT, lang="vie")
+                res = self._normalize_text(eng_data["text"] + " " + vie_data["text"])
                 return res
 
             step = max(1, num_batches // 50)

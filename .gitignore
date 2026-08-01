@@ -38,6 +38,12 @@ data**/
 # Logs
 **.log
 
+# Testing output & features
+testing/
+testing/data/
+testing/features/
+*.npy
+
 # Workspace
 workspace/
 aic51-src/workspace

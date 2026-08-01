@@ -198,7 +198,14 @@ class AnalyseCommand(BaseCommand):
             )
 
             keyframes = self._get_keyframes_list(feature_extractor, video_id, do_overwrite)
+            if not keyframes:
+                progress.remove_task(task_id)
+                return
+
             input_files = self._get_input_files(feature_extractor, video_id, keyframes)
+            if not input_files:
+                progress.remove_task(task_id)
+                return
 
             def update_progress(feature_extractor, completed, total, res):
                 progress.update(task_id, completed=completed, total=total)

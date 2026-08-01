@@ -69,6 +69,8 @@ class ImageSigLIP(FeatureExtractor):
         images: list[Path | str] | np.ndarray | torch.Tensor | list[Image.Image],
         callback: Optional[Callable] = None,
     ) -> np.ndarray:
+        if len(images) == 0:
+            return np.array([])
 
         dataset = ImageDataset(images, OpenCLIPPreprocessWrapper(self._preprocess))
 
