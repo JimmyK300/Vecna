@@ -1,7 +1,10 @@
 import re
 from copy import deepcopy
 from functools import lru_cache
-from deep_translator import GoogleTranslator
+try:
+    from deep_translator import GoogleTranslator
+except ModuleNotFoundError:
+    GoogleTranslator = None
 
 from aic51.packages.logger import logger
 import aic51.packages.constant as global_constant
@@ -12,6 +15,9 @@ from . import constants
 @lru_cache(maxsize=1024)
 def translate_en_to_vi(text: str) -> str:
     if not text or not text.strip():
+        return text
+    if GoogleTranslator is None:
+        logger.warning("auto_translate unavailable: deep-translator is not installed")
         return text
     try:
         translated = GoogleTranslator(source="auto", target="vi").translate(text)
