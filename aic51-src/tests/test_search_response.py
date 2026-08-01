@@ -12,6 +12,7 @@ class SearchResponseTests(unittest.TestCase):
                         "entity": {
                             "frame_id": "L21_V001#000060",
                             "ocr": "visible text",
+                            "feature_availability": {"clip": {"status": "ready"}},
                         },
                         "scores": {"final": 0.8, "clip": 0.8, "ocr": 0.2, "asr": 0.0},
                     }
@@ -30,6 +31,7 @@ class SearchResponseTests(unittest.TestCase):
         self.assertEqual(frame["matched_text"], {"ocr": "visible text"})
         self.assertEqual(frame["fusion_method"], "VecnaWeightedFusion")
         self.assertEqual(frame["source_artifact_ids"], ["L21_V001#000060"])
+        self.assertEqual(frame["feature_availability"]["clip"]["status"], "ready")
 
 
 if __name__ == "__main__":

@@ -57,6 +57,11 @@ class MilvusDatabase(object):
         schema = MilvusClient.create_schema(auto_id=False, enable_dynamic_field=False)
         fields = GlobalConfig.get("milvus", "fields") or []
         allow_partial_features = GlobalConfig.get("milvus", "allow_partial_features") or False
+        record_feature_availability = GlobalConfig.get("milvus", "record_feature_availability") or False
+        if record_feature_availability and not any(
+            field.get("field_name") == "feature_availability" for field in fields
+        ):
+            fields = [*fields, {"field_name": "feature_availability", "datatype": "JSON", "nullable": True}]
 
         features = GlobalConfig.get("features")
         feature_fields = []

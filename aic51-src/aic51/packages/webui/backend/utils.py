@@ -89,6 +89,7 @@ def process_searcher_results(searcher_res: dict):
                     for key in ("ocr", "asr")
                     if isinstance(data.get(key), str) and data.get(key)
                 },
+                "feature_availability": data.get("feature_availability"),
                 "component_scores": component_scores,
                 "fusion_method": record.get("fusion_method") or searcher_res.get("fusion_method"),
                 "source_artifact_ids": [record_id],
