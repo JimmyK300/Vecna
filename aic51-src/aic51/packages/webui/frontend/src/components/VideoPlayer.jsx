@@ -1,43 +1,53 @@
 import { useFetcher } from "react-router-dom";
 import { createContext, useEffect, useContext, useState, useRef } from "react";
 import classNames from "classnames";
-import { AuthContext } from "./AuthProvider";
+import { AuthContext } from "./AuthProvider.jsx";
 import { useSelected } from "./SelectedProvider.jsx";
 import { getFrameInfo, getVideoTranscript, getVideoKeyframes } from "../services/search.js";
+
 export const VideoContext = createContext({ playVideo: null });
 
 export default function VideoProvider({ children }) {
   const [frameInfo, setFrameInfo] = useState(null);
+
   const playVideo = async (f, keyframe) => {
-    const res = await getFrameInfo(f.video_id, keyframe);
-    res.frame_id = keyframe;
-    setFrameInfo(res);
+    try {
+      const vId = typeof f === "string" ? f : f?.video_id;
+      const kId = keyframe || (typeof f === "object" ? f?.frame_id : 0);
+      const res = await getFrameInfo(vId, kId);
+      res.frame_id = kId;
+      setFrameInfo(res);
+    } catch (err) {
+      console.error("Failed to fetch video frame info:", err);
+    }
   };
-  const handleOnCancle = () => {
+
+  const handleOnCancel = () => {
     setFrameInfo(null);
   };
+
   return (
-    <VideoContext.Provider
-      value={{
-        playVideo: playVideo,
-      }}
-    >
+    <VideoContext.Provider value={{ playVideo }}>
       {frameInfo !== null && (
-        <VideoPlayer frameInfo={frameInfo} onCancle={handleOnCancle} />
+        <VideoPlayer frameInfo={frameInfo} onCancel={handleOnCancel} />
       )}
       {children}
     </VideoContext.Provider>
   );
 }
+
 export function usePlayVideo() {
   const { playVideo } = useContext(VideoContext);
   return playVideo;
 }
-function VideoPlayer({ frameInfo, onCancle }) {
+
+export function VideoPlayer({ frameInfo, onCancel }) {
   const { evaluationIds, submitAnswer } = useContext(AuthContext);
   const { selected, addSelected, removeSelected } = useSelected();
   const fetcher = useFetcher({ key: "answers" });
   const videoElementRef = useRef(null);
+  const videoWrapperRef = useRef(null);
+
   const [frameCounter, setFrameCounter] = useState(0);
   const [seekStep, setSeekStep] = useState(2);
   const seekStepRef = useRef(2);
@@ -49,17 +59,18 @@ function VideoPlayer({ frameInfo, onCancle }) {
 
   const timelineRef = useRef(null);
   const [isScrubbing, setIsScrubbing] = useState(false);
+  const [keyframes, setKeyframes] = useState([]);
 
   const displayEvaluationIds = [
     { id: "TKIS", name: "TKIS" },
     { id: "VKIS", name: "VKIS" },
     { id: "QA", name: "QA" },
-    { id: "TR", name: "TR" },
-    ...evaluationIds
+    { id: "TRAKE", name: "TRAKE" },
+    ...evaluationIds,
   ];
 
   const [selectedQueryId, setSelectedQueryId] = useState(
-    displayEvaluationIds.length > 0 ? displayEvaluationIds[0].id : ""
+    displayEvaluationIds[0]?.id || "TKIS"
   );
 
   const handleSeekStepChange = (e) => {
@@ -68,39 +79,41 @@ function VideoPlayer({ frameInfo, onCancle }) {
     seekStepRef.current = val;
   };
 
-  const [keyframes, setKeyframes] = useState([]);
-
-  useEffect(() => {
-    async function loadTranscript() {
-      try {
-        const data = await getVideoTranscript(frameInfo.video_id);
-        setTranscript(data);
-      } catch (err) {
-        console.error("Failed to load transcript", err);
-      }
+  // Fullscreen Video + Diagram Container (Hotkey F)
+  const toggleVideoFullscreen = () => {
+    if (!videoWrapperRef.current) return;
+    if (!document.fullscreenElement) {
+      videoWrapperRef.current.requestFullscreen().catch((err) => console.error(err));
+    } else {
+      document.exitFullscreen().catch((err) => console.error(err));
     }
-    loadTranscript();
-  }, [frameInfo.video_id]);
+  };
 
+  // Load Transcript
   useEffect(() => {
-    async function loadKeyframes() {
-      try {
-        const data = await getVideoKeyframes(frameInfo.video_id);
-        setKeyframes(data);
-      } catch (err) {
-        console.error("Failed to load keyframes", err);
-      }
-    }
-    loadKeyframes();
-  }, [frameInfo.video_id]);
+    if (!frameInfo?.video_id) return;
+    getVideoTranscript(frameInfo.video_id)
+      .then(setTranscript)
+      .catch(() => setTranscript([]));
+  }, [frameInfo?.video_id]);
 
+  // Load Keyframes Timeline Strip
+  useEffect(() => {
+    if (!frameInfo?.video_id) return;
+    getVideoKeyframes(frameInfo.video_id)
+      .then(setKeyframes)
+      .catch(() => setKeyframes([]));
+  }, [frameInfo?.video_id]);
+
+  // Timeline Scrubbing Handler (CapCut Timeline Bar)
   const handleTimelineScrub = (e) => {
     if (!videoElementRef.current || !timelineRef.current) return;
     const rect = timelineRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const relativeX = Math.max(0, Math.min(1, x / rect.width));
     if (videoElementRef.current.duration) {
-      videoElementRef.current.currentTime = relativeX * videoElementRef.current.duration;
+      videoElementRef.current.currentTime =
+        relativeX * videoElementRef.current.duration;
     }
   };
 
@@ -112,42 +125,42 @@ function VideoPlayer({ frameInfo, onCancle }) {
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      if (isScrubbing) {
-        handleTimelineScrub(e);
-      }
+      if (isScrubbing) handleTimelineScrub(e);
     };
     const handleMouseUp = () => {
-      if (isScrubbing) {
-        setIsScrubbing(false);
-      }
+      if (isScrubbing) setIsScrubbing(false);
     };
 
     if (isScrubbing) {
       window.addEventListener("mousemove", handleMouseMove);
       window.addEventListener("mouseup", handleMouseUp);
     }
-
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
     };
   }, [isScrubbing]);
 
+  // Sample Keyframes for Timeline Strip
   const targetTimelineCount = 20;
   const sampledKeyframes = [];
   if (keyframes.length > 0) {
     for (let i = 0; i < targetTimelineCount; i++) {
-      const idx = Math.floor((i / (targetTimelineCount - 1)) * (keyframes.length - 1));
+      const idx = Math.floor(
+        (i / (targetTimelineCount - 1)) * (keyframes.length - 1)
+      );
       sampledKeyframes.push(keyframes[idx]);
     }
   }
 
+  const fps = frameInfo?.fps || 25;
   const duration = videoElementRef.current ? videoElementRef.current.duration : 0;
-  const currentPercentage = duration > 0 ? ((frameCounter / frameInfo.fps) / duration) * 100 : 0;
+  const currentPercentage =
+    duration > 0 ? (frameCounter / fps / duration) * 100 : 0;
 
+  // Active Transcript Auto-Scroll
   useEffect(() => {
     if (transcript.length === 0) return;
-    const fps = frameInfo.fps;
     const currentTime = frameCounter / fps;
     const activeIdx = transcript.findIndex(
       (item) => currentTime >= item.start_time && currentTime <= item.end_time
@@ -157,137 +170,168 @@ function VideoPlayer({ frameInfo, onCancle }) {
       if (activeIdx !== -1) {
         const activeEl = document.getElementById(`asr-seg-${activeIdx}`);
         if (activeEl && transcriptContainerRef.current) {
-          activeEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          activeEl.scrollIntoView({ behavior: "smooth", block: "center" });
         }
       }
     }
-  }, [frameCounter, transcript, activeSegmentIndex, frameInfo.fps]);
+  }, [frameCounter, transcript, activeSegmentIndex, fps]);
 
+  // YouTube Hotkeys & Video Playback Controls
   useEffect(() => {
-    const fps = frameInfo.fps;
     const videoElement = videoElementRef.current;
+    if (!videoElement) return;
+
     videoElement.currentTime =
-      frameInfo.time || parseInt(frameInfo.frame_id) / fps - 0.5;
+      frameInfo.time || parseInt(frameInfo.frame_id, 10) / fps - 0.5;
     videoElement.focus();
 
     const handleKeyDown = (e) => {
-      const isInInput = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
-      
+      const isInInput = ["INPUT", "TEXTAREA", "SELECT"].includes(
+        e.target.tagName
+      );
+
       switch (e.keyCode) {
-        case 27: // Escape - close video player
-          onCancle();
-          return;
-        case 13: // Enter - focus answer input or shift+enter to submit
-          if (e.shiftKey) {
-            e.preventDefault();
-            document.querySelector("#answer-form input[type=submit]").click();
-          } else if (!isInInput) {
-            document.querySelector("#answer-form input[name=answer]").focus();
+        case 27: // Escape - close video player (or exit fullscreen first)
+          if (!document.fullscreenElement) {
+            onCancel();
           }
           return;
-        case 191: // Shift + / - Jump to answer
-          if (e.shiftKey) {
+
+        case 70: // F - Fullscreen Video + Diagram Container
+          if (!isInInput) {
             e.preventDefault();
-            document.querySelector("#answer-form input[name=answer]").focus();
+            toggleVideoFullscreen();
           }
           return;
-        case 75: // K - Play/pause
+
+        case 75: // K - Play/Pause
+        case 32: // Space - Play/Pause
           if (!isInInput) {
             e.preventDefault();
             if (videoElement.paused) videoElement.play();
             else videoElement.pause();
           }
           return;
-        case 37: // Left arrow - Go seekStep back OR frame by frame if Shift
+
+        case 37: // Left arrow - Seek Step back OR frame by frame if Shift
           if (!isInInput) {
             e.preventDefault();
             if (e.shiftKey) {
-              videoElement.currentTime = Math.max(videoElement.currentTime - 1/fps, 0);
+              videoElement.currentTime = Math.max(
+                videoElement.currentTime - 1 / fps,
+                0
+              );
             } else {
-              videoElement.currentTime = Math.max(videoElement.currentTime - seekStepRef.current, 0);
+              videoElement.currentTime = Math.max(
+                videoElement.currentTime - seekStepRef.current,
+                0
+              );
             }
           }
           return;
-        case 39: // Right arrow - Go seekStep forward OR frame by frame if Shift
+
+        case 39: // Right arrow - Seek Step forward OR frame by frame if Shift
           if (!isInInput) {
             e.preventDefault();
             if (e.shiftKey) {
               videoElement.currentTime = Math.min(
-                videoElement.currentTime + 1/fps,
-                videoElement.duration,
+                videoElement.currentTime + 1 / fps,
+                videoElement.duration
               );
             } else {
               videoElement.currentTime = Math.min(
                 videoElement.currentTime + seekStepRef.current,
-                videoElement.duration,
+                videoElement.duration
               );
             }
           }
           return;
-        case 219: // [ - Go frame by frame back
+
+        case 219: // [ - Go 1 frame back
           if (!isInInput) {
             e.preventDefault();
-            videoElement.currentTime = Math.max(videoElement.currentTime - 1/fps, 0);
-          }
-          return;
-        case 221: // ] - Go frame by frame forward
-          if (!isInInput) {
-            e.preventDefault();
-            videoElement.currentTime = Math.min(
-              videoElement.currentTime + 1/fps,
-              videoElement.duration,
+            videoElement.currentTime = Math.max(
+              videoElement.currentTime - 1 / fps,
+              0
             );
           }
           return;
-        case 189: // - - Decrease speed
+
+        case 221: // ] - Go 1 frame forward
+          if (!isInInput) {
+            e.preventDefault();
+            videoElement.currentTime = Math.min(
+              videoElement.currentTime + 1 / fps,
+              videoElement.duration
+            );
+          }
+          return;
+
+        case 189: // - - Decrease playback speed
           if (!isInInput) {
             e.preventDefault();
             videoElement.playbackRate = Math.max(
               videoElement.playbackRate - 0.25,
-              0.25,
+              0.25
             );
           }
           return;
-        case 187: // + - Increase speed
+
+        case 187: // + - Increase playback speed
           if (!isInInput) {
             e.preventDefault();
             videoElement.playbackRate = Math.min(
               videoElement.playbackRate + 0.25,
-              4,
+              4
             );
           }
           return;
+
         case 83: // S - Toggle select frame
           if (!isInInput) {
             e.preventDefault();
             document.getElementById("toggle-select-frame-btn")?.click();
           }
           return;
+
+        case 13: // Enter - Focus Answer Input or Submit Selected if Shift
+          if (e.shiftKey) {
+            e.preventDefault();
+            document.getElementById("submit-selected-btn")?.click();
+          } else if (!isInInput) {
+            e.preventDefault();
+            const ansInput = document.getElementById("answer-text-input");
+            if (ansInput) ansInput.focus();
+          }
+          return;
       }
     };
 
     document.addEventListener("keydown", handleKeyDown, true);
-    let id = setInterval(() => {
-      setFrameCounter(videoElement.currentTime * fps);
+    const id = setInterval(() => {
+      if (videoElement) {
+        setFrameCounter(videoElement.currentTime * fps);
+      }
     }, 20);
+
     return () => {
       document.removeEventListener("keydown", handleKeyDown, true);
       clearInterval(id);
     };
-  }, []);
+  }, [fps, frameInfo, onCancel]);
 
-  const currentFrameStr = String(Math.round(frameCounter)).padStart(6, '0');
+  const currentFrameStr = String(Math.round(frameCounter)).padStart(6, "0");
   const currentFrameId = `${frameInfo.video_id}#${currentFrameStr}`;
   const isFrameSelected = selected.includes(currentFrameId);
 
   const selectedFramesOfThisVideo = selected
-    .filter(id => id.startsWith(frameInfo.video_id + "#"))
-    .map(id => id.split("#")[1])
-    .sort((a, b) => parseInt(a) - parseInt(b));
+    .filter((id) => id.startsWith(frameInfo.video_id + "#"))
+    .map((id) => id.split("#")[1])
+    .sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
 
   const jumpToFrame = (frameNum) => {
     if (videoElementRef.current) {
-      videoElementRef.current.currentTime = parseInt(frameNum) / frameInfo.fps;
+      videoElementRef.current.currentTime = parseInt(frameNum, 10) / fps;
     }
   };
 
@@ -295,236 +339,248 @@ function VideoPlayer({ frameInfo, onCancle }) {
     <div
       onClick={(e) => {
         e.stopPropagation();
-        onCancle();
+        onCancel();
       }}
-      className="fixed flex items-center justify-center z-10 w-screen h-screen bg-black bg-opacity-25 z-20"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 p-2 overflow-auto"
     >
       <div
-        className="p-4 bg-white rounded-xl max-w-[95vw] max-h-[95vh] flex flex-col shadow-2xl animate-fade-in"
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
+        className="bg-white rounded-xl flex flex-col shadow-2xl transition-all duration-200 border border-gray-300 p-3 w-[98vw] max-h-[98vh]"
+        onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex flex-row justify-between items-start mb-3">
-          <div className="flex flex-row gap-6 text-sm">
-            <div>
-              <div className="">
-                <span className="font-bold">Video ID</span>
-                {": "}
-                {frameInfo.video_id}
-              </div>
-              <div className="">
-                {" "}
-                <span className="font-bold">Frame ID</span>
-                {": "}
-                {frameInfo.frame_id}
-              </div>
-              <div className="">
-                {" "}
-                <span className="font-bold">Frame Counter</span>
-                {": "}
-                {parseInt(frameCounter)}
-              </div>
-              <div className="flex items-center gap-1 mt-1">
-                <span className="font-bold">Seek Step (s)</span>
-                {": "}
-                <input
-                  type="number"
-                  min="0"
-                  step="1"
-                  value={seekStep}
-                  onChange={handleSeekStepChange}
-                  className="w-12 text-center text-xs border border-gray-400 rounded focus:outline-none focus:border-blue-500 font-medium"
-                />
-              </div>
-              <button
-                id="toggle-select-frame-btn"
-                onClick={() => {
-                  if (isFrameSelected) {
-                    removeSelected(currentFrameId);
-                  } else {
-                    addSelected(currentFrameId);
-                  }
-                }}
-                className={classNames(
-                  "mt-2 px-3 py-1 text-xs font-semibold rounded-lg border transition-all duration-150 shadow-sm",
-                  {
-                    "bg-orange-500 hover:bg-orange-600 text-white border-orange-600": isFrameSelected,
-                    "bg-white hover:bg-gray-50 text-slate-700 border-slate-300": !isFrameSelected,
-                  }
-                )}
-              >
-                {isFrameSelected ? "Deselect Frame" : "Select Frame"}
-              </button>
+        {/* Optimized Ultra-Compact Header Toolbar */}
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-2 pb-2 border-b border-gray-200 text-xs shrink-0">
+          {/* Left: Metadata Badges & Frame Selection */}
+          <div className="flex flex-wrap items-center gap-2 font-mono">
+            {/* Video & Frame Info Badges */}
+            <div className="flex items-center gap-1.5 bg-gray-100 border border-gray-300 px-2 py-1 rounded-lg shadow-sm">
+              <span className="text-gray-500 font-sans text-[11px]">Video:</span>
+              <strong className="text-blue-700">{frameInfo.video_id}</strong>
+              <span className="text-gray-300">|</span>
+              <span className="text-gray-500 font-sans text-[11px]">Frame:</span>
+              <strong className="text-emerald-700">#{frameInfo.frame_id}</strong>
+              <span className="text-gray-300">|</span>
+              <span className="text-gray-500 font-sans text-[11px]">Pos:</span>
+              <strong className="text-purple-700">{Math.round(frameCounter)}</strong>
             </div>
 
+            {/* Seek Step */}
+            <div className="flex items-center gap-1 bg-white border border-gray-300 px-2 py-1 rounded-lg shadow-sm">
+              <span className="text-gray-600 font-sans text-[11px]">Step(s):</span>
+              <input
+                type="number"
+                min="1"
+                max="60"
+                value={seekStep}
+                onChange={handleSeekStepChange}
+                className="w-8 text-center text-xs font-bold border-b border-gray-300 focus:outline-none focus:border-blue-500 bg-transparent"
+              />
+            </div>
+
+            {/* Select Frame Button */}
+            <button
+              id="toggle-select-frame-btn"
+              onClick={() => {
+                if (isFrameSelected) removeSelected(currentFrameId);
+                else addSelected(currentFrameId);
+              }}
+              className={classNames(
+                "px-2.5 py-1 text-xs font-bold rounded-lg border transition-all shadow-sm flex items-center gap-1",
+                {
+                  "bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-700": isFrameSelected,
+                  "bg-white hover:bg-gray-100 text-gray-800 border-gray-300": !isFrameSelected,
+                }
+              )}
+            >
+              {isFrameSelected ? "✓ Selected" : "+ Select Frame"}
+            </button>
+
+            {/* Fullscreen Video + Diagram Trigger Button */}
+            <button
+              type="button"
+              onClick={toggleVideoFullscreen}
+              className="px-2 py-1 text-xs font-bold rounded-lg border border-gray-300 bg-gray-100 hover:bg-gray-200 text-gray-800 transition-colors shadow-sm flex items-center gap-1"
+              title="Fullscreen Video + Diagram (Hotkey: F)"
+            >
+              ⛶ Fullscreen (F)
+            </button>
+
+            {/* Saved in this video pills */}
             {selectedFramesOfThisVideo.length > 0 && (
-              <div className="border-l border-slate-200 pl-4 flex flex-col justify-between">
-                <div>
-                  <div className="font-bold text-slate-700 mb-1">Selected in this video:</div>
-                  <div className="flex flex-wrap gap-1 max-w-[20rem]">
-                    {selectedFramesOfThisVideo.map((frameNum) => (
-                      <span
-                        key={frameNum}
-                        className={classNames(
-                          "inline-flex items-center gap-1 font-mono text-[10px] px-1.5 py-0.5 rounded border transition-colors duration-150 shadow-sm group",
-                          {
-                            "bg-orange-500 border-orange-600 text-white font-semibold": frameNum === currentFrameStr,
-                            "bg-orange-550 bg-orange-50 border-orange-200 text-orange-700 hover:bg-orange-100 hover:border-orange-300": frameNum !== currentFrameStr,
-                          }
-                        )}
-                      >
-                        <span 
-                          onClick={() => jumpToFrame(frameNum)}
-                          className="cursor-pointer"
-                          title={frameNum === currentFrameStr ? "Currently showing" : "Click to seek to this frame"}
-                        >
-                          {frameNum}
-                        </span>
-                        <span
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            removeSelected(`${frameInfo.video_id}#${frameNum}`);
-                          }}
-                          className="cursor-pointer font-bold opacity-0 group-hover:opacity-100 hover:text-red-650 text-slate-400 pl-0.5 transition-all duration-150 text-[9px]"
-                          title="Remove frame"
-                        >
-                          ✕
-                        </span>
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <div className="mt-2 text-[10px] text-slate-600 font-mono select-all bg-slate-50 border border-slate-200 rounded px-1.5 py-0.5" title="Double click to copy">
-                  {selectedQueryId}-{frameInfo.video_id}-{selectedFramesOfThisVideo.join(",")}
+              <div className="flex items-center gap-1 border-l border-gray-300 pl-2">
+                <span className="text-[10px] text-gray-500 font-sans">Saved:</span>
+                <div className="flex flex-wrap gap-1 max-w-[14rem] max-h-6 overflow-hidden">
+                  {selectedFramesOfThisVideo.map((frameNum) => (
+                    <span
+                      key={frameNum}
+                      onClick={() => jumpToFrame(frameNum)}
+                      className={classNames(
+                        "inline-flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded font-mono cursor-pointer border shadow-sm",
+                        {
+                          "bg-orange-500 border-orange-600 text-white font-bold": frameNum === currentFrameStr,
+                          "bg-white border-gray-300 text-gray-700 hover:bg-orange-50": frameNum !== currentFrameStr,
+                        }
+                      )}
+                      title="Click to jump to frame"
+                    >
+                      #{frameNum}
+                    </span>
+                  ))}
                 </div>
               </div>
             )}
           </div>
-          <fetcher.Form
-            id="answer-form"
-            onSubmit={(e) => {
-              e.preventDefault();
-              const formData = new FormData(e.currentTarget);
-              const data = Object.fromEntries(formData);
-              const newAnswer = {
-                ...data,
-                video_id: frameInfo.video_id,
-                frame_id: String(Math.round(frameCounter)),
-                frame_counter: frameCounter,
-                time: videoElementRef.current.currentTime,
-              };
-              submitAnswer(newAnswer);
-            }}
-          >
-            <div className="flex flex-row">
-              <select
-                required
-                type="text"
-                name="query_id"
-                value={selectedQueryId}
-                onChange={(e) => setSelectedQueryId(e.target.value)}
-                placeholder="evaluationIds"
-                className="flex-1 py-1 px-2 border-black border-r-2 min-w-0 focus:outline-none"
-              >
-                {displayEvaluationIds.map((e) => (
-                  <option key={e.id} value={e.id}>{e.name}</option>
-                ))}
-              </select>
-              <input
-                type="text"
-                name="answer"
-                placeholder="Answer"
-                autoComplete="off"
-                className="flex-[2_2_0%] py-1 px-2 min-w-0 focus:outline-none"
-              />
-              <input
-                type="submit"
-                value="Submit"
-                className="text-xl px-4 py-1 bg-sky-100 border border-black rounded-xl focus:outline-none hover:bg-sky-200 active:bg-sky-300"
-              />
-            </div>
-          </fetcher.Form>
+
+          {/* Right: Quick Answer Submission & Close */}
+          <div className="flex items-center gap-2">
+            <fetcher.Form
+              id="answer-form"
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                const data = Object.fromEntries(formData);
+                const newAnswer = {
+                  ...data,
+                  video_id: frameInfo.video_id,
+                  frame_id: String(Math.round(frameCounter)),
+                  frame_counter: frameCounter,
+                  time: videoElementRef.current?.currentTime || 0,
+                };
+                if (submitAnswer) submitAnswer(newAnswer);
+              }}
+              className="flex items-center gap-1"
+            >
+              <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
+                <select
+                  required
+                  name="query_id"
+                  value={selectedQueryId}
+                  onChange={(e) => setSelectedQueryId(e.target.value)}
+                  className="py-1 px-2 text-xs bg-gray-50 border-r border-gray-300 focus:outline-none font-bold"
+                >
+                  {displayEvaluationIds.map((e) => (
+                    <option key={e.id} value={e.id}>
+                      {e.name}
+                    </option>
+                  ))}
+                </select>
+
+                {selectedQueryId === "QA" && (
+                  <input
+                    type="text"
+                    name="answer"
+                    placeholder="Answer"
+                    autoComplete="off"
+                    className="py-1 px-2 text-xs focus:outline-none w-32 font-sans"
+                  />
+                )}
+
+                <button
+                  type="submit"
+                  className="text-xs font-bold px-3 py-1 bg-sky-100 hover:bg-sky-200 active:bg-sky-300 border-l border-gray-300 text-sky-900 transition-colors"
+                >
+                  Submit
+                </button>
+              </div>
+            </fetcher.Form>
+
+            {/* Close Modal Button */}
+            <button
+              type="button"
+              onClick={onCancel}
+              className="p-1 px-2.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-lg shadow-sm"
+              title="Close (Esc)"
+            >
+              ✕
+            </button>
+          </div>
         </div>
 
-        <div className="flex flex-row gap-4 overflow-hidden items-start">
-          {/* Left: Video and playback controls */}
-          <div className="flex flex-col flex-1 min-w-[50vw]">
+        {/* Main Body: Video + CapCut Keyframe Timeline + Live Transcript */}
+        <div className="flex flex-row gap-3 overflow-hidden flex-1 min-h-0 h-full">
+          {/* Combined Video & CapCut Timeline Container (Will go Fullscreen together on key F!) */}
+          <div
+            ref={videoWrapperRef}
+            className="flex flex-col flex-1 min-w-0 h-full justify-between bg-black p-1.5 rounded-lg shadow-md border border-gray-800"
+          >
             <video
               ref={videoElementRef}
-              id="playing-vide"
-              key={frameInfo.video_uri}
+              id="playing-video"
               controls
               autoPlay
-              className="w-full h-[26rem] object-contain bg-black rounded-lg shadow-inner"
+              className="w-full flex-1 object-contain bg-black rounded-lg min-h-0"
             >
               <source src={frameInfo.video_uri} type="video/mp4" />
             </video>
 
-            {/* Keyframe Timeline Strip */}
+            {/* CapCut Style Timeline Keyframe Diagram Strip (Gắn liền dưới Video cả ở chế độ Fullscreen!) */}
             <div
               ref={timelineRef}
               onMouseDown={handleMouseDown}
-              className="mt-1 flex flex-row w-full py-0.5 items-center min-h-[4.5rem] bg-slate-950 rounded border border-slate-800 overflow-hidden relative select-none cursor-ew-resize shadow-md"
+              className="mt-1.5 flex flex-row w-full py-0.5 items-center h-16 bg-gray-900 rounded border border-gray-700 overflow-hidden relative select-none cursor-ew-resize shadow-md shrink-0"
+              title="CapCut Timeline Keyframe Strip - Click or drag to scrub video"
             >
-              {/* Playhead line */}
+              {/* Red Playhead Line */}
               {videoElementRef.current && (
                 <div
                   style={{ left: `${currentPercentage}%` }}
-                  className="absolute top-0 bottom-0 w-1 bg-red-500 z-20 pointer-events-none shadow-md shadow-red-500/80"
+                  className="absolute top-0 bottom-0 w-1 bg-red-600 z-20 pointer-events-none shadow-md shadow-red-500/80"
                 />
               )}
 
               {sampledKeyframes.length === 0 ? (
-                <div className="text-slate-500 text-xs text-center w-full py-4 pointer-events-none">Loading timeline keyframes...</div>
+                <div className="text-gray-400 text-xs text-center w-full py-4 pointer-events-none">
+                  Loading timeline keyframes...
+                </div>
               ) : (
-                sampledKeyframes.map((kf, i) => {
-                  return (
-                    <div
-                      key={kf + "-" + i}
-                      className="flex-1 h-14 relative group overflow-hidden pointer-events-none"
-                    >
-                      <img
-                        src={`http://127.0.0.1:6900/api/files/${frameInfo.video_id}/${kf}`}
-                        alt={kf}
-                        loading="lazy"
-                        className="h-full w-full object-cover bg-black"
-                      />
-                    </div>
-                  );
-                })
+                sampledKeyframes.map((kf, i) => (
+                  <div
+                    key={kf + "-" + i}
+                    className="flex-1 h-14 relative group overflow-hidden pointer-events-none border-r border-gray-800"
+                  >
+                    <img
+                      src={`http://127.0.0.1:6900/api/files/${frameInfo.video_id}/${kf}`}
+                      alt={kf}
+                      loading="lazy"
+                      className="h-full w-full object-cover bg-black"
+                    />
+                  </div>
+                ))
               )}
             </div>
           </div>
-          {/* Right: Live Transcript */}
-          <div className="flex flex-col w-96 h-[32rem] border border-slate-200 rounded-lg bg-slate-50 shadow-sm overflow-hidden">
-            <div className="flex justify-between items-center p-2.5 bg-white border-b border-slate-200">
-              <span className="font-bold text-sm text-slate-800 flex items-center gap-1.5">
-                <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                </svg>
-                Live Transcript
+
+          {/* Right: Live Transcript Sidebar (Expanded Comfortable Fixed Height Box) */}
+          <div className="flex flex-col w-80 h-[500px] max-h-[85vh] border border-gray-300 rounded-lg bg-gray-50 shadow-sm overflow-hidden shrink-0 self-start">
+            <div className="flex justify-between items-center p-2 bg-white border-b border-gray-200 shrink-0">
+              <span className="font-bold text-xs text-gray-800 flex items-center gap-1">
+                <span>Live Transcript</span>
+                {transcript.length > 0 && (
+                  <span className="text-[10px] text-gray-400 font-mono">({transcript.length})</span>
+                )}
               </span>
               <input
                 type="text"
                 placeholder="Search transcript..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="text-xs py-1 px-2 border border-slate-300 rounded focus:outline-none focus:border-blue-500 font-medium w-48 shadow-sm transition-colors duration-150"
+                className="text-xs py-1 px-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 font-medium w-36"
               />
             </div>
+
             <div
               ref={transcriptContainerRef}
-              className="flex-grow overflow-y-auto p-2 space-y-1.5"
+              className="flex-1 overflow-y-auto p-2 space-y-1.5"
             >
               {transcript.length === 0 ? (
-                <div className="text-slate-400 text-center py-8 text-xs font-medium">No transcript available</div>
+                <div className="text-gray-400 text-center py-8 text-xs italic">
+                  No transcript available
+                </div>
               ) : (
                 transcript.map((item, idx) => {
-                  const fps = frameInfo.fps;
                   const currentTime = frameCounter / fps;
-                  const isActive = currentTime >= item.start_time && currentTime <= item.end_time;
-                  
+                  const isActive =
+                    currentTime >= item.start_time &&
+                    currentTime <= item.end_time;
                   const matchesSearch =
                     searchTerm &&
                     item.text.toLowerCase().includes(searchTerm.toLowerCase());
@@ -539,19 +595,26 @@ function VideoPlayer({ frameInfo, onCancle }) {
                         }
                       }}
                       className={classNames(
-                        "p-2.5 rounded-lg border-l-4 cursor-pointer transition-all duration-200 text-xs shadow-sm",
+                        "p-2 rounded border-l-4 cursor-pointer transition-all text-xs shadow-sm",
                         {
-                          "bg-blue-50 border-l-blue-600 font-medium text-blue-950 ring-1 ring-blue-100": isActive,
-                          "bg-yellow-50/70 border-l-yellow-400 text-slate-800": matchesSearch && !isActive,
-                          "bg-white border-l-transparent text-slate-700 hover:bg-slate-100/70 hover:border-l-slate-300": !isActive && !matchesSearch,
+                          "bg-blue-100 border-l-blue-600 font-bold text-blue-950":
+                            isActive,
+                          "bg-yellow-100 border-l-yellow-500 text-gray-900":
+                            matchesSearch && !isActive,
+                          "bg-white border-l-transparent text-gray-700 hover:bg-gray-100":
+                            !isActive && !matchesSearch,
                         }
                       )}
                     >
-                      <div className="flex justify-between text-[10px] text-slate-400 mb-1 font-mono">
-                        <span>{formatTime(item.start_time)} - {formatTime(item.end_time)}</span>
+                      <div className="flex justify-between text-[10px] text-gray-400 mb-0.5 font-mono">
+                        <span>
+                          {formatTime(item.start_time)} - {formatTime(item.end_time)}
+                        </span>
                         <span>Frame {item.start_frame}</span>
                       </div>
-                      <div className="leading-relaxed break-words">{item.text}</div>
+                      <div className="leading-relaxed break-words">
+                        {item.text}
+                      </div>
                     </div>
                   );
                 })
@@ -568,5 +631,5 @@ function formatTime(seconds) {
   const m = Math.floor(seconds / 60);
   const s = Math.floor(seconds % 60);
   const ms = Math.floor((seconds % 1) * 10);
-  return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}.${ms}`;
+  return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}.${ms}`;
 }

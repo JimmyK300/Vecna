@@ -10,146 +10,169 @@ from . import constants
 
 
 @lru_cache(maxsize=1024)
+def translate_vi_to_en(text: str) -> str:
+  if not text or not text.strip():
+    return text
+  try:
+    translated = GoogleTranslator(source="auto", target="en").translate(text)
+    logger.info(f"translate_vi_to_en: '{text}' -> '{translated}'")
+    return translated
+  except Exception as e:
+    logger.error(f"translate_vi_to_en failed for '{text}': {e}")
+    return text
+
+
+@lru_cache(maxsize=1024)
 def translate_en_to_vi(text: str) -> str:
-    if not text or not text.strip():
-        return text
-    try:
-        translated = GoogleTranslator(source="auto", target="vi").translate(text)
-        logger.info(f"auto_translate: '{text}' -> OK")
-        return translated
-    except Exception as e:
-        logger.error(f"auto_translate failed for '{text}': {e}")
-        return text
+  if not text or not text.strip():
+    return text
+  try:
+    translated = GoogleTranslator(source="auto", target="vi").translate(text)
+    logger.info(f"translate_en_to_vi: '{text}' -> '{translated}'")
+    return translated
+  except Exception as e:
+    logger.error(f"translate_en_to_vi failed for '{text}': {e}")
+    return text
 
 
 class Query:
-    def __init__(self, query: str, auto_translate: bool = False):
-        self._raw_query = deepcopy(query)
 
-        self._query = deepcopy(query)
-        self._queries: list = []
-        self._video_ids = []
-        self._auto_translate = auto_translate
+  def __init__(
+      self,
+      query: str,
+      auto_translate: bool = False,
+      en_to_vi_translate: bool = False,
+  ):
+    self._raw_query = deepcopy(query)
 
-        self._parse()
+    self._query = deepcopy(query)
+    self._queries: list = []
+    self._video_ids = []
+    self._auto_translate = auto_translate  # VI -> EN for CLIP
+    self._en_to_vi_translate = en_to_vi_translate  # EN -> VI for OCR/ASR
 
-    @property
-    def simple(self):
-        return len(self._queries) == 0
+    self._parse()
 
-    @property
-    def advance(self):
-        return len(self._queries) > 0
+  @property
+  def simple(self):
+    return len(self._queries) == 0
 
-    @property
-    def temporal(self):
-        return len(self._queries) > 1
+  @property
+  def advance(self):
+    return len(self._queries) > 0
 
-    @property
-    def video_ids(self):
-        return self._video_ids
+  @property
+  def temporal(self):
+    return len(self._queries) > 1
 
-    @property
-    def data(self):
-        return self._queries
+  @property
+  def video_ids(self):
+    return self._video_ids
 
-    @property
-    def raw(self):
-        return self._raw_query
+  @property
+  def data(self):
+    return self._queries
 
-    def _parse(self):
-        self._extract_video_ids()
-        self._extract_temporal_queries()
+  @property
+  def raw(self):
+    return self._raw_query
 
-        processed_queries = []
+  def _parse(self):
+    self._extract_video_ids()
+    self._extract_temporal_queries()
 
-        for q in self._queries:
-            q = self._parse_one_query(q)
-            if q:
-                processed_queries.append(q)
+    processed_queries = []
 
-        self._queries = processed_queries
+    for q in self._queries:
+      q = self._parse_one_query(q)
+      if q:
+        processed_queries.append(q)
 
-    def _extract_video_ids(self):
-        pattern = global_constant.VIDEO_QUERY_PATTERN
-        video_match = re.search(pattern, self._query, re.IGNORECASE)
-        if video_match:
-            video_str = video_match.group()
-            video_str = video_str.strip("[]")
-            video_ids_str = ":".join(video_str.split(":")[1:])
+    self._queries = processed_queries
 
-            self._video_ids = video_ids_str.split(",")
-            self._query = self._query.replace(video_match.group(), "", 1)
+  def _extract_video_ids(self):
+    pattern = global_constant.VIDEO_QUERY_PATTERN
+    video_match = re.search(pattern, self._query, re.IGNORECASE)
+    if video_match:
+      video_str = video_match.group()
+      video_str = video_str.strip("[]")
+      video_ids_str = ":".join(video_str.split(":")[1:])
 
-    def _extract_ocr(self, query: str):
-        new_query = deepcopy(query)
+      self._video_ids = video_ids_str.split(",")
+      self._query = self._query.replace(video_match.group(), "", 1)
 
-        pattern = global_constant.OCR_QUERY_PATTERN
-        ocr_list = []
-        while True:
-            ocr_match = re.search(pattern, new_query, re.IGNORECASE)
-            if not ocr_match:
-                break
+  def _extract_ocr(self, query: str):
+    new_query = deepcopy(query)
 
-            ocr_str = ocr_match.group()
-            ocr_str = ocr_str.strip("[]")
-            ocr = ":".join(ocr_str.split(":")[1:]).strip()
+    pattern = global_constant.OCR_QUERY_PATTERN
+    ocr_list = []
+    while True:
+      ocr_match = re.search(pattern, new_query, re.IGNORECASE)
+      if not ocr_match:
+        break
 
-            ocr_list.append(ocr.lower())
-            new_query = new_query.replace(ocr_match.group(), "", 1)
+      ocr_str = ocr_match.group()
+      ocr_str = ocr_str.strip("[]")
+      ocr = ":".join(ocr_str.split(":")[1:]).strip()
 
-        return new_query, ocr_list
+      ocr_list.append(ocr.lower())
+      new_query = new_query.replace(ocr_match.group(), "", 1)
 
-    def _extract_asr(self, query: str):
-        new_query = deepcopy(query)
+    return new_query, ocr_list
 
-        pattern = global_constant.ASR_QUERY_PATTERN
-        asr_list = []
-        while True:
-            asr_match = re.search(pattern, new_query, re.IGNORECASE)
-            if not asr_match:
-                break
+  def _extract_asr(self, query: str):
+    new_query = deepcopy(query)
 
-            asr_str = asr_match.group()
-            asr_str = asr_str.strip("[]")
-            asr = ":".join(asr_str.split(":")[1:]).strip()
+    pattern = global_constant.ASR_QUERY_PATTERN
+    asr_list = []
+    while True:
+      asr_match = re.search(pattern, new_query, re.IGNORECASE)
+      if not asr_match:
+        break
 
-            asr_list.append(asr.lower())
-            new_query = new_query.replace(asr_match.group(), "", 1)
+      asr_str = asr_match.group()
+      asr_str = asr_str.strip("[]")
+      asr = ":".join(asr_str.split(":")[1:]).strip()
 
-        return new_query, asr_list
+      asr_list.append(asr.lower())
+      new_query = new_query.replace(asr_match.group(), "", 1)
 
-    def _extract_temporal_queries(self):
-        self._queries = [{"raw": q} for q in self._query.split(";")]
+    return new_query, asr_list
 
-    def _parse_one_query(self, q):
-        raw = deepcopy(q["raw"]).strip()
+  def _extract_temporal_queries(self):
+    self._queries = [{"raw": q} for q in self._query.split(";")]
 
-        raw, ocr_list = self._extract_ocr(raw)
-        raw, asr_list = self._extract_asr(raw)
+  def _parse_one_query(self, q):
+    raw = deepcopy(q["raw"]).strip()
 
-        raw = raw.strip()
+    raw, ocr_list = self._extract_ocr(raw)
+    raw, asr_list = self._extract_asr(raw)
 
-        features = {}
-        if len(raw):
-            features["text"] = raw
-            if self._auto_translate:
-                features["text_translated"] = translate_en_to_vi(raw)
+    raw = raw.strip()
 
-        if len(ocr_list):
-            features["ocr"] = ocr_list
-            if self._auto_translate:
-                features["ocr_translated"] = [translate_en_to_vi(x) for x in ocr_list]
+    features = {}
+    if len(raw):
+      features["text"] = raw
+      if self._auto_translate:
+        # VI -> EN translation for CLIP
+        features["text_en"] = translate_vi_to_en(raw)
+      if self._en_to_vi_translate:
+        # EN -> VI translation for OCR/ASR
+        features["text_vi"] = translate_en_to_vi(raw)
 
-        if len(asr_list):
-            features["asr"] = asr_list
-            if self._auto_translate:
-                features["asr_translated"] = [translate_en_to_vi(x) for x in asr_list]
+    if len(ocr_list):
+      features["ocr"] = ocr_list
+      if self._en_to_vi_translate:
+        features["ocr_translated"] = [translate_en_to_vi(x) for x in ocr_list]
 
-        if len(features) == 0:
-            return None
+    if len(asr_list):
+      features["asr"] = asr_list
+      if self._en_to_vi_translate:
+        features["asr_translated"] = [translate_en_to_vi(x) for x in asr_list]
 
-        new_q = deepcopy(q)
-        new_q["features"] = features
-        return new_q
+    if len(features) == 0:
+      return None
 
+    new_q = deepcopy(q)
+    new_q["features"] = features
+    return new_q

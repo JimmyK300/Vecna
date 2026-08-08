@@ -111,9 +111,10 @@ class Searcher(object):
         max_interval: int = 250,
         selected: str | None = None,
         auto_translate: bool = False,
+        en_to_vi_translate: bool = False,
     ):
         start_time = time.time()
-        query = Query(q, auto_translate=auto_translate)
+        query = Query(q, auto_translate=auto_translate, en_to_vi_translate=en_to_vi_translate)
 
         if query.simple:
             logger.info(f"searcher: get video_ids={query.video_ids}")
@@ -237,10 +238,11 @@ class Searcher(object):
         # Store entity data for each frame_id
         entity_data = {}
 
-        # 1. CLIP Search (using general "text" query)
+        # 1. CLIP Search (using general "text" query or translated English "text_en" query)
         clip_weight = 1.0 - ocr_weight - asr_weight
         clip_req_count = 0
-        if "text" in query_features and clip_weight > 0:
+        clip_query_text = query_features.get("text_en", query_features.get("text", ""))
+        if clip_query_text and clip_weight > 0:
             text_embeddings = {}
             for target_name in target_features:
                 if target_name not in self._features:
@@ -250,7 +252,7 @@ class Searcher(object):
                 m = self._features[target_name]
                 if m not in text_embeddings:
                     text_embeddings[m] = (
-                        self._extractors[m]["feature_extractor"].get_text_features(query_features["text"]).tolist()[0]
+                        self._extractors[m]["feature_extractor"].get_text_features(clip_query_text).tolist()[0]
                     )
 
                 search_results = self._database.search(
@@ -279,6 +281,8 @@ class Searcher(object):
                 ocr_list = query_features["ocr_translated"]
             elif "ocr" in query_features:
                 ocr_list = query_features["ocr"]
+            elif "text_vi" in query_features:
+                ocr_list = [query_features["text_vi"]]
             elif "text_translated" in query_features:
                 ocr_list = [query_features["text_translated"]]
             elif "text" in query_features:
@@ -325,6 +329,8 @@ class Searcher(object):
                 asr_list = query_features["asr_translated"]
             elif "asr" in query_features:
                 asr_list = query_features["asr"]
+            elif "text_vi" in query_features:
+                asr_list = [query_features["text_vi"]]
             elif "text_translated" in query_features:
                 asr_list = [query_features["text_translated"]]
             elif "text" in query_features:

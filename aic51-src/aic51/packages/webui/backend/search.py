@@ -55,6 +55,7 @@ async def search_multimodal(
     max_interval: int = 1000,
     selected: str | None = None,
     auto_translate: bool = False,
+    en_to_vi_translate: bool = False,
 ):
     if "searcher" not in internal:
         return JSONResponse(
@@ -78,6 +79,7 @@ async def search_multimodal(
             max_interval=max_interval,
             selected=selected,
             auto_translate=auto_translate,
+            en_to_vi_translate=en_to_vi_translate,
         )
     except Exception as e:
         logger.exception(e)

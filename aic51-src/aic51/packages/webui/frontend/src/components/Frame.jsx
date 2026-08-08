@@ -1,65 +1,49 @@
-import { useState, useEffect, useRef } from "react";
-import classNames from "classnames";
-
-import PlayButton from "../assets/play-btn.svg";
-import SearchButton from "../assets/search-btn.svg";
-import NextButton from "../assets/next-btn.svg";
+import React, { useState, useEffect } from "react";
 import { useSelected } from "./SelectedProvider.jsx";
+import { getVideoKeyframes, getFrameOcr } from "../services/search.js";
 
 export function FrameItem({
   id,
   video_id,
   frame_id,
   thumbnail,
-  timelineColor,
-  highlighted,
+  score,
+  scores,
+  ocr,
   onPlay,
   onSearchSimilar,
   onSearchNearby,
-  scores,
-  ocr,
+  temporalStep,
 }) {
   const { selected, addSelected, removeSelected } = useSelected();
   const isSelected = selected.includes(id);
-  const [isZoomed, setIsZoomed] = useState(false);
+
+  // Zoom Modal State
+  const [showZoomModal, setShowZoomModal] = useState(false);
+
+  // OCR Modal State
+  const [showOcrModal, setShowOcrModal] = useState(false);
+  const [ocrText, setOcrText] = useState("");
+  const [loadingOcr, setLoadingOcr] = useState(false);
+
   const [showScores, setShowScores] = useState(false);
-  const [showOCR, setShowOCR] = useState(false);
-  const [ocrText, setOcrText] = useState(ocr !== undefined ? ocr : null);
-  const [loadingOCR, setLoadingOCR] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const elementRef = useRef(null);
 
-  useEffect(() => {
-    if (ocr !== undefined) {
-      setOcrText(ocr);
-    }
-  }, [ocr]);
+  // Fullscreen Nearby Keyframes Explorer Modal state
+  const [showNearbyModal, setShowNearbyModal] = useState(false);
+  const [nearbyKeyframes, setNearbyKeyframes] = useState([]);
+  const [loadingNearby, setLoadingNearby] = useState(false);
+  const [nearbySearchFilter, setNearbySearchFilter] = useState("");
 
-  useEffect(() => {
-    if (highlighted && elementRef.current) {
-      // Small timeout to ensure DOM layout is ready
-      const timer = setTimeout(() => {
-        elementRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
-      }, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [highlighted]);
+  const finalScore = scores?.final ?? score ?? 0.75;
 
-  useEffect(() => {
-    if (!isZoomed && !showOCR) return;
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape" || e.keyCode === 27) {
-        setIsZoomed(false);
-        setShowOCR(false);
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isZoomed, showOCR]);
-  
-  const handleSelect = () => {
+  const getConfidenceBorder = (sc) => {
+    if (sc >= 0.8) return "border-l-emerald-500 border-l-4";
+    if (sc >= 0.5) return "border-l-amber-400 border-l-4";
+    return "border-l-red-400 border-l-4";
+  };
+
+  const handleSelect = (e) => {
+    e.stopPropagation();
     if (isSelected) {
       removeSelected(id);
     } else {
@@ -67,216 +51,419 @@ export function FrameItem({
     }
   };
 
-  const handleOpenOCR = async (e) => {
-    e.stopPropagation();
-    setShowOCR(true);
-    if (!ocrText && ocrText !== "") {
-      setLoadingOCR(true);
-      try {
-        const res = await fetch(`http://127.0.0.1:6900/api/frame/ocr/${video_id}/${frame_id}`);
-        if (res.ok) {
-          const data = await res.json();
-          setOcrText(data.ocr || "");
-        }
-      } catch (err) {
-        console.error("Failed to fetch frame OCR:", err);
-      } finally {
-        setLoadingOCR(false);
+  // Load OCR text when OCR modal is opened
+  useEffect(() => {
+    if (showOcrModal) {
+      if (ocr && String(ocr).trim().length > 0) {
+        setOcrText(String(ocr));
+        setLoadingOcr(false);
+      } else {
+        setLoadingOcr(true);
+        getFrameOcr(video_id, frame_id)
+          .then((txt) => {
+            setOcrText(txt || "");
+          })
+          .catch(() => {
+            setOcrText("");
+          })
+          .finally(() => {
+            setLoadingOcr(false);
+          });
       }
     }
-  };
+  }, [showOcrModal, video_id, frame_id, ocr]);
+
+  // Load nearby keyframes for video_id when modal is opened
+  useEffect(() => {
+    if (showNearbyModal && video_id) {
+      async function fetchNearby() {
+        setLoadingNearby(true);
+        try {
+          const res = await getVideoKeyframes(video_id);
+          const list = res.keyframes || res || [];
+          setNearbyKeyframes(Array.isArray(list) ? list : []);
+        } catch (err) {
+          console.error("Failed to load nearby keyframes:", err);
+          setNearbyKeyframes([]);
+        } finally {
+          setLoadingNearby(false);
+        }
+      }
+      fetchNearby();
+    }
+  }, [showNearbyModal, video_id]);
+
+  // Escape key listener to close modals
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        if (showNearbyModal) setShowNearbyModal(false);
+        if (showOcrModal) setShowOcrModal(false);
+        if (showZoomModal) setShowZoomModal(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [showNearbyModal, showOcrModal, showZoomModal]);
 
   return (
     <>
       <div
-        ref={elementRef}
-        className={classNames("relative flex flex-col space-y-2 p-1 border-l-4 transition-all duration-200", {
-          "bg-white hover:bg-gray-300": !isSelected && !timelineColor && !highlighted,
-          "bg-black border-l-black scale-105 shadow-lg ring-4 ring-yellow-400": isSelected,
-          "scale-105 shadow-lg ring-4 ring-cyan-500 bg-cyan-50 border-l-cyan-500": highlighted && !isSelected,
-        }, !isSelected ? timelineColor : "")}
         onClick={handleSelect}
+        className={`relative flex flex-col p-1 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all cursor-pointer ${getConfidenceBorder(
+          finalScore
+        )} ${
+          isSelected ? "ring-2 ring-blue-500 bg-blue-50/50 border-blue-300" : "hover:bg-gray-50/80"
+        }`}
       >
+        {/* Frame Image Thumbnail */}
         <div
-          className="relative"
+          className="relative aspect-video w-full bg-black rounded-lg overflow-hidden group"
           onMouseEnter={() => setShowScores(true)}
           onMouseLeave={() => setShowScores(false)}
         >
-          <img src={thumbnail} draggable="false" className="w-full h-auto" />
+          <img
+            src={thumbnail}
+            alt={`${video_id}_${frame_id}`}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            loading="lazy"
+          />
+
+          {/* Video ID & Frame ID Tag */}
+          <div className="absolute top-1 left-1 bg-black/75 backdrop-blur-sm px-1.5 py-0.5 rounded text-[10px] text-white font-mono flex gap-1 shadow-sm">
+            <span className="font-semibold text-blue-300">{video_id}</span>
+            <span className="text-gray-300">#</span>
+            <span className="text-emerald-300">{frame_id}</span>
+          </div>
+
+          {/* Temporal Step Badge */}
+          {temporalStep && (
+            <div className="absolute bottom-1 left-1 bg-blue-600/90 backdrop-blur-sm text-white font-mono text-[9px] px-1.5 py-0.5 rounded font-black shadow-sm border border-blue-400 z-10">
+              Step {temporalStep}
+            </div>
+          )}
+
+          {/* Score Badge */}
+          <div className="absolute top-1 right-1 bg-black/80 backdrop-blur-sm text-yellow-400 font-mono text-[9px] px-1.5 py-0.5 rounded-md font-extrabold shadow-sm border border-yellow-500/30">
+            {(finalScore * 100).toFixed(0)}%
+          </div>
+
+          {/* Detailed Score Popup on Hover */}
           {showScores && scores && (
-            <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-80 text-white text-xs p-1.5 space-y-0.5 pointer-events-none">
-              <div className="flex justify-between"><span>Final:</span><span className="font-bold text-yellow-300">{scores.final?.toFixed(4) ?? '-'}</span></div>
-              <div className="flex justify-between"><span>CLIP:</span><span className="font-bold text-green-300">{scores.clip?.toFixed(4) ?? '-'}</span></div>
-              <div className="flex justify-between"><span>OCR:</span><span className="font-bold text-blue-300">{scores.ocr?.toFixed(4) ?? '-'}</span></div>
-              <div className="flex justify-between"><span>ASR:</span><span className="font-bold text-purple-300">{scores.asr?.toFixed(4) ?? '-'}</span></div>
+            <div className="absolute bottom-0 left-0 right-0 bg-black/90 backdrop-blur-md text-white text-[10px] font-mono p-1.5 space-y-0.5 pointer-events-none border-t border-gray-800 animate-fadeIn">
+              <div className="flex justify-between">
+                <span>Final:</span>
+                <span className="font-bold text-yellow-400">{scores.final?.toFixed(4) ?? "-"}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>CLIP:</span>
+                <span className="font-bold text-green-400">{scores.clip?.toFixed(4) ?? "-"}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>OCR:</span>
+                <span className="font-bold text-blue-400">{scores.ocr?.toFixed(4) ?? "-"}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>ASR:</span>
+                <span className="font-bold text-purple-400">{scores.asr?.toFixed(4) ?? "-"}</span>
+              </div>
             </div>
           )}
         </div>
-        <div className="absolute top-0 left-0 space-x-2 flex flex-row bg-black bg-opacity-50 px-1">
-          <div className="text-sm text-white">{frame_id}</div>
-          <div className="text-sm text-nowrap overflow-hidden text-white">
-            {video_id}
-          </div>
-        </div>
-        <div
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-          className="flex flex-row bg-white rounded-md justify-end space-x-1.5 items-center p-0.5"
-        >
-          {/* OCR Transcript Button */}
-          <svg
-            onClick={handleOpenOCR}
-            className="hover:bg-gray-200 active:bg-gray-300 rounded cursor-pointer p-0.5 text-blue-600 hover:text-blue-800 transition-colors"
-            width="24px"
-            height="24px"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            title="Xem OCR Transcript"
-          >
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-            <line x1="10" y1="9" x2="8" y2="9"></line>
-          </svg>
 
-          {/* Zoom button */}
-          <svg
-            onClick={() => setIsZoomed(true)}
-            className="hover:bg-gray-200 active:bg-gray-300 rounded cursor-pointer p-0.5 text-gray-700"
-            width="24px"
-            height="24px"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            title="Zoom image"
+        {/* Action Controls Toolbar (Priority: Play -> Nearby -> Zoom -> OCR -> Similar -> Add) */}
+        <div
+          className="flex justify-between items-center mt-1 pt-1 border-t border-gray-100 overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center gap-1 overflow-hidden shrink-0">
+            {/* 1. Play Video Icon Button (1st Priority) */}
+            <button
+              onClick={onPlay}
+              className="p-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-all shadow-sm hover:scale-105 active:scale-95 flex items-center justify-center shrink-0"
+              title="Play video at frame"
+            >
+              <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </button>
+
+            {/* 2. Nearby Keyframes Icon Button (2nd Priority) */}
+            <button
+              onClick={() => (onSearchNearby ? onSearchNearby() : setShowNearbyModal(true))}
+              className="p-1 bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-700 rounded-md border border-indigo-200 transition-all shadow-sm hover:scale-105 active:scale-95 flex items-center justify-center shrink-0"
+              title="Explore Nearby Keyframes in Video"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+              </svg>
+            </button>
+
+            {/* 3. Zoom Frame Icon Button (3rd Priority) */}
+            <button
+              onClick={() => setShowZoomModal(true)}
+              className="p-1 bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 rounded-md border border-teal-200 transition-all shadow-sm hover:scale-105 active:scale-95 flex items-center justify-center shrink-0"
+              title="Zoom keyframe image"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+              </svg>
+            </button>
+
+            {/* 4. OCR Reader Icon Button (4th Priority) */}
+            <button
+              onClick={() => setShowOcrModal(true)}
+              className="p-1 bg-amber-50 hover:bg-amber-600 hover:text-white text-amber-700 rounded-md border border-amber-200 transition-all shadow-sm hover:scale-105 active:scale-95 flex items-center justify-center shrink-0"
+              title="Read On-screen OCR Text"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </button>
+
+            {/* 5. Search Similar Icon Button (5th Priority) */}
+            {onSearchSimilar && (
+              <button
+                onClick={onSearchSimilar}
+                className="p-1 bg-purple-50 hover:bg-purple-600 hover:text-white text-purple-700 rounded-md border border-purple-200 transition-all shadow-sm hover:scale-105 active:scale-95 flex items-center justify-center shrink-0"
+                title="Search similar keyframes"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </button>
+            )}
+          </div>
+
+          {/* 6. Add / Selected Toggle Icon Button (6th Priority, Rightmost) */}
+          <button
+            onClick={handleSelect}
+            className={`p-1 rounded-md transition-all shadow-sm flex items-center justify-center border shrink-0 ${
+              isSelected
+                ? "bg-emerald-600 text-white border-emerald-600 shadow-emerald-600/30"
+                : "bg-gray-100 hover:bg-emerald-50 text-gray-700 border-gray-300 hover:border-emerald-500"
+            }`}
+            title={isSelected ? "Remove from payload" : "Add frame to payload"}
           >
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            <line x1="11" y1="8" x2="11" y2="14"></line>
-            <line x1="8" y1="11" x2="14" y2="11"></line>
-          </svg>
-          <img
-            onClick={onPlay}
-            className="hover:bg-gray-200 active:bg-gray-300 cursor-pointer"
-            width="24em"
-            src={PlayButton}
-            draggable="false"
-            title="Play video"
-          />
-          <img
-            onClick={onSearchSimilar}
-            className="hover:bg-gray-200 active:bg-gray-300 cursor-pointer"
-            width="24em"
-            src={SearchButton}
-            draggable="false"
-            title="Search similar"
-          />
-          <img
-            onClick={onSearchNearby}
-            className="hover:bg-gray-200 active:bg-gray-300 cursor-pointer"
-            width="24em"
-            src={NextButton}
-            draggable="false"
-            title="Search nearby keyframes"
-          />
+            {isSelected ? (
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            ) : (
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+            )}
+          </button>
         </div>
       </div>
 
-      {/* OCR Modal */}
-      {showOCR && (
+      {/* Zoom Image Modal */}
+      {showZoomModal && (
         <div
-          onClick={() => setShowOCR(false)}
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50 p-4 cursor-pointer"
+          onClick={() => setShowZoomModal(false)}
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn"
         >
           <div
+            className="relative max-w-5xl w-full bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col"
             onClick={(e) => e.stopPropagation()}
-            className="relative max-w-xl w-full bg-white rounded-xl shadow-2xl p-4 flex flex-col space-y-3 cursor-default"
           >
-            <div className="flex justify-between items-center border-b pb-2">
-              <div className="flex items-center space-x-2 font-bold text-gray-800 text-sm">
-                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                <span>OCR Transcript — {video_id}#{frame_id}</span>
-              </div>
+            <div className="px-4 py-2.5 bg-slate-800 flex justify-between items-center border-b border-slate-700">
+              <span className="font-mono text-xs font-bold text-white flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-teal-400 animate-pulse"></span>
+                Zoomed Keyframe: {video_id} #{frame_id}
+              </span>
               <button
-                onClick={() => setShowOCR(false)}
-                className="text-gray-400 hover:text-gray-600 font-bold px-2 py-1 rounded text-base"
+                onClick={() => setShowZoomModal(false)}
+                className="px-2.5 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold shadow-sm transition-colors"
               >
                 ✕
               </button>
             </div>
 
-            <div className="max-h-[60vh] overflow-y-auto bg-slate-50 border rounded-lg p-3 text-sm font-mono text-slate-800 leading-relaxed whitespace-pre-wrap select-text">
-              {loadingOCR ? (
-                <div className="text-gray-500 animate-pulse">Đang tải văn bản OCR...</div>
-              ) : (ocrText && ocrText.trim()) ? (
-                ocrText
-              ) : (
-                <div className="text-gray-400 italic">Không tìm thấy văn bản OCR được trích xuất cho khung hình này.</div>
-              )}
-            </div>
-
-            <div className="flex justify-between items-center pt-1">
-              <span className="text-xs text-gray-500 font-medium">
-                {(ocrText && ocrText.trim()) ? `${ocrText.trim().length} ký tự` : ""}
-              </span>
-              <div className="flex space-x-2">
-                {(ocrText && ocrText.trim()) && (
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(ocrText);
-                      setCopied(true);
-                      setTimeout(() => setCopied(false), 2000);
-                    }}
-                    className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded text-xs font-semibold flex items-center space-x-1"
-                  >
-                    <span>{copied ? "✓ Đã chép!" : "Sao chép văn bản"}</span>
-                  </button>
-                )}
-                <button
-                  onClick={() => setShowOCR(false)}
-                  className="px-3 py-1.5 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded text-xs font-semibold"
-                >
-                  Đóng
-                </button>
-              </div>
+            <div className="p-2 bg-black flex items-center justify-center max-h-[85vh] overflow-hidden">
+              <img
+                src={thumbnail}
+                alt={`${video_id}_${frame_id}_zoomed`}
+                className="max-h-[80vh] w-auto object-contain rounded-lg shadow-lg"
+              />
             </div>
           </div>
         </div>
       )}
 
-      {isZoomed && (
+      {/* OCR Text Reader Modal */}
+      {showOcrModal && (
         <div
-          onClick={() => setIsZoomed(false)}
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50 cursor-zoom-out"
+          onClick={() => setShowOcrModal(false)}
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn"
         >
-          <div 
-            className="relative max-w-[95vw] w-fit max-h-[95vh] p-2 bg-white rounded-xl shadow-2xl flex flex-col items-center"
+          <div
+            className="relative max-w-lg w-full bg-slate-900 text-white p-4.5 rounded-2xl shadow-2xl flex flex-col gap-3.5 border border-slate-800"
             onClick={(e) => e.stopPropagation()}
           >
-            <button
-              onClick={() => setIsZoomed(false)}
-              className="absolute top-2 right-2 px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 font-bold text-xs shadow-md active:bg-red-800"
-            >
-              Close
-            </button>
-            <img
-              src={thumbnail.replace("/api/files/", "/api/keyframes/")}
-              className="max-w-[90vw] max-h-[85vh] object-contain rounded-lg shadow-inner bg-gray-100"
-              alt="Enlarged keyframe"
-            />
-            <div className="mt-2 text-sm font-semibold text-gray-800">
-              Video ID: {video_id} | Frame ID: {frame_id}
+            {/* Modal Header */}
+            <div className="flex justify-between items-center border-b border-slate-800 pb-2.5 font-bold text-xs">
+              <span className="flex items-center gap-2 font-mono">
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
+                <span className="text-amber-400 font-extrabold uppercase">OCR Text Reader</span>
+                <span className="text-slate-400">({video_id} #{frame_id})</span>
+              </span>
+              <button
+                onClick={() => setShowOcrModal(false)}
+                className="px-2.5 py-1 bg-slate-800 hover:bg-red-600 text-slate-300 hover:text-white rounded-lg text-xs font-bold transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Modal Body: Actual OCR Text Content */}
+            <div className="bg-slate-950 border border-slate-800 text-slate-100 rounded-xl p-3.5 max-h-64 overflow-y-auto font-mono text-xs leading-relaxed whitespace-pre-wrap select-text shadow-inner">
+              {loadingOcr ? (
+                <div className="flex items-center gap-2 text-slate-400 italic">
+                  <div className="w-4 h-4 border-2 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
+                  <span>Fetching detected OCR text...</span>
+                </div>
+              ) : ocrText ? (
+                ocrText
+              ) : (
+                <span className="text-slate-500 italic">No on-screen OCR text detected for this frame.</span>
+              )}
+            </div>
+
+            {/* Modal Footer: Score Indicator & Copy Text Button */}
+            <div className="flex justify-between items-center pt-1 border-t border-slate-800 text-xs font-mono">
+              <div className="text-slate-400 text-[11px]">
+                {scores?.ocr !== undefined && (
+                  <span>OCR Match Score: <strong className="text-amber-400 font-bold">{(scores.ocr * 100).toFixed(1)}%</strong></span>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  if (ocrText) {
+                    navigator.clipboard.writeText(ocrText);
+                    alert("Copied OCR text to clipboard!");
+                  }
+                }}
+                disabled={!ocrText}
+                className="px-4 py-1.5 bg-amber-600 hover:bg-amber-500 disabled:bg-slate-800 disabled:text-slate-600 text-white font-bold rounded-lg text-xs shadow-md transition-colors flex items-center gap-1.5"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                Copy Text
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Fullscreen Nearby Keyframes Explorer Modal (True Edge-to-Edge & Super Tight Grid) */}
+      {showNearbyModal && (
+        <div
+          onClick={() => setShowNearbyModal(false)}
+          className="fixed inset-0 z-50 bg-black flex flex-col text-white animate-fadeIn"
+        >
+          <div
+            className="flex flex-col h-full w-full bg-slate-950 overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Sleek Minimal Header */}
+            <div className="px-3 py-2 bg-slate-900 border-b border-slate-800 flex justify-between items-center shrink-0">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span className="font-bold text-xs text-white uppercase tracking-wide">Nearby Keyframes</span>
+                <span className="text-xs text-blue-400 font-mono font-bold bg-blue-950 px-2 py-0.5 rounded border border-blue-800">
+                  Video: {video_id}
+                </span>
+                <span className="text-xs text-emerald-400 font-mono font-bold bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">
+                  Target: #{frame_id}
+                </span>
+                <span className="text-xs text-gray-400 font-mono">
+                  ({nearbyKeyframes.length} frames)
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  placeholder="Filter frame ID..."
+                  value={nearbySearchFilter}
+                  onChange={(e) => setNearbySearchFilter(e.target.value)}
+                  className="bg-slate-900 border border-slate-700 text-xs px-2 py-0.5 rounded text-white font-mono focus:outline-none focus:border-blue-500 w-36"
+                />
+                <button
+                  onClick={() => setShowNearbyModal(false)}
+                  className="px-2.5 py-0.5 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-bold shadow-sm transition-colors"
+                >
+                  Close (Esc ✕)
+                </button>
+              </div>
+            </div>
+
+            {/* Fullscreen Edge-to-Edge Grid (Tight gap-1 spacing, 10 cols) */}
+            <div className="flex-1 overflow-y-auto p-1 bg-black">
+              {loadingNearby ? (
+                <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-gray-400 font-mono text-sm py-20">
+                  <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                  <span>Loading keyframes for {video_id}...</span>
+                </div>
+              ) : nearbyKeyframes.length === 0 ? (
+                <div className="w-full text-center py-20 text-gray-400 font-mono text-sm">
+                  No keyframes found for video: {video_id}
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9 xl:grid-cols-10 gap-1">
+                  {nearbyKeyframes
+                    .filter((kf) => (nearbySearchFilter ? String(kf).includes(nearbySearchFilter) : true))
+                    .map((kf) => {
+                      const kfId = `${video_id}#${kf}`;
+                      const isCurrentTarget = String(kf) === String(frame_id);
+                      const isSelectedFrame = selected.includes(kfId);
+
+                      return (
+                        <div
+                          key={kf}
+                          id={`nearby-kf-${kf}`}
+                          onClick={() => {
+                            if (isSelectedFrame) removeSelected(kfId);
+                            else addSelected(kfId);
+                          }}
+                          className={`relative aspect-video w-full bg-black rounded overflow-hidden cursor-pointer group hover:scale-[1.03] transition-transform ${
+                            isSelectedFrame
+                              ? "ring-4 ring-emerald-500 z-10"
+                              : isCurrentTarget
+                              ? "ring-2 ring-blue-400"
+                              : "hover:ring-2 hover:ring-emerald-400/60"
+                          }`}
+                        >
+                          {/* Thumbnail Image */}
+                          <img
+                            src={`http://127.0.0.1:6900/api/files/${video_id}/${kf}`}
+                            alt={kf}
+                            loading="lazy"
+                            className="w-full h-full object-cover"
+                          />
+
+                          {/* Selected Checkmark Badge */}
+                          {isSelectedFrame && (
+                            <div className="absolute top-1 left-1 bg-emerald-600 text-white font-extrabold text-xs w-5 h-5 rounded-full flex items-center justify-center shadow-lg border border-white/50">
+                              ✓
+                            </div>
+                          )}
+
+                          {/* Current Target Indicator Badge */}
+                          {isCurrentTarget && (
+                            <div className="absolute top-0.5 right-0.5 bg-blue-600 text-white font-mono text-[8px] px-1 py-0.2 rounded font-black shadow-sm uppercase">
+                              TARGET
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -286,5 +473,9 @@ export function FrameItem({
 }
 
 export function FrameContainer({ children }) {
-  return <div className="grid grid-cols-5 gap-2">{children}</div>;
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-1">
+      {children}
+    </div>
+  );
 }
