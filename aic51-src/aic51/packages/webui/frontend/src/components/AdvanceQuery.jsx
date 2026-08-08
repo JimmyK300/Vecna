@@ -8,14 +8,14 @@ export function AdvanceQueryContainer({
   onChange,
   onSubmit,
 }) {
-  const temporalQueries = q.split(";");
+  const temporalQueries = q.split(/[;|\\]/);
   const handleOnChange = (id, newTemporalQuery) => {
     temporalQueries[id] = newTemporalQuery;
-    onChange(temporalQueries.join(";"));
+    onChange(temporalQueries.join(" | "));
   };
   const handleOnDelete = (id) => {
     temporalQueries.splice(id, 1);
-    onChange(temporalQueries.join(";"));
+    onChange(temporalQueries.join(" | "));
   };
   return (
     <div className="flex flex-row items-center flex-wrap">
@@ -34,15 +34,14 @@ export function AdvanceQueryContainer({
         </div>
       ))}
       <div className="basis-1/4">
-        <img
-          className="hover:bg-gray-300 active:bg-gray-400 m-auto"
-          src={AddButton}
-          width="30em"
-          draggable={false}
-          onClick={() => {
-            onChange(q + ";");
-          }}
-        />
+        <button
+          type="button"
+          className="temporal-add-button"
+          onClick={() => onChange(`${q} | `)}
+        >
+          <img src={AddButton} width="20em" draggable={false} alt="Add temporal query" />
+          Add temporal segment
+        </button>
       </div>
     </div>
   );

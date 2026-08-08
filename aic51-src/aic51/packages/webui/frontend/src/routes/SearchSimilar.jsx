@@ -1,7 +1,6 @@
 import {
   useLoaderData,
   useSubmit,
-  useOutletContext,
   useNavigation,
 } from "react-router-dom";
 import classNames from "classnames";
@@ -42,7 +41,6 @@ export async function loader({ request }) {
   }
 
   const _offset = searchParams.get("offset") || 0;
-  const selected = searchParams.get("selected") || undefined;
   const limit = searchParams.get("limit") || limitOptions[0];
   const nprobe = searchParams.get("nprobe") || nprobeOption[0];
   const temporal_k = searchParams.get("temporal_k") || temporal_k_default;
@@ -73,16 +71,15 @@ export async function loader({ request }) {
 
 export default function SearchSimilar() {
   const navigation = useNavigation();
-  const { targetFeatureOptions } = useOutletContext();
   const submit = useSubmit();
   const { query, params, offset, data } = useLoaderData();
   const playVideo = usePlayVideo();
   const { clearSelected } = useSelected();
 
   const { id } = query;
-  const { limit, nprobe } = params;
+  const { limit } = params;
 
-  const { total, frames } = data;
+  const { frames } = data;
   const empty = frames.length === 0;
 
   useEffect(() => {
@@ -116,7 +113,7 @@ export default function SearchSimilar() {
   };
 
   const handleOnPlay = (frame) => {
-    playVideo(frame);
+    playVideo(frame, frame.frame_id);
   };
 
   const handleOnSearchSimilar = (frame) => {

@@ -38,6 +38,7 @@ function VideoPlayer({ frameInfo, onCancle }) {
   const { selected, addSelected, removeSelected } = useSelected();
   const fetcher = useFetcher({ key: "answers" });
   const videoElementRef = useRef(null);
+  const playerShellRef = useRef(null);
   const [frameCounter, setFrameCounter] = useState(0);
   const [seekStep, setSeekStep] = useState(2);
   const seekStepRef = useRef(2);
@@ -49,6 +50,7 @@ function VideoPlayer({ frameInfo, onCancle }) {
 
   const timelineRef = useRef(null);
   const [isScrubbing, setIsScrubbing] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const displayEvaluationIds = [
     { id: "TKIS", name: "TKIS" },
@@ -67,6 +69,21 @@ function VideoPlayer({ frameInfo, onCancle }) {
     setSeekStep(val);
     seekStepRef.current = val;
   };
+
+  const toggleFullscreen = async () => {
+    if (!playerShellRef.current) return;
+    if (document.fullscreenElement) {
+      await document.exitFullscreen();
+    } else {
+      await playerShellRef.current.requestFullscreen();
+    }
+  };
+
+  useEffect(() => {
+    const handleFullscreenChange = () => setIsFullscreen(Boolean(document.fullscreenElement));
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  }, []);
 
   const [keyframes, setKeyframes] = useState([]);
 
@@ -285,6 +302,11 @@ function VideoPlayer({ frameInfo, onCancle }) {
     .map(id => id.split("#")[1])
     .sort((a, b) => parseInt(a) - parseInt(b));
 
+  const selectedMarkers = selectedFramesOfThisVideo.map((frameNum) => ({
+    frameNum,
+    left: duration > 0 ? (parseInt(frameNum, 10) / (duration * frameInfo.fps)) * 100 : 0,
+  }));
+
   const jumpToFrame = (frameNum) => {
     if (videoElementRef.current) {
       videoElementRef.current.currentTime = parseInt(frameNum) / frameInfo.fps;
@@ -292,15 +314,18 @@ function VideoPlayer({ frameInfo, onCancle }) {
   };
 
   return (
-    <div
-      onClick={(e) => {
+      <div
+        ref={playerShellRef}
+        onClick={(e) => {
         e.stopPropagation();
         onCancle();
       }}
       className="fixed flex items-center justify-center z-10 w-screen h-screen bg-black bg-opacity-25 z-20"
     >
       <div
-        className="p-4 bg-white rounded-xl max-w-[95vw] max-h-[95vh] flex flex-col shadow-2xl animate-fade-in"
+        className={classNames("video-player-modal p-4 bg-white rounded-xl max-w-[95vw] max-h-[95vh] flex flex-col shadow-2xl animate-fade-in", {
+          "video-player-modal-fullscreen": isFullscreen,
+        })}
         onClick={(e) => {
           e.stopPropagation();
         }}
@@ -401,6 +426,9 @@ function VideoPlayer({ frameInfo, onCancle }) {
               </div>
             )}
           </div>
+          <button type="button" onClick={toggleFullscreen} className="toolbar-button" title="Toggle fullscreen">
+            {isFullscreen ? "Exit fullscreen" : "Fullscreen"}
+          </button>
           <fetcher.Form
             id="answer-form"
             onSubmit={(e) => {
@@ -474,6 +502,15 @@ function VideoPlayer({ frameInfo, onCancle }) {
                   className="absolute top-0 bottom-0 w-1 bg-red-500 z-20 pointer-events-none shadow-md shadow-red-500/80"
                 />
               )}
+
+              {selectedMarkers.map(({ frameNum, left }) => (
+                <div
+                  key={frameNum}
+                  className="absolute top-0 bottom-0 w-1 bg-orange-400 z-10 pointer-events-none shadow-md"
+                  style={{ left: `${Math.min(100, Math.max(0, left))}%` }}
+                  title={`Selected frame ${frameNum}`}
+                />
+              ))}
 
               {sampledKeyframes.length === 0 ? (
                 <div className="text-slate-500 text-xs text-center w-full py-4 pointer-events-none">Loading timeline keyframes...</div>
@@ -551,7 +588,7 @@ function VideoPlayer({ frameInfo, onCancle }) {
                         <span>{formatTime(item.start_time)} - {formatTime(item.end_time)}</span>
                         <span>Frame {item.start_frame}</span>
                       </div>
-                      <div className="leading-relaxed break-words">{item.text}</div>
+                      <div className="leading-relaxed break-words">{highlightTranscript(item.text, searchTerm)}</div>
                     </div>
                   );
                 })
@@ -569,4 +606,15 @@ function formatTime(seconds) {
   const s = Math.floor(seconds % 60);
   const ms = Math.floor((seconds % 1) * 10);
   return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}.${ms}`;
+}
+
+function highlightTranscript(text, searchTerm) {
+  if (!searchTerm.trim()) return text;
+  const escapedSearchTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const parts = text.split(new RegExp(`(${escapedSearchTerm})`, "ig"));
+  return parts.map((part, index) => (
+    part.toLowerCase() === searchTerm.toLowerCase()
+      ? <mark key={`${part}-${index}`} className="transcript-highlight">{part}</mark>
+      : part
+  ));
 }

@@ -2,15 +2,21 @@ import { createContext, useContext, useState } from "react";
 
 export const SelectedContext = createContext({
   selected: [],
+  viewed: [],
+  submitted: [],
   addSelected: () => {},
   removeSelected: () => {},
   clearSelected: () => {},
+  markViewed: () => {},
+  markSubmitted: () => {},
   getFirstSelected: () => null,
   getSelectedForSubmit: () => null,
 });
 
 export default function SelectedProvider({ children }) {
   const [selected, setSelected] = useState([]);
+  const [viewed, setViewed] = useState([]);
+  const [submitted, setSubmitted] = useState([]);
 
   const addSelected = (frameId) => {
     setSelected(prev => {
@@ -38,6 +44,15 @@ export default function SelectedProvider({ children }) {
     setSelected([]);
   };
 
+  const markViewed = (frameId) => {
+    setViewed((prev) => (prev.includes(frameId) ? prev : [...prev, frameId]));
+  };
+
+  const markSubmitted = (frameIds) => {
+    const ids = Array.isArray(frameIds) ? frameIds : [frameIds];
+    setSubmitted((prev) => [...new Set([...prev, ...ids])]);
+  };
+
   const getFirstSelected = () => {
     return selected.length > 0 ? selected[0] : null;
   };
@@ -50,9 +65,13 @@ export default function SelectedProvider({ children }) {
     <SelectedContext.Provider
       value={{
         selected,
+        viewed,
+        submitted,
         addSelected,
         removeSelected,
         clearSelected,
+        markViewed,
+        markSubmitted,
         getFirstSelected,
         getSelectedForSubmit,
       }}

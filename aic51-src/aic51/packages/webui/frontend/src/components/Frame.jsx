@@ -19,8 +19,17 @@ export function FrameItem({
   scores,
   ocr,
 }) {
-  const { selected, addSelected, removeSelected } = useSelected();
+  const {
+    selected,
+    viewed,
+    submitted,
+    addSelected,
+    removeSelected,
+    markViewed,
+  } = useSelected();
   const isSelected = selected.includes(id);
+  const isViewed = viewed.includes(id);
+  const isSubmitted = submitted.includes(id);
   const [isZoomed, setIsZoomed] = useState(false);
   const [showScores, setShowScores] = useState(false);
   const [showOCR, setShowOCR] = useState(false);
@@ -67,6 +76,12 @@ export function FrameItem({
     }
   };
 
+  const handlePlay = (event) => {
+    event.stopPropagation();
+    markViewed(id);
+    onPlay();
+  };
+
   const handleOpenOCR = async (e) => {
     e.stopPropagation();
     setShowOCR(true);
@@ -90,7 +105,13 @@ export function FrameItem({
     <>
       <div
         ref={elementRef}
-        className={classNames("relative flex flex-col space-y-2 p-1 border-l-4 transition-all duration-200", {
+        draggable
+        onDragStart={(event) => {
+          event.dataTransfer.setData("application/x-vecna-frame", id);
+          event.dataTransfer.effectAllowed = "copy";
+        }}
+        data-frame-id={id}
+        className={classNames("frame-card relative flex flex-col space-y-2 p-1 border-l-4 transition-all duration-200", {
           "bg-white hover:bg-gray-300": !isSelected && !timelineColor && !highlighted,
           "bg-black border-l-black scale-105 shadow-lg ring-4 ring-yellow-400": isSelected,
           "scale-105 shadow-lg ring-4 ring-cyan-500 bg-cyan-50 border-l-cyan-500": highlighted && !isSelected,
@@ -103,6 +124,11 @@ export function FrameItem({
           onMouseLeave={() => setShowScores(false)}
         >
           <img src={thumbnail} draggable="false" className="w-full h-auto" />
+          <div className="absolute top-1 right-1 flex flex-wrap justify-end gap-1">
+            {isViewed && <span className="frame-badge frame-badge-viewed">Viewed</span>}
+            {isSelected && <span className="frame-badge frame-badge-selected">Staged</span>}
+            {isSubmitted && <span className="frame-badge frame-badge-submitted">Sent</span>}
+          </div>
           {showScores && scores && (
             <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-80 text-white text-xs p-1.5 space-y-0.5 pointer-events-none">
               <div className="flex justify-between"><span>Final:</span><span className="font-bold text-yellow-300">{scores.final?.toFixed(4) ?? '-'}</span></div>
@@ -165,7 +191,7 @@ export function FrameItem({
             <line x1="8" y1="11" x2="14" y2="11"></line>
           </svg>
           <img
-            onClick={onPlay}
+            onClick={handlePlay}
             className="hover:bg-gray-200 active:bg-gray-300 cursor-pointer"
             width="24em"
             src={PlayButton}
@@ -285,6 +311,10 @@ export function FrameItem({
   );
 }
 
-export function FrameContainer({ children }) {
-  return <div className="grid grid-cols-5 gap-2">{children}</div>;
+export function FrameContainer({ children, density = "compact" }) {
+  return (
+    <div className={classNames("frame-grid", `frame-grid-${density}`)}>
+      {children}
+    </div>
+  );
 }

@@ -1,22 +1,12 @@
-import {
-  useLoaderData,
-  Form,
-  useSubmit,
-  useOutletContext,
-  useNavigation,
-} from "react-router-dom";
-import classNames from "classnames";
+import { Form, useLoaderData, useNavigation, useSubmit } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import { search } from "../services/search.js";
-import { FrameItem, FrameContainer } from "../components/Frame.jsx";
+import { FrameContainer, FrameItem } from "../components/Frame.jsx";
 import { usePlayVideo } from "../components/VideoPlayer.jsx";
 import { AdvanceQueryContainer } from "../components/AdvanceQuery.jsx";
 import { useSelected } from "../components/SelectedProvider.jsx";
 import { getTimelineColor } from "../utils/timelineColors.js";
-import PreviousButton from "../assets/previous-btn.svg";
-import NextButton from "../assets/next-btn.svg";
-import HomeButton from "../assets/home-btn.svg";
 import SpinIcon from "../assets/spin.svg";
 
 import {
@@ -28,524 +18,256 @@ import {
   max_interval_default,
 } from "../resources/options.js";
 
+function appendVideoFilters(query, includeVideo, excludeVideo) {
+  const include = includeVideo
+    ? `[video:${includeVideo.split(",").map((item) => item.trim()).filter(Boolean).join(",")}]`
+    : "";
+  const exclude = excludeVideo
+    ? `[-video:${excludeVideo.split(",").map((item) => item.trim()).filter(Boolean).join(",")}]`
+    : "";
+  return [query, include, exclude].filter(Boolean).join(" ").trim();
+}
+
 export async function loader({ request }) {
   const url = new URL(request.url);
   const searchParams = url.searchParams;
+  const q = searchParams.get("q") || "";
+  const include_video = searchParams.get("include_video") || "";
+  const exclude_video = searchParams.get("exclude_video") || "";
 
-  const q = searchParams.get("q");
-  
+  const params = {
+    limit: searchParams.get("limit") || limitOptions[0],
+    nprobe: searchParams.get("nprobe") || nprobeOption[0],
+    temporal_k: searchParams.get("temporal_k") || temporal_k_default,
+    ocr_weight: searchParams.get("ocr_weight") || ocr_weight_default,
+    asr_weight: searchParams.get("asr_weight") || asr_weight_default,
+    max_interval: searchParams.get("max_interval") || max_interval_default,
+    target_features: searchParams.get("target_features") || "",
+    auto_translate: searchParams.get("auto_translate") || "",
+    include_video,
+    exclude_video,
+  };
+
   if (!q) {
-    return {
-      query: {},
-      params: {},
-      selected: undefined,
-      offset: 0,
-      data: { total: 0, frames: [] },
-    };
+    return { query: {}, params, selected: undefined, offset: 0, data: { total: 0, frames: [] } };
   }
 
-  const _offset = searchParams.get("offset") || 0;
-  const selected = searchParams.get("selected") || undefined;
-  const limit = searchParams.get("limit") || limitOptions[0];
-  const nprobe = searchParams.get("nprobe") || nprobeOption[0];
-  const temporal_k = searchParams.get("temporal_k") || temporal_k_default;
-  const ocr_weight = searchParams.get("ocr_weight") || ocr_weight_default;
-  const asr_weight = searchParams.get("asr_weight") || asr_weight_default;
-  const max_interval = searchParams.get("max_interval") || max_interval_default;
-
-  const target_features = searchParams.get("target_features") || "";
-  const auto_translate = searchParams.get("auto_translate") || "";
-
   try {
-    const { total, frames, offset } = await search(
-      q,
-      _offset,
-      limit,
-      nprobe,
-      temporal_k,
-      ocr_weight,
-      asr_weight,
-      max_interval,
-      selected,
-      target_features,
-      auto_translate,
+    const response = await search(
+      appendVideoFilters(q.replace(/[|\\]/g, ";"), include_video, exclude_video),
+      searchParams.get("offset") || 0,
+      params.limit,
+      params.nprobe,
+      params.temporal_k,
+      params.ocr_weight,
+      params.asr_weight,
+      params.max_interval,
+      searchParams.get("selected") || undefined,
+      params.target_features,
+      params.auto_translate,
     );
-    const query = q ? { q } : {};
-
     return {
-      query,
-      params: {
-        limit,
-        nprobe,
-        temporal_k,
-        ocr_weight,
-        asr_weight,
-        max_interval,
-        target_features,
-        auto_translate
-      },
-      selected,
-      offset,
-      data: { total, frames },
+      query: { q },
+      params,
+      selected: searchParams.get("selected") || undefined,
+      offset: response.offset || 0,
+      data: { total: response.total || 0, frames: response.frames || [] },
     };
   } catch (error) {
-    console.error("Search failed:", error);
-    const query = q ? { q } : {};
-    
     return {
-      query,
-      params: {
-        limit,
-        nprobe,
-        temporal_k,
-        ocr_weight,
-        asr_weight,
-        max_interval,
-        target_features,
-        auto_translate
-      },
-      selected,
-      offset: _offset,
+      query: { q },
+      params,
+      selected: searchParams.get("selected") || undefined,
+      offset: searchParams.get("offset") || 0,
       data: { total: 0, frames: [] },
       error: error.message,
     };
   }
 }
 
+function frameEntries(frame) {
+  const timeLines = frame.time_line?.length
+    ? frame.time_line
+    : [frame.frame_id || String(frame.id || "").split("#")[1]].filter(Boolean);
+  return timeLines.map((keyframe, index) => ({
+    frame,
+    keyframe,
+    scores: frame.time_line_scores?.[index] || frame.scores,
+  }));
+}
+
 export default function Search() {
   const navigation = useNavigation();
-  const { targetFeatureOptions } = useOutletContext();
   const submit = useSubmit();
-  const { query, params, offset, data, selected } = useLoaderData();
-  console.log(params);
+  const { query = {}, params = {}, offset = 0, data = {}, selected, error } = useLoaderData();
   const playVideo = usePlayVideo();
-  const { getSelectedForSubmit, clearSelected } = useSelected();
-
+  const { selected: selectedFrames, clearSelected } = useSelected();
   const { q = "", id = null } = query;
-  const { limit, nprobe } = params;
-  
+  const { limit = limitOptions[0] } = params;
+  const frames = data.frames || [];
+  const total = data.total || 0;
   const [currentQuery, setCurrentQuery] = useState(q);
-
-  const { total, frames } = data;
-  const empty = frames.length === 0;
+  const [density, setDensity] = useState(() => localStorage.getItem("vecna-grid-density") || "compact");
 
   useEffect(() => {
     setCurrentQuery(q);
-    const searchBar = document.querySelector("#search-bar");
-    if (searchBar) {
-      searchBar.focus();
-    }
-    document.title = q;
+    document.title = q || "Vecna Search";
   }, [q]);
 
-
-  // Add hotkeys
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.keyCode === 191) {
-        const filterBar = document.querySelector("#search-area");
-        if (filterBar) filterBar.scrollIntoView();
-        const searchBar = document.querySelector("#search-bar");
-        if (searchBar && searchBar !== document.activeElement) {
-          e.preventDefault();
-          searchBar.focus();
-          return false;
-        }
-      }
+    localStorage.setItem("vecna-grid-density", density);
+  }, [density]);
 
-      if (e.keyCode === 9) {
-        const searchBar = document.querySelector("#search-bar");
-        const queryInputs = Array.from(document.querySelectorAll(
-          '[data-query-input="main"], [data-query-input="ocr"], [data-query-input="speech"]'
-        ));
-        const activeElement = document.activeElement;
+  useEffect(() => {
+    if (!currentQuery.trim() || currentQuery === q || id) return undefined;
+    const timer = window.setTimeout(() => {
+      submit({ ...params, q: currentQuery.trim(), offset: 0 }, { action: "/search" });
+    }, 450);
+    return () => window.clearTimeout(timer);
+  }, [currentQuery, id, params, q, submit]);
 
-        const cycleElements = [];
-        if (searchBar) cycleElements.push(searchBar);
-        cycleElements.push(...queryInputs);
-
-        if (cycleElements.length > 0) {
-          if (cycleElements.includes(activeElement)) {
-            e.preventDefault();
-            const currentIndex = cycleElements.indexOf(activeElement);
-            let nextIndex;
-            if (e.shiftKey) {
-              if (currentIndex === 0) {
-                activeElement.blur();
-              } else {
-                nextIndex = currentIndex - 1;
-                cycleElements[nextIndex].focus();
-              }
-            } else {
-              nextIndex = (currentIndex + 1) % cycleElements.length;
-              cycleElements[nextIndex].focus();
-            }
-          } else {
-            e.preventDefault();
-            const targetElement = queryInputs.length > 0 ? queryInputs[0] : searchBar;
-            if (targetElement) {
-              targetElement.focus();
-            }
-          }
-        }
-      }
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      const isInput = ["INPUT", "TEXTAREA"].includes(event.target.tagName);
+      if (isInput) return;
+      if (event.key === "ArrowUp") goToPreviousPage();
+      if (event.key === "ArrowDown") goToNextPage();
     };
     document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
-  useEffect(() => {
-    document.title = q + `(${Math.floor(offset / limit) + 1})`;
-    const handleKeyDown = (e) => {
-      const isInInput = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
-      
-      switch (e.keyCode) {
-        case 38: // Up arrow - Previous page
-          if (!isInInput) {
-            e.preventDefault();
-            goToPreviousPage();
-          }
-          return;
-        case 40: // Down arrow - Next page
-          if (!isInInput) {
-            e.preventDefault();
-            goToNextPage();
-          }
-          return;
-        case 37: // Left arrow - Go 5s back (placeholder for video)
-          if (!isInInput) {
-            e.preventDefault();
-          }
-          return;
-        case 39: // Right arrow - Go 5s forward (placeholder for video)
-          if (!isInInput) {
-            e.preventDefault();
-          }
-          return;
-        case 219: // [ - Go frame by frame back
-          if (!isInInput) {
-            e.preventDefault();
-          }
-          return;
-        case 221: // ] - Go frame by frame forward
-          if (!isInInput) {
-            e.preventDefault();
-            console.log("Go frame forward");
-          }
-          return;
-        case 187: // + - Increase speed
-          if (!isInInput) {
-            e.preventDefault();
-            console.log("Increase speed");
-          }
-          return;
-        case 189: // - - Decrease speed
-          if (!isInInput) {
-            e.preventDefault();
-            console.log("Decrease speed");
-          }
-          return;
-        case 13: // Enter with Shift - Submit when viewing video
-          if (e.shiftKey && !isInInput) {
-            e.preventDefault();
-            handleSubmitSelected();
-          }
-          return;
-        case 191: // Shift + / - Jump to answer when viewing video
-          if (e.shiftKey && !isInInput) {
-            e.preventDefault();
-            const answerSection = document.querySelector(".relative.p-2");
-            if (answerSection) {
-              answerSection.scrollIntoView({ behavior: 'smooth' });
-            }
-          }
-          return;
-      }
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  });
 
-      // Shift + 1-0 to play video 1 to 10
-      if (e.shiftKey && !isInInput && ((e.keyCode >= 49 && e.keyCode <= 57) || e.keyCode === 48)) {
-        e.preventDefault();
-        const index = e.keyCode === 48 ? 9 : e.keyCode - 49;
-        const allDisplayedItems = [];
-        frames.forEach((frame) => {
-          const timeLines = frame.time_line || [];
-          timeLines.forEach((keyframe) => {
-            allDisplayedItems.push({ frame, keyframe });
-          });
-        });
-        if (allDisplayedItems[index]) {
-          const { frame, keyframe } = allDisplayedItems[index];
-          handleOnPlay(frame, keyframe);
-        }
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [offset, frames]);
+  const pageSize = parseInt(limit, 10) || 1;
+  const page = Math.floor(Number(offset) / pageSize) + 1;
+  const empty = frames.length === 0;
 
-  const goToFirstPage = () => {
-    submit({ ...query, ...params, offset: 0 });
-  };
-  
-  const goToPreviousPage = () => {
-    submit({ 
-      ...query, 
-      ...params, 
-      offset: Math.max(parseInt(offset) - parseInt(limit), 0) 
-    });
-  };
-  
+  const goToFirstPage = () => submit({ ...query, ...params, offset: 0 });
+  const goToPreviousPage = () => submit({ ...query, ...params, offset: Math.max(Number(offset) - pageSize, 0) });
   const goToNextPage = () => {
-    if (!empty) {
-      submit({ 
-        ...query, 
-        ...params, 
-        offset: parseInt(offset) + parseInt(limit) 
-      });
-    }
+    if (!empty) submit({ ...query, ...params, offset: Number(offset) + pageSize });
   };
 
-  const handleOnPlay = (frame, keyframe) => {
-    playVideo(frame, keyframe);
+  const handleOnSearch = (event = { preventDefault: () => {} }) => {
+    event.preventDefault();
+    if (currentQuery.trim()) submit({ ...params, q: currentQuery.trim(), offset: 0 }, { action: "/search" });
   };
 
   const handleOnSearchSimilar = (frame, keyframe) => {
-    let idx = frame.video_id + "#" + keyframe;
-    submit({ id: idx, ...params }, { action: "/similar" });
+    submit({ ...params, id: `${frame.video_id}#${keyframe}` }, { action: "/similar" });
   };
 
   const handleOnSearchNearby = (frame, keyframe) => {
-    let idx = frame.video_id + "#" + keyframe;
-    submit(
-      {
-        q: "[video:" + frame.video_id + "]",
-        ...params,
-        selected: idx,
-      },
-      { action: "/search" },
-    );
+    submit({ ...params, q: `[video:${frame.video_id}]`, selected: `${frame.video_id}#${keyframe}`, offset: 0 }, { action: "/search" });
   };
 
   const handleSubmitSelected = () => {
-    const selectedFrameId = getSelectedForSubmit();
-    if (selectedFrameId) {
-      const [videoId, frameId] = selectedFrameId.split('#');
-      
-      const queryType = 'kis'; 
-      
-      let csvContent = '';
-      
-      if (queryType === 'kis') {
-        csvContent = `${videoId}, ${frameId}`;
-      } else if (queryType === 'qa') {
-        const answer = prompt("Enter your answer (max 100 characters):");
-        if (answer && answer.length <= 100) {
-          const escapedAnswer = answer.includes(',') || answer.includes('"') ? 
-            `"${answer.replace(/"/g, '""')}"` : answer;
-          csvContent = `${videoId}, ${frameId}, ${escapedAnswer}`;
-        } else {
-          alert("Answer is required and must be 100 characters or less");
-          return;
-        }
-      }
-      
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement('a');
-      const url = URL.createObjectURL(blob);
-      link.setAttribute('href', url);
-      link.setAttribute('download', `query-result-${queryType}.csv`);
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      console.log("Generated CSV content:", csvContent);
-    } else {
-      alert("Please select a frame first");
+    if (selectedFrames.length === 0) {
+      window.alert("Select at least one frame first.");
+      return;
     }
+    const [videoId] = selectedFrames[0].split("#");
+    const frameIds = selectedFrames.map((frameId) => frameId.split("#")[1]);
+    const blob = new Blob([`${videoId}, ${frameIds.join(", ")}`], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "query-result-kis.csv";
+    link.click();
+    URL.revokeObjectURL(link.href);
   };
-
-  const handleClearSelected = () => {
-    clearSelected();
-  };
-  const getSearchParams = () => {
-    const currentParams = {};
-    const paramKeys = ["limit", "nprobe", "temporal_k", "ocr_weight", "asr_weight", "max_interval"];
-    for (const key of paramKeys) {
-      const element = document.querySelector(`#${key}`);
-      if (element) {
-        currentParams[key] = element.value;
-      } else if (params[key] !== undefined) {
-        currentParams[key] = params[key];
-      }
-    }
-    
-    const targetFeaturesSelected = [];
-    const checkboxes = document.querySelectorAll('input[name="target_features"]:checked');
-    checkboxes.forEach((cb) => {
-      targetFeaturesSelected.push(cb.value);
-    });
-    if (targetFeaturesSelected.length > 0) {
-      currentParams.target_features = targetFeaturesSelected.join(',');
-    } else if (params.target_features) {
-      currentParams.target_features = params.target_features;
-    }
-
-    const autoTranslateCheckbox = document.querySelector("#auto_translate");
-    if (autoTranslateCheckbox) {
-      currentParams.auto_translate = autoTranslateCheckbox.checked ? "true" : "false";
-    } else if (params.auto_translate) {
-      currentParams.auto_translate = params.auto_translate;
-    }
-
-    return currentParams;
-  };
-
-  const handleOnSearch = (e) => {
-    e.preventDefault();
-    const currentParams = getSearchParams();
-    submit({ ...currentParams, q: currentQuery, offset: 0 }, { action: "/search" });
-  };
-
-  console.log(frames);
 
   return (
-    <div id="search-area" className="flex flex-col w-full">
+    <div id="search-area" className="search-page">
       <Form id="search-form" onSubmit={handleOnSearch}>
-        <div className="flex flex-col p-1 px-2 space-y-1 bg-gray-100">
-          <div className="flex flex-row space-x-2">
+        <div
+          className="query-toolbar"
+          onDragOver={(event) => event.preventDefault()}
+          onDrop={(event) => {
+            event.preventDefault();
+            const idFromDrop = event.dataTransfer.getData("application/x-vecna-frame");
+            if (idFromDrop) submit({ ...params, id: idFromDrop }, { action: "/similar" });
+          }}
+        >
+          <div className="query-toolbar-main">
             <img
-              className={classNames("h-6 w-6 self-center", {
-                "visible animate-spin": navigation.state === "loading",
-                invisible: navigation.state !== "loading",
-              })}
+              className={navigation.state === "loading" ? "query-spinner" : "query-spinner invisible"}
               src={SpinIcon}
+              alt="Searching"
             />
             <textarea
               form="search-form"
               autoComplete="off"
-              rows="2"
-              className="flex-grow text-sm p-1 border rounded border-gray-400 bg-gray-200 text-gray-600 focus:border-black focus:bg-white focus:text-black focus:outline-none resize-none"
+              rows="1"
+              className="query-input"
               name="q"
               id="search-bar"
-              placeholder="Search"
+              placeholder="Describe a scene, OCR text, or spoken phrase…"
               value={currentQuery}
-              onChange={(e) => setCurrentQuery(e.target.value)}
-              onKeyDown={(e) => {
-                // Bad practice
-                if (e.keyCode === 13 && e.shiftKey === false) {
-                  e.preventDefault();
-                  handleOnSearch(e);
-                }
+              onChange={(event) => setCurrentQuery(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" && event.shiftKey) event.preventDefault();
               }}
             />
-            <button
-              className="self-center text-sm py-1 px-2 border rounded bg-gray-600 text-white hover:bg-gray-500 active:bg-gray-400"
-              type="button"
-              onClick={(e) => {
-                handleOnSearch(e);
-              }}
-            >
-              Search
-            </button>
+            <span className="query-status">{navigation.state === "loading" ? "Searching…" : "Auto-search"}</span>
           </div>
+          <p className="query-helper">Type to search · use <code>ocr:</code> and <code>asr:</code> for evidence · drop a frame here for similar search</p>
         </div>
       </Form>
 
-      <AdvanceQueryContainer
-        q={currentQuery}
-        onChange={(newQ) => {
-          setCurrentQuery(newQ);
-        }}
-        onSubmit={() => {
-          submit({ q: currentQuery, ...getSearchParams() });
-        }}
-      />
+      {!id && currentQuery.trim() && (
+        <AdvanceQueryContainer
+          q={currentQuery}
+          onChange={setCurrentQuery}
+          onSubmit={handleOnSearch}
+        />
+      )}
 
-      <div
-        id="nav-bar"
-        className="p-1 flex flex-row justify-center items-center text-xl font-bold"
-      >
-          <img
-            onClick={() => {
-              goToFirstPage();
-            }}
-            className="hover:bg-gray-200 active:bg-gray-300"
-            width="50em"
-            src={HomeButton}
-            draggable="false"
-          />
-
-          <img
-            onClick={() => {
-              goToPreviousPage();
-            }}
-            className="hover:bg-gray-200 active:bg-gray-300"
-            width="50em"
-            src={PreviousButton}
-            draggable="false"
-          />
-          <div className="w-10 text-center">{Math.floor(offset / limit) + 1}</div>
-          <img
-            onClick={() => {
-              goToNextPage();
-            }}
-            className="hover:bg-gray-200 active:bg-gray-300"
-            width="50em"
-            src={NextButton}
-            draggable="false"
-          />
+      <div id="nav-bar" className="results-toolbar">
+        <div>
+          <p className="eyebrow">Results</p>
+          <h1>{q ? `Matches for “${q}”` : "Start with a query"}</h1>
+          <span className="results-count">{total} candidates · page {page}</span>
+        </div>
+        <div className="results-toolbar-actions">
+          <div className="density-toggle" role="group" aria-label="Result density">
+            <button type="button" className={density === "compact" ? "active" : ""} onClick={() => setDensity("compact")}>Compact</button>
+            <button type="button" className={density === "detailed" ? "active" : ""} onClick={() => setDensity("detailed")}>Detailed</button>
+          </div>
+          <button type="button" className="toolbar-button" onClick={goToFirstPage}>First</button>
+          <button type="button" className="toolbar-button" onClick={goToPreviousPage}>Prev</button>
+          <button type="button" className="toolbar-button" onClick={goToNextPage}>Next</button>
+          <button type="button" className="toolbar-button toolbar-button-primary" onClick={handleSubmitSelected}>Export staged</button>
+        </div>
       </div>
+
+      {error && <div className="error-banner">Search unavailable: {error}</div>}
       {empty ? (
-        <div className="w-full text-center p-2 bg-red-500 text-white text-xl text-bold">
-          END
+        <div className="empty-state">
+          <strong>{q ? "No candidates yet" : "Search the indexed video collection"}</strong>
+          <span>{q ? "Try a broader phrase or adjust a source preset." : "Results will appear here as you type."}</span>
         </div>
       ) : (
-        <div
-          className={classNames("", {
-            "animate-pulse": navigation.state === "loading",
-          })}
-        >
-          <FrameContainer id="result">
-            {frames.map((frame, idx) => {
-              let timeLines = frame.time_line || [];
-              let timeLineScores = frame.time_line_scores || [];
-              return (
-                <>
-                  {timeLines.map((keyframe, keyframeIdx) => {
-                    const itemScores = (timeLineScores && timeLineScores[keyframeIdx]) || frame.scores;
-                    return (
-                      <FrameItem
-                        key={String(frame.id) + String(idx) + String(keyframe)}
-                        id={`${frame.video_id}#${keyframe}`}
-                        video_id={frame.video_id}
-                        frame_id={keyframe}
-                        thumbnail={`http://127.0.0.1:6900/api/files/${frame.video_id}/${keyframe}`}
-                        timelineColor={getTimelineColor(idx)}
-                        highlighted={selected === `${frame.video_id}#${keyframe}`}
-                        scores={itemScores}
-                        ocr={frame.ocr}
-                        onPlay={() => {
-                          handleOnPlay(frame, keyframe);
-                        }}
-                        onSearchSimilar={() => {
-                          handleOnSearchSimilar(frame, keyframe);
-                        }}
-                        onSearchNearby={() => {
-                          handleOnSearchNearby(frame, keyframe);
-                        }}
-                      />
-                    );
-                  })}
-                </>
-              );
-            })}
+        <div className={navigation.state === "loading" ? "results-loading" : ""}>
+          <FrameContainer density={density}>
+            {frames.flatMap(frameEntries).map(({ frame, keyframe, scores }, index) => (
+              <FrameItem
+                key={`${frame.id || frame.video_id}-${keyframe}-${index}`}
+                id={`${frame.video_id}#${keyframe}`}
+                video_id={frame.video_id}
+                frame_id={keyframe}
+                thumbnail={`http://127.0.0.1:6900/api/files/${frame.video_id}/${keyframe}`}
+                timelineColor={getTimelineColor(index)}
+                highlighted={selected === `${frame.video_id}#${keyframe}`}
+                scores={scores}
+                ocr={frame.ocr}
+                onPlay={() => playVideo(frame, keyframe)}
+                onSearchSimilar={() => handleOnSearchSimilar(frame, keyframe)}
+                onSearchNearby={() => handleOnSearchNearby(frame, keyframe)}
+              />
+            ))}
           </FrameContainer>
-      </div>
-    )}
+        </div>
+      )}
+      <button type="button" className="sr-only" onClick={() => clearSelected()}>Clear staged frames</button>
     </div>
   );
 }
