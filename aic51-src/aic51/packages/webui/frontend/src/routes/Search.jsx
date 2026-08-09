@@ -19,7 +19,6 @@ export async function loader({ request }) {
   const max_interval = parseInt(searchParams.get("max_interval") || "1000", 10);
   const auto_translate = searchParams.get("auto_translate") === "true";
   const en_to_vi_translate = searchParams.get("en_to_vi_translate") === "true";
-
   const target_features = searchParams.get("target_features") || "";
   const include_videos = searchParams.get("include_videos") || "";
   const exclude_videos = searchParams.get("exclude_videos") || "";
@@ -127,7 +126,6 @@ export default function Search() {
   const [enToViTranslate, setEnToViTranslate] = useState(params.en_to_vi_translate || false);
   const [includeVideos, setIncludeVideos] = useState(params.include_videos || "");
   const [excludeVideos, setExcludeVideos] = useState(params.exclude_videos || "");
-
   const [queryHeight, setQueryHeight] = useState(null);
   const [isResizingQuery, setIsResizingQuery] = useState(false);
 
@@ -143,7 +141,6 @@ export default function Search() {
 
   const resultsContainerRef = useRef(null);
   const loadSentinelRef = useRef(null);
-
   const isSearching = navigation.state === "loading";
 
   useEffect(() => {
@@ -162,9 +159,7 @@ export default function Search() {
     );
     setIsLoadingMore(false);
 
-    if (resultsContainerRef.current) {
-      resultsContainerRef.current.scrollTop = 0;
-    }
+    if (resultsContainerRef.current) resultsContainerRef.current.scrollTop = 0;
   }, [query.q, params, data, offset, limit]);
 
   const handleQueryMouseDown = (e) => {
@@ -180,8 +175,7 @@ export default function Search() {
         const rect = container.getBoundingClientRect();
         const contentH = container.firstElementChild ? container.firstElementChild.offsetHeight : 210;
         const maxH = contentH + 4;
-        const newH = Math.min(Math.max(70, e.clientY - rect.top), maxH);
-        setQueryHeight(newH);
+        setQueryHeight(Math.min(Math.max(70, e.clientY - rect.top), maxH));
       }
     };
 
@@ -250,9 +244,7 @@ export default function Search() {
       const incoming = res.frames || [];
       setStreamFrames((prev) => {
         const seen = new Set(
-          prev.map((frame) =>
-            `${frame.video_id}#${frame.frame_id}#${JSON.stringify(frame.time_line || [])}`
-          )
+          prev.map((frame) => `${frame.video_id}#${frame.frame_id}#${JSON.stringify(frame.time_line || [])}`)
         );
         const unique = incoming.filter((frame) => {
           const key = `${frame.video_id}#${frame.frame_id}#${JSON.stringify(frame.time_line || [])}`;
@@ -268,7 +260,6 @@ export default function Search() {
       setStreamTotal(total);
       setNextOffset(followingOffset);
       setHasMore(incoming.length >= limit && followingOffset < (total || Infinity));
-
       console.debug(
         `[Vecna search] fetched offset ${nextOffset} in ${(performance.now() - startedAt).toFixed(1)} ms`
       );
@@ -298,15 +289,9 @@ export default function Search() {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries.some((entry) => entry.isIntersecting)) {
-          loadMore();
-        }
+        if (entries.some((entry) => entry.isIntersecting)) loadMore();
       },
-      {
-        root,
-        rootMargin: "900px 0px",
-        threshold: 0.01,
-      }
+      { root, rootMargin: "900px 0px", threshold: 0.01 }
     );
 
     observer.observe(sentinel);
@@ -342,9 +327,7 @@ export default function Search() {
       if (e.shiftKey && (e.key === "?" || e.key === "/")) {
         e.preventDefault();
         const answerSection = document.getElementById("answer-sidebar-container");
-        if (answerSection) {
-          answerSection.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
+        if (answerSection) answerSection.scrollIntoView({ behavior: "smooth", block: "center" });
         return;
       }
 
@@ -432,6 +415,11 @@ export default function Search() {
             setExcludeVideos(val);
             triggerSearch(searchQuery, includeVideos, val);
           }}
+          onVideoScopeChange={({ includeVideos: nextInc, excludeVideos: nextExc }) => {
+            setIncludeVideos(nextInc);
+            setExcludeVideos(nextExc);
+            triggerSearch(searchQuery, nextInc, nextExc);
+          }}
           isSearching={isSearching}
         />
       </div>
@@ -444,10 +432,7 @@ export default function Search() {
         title="Drag up / down to resize Query Box"
       />
 
-      <div
-        ref={resultsContainerRef}
-        className="flex-1 flex flex-col gap-2 min-h-0 overflow-y-auto pr-1"
-      >
+      <div ref={resultsContainerRef} className="flex-1 flex flex-col gap-2 min-h-0 overflow-y-auto pr-1">
         <div className="sticky top-0 z-20 self-end bg-white/90 backdrop-blur border border-gray-200 rounded px-2 py-1 text-[10px] font-mono text-gray-600 shadow-sm">
           <strong className="text-emerald-700">{displayFrames.length}</strong> loaded
           {streamTotal > 0 && <span> · {streamTotal} backend total</span>}
