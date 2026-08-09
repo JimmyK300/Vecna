@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import VideoScopeSelector from "./VideoScopeSelector.jsx";
 
 const VIDEO_PREFIX_OPTIONS = [
   { prefix: "L21", name: "L21: HTV 60 Seconds (P1)" },
@@ -24,8 +25,6 @@ export function AdvanceQueryContainer({
   onExcludeVideosChange,
   isSearching = false,
 }) {
-  const [showPrefixMenu, setShowPrefixMenu] = useState(false);
-
   const parseQuery = (queryString) => {
     let mainText = queryString || "";
     let ocrText = "";
@@ -57,13 +56,9 @@ export function AdvanceQueryContainer({
   };
 
   const buildQuery = (mainText, ocrText, asrText) => {
-    let parts = [mainText.trim()];
-    if (ocrText.trim()) {
-      parts.push(`[OCR:"${ocrText.trim()}"]`);
-    }
-    if (asrText.trim()) {
-      parts.push(`[asr:"${asrText.trim()}"]`);
-    }
+    const parts = [mainText.trim()];
+    if (ocrText.trim()) parts.push(`[OCR:"${ocrText.trim()}"]`);
+    if (asrText.trim()) parts.push(`[asr:"${asrText.trim()}"]`);
     return parts.filter(Boolean).join(" ");
   };
 
@@ -84,9 +79,7 @@ export function AdvanceQueryContainer({
     return segments;
   }, [mainQuery, hasTemporal]);
 
-  const setTemporalSegments = (segments) => {
-    setMainQuery(segments.join(";"));
-  };
+  const setTemporalSegments = (segments) => setMainQuery(segments.join(";"));
 
   const handleUpdateTemporalSegment = (stepIdx, newText) => {
     const currentSegments = [...temporalSegments];
@@ -135,35 +128,15 @@ export function AdvanceQueryContainer({
   useEffect(() => {
     const timer = setTimeout(() => {
       const fullQuery = buildQuery(mainQuery, ocrQuery, asrQuery);
-      if (fullQuery !== q) {
-        onChange(fullQuery);
-      }
+      if (fullQuery !== q) onChange(fullQuery);
     }, 400);
     return () => clearTimeout(timer);
   }, [mainQuery, ocrQuery, asrQuery, q, onChange]);
 
-  const handleAddDirectPrefix = (prefixCode, type) => {
-    if (!prefixCode) return;
-    if (type === "include") {
-      const existing = includeVideos ? includeVideos.trim().split(/[,;\s]+/).filter(Boolean) : [];
-      if (!existing.includes(prefixCode)) {
-        const nextVal = [...existing, prefixCode].join(", ");
-        onIncludeVideosChange && onIncludeVideosChange(nextVal);
-      }
-    } else {
-      const existing = excludeVideos ? excludeVideos.trim().split(/[,;\s]+/).filter(Boolean) : [];
-      if (!existing.includes(prefixCode)) {
-        const nextVal = [...existing, prefixCode].join(", ");
-        onExcludeVideosChange && onExcludeVideosChange(nextVal);
-      }
-    }
-  };
-
   const handleMainQueryKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      const fullQuery = buildQuery(mainQuery, ocrQuery, asrQuery);
-      onChange(fullQuery);
+      onChange(buildQuery(mainQuery, ocrQuery, asrQuery));
     }
   };
 
@@ -289,101 +262,13 @@ export function AdvanceQueryContainer({
         </div>
       </div>
 
-      <div className="w-full lg:w-56 flex flex-col gap-1.5 bg-white border border-sky-300 p-2 rounded shadow-sm relative">
-        <div className="flex items-center justify-between border-b border-gray-100 pb-1">
-          <label className="text-xs font-bold text-gray-800 flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-            Video Filters
-          </label>
-
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setShowPrefixMenu(!showPrefixMenu)}
-              className="px-2 py-0.5 text-[11px] font-bold bg-slate-100 hover:bg-slate-200 border border-gray-300 rounded text-gray-800 flex items-center gap-1 shadow-sm transition-colors"
-              title="Quick Select Prefix Code"
-            >
-              Prefix ▾
-            </button>
-
-            {showPrefixMenu && (
-              <div
-                className="absolute top-full right-0 mt-1 z-40 bg-white border border-gray-300 rounded-lg shadow-xl p-1.5 w-60 max-h-64 overflow-y-auto font-sans"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="text-[10px] font-bold text-gray-500 px-1 pb-1 border-b mb-1 flex justify-between items-center">
-                  <span>Select Prefix (+ Inc / - Exc):</span>
-                  <button
-                    onClick={() => setShowPrefixMenu(false)}
-                    className="text-red-500 font-bold hover:text-red-700 text-xs px-1"
-                  >
-                    ✕
-                  </button>
-                </div>
-
-                <div className="flex flex-col gap-1">
-                  {VIDEO_PREFIX_OPTIONS.map((opt) => (
-                    <div
-                      key={opt.prefix}
-                      className="flex items-center justify-between hover:bg-slate-50 p-1 rounded border border-gray-100 text-xs"
-                    >
-                      <span className="truncate text-[11px] font-medium text-gray-800 pr-1" title={opt.name}>
-                        {opt.name}
-                      </span>
-                      <div className="flex items-center gap-1 shrink-0">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            handleAddDirectPrefix(opt.prefix, "include");
-                            setShowPrefixMenu(false);
-                          }}
-                          className="w-5 h-5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded flex items-center justify-center text-xs shadow-sm"
-                          title={`Add ${opt.prefix} to Include`}
-                        >
-                          +
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            handleAddDirectPrefix(opt.prefix, "exclude");
-                            setShowPrefixMenu(false);
-                          }}
-                          className="w-5 h-5 bg-red-600 hover:bg-red-700 text-white font-bold rounded flex items-center justify-center text-xs shadow-sm"
-                          title={`Add ${opt.prefix} to Exclude`}
-                        >
-                          -
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-0.5 pt-0.5">
-          <span className="text-[10px] font-bold text-emerald-700">Include Video IDs:</span>
-          <input
-            type="text"
-            className="w-full bg-slate-50 border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:border-emerald-500 font-sans"
-            placeholder="e.g. L26, L01_V001"
-            value={includeVideos}
-            onChange={(e) => onIncludeVideosChange && onIncludeVideosChange(e.target.value)}
-          />
-        </div>
-
-        <div className="flex flex-col gap-0.5">
-          <span className="text-[10px] font-bold text-red-700">Exclude Video IDs:</span>
-          <input
-            type="text"
-            className="w-full bg-slate-50 border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:border-red-500 font-sans"
-            placeholder="e.g. L21, L02_V005"
-            value={excludeVideos}
-            onChange={(e) => onExcludeVideosChange && onExcludeVideosChange(e.target.value)}
-          />
-        </div>
-      </div>
+      <VideoScopeSelector
+        includeVideos={includeVideos}
+        excludeVideos={excludeVideos}
+        onIncludeVideosChange={onIncludeVideosChange}
+        onExcludeVideosChange={onExcludeVideosChange}
+        groups={VIDEO_PREFIX_OPTIONS}
+      />
     </div>
   );
 }
