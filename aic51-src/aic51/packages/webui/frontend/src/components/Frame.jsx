@@ -109,7 +109,7 @@ export function FrameItem({
   return (
     <>
       <div
-        onClick={handleSelect}
+        onClick={() => onPlay?.()}
         className={`relative flex flex-col p-1 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all cursor-pointer ${getConfidenceBorder(
           finalScore
         )} ${
@@ -257,7 +257,6 @@ export function FrameItem({
           </button>
         </div>
       </div>
-
       {/* Zoom Image Modal */}
       {showZoomModal && (
         <div
