@@ -53,12 +53,13 @@ export async function search(
     params.exclude_videos = exclude_videos;
   }
 
+  const startedAt = performance.now();
   const res = await axios.get(`http://127.0.0.1:${PORT}/api/search_multimodal`, {
     params: params,
   });
   let data = res.data;
+  const responseAt = performance.now();
 
-  // Strict Exclude & Include Video Filtering
   if (data && Array.isArray(data.frames)) {
     if (exclude_videos && String(exclude_videos).trim().length > 0) {
       const excludes = String(exclude_videos)
@@ -86,6 +87,10 @@ export async function search(
       }
     }
   }
+
+  console.debug(
+    `[Vecna search] response ${(responseAt - startedAt).toFixed(1)} ms; client transform ${(performance.now() - responseAt).toFixed(1)} ms`
+  );
 
   return data;
 }
@@ -133,6 +138,12 @@ export async function getTargetFeatures() {
   const res = await axios.get(`http://127.0.0.1:${PORT}/api/target_features`);
   const data = res.data;
   return data;
+}
+
+export async function getVideoInventory() {
+  const res = await axios.get(`http://127.0.0.1:${PORT}/api/videos`);
+  const videos = res.data?.videos || [];
+  return Array.isArray(videos) ? videos : [];
 }
 
 export async function getVideoTranscript(videoId) {
