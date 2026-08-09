@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLoaderData, useNavigation, useOutletContext, useSubmit } from "react-router-dom";
 import { search } from "../services/search.js";
 import { AdvanceQueryContainer } from "../components/AdvanceQuery.jsx";
@@ -37,9 +37,9 @@ export async function loader({ request }) {
     exclude_videos,
   };
 
-  if (!q && !include_videos) {
+  if ((!q && !include_videos) || include_videos === "__none__") {
     return {
-      query: { q: "" },
+      query: { q },
       params,
       offset: 0,
       data: { total: 0, frames: [] },
@@ -84,6 +84,8 @@ export async function loader({ request }) {
 
 function filterFrames(frames, includeVideos, excludeVideos) {
   let displayFrames = frames;
+
+  if (includeVideos === "__none__") return [];
 
   if (excludeVideos && excludeVideos.trim().length > 0) {
     const excludes = excludeVideos
@@ -155,7 +157,9 @@ export default function Search() {
     setStreamTotal(data.total || 0);
     setNextOffset((offset || 0) + limit);
     setHasMore(
-      frames.length >= limit && ((offset || 0) + limit < (data.total || Infinity))
+      params.include_videos !== "__none__" &&
+        frames.length >= limit &&
+        ((offset || 0) + limit < (data.total || Infinity))
     );
     setIsLoadingMore(false);
 
@@ -219,7 +223,14 @@ export default function Search() {
   };
 
   const loadMore = useCallback(async () => {
-    if (isLoadingMore || !hasMore || (!query.q && !includeVideos)) return;
+    if (
+      isLoadingMore ||
+      !hasMore ||
+      includeVideos === "__none__" ||
+      (!query.q && !includeVideos)
+    ) {
+      return;
+    }
 
     setIsLoadingMore(true);
     const startedAt = performance.now();
@@ -298,7 +309,17 @@ export default function Search() {
     return () => observer.disconnect();
   }, [loadMore, hasMore]);
 
-  const displayFrames = filterFrames(streamFrames, includeVideos, excludeVideos);
+  const displayFrames = useMemo(() => {
+    const startedAt = performance.now();
+    const filtered = filterFrames(streamFrames, includeVideos, excludeVideos);
+    const elapsed = performance.now() - startedAt;
+    if (streamFrames.length > 0) {
+      console.debug(
+        `[Vecna search] client result filter ${elapsed.toFixed(1)} ms for ${streamFrames.length} records`
+      );
+    }
+    return filtered;
+  }, [streamFrames, includeVideos, excludeVideos]);
 
   useEffect(() => {
     const handleGlobalKeyDown = (e) => {
