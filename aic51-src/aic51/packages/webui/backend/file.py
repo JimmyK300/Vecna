@@ -112,6 +112,17 @@ async def get_video(request: Request, video_id: str, range: str = Header(None)):
     return Response(data, status_code=206, headers=headers, media_type=constant.VIDEO_MEDIA_TYPE)
 
 
+@app.get("/api/videos")
+async def get_video_inventory():
+    """Return video IDs that actually exist in the analyzed feature store."""
+    feature_root = Path.cwd() / constant.FEATURE_DIR
+    if not feature_root.exists():
+        return {"videos": []}
+
+    videos = sorted(item.name for item in feature_root.iterdir() if item.is_dir())
+    return {"videos": videos}
+
+
 def split_into_sentences(segment):
     text = segment["text"]
     # Split by standard sentence punctuation (dot, question mark, exclamation mark)

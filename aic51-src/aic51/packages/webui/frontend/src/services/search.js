@@ -2,6 +2,29 @@ import axios from "axios";
 
 const PORT = import.meta.env.VITE_PORT || 6900;
 
+function installThumbnailTimingProbe() {
+  if (typeof window === "undefined" || window.__vecnaThumbnailTimingProbeInstalled) return;
+  window.__vecnaThumbnailTimingProbeInstalled = true;
+  window.addEventListener(
+    "load",
+    (event) => {
+      const target = event.target;
+      const perf = window.__vecnaSearchPerf;
+      if (!perf || perf.firstThumbnailAt || target?.tagName !== "IMG") return;
+      if (!String(target.src || "").includes("/api/files/")) return;
+
+      perf.firstThumbnailAt = performance.now();
+      console.debug(
+        `[Vecna search] first usable thumbnail ${(perf.firstThumbnailAt - perf.startedAt).toFixed(1)} ms from request; ` +
+          `${(perf.firstThumbnailAt - perf.responseAt).toFixed(1)} ms after search response`
+      );
+    },
+    true
+  );
+}
+
+installThumbnailTimingProbe();
+
 export async function search(
   q,
   offset,
@@ -19,72 +42,53 @@ export async function search(
   en_to_vi_translate,
 ) {
   const params = {
-    q: q,
-    offset: offset,
-    limit: limit,
-    nprobe: nprobe,
-    temporal_k: temporal_k,
-    ocr_weight: ocr_weight,
-    asr_weight: asr_weight,
-    max_interval: max_interval,
+    q,
+    offset,
+    limit,
+    nprobe,
+    temporal_k,
+    ocr_weight,
+    asr_weight,
+    max_interval,
   };
 
-  if (auto_translate) {
-    params.auto_translate = auto_translate;
-  }
+  if (auto_translate) params.auto_translate = auto_translate;
+  if (en_to_vi_translate) params.en_to_vi_translate = en_to_vi_translate;
+  if (selected) params.selected = selected;
+  if (target_features && target_features.length > 0) params.target_features = target_features;
+  if (include_videos) params.include_videos = include_videos;
+  if (exclude_videos) params.exclude_videos = exclude_videos;
 
-  if (en_to_vi_translate) {
-    params.en_to_vi_translate = en_to_vi_translate;
-  }
-
-  if (selected) {
-    params.selected = selected;
-  }
-
-  if (target_features && target_features.length > 0) {
-    params.target_features = target_features;
-  }
-
-  if (include_videos) {
-    params.include_videos = include_videos;
-  }
-
-  if (exclude_videos) {
-    params.exclude_videos = exclude_videos;
-  }
-
+  const startedAt = performance.now();
   const res = await axios.get(`http://127.0.0.1:${PORT}/api/search_multimodal`, {
-    params: params,
+    params,
   });
-  let data = res.data;
+  const responseAt = performance.now();
+  const data = res.data;
+  const normalizedAt = performance.now();
 
-  // Strict Exclude & Include Video Filtering
-  if (data && Array.isArray(data.frames)) {
-    if (exclude_videos && String(exclude_videos).trim().length > 0) {
-      const excludes = String(exclude_videos)
-        .split(/[,;\s]+/)
-        .map((s) => s.trim().toLowerCase())
-        .filter(Boolean);
-      if (excludes.length > 0) {
-        data.frames = data.frames.filter((frame) => {
-          const vId = String(frame.video_id || "").toLowerCase();
-          return !excludes.some((ex) => vId.includes(ex));
-        });
-      }
-    }
+  console.debug(
+    `[Vecna search] response ${(responseAt - startedAt).toFixed(1)} ms; response normalize ${(normalizedAt - responseAt).toFixed(1)} ms`
+  );
 
-    if (include_videos && String(include_videos).trim().length > 0) {
-      const includes = String(include_videos)
-        .split(/[,;\s]+/)
-        .map((s) => s.trim().toLowerCase())
-        .filter(Boolean);
-      if (includes.length > 0) {
-        data.frames = data.frames.filter((frame) => {
-          const vId = String(frame.video_id || "").toLowerCase();
-          return includes.some((inc) => vId.includes(inc));
-        });
-      }
-    }
+  if (typeof window !== "undefined" && Number(offset) === 0) {
+    window.__vecnaSearchPerf = {
+      startedAt,
+      responseAt,
+      transformedAt: normalizedAt,
+      firstThumbnailAt: null,
+    };
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const perf = window.__vecnaSearchPerf;
+        if (!perf || perf.startedAt !== startedAt) return;
+        perf.nextPaintAt = performance.now();
+        console.debug(
+          `[Vecna search] next browser paint ${(perf.nextPaintAt - normalizedAt).toFixed(1)} ms after response normalization`
+        );
+      });
+    });
   }
 
   return data;
@@ -102,49 +106,48 @@ export async function searchSimilar(
   target_features,
 ) {
   const params = {
-    id: id,
-    offset: offset,
-    limit: limit,
-    nprobe: nprobe,
-    temporal_k: temporal_k,
-    ocr_weight: ocr_weight,
-    asr_weight: asr_weight,
-    max_interval: max_interval,
+    id,
+    offset,
+    limit,
+    nprobe,
+    temporal_k,
+    ocr_weight,
+    asr_weight,
+    max_interval,
   };
 
-  if (target_features && target_features.length > 0) {
-    params.target_features = target_features;
-  }
+  if (target_features && target_features.length > 0) params.target_features = target_features;
 
   const res = await axios.get(`http://127.0.0.1:${PORT}/api/search_image`, {
-    params: params,
+    params,
   });
-  const data = res.data;
-  return data;
+  return res.data;
 }
 
 export async function getFrameInfo(videoId, frameId) {
   const res = await axios.get(`http://127.0.0.1:${PORT}/api/files/info/${videoId}/${frameId}`);
-  const data = res.data;
-  return data;
+  return res.data;
 }
 
 export async function getTargetFeatures() {
   const res = await axios.get(`http://127.0.0.1:${PORT}/api/target_features`);
-  const data = res.data;
-  return data;
+  return res.data;
+}
+
+export async function getVideoInventory() {
+  const res = await axios.get(`http://127.0.0.1:${PORT}/api/videos`);
+  const videos = res.data?.videos || [];
+  return Array.isArray(videos) ? videos : [];
 }
 
 export async function getVideoTranscript(videoId) {
   const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/transcript/${videoId}`);
-  const data = res.data;
-  return data;
+  return res.data;
 }
 
 export async function getVideoKeyframes(videoId) {
   const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/keyframes/${videoId}`);
-  const data = res.data;
-  return data;
+  return res.data;
 }
 
 export async function getFrameOcr(videoId, frameId) {

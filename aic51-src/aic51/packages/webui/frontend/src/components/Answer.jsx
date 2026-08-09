@@ -36,6 +36,8 @@ function AnswerHeader() {
   const [selectedQueryId, setSelectedQueryId] = useState(
     availableQueryIds[0]?.id || "TKIS"
   );
+  const [videoIdValue, setVideoIdValue] = useState("");
+  const [frameCounterValue, setFrameCounterValue] = useState("");
 
   const selectedFramesText =
     selected.length > 0
@@ -47,12 +49,21 @@ function AnswerHeader() {
           .join(",")
       : "";
 
-  const videoId = selected.length > 0 ? selected[0].split("#")[0] : "";
+  const selectedVideoId = selected.length > 0 ? selected[0].split("#")[0] : "";
+
+  useEffect(() => {
+    if (selected.length > 0) {
+      setVideoIdValue(selectedVideoId);
+      setFrameCounterValue(selectedFramesText);
+    } else {
+      setVideoIdValue("");
+      setFrameCounterValue("");
+    }
+  }, [selected, selectedVideoId, selectedFramesText]);
 
   return (
     <fetcher.Form action="/answers" method="POST" className="w-full mb-1.5">
       <div className="p-2 w-full flex flex-col gap-1.5 bg-lime-100 border border-lime-300 rounded-lg shadow-sm overflow-hidden box-border">
-        {/* Row 1: Query ID Select, Video ID, Frame Counter */}
         <div className="grid grid-cols-3 gap-1 w-full min-w-0">
           <select
             required
@@ -74,7 +85,8 @@ function AnswerHeader() {
             name="video_id"
             placeholder="Video ID"
             autoComplete="off"
-            defaultValue={videoId}
+            value={videoIdValue}
+            onChange={(e) => setVideoIdValue(e.target.value)}
             className="w-full min-w-0 py-1 px-1.5 text-xs bg-white border border-gray-400 rounded focus:outline-none font-semibold truncate"
           />
 
@@ -84,12 +96,18 @@ function AnswerHeader() {
             name="frame_counter"
             placeholder="Frame Counter"
             autoComplete="off"
-            defaultValue={selectedFramesText}
+            value={frameCounterValue}
+            onChange={(e) => setFrameCounterValue(e.target.value)}
             className="w-full min-w-0 py-1 px-1.5 text-xs bg-white border border-gray-400 rounded focus:outline-none font-semibold truncate"
           />
         </div>
 
-        {/* Row 2: Answer Input - ONLY SHOWN WHEN QUERY ID IS QA */}
+        {selected.length > 0 && (
+          <div className="text-[9px] text-lime-900 font-mono leading-tight">
+            Form values are synchronized from the visually staged frames. Manual edits remain possible.
+          </div>
+        )}
+
         {selectedQueryId === "QA" && (
           <input
             type="text"
@@ -100,7 +118,6 @@ function AnswerHeader() {
           />
         )}
 
-        {/* Row 3: Add Button */}
         <button
           type="submit"
           className="w-full py-1.5 bg-sky-100 hover:bg-sky-200 active:bg-sky-300 border border-gray-700 rounded-lg text-xs font-bold text-gray-800 shadow-sm transition-colors"
@@ -113,7 +130,14 @@ function AnswerHeader() {
 }
 
 function SelectedFramesPreview() {
-  const { selected, removeSelected } = useSelected();
+  const {
+    selected,
+    selectionNotice,
+    removeSelected,
+    clearSelected,
+    moveSelected,
+    clearSelectionNotice,
+  } = useSelected();
   const playVideo = usePlayVideo();
 
   if (selected.length === 0) return null;
@@ -134,33 +158,82 @@ function SelectedFramesPreview() {
 
   return (
     <div className="p-1.5 bg-green-50 border border-green-300 rounded mb-1 text-xs w-full overflow-hidden">
-      <div className="font-bold text-green-900 mb-1 text-[11px] flex justify-between items-center">
-        <span>Selected Frames ({selected.length}):</span>
-        <span className="text-[9px] text-green-700 font-normal">Click item to play</span>
-      </div>
-      <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto">
-        {selected.map((frameId, index) => (
-          <span
-            key={frameId}
-            onClick={() => handlePlayFrame(frameId)}
-            className="inline-flex items-center gap-1 bg-white hover:bg-emerald-100 text-green-900 border border-green-400 hover:border-green-600 rounded px-1.5 py-0.5 text-[10px] font-mono cursor-pointer shadow-sm truncate max-w-full transition-colors group"
-            title="Click to open video player"
+      <div className="font-bold text-green-900 mb-1 text-[11px] flex justify-between items-center gap-2">
+        <span>Selected Frames ({selected.length})</span>
+        <div className="flex items-center gap-1">
+          <span className="text-[9px] text-green-700 font-normal">Click frame to verify</span>
+          <button
+            type="button"
+            onClick={clearSelected}
+            className="px-1.5 py-0.5 text-[9px] bg-white hover:bg-red-50 text-red-700 border border-red-300 rounded font-bold"
           >
-            <span className="font-bold text-gray-400 text-[9px]">#{index + 1}</span>
-            <span className="truncate group-hover:underline font-bold">{frameId}</span>
+            Clear
+          </button>
+        </div>
+      </div>
+
+      {selectionNotice && (
+        <div className="mb-1 flex items-start justify-between gap-1 bg-amber-50 border border-amber-300 text-amber-900 rounded px-1.5 py-1 text-[9px] leading-tight">
+          <span>{selectionNotice}</span>
+          <button
+            type="button"
+            onClick={clearSelectionNotice}
+            className="font-bold text-amber-700 hover:text-amber-900"
+            title="Dismiss"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
+      <div className="flex flex-col gap-1 max-h-28 overflow-y-auto">
+        {selected.map((frameId, index) => (
+          <div
+            key={frameId}
+            className="flex items-center gap-1 bg-white text-green-900 border border-green-300 rounded px-1 py-0.5 text-[10px] font-mono shadow-sm min-w-0"
+          >
+            <span className="font-bold text-gray-400 text-[9px] w-5 shrink-0 text-center">
+              #{index + 1}
+            </span>
             <button
               type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                removeSelected(frameId);
-              }}
-              className="text-red-500 hover:text-red-700 font-bold shrink-0 px-0.5 hover:bg-red-100 rounded"
+              onClick={() => handlePlayFrame(frameId)}
+              className="truncate text-left hover:underline font-bold flex-1 min-w-0"
+              title="Open this staged frame in verification player"
+            >
+              {frameId}
+            </button>
+            <button
+              type="button"
+              onClick={() => moveSelected(index, index - 1)}
+              disabled={index === 0}
+              className="w-5 h-5 border border-gray-300 rounded text-gray-600 disabled:text-gray-300 disabled:bg-gray-50 hover:bg-gray-100 shrink-0"
+              title="Move earlier"
+            >
+              ↑
+            </button>
+            <button
+              type="button"
+              onClick={() => moveSelected(index, index + 1)}
+              disabled={index === selected.length - 1}
+              className="w-5 h-5 border border-gray-300 rounded text-gray-600 disabled:text-gray-300 disabled:bg-gray-50 hover:bg-gray-100 shrink-0"
+              title="Move later"
+            >
+              ↓
+            </button>
+            <button
+              type="button"
+              onClick={() => removeSelected(frameId)}
+              className="w-5 h-5 text-red-500 hover:text-red-700 font-bold shrink-0 hover:bg-red-100 rounded"
               title="Remove frame"
             >
               ✕
             </button>
-          </span>
+          </div>
         ))}
+      </div>
+      <div className="mt-1 text-[9px] text-green-800 font-mono leading-tight">
+        Order is preserved in the staging UI. Remote contest submission remains single-point until its payload rules are separately verified.
       </div>
     </div>
   );
@@ -181,6 +254,7 @@ function AnswerItem({
   const [searchParams] = useSearchParams();
   const fetcher = useFetcher({ key: "answers" });
   const playVideo = usePlayVideo();
+  const hasVerifiedTime = Number.isFinite(Number(answer.time));
 
   const handleOnPlay = (e) => {
     e.stopPropagation();
@@ -328,7 +402,6 @@ function AnswerItem({
       onClick={() => onClick(answer)}
     >
       <div id="answer-description" className="flex flex-row items-center gap-1.5 text-[11px] font-mono truncate min-w-0 pr-1">
-        {/* Sequence Number STT Badge */}
         <span className="font-bold text-gray-500 bg-gray-100 border border-gray-300 px-1 py-0.5 rounded text-[10px] shrink-0 font-mono">
           #{index}
         </span>
@@ -353,13 +426,23 @@ function AnswerItem({
           onClick={() => setIsEditing(true)}
         />
         <img
-          className="hover:bg-blue-200 p-0.5 rounded cursor-pointer select-none"
+          className={`p-0.5 rounded select-none ${
+            hasVerifiedTime
+              ? "hover:bg-blue-200 cursor-pointer"
+              : "opacity-30 cursor-not-allowed"
+          }`}
           src={SubmitButton}
           width="18em"
           draggable="false"
           alt="Submit"
-          title="Submit answer to AIC server"
-          onClick={() => onSubmitAnswer(answer)}
+          title={
+            hasVerifiedTime
+              ? "Submit this verified single-point answer to AIC server"
+              : "No verified timestamp on this staged answer; verify a frame and submit from the player"
+          }
+          onClick={() => {
+            if (hasVerifiedTime) onSubmitAnswer(answer);
+          }}
         />
         <img
           className="hover:bg-blue-200 p-0.5 rounded cursor-pointer select-none"
@@ -399,13 +482,13 @@ function AnswerItem({
         />
       </div>
 
-      {/* Floating Tooltip (No DOM Layout Shift) */}
       {showTooltip && (
         <div className="absolute top-0 right-0 z-30 bg-slate-900 text-white text-[10px] p-1.5 rounded shadow-lg pointer-events-none border border-slate-700 opacity-95 animate-fadeIn">
           <div><strong>Task:</strong> {answer.query_id}</div>
           <div><strong>Video:</strong> {answer.video_id}</div>
           <div><strong>Frames:</strong> {frameStr}</div>
           {answer.answer && <div><strong>Ans:</strong> {answer.answer}</div>}
+          {!hasVerifiedTime && <div className="text-amber-300">Remote submit unavailable: no verified timestamp.</div>}
         </div>
       )}
     </div>
@@ -418,7 +501,6 @@ export default function AnswerSidebar() {
   const [selected, setSelected] = useState(null);
   const [downloadList, setDownloadList] = useState([]);
 
-  // Restored N: and STEP: controls
   const [downloadN, setDownloadN] = useState(1);
   const [downloadStep, setDownloadStep] = useState(1);
 
@@ -465,7 +547,6 @@ export default function AnswerSidebar() {
 
   return (
     <div className="w-full flex flex-col gap-1 p-1 box-border overflow-hidden">
-      {/* Restored N: and STEP: Parameters Header Bar */}
       <div className="flex items-center justify-between bg-blue-50 border border-blue-200 rounded p-1.5 text-xs mb-1">
         <div className="flex items-center gap-1.5 font-bold text-gray-700">
           <label htmlFor="n-input" className="text-[11px]">N:</label>
@@ -501,11 +582,9 @@ export default function AnswerSidebar() {
         )}
       </div>
 
-      {/* Answer Form */}
       <AnswerHeader />
       <SelectedFramesPreview />
 
-      {/* Answer List with Sequence Numbers STT */}
       <div className="flex flex-col max-h-56 overflow-y-auto pr-0.5">
         {fetcher.data && fetcher.data.length > 0 ? (
           fetcher.data

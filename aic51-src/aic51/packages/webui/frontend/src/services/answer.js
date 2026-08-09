@@ -3,13 +3,18 @@ import localforage from "localforage";
 export function processAnswer(answer) {
   if ("time" in answer) answer.time = parseFloat(answer.time);
   if ("frame_counter" in answer) {
-    if (typeof answer.frame_counter === 'string' && answer.frame_counter.includes(',')) {
-      answer.frame_counter = answer.frame_counter.split(',').map(fc => fc.trim());
+    if (typeof answer.frame_counter === "string" && answer.frame_counter.includes(",")) {
+      answer.frame_counter = answer.frame_counter
+        .split(",")
+        .map((fc) => fc.trim())
+        .filter(Boolean);
     } else {
       answer.frame_counter = [answer.frame_counter];
     }
   }
-  answer.frame_counter = answer.frame_counter.sort();
+
+  // Preserve the operator's staged order. Sorting here used to erase the
+  // explicit order maintained by the selection UI and could silently change CSV output.
   if ("correct" in answer) answer.correct = parseInt(answer.correct);
   answer.frame_id = answer.frame_id || answer.frame_counter[0];
   return answer;
@@ -83,15 +88,15 @@ export function formatCleanInteger(val) {
 
 export function getCSV(answer, n = 1, step = 1) {
   const cleanVideoId = String(answer.video_id || "").trim();
-  
-  if (answer.frame_counter && typeof answer.frame_counter === 'string' && answer.frame_counter.includes(',')) {
-    const frameCounters = answer.frame_counter.split(',').map(fc => formatCleanInteger(fc));
-    return `${cleanVideoId},${frameCounters.join(',')}`;
+
+  if (answer.frame_counter && typeof answer.frame_counter === "string" && answer.frame_counter.includes(",")) {
+    const frameCounters = answer.frame_counter.split(",").map((fc) => formatCleanInteger(fc));
+    return `${cleanVideoId},${frameCounters.join(",")}`;
   }
-  
+
   let fileData = "";
   let rawCenters = Array.isArray(answer.frame_counter) ? answer.frame_counter : [answer.frame_id || 0];
-  let centers = rawCenters.map(e => parseInt(formatCleanInteger(e), 10));
+  let centers = rawCenters.map((e) => parseInt(formatCleanInteger(e), 10));
 
   const parsedN = parseInt(n, 10) || 1;
   const parsedStep = parseInt(step, 10) || 1;
@@ -108,14 +113,13 @@ export function getCSV(answer, n = 1, step = 1) {
 
     if (fileData !== "") fileData += "\n";
     if (answer.answer && String(answer.answer).trim().length > 0)
-      fileData += `${cleanVideoId},${curFrames.join(',')},${String(answer.answer).trim()}`;
-    else fileData += `${cleanVideoId},${curFrames.join(',')}`;
+      fileData += `${cleanVideoId},${curFrames.join(",")},${String(answer.answer).trim()}`;
+    else fileData += `${cleanVideoId},${curFrames.join(",")}`;
   }
   return fileData;
 }
 
 export function exportAllAnswersCSV(answers) {
   if (!answers || !answers.length) return "";
-  return answers.map(ans => getCSV(ans, 1, 1)).filter(Boolean).join("\n");
+  return answers.map((ans) => getCSV(ans, 1, 1)).filter(Boolean).join("\n");
 }
-
