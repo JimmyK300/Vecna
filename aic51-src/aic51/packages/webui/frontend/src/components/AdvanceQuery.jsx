@@ -76,23 +76,58 @@ export function AdvanceQueryContainer({
   const [mainQuery, setMainQuery] = useState(parsed.mainText);
   const [ocrQuery, setOcrQuery] = useState(parsed.ocrText);
   const [asrQuery, setAsrQuery] = useState(parsed.asrText);
+  const [manualTemporalMode, setManualTemporalMode] = useState(parsed.mainText.includes(";"));
 
-  // Check if mainQuery has temporal delimiters \ or |
-  const hasTemporal = /[\/\\|]/.test(mainQuery);
+  // The backend's actual temporal grammar is semicolon-separated clauses.
+  // Manual mode uses the same representation so UI state and search semantics cannot diverge.
+  const grammarTemporalMode = mainQuery.includes(";");
+  const hasTemporal = manualTemporalMode || grammarTemporalMode;
 
-  // Extract delimiter used (\ or |)
-  const temporalDelimiter = mainQuery.includes("|") ? "|" : "\\";
-
-  // Split mainQuery into non-delimiter segment strings
   const temporalSegments = useMemo(() => {
     if (!hasTemporal) return [];
-    return mainQuery.split(/[\/\\|]/);
+    const segments = mainQuery.split(";");
+    if (segments.length === 1) return [segments[0], ""];
+    return segments;
   }, [mainQuery, hasTemporal]);
 
+  const setTemporalSegments = (segments) => {
+    setMainQuery(segments.join(";"));
+  };
+
   const handleUpdateTemporalSegment = (stepIdx, newText) => {
-    const currentSegments = mainQuery.split(/[\/\\|]/);
+    const currentSegments = [...temporalSegments];
     currentSegments[stepIdx] = newText;
-    setMainQuery(currentSegments.join(temporalDelimiter));
+    setTemporalSegments(currentSegments);
+  };
+
+  const handleAddTemporalSegment = () => {
+    setManualTemporalMode(true);
+    setTemporalSegments([...temporalSegments, ""]);
+  };
+
+  const handleRemoveTemporalSegment = (stepIdx) => {
+    const nextSegments = temporalSegments.filter((_, idx) => idx !== stepIdx);
+    if (nextSegments.length <= 1) {
+      setMainQuery((nextSegments[0] || "").trim());
+      setManualTemporalMode(false);
+      return;
+    }
+    setTemporalSegments(nextSegments);
+  };
+
+  const handleToggleTemporalMode = () => {
+    if (hasTemporal) {
+      const plainText = temporalSegments
+        .map((segment) => segment.trim())
+        .filter(Boolean)
+        .join(" ");
+      setMainQuery(plainText);
+      setManualTemporalMode(false);
+      return;
+    }
+
+    setManualTemporalMode(true);
+    setMainQuery(`${mainQuery};`);
   };
 
   // Sync state if external q changes
@@ -101,6 +136,7 @@ export function AdvanceQueryContainer({
     setMainQuery(p.mainText);
     setOcrQuery(p.ocrText);
     setAsrQuery(p.asrText);
+    setManualTemporalMode(p.mainText.includes(";"));
   }, [q]);
 
   // Debounced live search trigger
@@ -143,7 +179,7 @@ export function AdvanceQueryContainer({
     <div className="w-full flex flex-col lg:flex-row gap-2 bg-sky-200 border border-sky-300 p-2 rounded-lg shadow-sm mb-2">
       {/* Primary Text Search Query Box */}
       <div className="flex-1 flex flex-col gap-1.5 h-full">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-3">
             {isSearching && (
               <span className="text-xs text-sky-800 font-semibold animate-pulse">
@@ -151,13 +187,25 @@ export function AdvanceQueryContainer({
               </span>
             )}
 
-            {/* Temporal Mode Active Badge */}
             {hasTemporal && (
               <span className="text-[10px] bg-blue-600 text-white font-mono px-2 py-0.5 rounded-md font-bold shadow-sm">
                 Temporal Mode Active
               </span>
             )}
           </div>
+
+          <button
+            type="button"
+            onClick={handleToggleTemporalMode}
+            className={`px-2 py-1 rounded-md border text-[10px] font-bold font-mono transition-colors ${
+              hasTemporal
+                ? "bg-blue-700 border-blue-800 text-white hover:bg-blue-800"
+                : "bg-white border-sky-400 text-sky-800 hover:bg-sky-50"
+            }`}
+            title={hasTemporal ? "Exit temporal mode" : "Enter temporal mode"}
+          >
+            {hasTemporal ? "Exit Temporal" : "+ Temporal"}
+          </button>
         </div>
 
         <textarea
@@ -166,15 +214,24 @@ export function AdvanceQueryContainer({
             hasTemporal ? "min-h-[52px] flex-1" : "h-full flex-1 min-h-[92px]"
           }`}
           rows={hasTemporal ? 2 : 3}
-          placeholder="Type search text here... (Temporal syntax: '\\' for sequence, '|' for parallel/OR)"
+          placeholder="Type search text here... Use ';' between temporal steps, or press + Temporal."
           value={mainQuery}
           onChange={(e) => setMainQuery(e.target.value)}
           onKeyDown={handleMainQueryKeyDown}
         />
 
-        {/* Dynamic Full-Width Interactive Temporal Step Inputs (Rendered ONLY when hasTemporal is true) */}
         {hasTemporal && (
           <div className="flex flex-col gap-1.5 pt-1 border-t border-sky-300 w-full animate-fadeIn">
+            <div className="flex items-center justify-between gap-2 text-[9px] font-mono text-sky-800">
+              <span>Steps are sent as the backend-supported <strong>;</strong> sequence grammar.</span>
+              <button
+                type="button"
+                onClick={handleAddTemporalSegment}
+                className="px-2 py-0.5 bg-white hover:bg-sky-50 border border-sky-400 rounded font-bold shrink-0"
+              >
+                + Step
+              </button>
+            </div>
             {temporalSegments.map((segmentText, stepIdx) => (
               <div
                 key={stepIdx}
@@ -190,6 +247,16 @@ export function AdvanceQueryContainer({
                   className="bg-transparent text-xs font-mono font-bold text-sky-950 focus:outline-none w-full"
                   placeholder={`Step ${stepIdx + 1} text...`}
                 />
+                {temporalSegments.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveTemporalSegment(stepIdx)}
+                    className="ml-1 px-1 text-red-500 hover:text-red-700 font-bold"
+                    title={`Remove step ${stepIdx + 1}`}
+                  >
+                    ✕
+                  </button>
+                )}
               </div>
             ))}
           </div>
