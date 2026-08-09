@@ -23,6 +23,7 @@ export function AdvanceQueryContainer({
   onIncludeVideosChange,
   excludeVideos = "",
   onExcludeVideosChange,
+  onVideoScopeChange,
   isSearching = false,
 }) {
   const parseQuery = (queryString) => {
@@ -34,9 +35,7 @@ export function AdvanceQueryContainer({
     const ocrMatch = ocrRegex.exec(mainText);
     if (ocrMatch) {
       let content = ocrMatch[1];
-      if (content.startsWith('"') && content.endsWith('"')) {
-        content = content.slice(1, -1);
-      }
+      if (content.startsWith('"') && content.endsWith('"')) content = content.slice(1, -1);
       ocrText = content;
       mainText = mainText.replace(ocrMatch[0], "");
     }
@@ -45,9 +44,7 @@ export function AdvanceQueryContainer({
     const asrMatch = asrRegex.exec(mainText);
     if (asrMatch) {
       let content = asrMatch[1];
-      if (content.startsWith('"') && content.endsWith('"')) {
-        content = content.slice(1, -1);
-      }
+      if (content.startsWith('"') && content.endsWith('"')) content = content.slice(1, -1);
       asrText = content;
       mainText = mainText.replace(asrMatch[0], "");
     }
@@ -63,7 +60,6 @@ export function AdvanceQueryContainer({
   };
 
   const parsed = useMemo(() => parseQuery(q), [q]);
-
   const [mainQuery, setMainQuery] = useState(parsed.mainText);
   const [ocrQuery, setOcrQuery] = useState(parsed.ocrText);
   const [asrQuery, setAsrQuery] = useState(parsed.asrText);
@@ -75,8 +71,7 @@ export function AdvanceQueryContainer({
   const temporalSegments = useMemo(() => {
     if (!hasTemporal) return [];
     const segments = mainQuery.split(";");
-    if (segments.length === 1) return [segments[0], ""];
-    return segments;
+    return segments.length === 1 ? [segments[0], ""] : segments;
   }, [mainQuery, hasTemporal]);
 
   const setTemporalSegments = (segments) => setMainQuery(segments.join(";"));
@@ -104,15 +99,10 @@ export function AdvanceQueryContainer({
 
   const handleToggleTemporalMode = () => {
     if (hasTemporal) {
-      const plainText = temporalSegments
-        .map((segment) => segment.trim())
-        .filter(Boolean)
-        .join(" ");
-      setMainQuery(plainText);
+      setMainQuery(temporalSegments.map((segment) => segment.trim()).filter(Boolean).join(" "));
       setManualTemporalMode(false);
       return;
     }
-
     setManualTemporalMode(true);
     setMainQuery(`${mainQuery};`);
   };
@@ -145,19 +135,13 @@ export function AdvanceQueryContainer({
       <div className="flex-1 flex flex-col gap-1.5 h-full">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-3">
-            {isSearching && (
-              <span className="text-xs text-sky-800 font-semibold animate-pulse">
-                Searching...
-              </span>
-            )}
-
+            {isSearching && <span className="text-xs text-sky-800 font-semibold animate-pulse">Searching...</span>}
             {hasTemporal && (
               <span className="text-[10px] bg-blue-600 text-white font-mono px-2 py-0.5 rounded-md font-bold shadow-sm">
                 Temporal Mode Active
               </span>
             )}
           </div>
-
           <button
             type="button"
             onClick={handleToggleTemporalMode}
@@ -188,22 +172,13 @@ export function AdvanceQueryContainer({
           <div className="flex flex-col gap-1.5 pt-1 border-t border-sky-300 w-full animate-fadeIn">
             <div className="flex items-center justify-between gap-2 text-[9px] font-mono text-sky-800">
               <span>Steps are sent as the backend-supported <strong>;</strong> sequence grammar.</span>
-              <button
-                type="button"
-                onClick={handleAddTemporalSegment}
-                className="px-2 py-0.5 bg-white hover:bg-sky-50 border border-sky-400 rounded font-bold shrink-0"
-              >
+              <button type="button" onClick={handleAddTemporalSegment} className="px-2 py-0.5 bg-white hover:bg-sky-50 border border-sky-400 rounded font-bold shrink-0">
                 + Step
               </button>
             </div>
             {temporalSegments.map((segmentText, stepIdx) => (
-              <div
-                key={stepIdx}
-                className="flex items-center bg-white border border-sky-400 px-2 py-1 rounded-lg text-xs font-semibold text-sky-950 font-mono shadow-sm focus-within:ring-1 focus-within:ring-blue-500 w-full"
-              >
-                <span className="text-[10px] text-sky-600 font-bold mr-1.5 shrink-0 select-none">
-                  #{stepIdx + 1}
-                </span>
+              <div key={stepIdx} className="flex items-center bg-white border border-sky-400 px-2 py-1 rounded-lg text-xs font-semibold text-sky-950 font-mono shadow-sm focus-within:ring-1 focus-within:ring-blue-500 w-full">
+                <span className="text-[10px] text-sky-600 font-bold mr-1.5 shrink-0 select-none">#{stepIdx + 1}</span>
                 <input
                   type="text"
                   value={segmentText}
@@ -212,12 +187,7 @@ export function AdvanceQueryContainer({
                   placeholder={`Step ${stepIdx + 1} text...`}
                 />
                 {temporalSegments.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveTemporalSegment(stepIdx)}
-                    className="ml-1 px-1 text-red-500 hover:text-red-700 font-bold"
-                    title={`Remove step ${stepIdx + 1}`}
-                  >
+                  <button type="button" onClick={() => handleRemoveTemporalSegment(stepIdx)} className="ml-1 px-1 text-red-500 hover:text-red-700 font-bold" title={`Remove step ${stepIdx + 1}`}>
                     ✕
                   </button>
                 )}
@@ -232,11 +202,9 @@ export function AdvanceQueryContainer({
           <span className="w-2 h-2 rounded-full bg-amber-500"></span>
           OCR & ASR Filters
         </label>
-
         <p className="text-[9px] leading-tight text-gray-500 font-mono">
           Empty field = use the main query when that modality has non-zero weight. Weight 0 = disabled.
         </p>
-
         <div className="flex flex-col gap-0.5">
           <span className="text-[10px] font-bold text-blue-700">OCR Text (On-screen):</span>
           <input
@@ -248,7 +216,6 @@ export function AdvanceQueryContainer({
             onChange={(e) => setOcrQuery(e.target.value)}
           />
         </div>
-
         <div className="flex flex-col gap-0.5">
           <span className="text-[10px] font-bold text-purple-700">ASR Text (Audio Speech):</span>
           <input
@@ -265,6 +232,7 @@ export function AdvanceQueryContainer({
       <VideoScopeSelector
         includeVideos={includeVideos}
         excludeVideos={excludeVideos}
+        onScopeChange={onVideoScopeChange}
         onIncludeVideosChange={onIncludeVideosChange}
         onExcludeVideosChange={onExcludeVideosChange}
         groups={VIDEO_PREFIX_OPTIONS}
