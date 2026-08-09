@@ -26,13 +26,11 @@ export function AdvanceQueryContainer({
 }) {
   const [showPrefixMenu, setShowPrefixMenu] = useState(false);
 
-  // Helper to parse OCR and ASR tags out of full query string
   const parseQuery = (queryString) => {
     let mainText = queryString || "";
     let ocrText = "";
     let asrText = "";
 
-    // Parse [OCR:"..."] or [OCR:text]
     const ocrRegex = /\s?\[OCR:((".*?")|\S+)\]/gi;
     const ocrMatch = ocrRegex.exec(mainText);
     if (ocrMatch) {
@@ -44,7 +42,6 @@ export function AdvanceQueryContainer({
       mainText = mainText.replace(ocrMatch[0], "");
     }
 
-    // Parse [asr:"..."] or [asr:text]
     const asrRegex = /\s?\[asr:((".*?")|\S+)\]/gi;
     const asrMatch = asrRegex.exec(mainText);
     if (asrMatch) {
@@ -59,7 +56,6 @@ export function AdvanceQueryContainer({
     return { mainText: mainText.trim(), ocrText, asrText };
   };
 
-  // Helper to rebuild query string from main, ocr, and asr inputs
   const buildQuery = (mainText, ocrText, asrText) => {
     let parts = [mainText.trim()];
     if (ocrText.trim()) {
@@ -78,8 +74,6 @@ export function AdvanceQueryContainer({
   const [asrQuery, setAsrQuery] = useState(parsed.asrText);
   const [manualTemporalMode, setManualTemporalMode] = useState(parsed.mainText.includes(";"));
 
-  // The backend's actual temporal grammar is semicolon-separated clauses.
-  // Manual mode uses the same representation so UI state and search semantics cannot diverge.
   const grammarTemporalMode = mainQuery.includes(";");
   const hasTemporal = manualTemporalMode || grammarTemporalMode;
 
@@ -130,7 +124,6 @@ export function AdvanceQueryContainer({
     setMainQuery(`${mainQuery};`);
   };
 
-  // Sync state if external q changes
   useEffect(() => {
     const p = parseQuery(q);
     setMainQuery(p.mainText);
@@ -139,7 +132,6 @@ export function AdvanceQueryContainer({
     setManualTemporalMode(p.mainText.includes(";"));
   }, [q]);
 
-  // Debounced live search trigger
   useEffect(() => {
     const timer = setTimeout(() => {
       const fullQuery = buildQuery(mainQuery, ocrQuery, asrQuery);
@@ -177,7 +169,6 @@ export function AdvanceQueryContainer({
 
   return (
     <div className="w-full flex flex-col lg:flex-row gap-2 bg-sky-200 border border-sky-300 p-2 rounded-lg shadow-sm mb-2">
-      {/* Primary Text Search Query Box */}
       <div className="flex-1 flex flex-col gap-1.5 h-full">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-3">
@@ -263,12 +254,15 @@ export function AdvanceQueryContainer({
         )}
       </div>
 
-      {/* Dedicated OCR & ASR Filters Panel */}
       <div className="w-full lg:w-56 flex flex-col gap-1.5 bg-white border border-sky-300 p-2 rounded shadow-sm">
         <label className="text-xs font-bold text-gray-800 flex items-center gap-1">
           <span className="w-2 h-2 rounded-full bg-amber-500"></span>
           OCR & ASR Filters
         </label>
+
+        <p className="text-[9px] leading-tight text-gray-500 font-mono">
+          Empty field = use the main query when that modality has non-zero weight. Weight 0 = disabled.
+        </p>
 
         <div className="flex flex-col gap-0.5">
           <span className="text-[10px] font-bold text-blue-700">OCR Text (On-screen):</span>
@@ -276,7 +270,7 @@ export function AdvanceQueryContainer({
             type="text"
             data-query-input="ocr"
             className="w-full bg-slate-50 border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-500 font-sans"
-            placeholder="e.g. Traffic Sign, Coffee"
+            placeholder="Empty → main query"
             value={ocrQuery}
             onChange={(e) => setOcrQuery(e.target.value)}
           />
@@ -288,23 +282,20 @@ export function AdvanceQueryContainer({
             type="text"
             data-query-input="speech"
             className="w-full bg-slate-50 border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:border-purple-500 font-sans"
-            placeholder="e.g. Spoken words"
+            placeholder="Empty → main query if enabled"
             value={asrQuery}
             onChange={(e) => setAsrQuery(e.target.value)}
           />
         </div>
       </div>
 
-      {/* Dedicated Include / Exclude Video Filter Panel with Header Menu */}
       <div className="w-full lg:w-56 flex flex-col gap-1.5 bg-white border border-sky-300 p-2 rounded shadow-sm relative">
-        {/* Header Line with Prefix Menu Button Right Beside Video Filters */}
         <div className="flex items-center justify-between border-b border-gray-100 pb-1">
           <label className="text-xs font-bold text-gray-800 flex items-center gap-1">
             <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
             Video Filters
           </label>
 
-          {/* Compact Prefix Menu Button */}
           <div className="relative">
             <button
               type="button"
@@ -315,7 +306,6 @@ export function AdvanceQueryContainer({
               Prefix ▾
             </button>
 
-            {/* Popover Menu with + and - on EACH LINE */}
             {showPrefixMenu && (
               <div
                 className="absolute top-full right-0 mt-1 z-40 bg-white border border-gray-300 rounded-lg shadow-xl p-1.5 w-60 max-h-64 overflow-y-auto font-sans"
