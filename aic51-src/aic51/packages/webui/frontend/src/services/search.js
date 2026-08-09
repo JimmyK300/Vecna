@@ -63,47 +63,19 @@ export async function search(
   const res = await axios.get(`http://127.0.0.1:${PORT}/api/search_multimodal`, {
     params,
   });
-  let data = res.data;
   const responseAt = performance.now();
+  const data = res.data;
+  const normalizedAt = performance.now();
 
-  if (data && Array.isArray(data.frames)) {
-    if (exclude_videos && String(exclude_videos).trim().length > 0) {
-      const excludes = String(exclude_videos)
-        .split(/[,;\s]+/)
-        .map((s) => s.trim().toLowerCase())
-        .filter(Boolean);
-      if (excludes.length > 0) {
-        data.frames = data.frames.filter((frame) => {
-          const vId = String(frame.video_id || "").toLowerCase();
-          return !excludes.some((ex) => vId.includes(ex));
-        });
-      }
-    }
-
-    if (include_videos && String(include_videos).trim().length > 0) {
-      const includes = String(include_videos)
-        .split(/[,;\s]+/)
-        .map((s) => s.trim().toLowerCase())
-        .filter(Boolean);
-      if (includes.length > 0) {
-        data.frames = data.frames.filter((frame) => {
-          const vId = String(frame.video_id || "").toLowerCase();
-          return includes.some((inc) => vId.includes(inc));
-        });
-      }
-    }
-  }
-
-  const transformedAt = performance.now();
   console.debug(
-    `[Vecna search] response ${(responseAt - startedAt).toFixed(1)} ms; client transform ${(transformedAt - responseAt).toFixed(1)} ms`
+    `[Vecna search] response ${(responseAt - startedAt).toFixed(1)} ms; response normalize ${(normalizedAt - responseAt).toFixed(1)} ms`
   );
 
   if (typeof window !== "undefined" && Number(offset) === 0) {
     window.__vecnaSearchPerf = {
       startedAt,
       responseAt,
-      transformedAt,
+      transformedAt: normalizedAt,
       firstThumbnailAt: null,
     };
 
@@ -113,7 +85,7 @@ export async function search(
         if (!perf || perf.startedAt !== startedAt) return;
         perf.nextPaintAt = performance.now();
         console.debug(
-          `[Vecna search] next browser paint ${(perf.nextPaintAt - transformedAt).toFixed(1)} ms after client transform`
+          `[Vecna search] next browser paint ${(perf.nextPaintAt - normalizedAt).toFixed(1)} ms after response normalization`
         );
       });
     });
