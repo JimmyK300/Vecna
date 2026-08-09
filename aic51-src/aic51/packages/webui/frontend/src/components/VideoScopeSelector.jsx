@@ -36,6 +36,7 @@ function GroupToggle({ checked, indeterminate, onChange, label, count }) {
 export default function VideoScopeSelector({
   includeVideos = "",
   excludeVideos = "",
+  onScopeChange,
   onIncludeVideosChange,
   onExcludeVideosChange,
   groups = [],
@@ -95,7 +96,10 @@ export default function VideoScopeSelector({
       (match || other).videos.push(videoId);
     });
 
-    return [...knownGroups.filter((group) => group.videos.length > 0), ...(other.videos.length ? [other] : [])];
+    return [
+      ...knownGroups.filter((group) => group.videos.length > 0),
+      ...(other.videos.length ? [other] : []),
+    ];
   }, [videos, groups]);
 
   const filteredGroups = useMemo(() => {
@@ -109,29 +113,35 @@ export default function VideoScopeSelector({
       .filter((group) => group.videos.length > 0);
   }, [groupedVideos, searchText]);
 
+  const publishScope = (include, exclude) => {
+    if (onScopeChange) {
+      onScopeChange({ includeVideos: include, excludeVideos: exclude });
+      return;
+    }
+    onIncludeVideosChange?.(include);
+    onExcludeVideosChange?.(exclude);
+  };
+
   const commitSelection = (nextSelected) => {
     setSelected(nextSelected);
-    if (!onIncludeVideosChange || !onExcludeVideosChange || videos.length === 0) return;
+    if (videos.length === 0) return;
 
     if (nextSelected.size === videos.length) {
-      onIncludeVideosChange("");
-      onExcludeVideosChange("");
+      publishScope("", "");
       return;
     }
 
     if (nextSelected.size === 0) {
-      onIncludeVideosChange("__none__");
-      onExcludeVideosChange("");
+      publishScope("__none__", "");
       return;
     }
 
-    const unselected = videos.filter((id) => !nextSelected.has(id));
-    if (nextSelected.size <= unselected.length) {
-      onIncludeVideosChange(videos.filter((id) => nextSelected.has(id)).join(","));
-      onExcludeVideosChange("");
+    const selectedIds = videos.filter((id) => nextSelected.has(id));
+    const unselectedIds = videos.filter((id) => !nextSelected.has(id));
+    if (selectedIds.length <= unselectedIds.length) {
+      publishScope(selectedIds.join(","), "");
     } else {
-      onIncludeVideosChange("");
-      onExcludeVideosChange(unselected.join(","));
+      publishScope("", unselectedIds.join(","));
     }
   };
 
