@@ -167,3 +167,17 @@ export function resetTriageState(state = {}, queryKey) {
   const prefix = `${queryKey || "all"}::`;
   return Object.fromEntries(Object.entries(state).filter(([key]) => !key.startsWith(prefix)));
 }
+
+export function restoreRejectedState(state = {}, queryKey, frameId) {
+  const key = triageKey(queryKey, frameId);
+  const next = { ...state };
+  if (next[key]?.rejected) delete next[key];
+  return next;
+}
+
+export function restoreAllRejectedState(state = {}, queryKey) {
+  const prefix = `${queryKey || "all"}::`;
+  return Object.fromEntries(
+    Object.entries(state).filter(([key, value]) => !key.startsWith(prefix) || !value?.rejected),
+  );
+}

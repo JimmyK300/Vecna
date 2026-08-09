@@ -72,16 +72,24 @@ export default function SearchParams({ onToggle }) {
       const query = searchParams.get("q") || "";
       const id = searchParams.get("id") || "";
       const action = isSimilar ? "/similar" : "/search";
+      const payload = isSimilar
+        ? {
+            ...(id ? { id } : {}),
+            limit: nextValues.limit,
+            nprobe: nextValues.nprobe,
+            ...(nextFeatures.length ? { target_features: nextFeatures.join(",") } : {}),
+            offset: 0,
+          }
+        : {
+            ...(query ? { q: query } : {}),
+            ...nextValues,
+            ...(nextFeatures.length ? { target_features: nextFeatures.join(",") } : {}),
+            ...(nextAutoTranslate ? { auto_translate: "true" } : {}),
+            ...(nextIncludeVideo.trim() ? { include_video: nextIncludeVideo.trim() } : {}),
+            offset: 0,
+          };
       submit(
-        {
-          ...(query ? { q: query } : {}),
-          ...(isSimilar && id ? { id } : {}),
-          ...nextValues,
-          ...(nextFeatures.length ? { target_features: nextFeatures.join(",") } : {}),
-          ...(nextAutoTranslate ? { auto_translate: "true" } : {}),
-          ...(nextIncludeVideo.trim() ? { include_video: nextIncludeVideo.trim() } : {}),
-          offset: 0,
-        },
+        payload,
         { action },
       );
     },
@@ -134,10 +142,68 @@ export default function SearchParams({ onToggle }) {
       </div>
 
       {isSimilar ? (
-        <div className="similar-controls-note">
-          <p className="eyebrow">Similar mode</p>
-          <p>Source-frame retrieval is fixed for this view; query-only controls are hidden.</p>
-        </div>
+        <>
+          <div className="similar-controls-note">
+            <p className="eyebrow">Similar mode</p>
+            <p>Adjust the image-search limit, probe depth, and target features.</p>
+          </div>
+          {isOpen && (
+            <div className="control-rail-body">
+              <section className="control-section">
+                <div className="section-heading">
+                  <div>
+                    <p className="eyebrow">Image retrieval</p>
+                    <h3>Search tuning</h3>
+                  </div>
+                  <span className="status-dot" title="Controls auto-apply" />
+                </div>
+                <div className="control-grid">
+                  <label className="field-label">
+                    Candidates
+                    <select value={values.limit} onChange={(event) => setValue("limit", event.target.value)}>
+                      {limitOptions.map((option) => <option key={option} value={option}>{option}</option>)}
+                    </select>
+                  </label>
+                  <label className="field-label">
+                    Probe
+                    <select value={values.nprobe} onChange={(event) => setValue("nprobe", event.target.value)}>
+                      {nprobeOption.map((option) => <option key={option} value={option}>{option}</option>)}
+                    </select>
+                  </label>
+                </div>
+              </section>
+
+              {targetFeatures.length > 0 && (
+                <section className="control-section">
+                  <div className="section-heading">
+                    <div>
+                      <p className="eyebrow">Embedding space</p>
+                      <h3>Target features</h3>
+                    </div>
+                  </div>
+                  <div className="feature-list">
+                    {targetFeatures.map((feature) => (
+                      <label key={feature} className="toggle-row">
+                        <span>{feature}</span>
+                        <input
+                          type="checkbox"
+                          checked={selectedFeatures.includes(feature)}
+                          onChange={(event) => {
+                            const nextFeatures = event.target.checked
+                              ? [...selectedFeatures, feature]
+                              : selectedFeatures.filter((item) => item !== feature);
+                            setSelectedFeatures(nextFeatures);
+                            scheduleApply({ nextFeatures });
+                          }}
+                        />
+                      </label>
+                    ))}
+                  </div>
+                </section>
+              )}
+            </div>
+          )}
+        </>
       ) : isOpen && (
         <div className="control-rail-body">
           <section className="control-section">

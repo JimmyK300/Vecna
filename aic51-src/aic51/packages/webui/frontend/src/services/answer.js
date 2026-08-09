@@ -39,7 +39,7 @@ export async function addAnswer(answer) {
   let id = parseInt((await localforage.getItem("id_ptr")) || 0);
   await localforage.setItem("answers", [
     ...answers,
-    { id: id, submitted: new Date().toLocaleString(), ...answer },
+    { id: id, saved: new Date().toLocaleString(), ...answer },
   ]);
   const res = await localforage.getItem("answers");
   await localforage.setItem("id_ptr", id + 1);
@@ -53,7 +53,7 @@ export async function updateAnswer(id, new_answer) {
     if (answer.id === parseInt(id)) {
       return {
         id: parseInt(id),
-        submitted: answer.submitted,
+        saved: answer.saved || answer.submitted,
         frame_id: answer.frame_id,
         ...new_answer,
       };

@@ -159,7 +159,7 @@
 //       }}
 //     >
 //       <div id="answer-description">
-//         <div className="">{answer.submitted}</div>
+//         <div className="">{answer.saved}</div>
 //       </div>
 //       <div
 //         id="answer-option"
@@ -244,9 +244,9 @@
 //           {answer.correct ? "Correct" : "Wrong"}
 //         </div>
 //         <div className="">
-//           <span className="font-bold">Submitted at</span>
+//           <span className="font-bold">Saved at</span>
 //           {": "}
-//           {answer.submitted}
+//           {answer.saved}
 //         </div>
 //       </div>
 //     </div>
@@ -786,9 +786,9 @@ export default function AnswerSidebar() {
     const [downloadStep, setDownloadStep] = useState(50);
     const [downloadN, setDownloadN] = useState(5);
     const [downloadList, setDownloadList] = useState([]);
-    const { selected: selectedFrames, clearSelected, markSent } = useSelected();
+    const { selected: selectedFrames, clearSelected, markSaved } = useSelected();
     const [isDownloading, setIsDownloading] = useState(false);
-    const pendingSentRef = useRef([]);
+    const pendingSavedRef = useRef([]);
 
     useEffect(() => {
         if (fetcher.state === "idle" && !fetcher.data) {
@@ -797,11 +797,11 @@ export default function AnswerSidebar() {
     }, [fetcher]);
 
     useEffect(() => {
-        if (fetcher.state === "idle" && pendingSentRef.current.length > 0 && Array.isArray(fetcher.data)) {
-            markSent(pendingSentRef.current);
-            pendingSentRef.current = [];
+        if (fetcher.state === "idle" && pendingSavedRef.current.length > 0 && Array.isArray(fetcher.data)) {
+            markSaved(pendingSavedRef.current);
+            pendingSavedRef.current = [];
         }
-    }, [fetcher.data, fetcher.state, markSent]);
+    }, [fetcher.data, fetcher.state, markSaved]);
 
     const handleOnSelect = (answer) => {
         setSelected(answer);
@@ -846,9 +846,9 @@ export default function AnswerSidebar() {
                 return;
             }
             
-            pendingSentRef.current = [...selectedFrames];
+            pendingSavedRef.current = [...selectedFrames];
             fetcher.submit(form);
-            console.log("Submitted form with existing values");
+            console.log("Saved form locally with existing values");
         }
     };
 
@@ -874,7 +874,7 @@ export default function AnswerSidebar() {
             return frameCounter;
         }).join(', ');
         
-        pendingSentRef.current = [...selectedFrames];
+        pendingSavedRef.current = [...selectedFrames];
         fetcher.submit({
             query_id: queryId,
             video_id: videoId,

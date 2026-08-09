@@ -1,5 +1,5 @@
 import { Form, useLoaderData, useNavigation, useSubmit } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { search } from "../services/search.js";
 import { FrameContainer, FrameItem } from "../components/Frame.jsx";
@@ -17,7 +17,7 @@ import {
   saveQueryHistory,
   serializeQueryState,
 } from "../utils/queryState.js";
-import { getShortcutAction } from "../utils/keyboardShortcuts.js";
+import { getSearchShortcutAction } from "../utils/keyboardShortcuts.js";
 
 import {
   limitOptions,
@@ -104,22 +104,41 @@ export default function Search() {
     toggleShortlist,
     toggleReject,
     resetTriage,
+    restoreRejected,
+    restoreAllRejected,
   } = useSelected();
   const { q = "", id = null } = query;
   const { limit = limitOptions[0] } = params;
   const frames = data.frames || [];
   const candidates = groupTemporalCandidates(frames);
   const visibleCandidates = candidates.filter((candidate) => !isRejected(candidate.id));
-  const total = getResultTotal(data) || candidates.length;
+  const rejectedCandidates = candidates.filter((candidate) => isRejected(candidate.id));
   const empty = visibleCandidates.length === 0;
   const queryKey = id ? `similar:${id}` : q.trim() || "all";
   const pageSize = parseInt(limit, 10) || 1;
   const [currentQuery, setCurrentQuery] = useState(q);
+  const [activeCandidateId, setActiveCandidateId] = useState(null);
   const [density, setDensity] = useState(() => {
     const stored = Number(localStorage.getItem("vecna-grid-density"));
     return Number.isFinite(stored) && stored > 0 ? stored : 220;
   });
   const [history, setHistory] = useState(() => loadQueryHistory());
+
+  const openCandidate = useCallback((candidate, keyframe = candidate?.primaryKeyframe) => {
+    if (!candidate) return;
+    setActiveCandidateId(candidate.id);
+    playVideo(candidate, keyframe);
+  }, [playVideo]);
+
+  const activeCandidate = visibleCandidates.find((candidate) => candidate.id === activeCandidateId) || visibleCandidates[0];
+
+  const navigateCandidate = useCallback((delta) => {
+    if (visibleCandidates.length === 0) return;
+    const currentIndex = visibleCandidates.findIndex((candidate) => candidate.id === activeCandidateId);
+    const startIndex = currentIndex < 0 ? (delta > 0 ? 0 : visibleCandidates.length - 1) : currentIndex + delta;
+    const nextIndex = Math.max(0, Math.min(startIndex, visibleCandidates.length - 1));
+    openCandidate(visibleCandidates[nextIndex]);
+  }, [activeCandidateId, openCandidate, visibleCandidates]);
 
   useEffect(() => {
     setCurrentQuery(q);
@@ -133,6 +152,10 @@ export default function Search() {
   useEffect(() => {
     setActiveQuery(queryKey);
   }, [queryKey, setActiveQuery]);
+
+  useEffect(() => {
+    setActiveCandidateId(null);
+  }, [queryKey, offset]);
 
   useEffect(() => {
     if (!id && q.trim()) {
@@ -154,27 +177,44 @@ export default function Search() {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      const action = getShortcutAction(event, {
+      const action = getSearchShortcutAction(event, {
         isInput: ["INPUT", "TEXTAREA", "SELECT"].includes(event.target.tagName),
       });
-      if (action === "page-previous") {
+      if (!action) return;
+      if (action.type === "page-previous") {
         submit(serializeQueryState({ query: q, id, params, offset: Math.max(Number(offset) - pageSize, 0) }));
       }
-      if (action === "page-next" && !empty) {
+      if (action.type === "page-next" && !empty) {
         submit(serializeQueryState({ query: q, id, params, offset: Number(offset) + pageSize }));
       }
-      if (action === "focus-search" && !id) {
+      if (action.type === "focus-search" && !id) {
         event.preventDefault();
         document.querySelector("#search-bar")?.focus();
       }
-      if (action === "focus-answer") {
+      if (action.type === "focus-answer") {
         event.preventDefault();
         document.querySelector("#answer-form input[name=answer]")?.focus();
+      }
+      if (action.type === "candidate-previous" || action.type === "candidate-next") {
+        event.preventDefault();
+        navigateCandidate(action.type === "candidate-previous" ? -1 : 1);
+      }
+      if (action.type === "quick-open") {
+        event.preventDefault();
+        openCandidate(visibleCandidates[action.index]);
+      }
+      if (action.type === "toggle-shortlist" && activeCandidate) {
+        event.preventDefault();
+        toggleShortlist(activeCandidate.id);
+      }
+      if (action.type === "toggle-reject" && activeCandidate) {
+        event.preventDefault();
+        toggleReject(activeCandidate.id);
       }
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [empty, id, offset, pageSize, params, q, submit, total]);
+  }, [activeCandidate, empty, id, navigateCandidate, offset, openCandidate, pageSize, params, q, submit, toggleReject, toggleShortlist, visibleCandidates]);
 
   const page = Math.floor(Number(offset) / pageSize) + 1;
 
@@ -307,7 +347,7 @@ export default function Search() {
         <div>
           <p className="eyebrow">Results</p>
           <h1>{q ? `Matches for “${q}”` : "Start with a query"}</h1>
-          <span className="results-count">{total} candidates · page {page}</span>
+          <span className="results-count">{visibleCandidates.length} matches on this page · page {page}</span>
         </div>
         <div className="results-toolbar-actions">
           <label className="density-control">Density <input type="range" min="160" max="360" step="10" value={density} onChange={(event) => setDensity(Number(event.target.value))} /> <output>{density}px</output></label>
@@ -317,6 +357,20 @@ export default function Search() {
           <button type="button" className="toolbar-button toolbar-button-primary" onClick={handleSubmitSelected}>Export staged</button>
         </div>
       </div>
+
+      {rejectedCandidates.length > 0 && (
+        <details className="rejected-bucket">
+          <summary>Rejected ({rejectedCandidates.length})</summary>
+          <div className="rejected-bucket-body">
+            <button type="button" onClick={() => restoreAllRejected(queryKey)}>Restore all</button>
+            {rejectedCandidates.map((candidate) => (
+              <button key={candidate.id} type="button" onClick={() => restoreRejected(candidate.id, queryKey)}>
+                {candidate.video_id}#{candidate.primaryKeyframe} · Restore
+              </button>
+            ))}
+          </div>
+        </details>
+      )}
 
       {error && <div className="error-banner">Search unavailable: {error}</div>}
       {empty ? (
@@ -336,13 +390,11 @@ export default function Search() {
                 keyframes={candidate.keyframes}
                 thumbnail={`http://127.0.0.1:6900/api/files/${candidate.video_id}/${candidate.primaryKeyframe}`}
                 timelineColor={getTimelineColor(index)}
-                highlighted={selected === candidate.id}
+                highlighted={selected === candidate.id || activeCandidateId === candidate.id}
                 scores={candidate.scores}
                 timelineScores={candidate.timelineScores}
-                ocr={candidate.ocr}
-                ocrBoxes={candidate.ocr_bboxes || candidate.ocr_boxes || candidate.bboxes}
                 shortlisted={isShortlisted(candidate.id)}
-                onPlay={(keyframe = candidate.primaryKeyframe) => playVideo(candidate, keyframe)}
+                onPlay={(keyframe = candidate.primaryKeyframe) => openCandidate(candidate, keyframe)}
                 onSearchSimilar={(keyframe = candidate.primaryKeyframe) => handleOnSearchSimilar(candidate, keyframe)}
                 onSearchNearby={(keyframe = candidate.primaryKeyframe) => handleOnSearchNearby(candidate, keyframe)}
                 onToggleShortlist={() => toggleShortlist(candidate.id)}

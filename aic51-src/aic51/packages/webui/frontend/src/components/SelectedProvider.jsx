@@ -2,28 +2,30 @@ import { createContext, useContext, useEffect, useState } from "react";
 import {
   TRIAGE_STATE_KEY,
   resetTriageState,
+  restoreAllRejectedState,
+  restoreRejectedState,
   updateTriageState,
 } from "../utils/queryState.js";
 
 export const SelectedContext = createContext({
   selected: [],
   viewed: [],
-  submitted: [],
-  sent: [],
+  saved: [],
   triageByQuery: {},
   activeQueryKey: "all",
   addSelected: () => {},
   removeSelected: () => {},
   clearSelected: () => {},
   markViewed: () => {},
-  markSubmitted: () => {},
-  markSent: () => {},
+  markSaved: () => {},
   setActiveQuery: () => {},
   isShortlisted: () => false,
   isRejected: () => false,
   toggleShortlist: () => {},
   toggleReject: () => {},
   resetTriage: () => {},
+  restoreRejected: () => {},
+  restoreAllRejected: () => {},
   getFirstSelected: () => null,
   getSelectedForSubmit: () => null,
 });
@@ -31,7 +33,7 @@ export const SelectedContext = createContext({
 export default function SelectedProvider({ children }) {
   const [selected, setSelected] = useState([]);
   const [viewed, setViewed] = useState([]);
-  const [submitted, setSubmitted] = useState([]);
+  const [saved, setSaved] = useState([]);
   const [triageByQuery, setTriageByQuery] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem(TRIAGE_STATE_KEY) || "{}");
@@ -75,9 +77,9 @@ export default function SelectedProvider({ children }) {
     setViewed((prev) => (prev.includes(frameId) ? prev : [...prev, frameId]));
   };
 
-  const markSubmitted = (frameIds) => {
+  const markSaved = (frameIds) => {
     const ids = Array.isArray(frameIds) ? frameIds : [frameIds];
-    setSubmitted((prev) => [...new Set([...prev, ...ids])]);
+    setSaved((prev) => [...new Set([...prev, ...ids])]);
   };
 
   const setActiveQuery = (queryKey) => {
@@ -102,6 +104,14 @@ export default function SelectedProvider({ children }) {
     setTriageByQuery((current) => resetTriageState(current, queryKey));
   };
 
+  const restoreRejected = (frameId, queryKey = activeQueryKey) => {
+    setTriageByQuery((current) => restoreRejectedState(current, queryKey, frameId));
+  };
+
+  const restoreAllRejected = (queryKey = activeQueryKey) => {
+    setTriageByQuery((current) => restoreAllRejectedState(current, queryKey));
+  };
+
   const getFirstSelected = () => {
     return selected.length > 0 ? selected[0] : null;
   };
@@ -115,22 +125,22 @@ export default function SelectedProvider({ children }) {
       value={{
         selected,
         viewed,
-        submitted,
-        sent: submitted,
+        saved,
         triageByQuery,
         activeQueryKey,
         addSelected,
         removeSelected,
         clearSelected,
         markViewed,
-        markSubmitted,
-        markSent: markSubmitted,
+        markSaved,
         setActiveQuery,
         isShortlisted,
         isRejected,
         toggleShortlist,
         toggleReject,
         resetTriage,
+        restoreRejected,
+        restoreAllRejected,
         getFirstSelected,
         getSelectedForSubmit,
       }}

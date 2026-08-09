@@ -7,6 +7,8 @@ import {
   loadQueryHistory,
   normalizeTemporalQuery,
   rememberQuery,
+  restoreAllRejectedState,
+  restoreRejectedState,
   resetTriageState,
   saveQueryHistory,
   serializeQueryState,
@@ -71,5 +73,8 @@ test("history and triage state stay query-scoped", () => {
   assert.equal(Object.keys(triage).length, 2);
   triage = resetTriageState(triage, "red car");
   assert.equal(Object.keys(triage).length, 1);
+  triage = updateTriageState(triage, "red car", "video-2#10", "reject");
+  assert.equal(Object.keys(restoreRejectedState(triage, "red car", "video-2#10")).length, 1);
+  assert.equal(Object.keys(restoreAllRejectedState(triage, "blue car")).length, 1);
   assert.deepEqual(clearQueryHistory(storage), []);
 });

@@ -83,6 +83,11 @@ export async function getFrameInfo(videoId, frameId) {
   return data;
 }
 
+export async function getFrameOCR(videoId, frameId) {
+  const res = await axios.get(`http://127.0.0.1:${PORT}/api/frame/ocr/${videoId}/${frameId}`);
+  return res.data;
+}
+
 export async function getTargetFeatures() {
   const res = await axios.get(`http://127.0.0.1:${PORT}/api/target_features`);
   const data = res.data;
