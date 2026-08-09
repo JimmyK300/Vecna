@@ -21,10 +21,9 @@ export default function SearchParams({
   enToViTranslate = false,
   setEnToViTranslate,
 }) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [targetFeatures, setTargetFeatures] = useState([]);
 
-  // Load available target features from backend
   useEffect(() => {
     async function fetchFeatures() {
       try {
@@ -32,7 +31,6 @@ export default function SearchParams({
         const features = res.target_features || [];
         setTargetFeatures(features);
 
-        // Auto-select CLIP and SIGLIP by default if empty
         if ((!selectedFeatures || selectedFeatures.length === 0) && features.length > 0) {
           const autoDefaults = features.filter((f) => {
             const lower = f.toLowerCase();
@@ -63,22 +61,20 @@ export default function SearchParams({
   };
 
   return (
-    <div className="w-full p-3 bg-gray-50 border-b border-gray-200 flex flex-col gap-2.5">
-      {/* Header Bar with Collapse Button Only */}
-      <div className="flex items-center justify-end pb-1 border-b border-gray-200">
+    <div className="w-full p-2 bg-gray-50 border-b border-gray-200 flex flex-col gap-2">
+      <div className="flex items-center justify-between">
+        <span className="text-[11px] font-bold text-gray-700">Search controls</span>
         <button
           type="button"
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="text-xs text-blue-600 hover:text-blue-800 font-semibold flex items-center gap-1"
+          className="text-[11px] text-blue-700 hover:text-blue-900 font-semibold flex items-center gap-1 bg-white border border-gray-300 rounded px-2 py-0.5"
         >
-          {isCollapsed ? "Expand Parameters" : "Collapse Parameters"}
-          <span className="text-[10px]">{isCollapsed ? "▼" : "▲"}</span>
+          Advanced
+          <span className="text-[9px]">{isCollapsed ? "▼" : "▲"}</span>
         </button>
       </div>
 
-      {/* Quick Weights Buttons Section (Row 1: CLIP, OCR, ASR | Row 2: Default, Hybrid) */}
       <div className="flex flex-col space-y-1.5 bg-white border border-gray-300 rounded-lg p-2 shadow-sm">
-        {/* Row 1: CLIP, OCR, ASR */}
         <div className="grid grid-cols-3 gap-1">
           <button
             type="button"
@@ -120,7 +116,6 @@ export default function SearchParams({
           </button>
         </div>
 
-        {/* Row 2: Default, Hybrid */}
         <div className="grid grid-cols-2 gap-1">
           <button
             type="button"
@@ -149,58 +144,52 @@ export default function SearchParams({
           </button>
         </div>
 
-        {/* Current Weight Values Indicator */}
         <div className="flex justify-between items-center text-[11px] pt-1 text-gray-600 border-t border-gray-100 font-mono truncate">
-          <span className="truncate">OCR Weight: <strong className="text-blue-700">{ocrWeight}</strong></span>
-          <span className="truncate">ASR Weight: <strong className="text-purple-700">{asrWeight}</strong></span>
+          <span className="truncate">OCR: <strong className="text-blue-700">{ocrWeight}</strong></span>
+          <span className="truncate">ASR: <strong className="text-purple-700">{asrWeight}</strong></span>
         </div>
       </div>
 
-      {/* Collapsible Parameters Container (Includes Translation Toggles & Model Constants) */}
+      <div className="flex flex-col space-y-1.5 bg-white border border-gray-300 rounded-lg p-2 shadow-sm">
+        <span className="text-xs font-bold text-gray-700">Translation</span>
+        <div className="grid grid-cols-2 gap-1.5">
+          <button
+            type="button"
+            onClick={() => setAutoTranslate && setAutoTranslate(!autoTranslate)}
+            className={`px-2 py-1 text-xs border rounded-md font-bold transition-all shadow-sm flex items-center justify-center gap-1 ${
+              autoTranslate
+                ? "bg-blue-600 text-white border-blue-600"
+                : "bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
+            }`}
+            title="Translate Vietnamese query to English for CLIP model"
+          >
+            VI ➔ EN CLIP
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setEnToViTranslate && setEnToViTranslate(!enToViTranslate)}
+            className={`px-2 py-1 text-xs border rounded-md font-bold transition-all shadow-sm flex items-center justify-center gap-1 ${
+              enToViTranslate
+                ? "bg-amber-600 text-white border-amber-600"
+                : "bg-amber-50 hover:bg-amber-100 border-amber-200 text-amber-800"
+            }`}
+            title="Translate English OCR/ASR text to Vietnamese"
+          >
+            EN ➔ VI OCR/ASR
+          </button>
+        </div>
+      </div>
+
       {!isCollapsed && (
         <div className="flex flex-col gap-2 pt-1 border-t border-gray-200 animate-fadeIn">
-          {/* Translation Settings Section (Inside Collapsible Area) */}
-          <div className="flex flex-col space-y-1.5 bg-white border border-gray-300 rounded-lg p-2 shadow-sm">
-            <span className="text-xs font-bold text-gray-700">Translation Toggles</span>
-            <div className="grid grid-cols-2 gap-1.5">
-              {/* VI -> EN CLIP Translation Toggle */}
-              <button
-                type="button"
-                onClick={() => setAutoTranslate && setAutoTranslate(!autoTranslate)}
-                className={`px-2 py-1 text-xs border rounded-md font-bold transition-all shadow-sm flex items-center justify-center gap-1 ${
-                  autoTranslate
-                    ? "bg-blue-600 text-white border-blue-600"
-                    : "bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
-                }`}
-                title="Translate Vietnamese query to English for CLIP model"
-              >
-                VI ➔ EN CLIP
-              </button>
-
-              {/* EN -> VI OCR/ASR Translation Toggle */}
-              <button
-                type="button"
-                onClick={() => setEnToViTranslate && setEnToViTranslate(!enToViTranslate)}
-                className={`px-2 py-1 text-xs border rounded-md font-bold transition-all shadow-sm flex items-center justify-center gap-1 ${
-                  enToViTranslate
-                    ? "bg-amber-600 text-white border-amber-600"
-                    : "bg-amber-50 hover:bg-amber-100 border-amber-200 text-amber-800"
-                }`}
-                title="Translate English OCR/ASR text to Vietnamese"
-              >
-                EN ➔ VI OCR/ASR
-              </button>
-            </div>
-          </div>
-
-          {/* Target Feature Models Selector */}
           <div className="flex flex-col bg-white border border-gray-300 rounded-lg p-2 gap-1.5 shadow-sm">
             <div className="flex items-center justify-between">
               <label className="font-bold text-xs text-gray-800">
                 Target Feature Models
               </label>
               <span className="text-[10px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded font-semibold">
-                Auto-Selected CLIP/SIGLIP
+                Auto CLIP/SigLIP
               </span>
             </div>
 
@@ -231,7 +220,6 @@ export default function SearchParams({
             )}
           </div>
 
-          {/* Model Constants Grid Inputs */}
           <div className="grid grid-cols-2 gap-2 text-xs">
             <div className="flex items-center bg-white border border-gray-300 rounded p-1 gap-1">
               <label className="font-bold text-[11px] text-gray-600">nprobe:</label>
@@ -249,7 +237,7 @@ export default function SearchParams({
             </div>
 
             <div className="flex items-center bg-white border border-gray-300 rounded p-1 gap-1">
-              <label className="font-bold text-[11px] text-gray-600">limit:</label>
+              <label className="font-bold text-[11px] text-gray-600">batch limit:</label>
               <select
                 value={limit}
                 onChange={(e) => setLimit && setLimit(e.target.value)}
