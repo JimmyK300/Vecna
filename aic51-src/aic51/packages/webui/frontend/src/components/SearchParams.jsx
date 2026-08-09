@@ -28,9 +28,9 @@ export default function SearchParams({ onToggle }) {
   const [selectedFeatures, setSelectedFeatures] = useState([]);
   const [autoTranslate, setAutoTranslate] = useState(false);
   const [includeVideo, setIncludeVideo] = useState("");
-  const [excludeVideo, setExcludeVideo] = useState("");
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const pendingSubmit = useRef(null);
+  const isSimilar = location.pathname.includes("/similar");
 
   useEffect(() => {
     getTargetFeatures()
@@ -53,7 +53,6 @@ export default function SearchParams({ onToggle }) {
     });
     setAutoTranslate(searchParams.get("auto_translate") === "true");
     setIncludeVideo(searchParams.get("include_video") || "");
-    setExcludeVideo(searchParams.get("exclude_video") || "");
     setSelectedFeatures(
       (searchParams.get("target_features") || "")
         .split(",")
@@ -68,25 +67,25 @@ export default function SearchParams({ onToggle }) {
       nextFeatures = selectedFeatures,
       nextAutoTranslate = autoTranslate,
       nextIncludeVideo = includeVideo,
-      nextExcludeVideo = excludeVideo,
     } = {}) => {
       const searchParams = new URLSearchParams(location.search);
       const query = searchParams.get("q") || "";
-      const action = location.pathname.includes("/similar") ? "/similar" : "/search";
+      const id = searchParams.get("id") || "";
+      const action = isSimilar ? "/similar" : "/search";
       submit(
         {
           ...(query ? { q: query } : {}),
+          ...(isSimilar && id ? { id } : {}),
           ...nextValues,
           ...(nextFeatures.length ? { target_features: nextFeatures.join(",") } : {}),
           ...(nextAutoTranslate ? { auto_translate: "true" } : {}),
           ...(nextIncludeVideo.trim() ? { include_video: nextIncludeVideo.trim() } : {}),
-          ...(nextExcludeVideo.trim() ? { exclude_video: nextExcludeVideo.trim() } : {}),
           offset: 0,
         },
         { action },
       );
     },
-    [autoTranslate, excludeVideo, includeVideo, location, selectedFeatures, submit, values],
+    [autoTranslate, includeVideo, isSimilar, location, selectedFeatures, submit, values],
   );
 
   const scheduleApply = (next) => {
@@ -134,7 +133,12 @@ export default function SearchParams({ onToggle }) {
         </button>
       </div>
 
-      {isOpen && (
+      {isSimilar ? (
+        <div className="similar-controls-note">
+          <p className="eyebrow">Similar mode</p>
+          <p>Source-frame retrieval is fixed for this view; query-only controls are hidden.</p>
+        </div>
+      ) : isOpen && (
         <div className="control-rail-body">
           <section className="control-section">
             <div className="section-heading">
@@ -184,14 +188,6 @@ export default function SearchParams({ onToggle }) {
                 onChange={(event) => setFilter(setIncludeVideo, "nextIncludeVideo", event.target.value)}
               />
             </label>
-            <label className="field-label">
-              Exclude video
-              <input
-                value={excludeVideo}
-                placeholder="video_099"
-                onChange={(event) => setFilter(setExcludeVideo, "nextExcludeVideo", event.target.value)}
-              />
-            </label>
             <p className="helper-text">Filters stay outside the query text and are applied automatically.</p>
           </section>
 
@@ -213,7 +209,7 @@ export default function SearchParams({ onToggle }) {
               <label className="field-label">ASR<input value={values.asr_weight} onChange={(event) => setValue("asr_weight", event.target.value)} /></label>
             </div>
             <label className="toggle-row">
-              <span>Translate Vietnamese → English for CLIP</span>
+              <span>Auto-translate evidence (EN → VI)</span>
               <input
                 type="checkbox"
                 checked={autoTranslate}

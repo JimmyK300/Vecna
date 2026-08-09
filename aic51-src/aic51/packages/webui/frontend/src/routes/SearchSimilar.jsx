@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { searchSimilar } from "../services/search.js";
 import { FrameItem, FrameContainer } from "../components/Frame.jsx";
 import { getTimelineColor } from "../utils/timelineColors.js";
+import { getResultTotal } from "../utils/queryState.js";
 import { usePlayVideo } from "../components/VideoPlayer.jsx";
 import { useSelected } from "../components/SelectedProvider.jsx";
 import PreviousButton from "../assets/previous-btn.svg";
@@ -49,24 +50,34 @@ export async function loader({ request }) {
   const max_interval = searchParams.get("max_interval") || max_interval_default;
   const target_features = searchParams.get("target_features") || "";
 
-  const { total, frames, params, offset } = await searchSimilar(
-    id,
-    _offset,
-    limit,
-    nprobe,
-    temporal_k,
-    ocr_weight,
-    asr_weight,
-    max_interval,
-    target_features,
-  );
+  try {
+    const response = await searchSimilar(
+      id,
+      _offset,
+      limit,
+      nprobe,
+      temporal_k,
+      ocr_weight,
+      asr_weight,
+      max_interval,
+      target_features,
+    );
 
-  return {
-    query: { id },
-    params,
-    offset,
-    data: { total, frames },
-  };
+    return {
+      query: { id },
+      params: response.params || { limit, nprobe, temporal_k, ocr_weight, asr_weight, max_interval, target_features },
+      offset: response.offset || _offset,
+      data: { total: getResultTotal(response), frames: response.frames || [] },
+    };
+  } catch (error) {
+    return {
+      query: { id },
+      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, max_interval, target_features },
+      offset: _offset,
+      data: { total: 0, frames: [] },
+      error: error.message,
+    };
+  }
 }
 
 export default function SearchSimilar() {

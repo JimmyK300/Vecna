@@ -5,6 +5,7 @@ import PlayButton from "../assets/play-btn.svg";
 import SearchButton from "../assets/search-btn.svg";
 import NextButton from "../assets/next-btn.svg";
 import { useSelected } from "./SelectedProvider.jsx";
+import { getOcrBoxes } from "../utils/queryState.js";
 
 export function FrameItem({
   id,
@@ -18,6 +19,11 @@ export function FrameItem({
   onSearchNearby,
   scores,
   ocr,
+  ocrBoxes,
+  keyframes = [],
+  shortlisted = false,
+  onToggleShortlist = () => {},
+  onToggleReject = () => {},
 }) {
   const {
     selected,
@@ -30,6 +36,7 @@ export function FrameItem({
   const isSelected = selected.includes(id);
   const isViewed = viewed.includes(id);
   const isSubmitted = submitted.includes(id);
+  const normalizedOcrBoxes = getOcrBoxes(ocrBoxes);
   const [isZoomed, setIsZoomed] = useState(false);
   const [showScores, setShowScores] = useState(false);
   const [showOCR, setShowOCR] = useState(false);
@@ -68,7 +75,8 @@ export function FrameItem({
     };
   }, [isZoomed, showOCR]);
   
-  const handleSelect = () => {
+  const handleSelect = (event) => {
+    event?.stopPropagation();
     if (isSelected) {
       removeSelected(id);
     } else {
@@ -76,10 +84,10 @@ export function FrameItem({
     }
   };
 
-  const handlePlay = (event) => {
-    event.stopPropagation();
+  const handlePlay = (event, selectedKeyframe = frame_id) => {
+    event?.stopPropagation();
     markViewed(id);
-    onPlay();
+    onPlay(selectedKeyframe);
   };
 
   const handleOpenOCR = async (e) => {
@@ -116,7 +124,7 @@ export function FrameItem({
           "bg-black border-l-black scale-105 shadow-lg ring-4 ring-yellow-400": isSelected,
           "scale-105 shadow-lg ring-4 ring-cyan-500 bg-cyan-50 border-l-cyan-500": highlighted && !isSelected,
         }, !isSelected ? timelineColor : "")}
-        onClick={handleSelect}
+        onClick={handlePlay}
       >
         <div
           className="relative"
@@ -124,6 +132,14 @@ export function FrameItem({
           onMouseLeave={() => setShowScores(false)}
         >
           <img src={thumbnail} draggable="false" className="w-full h-auto" />
+          {normalizedOcrBoxes.map((box, index) => (
+            <span
+              key={`${box.x}-${box.y}-${index}`}
+              className="ocr-box-overlay"
+              style={{ left: `${box.x}%`, top: `${box.y}%`, width: `${box.width}%`, height: `${box.height}%` }}
+              title={box.text}
+            />
+          ))}
           <div className="absolute top-1 right-1 flex flex-wrap justify-end gap-1">
             {isViewed && <span className="frame-badge frame-badge-viewed">Viewed</span>}
             {isSelected && <span className="frame-badge frame-badge-selected">Staged</span>}
@@ -138,6 +154,22 @@ export function FrameItem({
             </div>
           )}
         </div>
+        {keyframes.length > 1 && (
+          <div className="storyboard-strip" aria-label={`${keyframes.length} temporal keyframes`}>
+            {keyframes.map((keyframe, index) => (
+              <button
+                type="button"
+                key={`${keyframe}-${index}`}
+                className="storyboard-frame"
+                onClick={(event) => handlePlay(event, keyframe)}
+                title={`Open keyframe ${keyframe}`}
+              >
+                <img src={`http://127.0.0.1:6900/api/files/${video_id}/${keyframe}`} alt={`Keyframe ${keyframe}`} loading="lazy" />
+                <span>{keyframe}</span>
+              </button>
+            ))}
+          </div>
+        )}
         <div className="absolute top-0 left-0 space-x-2 flex flex-row bg-black bg-opacity-50 px-1">
           <div className="text-sm text-white">{frame_id}</div>
           <div className="text-sm text-nowrap overflow-hidden text-white">
@@ -150,6 +182,9 @@ export function FrameItem({
           }}
           className="flex flex-row bg-white rounded-md justify-end space-x-1.5 items-center p-0.5"
         >
+          <button type="button" className={isSelected ? "frame-action active" : "frame-action"} onClick={handleSelect} title="Stage this candidate">
+            {isSelected ? "Staged" : "Stage"}
+          </button>
           {/* OCR Transcript Button */}
           <svg
             onClick={handleOpenOCR}
@@ -198,8 +233,10 @@ export function FrameItem({
             draggable="false"
             title="Play video"
           />
+          <button type="button" className={shortlisted ? "frame-action active" : "frame-action"} onClick={(event) => { event.stopPropagation(); onToggleShortlist(); }} title="Shortlist this candidate">★</button>
+          <button type="button" className="frame-action frame-action-reject" onClick={(event) => { event.stopPropagation(); onToggleReject(); }} title="Reject this candidate">×</button>
           <img
-            onClick={onSearchSimilar}
+            onClick={(event) => { event.stopPropagation(); onSearchSimilar(frame_id); }}
             className="hover:bg-gray-200 active:bg-gray-300 cursor-pointer"
             width="24em"
             src={SearchButton}
@@ -207,7 +244,7 @@ export function FrameItem({
             title="Search similar"
           />
           <img
-            onClick={onSearchNearby}
+            onClick={(event) => { event.stopPropagation(); onSearchNearby(frame_id); }}
             className="hover:bg-gray-200 active:bg-gray-300 cursor-pointer"
             width="24em"
             src={NextButton}
@@ -245,8 +282,8 @@ export function FrameItem({
             <div className="max-h-[60vh] overflow-y-auto bg-slate-50 border rounded-lg p-3 text-sm font-mono text-slate-800 leading-relaxed whitespace-pre-wrap select-text">
               {loadingOCR ? (
                 <div className="text-gray-500 animate-pulse">Đang tải văn bản OCR...</div>
-              ) : (ocrText && ocrText.trim()) ? (
-                ocrText
+              ) : (ocrText && String(ocrText).trim()) ? (
+                typeof ocrText === "string" ? ocrText : JSON.stringify(ocrText, null, 2)
               ) : (
                 <div className="text-gray-400 italic">Không tìm thấy văn bản OCR được trích xuất cho khung hình này.</div>
               )}
@@ -257,10 +294,10 @@ export function FrameItem({
                 {(ocrText && ocrText.trim()) ? `${ocrText.trim().length} ký tự` : ""}
               </span>
               <div className="flex space-x-2">
-                {(ocrText && ocrText.trim()) && (
+                {(ocrText && String(ocrText).trim()) && (
                   <button
                     onClick={() => {
-                      navigator.clipboard.writeText(ocrText);
+                      navigator.clipboard.writeText(typeof ocrText === "string" ? ocrText : JSON.stringify(ocrText));
                       setCopied(true);
                       setTimeout(() => setCopied(false), 2000);
                     }}
@@ -311,9 +348,10 @@ export function FrameItem({
   );
 }
 
-export function FrameContainer({ children, density = "compact" }) {
+export function FrameContainer({ children, density = 220 }) {
+  const minWidth = Number(density) || 220;
   return (
-    <div className={classNames("frame-grid", `frame-grid-${density}`)}>
+    <div className="frame-grid" style={{ "--frame-min-width": `${minWidth}px` }}>
       {children}
     </div>
   );

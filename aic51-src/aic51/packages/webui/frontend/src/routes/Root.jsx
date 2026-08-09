@@ -30,9 +30,9 @@ export default function Root() {
             <main className="workspace-main">
               <Outlet context={{ targetFeatureOptions }} />
             </main>
-            <aside className="candidate-rail" aria-label="Candidate staging and submissions">
+            <section className="candidate-dock" aria-label="Candidate staging and submissions">
               <AnswerSidebar />
-            </aside>
+            </section>
           </div>
       </VideoProvider>
       </SelectedProvider>

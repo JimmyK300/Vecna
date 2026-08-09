@@ -430,7 +430,7 @@
 // }
 
 import { useFetcher, useSubmit, useSearchParams, Form } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import JSZip from "jszip";
 import classNames from "classnames";
 
@@ -786,14 +786,22 @@ export default function AnswerSidebar() {
     const [downloadStep, setDownloadStep] = useState(50);
     const [downloadN, setDownloadN] = useState(5);
     const [downloadList, setDownloadList] = useState([]);
-    const { selected: selectedFrames, clearSelected, markSubmitted } = useSelected();
+    const { selected: selectedFrames, clearSelected, markSent } = useSelected();
     const [isDownloading, setIsDownloading] = useState(false);
+    const pendingSentRef = useRef([]);
 
     useEffect(() => {
         if (fetcher.state === "idle" && !fetcher.data) {
             fetcher.load("/answers");
         }
     }, [fetcher]);
+
+    useEffect(() => {
+        if (fetcher.state === "idle" && pendingSentRef.current.length > 0 && Array.isArray(fetcher.data)) {
+            markSent(pendingSentRef.current);
+            pendingSentRef.current = [];
+        }
+    }, [fetcher.data, fetcher.state, markSent]);
 
     const handleOnSelect = (answer) => {
         setSelected(answer);
@@ -838,8 +846,8 @@ export default function AnswerSidebar() {
                 return;
             }
             
+            pendingSentRef.current = [...selectedFrames];
             fetcher.submit(form);
-            markSubmitted(selectedFrames);
             console.log("Submitted form with existing values");
         }
     };
@@ -866,6 +874,7 @@ export default function AnswerSidebar() {
             return frameCounter;
         }).join(', ');
         
+        pendingSentRef.current = [...selectedFrames];
         fetcher.submit({
             query_id: queryId,
             video_id: videoId,
@@ -875,8 +884,6 @@ export default function AnswerSidebar() {
             method: "POST",
             action: "/answers"
         });
-        markSubmitted(selectedFrames);
-        
         console.log("Added temporal sequence:", {
             query_id: queryId,
             video_id: videoId,

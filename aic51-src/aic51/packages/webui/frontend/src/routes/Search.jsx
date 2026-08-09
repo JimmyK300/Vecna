@@ -8,6 +8,16 @@ import { AdvanceQueryContainer } from "../components/AdvanceQuery.jsx";
 import { useSelected } from "../components/SelectedProvider.jsx";
 import { getTimelineColor } from "../utils/timelineColors.js";
 import SpinIcon from "../assets/spin.svg";
+import {
+  clearQueryHistory,
+  getResultTotal,
+  groupTemporalCandidates,
+  loadQueryHistory,
+  rememberQuery,
+  saveQueryHistory,
+  serializeQueryState,
+} from "../utils/queryState.js";
+import { getShortcutAction } from "../utils/keyboardShortcuts.js";
 
 import {
   limitOptions,
@@ -18,14 +28,11 @@ import {
   max_interval_default,
 } from "../resources/options.js";
 
-function appendVideoFilters(query, includeVideo, excludeVideo) {
+function appendVideoFilters(query, includeVideo) {
   const include = includeVideo
     ? `[video:${includeVideo.split(",").map((item) => item.trim()).filter(Boolean).join(",")}]`
     : "";
-  const exclude = excludeVideo
-    ? `[-video:${excludeVideo.split(",").map((item) => item.trim()).filter(Boolean).join(",")}]`
-    : "";
-  return [query, include, exclude].filter(Boolean).join(" ").trim();
+  return [query, include].filter(Boolean).join(" ").trim();
 }
 
 export async function loader({ request }) {
@@ -33,7 +40,6 @@ export async function loader({ request }) {
   const searchParams = url.searchParams;
   const q = searchParams.get("q") || "";
   const include_video = searchParams.get("include_video") || "";
-  const exclude_video = searchParams.get("exclude_video") || "";
 
   const params = {
     limit: searchParams.get("limit") || limitOptions[0],
@@ -45,7 +51,6 @@ export async function loader({ request }) {
     target_features: searchParams.get("target_features") || "",
     auto_translate: searchParams.get("auto_translate") || "",
     include_video,
-    exclude_video,
   };
 
   if (!q) {
@@ -54,7 +59,7 @@ export async function loader({ request }) {
 
   try {
     const response = await search(
-      appendVideoFilters(q.replace(/[|\\]/g, ";"), include_video, exclude_video),
+      appendVideoFilters(q.replace(/[|\\]/g, ";"), include_video),
       searchParams.get("offset") || 0,
       params.limit,
       params.nprobe,
@@ -71,7 +76,7 @@ export async function loader({ request }) {
       params,
       selected: searchParams.get("selected") || undefined,
       offset: response.offset || 0,
-      data: { total: response.total || 0, frames: response.frames || [] },
+      data: { total: getResultTotal(response), frames: response.frames || [] },
     };
   } catch (error) {
     return {
@@ -85,29 +90,36 @@ export async function loader({ request }) {
   }
 }
 
-function frameEntries(frame) {
-  const timeLines = frame.time_line?.length
-    ? frame.time_line
-    : [frame.frame_id || String(frame.id || "").split("#")[1]].filter(Boolean);
-  return timeLines.map((keyframe, index) => ({
-    frame,
-    keyframe,
-    scores: frame.time_line_scores?.[index] || frame.scores,
-  }));
-}
-
 export default function Search() {
   const navigation = useNavigation();
   const submit = useSubmit();
   const { query = {}, params = {}, offset = 0, data = {}, selected, error } = useLoaderData();
   const playVideo = usePlayVideo();
-  const { selected: selectedFrames, clearSelected } = useSelected();
+  const {
+    selected: selectedFrames,
+    clearSelected,
+    setActiveQuery,
+    isShortlisted,
+    isRejected,
+    toggleShortlist,
+    toggleReject,
+    resetTriage,
+  } = useSelected();
   const { q = "", id = null } = query;
   const { limit = limitOptions[0] } = params;
   const frames = data.frames || [];
-  const total = data.total || 0;
+  const candidates = groupTemporalCandidates(frames);
+  const visibleCandidates = candidates.filter((candidate) => !isRejected(candidate.id));
+  const total = getResultTotal(data) || candidates.length;
+  const empty = visibleCandidates.length === 0;
+  const queryKey = id ? `similar:${id}` : q.trim() || "all";
+  const pageSize = parseInt(limit, 10) || 1;
   const [currentQuery, setCurrentQuery] = useState(q);
-  const [density, setDensity] = useState(() => localStorage.getItem("vecna-grid-density") || "compact");
+  const [density, setDensity] = useState(() => {
+    const stored = Number(localStorage.getItem("vecna-grid-density"));
+    return Number.isFinite(stored) && stored > 0 ? stored : 220;
+  });
+  const [history, setHistory] = useState(() => loadQueryHistory());
 
   useEffect(() => {
     setCurrentQuery(q);
@@ -115,8 +127,22 @@ export default function Search() {
   }, [q]);
 
   useEffect(() => {
-    localStorage.setItem("vecna-grid-density", density);
+    localStorage.setItem("vecna-grid-density", String(density));
   }, [density]);
+
+  useEffect(() => {
+    setActiveQuery(queryKey);
+  }, [queryKey, setActiveQuery]);
+
+  useEffect(() => {
+    if (!id && q.trim()) {
+      const nextHistory = rememberQuery(q, history);
+      if (nextHistory.join("\u0000") !== history.join("\u0000")) {
+        setHistory(nextHistory);
+        saveQueryHistory(nextHistory);
+      }
+    }
+  }, [history, id, q]);
 
   useEffect(() => {
     if (!currentQuery.trim() || currentQuery === q || id) return undefined;
@@ -128,23 +154,34 @@ export default function Search() {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      const isInput = ["INPUT", "TEXTAREA"].includes(event.target.tagName);
-      if (isInput) return;
-      if (event.key === "ArrowUp") goToPreviousPage();
-      if (event.key === "ArrowDown") goToNextPage();
+      const action = getShortcutAction(event, {
+        isInput: ["INPUT", "TEXTAREA", "SELECT"].includes(event.target.tagName),
+      });
+      if (action === "page-previous") {
+        submit(serializeQueryState({ query: q, id, params, offset: Math.max(Number(offset) - pageSize, 0) }));
+      }
+      if (action === "page-next" && !empty) {
+        submit(serializeQueryState({ query: q, id, params, offset: Number(offset) + pageSize }));
+      }
+      if (action === "focus-search" && !id) {
+        event.preventDefault();
+        document.querySelector("#search-bar")?.focus();
+      }
+      if (action === "focus-answer") {
+        event.preventDefault();
+        document.querySelector("#answer-form input[name=answer]")?.focus();
+      }
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  });
+  }, [empty, id, offset, pageSize, params, q, submit, total]);
 
-  const pageSize = parseInt(limit, 10) || 1;
   const page = Math.floor(Number(offset) / pageSize) + 1;
-  const empty = frames.length === 0;
 
-  const goToFirstPage = () => submit({ ...query, ...params, offset: 0 });
-  const goToPreviousPage = () => submit({ ...query, ...params, offset: Math.max(Number(offset) - pageSize, 0) });
+  const goToFirstPage = () => submit(serializeQueryState({ query: q, id, params, offset: 0 }));
+  const goToPreviousPage = () => submit(serializeQueryState({ query: q, id, params, offset: Math.max(Number(offset) - pageSize, 0) }));
   const goToNextPage = () => {
-    if (!empty) submit({ ...query, ...params, offset: Number(offset) + pageSize });
+    if (!empty) submit(serializeQueryState({ query: q, id, params, offset: Number(offset) + pageSize }));
   };
 
   const handleOnSearch = (event = { preventDefault: () => {} }) => {
@@ -175,9 +212,28 @@ export default function Search() {
     URL.revokeObjectURL(link.href);
   };
 
+  const handleResetQuery = () => {
+    resetTriage(queryKey);
+    if (id) {
+      submit({ ...params, q: "", offset: 0 }, { action: "/search" });
+      return;
+    }
+    setCurrentQuery("");
+    submit({ ...params, offset: 0 }, { action: "/search" });
+  };
+
+  const handleClearHistory = () => {
+    setHistory(clearQueryHistory());
+  };
+
+  const handleHistorySelect = (value) => {
+    setCurrentQuery(value);
+    submit({ ...params, q: value, offset: 0 }, { action: "/search" });
+  };
+
   return (
     <div id="search-area" className="search-page">
-      <Form id="search-form" onSubmit={handleOnSearch}>
+      {!id && <Form id="search-form" onSubmit={handleOnSearch}>
         <div
           className="query-toolbar"
           onDragOver={(event) => event.preventDefault()}
@@ -209,9 +265,35 @@ export default function Search() {
             />
             <span className="query-status">{navigation.state === "loading" ? "Searching…" : "Auto-search"}</span>
           </div>
-          <p className="query-helper">Type to search · use <code>ocr:</code> and <code>asr:</code> for evidence · drop a frame here for similar search</p>
+          <p className="query-helper">Type to search · use <code>ocr:</code> and <code>asr:</code> for evidence · drop a frame here for Similar</p>
         </div>
-      </Form>
+      </Form>}
+
+      {id && (
+        <div className="similar-source-banner">
+          <div>
+            <p className="eyebrow">Similar mode</p>
+            <strong>Matches similar to {id}</strong>
+          </div>
+          <button type="button" className="toolbar-button" onClick={handleResetQuery}>Return to search</button>
+        </div>
+      )}
+
+      {!id && (
+        <div className="query-history-row">
+          <details>
+            <summary>Query history ({history.length})</summary>
+            <div className="query-history-list">
+              {history.length === 0 && <span className="helper-text">No saved queries yet.</span>}
+              {history.map((item) => (
+                <button key={item} type="button" onClick={() => handleHistorySelect(item)}>{item}</button>
+              ))}
+            </div>
+          </details>
+          <button type="button" className="toolbar-button" onClick={handleResetQuery}>Reset</button>
+          <button type="button" className="toolbar-button" onClick={handleClearHistory} disabled={history.length === 0}>Clear history</button>
+        </div>
+      )}
 
       {!id && currentQuery.trim() && (
         <AdvanceQueryContainer
@@ -228,10 +310,7 @@ export default function Search() {
           <span className="results-count">{total} candidates · page {page}</span>
         </div>
         <div className="results-toolbar-actions">
-          <div className="density-toggle" role="group" aria-label="Result density">
-            <button type="button" className={density === "compact" ? "active" : ""} onClick={() => setDensity("compact")}>Compact</button>
-            <button type="button" className={density === "detailed" ? "active" : ""} onClick={() => setDensity("detailed")}>Detailed</button>
-          </div>
+          <label className="density-control">Density <input type="range" min="160" max="360" step="10" value={density} onChange={(event) => setDensity(Number(event.target.value))} /> <output>{density}px</output></label>
           <button type="button" className="toolbar-button" onClick={goToFirstPage}>First</button>
           <button type="button" className="toolbar-button" onClick={goToPreviousPage}>Prev</button>
           <button type="button" className="toolbar-button" onClick={goToNextPage}>Next</button>
@@ -248,20 +327,26 @@ export default function Search() {
       ) : (
         <div className={navigation.state === "loading" ? "results-loading" : ""}>
           <FrameContainer density={density}>
-            {frames.flatMap(frameEntries).map(({ frame, keyframe, scores }, index) => (
+            {visibleCandidates.map((candidate, index) => (
               <FrameItem
-                key={`${frame.id || frame.video_id}-${keyframe}-${index}`}
-                id={`${frame.video_id}#${keyframe}`}
-                video_id={frame.video_id}
-                frame_id={keyframe}
-                thumbnail={`http://127.0.0.1:6900/api/files/${frame.video_id}/${keyframe}`}
+                key={`${candidate.id}-${index}`}
+                id={candidate.id}
+                video_id={candidate.video_id}
+                frame_id={candidate.primaryKeyframe}
+                keyframes={candidate.keyframes}
+                thumbnail={`http://127.0.0.1:6900/api/files/${candidate.video_id}/${candidate.primaryKeyframe}`}
                 timelineColor={getTimelineColor(index)}
-                highlighted={selected === `${frame.video_id}#${keyframe}`}
-                scores={scores}
-                ocr={frame.ocr}
-                onPlay={() => playVideo(frame, keyframe)}
-                onSearchSimilar={() => handleOnSearchSimilar(frame, keyframe)}
-                onSearchNearby={() => handleOnSearchNearby(frame, keyframe)}
+                highlighted={selected === candidate.id}
+                scores={candidate.scores}
+                timelineScores={candidate.timelineScores}
+                ocr={candidate.ocr}
+                ocrBoxes={candidate.ocr_bboxes || candidate.ocr_boxes || candidate.bboxes}
+                shortlisted={isShortlisted(candidate.id)}
+                onPlay={(keyframe = candidate.primaryKeyframe) => playVideo(candidate, keyframe)}
+                onSearchSimilar={(keyframe = candidate.primaryKeyframe) => handleOnSearchSimilar(candidate, keyframe)}
+                onSearchNearby={(keyframe = candidate.primaryKeyframe) => handleOnSearchNearby(candidate, keyframe)}
+                onToggleShortlist={() => toggleShortlist(candidate.id)}
+                onToggleReject={() => toggleReject(candidate.id)}
               />
             ))}
           </FrameContainer>
