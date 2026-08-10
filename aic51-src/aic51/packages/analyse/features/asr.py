@@ -8,7 +8,7 @@ import torch
 
 import aic51.packages.constant as constant
 from aic51.packages.logger import logger
-from aic51.packages.utils.provenance import stable_id
+from aic51.packages.utils.provenance import file_sha256, stable_id
 
 from .feature_extractor import FeatureExtractor, FeatureExtractorFactory
 
@@ -72,7 +72,11 @@ class WhisperX(ASR):
         if num_frames == 0:
             self._last_evidence_payload = {
                 "evidence_kind": "asr",
-                "provider_generation_id": getattr(self, "_vecna_provider_generation_id", "unknown"),
+                "provider_generation_id": getattr(
+                    self,
+                    "_vecna_provider_generation_id",
+                    "unknown",
+                ),
                 "segments": [],
                 "frame_projections": [],
             }
@@ -82,7 +86,11 @@ class WhisperX(ASR):
         segments, fps, transcript_meta = self._transcribe_video(video_id)
 
         source_context = getattr(self, "_vecna_source_context", {})
-        provider_generation_id = getattr(self, "_vecna_provider_generation_id", "unknown")
+        provider_generation_id = getattr(
+            self,
+            "_vecna_provider_generation_id",
+            "unknown",
+        )
 
         evidence_segments = []
         for idx, seg in enumerate(segments):
@@ -94,6 +102,7 @@ class WhisperX(ASR):
                     "provider_generation_id": provider_generation_id,
                     "source_id": source_context.get("source_id"),
                     "rendition_id": source_context.get("rendition_id"),
+                    "audio_input_sha256": transcript_meta.get("audio_input_sha256"),
                     "segment_index": idx,
                     "start": seg.get("start"),
                     "end": seg.get("end"),
@@ -132,7 +141,9 @@ class WhisperX(ASR):
             frame_projections.append(
                 {
                     "frame_id": keyframe_path.stem,
-                    "frame_evidence_id": source_context.get("frame_evidence_map", {}).get(keyframe_path.stem),
+                    "frame_evidence_id": source_context.get("frame_evidence_map", {}).get(
+                        keyframe_path.stem
+                    ),
                     "projected_time_seconds": timestamp,
                     "time_projection_quality": (
                         "reconstructed_from_rounded_fps" if fps else "unknown"
@@ -154,6 +165,7 @@ class WhisperX(ASR):
             "source_id": source_context.get("source_id"),
             "rendition_id": source_context.get("rendition_id"),
             "audio_input": transcript_meta["audio_input"],
+            "audio_input_sha256": transcript_meta.get("audio_input_sha256"),
             "language": transcript_meta.get("language"),
             "model": self._arch_name,
             "runtime": {
@@ -179,6 +191,7 @@ class WhisperX(ASR):
             )
 
         logger.info(f"asr: transcribing {audio_path}")
+        audio_sha256 = file_sha256(audio_path)
         audio = whisperx.load_audio(str(audio_path))
         result = self._model.transcribe(
             audio,
@@ -193,6 +206,7 @@ class WhisperX(ASR):
         fps = self._get_fps(video_id)
         transcript_meta = {
             "audio_input": str(audio_path),
+            "audio_input_sha256": audio_sha256,
             "language": result.get("language"),
         }
         return segments, fps, transcript_meta
@@ -239,7 +253,11 @@ class WhisperX(ASR):
 
         if best is not None and best_dist is not None and best_dist <= 2.0:
             return best, "nearest_within_2s_legacy_projection", float(best_dist)
-        return None, "no_projection_match", float(best_dist) if best_dist is not None else None
+        return (
+            None,
+            "no_projection_match",
+            float(best_dist) if best_dist is not None else None,
+        )
 
     def _find_segment_text(self, segments: list, timestamp: float) -> str:
         segment, _, _ = self._find_segment(segments, timestamp)
