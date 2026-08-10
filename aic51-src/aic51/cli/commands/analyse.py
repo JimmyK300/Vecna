@@ -7,12 +7,15 @@ from aic51.packages.analyse import FeatureExtractor, FeatureExtractorFactory
 from aic51.packages.config import GlobalConfig
 from aic51.packages.logger import logger
 from aic51.packages.utils import get_device
+from aic51.packages.utils.provenance import ProvenanceStore
 
 from .command import BaseCommand
+
 
 class AnalyseCommand(BaseCommand):
     def __init__(self, *args, **kwargs):
         super(AnalyseCommand, self).__init__(*args, **kwargs)
+        self._provenance = ProvenanceStore(self._work_dir)
 
     def add_args(self, subparser):
         parser = subparser.add_parser("analyse", help="Analyse extracted keyframes")
@@ -80,7 +83,7 @@ class AnalyseCommand(BaseCommand):
         device = get_device(do_gpu)
 
         if feature_infos is None:
-            raise RuntimeError(f"Features are not specified. Check your config file.")
+            raise RuntimeError("Features are not specified. Check your config file.")
 
         video_ids = self._get_video_ids()
 
@@ -132,25 +135,50 @@ class AnalyseCommand(BaseCommand):
                 logger.error(f"{polite_name}: invalid feature extractor")
                 continue
 
-            with (
-                Progress(
-                    TextColumn("{task.fields[name]}"),
-                    TextColumn(":"),
-                    SpinnerColumn(),
-                    *Progress.get_default_columns(),
-                    TimeElapsedColumn(),
-                    disable=not verbose,
-                ) as progress,
-            ):
+            provider_generation = self._provenance.provider_generation(
+                feature_name=feature_name,
+                model_name=model_name,
+                source=source,
+                arch_name=arch_name,
+                pretrained_model=pretrained_model,
+                batch_size=batch_size,
+                extractor=feature_extractor,
+            )
+            # Legacy extractor plumbing only. This does not define a universal provider API.
+            feature_extractor._vecna_provider_generation_id = provider_generation[
+                "provider_generation_id"
+            ]
+
+            with Progress(
+                TextColumn("{task.fields[name]}"),
+                TextColumn(":"),
+                SpinnerColumn(),
+                *Progress.get_default_columns(),
+                TimeElapsedColumn(),
+                disable=not verbose,
+            ) as progress:
                 for video_id in video_ids:
-                    self._analyse_one_video(feature_extractor, video_id, progress, do_overwrite)
+                    self._analyse_one_video(
+                        feature_extractor,
+                        model_name,
+                        provider_generation,
+                        video_id,
+                        progress,
+                        do_overwrite,
+                    )
 
     def _get_video_ids(self):
         keyframes_dir = self._work_dir / constant.KEYFRAME_DIR
-        video_ids = sorted([d.stem for d in keyframes_dir.glob("*") if d.is_dir() and d.stem[0] != "."])
-        return video_ids
+        return sorted(
+            [d.stem for d in keyframes_dir.glob("*") if d.is_dir() and d.stem[0] != "."]
+        )
 
-    def _get_keyframes_list(self, feature_extractor: FeatureExtractor, video_id: str, do_overwrite: bool):
+    def _get_keyframes_list(
+        self,
+        feature_extractor: FeatureExtractor,
+        video_id: str,
+        do_overwrite: bool,
+    ):
         keyframes_dir = self._work_dir / constant.KEYFRAME_DIR / video_id
         features_dir = self._work_dir / constant.FEATURE_DIR / video_id
 
@@ -159,7 +187,6 @@ class AnalyseCommand(BaseCommand):
             for feature_path in features_dir.glob("*/*.npy"):
                 if feature_path.is_dir():
                     continue
-
                 if feature_path.stem == feature_extractor.name:
                     has_features.add(feature_path.parent.stem)
 
@@ -169,33 +196,42 @@ class AnalyseCommand(BaseCommand):
                 continue
             keyframes.append(keyframe.stem)
 
-        keyframes = sorted(keyframes)
+        return sorted(keyframes)
 
-        return keyframes
-
-    def _get_input_files(self, feature_extractor: FeatureExtractor, video_id: str, keyframes: list[str]):
+    def _get_input_files(
+        self,
+        feature_extractor: FeatureExtractor,
+        video_id: str,
+        keyframes: list[str],
+    ):
         inputs_dir = self._work_dir / feature_extractor.require_input() / video_id
         if not inputs_dir.exists():
             raise RuntimeError(
-                f'video_id={video_id} does not have "{feature_extractor.require_input()}" for {feature_extractor.name}'
+                f'video_id={video_id} does not have "{feature_extractor.require_input()}" '
+                f"for {feature_extractor.name}"
             )
 
         keyframes_set = set(keyframes)
-
-        return sorted([f for f in inputs_dir.glob("*") if f.stem in keyframes_set], key=lambda x: x.stem)
+        return sorted(
+            [f for f in inputs_dir.glob("*") if f.stem in keyframes_set],
+            key=lambda x: x.stem,
+        )
 
     def _analyse_one_video(
-        self, feature_extractor: FeatureExtractor, video_id: str, progress: Progress, do_overwrite: bool
+        self,
+        feature_extractor: FeatureExtractor,
+        model_name: str,
+        provider_generation: dict,
+        video_id: str,
+        progress: Progress,
+        do_overwrite: bool,
     ):
-        task_id = progress.add_task(
-            description="Analysing",
-            name=video_id,
-        )
+        task_id = progress.add_task(description="Analysing", name=video_id)
+        run = None
+        outputs = []
+        evidence_manifest = None
         try:
-            progress.update(
-                task_id,
-                description="Extracting features",
-            )
+            progress.update(task_id, description="Extracting features")
 
             keyframes = self._get_keyframes_list(feature_extractor, video_id, do_overwrite)
             if not keyframes:
@@ -207,30 +243,91 @@ class AnalyseCommand(BaseCommand):
                 progress.remove_task(task_id)
                 return
 
+            input_frame_ids = [path.stem for path in input_files]
+            run = self._provenance.begin_analysis_run(
+                video_id=video_id,
+                feature_name=feature_extractor.name,
+                provider_generation=provider_generation,
+                requested_frame_ids=input_frame_ids,
+            )
+            frame_evidence_map = self._provenance.frame_evidence_map(video_id)
+            feature_extractor._vecna_source_context = {
+                "source_id": run["source_id"],
+                "rendition_id": run["rendition_id"],
+                "selection_generation_id": run["selection_generation_id"],
+                "frame_evidence_map": frame_evidence_map,
+            }
+            feature_extractor._vecna_analysis_run_id = run["analysis_run_id"]
+
             def update_progress(feature_extractor, completed, total, res):
                 progress.update(task_id, completed=completed, total=total)
 
             features = feature_extractor.get_features(input_files, update_progress)
+            if len(features) != len(input_files):
+                raise RuntimeError(
+                    f"{feature_extractor.name}: returned {len(features)} outputs for "
+                    f"{len(input_files)} inputs"
+                )
+
+            evidence_getter = getattr(feature_extractor, "get_last_evidence_payload", None)
+            if callable(evidence_getter):
+                evidence_payload = evidence_getter()
+                if evidence_payload is not None:
+                    evidence_manifest = self._provenance.write_evidence(
+                        video_id=video_id,
+                        feature_name=feature_extractor.name,
+                        run_id=run["analysis_run_id"],
+                        payload=evidence_payload,
+                    )
 
             progress.update(
                 task_id,
                 description="Saving features",
                 name=video_id,
-                total=len(keyframes),
+                total=len(input_files),
             )
 
             video_save_dir = self._work_dir / constant.FEATURE_DIR / video_id
-            for i, keyframe in enumerate(keyframes):
-                keyframe_save_dir = video_save_dir / keyframe
+            for i, input_file in enumerate(input_files):
+                frame_id = input_file.stem
+                keyframe_save_dir = video_save_dir / frame_id
                 keyframe_save_dir.mkdir(parents=True, exist_ok=True)
                 feature = np.array(features[i])
 
                 assert isinstance(feature, np.ndarray)
 
-                np.save(keyframe_save_dir / f"{feature_extractor.name}.npy", feature)
+                feature_path = keyframe_save_dir / f"{feature_extractor.name}.npy"
+                np.save(feature_path, feature)
+                outputs.append(
+                    self._provenance.output_record(
+                        run=run,
+                        frame_id=frame_id,
+                        feature_path=feature_path,
+                        feature=feature,
+                        model_name=model_name,
+                        frame_evidence_id=frame_evidence_map.get(frame_id),
+                    )
+                )
                 progress.update(task_id, advance=1)
 
+            self._provenance.finish_analysis_run(
+                run,
+                status="success",
+                outputs=outputs,
+                evidence_manifest=evidence_manifest,
+            )
             progress.remove_task(task_id)
         except Exception as e:
-            raise e
-            progress.update(task_id, description=f"Error: {str(e)}")
+            if run is not None:
+                self._provenance.finish_analysis_run(
+                    run,
+                    status="failed",
+                    outputs=outputs,
+                    evidence_manifest=evidence_manifest,
+                    error=e,
+                )
+            try:
+                progress.update(task_id, description=f"Error: {str(e)}")
+            except Exception:
+                pass
+            raise
