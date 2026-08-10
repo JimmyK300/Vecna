@@ -307,6 +307,8 @@ class AnalyseCommand(BaseCommand):
         analysis_runtime: dict,
         artifact_records: list[dict],
         native_evidence: dict,
+        attempt_status: str = "success",
+        error: Exception | None = None,
     ):
         video_save_dir = self._work_dir / constant.FEATURE_DIR / video_id
         manifest_path = (
@@ -319,11 +321,28 @@ class AnalyseCommand(BaseCommand):
         merged_records = merge_artifact_records(existing_records, artifact_records)
         now = utc_now()
 
+        if attempt_status == "success":
+            overall_status = "success"
+        elif merged_records:
+            overall_status = "partial"
+        else:
+            overall_status = "failed"
+
+        last_attempt = {
+            "status": attempt_status,
+            "at": now,
+        }
+        if error is not None:
+            last_attempt["error"] = {
+                "type": error.__class__.__name__,
+                "message": str(error),
+            }
+
         manifest = {
             "schema_version": SCHEMA_VERSION,
             "video_id": video_id,
             "feature_name": feature_extractor.name,
-            "status": "success",
+            "status": overall_status,
             "provider_generation": {
                 "id": provider_id,
                 "descriptor": provider_descriptor,
@@ -332,6 +351,7 @@ class AnalyseCommand(BaseCommand):
             "analysis_code_revision": resolve_code_revision(),
             "created_at": existing.get("created_at") or now,
             "updated_at": now,
+            "last_attempt": last_attempt,
             "artifacts": merged_records,
         }
         if native_evidence:
@@ -354,6 +374,10 @@ class AnalyseCommand(BaseCommand):
             description="Analysing",
             name=video_id,
         )
+        provider_id = provider_generation_id(provider_descriptor)
+        artifact_records = []
+        native_evidence = {}
+
         try:
             progress.update(
                 task_id,
@@ -382,7 +406,6 @@ class AnalyseCommand(BaseCommand):
                 total=len(keyframes),
             )
 
-            provider_id = provider_generation_id(provider_descriptor)
             video_save_dir = self._work_dir / constant.FEATURE_DIR / video_id
             native_evidence = self._write_native_evidence(
                 feature_extractor=feature_extractor,
@@ -392,7 +415,6 @@ class AnalyseCommand(BaseCommand):
             )
             frame_evidence_paths = native_evidence.get("paths", {}) if native_evidence.get("scope") == "frame" else {}
 
-            artifact_records = []
             for i, keyframe in enumerate(keyframes):
                 keyframe_save_dir = video_save_dir / keyframe
                 keyframe_save_dir.mkdir(parents=True, exist_ok=True)
@@ -422,9 +444,27 @@ class AnalyseCommand(BaseCommand):
                 analysis_runtime=analysis_runtime,
                 artifact_records=artifact_records,
                 native_evidence=native_evidence,
+                attempt_status="success",
             )
 
             progress.remove_task(task_id)
-        except Exception:
+        except Exception as error:
+            try:
+                self._write_manifest(
+                    video_id=video_id,
+                    feature_extractor=feature_extractor,
+                    provider_descriptor=provider_descriptor,
+                    provider_id=provider_id,
+                    analysis_runtime=analysis_runtime,
+                    artifact_records=artifact_records,
+                    native_evidence=native_evidence,
+                    attempt_status="failed",
+                    error=error,
+                )
+            except Exception as manifest_error:
+                logger.error(
+                    f"Failed to persist analysis failure provenance for video_id={video_id}, "
+                    f"feature={feature_extractor.name}: {manifest_error}"
+                )
             progress.remove_task(task_id)
             raise
