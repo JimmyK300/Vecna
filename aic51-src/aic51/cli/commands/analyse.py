@@ -7,7 +7,11 @@ from aic51.packages.analyse import FeatureExtractor, FeatureExtractorFactory
 from aic51.packages.config import GlobalConfig
 from aic51.packages.logger import logger
 from aic51.packages.utils import get_device
-from aic51.packages.utils.provenance import ProvenanceStore
+from aic51.packages.utils.provenance import (
+    ProvenanceStore,
+    atomic_write_json,
+    stable_id,
+)
 
 from .command import BaseCommand
 
@@ -138,6 +142,20 @@ class AnalyseCommand(BaseCommand):
                 batch_size=batch_size,
                 extractor=feature_extractor,
             )
+            runtime_semantics = {}
+            extractor_device = getattr(feature_extractor, "_device", None)
+            if extractor_device is not None:
+                runtime_semantics["device"] = str(extractor_device)
+            compute_type = getattr(feature_extractor, "_compute_type", None)
+            if compute_type is not None:
+                runtime_semantics["compute_type"] = str(compute_type)
+            if runtime_semantics:
+                provider_generation["descriptor"]["runtime_semantics"] = runtime_semantics
+                provider_generation["provider_generation_id"] = stable_id(
+                    "prv",
+                    provider_generation["descriptor"],
+                )
+
             # Compatibility plumbing inside the legacy extractor path; this is
             # not a universal provider API.
             feature_extractor._vecna_provider_generation_id = provider_generation[
@@ -267,6 +285,14 @@ class AnalyseCommand(BaseCommand):
             # without retroactively changing the frame Evidence identity.
             run["current_source_rendition_id"] = source_record["current_rendition_id"]
             run["rendition_id"] = selection_generation["rendition_id"]
+            atomic_write_json(
+                self._provenance.analysis_path(
+                    video_id,
+                    feature_extractor.name,
+                    run["analysis_run_id"],
+                ),
+                run,
+            )
 
             frame_evidence_map = self._provenance.frame_evidence_map(video_id)
             feature_extractor._vecna_source_context = {
