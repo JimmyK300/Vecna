@@ -9,12 +9,13 @@ from aic51.packages.analyse import FeatureExtractor, FeatureExtractorFactory
 from aic51.packages.analyse.provenance import (
     EVIDENCE_SCHEMA_VERSION,
     SCHEMA_VERSION,
+    build_artifact_record,
+    implementation_source_sha256,
     merge_artifact_records,
     provider_generation_id,
     read_json,
     relative_path,
     resolve_code_revision,
-    sha256_file,
     utc_now,
     write_json,
 )
@@ -154,8 +155,11 @@ class AnalyseCommand(BaseCommand):
                 model_name=model_name,
                 arch_name=arch_name,
                 pretrained_model=pretrained_model,
-                batch_size=batch_size,
             )
+            analysis_runtime = {
+                "batch_size": batch_size,
+                "device": str(device),
+            }
 
             with (
                 Progress(
@@ -174,6 +178,7 @@ class AnalyseCommand(BaseCommand):
                         progress,
                         do_overwrite,
                         provider_descriptor,
+                        analysis_runtime,
                     )
 
     def _provider_descriptor(
@@ -184,17 +189,16 @@ class AnalyseCommand(BaseCommand):
         model_name: str,
         arch_name,
         pretrained_model,
-        batch_size: int,
     ):
         return {
             "provider_family": model_name,
             "feature_name": feature_name,
             "implementation": f"{feature_extractor.__class__.__module__}.{feature_extractor.__class__.__qualname__}",
+            "implementation_sha256": implementation_source_sha256(feature_extractor),
             "source": source,
             "model": model_name,
             "arch_name": arch_name,
             "pretrained_model": pretrained_model,
-            "batch_size": batch_size,
             "input_kind": str(feature_extractor.require_input()),
         }
 
@@ -300,6 +304,7 @@ class AnalyseCommand(BaseCommand):
         feature_extractor: FeatureExtractor,
         provider_descriptor: dict,
         provider_id: str,
+        analysis_runtime: dict,
         artifact_records: list[dict],
         native_evidence: dict,
     ):
@@ -323,7 +328,8 @@ class AnalyseCommand(BaseCommand):
                 "id": provider_id,
                 "descriptor": provider_descriptor,
             },
-            "analysis_code_revision": existing.get("analysis_code_revision") or resolve_code_revision(),
+            "analysis_runtime": analysis_runtime,
+            "analysis_code_revision": resolve_code_revision(),
             "created_at": existing.get("created_at") or now,
             "updated_at": now,
             "artifacts": merged_records,
@@ -342,6 +348,7 @@ class AnalyseCommand(BaseCommand):
         progress: Progress,
         do_overwrite: bool,
         provider_descriptor: dict,
+        analysis_runtime: dict,
     ):
         task_id = progress.add_task(
             description="Analysing",
@@ -395,20 +402,16 @@ class AnalyseCommand(BaseCommand):
 
                 artifact_path = keyframe_save_dir / f"{feature_extractor.name}.npy"
                 np.save(artifact_path, feature)
-                artifact_record = {
-                    "artifact_path": relative_path(artifact_path, self._work_dir),
-                    "sha256": sha256_file(artifact_path),
-                    "natural_locator": {
-                        "kind": "frame",
-                        "video_id": video_id,
-                        "frame_id": str(keyframe),
-                    },
-                    "status": "success_empty" if feature.size == 0 else "success_output",
-                }
-                evidence_path = frame_evidence_paths.get(str(keyframe))
-                if evidence_path:
-                    artifact_record["native_evidence_path"] = evidence_path
-                artifact_records.append(artifact_record)
+                artifact_records.append(
+                    build_artifact_record(
+                        artifact_path=artifact_path,
+                        root=self._work_dir,
+                        video_id=video_id,
+                        frame_id=str(keyframe),
+                        feature=feature,
+                        native_evidence_path=frame_evidence_paths.get(str(keyframe)),
+                    )
+                )
                 progress.update(task_id, advance=1)
 
             self._write_manifest(
@@ -416,6 +419,7 @@ class AnalyseCommand(BaseCommand):
                 feature_extractor=feature_extractor,
                 provider_descriptor=provider_descriptor,
                 provider_id=provider_id,
+                analysis_runtime=analysis_runtime,
                 artifact_records=artifact_records,
                 native_evidence=native_evidence,
             )
