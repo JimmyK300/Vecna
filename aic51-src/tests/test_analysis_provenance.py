@@ -11,6 +11,7 @@ from aic51.packages.analyse.features.ocr import Tesseract
 from aic51.packages.analyse.provenance import (
     build_artifact_record,
     compatibility_output_status,
+    implementation_source_sha256,
     merge_artifact_records,
     provider_generation_id,
 )
@@ -25,14 +26,18 @@ class ProvenanceIdentityTests(unittest.TestCase):
             "model": "ocr",
             "arch_name": None,
             "pretrained_model": None,
-            "batch_size": 4,
             "input_kind": "keyframes",
+            "implementation_sha256": "abc123",
         }
         reordered = dict(reversed(list(base.items())))
-        changed = dict(base, batch_size=8)
+        changed = dict(base, implementation_sha256="def456")
 
         self.assertEqual(provider_generation_id(base), provider_generation_id(reordered))
         self.assertNotEqual(provider_generation_id(base), provider_generation_id(changed))
+
+    def test_implementation_fingerprint_is_available_for_current_extractors(self):
+        fingerprint = implementation_source_sha256(Tesseract)
+        self.assertEqual(len(fingerprint), 64)
 
     def test_artifact_record_has_fixity_locator_and_truthful_empty_text_status(self):
         with tempfile.TemporaryDirectory() as temp_dir:
