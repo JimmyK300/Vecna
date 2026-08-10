@@ -8,6 +8,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import numpy as np
+
 
 SCHEMA_VERSION = "vecna.analysis-manifest.v1"
 EVIDENCE_SCHEMA_VERSION = "vecna.native-evidence.v1"
@@ -29,6 +31,18 @@ def sha256_file(path: Path | str) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def compatibility_output_status(feature: np.ndarray) -> str:
+    if feature.size == 0:
+        return "success_empty"
+
+    if feature.dtype.kind in {"U", "S", "O"}:
+        values = feature.reshape(-1).tolist()
+        if all(str(value or "").strip() == "" for value in values):
+            return "success_empty"
+
+    return "success_output"
 
 
 def utc_now() -> str:
@@ -66,6 +80,29 @@ def relative_path(path: Path | str, root: Path | str) -> str:
         return path.resolve().relative_to(root.resolve()).as_posix()
     except ValueError:
         return path.as_posix()
+
+
+def build_artifact_record(
+    artifact_path: Path | str,
+    root: Path | str,
+    video_id: str,
+    frame_id: str,
+    feature: np.ndarray,
+    native_evidence_path: str | None = None,
+) -> dict[str, Any]:
+    record = {
+        "artifact_path": relative_path(artifact_path, root),
+        "sha256": sha256_file(artifact_path),
+        "natural_locator": {
+            "kind": "frame",
+            "video_id": video_id,
+            "frame_id": str(frame_id),
+        },
+        "status": compatibility_output_status(feature),
+    }
+    if native_evidence_path:
+        record["native_evidence_path"] = native_evidence_path
+    return record
 
 
 def write_json(path: Path | str, payload: Any) -> None:
