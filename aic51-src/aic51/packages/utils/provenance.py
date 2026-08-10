@@ -104,7 +104,7 @@ def read_json(path: Path) -> dict[str, Any] | None:
 
 
 class ProvenanceStore:
-    """Compatibility sidecars for the legacy Vecna analysis pipeline."""
+    """Compatibility sidecars for the legacy Vecna ingestion/analysis pipeline."""
 
     def __init__(self, work_dir: Path | str):
         self.work_dir = Path(work_dir)
@@ -131,10 +131,10 @@ class ProvenanceStore:
     def evidence_path(self, video_id: str, feature_name: str, run_id: str) -> Path:
         return self.root / "evidence" / video_id / feature_name / f"{run_id}.json"
 
-    def ensure_source(self, video_id: str) -> dict[str, Any]:
+    def ensure_source(self, video_id: str, *, refresh: bool = False) -> dict[str, Any]:
         path = self.source_path(video_id)
         existing = read_json(path)
-        if existing:
+        if existing and not refresh:
             return existing
 
         video_path = self.work_dir / constant.VIDEO_DIR / f"{video_id}{constant.VIDEO_EXTENSION}"
@@ -145,12 +145,16 @@ class ProvenanceStore:
         # Legacy video IDs are the only stable pre-v1 source handles available.
         # Use them as an explicit migration identity without claiming recovered
         # content-level source provenance.
-        source_id = stable_id(
-            "src",
-            {
-                "migration_basis": "legacy_video_id",
-                "legacy_video_id": video_id,
-            },
+        source_id = (
+            existing.get("logical_source", {}).get("source_id")
+            if existing
+            else stable_id(
+                "src",
+                {
+                    "migration_basis": "legacy_video_id",
+                    "legacy_video_id": video_id,
+                },
+            )
         )
 
         asset_sha256 = file_sha256(video_path) if video_path.exists() else None
@@ -160,62 +164,65 @@ class ProvenanceStore:
             "container": video_path.suffix.lower() if video_path.exists() else None,
         }
         rendition_id = stable_id("rnd", rendition_descriptor)
-
-        record = {
-            "schema_version": SCHEMA_VERSION,
-            "logical_source": {
-                "source_id": source_id,
-                "legacy_video_id": video_id,
-                "identity_basis": "legacy_video_id_migration",
-                "logical_content_identity_status": "unknown_historical",
-                "registered_at": utc_now(),
-                "registration_origin": "observed_at_analysis",
-                "historical_import_provenance": "unknown",
-            },
-            "current_rendition_id": rendition_id,
-            "renditions": [
-                {
-                    "rendition_id": rendition_id,
-                    "identity_basis": "exact_asset_sha256" if asset_sha256 else "missing_asset",
-                    "asset_sha256": asset_sha256,
-                    "registered_at": utc_now(),
-                    "registration_origin": "observed_at_analysis",
-                    "physical_asset": self._relative(video_path) if video_path.exists() else None,
-                    "container": video_path.suffix.lower() if video_path.exists() else None,
-                    "file_size_bytes": video_path.stat().st_size if video_path.exists() else None,
-                    "native_timing": "unknown",
-                    "legacy_rounded_fps": rounded_fps,
-                    "legacy_time_projection_quality": (
-                        "reconstructed_from_rounded_fps" if rounded_fps else "unknown"
-                    ),
-                    "historical_rendition_derivation": "unknown",
-                }
-            ],
+        rendition = {
+            "rendition_id": rendition_id,
+            "identity_basis": "exact_asset_sha256" if asset_sha256 else "missing_asset",
+            "asset_sha256": asset_sha256,
+            "registered_at": utc_now(),
+            "registration_origin": "observed_at_ingest_or_analysis",
+            "physical_asset": self._relative(video_path) if video_path.exists() else None,
+            "container": video_path.suffix.lower() if video_path.exists() else None,
+            "file_size_bytes": video_path.stat().st_size if video_path.exists() else None,
+            "native_timing": "unknown",
+            "legacy_rounded_fps": rounded_fps,
+            "legacy_time_projection_quality": (
+                "reconstructed_from_rounded_fps" if rounded_fps else "unknown"
+            ),
+            "historical_rendition_derivation": "unknown",
         }
+
+        if existing:
+            record = dict(existing)
+            record.setdefault("schema_version", SCHEMA_VERSION)
+            record.setdefault("renditions", [])
+            if not any(r.get("rendition_id") == rendition_id for r in record["renditions"]):
+                record["renditions"].append(rendition)
+            record["current_rendition_id"] = rendition_id
+            record["updated_at"] = utc_now()
+        else:
+            record = {
+                "schema_version": SCHEMA_VERSION,
+                "logical_source": {
+                    "source_id": source_id,
+                    "legacy_video_id": video_id,
+                    "identity_basis": "legacy_video_id_migration",
+                    "logical_content_identity_status": "unknown_historical",
+                    "registered_at": utc_now(),
+                    "registration_origin": "observed_at_ingest_or_analysis",
+                    "historical_import_provenance": "unknown",
+                },
+                "current_rendition_id": rendition_id,
+                "renditions": [rendition],
+            }
         atomic_write_json(path, record)
         return record
 
-    def ensure_keyframe_generation(self, video_id: str) -> dict[str, Any]:
-        path = self.keyframe_path(video_id)
-        existing = read_json(path)
-        if existing:
-            return existing
-
-        source = self.ensure_source(video_id)
-        source_id = source["logical_source"]["source_id"]
-        rendition_id = source["current_rendition_id"]
-        keyframe_dir = self.work_dir / constant.KEYFRAME_DIR / video_id
-        frame_ids = sorted(
-            p.stem
-            for p in keyframe_dir.glob("*")
-            if p.is_file() and not p.stem.startswith(".")
-        )
+    def _build_keyframe_generation(
+        self,
+        *,
+        source_id: str,
+        rendition_id: str,
+        frame_ids: list[str],
+        producer_configuration: dict[str, Any] | str,
+        producer_identity: dict[str, Any] | str,
+        registration_origin: str,
+    ) -> dict[str, Any]:
         descriptor = {
             "source_id": source_id,
             "rendition_id": rendition_id,
             "observed_frame_ids": frame_ids,
-            "registration_origin": "observed_at_analysis",
-            "producer_configuration": "unknown",
+            "producer_configuration": producer_configuration,
+            "producer_identity": producer_identity,
         }
         generation_id = stable_id("sel", descriptor)
         frames = [
@@ -237,20 +244,94 @@ class ProvenanceStore:
             }
             for frame_id in frame_ids
         ]
-        record = {
-            "schema_version": SCHEMA_VERSION,
+        return {
             "selection_generation_id": generation_id,
             "source_id": source_id,
             "rendition_id": rendition_id,
             "registered_at": utc_now(),
-            "registration_origin": "observed_at_analysis",
+            "registration_origin": registration_origin,
             "producer_family": "frame_selection",
-            "producer_configuration": "unknown",
-            "historical_generation_identity": "unknown",
+            "producer_identity": producer_identity,
+            "producer_configuration": producer_configuration,
             "frames": frames,
         }
-        atomic_write_json(path, record)
-        return record
+
+    def record_keyframe_generation(
+        self,
+        video_id: str,
+        frame_ids: list[str],
+        *,
+        producer_configuration: dict[str, Any] | str,
+        producer_identity: dict[str, Any] | str,
+        registration_origin: str = "generated_by_current_pipeline",
+    ) -> dict[str, Any]:
+        source = self.ensure_source(video_id)
+        source_id = source["logical_source"]["source_id"]
+        rendition_id = source["current_rendition_id"]
+        frame_ids = sorted(str(frame_id) for frame_id in frame_ids)
+        generation = self._build_keyframe_generation(
+            source_id=source_id,
+            rendition_id=rendition_id,
+            frame_ids=frame_ids,
+            producer_configuration=producer_configuration,
+            producer_identity=producer_identity,
+            registration_origin=registration_origin,
+        )
+
+        path = self.keyframe_path(video_id)
+        registry = read_json(path) or {
+            "schema_version": SCHEMA_VERSION,
+            "video_id": video_id,
+            "generations": [],
+        }
+        # Transitional support if an early v1 single-generation sidecar exists.
+        if "generations" not in registry and "selection_generation_id" in registry:
+            old = dict(registry)
+            registry = {
+                "schema_version": SCHEMA_VERSION,
+                "video_id": video_id,
+                "current_selection_generation_id": old["selection_generation_id"],
+                "generations": [old],
+            }
+
+        registry.setdefault("generations", [])
+        if not any(
+            item.get("selection_generation_id") == generation["selection_generation_id"]
+            for item in registry["generations"]
+        ):
+            registry["generations"].append(generation)
+        registry["current_selection_generation_id"] = generation["selection_generation_id"]
+        registry["updated_at"] = utc_now()
+        atomic_write_json(path, registry)
+        return generation
+
+    def ensure_keyframe_generation(self, video_id: str) -> dict[str, Any]:
+        path = self.keyframe_path(video_id)
+        existing = read_json(path)
+        if existing:
+            if "generations" in existing:
+                current_id = existing.get("current_selection_generation_id")
+                for generation in existing["generations"]:
+                    if generation.get("selection_generation_id") == current_id:
+                        return generation
+                if existing["generations"]:
+                    return existing["generations"][-1]
+            if "selection_generation_id" in existing:
+                return existing
+
+        keyframe_dir = self.work_dir / constant.KEYFRAME_DIR / video_id
+        frame_ids = sorted(
+            p.stem
+            for p in keyframe_dir.glob("*")
+            if p.is_file() and not p.stem.startswith(".")
+        )
+        return self.record_keyframe_generation(
+            video_id,
+            frame_ids,
+            producer_configuration="unknown",
+            producer_identity="unknown",
+            registration_origin="observed_at_analysis",
+        )
 
     def provider_generation(
         self,
