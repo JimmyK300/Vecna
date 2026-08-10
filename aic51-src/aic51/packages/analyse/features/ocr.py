@@ -133,6 +133,7 @@ class Tesseract(OCR):
 
                 eng_observations = self._observations(eng_data, "eng")
                 vie_observations = self._observations(vie_data, "vie")
+                observations = eng_observations + vie_observations
                 eng_raw = " ".join(x["text"] for x in eng_observations)
                 vie_raw = " ".join(x["text"] for x in vie_observations)
                 normalized = self._normalize_text(f"{eng_raw} {vie_raw}")
@@ -151,6 +152,8 @@ class Tesseract(OCR):
                         "rendition_id": source_context.get("rendition_id"),
                         "frame_id": frame_id,
                         "input_image_sha256": input_sha256,
+                        "normalized_text": normalized,
+                        "observations": observations,
                     },
                 )
                 evidence_record = {
@@ -184,7 +187,7 @@ class Tesseract(OCR):
                     },
                     "raw_text_by_language": {"eng": eng_raw, "vie": vie_raw},
                     "normalized_text": normalized,
-                    "observations": eng_observations + vie_observations,
+                    "observations": observations,
                 }
                 return normalized, evidence_record
 
