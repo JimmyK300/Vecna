@@ -19,13 +19,7 @@ class AnalyseCommand(BaseCommand):
 
     def add_args(self, subparser):
         parser = subparser.add_parser("analyse", help="Analyse extracted keyframes")
-
-        parser.add_argument(
-            "--no-gpu",
-            dest="do_gpu",
-            action="store_false",
-            help="Do not use gpu",
-        )
+        parser.add_argument("--no-gpu", dest="do_gpu", action="store_false", help="Do not use gpu")
         parser.add_argument(
             "-o",
             "--overwrite",
@@ -63,7 +57,6 @@ class AnalyseCommand(BaseCommand):
             action="store_true",
             help="Use OCR feature extractor",
         )
-
         parser.set_defaults(func=self)
 
     def __call__(
@@ -81,12 +74,10 @@ class AnalyseCommand(BaseCommand):
     ):
         feature_infos = GlobalConfig.get("features")
         device = get_device(do_gpu)
-
         if feature_infos is None:
             raise RuntimeError("Features are not specified. Check your config file.")
 
         video_ids = self._get_video_ids()
-
         logger.info(f"Starting analyse process with (device={device})")
 
         any_use_flag = use_image_clip or use_image_siglip or use_video_clip or use_asr or use_ocr
@@ -110,8 +101,9 @@ class AnalyseCommand(BaseCommand):
             batch_size = GlobalConfig.get("features", feature_name, "analyse", "batch_size") or 1
 
             assert model_name is not None
-
-            if any_use_flag and not any(tm in model_name or tm in feature_name for tm in target_models):
+            if any_use_flag and not any(
+                tm in model_name or tm in feature_name for tm in target_models
+            ):
                 continue
 
             feature_extractor_cls = FeatureExtractorFactory.get(model_name)
@@ -128,7 +120,9 @@ class AnalyseCommand(BaseCommand):
             else:
                 feature_extractor = None
 
-            polite_name = f"{model_name}" + (f' from "{pretrained_model}"' if pretrained_model else "")
+            polite_name = f"{model_name}" + (
+                f' from "{pretrained_model}"' if pretrained_model else ""
+            )
             if feature_extractor:
                 logger.info(f"Extracting features using {polite_name}")
             else:
@@ -144,7 +138,8 @@ class AnalyseCommand(BaseCommand):
                 batch_size=batch_size,
                 extractor=feature_extractor,
             )
-            # Legacy extractor plumbing only. This does not define a universal provider API.
+            # Compatibility plumbing inside the legacy extractor path; this is
+            # not a universal provider API.
             feature_extractor._vecna_provider_generation_id = provider_generation[
                 "provider_generation_id"
             ]
@@ -170,7 +165,11 @@ class AnalyseCommand(BaseCommand):
     def _get_video_ids(self):
         keyframes_dir = self._work_dir / constant.KEYFRAME_DIR
         return sorted(
-            [d.stem for d in keyframes_dir.glob("*") if d.is_dir() and d.stem[0] != "."]
+            [
+                d.stem
+                for d in keyframes_dir.glob("*")
+                if d.is_dir() and d.stem[0] != "."
+            ]
         )
 
     def _get_keyframes_list(
@@ -192,10 +191,13 @@ class AnalyseCommand(BaseCommand):
 
         keyframes = []
         for keyframe in keyframes_dir.glob("*"):
-            if keyframe.is_dir() or keyframe.stem[0] == "." or keyframe.stem in has_features:
+            if (
+                keyframe.is_dir()
+                or keyframe.stem[0] == "."
+                or keyframe.stem in has_features
+            ):
                 continue
             keyframes.append(keyframe.stem)
-
         return sorted(keyframes)
 
     def _get_input_files(
@@ -233,23 +235,39 @@ class AnalyseCommand(BaseCommand):
         try:
             progress.update(task_id, description="Extracting features")
 
-            keyframes = self._get_keyframes_list(feature_extractor, video_id, do_overwrite)
+            keyframes = self._get_keyframes_list(
+                feature_extractor,
+                video_id,
+                do_overwrite,
+            )
             if not keyframes:
                 progress.remove_task(task_id)
                 return
 
-            input_files = self._get_input_files(feature_extractor, video_id, keyframes)
+            input_files = self._get_input_files(
+                feature_extractor,
+                video_id,
+                keyframes,
+            )
             if not input_files:
                 progress.remove_task(task_id)
                 return
 
             input_frame_ids = [path.stem for path in input_files]
+            source_record = self._provenance.ensure_source(video_id)
+            selection_generation = self._provenance.ensure_keyframe_generation(video_id)
             run = self._provenance.begin_analysis_run(
                 video_id=video_id,
                 feature_name=feature_extractor.name,
                 provider_generation=provider_generation,
                 requested_frame_ids=input_frame_ids,
             )
+            # Evidence belongs to the rendition used by the selected frames. A
+            # later compression/re-encode may be the current stored rendition
+            # without retroactively changing the frame Evidence identity.
+            run["current_source_rendition_id"] = source_record["current_rendition_id"]
+            run["rendition_id"] = selection_generation["rendition_id"]
+
             frame_evidence_map = self._provenance.frame_evidence_map(video_id)
             feature_extractor._vecna_source_context = {
                 "source_id": run["source_id"],
@@ -269,7 +287,11 @@ class AnalyseCommand(BaseCommand):
                     f"{len(input_files)} inputs"
                 )
 
-            evidence_getter = getattr(feature_extractor, "get_last_evidence_payload", None)
+            evidence_getter = getattr(
+                feature_extractor,
+                "get_last_evidence_payload",
+                None,
+            )
             if callable(evidence_getter):
                 evidence_payload = evidence_getter()
                 if evidence_payload is not None:
@@ -293,7 +315,6 @@ class AnalyseCommand(BaseCommand):
                 keyframe_save_dir = video_save_dir / frame_id
                 keyframe_save_dir.mkdir(parents=True, exist_ok=True)
                 feature = np.array(features[i])
-
                 assert isinstance(feature, np.ndarray)
 
                 feature_path = keyframe_save_dir / f"{feature_extractor.name}.npy"
