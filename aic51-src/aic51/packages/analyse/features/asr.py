@@ -107,6 +107,7 @@ class WhisperX(ASR):
                     "start": seg.get("start"),
                     "end": seg.get("end"),
                     "text": seg.get("text", ""),
+                    "words": seg.get("words"),
                 },
             )
             seg["_vecna_evidence_id"] = evidence_id
