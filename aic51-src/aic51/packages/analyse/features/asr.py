@@ -44,6 +44,7 @@ class WhisperX(ASR):
         self._work_dir = Path(work_dir)
         self._compute_type_gpu = "float16"  # workaround bug int8 trên Blackwell sm_120
         self._model = None
+        self._native_evidence = {"scope": "video", "kind": "asr_utterance", "status": "unknown", "items": []}
         self.to(device)
 
     def to(self, device):
@@ -63,6 +64,12 @@ class WhisperX(ASR):
         if callback:
             callback(self, 0, num_frames, [])
         if num_frames == 0:
+            self._native_evidence = {
+                "scope": "video",
+                "kind": "asr_utterance",
+                "status": "success_empty",
+                "items": [],
+            }
             return np.array([])
 
         video_id = images[0].parent.stem
@@ -86,6 +93,41 @@ class WhisperX(ASR):
 
         return np.array(text_features)
 
+    def _build_native_evidence(self, video_id: str, result: dict):
+        segments = result.get("segments", []) or []
+        items = []
+        for index, segment in enumerate(segments):
+            raw_text = str(segment.get("text", ""))
+            normalized_text = self._normalize_text(raw_text)
+            start = segment.get("start")
+            end = segment.get("end")
+            items.append(
+                {
+                    "kind": "asr_utterance",
+                    "segment_index": index,
+                    "status": "success_output" if normalized_text else "success_empty",
+                    "raw_text": raw_text,
+                    "normalized_text": normalized_text,
+                    "natural_locator": {
+                        "kind": "time_interval",
+                        "start_seconds": float(start) if start is not None else None,
+                        "end_seconds": float(end) if end is not None else None,
+                        "time_basis": "native_provider_seconds",
+                    },
+                }
+            )
+
+        evidence = {
+            "scope": "video",
+            "kind": "asr_utterance",
+            "status": "success_output" if items else "success_empty",
+            "video_id": video_id,
+            "items": items,
+        }
+        if result.get("language") is not None:
+            evidence["language"] = result.get("language")
+        return evidence
+
     def _transcribe_video(self, video_id: str):
         import whisperx
 
@@ -98,12 +140,17 @@ class WhisperX(ASR):
         result = self._model.transcribe(audio, batch_size=self._batch_size, print_progress=True)
         segments = result.get("segments", [])
 
-        # Pre-normalize text for segments
+        self._native_evidence = self._build_native_evidence(video_id, result)
+
+        # Pre-normalize text for segments used by the legacy per-frame projection.
         for seg in segments:
             seg["norm_text"] = self._normalize_text(seg.get("text", ""))
 
         fps = self._get_fps(video_id)
         return segments, fps
+
+    def get_native_evidence(self):
+        return self._native_evidence
 
     def _get_fps(self, video_id: str) -> int:
         video_path = self._work_dir / constant.VIDEO_DIR / f"{video_id}{constant.VIDEO_EXTENSION}"
