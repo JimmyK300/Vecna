@@ -10,7 +10,7 @@ import torch
 from PIL import Image
 
 import aic51.packages.constant as constant
-from aic51.packages.utils.provenance import stable_id
+from aic51.packages.utils.provenance import file_sha256, stable_id
 
 from .feature_extractor import FeatureExtractor, FeatureExtractorFactory
 
@@ -85,7 +85,11 @@ class Tesseract(OCR):
         if len(images) == 0:
             self._last_evidence_payload = {
                 "evidence_kind": "ocr",
-                "provider_generation_id": getattr(self, "_vecna_provider_generation_id", "unknown"),
+                "provider_generation_id": getattr(
+                    self,
+                    "_vecna_provider_generation_id",
+                    "unknown",
+                ),
                 "records": [],
             }
             return np.array([])
@@ -97,7 +101,11 @@ class Tesseract(OCR):
             callback(self, 0, num_batches, image_features)
 
         source_context = getattr(self, "_vecna_source_context", {})
-        provider_generation_id = getattr(self, "_vecna_provider_generation_id", "unknown")
+        provider_generation_id = getattr(
+            self,
+            "_vecna_provider_generation_id",
+            "unknown",
+        )
 
         with ThreadPoolExecutor(self._batch_size) as executor:
 
@@ -130,6 +138,11 @@ class Tesseract(OCR):
                 normalized = self._normalize_text(f"{eng_raw} {vie_raw}")
 
                 frame_id = input_path.stem if input_path is not None else None
+                input_sha256 = (
+                    file_sha256(input_path)
+                    if input_path is not None and input_path.exists()
+                    else None
+                )
                 evidence_id = stable_id(
                     "ev_ocr",
                     {
@@ -137,6 +150,7 @@ class Tesseract(OCR):
                         "source_id": source_context.get("source_id"),
                         "rendition_id": source_context.get("rendition_id"),
                         "frame_id": frame_id,
+                        "input_image_sha256": input_sha256,
                     },
                 )
                 evidence_record = {
@@ -156,9 +170,16 @@ class Tesseract(OCR):
                         "coordinate_system": "keyframe_pixels_top_left",
                     },
                     "input_image": str(input_path) if input_path is not None else None,
+                    "input_image_sha256": input_sha256,
                     "image_size": {"width": width, "height": height},
                     "preprocessing": {
-                        "crop": {"left": 0, "top": 0, "right": width, "bottom": crop_bottom},
+                        "crop": {
+                            "left": 0,
+                            "top": 0,
+                            "right": width,
+                            "bottom": crop_bottom,
+                        },
+                        "languages": ["eng", "vie"],
                         "normalization": "strip+lower+collapse_whitespace",
                     },
                     "raw_text_by_language": {"eng": eng_raw, "vie": vie_raw},
@@ -202,7 +223,11 @@ class Tesseract(OCR):
         res = text.strip().lower()
         return re.sub(r"\s+", " ", res)
 
-    def get_text_features(self, texts: list[str] | str | np.ndarray, callback: Optional[Callable] = None) -> Any:
+    def get_text_features(
+        self,
+        texts: list[str] | str | np.ndarray,
+        callback: Optional[Callable] = None,
+    ) -> Any:
         return texts
 
     def to(self, device):
