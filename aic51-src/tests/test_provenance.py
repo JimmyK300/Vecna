@@ -30,7 +30,10 @@ class ProvenanceStoreTest(unittest.TestCase):
         self.tmp.cleanup()
 
     def test_stable_id_is_order_independent_for_dicts(self):
-        self.assertEqual(stable_id("x", {"a": 1, "b": 2}), stable_id("x", {"b": 2, "a": 1}))
+        self.assertEqual(
+            stable_id("x", {"a": 1, "b": 2}),
+            stable_id("x", {"b": 2, "a": 1}),
+        )
 
     def test_source_and_frame_registration_are_stable(self):
         source_a = self.store.ensure_source("V001")
@@ -40,6 +43,7 @@ class ProvenanceStoreTest(unittest.TestCase):
             source_b["logical_source"]["source_id"],
         )
         self.assertEqual(source_a["renditions"][0]["legacy_rounded_fps"], 25)
+        self.assertIsNotNone(source_a["renditions"][0]["asset_sha256"])
 
         selection_a = self.store.ensure_keyframe_generation("V001")
         selection_b = self.store.ensure_keyframe_generation("V001")
@@ -50,7 +54,40 @@ class ProvenanceStoreTest(unittest.TestCase):
         frame_map = self.store.frame_evidence_map("V001")
         self.assertIn("000001", frame_map)
 
-    def test_analysis_manifest_preserves_legacy_output(self):
+    def test_source_refresh_adds_rendition_without_rewriting_source(self):
+        source_a = self.store.ensure_source("V001")
+        original_source_id = source_a["logical_source"]["source_id"]
+        original_rendition_id = source_a["current_rendition_id"]
+
+        (self.work_dir / "data/videos/V001.mp4").write_bytes(b"re-encoded-video")
+        source_b = self.store.ensure_source("V001", refresh=True)
+
+        self.assertEqual(source_b["logical_source"]["source_id"], original_source_id)
+        self.assertNotEqual(source_b["current_rendition_id"], original_rendition_id)
+        self.assertEqual(len(source_b["renditions"]), 2)
+
+    def test_keyframe_generation_registry_keeps_history(self):
+        observed = self.store.ensure_keyframe_generation("V001")
+        generated = self.store.record_keyframe_generation(
+            "V001",
+            ["000001"],
+            producer_configuration={"max_scene_length_seconds": 1},
+            producer_identity={"name": "test-selector", "version": 1},
+        )
+        self.assertNotEqual(
+            observed["selection_generation_id"],
+            generated["selection_generation_id"],
+        )
+
+        with open(self.store.keyframe_path("V001"), "r", encoding="utf-8") as f:
+            registry = json.load(f)
+        self.assertEqual(
+            registry["current_selection_generation_id"],
+            generated["selection_generation_id"],
+        )
+        self.assertEqual(len(registry["generations"]), 2)
+
+    def test_analysis_manifest_preserves_legacy_output_and_fixity(self):
         provider = self.store.provider_generation(
             feature_name="image_test",
             model_name="image_test",
@@ -83,11 +120,19 @@ class ProvenanceStoreTest(unittest.TestCase):
         self.assertEqual(output["path"], "features/V001/000001/image_test.npy")
         self.assertEqual(output["shape"], [2])
         self.assertEqual(output["dtype"], "float32")
-        manifest_path = self.store.analysis_path("V001", "image_test", run["analysis_run_id"])
+        self.assertEqual(len(output["content_sha256"]), 64)
+        manifest_path = self.store.analysis_path(
+            "V001",
+            "image_test",
+            run["analysis_run_id"],
+        )
         with open(manifest_path, "r", encoding="utf-8") as f:
             manifest = json.load(f)
         self.assertEqual(manifest["status"], "success")
-        self.assertEqual(manifest["outputs"][0]["artifact_id"], output["artifact_id"])
+        self.assertEqual(
+            manifest["outputs"][0]["artifact_id"],
+            output["artifact_id"],
+        )
 
 
 if __name__ == "__main__":
