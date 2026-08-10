@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import inspect
 import json
 import os
 import subprocess
@@ -31,6 +32,16 @@ def sha256_file(path: Path | str) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def implementation_source_sha256(value: Any) -> str:
+    try:
+        source_file = inspect.getsourcefile(value.__class__ if not inspect.isclass(value) else value)
+        if source_file:
+            return sha256_file(source_file)
+    except (OSError, TypeError):
+        pass
+    return "unknown"
 
 
 def compatibility_output_status(feature: np.ndarray) -> str:
