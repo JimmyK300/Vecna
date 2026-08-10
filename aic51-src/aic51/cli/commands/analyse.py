@@ -1,14 +1,29 @@
+from pathlib import Path
+
 import numpy as np
 import torch
 from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
 
 import aic51.packages.constant as constant
 from aic51.packages.analyse import FeatureExtractor, FeatureExtractorFactory
+from aic51.packages.analyse.provenance import (
+    EVIDENCE_SCHEMA_VERSION,
+    SCHEMA_VERSION,
+    merge_artifact_records,
+    provider_generation_id,
+    read_json,
+    relative_path,
+    resolve_code_revision,
+    sha256_file,
+    utc_now,
+    write_json,
+)
 from aic51.packages.config import GlobalConfig
 from aic51.packages.logger import logger
 from aic51.packages.utils import get_device
 
 from .command import BaseCommand
+
 
 class AnalyseCommand(BaseCommand):
     def __init__(self, *args, **kwargs):
@@ -80,7 +95,7 @@ class AnalyseCommand(BaseCommand):
         device = get_device(do_gpu)
 
         if feature_infos is None:
-            raise RuntimeError(f"Features are not specified. Check your config file.")
+            raise RuntimeError("Features are not specified. Check your config file.")
 
         video_ids = self._get_video_ids()
 
@@ -132,6 +147,16 @@ class AnalyseCommand(BaseCommand):
                 logger.error(f"{polite_name}: invalid feature extractor")
                 continue
 
+            provider_descriptor = self._provider_descriptor(
+                feature_extractor=feature_extractor,
+                feature_name=feature_name,
+                source=source,
+                model_name=model_name,
+                arch_name=arch_name,
+                pretrained_model=pretrained_model,
+                batch_size=batch_size,
+            )
+
             with (
                 Progress(
                     TextColumn("{task.fields[name]}"),
@@ -143,7 +168,35 @@ class AnalyseCommand(BaseCommand):
                 ) as progress,
             ):
                 for video_id in video_ids:
-                    self._analyse_one_video(feature_extractor, video_id, progress, do_overwrite)
+                    self._analyse_one_video(
+                        feature_extractor,
+                        video_id,
+                        progress,
+                        do_overwrite,
+                        provider_descriptor,
+                    )
+
+    def _provider_descriptor(
+        self,
+        feature_extractor: FeatureExtractor,
+        feature_name: str,
+        source,
+        model_name: str,
+        arch_name,
+        pretrained_model,
+        batch_size: int,
+    ):
+        return {
+            "provider_family": model_name,
+            "feature_name": feature_name,
+            "implementation": f"{feature_extractor.__class__.__module__}.{feature_extractor.__class__.__qualname__}",
+            "source": source,
+            "model": model_name,
+            "arch_name": arch_name,
+            "pretrained_model": pretrained_model,
+            "batch_size": batch_size,
+            "input_kind": str(feature_extractor.require_input()),
+        }
 
     def _get_video_ids(self):
         keyframes_dir = self._work_dir / constant.KEYFRAME_DIR
@@ -169,9 +222,7 @@ class AnalyseCommand(BaseCommand):
                 continue
             keyframes.append(keyframe.stem)
 
-        keyframes = sorted(keyframes)
-
-        return keyframes
+        return sorted(keyframes)
 
     def _get_input_files(self, feature_extractor: FeatureExtractor, video_id: str, keyframes: list[str]):
         inputs_dir = self._work_dir / feature_extractor.require_input() / video_id
@@ -184,8 +235,113 @@ class AnalyseCommand(BaseCommand):
 
         return sorted([f for f in inputs_dir.glob("*") if f.stem in keyframes_set], key=lambda x: x.stem)
 
+    def _write_native_evidence(
+        self,
+        feature_extractor: FeatureExtractor,
+        video_id: str,
+        video_save_dir: Path,
+        provider_id: str,
+    ) -> dict:
+        evidence_getter = getattr(feature_extractor, "get_native_evidence", None)
+        if not callable(evidence_getter):
+            return {}
+
+        bundle = evidence_getter()
+        if not bundle:
+            return {}
+
+        scope = bundle.get("scope")
+        items = bundle.get("items", [])
+        created_at = utc_now()
+
+        if scope == "frame":
+            paths = {}
+            for item in items:
+                frame_id = str(item["frame_id"])
+                evidence_path = video_save_dir / frame_id / f"{feature_extractor.name}.evidence.json"
+                payload = {
+                    "schema_version": EVIDENCE_SCHEMA_VERSION,
+                    "provider_generation_id": provider_id,
+                    "video_id": video_id,
+                    "feature_name": feature_extractor.name,
+                    "created_at": created_at,
+                    "evidence": item,
+                }
+                write_json(evidence_path, payload)
+                paths[frame_id] = relative_path(evidence_path, self._work_dir)
+            return {"scope": "frame", "paths": paths}
+
+        if scope == "video":
+            evidence_path = (
+                video_save_dir
+                / "_provenance"
+                / f"{feature_extractor.name}.{provider_id[-16:]}.native-evidence.json"
+            )
+            payload = {
+                "schema_version": EVIDENCE_SCHEMA_VERSION,
+                "provider_generation_id": provider_id,
+                "video_id": video_id,
+                "feature_name": feature_extractor.name,
+                "created_at": created_at,
+                "status": bundle.get("status", "unknown"),
+                "kind": bundle.get("kind"),
+                "language": bundle.get("language"),
+                "items": items,
+            }
+            write_json(evidence_path, payload)
+            return {"scope": "video", "path": relative_path(evidence_path, self._work_dir)}
+
+        logger.warning(f"Ignoring unsupported native evidence scope={scope!r} for {feature_extractor.name}")
+        return {}
+
+    def _write_manifest(
+        self,
+        video_id: str,
+        feature_extractor: FeatureExtractor,
+        provider_descriptor: dict,
+        provider_id: str,
+        artifact_records: list[dict],
+        native_evidence: dict,
+    ):
+        video_save_dir = self._work_dir / constant.FEATURE_DIR / video_id
+        manifest_path = (
+            video_save_dir
+            / "_provenance"
+            / f"{feature_extractor.name}.{provider_id[-16:]}.manifest.json"
+        )
+        existing = read_json(manifest_path) or {}
+        existing_records = existing.get("artifacts", [])
+        merged_records = merge_artifact_records(existing_records, artifact_records)
+        now = utc_now()
+
+        manifest = {
+            "schema_version": SCHEMA_VERSION,
+            "video_id": video_id,
+            "feature_name": feature_extractor.name,
+            "status": "success",
+            "provider_generation": {
+                "id": provider_id,
+                "descriptor": provider_descriptor,
+            },
+            "analysis_code_revision": existing.get("analysis_code_revision") or resolve_code_revision(),
+            "created_at": existing.get("created_at") or now,
+            "updated_at": now,
+            "artifacts": merged_records,
+        }
+        if native_evidence:
+            manifest["native_evidence"] = native_evidence
+        elif existing.get("native_evidence"):
+            manifest["native_evidence"] = existing["native_evidence"]
+
+        write_json(manifest_path, manifest)
+
     def _analyse_one_video(
-        self, feature_extractor: FeatureExtractor, video_id: str, progress: Progress, do_overwrite: bool
+        self,
+        feature_extractor: FeatureExtractor,
+        video_id: str,
+        progress: Progress,
+        do_overwrite: bool,
+        provider_descriptor: dict,
     ):
         task_id = progress.add_task(
             description="Analysing",
@@ -219,7 +375,17 @@ class AnalyseCommand(BaseCommand):
                 total=len(keyframes),
             )
 
+            provider_id = provider_generation_id(provider_descriptor)
             video_save_dir = self._work_dir / constant.FEATURE_DIR / video_id
+            native_evidence = self._write_native_evidence(
+                feature_extractor=feature_extractor,
+                video_id=video_id,
+                video_save_dir=video_save_dir,
+                provider_id=provider_id,
+            )
+            frame_evidence_paths = native_evidence.get("paths", {}) if native_evidence.get("scope") == "frame" else {}
+
+            artifact_records = []
             for i, keyframe in enumerate(keyframes):
                 keyframe_save_dir = video_save_dir / keyframe
                 keyframe_save_dir.mkdir(parents=True, exist_ok=True)
@@ -227,10 +393,34 @@ class AnalyseCommand(BaseCommand):
 
                 assert isinstance(feature, np.ndarray)
 
-                np.save(keyframe_save_dir / f"{feature_extractor.name}.npy", feature)
+                artifact_path = keyframe_save_dir / f"{feature_extractor.name}.npy"
+                np.save(artifact_path, feature)
+                artifact_record = {
+                    "artifact_path": relative_path(artifact_path, self._work_dir),
+                    "sha256": sha256_file(artifact_path),
+                    "natural_locator": {
+                        "kind": "frame",
+                        "video_id": video_id,
+                        "frame_id": str(keyframe),
+                    },
+                    "status": "success_empty" if feature.size == 0 else "success_output",
+                }
+                evidence_path = frame_evidence_paths.get(str(keyframe))
+                if evidence_path:
+                    artifact_record["native_evidence_path"] = evidence_path
+                artifact_records.append(artifact_record)
                 progress.update(task_id, advance=1)
 
+            self._write_manifest(
+                video_id=video_id,
+                feature_extractor=feature_extractor,
+                provider_descriptor=provider_descriptor,
+                provider_id=provider_id,
+                artifact_records=artifact_records,
+                native_evidence=native_evidence,
+            )
+
             progress.remove_task(task_id)
-        except Exception as e:
-            raise e
-            progress.update(task_id, description=f"Error: {str(e)}")
+        except Exception:
+            progress.remove_task(task_id)
+            raise
