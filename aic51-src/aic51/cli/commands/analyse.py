@@ -239,6 +239,11 @@ class AnalyseCommand(BaseCommand):
 
         return sorted([f for f in inputs_dir.glob("*") if f.stem in keyframes_set], key=lambda x: x.stem)
 
+    def _metadata_path(self, video_save_dir: Path, feature_name: str, provider_id: str, suffix: str) -> Path:
+        # Keep video-root metadata as files, not directories: existing index code
+        # treats every direct child directory under features/<video>/ as a frame.
+        return video_save_dir / f"_vecna.{feature_name}.{provider_id[-16:]}.{suffix}.json"
+
     def _write_native_evidence(
         self,
         feature_extractor: FeatureExtractor,
@@ -276,10 +281,11 @@ class AnalyseCommand(BaseCommand):
             return {"scope": "frame", "paths": paths}
 
         if scope == "video":
-            evidence_path = (
-                video_save_dir
-                / "_provenance"
-                / f"{feature_extractor.name}.{provider_id[-16:]}.native-evidence.json"
+            evidence_path = self._metadata_path(
+                video_save_dir,
+                feature_extractor.name,
+                provider_id,
+                "native-evidence",
             )
             payload = {
                 "schema_version": EVIDENCE_SCHEMA_VERSION,
@@ -311,10 +317,11 @@ class AnalyseCommand(BaseCommand):
         error: Exception | None = None,
     ):
         video_save_dir = self._work_dir / constant.FEATURE_DIR / video_id
-        manifest_path = (
-            video_save_dir
-            / "_provenance"
-            / f"{feature_extractor.name}.{provider_id[-16:]}.manifest.json"
+        manifest_path = self._metadata_path(
+            video_save_dir,
+            feature_extractor.name,
+            provider_id,
+            "manifest",
         )
         existing = read_json(manifest_path) or {}
         existing_records = existing.get("artifacts", [])
