@@ -35,13 +35,14 @@ Desktop.ini
 dataset/
 data**/
 
+# Provenance
+provenance**/
+
 # Logs
 **.log
 
 # Testing output & features
-testing/
-testing/data/
-testing/features/
+test**/
 *.npy
 
 # Workspace
