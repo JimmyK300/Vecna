@@ -60,6 +60,19 @@ class AnalyseCommand(BaseCommand):
             action="store_true",
             help="Use OCR feature extractor",
         )
+        parser.add_argument(
+            "--use-ocr-dense",
+            dest="use_ocr_dense",
+            action="store_true",
+            help="Use OCR dense (BGE-M3) feature extractor only",
+        )
+        parser.add_argument(
+            "--use-asr-dense",
+            dest="use_asr_dense",
+            action="store_true",
+            help="Use ASR dense (BGE-M3) feature extractor only",
+        )
+
 
         parser.set_defaults(func=self)
 
@@ -73,6 +86,8 @@ class AnalyseCommand(BaseCommand):
         use_video_clip: bool = False,
         use_asr: bool = False,
         use_ocr: bool = False,
+        use_ocr_dense: bool = False,
+        use_asr_dense: bool = False,
         *args,
         **kwargs,
     ):
@@ -86,7 +101,7 @@ class AnalyseCommand(BaseCommand):
 
         logger.info(f"Starting analyse process with (device={device})")
 
-        any_use_flag = use_image_clip or use_image_siglip or use_video_clip or use_asr or use_ocr
+        any_use_flag = use_image_clip or use_image_siglip or use_video_clip or use_asr or use_ocr or use_ocr_dense or use_asr_dense
         target_models = set()
         if use_image_clip:
             target_models.add("image_clip")
@@ -98,25 +113,35 @@ class AnalyseCommand(BaseCommand):
             target_models.add("asr")
         if use_ocr:
             target_models.add("ocr")
+        if use_ocr_dense:
+            target_models.add("ocr_dense")
+        if use_asr_dense:
+            target_models.add("asr_dense")
 
         for feature_name in feature_infos.keys():
+            print(f"[DEBUG] feature_name={feature_name}", flush=True)
             source = GlobalConfig.get("features", feature_name, "source")
             model_name = GlobalConfig.get("features", feature_name, "model")
             arch_name = GlobalConfig.get("features", feature_name, "arch_name")
             pretrained_model = GlobalConfig.get("features", feature_name, "pretrained_model")
+            text_source = GlobalConfig.get("features", feature_name, "text_source")
             batch_size = GlobalConfig.get("features", feature_name, "analyse", "batch_size") or 1
 
             assert model_name is not None
 
             if any_use_flag and not any(tm in model_name or tm in feature_name for tm in target_models):
+                print(f"[DEBUG] skipping {feature_name}", flush=True)
                 continue
+            print(f"[DEBUG] not skipping {feature_name}", flush=True)
 
             feature_extractor_cls = FeatureExtractorFactory.get(model_name)
+            print(f"[DEBUG] cls={feature_extractor_cls}", flush=True)
             if feature_extractor_cls:
                 feature_extractor = feature_extractor_cls.from_pretrained(
                     source=source,
                     arch_name=arch_name,
                     pretrained_model=pretrained_model,
+                    text_source=text_source,
                     name=feature_name,
                     batch_size=batch_size,
                     device=device,
@@ -148,6 +173,7 @@ class AnalyseCommand(BaseCommand):
     def _get_video_ids(self):
         keyframes_dir = self._work_dir / constant.KEYFRAME_DIR
         video_ids = sorted([d.stem for d in keyframes_dir.glob("*") if d.is_dir() and d.stem[0] != "."])
+        print(f"[DEBUG] keyframes_dir={keyframes_dir}, video_ids={video_ids}", flush=True)  
         return video_ids
 
     def _get_keyframes_list(self, feature_extractor: FeatureExtractor, video_id: str, do_overwrite: bool):
@@ -170,7 +196,7 @@ class AnalyseCommand(BaseCommand):
             keyframes.append(keyframe.stem)
 
         keyframes = sorted(keyframes)
-
+        print(f"[DEBUG] {video_id} {feature_extractor.name}: has_features={has_features}, keyframes={len(keyframes)}", flush=True)
         return keyframes
 
     def _get_input_files(self, feature_extractor: FeatureExtractor, video_id: str, keyframes: list[str]):

@@ -4,6 +4,7 @@ import time
 import unicodedata
 from typing import Optional
 
+import numpy as np
 import torch
 from pymilvus import AnnSearchRequest, RRFRanker
 
@@ -87,7 +88,7 @@ class Searcher(object):
 
     @property
     def target_features(self):
-        return list(self._features.keys())
+        return [name for name in self._features.keys() if not name.endswith("_dense")]
 
     @property
     def support_ocr(self):
@@ -108,6 +109,7 @@ class Searcher(object):
         temporal_k: int = 10000,
         ocr_weight: float = 0.5,
         asr_weight: float = 0.0,
+        hybrid_alpha: float = 0.9,
         max_interval: int = 250,
         selected: str | None = None,
         auto_translate: bool = False,
@@ -120,7 +122,16 @@ class Searcher(object):
             res = self._get_videos(query.video_ids, offset, limit, selected)
         elif query.advance and not query.temporal:
             logger.info(f"searcher: advance_search query={query.data}")
-            res = self._advance_search(query, offset, limit, target_features, ocr_weight=ocr_weight, asr_weight=asr_weight, nprobe=nprobe)
+            res = self._advance_search(
+                query,
+                offset,
+                limit,
+                target_features,
+                ocr_weight=ocr_weight,
+                asr_weight=asr_weight,
+                hybrid_alpha=hybrid_alpha,
+                nprobe=nprobe,
+            )
         else:
             logger.info(f"searcher: temporal_search query={query.data}")
             res = self._temporal_search(
@@ -130,6 +141,7 @@ class Searcher(object):
                 target_features,
                 ocr_weight=ocr_weight,
                 asr_weight=asr_weight,
+                hybrid_alpha=hybrid_alpha,
                 nprobe=nprobe,
                 temporal_k=temporal_k,
                 max_interval=max_interval,
@@ -211,6 +223,161 @@ class Searcher(object):
             return {k: 0.0 for k in score_map}
         return {k: v / max_s for k, v in score_map.items()}
 
+    @staticmethod
+    def _text_field_from_index_field(field_name: str | None) -> str:
+        if not field_name:
+            return ""
+        if field_name.endswith("_sparse"):
+            return field_name.removesuffix("_sparse")
+        if field_name.endswith("_dense"):
+            return field_name.removesuffix("_dense")
+        return field_name
+
+    @staticmethod
+    def _extract_query_texts(query_features: dict, feature_key: str) -> tuple[list[str], str]:
+        if f"{feature_key}_translated" in query_features:
+            query_list = query_features[f"{feature_key}_translated"]
+        elif feature_key in query_features:
+            query_list = query_features[feature_key]
+        elif "text_translated" in query_features:
+            query_list = [query_features["text_translated"]]
+        elif "text" in query_features:
+            query_list = [query_features["text"]]
+        else:
+            query_list = []
+
+        if isinstance(query_list, str):
+            query_list = [query_list]
+
+        raw_query = ""
+        if feature_key in query_features:
+            raw_value = query_features[feature_key]
+            raw_query = raw_value[0] if isinstance(raw_value, list) and len(raw_value) > 0 else str(raw_value)
+        elif "text" in query_features:
+            raw_query = query_features["text"]
+
+        return query_list, raw_query
+
+    def _search_text_component(
+        self,
+        query_features: dict,
+        feature_key: str,
+        sparse_field: str | None,
+        dense_field: str | None,
+        dense_model_name: str | None,
+        video_filter: str,
+        subquery_limit: int,
+        nprobe: int,
+        hybrid_alpha: float,
+    ) -> tuple[dict, dict]:
+        query_list, raw_query = self._extract_query_texts(query_features, feature_key)
+        if len(query_list) == 0:
+            return {}, {}
+
+        text_field = self._text_field_from_index_field(sparse_field or dense_field)
+        sparse_raw_scores = {}
+        dense_raw_scores = {}
+        entity_data = {}
+        all_frame_ids = set()
+
+        dense_extractor = None
+        if dense_model_name and dense_model_name in self._extractors:
+            dense_extractor = self._extractors[dense_model_name]["feature_extractor"]
+
+        for query_text in query_list:
+            has_exact = bool(re.findall(r'"([^"]+)"', query_text) or re.findall(r'"([^"]+)"', raw_query))
+            search_limit = max(subquery_limit * 5, 500) if has_exact else subquery_limit
+            clean_query = re.sub(r'"', ' ', query_text).strip()
+            query_input = clean_query if clean_query else query_text
+
+            if sparse_field:
+                search_results = self._database.search(
+                    data=[query_input],
+                    filter=video_filter,
+                    offset=0,
+                    limit=search_limit,
+                    anns_field=sparse_field,
+                    search_params={"metric_type": "BM25"},
+                )
+                if search_results and len(search_results) > 0:
+                    for hit in search_results[0]:
+                        fid = hit["entity"]["frame_id"]
+                        doc_text = hit["entity"].get(text_field, "")
+                        is_valid, phrase_count = check_exact_phrases(query_text, doc_text, fallback_query=raw_query)
+                        if not is_valid:
+                            continue
+
+                        all_frame_ids.add(fid)
+                        boost = 1.5 if phrase_count > 0 else 1.0
+                        sparse_raw_scores[fid] = sparse_raw_scores.get(fid, 0) + hit["distance"] * boost
+                        if fid not in entity_data:
+                            entity_data[fid] = hit["entity"]
+
+            if dense_field and dense_extractor is not None:
+                dense_query = dense_extractor.get_text_features([query_input])
+                dense_query = np.asarray(dense_query).reshape(-1).tolist()
+
+                search_results = self._database.search(
+                    data=[dense_query],
+                    filter=video_filter,
+                    offset=0,
+                    limit=search_limit,
+                    anns_field=dense_field,
+                    search_params={"nprobe": nprobe, "metric_type": "COSINE"},
+                )
+                if search_results and len(search_results) > 0:
+                    for hit in search_results[0]:
+                        fid = hit["entity"]["frame_id"]
+                        doc_text = hit["entity"].get(text_field, "")
+                        is_valid, phrase_count = check_exact_phrases(query_text, doc_text, fallback_query=raw_query)
+                        if not is_valid:
+                            continue
+
+                        all_frame_ids.add(fid)
+                        boost = 1.5 if phrase_count > 0 else 1.0
+                        dense_raw_scores[fid] = dense_raw_scores.get(fid, 0) + hit["distance"] * boost
+                        if fid not in entity_data:
+                            entity_data[fid] = hit["entity"]
+
+        sparse_norm = self._normalize_scores(sparse_raw_scores)
+        dense_norm = self._normalize_scores(dense_raw_scores)
+        results = []
+        for fid in all_frame_ids:
+            final_score = hybrid_alpha * dense_norm.get(fid, 0.0) + (1.0 - hybrid_alpha) * sparse_norm.get(fid, 0.0)
+            results.append(
+                {
+                    "entity": entity_data[fid],
+                    "distance": final_score,
+                    "scores": {
+                        "final": round(final_score, 6),
+                        "dense": round(dense_norm.get(fid, 0.0), 6),
+                        "sparse": round(sparse_norm.get(fid, 0.0), 6),
+                        "dense_raw": round(dense_raw_scores.get(fid, 0.0), 6),
+                        "sparse_raw": round(sparse_raw_scores.get(fid, 0.0), 6),
+                    },
+                }
+            )
+
+        results.sort(key=lambda x: x["distance"], reverse=True)
+
+        top_k = 5
+        logger.info(f"[TOP {top_k}][{feature_key}] dense_model={dense_model_name} sparse_field={sparse_field} dense_field={dense_field}")
+
+        for i, item in enumerate(results[:top_k], 1):
+            fid = item["entity"]["frame_id"]
+            s = item["scores"]
+
+            logger.info(
+                f"[TOP {top_k}][{feature_key}] {i}. frame={fid} "
+                f"final={s['final']} "
+                f"dense={s['dense']} "
+                f"bm25={s['sparse']} "
+                f"dense_raw={s['dense_raw']} "
+                f"bm25_raw={s['sparse_raw']}"
+            )
+
+        return results, entity_data
+
     def _similarity_search(
         self,
         query_features: dict,
@@ -221,6 +388,7 @@ class Searcher(object):
         /,
         ocr_weight: float = 0.5,
         asr_weight: float = 0.0,
+        hybrid_alpha: float = 0.7,
         nprobe: int = 8,
     ):
         ocr_weight = max(0, min(1, ocr_weight))
@@ -271,97 +439,47 @@ class Searcher(object):
                         if fid not in entity_data:
                             entity_data[fid] = hit["entity"]
 
-        # 2. OCR Search
-        ocr_req_count = 0
+        # 2. OCR Search (dense + BM25 hybrid)
         if self._ocr_name and ocr_weight > 0:
-            ocr_list = []
-            if "ocr_translated" in query_features:
-                ocr_list = query_features["ocr_translated"]
-            elif "ocr" in query_features:
-                ocr_list = query_features["ocr"]
-            elif "text_translated" in query_features:
-                ocr_list = [query_features["text_translated"]]
-            elif "text" in query_features:
-                ocr_list = [query_features["text"]]
+            ocr_dense_name = getattr(self, "_ocr_dense_name", None)
+            ocr_dense_model = self._features.get(ocr_dense_name) if ocr_dense_name else None
+            ocr_results, ocr_entities = self._search_text_component(
+                query_features,
+                "ocr",
+                self._ocr_name,
+                ocr_dense_name,
+                ocr_dense_model,
+                video_filter,
+                subquery_limit,
+                nprobe,
+                hybrid_alpha,
+            )
+            for hit in ocr_results:
+                fid = hit["entity"]["frame_id"]
+                all_frame_ids.add(fid)
+                ocr_raw_scores[fid] = hit["distance"]
+                entity_data[fid] = ocr_entities[fid]
 
-            raw_ocr_query = query_features.get("ocr", [query_features.get("text", "")])[0] if isinstance(query_features.get("ocr"), list) else query_features.get("text", "")
-
-            if len(ocr_list) > 0:
-                for ocr in ocr_list:
-                    has_exact = bool(re.findall(r'"([^"]+)"', ocr) or re.findall(r'"([^"]+)"', raw_ocr_query))
-                    search_limit = max(subquery_limit * 5, 500) if has_exact else subquery_limit
-                    clean_ocr = re.sub(r'"', ' ', ocr).strip()
-
-                    search_results = self._database.search(
-                        data=[clean_ocr if clean_ocr else ocr],
-                        filter=video_filter,
-                        offset=0,
-                        limit=search_limit,
-                        anns_field=self._ocr_name,
-                        search_params={"metric_type": "BM25"},
-                    )
-                    ocr_req_count += 1
-
-                    if search_results and len(search_results) > 0:
-                        for hit in search_results[0]:
-                            fid = hit["entity"]["frame_id"]
-                            doc_text = hit["entity"].get(self._ocr_name, "") or hit["entity"].get("ocr", "")
-
-                            is_valid, phrase_count = check_exact_phrases(ocr, doc_text, fallback_query=raw_ocr_query)
-                            if not is_valid:
-                                continue
-
-                            all_frame_ids.add(fid)
-                            boost = 1.5 if phrase_count > 0 else 1.0
-                            ocr_raw_scores[fid] = ocr_raw_scores.get(fid, 0) + hit["distance"] * boost
-                            if fid not in entity_data:
-                                entity_data[fid] = hit["entity"]
-
-        # 3. ASR Search
-        asr_req_count = 0
+        # 3. ASR Search (dense + BM25 hybrid)
         if self._asr_name and asr_weight > 0:
-            asr_list = []
-            if "asr_translated" in query_features:
-                asr_list = query_features["asr_translated"]
-            elif "asr" in query_features:
-                asr_list = query_features["asr"]
-            elif "text_translated" in query_features:
-                asr_list = [query_features["text_translated"]]
-            elif "text" in query_features:
-                asr_list = [query_features["text"]]
-
-            raw_asr_query = query_features.get("asr", [query_features.get("text", "")])[0] if isinstance(query_features.get("asr"), list) else query_features.get("text", "")
-
-            if len(asr_list) > 0:
-                for asr in asr_list:
-                    has_exact = bool(re.findall(r'"([^"]+)"', asr) or re.findall(r'"([^"]+)"', raw_asr_query))
-                    search_limit = max(subquery_limit * 5, 500) if has_exact else subquery_limit
-                    clean_asr = re.sub(r'"', ' ', asr).strip()
-
-                    search_results = self._database.search(
-                        data=[clean_asr if clean_asr else asr],
-                        filter=video_filter,
-                        offset=0,
-                        limit=search_limit,
-                        anns_field=self._asr_name,
-                        search_params={"metric_type": "BM25"},
-                    )
-                    asr_req_count += 1
-
-                    if search_results and len(search_results) > 0:
-                        for hit in search_results[0]:
-                            fid = hit["entity"]["frame_id"]
-                            doc_text = hit["entity"].get(self._asr_name, "") or hit["entity"].get("asr", "")
-
-                            is_valid, phrase_count = check_exact_phrases(asr, doc_text, fallback_query=raw_asr_query)
-                            if not is_valid:
-                                continue
-
-                            all_frame_ids.add(fid)
-                            boost = 1.5 if phrase_count > 0 else 1.0
-                            asr_raw_scores[fid] = asr_raw_scores.get(fid, 0) + hit["distance"] * boost
-                            if fid not in entity_data:
-                                entity_data[fid] = hit["entity"]
+            asr_dense_name = getattr(self, "_asr_dense_name", None)
+            asr_dense_model = self._features.get(asr_dense_name) if asr_dense_name else None
+            asr_results, asr_entities = self._search_text_component(
+                query_features,
+                "asr",
+                self._asr_name,
+                asr_dense_name,
+                asr_dense_model,
+                video_filter,
+                subquery_limit,
+                nprobe,
+                hybrid_alpha,
+            )
+            for hit in asr_results:
+                fid = hit["entity"]["frame_id"]
+                all_frame_ids.add(fid)
+                asr_raw_scores[fid] = hit["distance"]
+                entity_data[fid] = asr_entities[fid]
 
         # Normalize scores per component
         clip_norm = self._normalize_scores(clip_raw_scores)
@@ -405,6 +523,7 @@ class Searcher(object):
         /,
         ocr_weight: float = 0.5,
         asr_weight: float = 0.0,
+        hybrid_alpha: float = 0.7,
         nprobe: int = 8,
     ):
         query_features = query.data[0]["features"]
@@ -418,6 +537,7 @@ class Searcher(object):
                 target_features,
                 ocr_weight=ocr_weight,
                 asr_weight=asr_weight,
+                hybrid_alpha=hybrid_alpha,
                 nprobe=nprobe,
             )
             total = len(results)
@@ -433,6 +553,7 @@ class Searcher(object):
                 target_features,
                 ocr_weight=ocr_weight,
                 asr_weight=asr_weight,
+                hybrid_alpha=hybrid_alpha,
                 nprobe=nprobe,
             )
             total = self._database.get_size()
@@ -454,6 +575,7 @@ class Searcher(object):
         /,
         ocr_weight: float = 0.5,
         asr_weight: float = 0.0,
+        hybrid_alpha: float = 0.7,
         nprobe: int = 8,
         temporal_k: int = 100,
         max_interval: int = 100,
@@ -464,6 +586,7 @@ class Searcher(object):
             "target_features": target_features,
             "ocr_weight": ocr_weight,
             "asr_weight": asr_weight,
+            "hybrid_alpha": hybrid_alpha,
             "nprobe": nprobe,
             "temporal_k": temporal_k,
             "max_interval": max_interval,
@@ -485,6 +608,7 @@ class Searcher(object):
                     target_features,
                     ocr_weight=ocr_weight,
                     asr_weight=asr_weight,
+                    hybrid_alpha=hybrid_alpha,
                     nprobe=nprobe,
                 )
                 results_list.append(results)
@@ -621,13 +745,17 @@ class Searcher(object):
         self._features = {}
         if GlobalConfig.get("searcher", "ocr", "enable"):
             self._ocr_name = GlobalConfig.get("searcher", "ocr", "ocr_field") or "ocr"
+            self._ocr_dense_name = GlobalConfig.get("searcher", "ocr", "ocr_dense_field")
         else:
             self._ocr_name = None
+            self._ocr_dense_name = None
 
         if GlobalConfig.get("searcher", "asr", "enable"):
             self._asr_name = GlobalConfig.get("searcher", "asr", "asr_field") or "asr"
+            self._asr_dense_name = GlobalConfig.get("searcher", "asr", "asr_dense_field")
         else:
             self._asr_name = None
+            self._asr_dense_name = None
 
         language_models = GlobalConfig.get("searcher", "language_models") or {}
 
@@ -636,6 +764,7 @@ class Searcher(object):
             model_name = GlobalConfig.get("searcher", "language_models", m, "model")
             arch_name = GlobalConfig.get("searcher", "language_models", m, "arch_name")
             pretrained_model = GlobalConfig.get("searcher", "language_models", m, "pretrained_model")
+            text_source = GlobalConfig.get("searcher", "language_models", m, "text_source")
             target_features = GlobalConfig.get("searcher", "language_models", m, "target")
             batch_size = 1
 
@@ -647,6 +776,7 @@ class Searcher(object):
                     source=source,
                     arch_name=arch_name,
                     pretrained_model=pretrained_model,
+                    text_source=text_source,
                     name=m,
                     batch_size=batch_size,
                     device=device,
