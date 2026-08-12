@@ -1,0 +1,192 @@
+query_id,source,source_question_number,task_type,query_mode,query,hint_1,hint_2,hint_3,hint_4,media_file,answer,answer_alt_1,scoreable,notes
+set1_q01,Questions.txt,1,tkis,text,The video shows a group of volunteers preparing charity meals. The charitable products are boxed meals. Đoạn video đưa hình ảnh nhóm người làm thiện nguyện. Sản phẩm từ thiện là các hộp cơm.,"The volunteers are wearing blue shirts, plastic gloves, and together they prepare hundreds of meal portions. Nhóm người thiện nguyện mặc đồ màu xanh, đeo bao tay nilon và cùng nhau làm hàng trăm suất com.","In one of the later scenes, the volunteer group is distributing free vegetarian meals in front of Chanh Thien Pagoda in Ba Ria Một trong các phân cảnh sau đó là nhóm thiện nguyện đang phát cơm chay 0 đồng trước cổng chùa Chánh Thiên, Bà Rịa.",,,,TKIS-V003-10090 -> 12029,,true,
+set1_q02,Questions.txt,2,qa,text,"What is the name of this virus (in ALL CAPS)? The information in the video indicates that this virus has a fatality rate of up to 88%.
+Tên của loại virus này là gì (viết in hoa)? Thông tin trong đoạn video cho biết virus này gây tỉ lệ tử vong (fatality rate) lên đến 88%.",,,,,,QA-MARBURG-V007,,true,
+set1_q03,Questions.txt,3,trake,text,"English: This is a scene of cooking a fish dish.
+
+E1: The chef stirs a sauce mixture. Capture the moment the chef's spoon touches the sauce for the first time.
+
+E2: The chef pours the sauce into the pot. Inside the pot, there is a piece of fish with a chili pepper on top of it. This piece of fish is placed on top of pieces of meat. Capture the moment the sauce is completely poured into the pot.
+
+Vietnamese: Đây là một cảnh nấu món cá. 
+
+E1: Người đầu bếp khuấy một hồn hợp nước sốt. Lấy khoảnh khắc người đầu bếp lấy muỗng chạm vào nước sốt lần đầu tiên. 
+
+E2: Người đầu bếp rưới nước sốt vào nồi. Trong nồi có một khoanh cá và phía trên là 1 quả ớt. Miếng cá này được đặt lên trên các miếng thịt. Lấy khoảnh khắc nước sốt được cho hoàn toàn hết vào nồi.",,,,,,TR-V006-4738,4788,,true,
+set1_q04,Questions.txt,4,vkis,media,,,,,,q4.mp4,VKIS-V005-10300 -> 11750,,true,
+set1_q05,Questions.txt,5,tkis,text,A four-legged robot with four wheels attached to its legs is running on a grassy field.
+Một con robot có 4 chân gắn với 4 bánh xe chạy trên đồng cỏ.,The following scene shows cows standing next to the robot.
+Cảnh sau có những con bò đứng kế bên con robot.,The following scene shows cows standing next to the robot.
+Đoạn clip kết thúc bằng cảnh phỏng vấn người trong nhóm làm ra con robot để mô tả các phương thức hoạt động và sự hữu ích của nó.,,,,TKIS-V008-18330 -> 19060,,true,
+set1_q06,Questions.txt,6,tkis,text,"In the video, there is a group of about four people performing the same action, while another group of four is walking in a circle. Their product is placed into a pot of boiling water. 
+Trong đoạn video, có một nhóm khoảng 4 người đang thực hiện một hành động giống nhau, một nhóm 4 người khác thì đi thành vòng tròn. Sản phẩm của họ được bỏ vào một nồi nước sôi.",At the end of the video, this group of 16 people (wearing white uniforms) is awarded a certificate at the ceremony. 
+Kết thúc video, nhóm 16 người này (mặc đồng phục trắng) đã được tặng giấy chứng nhận tại buổi lễ.,These people are making a type of noodle using an ingredient that comes from a tuber, one of the first domesticated crops from Peru (South America), which can be round/oval or long and slender. 
+Nhóm người này đang làm 1 loại sợi bún với nguyên liệu là 1 loại củ đầu tiên được thuần hoá từ Peru (Nam Mỹ), có hình tròn/ bầu dục hoặc dài thuôn.,This is a video introducing the Guinness World Record for making the world's longest potato noodle.
+Đây là video giới thiệu về kỷ lục Guiness về làm sợi bún khoai tây dài nhất thế giới.,,,TKIS-V009-21520 -> 22105,,true,
+set1_q07,Questions.txt,7,tkis,text,The video shows a member of an ethnic minority in Yen Bai Province introducing a product. The product is a red paper bag. 
+Đoạn video đưa hình ảnh của một người dân tộc ở tỉnh Yên Bái đang giới thiệu một sản phẩm. Sản phẩm đó là một túi giấy màu đỏ.,He is wearing a hat and a scarf, and his entire outfit features multicolored patterns. 
+Người này có đội nón và đeo khăn choàng cổ. Toàn bộ trang phục của anh ấy đều có các hoa văn nhiều màu.,One of the later scenes shows two ethnic minority people picking tea leaves on a hill. Both are wearing traditional ethnic clothing and carrying baskets on their backs to hold the tea leaves. 
+Một trong các phân cảnh sau đó là hình ảnh của 2 người dân tộc đang hái lá chè trên đồi. Cả hai người đều mặc trang phục dân tộc và đeo gùi sau lưng để đựng lá chè.,The clip is an introduction to Suối Giàng tea. Đoạn clip giới thiệu về chè Suối Giàng.,,,TKIS-V004-11055 -> 13070,,true,
+set1_q08,Questions.txt,8,tkis,text,The video shows students experiencing agricultural activities in Đồng Tháp. The hands-on experience takes place during the summer term. Đoạn video đưa hình ảnh các học viên đang trải nghiệm hoạt động nông nghiệp tại Đồng Tháp. Hoạt động trải nghiệm diễn ra trong học kỳ hè.,At the beginning of the news report, the young students are dressed in brown farmer-style clothing and wearing checkered scarves. Ở đoạn đầu của bản tin, các học viên thiếu nhi mặc quần áo nông dân có màu nâu và đeo khăn rằn.,In one of the later scenes, the group of students, wearing farmer outfits along with red life jackets, are sitting on a small boat to take part in a fish-catching activity on a narrow river. Một trong các phân cảnh sau đó là nhóm học viên mặc quần áo nông dân cùng áo phao màu đỏ, đang ngồi trên ghe để tham gia hoạt động bắt cá trên sông nhỏ.,,,,TKIS-V010-8150 -> 9965,,true,
+set1_q09,Questions.txt,9,tkis,text,The video shows a rural area in Indonesia where local people have the habit of sleeping on natural materials, which especially attracts tourists who come to visit and experience this lifestyle. 
+Đoạn video đưa hình ảnh một vùng nông thôn ở indonesia người dân có thói quen ngủ trên nguyên liệu thiên nhiên, đặc biệt gây thu hút khách tham quan đến du lịch và trải nghiệm.,The interview features a local man wearing a white tank top, along with children sitting and engaging in activities on the sand. 
+Hình ảnh phỏng vấn người đàn ông là dân địa phương mặc áo ba lỗ màu trắng cùng các em thiếu nhi đang ngồi sinh hoạt trên cát.,One of the later scenes shows a person dressed in black lying on the sand. 
+Một trong các phân cảnh sau là hình ảnh một người mặc quần áo màu đen đang nằm trên cát.,,,,TKIS-V015-18520 -> 19950,,true,
+set1_q10,Questions.txt,10,tkis,text,"In 2019, three scientists from the United States, the United Kingdom, and Japan
+were awarded the Nobel Prize in Chemistry for their work in developing a familiar
+everyday item. Find the clip about an activity in Australia aimed at collecting and
+recycling this item, as well as similar items. 
+Năm 2019, 3 nhà khoa học từ Mỹ, Anh và Nhật Bản đã được giải Nobel Hoá học cho công trình phát triển 1 vật dụng quen thuộc đời sống hàng ngày. Hãy tìm đoạn clip về 1 hoạt động tại Úc nhằm thu gom để tái chế (recycle) loại vật dụng này, cũng như các vật dụng tương tự.","The video shows a rectangular collection bin for recycling, with a blue lid and green
+edges, festuring instructional symbois around it, placed against a wooden-colored
+wall. 
+Có hình ảnh thùng thu gom để tái chế hình hộp chữ nhật với phần nắp màu
+xanh dương, viên xanh lá cầy, có các ký hiệu hướng dẫn xung quanh, được đặt sát
+tưởng màu gỗ.",At the end of the clip, there is an image of a store with the word coles in white letters
+on a red background. 
+Cuối đoạn clip có hình ánh 1 cửa hàng có dòng chữ coles màu trắng trên nền đỏ.,This is a clip about the collection and recycling of batteries (including lithium-ion
+betteries) by the Aldi supermarket chain in Australia. 
+Đây là đoạn clip về thu thập và tái chế pin (kế cả pin lithium-ion) của chuỗi siêu thị Aldi tại Úc.,,,TKIS-V012-21385 -> 23100,,true,
+set1_q11,Questions.txt,11,qa,text,"How many artworks are on display? Given that the artwork comes from Ukraine and is exhibited in Spain.
+Có bao nhiêu tác phẩm được trưng bày? Biết rằng tác phẩm nghệ thuật đến từ Ukraine và được trưng bày tại Tây Ban Nha.",,,,,,QA-70-V001,,true,
+set1_q12,Questions.txt,12,vkis,media,,,,,,q12.mp4,VKIS-V012-27865 -> 28170,,true,
+set1_q13,Questions.txt,13,tkis,text,This traditional craft, practiced by an ethnic group in Vietnam, is unique because the artisans do not use a potter's wheel. Find the clip about this craft being honored by UNESCO. 
+Nghề thủ công truyền thống này, được thực hành bởi một dân tộc tại Việt Nam, rất độc đáo vì các nghệ nhân không sử dụng bàn xoay. Hãy tìm đoạn clip về việc nghề thủ công này được UNESCO vinh danh.,The video shows a woman in traditional Cham clothing smoothing the surface of a jar, moving backward around it on a dirt floor. 
+Đoạn video cho thấy một người phụ nữ mặc trang phục truyền thống Chăm đang vuốt phẳng bề mặt của một chiếc lu, đi giật lùi xung quanh chiếc lu trên nền đất.,There is a scene where many finished clay pots and jars are arranged close together on the ground, and another scene showing pots being baked outdoors in an open fire under straw and wood. 
+Có cảnh nhiều bình và lu đất nung đã hoàn thành xếp sát nhau trên mặt đất, và một cảnh khác cho thấy các sản phẩm đang được nung ngoài trời trong đống lửa dưới lớp rơm củi.,This is a clip about the Chăm pottery-making art being officially recognized by UNESCO as an Intangible Cultural Heritage. 
+Đây là đoạn clip về nghệ thuật làm gốm của người Chăm chính thức được UNESCO ghi danh vào Danh sách di sản văn hóa phi vật thể.,,,TKIS-V001,,true,
+set1_q14,Questions.txt,14,tkis,text,The video highlights the issue of unhealthy weight levels in school environments. Find the clip discussing solutions to encourage students to participate in physical activities. 
+Đoạn video nêu bật tình trạng thể chất mất cân đối ở trẻ em trong môi trường học đường. Hãy tìm đoạn clip thảo luận về các giải pháp khuyến khích học sinh tham gia hoạt động thể chất.,In one scene, school children in uniforms are playing sports on a basketball court, and some are doing exercises on a pull-up bar (horizontal bar) in a playground. 
+Trong một phân cảnh, các em học sinh mặc đồng phục đang chơi thể thao trên sân bóng rổ, và một số em đang chơi xà đơn ở khu vực vui chơi.,The screen displays an educational graphic slide explaining the steps and formulas to calculate the Body Mass Index (BMI) with a specific numerical example. 
+Trên màn hình xuất hiện một slide đồ họa giáo dục giải thích các bước và công thức tính chỉ số khối cơ thể (BMI) kèm theo ví dụ bằng số cụ thể.,This is a news clip about the program to combat obesity in schools in Ho Chi Minh City by promoting physical education and sports. 
+Đây là bản tin về chương trình phòng chống béo phì trong học đường tại TP.HCM bằng cách tăng cường giáo dục thể chất và thể thao.,,,TKIS-V002-3545 -> 5025,,true,
+set1_q15,Questions.txt,15,tkis,text,This architectural marvel in Istanbul was originally built as a Christian cathedral in the 6th century. Find the clip about the restoration of its dome. 
+Kiệt tác kiến trúc này ở Istanbul ban đầu được xây dựng như một nhà thờ Kitô giáo vào thế kỷ thứ 6. Hãy tìm đoạn clip nói về việc trùng tu mái vòm của nó.,The video shows a giant dome and scaffolding structures rising to the top inside a grand historic building, with visitors walking on the ground level. 
+Đoạn video cho thấy một mái vòm khổng lồ và hệ thống giàn giáo lớn cao vút bên trong một tòa nhà lịch sử tráng lệ, cùng với du khách đi lại ở phía dưới sàn.,The exterior of the building is shown, featuring large stone walls and four tall minarets standing around the main structure. 
+Cảnh quan bên ngoài của tòa nhà được hiển thị, làm nổi bật các bức tường đá lớn và bốn ngọn tháp nhọn cao đứng xung quanh công trình chính.,This is a clip about the project to reinforce the dome of the Hagia Sophia cathedral with a steel frame to protect it from earthquakes. 
+Đây là đoạn clip về dự án trùng tu nhằm gia cố mái vòm của thánh đường Hagia Sophia bằng khung thép để bảo vệ nó khỏi động đất.,,,TKIS-V003-27350 -> 28840,,true,
+set1_q16,Questions.txt,16,tkis,text,This humanoid robot, famous worldwide for its human-like expressions, achieves a new milestone by performing on stage. Find the clip about this event. 
+Con robot hình người này, nổi tiếng toàn cầu với biểu cảm giống con người, đạt được một cột mốc mới bằng cách biểu diễn trên sân khấu. Hãy tìm đoạn clip về sự kiện này.,The robot is dressed in a metallic dress and is seen performing in front of an audience alongside a group of classical musicians. 
+Con robot mặc một chiếc váy ánh kim và biểu diễn trước khán giả bên cạnh một nhóm các nghệ sĩ chơi nhạc cụ cổ điển.,The performance takes place inside a concert hall, with a large screen in the background displaying colorful digital animations. 
+Buổi biểu diễn diễn ra bên trong một phòng hòa nhạc, với một màn hình lớn ở phía sau hiển thị các hình ảnh động kỹ thuật số nhiều màu sắc.,This is a clip showing the humanoid robot Sophia singing on stage with a university symphony orchestra. 
+Đây là đoạn clip cho thấy robot hình người Sophia đang hát trên sân khấu cùng với dàn nhạc giao hưởng của một trường đại học.,,,TKIS-V011-19750 -> 21150,,true,
+set1_q17,Questions.txt,17,tkis,text,This maritime incident involves a vessel carrying migrants colliding with a security vessel in coastal waters. Find the clip reporting this accident. 
+Tai nạn hàng hải này liên quan đến một con chở người di cư va chạm với một tàu an ninh ở vùng biển ven bờ. Hãy tìm đoạn clip đưa tin về vụ tai nạn này.,The clip shows night-time footage with searchlights shining on the dark sea water, and rescue operations carrying people onto a large ship. 
+Đoạn video hiển thị các cảnh quay ban đêm với đèn pha chiếu sáng trên vùng nước biển tối, và các hoạt động cứu hộ đang đưa người lên một con tàu lớn.,The clip shows a harbor scene at night with a white car and a red car parked near a large docked vessel, military personnel in camouflage uniforms, and a white ambulance driving with its headlights on. 
+Đoạn video chiếu cảnh bến cảng vào ban đêm với một chiếc xe ô tô màu trắng và một chiếc xe ô tô màu đỏ đậu gần một con tàu lớn đang neo đậu, các nhân viên quân sự mặc quân phục rằn ri, và một chiếc xe cứu thương màu trắng đang di chuyển với đèn pha bật sáng.,This is a news report about a migrant boat colliding with a patrol vessel in the Aegean Sea, leading to several deaths. 
+Đây là bản tin về một chiếc thuyền chở người di cư va chạm với tàu tuần tra ở Biển Aegean, dẫn đến nhiều người tử vong.,,,TKIS-V014-8580 -> 9375,,true,
+set1_q18,Questions.txt,18,tkis,text,This is a clip showing the first stage of a major national cycling tournament in Vietnam. Find the clip depicting this race. 
+Đây là đoạn clip chiếu chặng đầu tiên của một giải đua xe đạp quốc gia lớn tại Việt Nam. Hãy tìm đoạn clip miêu tả cuộc đua này.,In the clip, a group of cyclists in colorful jerseys is racing along a flat asphalt road, and a cyclist raises his hands in celebration as he crosses the finish line. 
+Trong clip, một nhóm các vận động viên đua xe đạp mặc áo thi đấu nhiều màu sắc đang đua trên đường nhựa bằng phẳng, và một tay đua giơ tay ăn mừng khi vượt qua vạch đích.,At the finish line, there is a large yellow-orange-pink overhead arch with a slogan, and 4 cyclists cross the finish line one by one. 
+Tại vạch đích, có một cổng chào lớn màu vàng-cam-hồng với một câu khẩu hiệu, và 4 tay đua lần lượt vượt qua vạch đích.,This clip covers the 20th stage of the HTV Cycling Cup, where a rider wins the stage. 
+Đoạn clip này đưa tin về chặng thứ 20 của Cúp Truyền hình HTV, nơi một tay đua giành chiến thắng chặng.,,,TKIS-V015-33060 -> 34870,,true,
+set1_q19,Questions.txt,19,trake,text,"Vietnamese: Đây là phân cảnh thử nghiệm và hiệu chỉnh các robot hình người trong xưởng công nghệ.
+
+E1: Phân cảnh quay góc chính diện cận cảnh thân trên của một robot màu trắng-đen đang đi bộ/chạy trên máy chạy bộ. Trên ngực robot có một logo hình chữ X màu xanh lá cây phát sáng. Ở hậu cảnh phía sau có nhiều con robot khác đang được treo trên các giá đỡ đứng bằng dây đai màu cam, phía trên có một màn hình tivi hiển thị biểu đồ màu xanh. Lấy ngay khoảnh khắc chuyển cảnh đến phân cảnh này.
+
+E2: Phân cảnh quay góc rộng từ bên cạnh, nơi một kỹ thuật viên nam ngồi ngay phía sau chiếc robot màu trắng-đen để dùng tua vít sửa chữa phần vai/lưng của robot. Ở góc phải phía trước có một tủ đựng dụng cụ kỹ thuật màu xanh lá cây. Lấy ngay khoảnh khắc chuyển cảnh đến phân cảnh này.
+
+English: This is a scene of testing and calibrating humanoid robots in a technology workshop.
+
+E1: A front medium close-up shot of a white-and-black humanoid robot walking/running on a treadmill, featuring a glowing green X-shaped logo on its chest. In the background, several other robots are suspended on stands with orange straps, and a flat screen displays blue charts above them. Capture the exact moment this scene cuts in.
+
+E2: A side wide shot showing a male technician sitting right behind the white-and-black robot, using a screwdriver to adjust its shoulder/back. In the right foreground, a green tool cabinet is partially visible. Capture the exact moment this scene cuts in.",,,,,,TR-V013-18354,18773,,true,
+set1_q20,Questions.txt,20,tkis,text,The video shows multiple vehicles passing slowly through narrow lanes defined by red-and-white plastic cones, next to a large overhead steel toll structure with a blue banner. 
+Video cho thấy nhiều phương tiện giao thông di chuyển chậm qua các làn đường hẹp được ngăn bằng cọc tiêu nhựa màu đỏ trắng, nằm cạnh một kết cấu khung thép thu phí lớn có treo tấm băng rôn màu xanh dương ở phía trên.,Workers wearing orange and red safety jackets are seen dismantling toll cabins, using tools near a small brown cargo truck loaded with equipment, and an excavator's hydraulic breaker crushing concrete structures. 
+Các công nhân mặc áo bảo hộ màu cam và đỏ đang tiến hành tháo dỡ các cabin thu phí, sử dụng các công cụ cạnh một chiếc xe tải chở hàng màu nâu nhỏ xếp đầy thiết bị, và một máy xúc đang dùng búa thủy lực đập vỡ các kết cấu cột bê tông.,This is a news report about the dismantling of the T3 toll plaza on National Highway 51 to ensure traffic safety. 
+Đây là bản tin về việc tháo dỡ trạm thu phí T3 trên Quốc lộ 51 để đảm bảo an toàn giao thông.,,,,TKIS-V014-2985 -> 2955,,true,
+p1_q01,p1.txt,1,tkis,text,"Mẩu tin giới thiệu về đàn hổ tại một địa phương ở miền Nam vừa có thêm khoảng 3-6 con hổ con. Đây là một giống hổ quý hiếm
+
+The news report mentioned that a tiger colony in a southern locality had recently welcomed 3-6 cubs. This is a rare species of tiger.",,,,,,TKIS-L21_V029-10785 -> 11946,,true,
+p1_q02,p1.txt,2,trake,text,"E1: Khoảnh khắc đầu tiên bột được bỏ vào tô măng tây.
+E2: Khoảnh khắc đầu tiên thấy miến măng tây đầu tiên tiếp xúc với dầu trong chảo.
+E3: Khoảnh khắc miếng măng tây đầu tiên rời khỏi chảo dầu.
+E4: Khoảng khắc miếng măng tây cuối cùng rời chảo dầu và nằm hoàn toàn trên dĩa.
+
+E1: The first moment the batter is added to the asparagus bowl.
+E2: The first moment the first asparagus spear touches the oil in the pan.
+E3: The moment the first asparagus spear leaves the pan of oil.
+E4: The moment the last asparagus spear leaves the pan of oil and rests completely on the plate.",,,,,,"TR-L26_V194-4707,5142,5430,5527",,true,
+p1_q03,p1.txt,3,tkis,text,"Đoạn clip cần tìm là cảnh hai người phụ nữ đang cho dê ăn: một người mặc áo thun trắng quàng áo đỏ trên vai, người kia mặc áo dài tay kẻ sọc tím truyền thống. Cả hai đều mỉm cười, tỏ vẻ thích thú.
+Không gian trại rộng rãi, có mái che bằng tôn và hàng rào gỗ chia thành nhiều dãy chuồng, trong đó có hàng dài dê được nuôi nhốt.
+
+The clip we're looking for shows two women feeding goats: one wearing a white t-shirt with a red shawl draped over her shoulders, the other a traditional purple striped long-sleeved shirt. Both are smiling, appearing to be enjoying themselves.
+The farm is spacious, with a corrugated iron roof and wooden fences dividing it into several rows of pens, in which long lines of goats are kept.",,,,,,TKIS-L27_V014-7297 -> 8953,,true,
+p1_q04,p1.txt,4,tkis,text,"Đoạn clip cần tìm bắt đầu bằng cảnh 1 người đầu bếp đặt đang đặt món gỏi cuốn chay bày trên đĩa, nhân gồm rau xanh cuộn tròn và đậu hũ, gói trong bánh tráng màu vàng và tím. Đĩa được trang trí thêm lá xanh và hoa pansy tím-vàng, tạo cảm giác thanh mát và tinh tế.
+
+The clip we're looking for begins with a chef arranging vegetarian spring rolls on a plate. The filling consists of rolled green vegetables and tofu, wrapped in yellow and purple rice paper. The plate is decorated with green leaves and purple-yellow pansies, creating a refreshing and delicate feel.",,,,,,TKIS-L26_V056-6304 -> 6629,,true,
+p1_q05,p1.txt,5,tkis,text,"Đoạn clip cần tìm là cảnh quay trong một khu rừng, dưới gốc cây to với nhiều lá khô phủ đầy mặt đất. Nổi bật ở cận cảnh là một chú chim có bộ lông đen ánh xanh ở đầu và thân trên, còn cánh và lưng màu nâu đỏ. Đôi mắt chim đỏ rực, tạo điểm nhấn rõ ràng. Đây là loài chim thường thấy ở vùng Nam Bộ Việt Nam.
+
+The clip we're looking for shows a scene in a forest, under a large tree with many dry leaves covering the ground. Prominently featured in the close-up is a bird with black and bluish feathers on its head and upper body, and reddish-brown wings and back. Its bright red eyes create a striking contrast. This is a species of bird commonly found in the southern regions of Vietnam.",,,,,,TKIS-L29_V023-10915 -> 10967,,true,
+p1_q06,p1.txt,6,tkis,text,"Đoạn video về một lễ hội ẩm thực Nhật Bản lớn nhất thế giới. Hãy tìm chính xác phân cảnh một cô bé đeo một con bạch tuộc / con mực màu đỏ phía trước ngực. Trên tay cô bé có cầm một chiếc túi giấy.
+
+This video is of the world's largest Japanese food festival. Find the exact scene where a little girl is wearing a red octopus/squid on her chest. She is holding a paper bag in her hand.",,,,,,TKIS-L22_V030-18327 -> 18395,,true,
+p1_q07,p1.txt,7,tkis,text,"Đoạn clip là cảnh thu hoạch dứa ở miền Tây: một bà cụ ngồi bên giỏ dứa trò chuyện với cô gái mặc áo hồng quàng khăn rằn; xung quanh chất đầy dứa, phía sau có người phụ nữ đội nón lá cầm trái dứa và một chiếc ghe xanh đậu cạnh bờ, tạo không khí nông thôn mộc mạc, yên bình.
+
+The clip depicts a pineapple harvest in the Mekong Delta: an elderly woman sits beside a basket of pineapples, chatting with a young girl in a pink shirt and checkered scarf; pineapples are piled high around them, and behind them, a woman wearing a conical hat holds a pineapple, while a green boat is moored by the shore, creating a rustic and peaceful rural atmosphere.",,,,,,TKIS-L27_V013-5051 -> 5135,,true,
+p1_q08,p1.txt,8,tkis,text,"Tìm chính xác đoạn clip ngắn có ba người (hai phụ nữ và một nam giới) đang ngồi cạnh nhau, tập trung chơi nhạc cụ kim loại có dạng tròn, rỗng, với các vết lõm để tạo ra âm thanh khi gõ tay. Có 1 người mặc áo trắng ngồi giữa 2 người mặc áo đen. Bối cảnh phía sau là một kệ sách nhiều ngăn, xếp đầy sách với nhiều màu sắc
+
+Find the exact short clip showing three people (two women and one man) sitting together, focusing on playing a round, hollow metal instrument with indentations to produce sound when tapped. One person wearing a white shirt is sitting between the two people wearing black shirts. In the background is a multi-tiered bookshelf filled with books of various colors.",,,,,,TKIS-L30_V017-2986 -> 3078,,true,
+p1_q09,p1.txt,9,tkis,text,"Trong đoạn clip có là một chàng trai đội mũ lưỡi trai đen, mặc áo thun trắng có dòng chữ tiếng Anh, đang ngồi cạnh một chiếc hộp. Trên hộp, anh sắp xếp nhiều mảnh bìa cắt rời với hình thù ngẫu nhiên.
+Nhờ ánh sáng chiếu từ một phía, các mảnh bìa đó đổ bóng lên tường, tạo thành hình chân dung một người đàn ông với khuôn mặt rõ nét, tóc vuốt gọn và mặc vest.
+
+The clip shows a young man wearing a black baseball cap and a white t-shirt with English lettering, sitting next to a box. On the box, he has arranged many randomly shaped pieces of cardboard.
+Thanks to the light shining from one side, these pieces of cardboard cast shadows on the wall, creating a portrait of a man with a clear face, neatly styled hair, and wearing a suit.",,,,,,TKIS-L30_V057-2914 -> 3106,,true,
+p1_q10,p1.txt,10,tkis,text,"Đoạn video mô tả cảnh trang trí bánh rán. Phân cảnh bắt đầu là một chiếc đĩa sứ màu trắng nằm trên một khay gỗ hình chữ nhật. Bên cạnh chiếc đĩa sứ là một chén đựng một vài trái dâu, nhưng có 2 trái bị rơi ra ngoài. Ngoài ra, bên cạnh đĩa sứ còn có một chén sứ nhỏ màu trắng đựng chuối đã được cắt sẵn và một cái thìa nhỏ màu nâu. Phân cảnh tiếp theo cho thấy đầu bếp đặt 2 chiếc bánh rán lên đĩa sứ và bắt đầu trang trí. Bước đầu tiên là việc rưới chocolate lên trên mặt bánh. Sau đó, đầu bếp đặt các lát chuối lên trên một chiếc bánh rán, chiếc còn lại được đặt các lát dâu tây lên.
+
+The video depicts the decorating of donuts. The scene begins with a white ceramic plate on a rectangular wooden tray. Next to the plate is a bowl containing a few strawberries, but two have fallen out. Also next to the plate is a small white ceramic bowl containing sliced ​​bananas and a small brown spoon. The next scene shows the chef placing two donuts on the ceramic plate and beginning to decorate them. The first step is to drizzle chocolate over the donuts. Then, the chef places slices of banana on one donut and slices of strawberries on the other.",,,,,,TKIS-L26_V200-4480 -> 6583,,true,
+p1_q11,p1.txt,11,tkis,text,"Đoạn video mô tả một người ngồi vệ sinh máy ảnh. Công đoạn này bắt đầu bằng việc tháo rời máy ảnh. Tiếp theo, chiếc ống kính đã được tháo rời và được đặt ngay ngắn trên một chiếc khăn màu tím hồng. Phân cảnh cuối cùng là vệ sinh ống kính (lens) bằng một chiếc tăm bông.
+
+The video shows a person cleaning a camera. The process begins with disassembling the camera. Next, the lens is detached and placed neatly on a pinkish-purple cloth. The final scene shows cleaning the lens with a cotton swab.",,,,,,TKIS-L30_V095-2673 -> 2918,,true,
+p1_q12,p1.txt,12,tkis,text,"Đoạn clip bắt đầu với cảnh một tác phẩm điêu khắc cát hoành tráng tại Lễ hội điêu khắc trên cát. Tác phẩm mô tả cảnh những thanh niên chơi thể thao đường phố: một người trượt patin, hai người trượt ván
+Nền phía sau là họa tiết vòm cong lớn và có khắc chữ.
+Tiếp theo có cảnh nhiều tác phẩm khác bằng cát, và có 2 cột khói màu hồng
+
+The clip begins with a spectacular sand sculpture at the Sand Sculpture Festival. The sculpture depicts young people playing street sports: one roller skater, two skateboarders.
+The background features a large arched pattern with engraved lettering.
+This is followed by scenes of several other sand sculptures, and two columns of pink smoke.",,,,,,TKIS-L21_V027-26781 -> 27919,,true,
+p1_q13,p1.txt,13,qa,text,"Đoạn video về một chương trình từ thiện của một câu lạc bộ tên là FANA. Trong đoạn video có thể thấy câu lạc bộ này đang đi trao quà tại một xã thuộc tỉnh Khánh Hòa. Hỏi xã này có tên là gì? (tại thời điểm đó)
+
+This video shows a charity program by a club called FANA. The video shows the club distributing gifts in a commune in Khanh Hoa province. What was the name of this commune at that time?",,,,,,QA-Giang Ly-L30_V072-1745 -> 1961,,true,
+p1_q14,p1.txt,14,trake,text,"Đoạn video múa lân một con lân màu vàng đen trắng, tìm các sự kiện sau:
+E1: Lân quay vòng trên cột số 4 bằng 2 chân trước rồi tiếp đất. Khoảnh khắc đầu tiên mà lân bắt đầu xoay vòng.
+E2: Khoảnh khắc 4 chân hoàn toàn chạm đất đầu tiên.
+E3: Khoảnh khắc đầu tiên 2 người biểu diễn lân cuối chào ban giám khảo.
+E4: Sau đó lân tiến lại chào một con rồng. Khoảnh khắc đầu tiên con rồng cử động đầu.
+
+The video shows a lion dance with a black and white lion. Find the following events:
+E1: The lion spins around pole number 4 on its two front legs before landing. The first moment the lion begins to spin.
+E2: The first moment all four legs completely touch the ground.
+E3: The first moment the two lion dancers bow to the judges.
+E4: Then the lion approaches and bows to a dragon. The first moment the dragon moves its head.",,,,,,"TRAKE-L24_V033-15945,16009,16355,16900",,true,
+p1_q15,p1.txt,15,tkis,text,"Đoạn video trong buổi trao quà từ thiện diễn ra tại 1 bệnh viện trong dịp Xuân 2024. Trong cảnh có hai người đàn ông (mặc áo sơ mi hồng và sơ mi trắng) đứng hai bên, đại diện ban tổ chức. Ở giữa là bốn em nhỏ và thiếu niên, trong đó có em mặc áo đỏ, em mặc áo trắng, em mặc váy hồng và em mặc áo xanh. Các em được trao bảng tượng trưng với nội dung “Chương trình: Trao kinh phí hỗ trợ cho trẻ em mồ côi do dịch COVID-19”. Trước mặt mỗi em là túi quà lớn mang logo y tế. Phía sau là phông nền màu đỏ với khẩu hiệu đón xuân và thông tin sự kiện.
+
+The video shows a charity gift-giving event at a hospital during the Spring Festival of 2024. Two men (one wearing a pink shirt and the other a white shirt) stand on either side, representing the organizing committee. In the middle are four children and teenagers, one wearing a red shirt, another a white shirt, one a pink dress, and one a blue shirt. They are presented with symbolic plaques that read, ""Program: Providing financial support to orphaned children affected by COVID-19."" Each child holds a large gift bag bearing the medical logo. Behind them is a red backdrop with a spring greeting slogan and event information.",,,,,,TKIS-L30_V092-2491 -> 2526,,true,
+p1_q16,p1.txt,16,trake,text,"Trong đoạn video nấu ăn một món ăn về nấm, gồm các khoảnh khắc sơ chế:
+E1: Khoảnh khắc đầu tiên thấy cắt nấm.
+E2: Khoảnh khắc đầu tiên cắt củ năng.
+E2: Khoảnh khắc đầu tiên cắt đậu hủ.
+E4: Khoảnh khắc chảo đặt lên bếp, đầu bếp mở lửa và thấy lửa bắt đầu xuất hiện
+
+In this cooking video of a mushroom dish, the following are the preparation moments:
+E1: The first moment of cutting the mushrooms.
+E2: The first moment of cutting the water chestnuts.
+E3: The first moment of cutting the tofu.
+E4: The moment the pan is placed on the stove, the chef turns on the heat and the flames begin to appear.",,,,,,"TR-L26_V072-2471,3136,3427,3800",,true,
+p1_q17,p1.txt,17,qa,text,"Trong đoạn video có 2 câu thơ của một nhà thơ ca ngợi anh hùng Nguyễn Trung Trực trong đình thần Nguyễn Trung Trực tại Kiên Giang. Hai câu thơ đó là gì?
+
+The video features two verses by a poet praising the hero Nguyen Trung Truc at the Nguyen Trung Truc shrine in Kien Giang. What are those two verses?",,,,,,QA-L27_V010-5580-HOẢ HỒNG NHẬT TẢO OANH THIÊN ĐỊA. KIẾM BẠT KIÊN GIANG KHẤP QUỶ THẦN,,true,
+p1_q18,p1.txt,18,tkis,text,"Trên đĩa tròn màu trắng có 1 ly panna cotta. Có một bàn tay lần lượt đặt thêm 2 ly panna cotta nữa vào đĩa.
+Mỗi ly panna cotta có lớp kem mịn màu trắng ngà, bên trên trang trí vài lát nho đỏ, thêm lá bạc hà xanh tạo điểm nhấn tươi mát.
+Bên cạnh trên đĩa còn có hai bông hoa ăn được (màu đỏ và vàng) để tăng phần đẹp mắt.
+
+On a white round plate is one panna cotta. A hand then places two more panna cottas onto the plate.
+Each panna cotta has a smooth, creamy white base, topped with slices of red grapes and a fresh green mint leaf.
+Beside each panna cotta are two edible flowers (red and yellow) for added visual appeal.",,,,,,TKIS-L26_V004-5393 -> 5524,,true,
+p1_q19,p1.txt,19,tkis,text,"Đoạn clip về 1 thị trấn ven biển thu hút du khách hiếu kỳ nhờ 1 loài động vật biển nguy hiểm. Loài động vật này nổi tiếng trong 1 bộ phim của đạo diễn Steven Spielberg được sản xuất vào năm 1975
+
+The clip shows a coastal town attracting curious tourists thanks to a dangerous marine animal. This animal became famous in a 1975 film directed by Steven Spielberg.",,,,,,TKIS-L22_V022-16612 -> 18441,,true,
+p1_q20,p1.txt,20,tkis,text,"Đoạn video về tường thuật một cuộc đua xe đạp. Tìm phân cảnh với góc quay trực diện từ trên cao xuống dõi theo các tay đua. Trong khung hình gồm có 3 tay đua đang đạp thành một đường thẳng. Cả 3 tay đua đều đến từ cùng một đội, với đồng phục áo trắng quần vàng xanh. Tay đua đầu tiên đội nón trắng, tay đua thứ hai đội nón đỏ và tay đua cuối cùng đội nón đen.
+
+The video depicts a cycling race. Find the scene with a direct overhead shot following the riders. The frame shows three riders cycling in a straight line. All three riders are from the same team, wearing white shirts and yellow and green shorts. The first rider wears a white cap, the second a red cap, and the last a black cap.",,,,,,TKIS-L23_V007-3247 -> 3608,,true,
+p1_q21,p1.txt,21,tkis,text,"Tìm một đoạn video đua xe đạp, góc quay từ flycam trên cao, một vận động viên mặc áo xanh dương, trắng đang vượt ba vận động viên khác và lên vị trí dẫn đầu. Biết sau đó vận động viên này dẫn đầu suốt đoạn đường còn lại đến đích.",,,,,,TKIS-L23_V018-5301 -> 6235,TKIS-L23_V025-7368 -> 8509,true,
+p1_q22,p1.txt,22,qa,text,Đoạn video về một người phụ nữ dạy nấu ăn cho những người khác. Trong đoạn video có thể thấy một người đang cầm công thức món ăn với nguyên liệu chính là 200g thịt nạc xay. Hỏi tiêu đề của công thức nấu ăn (tên món ăn) này là gì?,,,,,,,,,false,No ground-truth answer is present in p1.txt.
