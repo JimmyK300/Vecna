@@ -3,9 +3,9 @@ import { useFetcher } from "react-router-dom";
 import {
   signIn,
   getEvaluationIdAPI,
-  submitAnswerAPI,
 } from "../services/auth.js";
 import localforage from "localforage";
+import { EVENT_RETRIEVAL_ENABLED } from "../utils/localMode.js";
 
 export const AuthContext = createContext({
   username: "",
@@ -23,13 +23,14 @@ export default function AuthProvider({ children }) {
 
   const sessionId = useRef(undefined);
   useEffect(() => {
+    if (!EVENT_RETRIEVAL_ENABLED) return undefined;
     const fetchEval = async () => {
       const localSessionId = await localforage.getItem("sessionId");
       if (localSessionId) {
         sessionId.current = localSessionId;
       }
       const evalRes = await getEvaluationIdAPI(sessionId.current);
-      if (evalRes.status === 200) {
+      if (evalRes?.status === 200) {
         const evalIds = [];
         for (const e of evalRes.data) {
           evalIds.push({
@@ -43,16 +44,22 @@ export default function AuthProvider({ children }) {
     fetchEval();
   }, []);
   const updateAuth = async (username, password) => {
+    if (!EVENT_RETRIEVAL_ENABLED) {
+      setUsername(username);
+      setPassword(password);
+      alert("External event retrieval is disabled; answers remain local-only.");
+      return;
+    }
     setUsername(username);
     setPassword(password);
     const res = await signIn(username, password);
-    if (res.status === 200) {
+    if (res?.status === 200) {
       sessionId.current = res.data["sessionId"];
       await localforage.setItem("sessionId", sessionId.current);
 
       alert("Login successfully");
       const evalRes = await getEvaluationIdAPI(sessionId.current);
-      if (evalRes.status === 200) {
+      if (evalRes?.status === 200) {
         const evalIds = [];
         for (const e of evalRes.data) {
           evalIds.push({
@@ -63,23 +70,15 @@ export default function AuthProvider({ children }) {
         setEvaluationIds(evalIds);
       }
     } else {
-      alert(res.data["description"]);
+      alert(res?.data?.["description"] || "Login failed");
     }
   };
 
   const submitAnswer = async (answer) => {
-    let willSubmit = confirm("Submit?");
-    if (!willSubmit) {
-      return;
-    }
-    const res = await submitAnswerAPI(sessionId.current, answer);
-    alert(res.data["description"]);
-    if (res.status === 200) {
-      fetcher.submit(
-        { correct: 0 + (res.data["submission"] !== "WRONG"), ...answer },
-        { method: "POST", action: "/answers" },
-      );
-    }
+    fetcher.submit(
+      { correct: 0, ...answer },
+      { method: "POST", action: "/answers" },
+    );
   };
 
   return (

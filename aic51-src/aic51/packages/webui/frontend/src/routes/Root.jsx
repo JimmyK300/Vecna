@@ -23,17 +23,19 @@ export default function Root() {
     <AuthProvider>
       <SelectedProvider>
         <VideoProvider>
-          <div className="flex flex-row">
-          <div className="flex flex-col">
-            <SearchParams />
-            <div className="w-96 z-10">
-              <AnswerSidebar />
+          <div className="app-shell">
+            <div className="workspace-controls">
+              <SearchParams />
             </div>
+            <main className="workspace-main">
+              <Outlet context={{ targetFeatureOptions }} />
+            </main>
+            <section className="candidate-dock" aria-label="Candidate staging and submissions">
+              <AnswerSidebar />
+            </section>
           </div>
-          <Outlet context={{ targetFeatureOptions }}/>
-        </div>
       </VideoProvider>
-    </SelectedProvider>
+      </SelectedProvider>
     </AuthProvider>
   );
 }

@@ -159,7 +159,7 @@
 //       }}
 //     >
 //       <div id="answer-description">
-//         <div className="">{answer.submitted}</div>
+//         <div className="">{answer.saved}</div>
 //       </div>
 //       <div
 //         id="answer-option"
@@ -244,9 +244,9 @@
 //           {answer.correct ? "Correct" : "Wrong"}
 //         </div>
 //         <div className="">
-//           <span className="font-bold">Submitted at</span>
+//           <span className="font-bold">Saved at</span>
 //           {": "}
-//           {answer.submitted}
+//           {answer.saved}
 //         </div>
 //       </div>
 //     </div>
@@ -430,7 +430,7 @@
 // }
 
 import { useFetcher, useSubmit, useSearchParams, Form } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import JSZip from "jszip";
 import classNames from "classnames";
 
@@ -456,11 +456,11 @@ function AnswerItem({
 }) {
     const [isEditing, setIsEditing] = useState(false);
     const submit = useSubmit();
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams] = useSearchParams();
     const fetcher = useFetcher({ key: "answers" });
     const playVideo = usePlayVideo();
 
-    const handleOnMouseLeave = async () => {
+    const handleOnMouseLeave = () => {
         if (selected) {
             onSelect(null);
         }
@@ -471,7 +471,7 @@ function AnswerItem({
             onSelect(answer);
         }
     };
-    const handleOnPlay = async (e) => {
+    const handleOnPlay = async () => {
         const frameInfo = await getFrameInfo(answer.video_id, answer.frame_id);
         frameInfo.frame_counter = answer.frame_counter[0];
         playVideo(frameInfo, frameInfo.frame_id);
@@ -684,7 +684,7 @@ function AnswerDetail({ answer }) {
     );
 }
 
-function AnswerHeader({}) {
+function AnswerHeader() {
     const fetcher = useFetcher({ key: "answers" });
     const { selected } = useSelected();
     
@@ -713,8 +713,8 @@ function AnswerHeader({}) {
                     placeholder="Video ID"
                     autoComplete="off"
                     value={videoId}
+                    readOnly
                     className="basis-1/3 py-1 px-2 border-black border-r-2 min-w-0 focus:outline-none"
-                    onChange={(e) => {}}
                 />
                 <input
                     required
@@ -723,8 +723,8 @@ function AnswerHeader({}) {
                     placeholder="Frame Counter(s) - comma separated"
                     autoComplete="off"
                     value={selectedFramesText}
+                    readOnly
                     className="basis-1/3 py-1 px-2 min-w-0 focus:outline-none"
-                    onChange={(e) => {}}
                 />
                 <input
                     type="text"
@@ -745,28 +745,34 @@ function AnswerHeader({}) {
 
 function SelectedFramesPreview() {
     const { selected, removeSelected } = useSelected();
+    const playVideo = usePlayVideo();
     
     if (selected.length === 0) {
         return null;
     }
     
+    const handleOpen = async (frameId) => {
+        const [videoId, frameIdValue] = frameId.split("#");
+        const frameInfo = await getFrameInfo(videoId, frameIdValue);
+        if (frameInfo?.id) playVideo(frameInfo, frameIdValue);
+    };
+
     return (
         <div className="p-2 bg-green-100 border border-green-300 rounded">
-            <div className="text-sm font-bold text-green-800 mb-1.5">
-                Selected Frames ({selected.length}):
+            <div className="flex items-center justify-between text-sm font-bold text-green-800 mb-1.5">
+                <span>Candidate bucket ({selected.length})</span>
+                <span className="text-[10px] font-normal text-green-700">Click a frame to verify it</span>
             </div>
             <div className="flex flex-wrap gap-1">
                 {selected.map((frameId) => (
-                    <span 
+                    <span
                         key={frameId}
-                        onClick={() => removeSelected(frameId)}
-                        className="inline-flex items-center gap-1 bg-white hover:bg-red-50 hover:text-red-700 text-green-700 border border-green-200 hover:border-red-200 rounded px-1.5 py-0.5 text-[10px] font-medium font-mono cursor-pointer transition-colors duration-150 shadow-sm"
-                        title="Click to deselect"
+                        className="inline-flex items-center gap-1 bg-white text-green-700 border border-green-200 rounded px-1.5 py-0.5 text-[10px] font-medium font-mono shadow-sm"
                     >
-                        {frameId}
-                        <svg className="w-2.5 h-2.5 opacity-60 hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+                        <button type="button" onClick={() => handleOpen(frameId)} className="hover:text-green-950" title="Open selected frame in video">
+                            {frameId}
+                        </button>
+                        <button type="button" onClick={() => removeSelected(frameId)} className="text-slate-400 hover:text-red-700" title="Remove from bucket">×</button>
                     </span>
                 ))}
             </div>
@@ -774,20 +780,28 @@ function SelectedFramesPreview() {
     );
 }
 
-export default function AnswerSidebar({}) {
+export default function AnswerSidebar() {
     const fetcher = useFetcher({ key: "answers" });
     const [selected, setSelected] = useState(null);
     const [downloadStep, setDownloadStep] = useState(50);
     const [downloadN, setDownloadN] = useState(5);
     const [downloadList, setDownloadList] = useState([]);
-    const playVideo = usePlayVideo();
-    const { selected: selectedFrames, clearSelected } = useSelected();
+    const { selected: selectedFrames, clearSelected, markSaved } = useSelected();
+    const [isDownloading, setIsDownloading] = useState(false);
+    const pendingSavedRef = useRef([]);
 
     useEffect(() => {
         if (fetcher.state === "idle" && !fetcher.data) {
             fetcher.load("/answers");
         }
     }, [fetcher]);
+
+    useEffect(() => {
+        if (fetcher.state === "idle" && pendingSavedRef.current.length > 0 && Array.isArray(fetcher.data)) {
+            markSaved(pendingSavedRef.current);
+            pendingSavedRef.current = [];
+        }
+    }, [fetcher.data, fetcher.state, markSaved]);
 
     const handleOnSelect = (answer) => {
         setSelected(answer);
@@ -806,15 +820,20 @@ export default function AnswerSidebar({}) {
     };
     const handleOnBulkDownload = async (e) => {
         e.preventDefault();
-        const downloadAnswers = await getAnswersByIds(downloadList);
-        const zip = new JSZip();
-        for (const a of downloadAnswers) {
-            const csvData = getCSV(a, downloadN, downloadStep);
-            zip.file(`query-${a.query_id}.csv`, csvData);
-        }
-        zip.generateAsync({ type: "blob" }).then((content) => {
+        if (downloadList.length === 0 || isDownloading) return;
+        setIsDownloading(true);
+        try {
+            const downloadAnswers = await getAnswersByIds(downloadList);
+            const zip = new JSZip();
+            downloadAnswers.forEach((answer) => {
+                const csvData = getCSV(answer, downloadN, downloadStep);
+                zip.file(`query-${answer.query_id}.csv`, csvData);
+            });
+            const content = await zip.generateAsync({ type: "blob" });
             downloadFile(content, "submission.zip");
-        });
+        } finally {
+            setIsDownloading(false);
+        }
     };
 
     const handleAddSingle = () => {
@@ -827,8 +846,9 @@ export default function AnswerSidebar({}) {
                 return;
             }
             
+            pendingSavedRef.current = [...selectedFrames];
             fetcher.submit(form);
-            console.log("Submitted form with existing values");
+            console.log("Saved form locally with existing values");
         }
     };
 
@@ -854,6 +874,7 @@ export default function AnswerSidebar({}) {
             return frameCounter;
         }).join(', ');
         
+        pendingSavedRef.current = [...selectedFrames];
         fetcher.submit({
             query_id: queryId,
             video_id: videoId,
@@ -863,7 +884,6 @@ export default function AnswerSidebar({}) {
             method: "POST",
             action: "/answers"
         });
-        
         console.log("Added temporal sequence:", {
             query_id: queryId,
             video_id: videoId,
@@ -913,6 +933,7 @@ export default function AnswerSidebar({}) {
                                 placeholder="n"
                                 autoComplete="off"
                                 value={downloadN}
+                                inputMode="numeric"
                                 onChange={(e) => {
                                     setDownloadN(e.target.value);
                                 }}
@@ -928,6 +949,7 @@ export default function AnswerSidebar({}) {
                                 placeholder="step"
                                 autoComplete="off"
                                 value={downloadStep}
+                                inputMode="numeric"
                                 onChange={(e) => {
                                     setDownloadStep(e.target.value);
                                 }}
@@ -937,7 +959,7 @@ export default function AnswerSidebar({}) {
                         <input
                             disabled={downloadList.length === 0}
                             type="submit"
-                            value="Download"
+                            value={isDownloading ? "Preparing…" : "Download selected"}
                             className="flex-grow-0 mt-2 rounded-xl border-2 border-black text-lg px-4 py-1 bg-sky-100 focus:outline-none hover:bg-sky-200 active:bg-sky-300 disabled:bg-slate-100 disabled:border-slate-300 disabled:text-slate-300"
                         />
                     </div>

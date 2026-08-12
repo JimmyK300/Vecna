@@ -1,7 +1,6 @@
 import {
   useLoaderData,
   useSubmit,
-  useOutletContext,
   useNavigation,
 } from "react-router-dom";
 import classNames from "classnames";
@@ -10,6 +9,7 @@ import { useEffect } from "react";
 import { searchSimilar } from "../services/search.js";
 import { FrameItem, FrameContainer } from "../components/Frame.jsx";
 import { getTimelineColor } from "../utils/timelineColors.js";
+import { getResultTotal } from "../utils/queryState.js";
 import { usePlayVideo } from "../components/VideoPlayer.jsx";
 import { useSelected } from "../components/SelectedProvider.jsx";
 import PreviousButton from "../assets/previous-btn.svg";
@@ -42,7 +42,6 @@ export async function loader({ request }) {
   }
 
   const _offset = searchParams.get("offset") || 0;
-  const selected = searchParams.get("selected") || undefined;
   const limit = searchParams.get("limit") || limitOptions[0];
   const nprobe = searchParams.get("nprobe") || nprobeOption[0];
   const temporal_k = searchParams.get("temporal_k") || temporal_k_default;
@@ -51,38 +50,47 @@ export async function loader({ request }) {
   const max_interval = searchParams.get("max_interval") || max_interval_default;
   const target_features = searchParams.get("target_features") || "";
 
-  const { total, frames, params, offset } = await searchSimilar(
-    id,
-    _offset,
-    limit,
-    nprobe,
-    temporal_k,
-    ocr_weight,
-    asr_weight,
-    max_interval,
-    target_features,
-  );
+  try {
+    const response = await searchSimilar(
+      id,
+      _offset,
+      limit,
+      nprobe,
+      temporal_k,
+      ocr_weight,
+      asr_weight,
+      max_interval,
+      target_features,
+    );
 
-  return {
-    query: { id },
-    params,
-    offset,
-    data: { total, frames },
-  };
+    return {
+      query: { id },
+      params: response.params || { limit, nprobe, temporal_k, ocr_weight, asr_weight, max_interval, target_features },
+      offset: response.offset || _offset,
+      data: { total: getResultTotal(response), frames: response.frames || [] },
+    };
+  } catch (error) {
+    return {
+      query: { id },
+      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, max_interval, target_features },
+      offset: _offset,
+      data: { total: 0, frames: [] },
+      error: error.message,
+    };
+  }
 }
 
 export default function SearchSimilar() {
   const navigation = useNavigation();
-  const { targetFeatureOptions } = useOutletContext();
   const submit = useSubmit();
   const { query, params, offset, data } = useLoaderData();
   const playVideo = usePlayVideo();
   const { clearSelected } = useSelected();
 
   const { id } = query;
-  const { limit, nprobe } = params;
+  const { limit } = params;
 
-  const { total, frames } = data;
+  const { frames } = data;
   const empty = frames.length === 0;
 
   useEffect(() => {
@@ -116,7 +124,7 @@ export default function SearchSimilar() {
   };
 
   const handleOnPlay = (frame) => {
-    playVideo(frame);
+    playVideo(frame, frame.frame_id);
   };
 
   const handleOnSearchSimilar = (frame) => {

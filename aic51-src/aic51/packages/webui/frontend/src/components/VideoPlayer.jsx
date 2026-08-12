@@ -3,15 +3,25 @@ import { createContext, useEffect, useContext, useState, useRef } from "react";
 import classNames from "classnames";
 import { AuthContext } from "./AuthProvider";
 import { useSelected } from "./SelectedProvider.jsx";
-import { getFrameInfo, getVideoTranscript, getVideoKeyframes } from "../services/search.js";
+import { getFrameInfo, getFrameOCR, getVideoTranscript, getVideoKeyframes } from "../services/search.js";
+import { getOcrBoxes } from "../utils/queryState.js";
+import { applyFrameOcrFallback, hasFrameOcrEvidence, mergeFrameEvidence } from "../utils/verification.js";
+import { getVideoShortcutAction } from "../utils/keyboardShortcuts.js";
 export const VideoContext = createContext({ playVideo: null });
 
 export default function VideoProvider({ children }) {
   const [frameInfo, setFrameInfo] = useState(null);
   const playVideo = async (f, keyframe) => {
     const res = await getFrameInfo(f.video_id, keyframe);
-    res.frame_id = keyframe;
-    setFrameInfo(res);
+    let merged = mergeFrameEvidence(f, { ...res, frame_id: keyframe });
+    if (!hasFrameOcrEvidence(merged)) {
+      try {
+        merged = applyFrameOcrFallback(merged, await getFrameOCR(f.video_id, keyframe));
+      } catch (error) {
+        console.debug("Frame OCR fallback unavailable", error);
+      }
+    }
+    setFrameInfo(merged);
   };
   const handleOnCancle = () => {
     setFrameInfo(null);
@@ -19,11 +29,11 @@ export default function VideoProvider({ children }) {
   return (
     <VideoContext.Provider
       value={{
-        playVideo: playVideo,
+        playVideo,
       }}
     >
       {frameInfo !== null && (
-        <VideoPlayer frameInfo={frameInfo} onCancle={handleOnCancle} />
+        <VideoPlayer key={`${frameInfo.video_id}#${frameInfo.frame_id}`} frameInfo={frameInfo} onCancle={handleOnCancle} />
       )}
       {children}
     </VideoContext.Provider>
@@ -34,10 +44,24 @@ export function usePlayVideo() {
   return playVideo;
 }
 function VideoPlayer({ frameInfo, onCancle }) {
-  const { evaluationIds, submitAnswer } = useContext(AuthContext);
-  const { selected, addSelected, removeSelected } = useSelected();
+  const { evaluationIds } = useContext(AuthContext);
+  const {
+    selected,
+    addSelected,
+    removeSelected,
+    markSaved,
+  } = useSelected();
   const fetcher = useFetcher({ key: "answers" });
   const videoElementRef = useRef(null);
+  const playerShellRef = useRef(null);
+  const currentFrameIdRef = useRef("");
+  const selectedRef = useRef(selected);
+  const addSelectedRef = useRef(addSelected);
+  const removeSelectedRef = useRef(removeSelected);
+  const pendingSavedRef = useRef([]);
+  selectedRef.current = selected;
+  addSelectedRef.current = addSelected;
+  removeSelectedRef.current = removeSelected;
   const [frameCounter, setFrameCounter] = useState(0);
   const [seekStep, setSeekStep] = useState(2);
   const seekStepRef = useRef(2);
@@ -49,6 +73,10 @@ function VideoPlayer({ frameInfo, onCancle }) {
 
   const timelineRef = useRef(null);
   const [isScrubbing, setIsScrubbing] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [workspaceHeight, setWorkspaceHeight] = useState(500);
+  const [evidenceTab, setEvidenceTab] = useState("all");
+  const [showOcrOverlay, setShowOcrOverlay] = useState(false);
 
   const displayEvaluationIds = [
     { id: "TKIS", name: "TKIS" },
@@ -67,6 +95,32 @@ function VideoPlayer({ frameInfo, onCancle }) {
     setSeekStep(val);
     seekStepRef.current = val;
   };
+
+  const toggleFullscreen = async () => {
+    if (!playerShellRef.current) return;
+    if (document.fullscreenElement) {
+      await document.exitFullscreen();
+    } else {
+      await playerShellRef.current.requestFullscreen();
+    }
+  };
+
+  useEffect(() => {
+    const handleFullscreenChange = () => setIsFullscreen(Boolean(document.fullscreenElement));
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  }, []);
+
+  useEffect(() => {
+    if (fetcher.state === "idle" && pendingSavedRef.current.length > 0 && Array.isArray(fetcher.data)) {
+      markSaved(pendingSavedRef.current);
+      pendingSavedRef.current = [];
+    }
+  }, [fetcher.data, fetcher.state, markSaved]);
+
+  useEffect(() => {
+    setShowOcrOverlay(false);
+  }, [frameInfo]);
 
   const [keyframes, setKeyframes] = useState([]);
 
@@ -164,126 +218,84 @@ function VideoPlayer({ frameInfo, onCancle }) {
   }, [frameCounter, transcript, activeSegmentIndex, frameInfo.fps]);
 
   useEffect(() => {
-    const fps = frameInfo.fps;
+    const fps = Number(frameInfo.fps) || 30;
     const videoElement = videoElementRef.current;
-    videoElement.currentTime =
-      frameInfo.time || parseInt(frameInfo.frame_id) / fps - 0.5;
+    if (!videoElement) return undefined;
+    videoElement.currentTime = frameInfo.time || parseInt(frameInfo.frame_id, 10) / fps - 0.5;
     videoElement.focus();
 
-    const handleKeyDown = (e) => {
-      const isInInput = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
-      
-      switch (e.keyCode) {
-        case 27: // Escape - close video player
-          onCancle();
-          return;
-        case 13: // Enter - focus answer input or shift+enter to submit
-          if (e.shiftKey) {
-            e.preventDefault();
-            document.querySelector("#answer-form input[type=submit]").click();
-          } else if (!isInInput) {
-            document.querySelector("#answer-form input[name=answer]").focus();
-          }
-          return;
-        case 191: // Shift + / - Jump to answer
-          if (e.shiftKey) {
-            e.preventDefault();
-            document.querySelector("#answer-form input[name=answer]").focus();
-          }
-          return;
-        case 75: // K - Play/pause
-          if (!isInInput) {
-            e.preventDefault();
-            if (videoElement.paused) videoElement.play();
-            else videoElement.pause();
-          }
-          return;
-        case 37: // Left arrow - Go seekStep back OR frame by frame if Shift
-          if (!isInInput) {
-            e.preventDefault();
-            if (e.shiftKey) {
-              videoElement.currentTime = Math.max(videoElement.currentTime - 1/fps, 0);
-            } else {
-              videoElement.currentTime = Math.max(videoElement.currentTime - seekStepRef.current, 0);
-            }
-          }
-          return;
-        case 39: // Right arrow - Go seekStep forward OR frame by frame if Shift
-          if (!isInInput) {
-            e.preventDefault();
-            if (e.shiftKey) {
-              videoElement.currentTime = Math.min(
-                videoElement.currentTime + 1/fps,
-                videoElement.duration,
-              );
-            } else {
-              videoElement.currentTime = Math.min(
-                videoElement.currentTime + seekStepRef.current,
-                videoElement.duration,
-              );
-            }
-          }
-          return;
-        case 219: // [ - Go frame by frame back
-          if (!isInInput) {
-            e.preventDefault();
-            videoElement.currentTime = Math.max(videoElement.currentTime - 1/fps, 0);
-          }
-          return;
-        case 221: // ] - Go frame by frame forward
-          if (!isInInput) {
-            e.preventDefault();
-            videoElement.currentTime = Math.min(
-              videoElement.currentTime + 1/fps,
-              videoElement.duration,
-            );
-          }
-          return;
-        case 189: // - - Decrease speed
-          if (!isInInput) {
-            e.preventDefault();
-            videoElement.playbackRate = Math.max(
-              videoElement.playbackRate - 0.25,
-              0.25,
-            );
-          }
-          return;
-        case 187: // + - Increase speed
-          if (!isInInput) {
-            e.preventDefault();
-            videoElement.playbackRate = Math.min(
-              videoElement.playbackRate + 0.25,
-              4,
-            );
-          }
-          return;
-        case 83: // S - Toggle select frame
-          if (!isInInput) {
-            e.preventDefault();
-            document.getElementById("toggle-select-frame-btn")?.click();
-          }
-          return;
+    const handleKeyDown = (event) => {
+      const isInInput = ["INPUT", "TEXTAREA", "SELECT"].includes(event.target.tagName);
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onCancle();
+        return;
+      }
+      if (event.key === "Enter" && event.shiftKey) {
+        event.preventDefault();
+        document.querySelector("#answer-form input[type=submit]")?.click();
+        return;
+      }
+      if (event.key === "Enter" && !isInInput) {
+        event.preventDefault();
+        document.querySelector("#answer-form input[name=answer]")?.focus();
+        return;
+      }
+
+      const action = getVideoShortcutAction(event, { isInput: isInInput });
+      if (!action) return;
+      event.preventDefault();
+      if (action.type === "focus-answer") {
+        document.querySelector("#answer-form input[name=answer]")?.focus();
+      } else if (action.type === "toggle-play") {
+        if (videoElement.paused) videoElement.play();
+        else videoElement.pause();
+      } else if (action.type === "seek-previous") {
+        videoElement.currentTime = Math.max(videoElement.currentTime - seekStepRef.current, 0);
+      } else if (action.type === "seek-next") {
+        videoElement.currentTime = Math.min(videoElement.currentTime + seekStepRef.current, videoElement.duration || Infinity);
+      } else if (action.type === "frame-previous") {
+        videoElement.currentTime = Math.max(videoElement.currentTime - 1 / fps, 0);
+      } else if (action.type === "frame-next") {
+        videoElement.currentTime = Math.min(videoElement.currentTime + 1 / fps, videoElement.duration || Infinity);
+      } else if (action.type === "speed-down") {
+        videoElement.playbackRate = Math.max(videoElement.playbackRate - 0.25, 0.25);
+      } else if (action.type === "speed-up") {
+        videoElement.playbackRate = Math.min(videoElement.playbackRate + 0.25, 4);
+      } else if (action.type === "toggle-select-frame") {
+        if (selectedRef.current.includes(currentFrameIdRef.current)) removeSelectedRef.current(currentFrameIdRef.current);
+        else addSelectedRef.current(currentFrameIdRef.current);
       }
     };
 
     document.addEventListener("keydown", handleKeyDown, true);
-    let id = setInterval(() => {
+    const intervalId = setInterval(() => {
       setFrameCounter(videoElement.currentTime * fps);
     }, 20);
     return () => {
       document.removeEventListener("keydown", handleKeyDown, true);
-      clearInterval(id);
+      clearInterval(intervalId);
     };
-  }, []);
+  }, [frameInfo, onCancle]);
 
   const currentFrameStr = String(Math.round(frameCounter)).padStart(6, '0');
   const currentFrameId = `${frameInfo.video_id}#${currentFrameStr}`;
+  currentFrameIdRef.current = currentFrameId;
   const isFrameSelected = selected.includes(currentFrameId);
+  const ocrEvidence = frameInfo.ocr || frameInfo.ocr_text || "";
+  const ocrEvidenceText = typeof ocrEvidence === "string" ? ocrEvidence : JSON.stringify(ocrEvidence, null, 2);
+  const ocrBoxes = getOcrBoxes(frameInfo.ocr_bboxes || frameInfo.ocr_boxes || frameInfo.bboxes || frameInfo.ocr);
+  const ocrOverlaySupported = ocrBoxes.length > 0;
 
   const selectedFramesOfThisVideo = selected
     .filter(id => id.startsWith(frameInfo.video_id + "#"))
     .map(id => id.split("#")[1])
     .sort((a, b) => parseInt(a) - parseInt(b));
+
+  const selectedMarkers = selectedFramesOfThisVideo.map((frameNum) => ({
+    frameNum,
+    left: duration > 0 ? (parseInt(frameNum, 10) / (duration * frameInfo.fps)) * 100 : 0,
+  }));
 
   const jumpToFrame = (frameNum) => {
     if (videoElementRef.current) {
@@ -291,19 +303,35 @@ function VideoPlayer({ frameInfo, onCancle }) {
     }
   };
 
+  const handleResizeStart = (event) => {
+    event.preventDefault();
+    const startY = event.clientY;
+    const startHeight = workspaceHeight;
+    const handleMove = (moveEvent) => {
+      const nextHeight = startHeight + startY - moveEvent.clientY;
+      setWorkspaceHeight(Math.min(Math.max(nextHeight, 280), window.innerHeight - 48));
+    };
+    const handleUp = () => {
+      window.removeEventListener("mousemove", handleMove);
+      window.removeEventListener("mouseup", handleUp);
+    };
+    window.addEventListener("mousemove", handleMove);
+    window.addEventListener("mouseup", handleUp);
+  };
+
   return (
-    <div
-      onClick={(e) => {
-        e.stopPropagation();
-        onCancle();
-      }}
-      className="fixed flex items-center justify-center z-10 w-screen h-screen bg-black bg-opacity-25 z-20"
-    >
       <div
-        className="p-4 bg-white rounded-xl max-w-[95vw] max-h-[95vh] flex flex-col shadow-2xl animate-fade-in"
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
+        ref={playerShellRef}
+        className="verification-workspace"
+        style={{ height: `${workspaceHeight}px` }}
+    >
+      <button type="button" className="workspace-resize-handle" onMouseDown={handleResizeStart} aria-label="Resize verification workspace" title="Drag to resize verification workspace">
+        <span />
+      </button>
+      <div
+        className={classNames("video-player-modal p-4 bg-white flex flex-col shadow-2xl animate-fade-in", {
+          "video-player-modal-fullscreen": isFullscreen,
+        })}
       >
         <div className="flex flex-row justify-between items-start mb-3">
           <div className="flex flex-row gap-6 text-sm">
@@ -401,6 +429,12 @@ function VideoPlayer({ frameInfo, onCancle }) {
               </div>
             )}
           </div>
+          <div className="flex items-center gap-2">
+            <button type="button" onClick={toggleFullscreen} className="toolbar-button" title="Toggle fullscreen">
+              {isFullscreen ? "Exit fullscreen" : "Fullscreen"}
+            </button>
+            <button type="button" onClick={onCancle} className="toolbar-button" title="Close verification workspace">Close</button>
+          </div>
           <fetcher.Form
             id="answer-form"
             onSubmit={(e) => {
@@ -414,7 +448,8 @@ function VideoPlayer({ frameInfo, onCancle }) {
                 frame_counter: frameCounter,
                 time: videoElementRef.current.currentTime,
               };
-              submitAnswer(newAnswer);
+              pendingSavedRef.current = [currentFrameId];
+              fetcher.submit({ correct: 0, ...newAnswer }, { method: "POST", action: "/answers" });
             }}
           >
             <div className="flex flex-row">
@@ -450,16 +485,32 @@ function VideoPlayer({ frameInfo, onCancle }) {
         <div className="flex flex-row gap-4 overflow-hidden items-start">
           {/* Left: Video and playback controls */}
           <div className="flex flex-col flex-1 min-w-[50vw]">
-            <video
-              ref={videoElementRef}
-              id="playing-vide"
-              key={frameInfo.video_uri}
-              controls
-              autoPlay
-              className="w-full h-[26rem] object-contain bg-black rounded-lg shadow-inner"
-            >
-              <source src={frameInfo.video_uri} type="video/mp4" />
-            </video>
+            <div className="verification-video-surface">
+              <video
+                ref={videoElementRef}
+                id="playing-vide"
+                key={frameInfo.video_uri}
+                controls
+                autoPlay
+                className="w-full h-[26rem] object-contain bg-black rounded-lg shadow-inner"
+              >
+                <source src={frameInfo.video_uri} type="video/mp4" />
+              </video>
+              {showOcrOverlay && ocrOverlaySupported && ocrBoxes.map((box, index) => (
+                <span
+                  key={`${box.x}-${box.y}-${index}`}
+                  className="ocr-box-overlay"
+                  style={{ left: `${box.x}%`, top: `${box.y}%`, width: `${box.width}%`, height: `${box.height}%` }}
+                  title={box.text}
+                />
+              ))}
+              {ocrOverlaySupported && (
+                <label className="ocr-overlay-control">
+                  <input type="checkbox" checked={showOcrOverlay} onChange={(event) => setShowOcrOverlay(event.target.checked)} />
+                  Show OCR overlay
+                </label>
+              )}
+            </div>
 
             {/* Keyframe Timeline Strip */}
             <div
@@ -474,6 +525,15 @@ function VideoPlayer({ frameInfo, onCancle }) {
                   className="absolute top-0 bottom-0 w-1 bg-red-500 z-20 pointer-events-none shadow-md shadow-red-500/80"
                 />
               )}
+
+              {selectedMarkers.map(({ frameNum, left }) => (
+                <div
+                  key={frameNum}
+                  className="absolute top-0 bottom-0 w-1 bg-orange-400 z-10 pointer-events-none shadow-md"
+                  style={{ left: `${Math.min(100, Math.max(0, left))}%` }}
+                  title={`Selected frame ${frameNum}`}
+                />
+              ))}
 
               {sampledKeyframes.length === 0 ? (
                 <div className="text-slate-500 text-xs text-center w-full py-4 pointer-events-none">Loading timeline keyframes...</div>
@@ -498,22 +558,23 @@ function VideoPlayer({ frameInfo, onCancle }) {
           </div>
           {/* Right: Live Transcript */}
           <div className="flex flex-col w-96 h-[32rem] border border-slate-200 rounded-lg bg-slate-50 shadow-sm overflow-hidden">
-            <div className="flex justify-between items-center p-2.5 bg-white border-b border-slate-200">
-              <span className="font-bold text-sm text-slate-800 flex items-center gap-1.5">
-                <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                </svg>
-                Live Transcript
-              </span>
-              <input
+            <div className="evidence-panel-heading">
+              <div className="evidence-tabs" role="tablist" aria-label="Evidence views">
+                {["all", "transcript", "ocr"].map((tab) => (
+                  <button key={tab} type="button" role="tab" aria-selected={evidenceTab === tab} className={evidenceTab === tab ? "active" : ""} onClick={() => setEvidenceTab(tab)}>
+                    {tab === "all" ? "All" : tab === "transcript" ? "Transcript" : "OCR"}
+                  </button>
+                ))}
+              </div>
+              {evidenceTab !== "ocr" && <input
                 type="text"
                 placeholder="Search transcript..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="text-xs py-1 px-2 border border-slate-300 rounded focus:outline-none focus:border-blue-500 font-medium w-48 shadow-sm transition-colors duration-150"
-              />
+              />}
             </div>
-            <div
+            {(evidenceTab === "all" || evidenceTab === "transcript") && <div
               ref={transcriptContainerRef}
               className="flex-grow overflow-y-auto p-2 space-y-1.5"
             >
@@ -551,12 +612,16 @@ function VideoPlayer({ frameInfo, onCancle }) {
                         <span>{formatTime(item.start_time)} - {formatTime(item.end_time)}</span>
                         <span>Frame {item.start_frame}</span>
                       </div>
-                      <div className="leading-relaxed break-words">{item.text}</div>
+                      <div className="leading-relaxed break-words">{highlightTranscript(item.text, searchTerm)}</div>
                     </div>
                   );
                 })
               )}
-            </div>
+            </div>}
+            {(evidenceTab === "all" || evidenceTab === "ocr") && <div className="evidence-ocr">
+              <p className="eyebrow">OCR evidence</p>
+              {ocrEvidenceText ? <pre>{ocrEvidenceText}</pre> : <span className="helper-text">No OCR evidence returned for this frame.</span>}
+            </div>}
           </div>
         </div>
       </div>
@@ -569,4 +634,15 @@ function formatTime(seconds) {
   const s = Math.floor(seconds % 60);
   const ms = Math.floor((seconds % 1) * 10);
   return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}.${ms}`;
+}
+
+function highlightTranscript(text, searchTerm) {
+  if (!searchTerm.trim()) return text;
+  const escapedSearchTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const parts = text.split(new RegExp(`(${escapedSearchTerm})`, "ig"));
+  return parts.map((part, index) => (
+    part.toLowerCase() === searchTerm.toLowerCase()
+      ? <mark key={`${part}-${index}`} className="transcript-highlight">{part}</mark>
+      : part
+  ));
 }

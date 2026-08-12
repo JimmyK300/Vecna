@@ -39,7 +39,7 @@ export async function addAnswer(answer) {
   let id = parseInt((await localforage.getItem("id_ptr")) || 0);
   await localforage.setItem("answers", [
     ...answers,
-    { id: id, submitted: new Date().toLocaleString(), ...answer },
+    { id: id, saved: new Date().toLocaleString(), ...answer },
   ]);
   const res = await localforage.getItem("answers");
   await localforage.setItem("id_ptr", id + 1);
@@ -53,7 +53,7 @@ export async function updateAnswer(id, new_answer) {
     if (answer.id === parseInt(id)) {
       return {
         id: parseInt(id),
-        submitted: answer.submitted,
+        saved: answer.saved || answer.submitted,
         frame_id: answer.frame_id,
         ...new_answer,
       };
@@ -75,18 +75,25 @@ export async function deleteAnswer(id) {
 }
 
 export function getCSV(answer, n, step) {
-  if (answer.frame_counter && typeof answer.frame_counter === 'string' && answer.frame_counter.includes(',')) {
-    const frameCounters = answer.frame_counter.split(',').map(fc => fc.trim());
+  const rawFrameCounters = Array.isArray(answer.frame_counter)
+    ? answer.frame_counter
+    : String(answer.frame_counter || "").split(",");
+  const frameCounters = rawFrameCounters.map((frame) => String(frame).trim()).filter(Boolean);
+
+  if (frameCounters.length > 1) {
     return `${answer.video_id},${frameCounters.join(',')}`;
   }
-  
+
+  const count = Math.max(1, Number.parseInt(n, 10) || 1);
+  const stepSize = Math.max(1, Number.parseInt(step, 10) || 1);
   let fileData = "";
-  let centers = answer.frame_counter.map(e => parseInt(e));
+  const centers = frameCounters.map((frame) => Number.parseInt(frame, 10)).filter(Number.isFinite);
+  if (centers.length === 0) return "";
 
   for (
     let offset = 0, i = 0, left = false;
-    i < n;
-    offset += !left ? step : 0, ++i, left = !left
+    i < count;
+    offset += !left ? stepSize : 0, ++i, left = !left
   ) {
     let curFrames = centers.map((center) =>
       left

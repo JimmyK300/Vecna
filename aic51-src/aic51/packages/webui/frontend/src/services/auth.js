@@ -1,6 +1,12 @@
 import axios from "axios";
+import { EVENT_RETRIEVAL_ENABLED } from "../utils/localMode.js";
+
+function disabledResponse() {
+  return { status: 0, data: { description: "External event retrieval is disabled; answers are local-only." } };
+}
 
 export async function signIn(username, password) {
+  if (!EVENT_RETRIEVAL_ENABLED) return disabledResponse();
   try {
     const res = await axios.post(
       "https://eventretrieval.one/api/v2/login",
@@ -15,6 +21,7 @@ export async function signIn(username, password) {
 }
 
 export async function getEvaluationIdAPI(sessionId) {
+  if (!EVENT_RETRIEVAL_ENABLED) return disabledResponse();
   try {
     const res = await axios.get(
       "https://eventretrieval.one/api/v2/client/evaluation/list",
@@ -27,6 +34,7 @@ export async function getEvaluationIdAPI(sessionId) {
 }
 
 export async function submitAnswerAPI(sessionId, answer) {
+  if (!EVENT_RETRIEVAL_ENABLED) return disabledResponse();
   try {
     const answerType = answer.answer ? "qa" : "kis";
     let answerData = {};
