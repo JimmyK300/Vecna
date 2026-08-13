@@ -42,7 +42,9 @@ provenance**/
 **.log
 
 # Testing output & features
-test**/
+testing/
+testing/data/
+testing/features/
 *.npy
 
 # Workspace
@@ -52,6 +54,10 @@ aic51-src/workspace
 # Agents / AI tooling
 .agents/
 .web/
+
+# Local Milvus Backup connection files may contain credentials.
+aic51-src/benchmark/backup-local*.yaml
+!aic51-src/benchmark/backup-local.template.yaml
 
 drive-download-20260718T204638Z-1-001/
 .secrets

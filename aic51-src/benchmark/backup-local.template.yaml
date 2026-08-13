@@ -1,0 +1,27 @@
+# Based on the official Milvus Backup v2 local-destination example.
+# Review every value against live docker inspect output. Do not commit a filled
+# copy because it may contain credentials. Use an absolute local rootPath and
+# pass that same directory as --backup-root to issue34_runtime_bundle.py.
+configVersion: v2
+
+milvus:
+  user: "root"
+  password: "Milvus"
+  grpc:
+    address: localhost
+    port: 19530
+  storage:
+    provider: minio
+    address: localhost
+    port: 9000
+    bucketName: "a-bucket"
+    rootPath: "files"
+    auth:
+      type: static
+      accessKeyID: minioadmin
+      secretAccessKey: minioadmin
+
+backup:
+  storage:
+    provider: local
+    rootPath: "REPLACE_WITH_ABSOLUTE_BACKUP_ROOT"

@@ -13,6 +13,7 @@ data
 
 ### Data ###
 *.csv
+!benchmark/issue34_headless_queries.csv
 *.dat
 *.efx
 *.gbr

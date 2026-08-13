@@ -398,7 +398,10 @@ class Searcher(object):
             })
 
         # Sort by final score descending
-        results.sort(key=lambda x: x["distance"], reverse=True)
+        # Make equal-score boundaries reproducible across Python processes.
+        # ``all_frame_ids`` is a set, so score-only sorting otherwise inherits
+        # hash-randomized iteration order.
+        results.sort(key=lambda x: (-x["distance"], x["entity"]["frame_id"]))
 
         return results
 
@@ -590,7 +593,14 @@ class Searcher(object):
                             }
                         )
 
-            tmp = sorted(tmp, key=lambda x: x["distance"], reverse=True)
+            tmp = sorted(
+                tmp,
+                key=lambda x: (
+                    -x["distance"],
+                    x["entity"]["frame_id"],
+                    tuple(int(frame) for frame in x.get("time_line", [])),
+                ),
+            )
             best = tmp[: constant.TEMPORAL_QUEUE_SIZE]
 
         return best
