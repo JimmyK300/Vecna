@@ -10,7 +10,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 import aic51.packages.constant as constant
 from aic51.packages.logger import logger
-from aic51.packages.search.traceability import build_result_traceability
+from aic51.packages.search.traceability import (
+    build_result_traceability,
+    load_current_index_generation,
+)
 
 
 def create_app(*args, **kwargs):
@@ -46,6 +49,14 @@ def process_searcher_results(
     traceability_collection: str | None = None,
     traceability_features: list[str] | None = None,
 ):
+    resolved_work_dir = Path(work_dir) if work_dir is not None else Path.cwd()
+    index_generation = None
+    if include_traceability and traceability_collection:
+        index_generation = load_current_index_generation(
+            resolved_work_dir,
+            traceability_collection,
+        )
+
     frames = []
     for record in searcher_res["results"]:
         data = record["entity"]
@@ -72,12 +83,13 @@ def process_searcher_results(
         }
         if include_traceability:
             frame["traceability"] = build_result_traceability(
-                work_dir or Path.cwd(),
+                resolved_work_dir,
                 video_id=video_id,
                 frame_id=frame_id,
                 fps=fps,
                 collection_name=traceability_collection,
                 feature_names=traceability_features,
+                index_generation=index_generation,
             )
         frames.append(frame)
 

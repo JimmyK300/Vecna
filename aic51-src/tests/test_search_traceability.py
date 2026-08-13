@@ -262,6 +262,37 @@ class SearchTraceabilityTest(unittest.TestCase):
         self.assertEqual(legacy["total"], v2["total"])
         self.assertEqual(legacy["offset"], v2["offset"])
 
+    def test_index_generation_is_loaded_once_for_multi_result_projection(self):
+        searcher_res = {
+            "results": [
+                {"entity": {"frame_id": "V001#000001"}},
+                {"entity": {"frame_id": "V001#000002"}},
+            ],
+            "total": 2,
+            "offset": 0,
+        }
+        generation = {
+            "state": "unavailable",
+            "collection_name": "milvus",
+            "index_generation_id": None,
+            "reason": "legacy_or_unmanifested_index",
+        }
+        with (
+            patch("aic51.packages.webui.backend.utils.get_fps", return_value=25),
+            patch(
+                "aic51.packages.webui.backend.utils.load_current_index_generation",
+                return_value=generation,
+            ) as loader,
+        ):
+            process_searcher_results(
+                searcher_res,
+                include_traceability=True,
+                work_dir=self.work_dir,
+                traceability_collection="milvus",
+                traceability_features=["siglip"],
+            )
+        loader.assert_called_once_with(self.work_dir, "milvus")
+
 
 if __name__ == "__main__":
     unittest.main()

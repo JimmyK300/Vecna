@@ -464,11 +464,16 @@ def resolve_frame_provenance(
     *,
     collection_name: str | None = None,
     feature_names: list[str] | None = None,
+    index_generation: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Resolve provenance bound to the indexed generation; never rebind to current analysis state."""
-    if not collection_name:
-        return {"state": "unavailable", "reason": "index_collection_not_supplied"}
-    generation = load_current_index_generation(work_dir, collection_name)
+    if index_generation is None:
+        if not collection_name:
+            return {"state": "unavailable", "reason": "index_collection_not_supplied"}
+        generation = load_current_index_generation(work_dir, collection_name)
+    else:
+        generation = index_generation
+
     if generation.get("state") != "resolved":
         return {
             "state": "unavailable",
@@ -530,6 +535,7 @@ def build_result_traceability(
     fps: float | int | None,
     collection_name: str | None = None,
     feature_names: list[str] | None = None,
+    index_generation: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     seconds = None
     if fps:
@@ -555,6 +561,7 @@ def build_result_traceability(
             str(frame_id),
             collection_name=collection_name,
             feature_names=feature_names,
+            index_generation=index_generation,
         ),
         "score_semantics": "ranking_diagnostics_not_calibrated_probabilities",
     }
