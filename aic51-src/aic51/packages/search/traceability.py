@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -7,6 +8,7 @@ from aic51.packages.config import GlobalConfig
 from aic51.packages.utils.provenance import (
     atomic_write_json,
     file_sha256,
+    implementation_fingerprint,
     new_id,
     read_json,
     stable_id,
@@ -47,6 +49,14 @@ def load_current_index_generation(work_dir: Path | str, collection_name: str) ->
             "reason": "legacy_or_unmanifested_index",
         }
 
+    if registry.get("index_state") == "mutating":
+        return {
+            "state": "unavailable",
+            "collection_name": collection_name,
+            "index_generation_id": None,
+            "reason": "index_generation_mutating",
+        }
+
     current_id = registry.get("current_index_generation_id")
     for generation in registry.get("generations", []):
         if generation.get("index_generation_id") == current_id:
@@ -58,6 +68,27 @@ def load_current_index_generation(work_dir: Path | str, collection_name: str) ->
         "index_generation_id": None,
         "reason": "index_manifest_has_no_current_generation",
     }
+
+
+def invalidate_current_index_generation(
+    work_dir: Path | str,
+    collection_name: str,
+) -> dict[str, Any]:
+    """Make attribution unavailable before mutating an indexed collection."""
+    path = _index_registry_path(work_dir, collection_name)
+    registry = read_json(path) or {
+        "schema_version": INDEX_SCHEMA_VERSION,
+        "collection_name": collection_name,
+        "generations": [],
+    }
+    previous_id = registry.get("current_index_generation_id")
+    if previous_id:
+        registry["previous_index_generation_id"] = previous_id
+    registry["current_index_generation_id"] = None
+    registry["index_state"] = "mutating"
+    registry["updated_at"] = utc_now()
+    atomic_write_json(path, registry)
+    return registry
 
 
 def record_index_generation(
@@ -100,6 +131,7 @@ def record_index_generation(
     }
     registry.setdefault("generations", []).append(generation)
     registry["current_index_generation_id"] = generation["index_generation_id"]
+    registry["index_state"] = "ready"
     registry["updated_at"] = utc_now()
     atomic_write_json(path, registry)
     return generation
@@ -240,6 +272,43 @@ def summarize_provider_generations(
     return summary
 
 
+@lru_cache(maxsize=1)
+def _serving_implementation() -> dict[str, Any]:
+    packages_dir = Path(__file__).resolve().parent.parent
+    files = {
+        "searcher": Path(__file__).resolve().with_name("searcher.py"),
+        "query_parser": Path(__file__).resolve().with_name("utils.py"),
+        "index_backend": packages_dir / "index" / "milvus.py",
+    }
+    result: dict[str, Any] = {}
+    for name, path in files.items():
+        try:
+            digest = file_sha256(path)
+        except OSError:
+            digest = None
+        result[name] = {
+            "source_path": path.name,
+            "source_sha256": digest,
+            "state": "resolved" if digest else "unavailable",
+        }
+    return result
+
+
+@lru_cache(maxsize=64)
+def _query_encoder_implementation(model_name: str | None) -> dict[str, Any]:
+    if not model_name:
+        return {"state": "unavailable", "reason": "model_name_missing"}
+    try:
+        from aic51.packages.analyse import FeatureExtractorFactory
+
+        extractor_cls = FeatureExtractorFactory.get(model_name)
+    except Exception:
+        extractor_cls = None
+    if extractor_cls is None:
+        return {"state": "unavailable", "reason": "extractor_class_unavailable"}
+    return {"state": "resolved", **implementation_fingerprint(extractor_cls)}
+
+
 def _query_encoder_configuration(active_target_features: list[str]) -> dict[str, Any]:
     configured = GlobalConfig.get("searcher", "language_models") or {}
     result: dict[str, Any] = {}
@@ -254,6 +323,7 @@ def _query_encoder_configuration(active_target_features: list[str]) -> dict[str,
                 "arch_name": value.get("arch_name"),
                 "pretrained_model": value.get("pretrained_model"),
                 "target": sorted(targets),
+                "implementation": _query_encoder_implementation(value.get("model")),
             }
     return result
 
@@ -363,6 +433,7 @@ def build_serving_composition(
         "query_encoders": _query_encoder_configuration(
             active_target_features if channel_configuration["visual"].get("enabled") else []
         ),
+        "serving_implementation": _serving_implementation(),
         "score_semantics": "ranking_diagnostics_not_calibrated_probabilities",
     }
 
@@ -399,7 +470,22 @@ def build_serving_composition(
             for value in index_generation.get("provider_generations", {}).values()
             if isinstance(value, dict)
         ]
-        if all(state in {"resolved", "mixed"} for state in provider_states):
+        encoder_states = [
+            value.get("implementation", {}).get("state")
+            for value in descriptor["query_encoders"].values()
+            if isinstance(value, dict)
+        ]
+        serving_states = [
+            value.get("state")
+            for value in descriptor["serving_implementation"].values()
+            if isinstance(value, dict)
+        ]
+        if (
+            provider_states
+            and all(state in {"resolved", "mixed"} for state in provider_states)
+            and all(state == "resolved" for state in encoder_states)
+            and all(state == "resolved" for state in serving_states)
+        ):
             identity_state = "resolved"
 
     return {

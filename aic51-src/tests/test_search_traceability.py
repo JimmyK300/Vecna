@@ -9,6 +9,7 @@ from aic51.packages.search.traceability import (
     build_search_trace,
     build_serving_composition,
     channel_state,
+    invalidate_current_index_generation,
     load_current_index_generation,
     record_index_generation,
     resolve_frame_provenance,
@@ -78,6 +79,19 @@ class SearchTraceabilityTest(unittest.TestCase):
     def test_material_change_changes_composition_id(self):
         first = self._composition(nprobe=32)
         second = self._composition(nprobe=64)
+        self.assertNotEqual(first["serving_composition_id"], second["serving_composition_id"])
+
+    def test_query_encoder_implementation_change_changes_composition_id(self):
+        with patch(
+            "aic51.packages.search.traceability._query_encoder_implementation",
+            return_value={"state": "resolved", "source_sha256": "a" * 64},
+        ):
+            first = self._composition()
+        with patch(
+            "aic51.packages.search.traceability._query_encoder_implementation",
+            return_value={"state": "resolved", "source_sha256": "b" * 64},
+        ):
+            second = self._composition()
         self.assertNotEqual(first["serving_composition_id"], second["serving_composition_id"])
 
     def test_irrelevant_nprobe_does_not_change_id_when_visual_channel_is_disabled(self):
@@ -167,6 +181,43 @@ class SearchTraceabilityTest(unittest.TestCase):
         loaded = load_current_index_generation(self.work_dir, "milvus")
         self.assertEqual(loaded["state"], "resolved")
         self.assertEqual(loaded["index_generation_id"], created["index_generation_id"])
+
+    def test_index_generation_is_unavailable_while_collection_is_mutating(self):
+        created = record_index_generation(
+            self.work_dir,
+            collection_name="milvus",
+            feature_fields=["siglip"],
+            feature_configs={"siglip": {}},
+            provider_generations={
+                "siglip": {"state": "resolved", "provider_generation_ids": ["prv_a"]}
+            },
+            video_lineage={},
+            inserted_entities=1,
+            do_overwrite=False,
+            do_update=True,
+        )
+        invalidate_current_index_generation(self.work_dir, "milvus")
+        during = load_current_index_generation(self.work_dir, "milvus")
+        self.assertEqual(during["state"], "unavailable")
+        self.assertEqual(during["reason"], "index_generation_mutating")
+        self.assertNotEqual(during.get("index_generation_id"), created["index_generation_id"])
+
+        replacement = record_index_generation(
+            self.work_dir,
+            collection_name="milvus",
+            feature_fields=["siglip"],
+            feature_configs={"siglip": {}},
+            provider_generations={
+                "siglip": {"state": "resolved", "provider_generation_ids": ["prv_b"]}
+            },
+            video_lineage={},
+            inserted_entities=1,
+            do_overwrite=False,
+            do_update=True,
+        )
+        after = load_current_index_generation(self.work_dir, "milvus")
+        self.assertEqual(after["state"], "resolved")
+        self.assertEqual(after["index_generation_id"], replacement["index_generation_id"])
 
     def test_all_channel_states_are_distinctly_representable(self):
         values = {state: channel_state(state)["state"] for state in CHANNEL_STATES}

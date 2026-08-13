@@ -14,6 +14,7 @@ from aic51.packages.index import MilvusDatabase
 from aic51.packages.logger import logger
 from aic51.packages.search.traceability import (
     artifact_provenance_claims,
+    invalidate_current_index_generation,
     load_analysis_artifact_provenance,
     record_index_generation,
     summarize_provider_generations,
@@ -57,6 +58,10 @@ class IndexCommand(BaseCommand):
     def __call__(self, collection_name: str, do_overwrite: bool, do_update: bool, verbose: bool, *args, **kwargs):
         MilvusDatabase.start_server()
 
+        # Invalidate attribution before any collection mutation. If indexing then
+        # crashes, search remains truthful (`unavailable`) instead of silently
+        # attaching the previous generation to a changed collection.
+        invalidate_current_index_generation(self._work_dir, collection_name)
         database = MilvusDatabase(collection_name, do_overwrite)
 
         total_inserted = 0
