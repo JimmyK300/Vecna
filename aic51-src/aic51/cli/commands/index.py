@@ -12,6 +12,14 @@ import aic51.packages.constant as constant
 from aic51.packages.config import GlobalConfig
 from aic51.packages.index import MilvusDatabase
 from aic51.packages.logger import logger
+from aic51.packages.search.traceability import (
+    artifact_provenance_claims,
+    invalidate_current_index_generation,
+    load_analysis_artifact_provenance,
+    record_index_generation,
+    summarize_provider_generations,
+    summarize_video_lineage,
+)
 
 from .command import BaseCommand
 
@@ -50,9 +58,17 @@ class IndexCommand(BaseCommand):
     def __call__(self, collection_name: str, do_overwrite: bool, do_update: bool, verbose: bool, *args, **kwargs):
         MilvusDatabase.start_server()
 
+        # Invalidate attribution before any collection mutation. If indexing then
+        # crashes, search remains truthful (`unavailable`) instead of silently
+        # attaching the previous generation to a changed collection.
+        invalidate_current_index_generation(self._work_dir, collection_name)
         database = MilvusDatabase(collection_name, do_overwrite)
 
         total_inserted = 0
+        observed_provider_generations: dict[str, set[str]] = {}
+        indexed_video_lineage: dict[str, dict[str, object]] = {}
+        failed_videos: list[str] = []
+        artifact_provenance = load_analysis_artifact_provenance(self._work_dir)
 
         max_workers_ratio = GlobalConfig.get("max_workers_ratio") or 0
         max_workers = max(1, round(os.cpu_count() or 0) * max_workers_ratio)
@@ -78,10 +94,11 @@ class IndexCommand(BaseCommand):
                         video_id,
                         do_update,
                         update_progress(task_id),
+                        artifact_provenance,
                     )
                     progress.remove_task(task_id)
                 except Exception as e:
-                    res = 0
+                    res = (0, {}, {}, video_id)
                     logger.exception(e)
                     progress.update(task_id, description=f"Error: {str(e)}")
 
@@ -95,9 +112,36 @@ class IndexCommand(BaseCommand):
                 futures.append(executor.submit(index_one_video, video_id))
 
             for future in futures:
-                total_inserted += future.result()
+                inserted, provider_generations, video_lineage, failed_video = future.result()
+                total_inserted += inserted
+                if failed_video:
+                    failed_videos.append(failed_video)
+                    continue
+                indexed_video_lineage[video_lineage["video_id"]] = video_lineage["features"]
+                for feature_name, generation_ids in provider_generations.items():
+                    observed_provider_generations.setdefault(feature_name, set()).update(generation_ids)
 
-        logger.info(f"Inserted {total_inserted} entities")
+        feature_list = GlobalConfig.get("features") or {}
+        feature_fields = [name for name in feature_list.keys() if GlobalConfig.get("features", name)]
+        provider_summary = summarize_provider_generations(feature_fields, observed_provider_generations)
+        feature_configs = {name: GlobalConfig.get("features", name) for name in feature_fields}
+        generation = record_index_generation(
+            self._work_dir,
+            collection_name=collection_name,
+            feature_fields=feature_fields,
+            feature_configs=feature_configs,
+            provider_generations=provider_summary,
+            video_lineage=indexed_video_lineage,
+            inserted_entities=total_inserted,
+            do_overwrite=do_overwrite,
+            do_update=do_update,
+            failed_videos=failed_videos,
+        )
+
+        logger.info(
+            f"Inserted {total_inserted} entities; index_generation_id={generation['index_generation_id']}; "
+            f"status={generation['status']}"
+        )
 
     def _get_videos(self):
         features_dir = self._work_dir / constant.FEATURE_DIR
@@ -108,10 +152,19 @@ class IndexCommand(BaseCommand):
         )
         return video_paths
 
-    def _index_one_video(self, database: MilvusDatabase, video_id: str, do_update: bool, update_progress: Callable):
+    def _index_one_video(
+        self,
+        database: MilvusDatabase,
+        video_id: str,
+        do_update: bool,
+        update_progress: Callable,
+        artifact_provenance: dict[str, list[dict[str, str]]],
+    ):
         video_features_dir = self._work_dir / constant.FEATURE_DIR / video_id
 
         data_list = []
+        observed_provider_generations: dict[str, set[str]] = {}
+        observed_lineage_claims: dict[str, list[dict[str, str]]] = {}
         feature_list = GlobalConfig.get("features") or {}
         feature_fields = []
         for feature_name in feature_list.keys():
@@ -127,6 +180,8 @@ class IndexCommand(BaseCommand):
             data = {
                 "frame_id": f"{video_id}#{frame_id}",  # This is because Milvus does not allow composite primary key
             }
+            frame_provider_generations: dict[str, set[str]] = {}
+            frame_lineage_claims: dict[str, list[dict[str, str]]] = {}
             for feature_path in frame_features_path.glob("*"):
                 feature_name = feature_path.stem
                 if feature_name not in feature_fields:
@@ -142,13 +197,39 @@ class IndexCommand(BaseCommand):
                     feature = feature.astype(np.float32)
 
                 data[feature_name] = feature
+                claims = artifact_provenance_claims(
+                    self._work_dir,
+                    feature_path,
+                    artifact_provenance,
+                )
+                provider_ids = {
+                    claim["provider_generation_id"]
+                    for claim in claims
+                    if claim.get("provider_generation_id")
+                }
+                if provider_ids:
+                    frame_provider_generations.setdefault(feature_name, set()).update(provider_ids)
+                if claims:
+                    frame_lineage_claims.setdefault(feature_name, []).extend(claims)
 
             if all([f in data for f in feature_fields]):
                 data_list.append({database.process_field_name(k): v for k, v in data.items()})
+                for feature_name, provider_ids in frame_provider_generations.items():
+                    observed_provider_generations.setdefault(feature_name, set()).update(provider_ids)
+                for feature_name, claims in frame_lineage_claims.items():
+                    observed_lineage_claims.setdefault(feature_name, []).extend(claims)
             else:
                 logger.warning(f"Skipping {data['frame_id']}: Lack of features")
 
             update_progress(advance=1)
 
         database.insert(data_list, do_update)
-        return len(data_list)
+        return (
+            len(data_list),
+            observed_provider_generations,
+            {
+                "video_id": video_id,
+                "features": summarize_video_lineage(feature_fields, observed_lineage_claims),
+            },
+            None,
+        )
