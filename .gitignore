@@ -39,9 +39,7 @@ data**/
 **.log
 
 # Testing output & features
-testing/
-testing/data/
-testing/features/
+test**/
 *.npy
 
 # Workspace

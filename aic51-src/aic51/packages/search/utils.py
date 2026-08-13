@@ -42,14 +42,19 @@ class Query:
       query: str,
       auto_translate: bool = False,
       en_to_vi_translate: bool = False,
+      include_videos: str = "",
+      exclude_videos: str = "",
   ):
     self._raw_query = deepcopy(query)
 
     self._query = deepcopy(query)
     self._queries: list = []
-    self._video_ids = []
+    self._include_video_ids = []
+    self._exclude_video_ids = []
     self._auto_translate = auto_translate  # VI -> EN for CLIP
     self._en_to_vi_translate = en_to_vi_translate  # EN -> VI for OCR/ASR
+    self._init_include_videos = include_videos
+    self._init_exclude_videos = exclude_videos
 
     self._parse()
 
@@ -67,7 +72,15 @@ class Query:
 
   @property
   def video_ids(self):
-    return self._video_ids
+    return self._include_video_ids
+
+  @property
+  def include_video_ids(self):
+    return self._include_video_ids
+
+  @property
+  def exclude_video_ids(self):
+    return self._exclude_video_ids
 
   @property
   def data(self):
@@ -91,15 +104,45 @@ class Query:
     self._queries = processed_queries
 
   def _extract_video_ids(self):
-    pattern = global_constant.VIDEO_QUERY_PATTERN
-    video_match = re.search(pattern, self._query, re.IGNORECASE)
-    if video_match:
-      video_str = video_match.group()
-      video_str = video_str.strip("[]")
-      video_ids_str = ":".join(video_str.split(":")[1:])
+    include_ids = []
+    exclude_ids = []
 
-      self._video_ids = video_ids_str.split(",")
+    if self._init_include_videos:
+      for v in re.split(r"[,;\s]+", self._init_include_videos):
+        if v.strip():
+          include_ids.append(v.strip())
+
+    if self._init_exclude_videos:
+      for v in re.split(r"[,;\s]+", self._init_exclude_videos):
+        if v.strip():
+          exclude_ids.append(v.strip())
+
+    pattern_inc = global_constant.VIDEO_QUERY_PATTERN
+    while True:
+      video_match = re.search(pattern_inc, self._query, re.IGNORECASE)
+      if not video_match:
+        break
+      video_str = video_match.group().strip("[]")
+      video_ids_str = ":".join(video_str.split(":")[1:])
+      for item in video_ids_str.split(","):
+        if item.strip():
+          include_ids.append(item.strip())
       self._query = self._query.replace(video_match.group(), "", 1)
+
+    pattern_exc = getattr(global_constant, "EXCLUDE_VIDEO_QUERY_PATTERN", r"\[(?:exclude_video|!video):[^\]]+\]")
+    while True:
+      exc_match = re.search(pattern_exc, self._query, re.IGNORECASE)
+      if not exc_match:
+        break
+      exc_str = exc_match.group().strip("[]")
+      exc_ids_str = ":".join(exc_str.split(":")[1:])
+      for item in exc_ids_str.split(","):
+        if item.strip():
+          exclude_ids.append(item.strip())
+      self._query = self._query.replace(exc_match.group(), "", 1)
+
+    self._include_video_ids = list(dict.fromkeys(include_ids))
+    self._exclude_video_ids = list(dict.fromkeys(exclude_ids))
 
   def _extract_ocr(self, query: str):
     new_query = deepcopy(query)
@@ -140,7 +183,8 @@ class Query:
     return new_query, asr_list
 
   def _extract_temporal_queries(self):
-    self._queries = [{"raw": q} for q in self._query.split(";")]
+    raw_queries = [q.strip() for q in re.split(r"[\\/]", self._query) if q.strip()]
+    self._queries = [{"raw": q} for q in raw_queries]
 
   def _parse_one_query(self, q):
     raw = deepcopy(q["raw"]).strip()

@@ -49,13 +49,15 @@ async def search_multimodal(
     limit: int = 50,
     target_features: str = "",
     nprobe: int = 32,
-    temporal_k: int = 10000,
+    temporal_k: int = 2000,
     ocr_weight: float = 0.5,
     asr_weight: float = 0,
     max_interval: int = 1000,
     selected: str | None = None,
     auto_translate: bool = False,
     en_to_vi_translate: bool = False,
+    include_videos: str = "",
+    exclude_videos: str = "",
 ):
     if "searcher" not in internal:
         return JSONResponse(
@@ -80,6 +82,8 @@ async def search_multimodal(
             selected=selected,
             auto_translate=auto_translate,
             en_to_vi_translate=en_to_vi_translate,
+            include_videos=include_videos,
+            exclude_videos=exclude_videos,
         )
     except Exception as e:
         logger.exception(e)
@@ -101,6 +105,8 @@ async def search_multimodal(
         "asr_weight": asr_weight,
         "max_interval": max_interval,
         "auto_translate": auto_translate,
+        "include_videos": include_videos,
+        "exclude_videos": exclude_videos,
     }
     return JSONResponse(
         status_code=200,
@@ -116,7 +122,7 @@ async def search_image(
     limit: int = 50,
     target_features: str = "",
     nprobe: int = 32,
-    temporal_k: int = 10000,
+    temporal_k: int = 2000,
     ocr_weight: float = 0.5,
     asr_weight: float = 0,
     max_interval: int = 1000,
