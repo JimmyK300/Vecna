@@ -1,6 +1,7 @@
 import concurrent.futures
 import json
 import logging
+from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
 import requests
@@ -9,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 import aic51.packages.constant as constant
 from aic51.packages.logger import logger
+from aic51.packages.search.traceability import build_result_traceability
 
 
 def create_app(*args, **kwargs):
@@ -36,7 +38,14 @@ def get_fps(video_id: str):
     return fps
 
 
-def process_searcher_results(searcher_res: dict):
+def process_searcher_results(
+    searcher_res: dict,
+    *,
+    include_traceability: bool = False,
+    work_dir: Path | str | None = None,
+    traceability_collection: str | None = None,
+    traceability_features: list[str] | None = None,
+):
     frames = []
     for record in searcher_res["results"]:
         data = record["entity"]
@@ -50,19 +59,27 @@ def process_searcher_results(searcher_res: dict):
 
         fps = get_fps(video_id)
 
-        frames.append(
-            {
-                "id": record_id,
-                "video_id": video_id,
-                "frame_id": frame_id,
-                "time_line": time_line,
-                "time_line_scores": record.get("time_line_scores", [record.get("scores")]),
-                "fps": fps,
-                "scores": record.get("scores", None),
-                "ocr": data.get("ocr", ""),
-                "asr": data.get("asr", ""),
-            }
-        )
+        frame = {
+            "id": record_id,
+            "video_id": video_id,
+            "frame_id": frame_id,
+            "time_line": time_line,
+            "time_line_scores": record.get("time_line_scores", [record.get("scores")]),
+            "fps": fps,
+            "scores": record.get("scores", None),
+            "ocr": data.get("ocr", ""),
+            "asr": data.get("asr", ""),
+        }
+        if include_traceability:
+            frame["traceability"] = build_result_traceability(
+                work_dir or Path.cwd(),
+                video_id=video_id,
+                frame_id=frame_id,
+                fps=fps,
+                collection_name=traceability_collection,
+                feature_names=traceability_features,
+            )
+        frames.append(frame)
 
     return {
         constant.RESULT_TOTAL_KEY: searcher_res["total"],
