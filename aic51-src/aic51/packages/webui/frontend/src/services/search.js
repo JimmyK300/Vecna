@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const PORT = import.meta.env.VITE_PORT || 6900;
+const PORT = (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.VITE_PORT) || 6900;
 
 export async function search(
   q,
@@ -147,6 +147,40 @@ export async function getVideoKeyframes(videoId) {
   return data;
 }
 
+export async function getVideoMaxFrame(videoId) {
+  if (!videoId || videoId === "undefined" || videoId === "null") return 999999;
+  try {
+    const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/max-frame/${videoId}`);
+    if (res.data && typeof res.data.max_frame === "number") {
+      return res.data.max_frame;
+    }
+  } catch (err) {}
+
+  try {
+    const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/map-keyframes/${videoId}`);
+    if (res.data && res.data.keyframes && res.data.keyframes.length > 0) {
+      const rawIndices = res.data.keyframes
+        .map((k) => k.raw_idx || parseInt(k.frame_idx, 10))
+        .filter((n) => !isNaN(n));
+      if (rawIndices.length > 0) {
+        return Math.max(...rawIndices);
+      }
+    }
+  } catch (err) {}
+
+  try {
+    const keyframes = await getVideoKeyframes(videoId);
+    if (Array.isArray(keyframes) && keyframes.length > 0) {
+      const rawIndices = keyframes.map((k) => parseInt(k, 10)).filter((n) => !isNaN(n));
+      if (rawIndices.length > 0) {
+        return Math.max(...rawIndices);
+      }
+    }
+  } catch (err) {}
+
+  return 999999;
+}
+
 export async function getFrameOcr(videoId, frameId) {
   try {
     const res = await axios.get(`http://127.0.0.1:${PORT}/api/frame/ocr/${videoId}/${frameId}`);
@@ -156,3 +190,24 @@ export async function getFrameOcr(videoId, frameId) {
     return "";
   }
 }
+
+export async function getVideoMapKeyframes(videoId) {
+  try {
+    const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/map-keyframes/${videoId}`);
+    return res.data;
+  } catch (err) {
+    console.error(`Failed to fetch map keyframes for ${videoId}:`, err);
+    return { available: false, keyframes: [] };
+  }
+}
+
+export async function getMapKeyframesAround(videoId, frameId) {
+  try {
+    const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/map-keyframes-around/${videoId}/${frameId}`);
+    return res.data;
+  } catch (err) {
+    console.error(`Failed to fetch map keyframes around for ${videoId} ${frameId}:`, err);
+    return { available: false };
+  }
+}
+

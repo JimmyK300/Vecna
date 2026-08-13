@@ -37,7 +37,7 @@ export default function Root() {
   const [asrWeight, setAsrWeight] = useState(parseFloat(searchParams.get("asr_weight") || "0.0"));
   const [nprobe, setNprobe] = useState(searchParams.get("nprobe") || "32");
   const [limit, setLimit] = useState(searchParams.get("limit") || "20");
-  const [temporalK, setTemporalK] = useState(searchParams.get("temporal_k") || "10000");
+  const [temporalK, setTemporalK] = useState(searchParams.get("temporal_k") || "2000");
   const [maxInterval, setMaxInterval] = useState(searchParams.get("max_interval") || "1000");
 
   const [autoTranslate, setAutoTranslate] = useState(searchParams.get("auto_translate") === "true");
@@ -48,6 +48,22 @@ export default function Root() {
       ? searchParams.get("target_features").split(",").filter(Boolean)
       : []
   );
+
+  // Synchronize state with URL parameters when location.search changes
+  useEffect(() => {
+    const p = new URLSearchParams(location.search);
+    setOcrWeight(parseFloat(p.get("ocr_weight") || "0.5"));
+    setAsrWeight(parseFloat(p.get("asr_weight") || "0.0"));
+    setNprobe(p.get("nprobe") || "32");
+    setLimit(p.get("limit") || "20");
+    setTemporalK(p.get("temporal_k") || "2000");
+    setMaxInterval(p.get("max_interval") || "1000");
+    setAutoTranslate(p.get("auto_translate") === "true");
+    setEnToViTranslate(p.get("en_to_vi_translate") === "true");
+    if (p.has("target_features")) {
+      setSelectedFeatures(p.get("target_features").split(",").filter(Boolean));
+    }
+  }, [location.search]);
 
   const handleMouseDown = (e) => {
     e.preventDefault();
@@ -119,8 +135,13 @@ export default function Root() {
       offset: 0,
     };
 
-    const action = location.pathname.includes("/similar") ? "/similar" : "/search";
-    submit(submitData, { action });
+    const savedAutoSearch = localStorage.getItem("vecna_auto_search");
+    const isAutoSearchOn = savedAutoSearch !== null ? JSON.parse(savedAutoSearch) : true;
+
+    if (isAutoSearchOn) {
+      const action = location.pathname.includes("/similar") ? "/similar" : "/search";
+      submit(submitData, { action });
+    }
   };
 
   return (
@@ -145,14 +166,14 @@ export default function Root() {
                   AIC26
                 </div>
 
-                {/* Toggle Expand Button */}
+                {/* Sidebar Expand Icon Button */}
                 <button
                   onClick={() => setIsSidebarCollapsed(false)}
-                  className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
-                  title="Expand Sidebar (Tab)"
+                  className="p-2 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
+                  title="Expand Search Parameters Panel (Tab)"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h7" />
                   </svg>
                 </button>
 
@@ -212,7 +233,7 @@ export default function Root() {
                     ASR
                   </button>
 
-                  {/* 4. DEFAULT */}
+                  {/* 4. Default */}
                   <button
                     onClick={() => {
                       setOcrWeight(0.5);
@@ -221,15 +242,15 @@ export default function Root() {
                     }}
                     className={`w-9 h-7 rounded-lg text-[10px] font-black tracking-tight transition-all flex items-center justify-center border shadow-sm ${
                       ocrWeight === 0.5 && asrWeight === 0.0
-                        ? "bg-gray-600 text-white border-gray-400 ring-2 ring-gray-500/50 scale-105"
+                        ? "bg-blue-600 text-white border-blue-400 ring-2 ring-blue-500/50 scale-105"
                         : "bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700"
                     }`}
-                    title="Default Weights (OCR: 0.5, ASR: 0.0)"
+                    title="Default Model Weights (OCR: 0.5, ASR: 0.0)"
                   >
-                    DEF
+                    Def
                   </button>
 
-                  {/* 5. HYBRID */}
+                  {/* 5. Hybrid */}
                   <button
                     onClick={() => {
                       setOcrWeight(0.3);
@@ -243,12 +264,12 @@ export default function Root() {
                     }`}
                     title="Hybrid Model Weights (OCR: 0.3, ASR: 0.2)"
                   >
-                    HYB
+                    Hyb
                   </button>
                 </div>
               </div>
             ) : (
-              /* Expanded Resizable Left Sidebar */
+              /* Expanded Resizable Search Parameters Drawer Sidebar */
               <div
                 style={{ width: `${sidebarWidth}px` }}
                 className="flex flex-col h-full bg-gray-50 border-r border-gray-300 shadow-sm shrink-0 overflow-y-auto"
@@ -273,11 +294,16 @@ export default function Root() {
 
                 <SearchParams
                   ocrWeight={ocrWeight}
+                  asrWeight={asrWeight}
+                  setWeights={(ocr, asr) => {
+                    setOcrWeight(ocr);
+                    setAsrWeight(asr);
+                    triggerParamsChange({ ocrWeight: ocr, asrWeight: asr });
+                  }}
                   setOcrWeight={(w) => {
                     setOcrWeight(w);
                     triggerParamsChange({ ocrWeight: w });
                   }}
-                  asrWeight={asrWeight}
                   setAsrWeight={(w) => {
                     setAsrWeight(w);
                     triggerParamsChange({ asrWeight: w });
@@ -337,7 +363,21 @@ export default function Root() {
 
             {/* Main Content Area (Panels 2 & 3 inside) */}
             <div className="flex-1 flex flex-col h-full min-w-0 overflow-hidden p-2">
-              <Outlet context={{ targetFeatureOptions, selectedFeatures, triggerParamsChange }} />
+              <Outlet
+                context={{
+                  targetFeatureOptions,
+                  selectedFeatures,
+                  ocrWeight,
+                  asrWeight,
+                  nprobe,
+                  limit,
+                  temporalK,
+                  maxInterval,
+                  autoTranslate,
+                  enToViTranslate,
+                  triggerParamsChange,
+                }}
+              />
             </div>
           </div>
         </VideoProvider>

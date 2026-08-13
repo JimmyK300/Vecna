@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useSelected } from "./SelectedProvider.jsx";
-import { getVideoKeyframes, getFrameOcr } from "../services/search.js";
+import { getVideoKeyframes, getFrameOcr, getMapKeyframesAround } from "../services/search.js";
 
 export function FrameItem({
   id,
   video_id,
   frame_id,
   thumbnail,
+  keyframe,
   score,
   scores,
   ocr,
@@ -14,12 +15,27 @@ export function FrameItem({
   onSearchSimilar,
   onSearchNearby,
   temporalStep,
+  onAddIncludeVideo,
+  onAddExcludeVideo,
 }) {
   const { selected, addSelected, removeSelected } = useSelected();
   const isSelected = selected.includes(id);
 
   // Zoom Modal State
   const [showZoomModal, setShowZoomModal] = useState(false);
+
+  // Construct High-Resolution Keyframe URL from keyframes endpoint
+  const keyframeUrl =
+    keyframe ||
+    (thumbnail
+      ? thumbnail.replace("/api/files/", "/api/keyframes/")
+      : `http://127.0.0.1:6900/api/keyframes/${video_id}/${frame_id}`);
+
+  const [zoomImgSrc, setZoomImgSrc] = useState(keyframeUrl);
+
+  useEffect(() => {
+    setZoomImgSrc(keyframeUrl);
+  }, [keyframeUrl]);
 
   // OCR Modal State
   const [showOcrModal, setShowOcrModal] = useState(false);
@@ -42,12 +58,31 @@ export function FrameItem({
     return "border-l-red-400 border-l-4";
   };
 
-  const handleSelect = (e) => {
-    e.stopPropagation();
+  // Map Keyframes Modal State
+  const [showMapModal, setShowMapModal] = useState(false);
+  const [mapAroundData, setMapAroundData] = useState(null);
+  const [loadingMap, setLoadingMap] = useState(false);
+
+  const handleSelect = async (e) => {
+    if (e && e.stopPropagation) e.stopPropagation();
     if (isSelected) {
       removeSelected(id);
     } else {
-      addSelected(id);
+      setLoadingMap(true);
+      try {
+        const res = await getMapKeyframesAround(video_id, frame_id);
+        if (res && res.available) {
+          setMapAroundData(res);
+          setShowMapModal(true);
+        } else {
+          // Safety Fallback if map-keyframes is unavailable
+          addSelected(id);
+        }
+      } catch (err) {
+        addSelected(id);
+      } finally {
+        setLoadingMap(false);
+      }
     }
   };
 
@@ -93,10 +128,11 @@ export function FrameItem({
     }
   }, [showNearbyModal, video_id]);
 
-  // Escape key listener to close modals
+  // Escape key listener to close modals (including Keyframe Map / Add Payload modal)
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape") {
+        if (showMapModal) setShowMapModal(false);
         if (showNearbyModal) setShowNearbyModal(false);
         if (showOcrModal) setShowOcrModal(false);
         if (showZoomModal) setShowZoomModal(false);
@@ -104,12 +140,20 @@ export function FrameItem({
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [showNearbyModal, showOcrModal, showZoomModal]);
+  }, [showMapModal, showNearbyModal, showOcrModal, showZoomModal]);
+
+  const handleCardClick = (e) => {
+    if (isSelected) {
+      removeSelected(id);
+    } else {
+      addSelected(id);
+    }
+  };
 
   return (
     <>
       <div
-        onClick={handleSelect}
+        onClick={handleCardClick}
         className={`relative flex flex-col p-1 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all cursor-pointer ${getConfidenceBorder(
           finalScore
         )} ${
@@ -136,21 +180,46 @@ export function FrameItem({
             <span className="text-emerald-300">{frame_id}</span>
           </div>
 
-          {/* Temporal Step Badge */}
-          {temporalStep && (
+          {/* Temporal Event Badge (Hidden when hover score popup is shown) */}
+          {temporalStep && !showScores && (
             <div className="absolute bottom-1 left-1 bg-blue-600/90 backdrop-blur-sm text-white font-mono text-[9px] px-1.5 py-0.5 rounded font-black shadow-sm border border-blue-400 z-10">
-              Step {temporalStep}
+              Event {temporalStep}
             </div>
           )}
 
-          {/* Score Badge */}
-          <div className="absolute top-1 right-1 bg-black/80 backdrop-blur-sm text-yellow-400 font-mono text-[9px] px-1.5 py-0.5 rounded-md font-extrabold shadow-sm border border-yellow-500/30">
-            {(finalScore * 100).toFixed(0)}%
+          {/* Quick Include (+) / Exclude (-) Video Filter Buttons (Visible on hover) */}
+          <div className="absolute top-1.5 right-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center gap-1 z-20">
+            {onAddIncludeVideo && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onAddIncludeVideo(video_id);
+                }}
+                className="w-6 h-6 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold rounded flex items-center justify-center text-xs shadow-md border border-emerald-400 cursor-pointer transition-all"
+                title={`Include video ${video_id}`}
+              >
+                +
+              </button>
+            )}
+            {onAddExcludeVideo && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onAddExcludeVideo(video_id);
+                }}
+                className="w-6 h-6 bg-red-600 hover:bg-red-700 active:scale-95 text-white font-bold rounded flex items-center justify-center text-xs shadow-md border border-red-400 cursor-pointer transition-all"
+                title={`Exclude video ${video_id}`}
+              >
+                -
+              </button>
+            )}
           </div>
 
           {/* Detailed Score Popup on Hover */}
           {showScores && scores && (
-            <div className="absolute bottom-0 left-0 right-0 bg-black/90 backdrop-blur-md text-white text-[10px] font-mono p-1.5 space-y-0.5 pointer-events-none border-t border-gray-800 animate-fadeIn">
+            <div className="absolute bottom-0 left-0 right-0 bg-black/90 backdrop-blur-md text-white text-[10px] font-mono p-1.5 space-y-0.5 pointer-events-none border-t border-gray-800 animate-fadeIn z-20">
               <div className="flex justify-between">
                 <span>Final:</span>
                 <span className="font-bold text-yellow-400">{scores.final?.toFixed(4) ?? "-"}</span>
@@ -262,31 +331,117 @@ export function FrameItem({
       {showZoomModal && (
         <div
           onClick={() => setShowZoomModal(false)}
-          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn"
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 md:p-6 animate-fadeIn"
         >
           <div
-            className="relative max-w-5xl w-full bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col"
+            className="relative max-w-[94vw] max-h-[94vh] w-full bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="px-4 py-2.5 bg-slate-800 flex justify-between items-center border-b border-slate-700">
-              <span className="font-mono text-xs font-bold text-white flex items-center gap-2">
+            {/* Modal Header & Toolbar */}
+            <div className="px-4 py-2.5 bg-slate-900 flex justify-between items-center border-b border-slate-800 shrink-0 flex-wrap gap-2">
+              <div className="flex items-center gap-2 font-mono text-xs font-bold text-white">
                 <span className="w-2.5 h-2.5 rounded-full bg-teal-400 animate-pulse"></span>
-                Zoomed Keyframe: {video_id} #{frame_id}
-              </span>
-              <button
-                onClick={() => setShowZoomModal(false)}
-                className="px-2.5 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold shadow-sm transition-colors"
-              >
-                ✕
-              </button>
+                <span>Zoomed Keyframe:</span>
+                <span className="text-teal-300 font-extrabold">{video_id}</span>
+                <span className="text-emerald-400 font-extrabold">#{frame_id}</span>
+                <span className="hidden md:inline-flex items-center px-2 py-0.5 rounded text-[10px] bg-teal-950 text-teal-300 border border-teal-800 uppercase tracking-wider font-bold">
+                  HD Keyframe
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                {/* Copy Frame ID Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(`${video_id}#${frame_id}`);
+                    alert(`Copied frame ID: ${video_id}#${frame_id}`);
+                  }}
+                  className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white rounded-lg text-xs font-bold shadow-sm transition-all border border-slate-700 flex items-center gap-1.5"
+                  title="Copy frame string to clipboard"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  <span>Copy ID</span>
+                </button>
+
+                {/* Open HD Image in New Tab */}
+                <a
+                  href={zoomImgSrc}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-teal-300 hover:text-teal-200 rounded-lg text-xs font-bold shadow-sm transition-all border border-slate-700 flex items-center gap-1.5"
+                  title="Open full resolution image in new tab"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                  <span>Open HD</span>
+                </a>
+
+                {/* Add / Remove Payload Toggle */}
+                <button
+                  type="button"
+                  onClick={handleSelect}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold shadow-sm transition-all flex items-center gap-1.5 border ${
+                    isSelected
+                      ? "bg-emerald-600 text-white border-emerald-500 shadow-emerald-600/30"
+                      : "bg-slate-800 hover:bg-emerald-950 text-slate-200 hover:text-emerald-300 border-slate-700"
+                  }`}
+                  title={isSelected ? "Remove from payload" : "Add frame to payload"}
+                >
+                  {isSelected ? "✓ Selected" : "+ Add Payload"}
+                </button>
+
+                {/* Close Modal Button */}
+                <button
+                  onClick={() => setShowZoomModal(false)}
+                  className="px-2.5 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold shadow-sm transition-colors flex items-center gap-1"
+                >
+                  ✕ Close
+                </button>
+              </div>
             </div>
 
-            <div className="p-2 bg-black flex items-center justify-center max-h-[85vh] overflow-hidden">
+            {/* Modal Body: Large High-Res Image Display */}
+            <div className="p-2 sm:p-4 bg-black/95 flex-1 flex items-center justify-center min-h-[50vh] max-h-[82vh] overflow-hidden relative group">
               <img
-                src={thumbnail}
+                src={zoomImgSrc}
                 alt={`${video_id}_${frame_id}_zoomed`}
-                className="max-h-[80vh] w-auto object-contain rounded-lg shadow-lg"
+                className="max-h-[80vh] max-w-full w-auto h-auto object-contain rounded-lg shadow-2xl transition-all duration-300"
+                onError={() => {
+                  if (zoomImgSrc !== thumbnail && thumbnail) {
+                    setZoomImgSrc(thumbnail);
+                  }
+                }}
               />
+            </div>
+
+            {/* Modal Footer: Keyframe Path & Score Badges */}
+            <div className="px-4 py-2 bg-slate-900 border-t border-slate-800 flex justify-between items-center text-xs font-mono text-slate-400 shrink-0 flex-wrap gap-2">
+              <div className="flex items-center gap-2">
+                <span className="text-slate-500">Source:</span>
+                <span className="text-slate-300 bg-slate-800 px-2 py-0.5 rounded border border-slate-700 text-[11px]">
+                  /keyframes/{video_id}/{frame_id}.jpg
+                </span>
+              </div>
+              {scores && (
+                <div className="flex items-center gap-2 text-[11px]">
+                  {scores.final !== undefined && (
+                    <span>Score: <strong className="text-amber-400">{scores.final?.toFixed(4)}</strong></span>
+                  )}
+                  {scores.clip !== undefined && (
+                    <span>CLIP: <strong className="text-emerald-400">{scores.clip?.toFixed(4)}</strong></span>
+                  )}
+                  {scores.ocr !== undefined && (
+                    <span>OCR: <strong className="text-blue-400">{scores.ocr?.toFixed(4)}</strong></span>
+                  )}
+                  {scores.asr !== undefined && (
+                    <span>ASR: <strong className="text-purple-400">{scores.asr?.toFixed(4)}</strong></span>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -465,6 +620,194 @@ export function FrameItem({
                 </div>
               )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Map Keyframes Selector Modal (Option 2) */}
+      {showMapModal && mapAroundData && (
+        <div
+          onClick={() => setShowMapModal(false)}
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5 animate-fadeIn"
+        >
+          <div
+            className="bg-white border border-gray-200 rounded-2xl p-6 max-w-5xl w-full shadow-2xl space-y-4 text-gray-900 font-sans"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex justify-between items-center border-b border-gray-200 pb-3">
+              <div>
+                <h3 className="font-bold text-gray-900 text-xl flex items-center gap-2">
+                  <span className="w-3.5 h-3.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span>Keyframe Selector</span>
+                  <span className="text-blue-600 font-extrabold font-mono">{video_id}</span>
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-500 font-mono mt-0.5">
+                  Search frame: <span className="text-blue-700 font-bold">#{frame_id}</span>
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowMapModal(false)}
+                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 rounded-xl text-xs sm:text-sm font-bold transition-colors border border-gray-300 shadow-sm"
+              >
+                ✕ Close
+              </button>
+            </div>
+
+            <p className="text-xs sm:text-sm text-gray-600">
+              {mapAroundData.is_exact_match
+                ? "This frame is an official Keyframe. Would you like to add it to your submission payload?"
+                : "This search frame is an intermediate frame. Select one of the keyframe options to add to payload:"}
+            </p>
+
+            {mapAroundData.is_exact_match ? (
+              /* Single Card Mode when frame is an exact Keyframe */
+              <div className="flex justify-center py-2">
+                {mapAroundData.curr && (
+                  <div className="bg-blue-50/30 border-2 border-blue-500 rounded-2xl p-4.5 flex flex-col items-center space-y-3.5 shadow-xl shadow-blue-500/10 max-w-lg w-full group">
+                    <div className="text-xs sm:text-sm font-extrabold text-blue-800 bg-blue-100 px-3.5 py-1.5 rounded-full border border-blue-300 w-full text-center">
+                      ✓ Official Keyframe (n={mapAroundData.curr.n})
+                    </div>
+                    {mapAroundData.curr.is_fallback_image && (
+                      <div className="text-xs text-amber-800 bg-amber-50 px-3 py-1 rounded-lg border border-amber-200 font-mono text-center w-full font-semibold">
+                        ⚠️ Keyframe #{mapAroundData.curr.frame_idx} missing — Displaying closest frame #{mapAroundData.curr.display_frame_idx}
+                      </div>
+                    )}
+                    <div className="w-full aspect-video rounded-xl overflow-hidden bg-gray-100 relative border border-blue-300 shadow-inner">
+                      <img
+                        src={`http://127.0.0.1:6900/api/keyframes/${video_id}/${mapAroundData.curr.display_frame_idx || mapAroundData.curr.frame_idx}`}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = `http://127.0.0.1:6900/api/files/${video_id}/${mapAroundData.curr.display_frame_idx || mapAroundData.curr.frame_idx}`;
+                        }}
+                        alt={`n=${mapAroundData.curr.n}`}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                    <div className="text-xs sm:text-sm font-mono text-blue-950 text-center font-bold">
+                      Frame: #{mapAroundData.curr.frame_idx} {mapAroundData.curr.is_fallback_image ? `(Shown: #${mapAroundData.curr.display_frame_idx})` : ""} | {mapAroundData.curr.pts_time}s
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        addSelected(`${video_id}#${mapAroundData.curr.frame_idx}`);
+                        setShowMapModal(false);
+                      }}
+                      className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs sm:text-sm rounded-xl transition-all shadow-md shadow-blue-600/20 flex items-center justify-center gap-1.5 active:scale-95"
+                    >
+                      + Add Keyframe (n={mapAroundData.curr.n})
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* 3 Cards Mode when frame is an intermediate frame - Unified Blue Theme Across All Cards */
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                {/* Card 1 (Left): Previous Keyframe */}
+                {mapAroundData.prev && (
+                  <div className="bg-blue-50/30 border border-blue-200 hover:border-blue-400 rounded-2xl p-4 flex flex-col items-center space-y-3 transition-all group shadow-sm">
+                    <div className="text-xs sm:text-sm font-bold text-blue-800 bg-blue-100 border border-blue-200 px-3 py-1 rounded-full w-full text-center">
+                      ⬅ Prev Keyframe (n={mapAroundData.prev.n})
+                    </div>
+                    {mapAroundData.prev.is_fallback_image && (
+                      <div className="text-[11px] text-amber-800 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 font-mono text-center w-full font-semibold">
+                        ⚠️ Keyframe #{mapAroundData.prev.frame_idx} missing — Displaying closest frame #{mapAroundData.prev.display_frame_idx}
+                      </div>
+                    )}
+                    <div className="w-full aspect-video rounded-xl overflow-hidden bg-gray-100 relative border border-blue-200 shadow-inner">
+                      <img
+                        src={`http://127.0.0.1:6900/api/keyframes/${video_id}/${mapAroundData.prev.display_frame_idx || mapAroundData.prev.frame_idx}`}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = `http://127.0.0.1:6900/api/files/${video_id}/${mapAroundData.prev.display_frame_idx || mapAroundData.prev.frame_idx}`;
+                        }}
+                        alt={`n=${mapAroundData.prev.n}`}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                    <div className="text-xs sm:text-sm font-mono text-blue-950 text-center font-bold">
+                      Frame: #{mapAroundData.prev.frame_idx} {mapAroundData.prev.is_fallback_image ? `(Shown: #${mapAroundData.prev.display_frame_idx})` : ""} | {mapAroundData.prev.pts_time}s
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        addSelected(`${video_id}#${mapAroundData.prev.frame_idx}`);
+                        setShowMapModal(false);
+                      }}
+                      className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow-md shadow-blue-600/20 flex items-center justify-center gap-1 active:scale-95"
+                    >
+                      + Add Keyframe (n={mapAroundData.prev.n})
+                    </button>
+                  </div>
+                )}
+
+                {/* Card 2 (Middle): Current Search Frame */}
+                <div className="bg-blue-50/40 border-2 border-blue-500 rounded-2xl p-4 flex flex-col items-center space-y-3 transition-all shadow-md shadow-blue-500/10 group">
+                  <div className="text-xs sm:text-sm font-extrabold text-blue-800 bg-blue-100 border border-blue-300 px-3 py-1 rounded-full w-full text-center">
+                    ⏺ Current Search Frame
+                  </div>
+                  <div className="w-full aspect-video rounded-xl overflow-hidden bg-gray-100 relative border border-blue-300 shadow-inner">
+                    <img
+                      src={thumbnail}
+                      alt={`Search Frame ${frame_id}`}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <div className="text-xs sm:text-sm font-mono text-blue-950 text-center font-extrabold">
+                    Frame: #{frame_id}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      addSelected(id);
+                      setShowMapModal(false);
+                    }}
+                    className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs sm:text-sm rounded-xl transition-all shadow-md shadow-blue-600/20 flex items-center justify-center gap-1 active:scale-95"
+                  >
+                    + Add Search Frame (#{frame_id})
+                  </button>
+                </div>
+
+                {/* Card 3 (Right): Next Keyframe */}
+                {mapAroundData.next && (
+                  <div className="bg-blue-50/30 border border-blue-200 hover:border-blue-400 rounded-2xl p-4 flex flex-col items-center space-y-3 transition-all group shadow-sm">
+                    <div className="text-xs sm:text-sm font-bold text-blue-800 bg-blue-100 border border-blue-200 px-3 py-1 rounded-full w-full text-center">
+                      ➔ Next Keyframe (n={mapAroundData.next.n})
+                    </div>
+                    {mapAroundData.next.is_fallback_image && (
+                      <div className="text-[11px] text-amber-800 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 font-mono text-center w-full font-semibold">
+                        ⚠️ Keyframe #{mapAroundData.next.frame_idx} missing — Displaying closest frame #{mapAroundData.next.display_frame_idx}
+                      </div>
+                    )}
+                    <div className="w-full aspect-video rounded-xl overflow-hidden bg-gray-100 relative border border-blue-200 shadow-inner">
+                      <img
+                        src={`http://127.0.0.1:6900/api/keyframes/${video_id}/${mapAroundData.next.display_frame_idx || mapAroundData.next.frame_idx}`}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = `http://127.0.0.1:6900/api/files/${video_id}/${mapAroundData.next.display_frame_idx || mapAroundData.next.frame_idx}`;
+                        }}
+                        alt={`n=${mapAroundData.next.n}`}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                    <div className="text-xs sm:text-sm font-mono text-blue-950 text-center font-bold">
+                      Frame: #{mapAroundData.next.frame_idx} {mapAroundData.next.is_fallback_image ? `(Shown: #${mapAroundData.next.display_frame_idx})` : ""} | {mapAroundData.next.pts_time}s
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        addSelected(`${video_id}#${mapAroundData.next.frame_idx}`);
+                        setShowMapModal(false);
+                      }}
+                      className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow-md shadow-blue-600/20 flex items-center justify-center gap-1 active:scale-95"
+                    >
+                      + Add Keyframe (n={mapAroundData.next.n})
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       )}

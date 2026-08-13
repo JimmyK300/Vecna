@@ -6,11 +6,12 @@ export default function SearchParams({
   setOcrWeight,
   asrWeight = 0.0,
   setAsrWeight,
+  setWeights,
   nprobe = 32,
   setNprobe,
   limit = 100,
   setLimit,
-  temporalK = 10000,
+  temporalK = 2000,
   setTemporalK,
   maxInterval = 1000,
   setMaxInterval,
@@ -48,9 +49,13 @@ export default function SearchParams({
     fetchFeatures();
   }, []);
 
-  const setWeights = (ocr, asr) => {
-    setOcrWeight && setOcrWeight(ocr);
-    setAsrWeight && setAsrWeight(asr);
+  const handleWeightsChange = (ocr, asr) => {
+    if (setWeights) {
+      setWeights(ocr, asr);
+    } else {
+      setOcrWeight && setOcrWeight(ocr);
+      setAsrWeight && setAsrWeight(asr);
+    }
   };
 
   const handleCheckboxToggle = (feature) => {
@@ -82,7 +87,7 @@ export default function SearchParams({
         <div className="grid grid-cols-3 gap-1">
           <button
             type="button"
-            onClick={() => setWeights(0.0, 0.0)}
+            onClick={() => handleWeightsChange(0.0, 0.0)}
             className={`px-2 py-1 text-xs border rounded font-bold truncate transition-colors ${
               ocrWeight === 0.0 && asrWeight === 0.0
                 ? "bg-blue-600 text-white border-blue-600 font-bold"
@@ -95,7 +100,7 @@ export default function SearchParams({
 
           <button
             type="button"
-            onClick={() => setWeights(1.0, 0.0)}
+            onClick={() => handleWeightsChange(1.0, 0.0)}
             className={`px-2 py-1 text-xs border rounded font-bold truncate transition-colors ${
               ocrWeight === 1.0 && asrWeight === 0.0
                 ? "bg-blue-600 text-white border-blue-600 font-bold"
@@ -108,7 +113,7 @@ export default function SearchParams({
 
           <button
             type="button"
-            onClick={() => setWeights(0.0, 1.0)}
+            onClick={() => handleWeightsChange(0.0, 1.0)}
             className={`px-2 py-1 text-xs border rounded font-bold truncate transition-colors ${
               ocrWeight === 0.0 && asrWeight === 1.0
                 ? "bg-blue-600 text-white border-blue-600 font-bold"
@@ -124,7 +129,7 @@ export default function SearchParams({
         <div className="grid grid-cols-2 gap-1">
           <button
             type="button"
-            onClick={() => setWeights(0.5, 0.0)}
+            onClick={() => handleWeightsChange(0.5, 0.0)}
             className={`px-2 py-1 text-xs border rounded font-bold truncate transition-colors ${
               ocrWeight === 0.5 && asrWeight === 0.0
                 ? "bg-gray-700 text-white border-gray-700"
@@ -137,7 +142,7 @@ export default function SearchParams({
 
           <button
             type="button"
-            onClick={() => setWeights(0.3, 0.2)}
+            onClick={() => handleWeightsChange(0.3, 0.2)}
             className={`px-2 py-1 text-xs border rounded font-bold truncate transition-all shadow-sm ${
               ocrWeight === 0.3 && asrWeight === 0.2
                 ? "bg-purple-600 text-white border-purple-600"

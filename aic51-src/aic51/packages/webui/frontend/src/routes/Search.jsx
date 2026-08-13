@@ -16,7 +16,7 @@ export async function loader({ request }) {
   const _offset = parseInt(searchParams.get("offset") || "0", 10);
   const limit = parseInt(searchParams.get("limit") || "20", 10);
   const nprobe = parseInt(searchParams.get("nprobe") || "32", 10);
-  const temporal_k = parseInt(searchParams.get("temporal_k") || "10000", 10);
+  const temporal_k = parseInt(searchParams.get("temporal_k") || "2000", 10);
   const ocr_weight = parseFloat(searchParams.get("ocr_weight") || "0.5");
   const asr_weight = parseFloat(searchParams.get("asr_weight") || "0.0");
   const max_interval = parseInt(searchParams.get("max_interval") || "1000", 10);
@@ -27,7 +27,7 @@ export async function loader({ request }) {
   const include_videos = searchParams.get("include_videos") || "";
   const exclude_videos = searchParams.get("exclude_videos") || "";
 
-  if (!q && !include_videos) {
+  if (!q && !include_videos && !exclude_videos) {
     return {
       query: { q: "" },
       params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos },
@@ -74,7 +74,17 @@ export async function loader({ request }) {
 
 export default function Search() {
   const { query, params, offset, data } = useLoaderData();
-  const { selectedFeatures } = useOutletContext();
+  const {
+    selectedFeatures,
+    ocrWeight: liveOcrWeight,
+    asrWeight: liveAsrWeight,
+    nprobe: liveNprobe,
+    limit: liveLimit,
+    temporalK: liveTemporalK,
+    maxInterval: liveMaxInterval,
+    autoTranslate: liveAutoTranslate,
+    enToViTranslate: liveEnToViTranslate,
+  } = useOutletContext();
   const submit = useSubmit();
   const navigation = useNavigation();
   const playVideo = usePlayVideo();
@@ -136,24 +146,53 @@ export default function Search() {
     newInc = includeVideos,
     newExc = excludeVideos
   ) => {
+    const activeAutoTranslate = liveAutoTranslate !== undefined ? liveAutoTranslate : autoTranslate;
+    const activeEnToViTranslate = liveEnToViTranslate !== undefined ? liveEnToViTranslate : enToViTranslate;
+    const activeOcrWeight = liveOcrWeight !== undefined ? liveOcrWeight : (params.ocr_weight !== undefined ? params.ocr_weight : 0.5);
+    const activeAsrWeight = liveAsrWeight !== undefined ? liveAsrWeight : (params.asr_weight !== undefined ? params.asr_weight : 0.0);
+    const activeNprobe = liveNprobe ?? params.nprobe ?? 32;
+    const activeLimit = liveLimit ?? params.limit ?? 20;
+    const activeTemporalK = liveTemporalK ?? params.temporal_k ?? 2000;
+    const activeMaxInterval = liveMaxInterval ?? params.max_interval ?? 1000;
+
     submit(
       {
         q: newQ,
-        auto_translate: autoTranslate ? "true" : "false",
-        en_to_vi_translate: enToViTranslate ? "true" : "false",
+        auto_translate: activeAutoTranslate ? "true" : "false",
+        en_to_vi_translate: activeEnToViTranslate ? "true" : "false",
         include_videos: newInc,
         exclude_videos: newExc,
         target_features: (selectedFeatures || []).join(","),
-        ocr_weight: params.ocr_weight || 0.5,
-        asr_weight: params.asr_weight || 0.0,
-        nprobe: params.nprobe || 32,
-        limit: params.limit || 20,
-        temporal_k: params.temporal_k || 10000,
-        max_interval: params.max_interval || 1000,
+        ocr_weight: activeOcrWeight,
+        asr_weight: activeAsrWeight,
+        nprobe: activeNprobe,
+        limit: activeLimit,
+        temporal_k: activeTemporalK,
+        max_interval: activeMaxInterval,
         offset: 0,
       },
       { method: "get", action: "/search" }
     );
+  };
+
+  const handleAddIncludeVideo = (vid) => {
+    if (!vid) return;
+    const existing = includeVideos ? includeVideos.trim().split(/[,;\s]+/).filter(Boolean) : [];
+    if (!existing.includes(vid)) {
+      const nextInc = [...existing, vid].join(", ");
+      setIncludeVideos(nextInc);
+      triggerSearch(searchQuery, nextInc, excludeVideos);
+    }
+  };
+
+  const handleAddExcludeVideo = (vid) => {
+    if (!vid) return;
+    const existing = excludeVideos ? excludeVideos.trim().split(/[,;\s]+/).filter(Boolean) : [];
+    if (!existing.includes(vid)) {
+      const nextExc = [...existing, vid].join(", ");
+      setExcludeVideos(nextExc);
+      triggerSearch(searchQuery, includeVideos, nextExc);
+    }
   };
 
   const rawFrames = (data && data.frames) || [];
@@ -392,12 +431,12 @@ export default function Search() {
       {
         id: frameKey,
         target_features: (selectedFeatures || []).join(","),
-        ocr_weight: params.ocr_weight || 0.5,
-        asr_weight: params.asr_weight || 0.0,
-        nprobe: params.nprobe || 32,
-        limit: params.limit || 20,
-        temporal_k: params.temporal_k || 10000,
-        max_interval: params.max_interval || 1000,
+        ocr_weight: params.ocr_weight !== undefined ? params.ocr_weight : 0.5,
+        asr_weight: params.asr_weight !== undefined ? params.asr_weight : 0.0,
+        nprobe: params.nprobe ?? 32,
+        limit: params.limit ?? 20,
+        temporal_k: params.temporal_k ?? 2000,
+        max_interval: params.max_interval ?? 1000,
       },
       { action: "/similar" }
     );
@@ -430,12 +469,19 @@ export default function Search() {
           includeVideos={includeVideos}
           onIncludeVideosChange={(val) => {
             setIncludeVideos(val);
-            triggerSearch(searchQuery, val, excludeVideos);
+            if (val) setExcludeVideos("");
+            triggerSearch(searchQuery, val, val ? "" : excludeVideos);
           }}
           excludeVideos={excludeVideos}
           onExcludeVideosChange={(val) => {
             setExcludeVideos(val);
-            triggerSearch(searchQuery, includeVideos, val);
+            if (val) setIncludeVideos("");
+            triggerSearch(searchQuery, val ? "" : includeVideos, val);
+          }}
+          onApplyVideoFilters={(newInc, newExc) => {
+            setIncludeVideos(newInc);
+            setExcludeVideos(newExc);
+            triggerSearch(searchQuery, newInc, newExc);
           }}
           isSearching={isSearching}
         />
@@ -483,6 +529,8 @@ export default function Search() {
                       temporalStep={isTemporalSeq ? `${kfIdx + 1}/${keyframesList.length}` : null}
                       onPlay={() => playVideo({ video_id: frame.video_id, frame_id: kf }, kf)}
                       onSearchSimilar={() => handleSearchSimilar(frameKey)}
+                      onAddIncludeVideo={handleAddIncludeVideo}
+                      onAddExcludeVideo={handleAddExcludeVideo}
                     />
                   );
                 });
