@@ -127,7 +127,7 @@ class LLMQueryExpander:
             ]
             variants = [v.strip() for v in variants if v and v.strip()]
 
-            logger.info(f"LLMQueryExpander: '{query_text}' -> {variants}")
+            logger.info(f"LLMQueryExpander: expanded query successfully into {len(variants)} variants")
             return variants
         except Exception as e:
             logger.error(f"LLMQueryExpander: Error expanding query '{query_text}': {e}")
