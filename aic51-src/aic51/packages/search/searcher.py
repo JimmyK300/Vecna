@@ -205,6 +205,114 @@ class Searcher(object):
         }
         return res
 
+    def search_by_image_upload(
+        self,
+        image: "Image.Image",
+        offset: int = 0,
+        limit: int = 50,
+        target_features: list = [],
+        /,
+        nprobe: int = 8,
+        auto_crop: bool = True,
+    ):
+        """Tìm kiếm ảnh tương tự từ ảnh upload (Similar Search with YOLO auto-crop).
+
+        Pipeline bắt chước từ caube (D:\\AIC_2026\\caube\\app.py, search_similar_image):
+          1. Nếu auto_crop=True, chạy YOLO detect trên ảnh upload → crop vật thể chính.
+          2. Encode ảnh (đã crop hoặc gốc) qua SigLIP/CLIP để lấy vector query.
+          3. Tìm kiếm Cosine Similarity trong Milvus DB.
+
+        Args:
+            image: PIL.Image ảnh query (RGB).
+            offset: Vị trí bắt đầu trong kết quả.
+            limit: Số lượng kết quả trả về.
+            target_features: Danh sách tên feature (ví dụ: ["image_siglip_so400m-384"]).
+            nprobe: Tham số nprobe cho Milvus search.
+            auto_crop: Nếu True, tự động YOLO crop trước khi encode.
+
+        Returns:
+            dict với keys: results, total, offset, crop_meta (nếu có crop).
+        """
+        import time as _time
+
+        start_time = _time.time()
+        crop_meta = None
+
+        # --- Bước 1: YOLO Auto-Crop (bắt chước caube dòng 746-800) ---
+        target_image = image
+        if auto_crop and hasattr(self, "_yolo_processor") and self._yolo_processor is not None:
+            logger.info("searcher: Running YOLO auto-crop on uploaded image...")
+            target_image, crop_meta = self._yolo_processor.auto_crop(image)
+            if crop_meta:
+                logger.info(
+                    f"searcher: YOLO cropped '{crop_meta['class_name']}' "
+                    f"(conf: {crop_meta['confidence']:.2f})"
+                )
+            else:
+                logger.info("searcher: YOLO found no objects, using original image.")
+
+        # --- Bước 2: Encode ảnh qua SigLIP/CLIP (bắt chước caube dòng 810-820) ---
+        reqs = []
+        subquery_limit = offset + limit
+
+        for target_name in target_features:
+            if target_name not in self._features:
+                logger.warning(f"searcher: {target_name} is invalid feature")
+                continue
+
+            m = self._features[target_name]
+            extractor = self._extractors[m]["feature_extractor"]
+
+            # Encode ảnh PIL trực tiếp (SigLIP/CLIP đều hỗ trợ PIL.Image input)
+            image_embedding = extractor.get_features([target_image])
+            if len(image_embedding) == 0:
+                logger.warning(f"searcher: Failed to extract features for {target_name}")
+                continue
+
+            # Normalize embedding
+            image_vec = image_embedding[0].tolist()
+
+            target_param = {
+                "nprobe": nprobe,
+                "metric_type": "COSINE",
+            }
+
+            reqs.append(
+                AnnSearchRequest(
+                    data=[image_vec],
+                    anns_field=self._database.process_field_name(target_name),
+                    param=target_param,
+                    limit=subquery_limit,
+                )
+            )
+
+        # --- Bước 3: Milvus Hybrid Search ---
+        ranker = RRFRanker()
+
+        if len(reqs) > 0:
+            results = self._database.hybrid_search(
+                reqs,
+                ranker,
+                offset,
+                limit,
+            )[0]
+        else:
+            results = []
+
+        end_time = _time.time()
+        logger.info(f"searcher: search_by_image_upload took {end_time - start_time:.4f}s")
+
+        res = {
+            "results": results,
+            "total": self._database.get_size(),
+            "offset": offset,
+        }
+        if crop_meta:
+            res["crop_meta"] = crop_meta
+
+        return res
+
+
     def _get_video_filter(self, include_video_ids: list[str] = []):
         clauses = []
         if include_video_ids and len(include_video_ids) > 0:
@@ -745,3 +853,29 @@ class Searcher(object):
                 self._features[t] = m
 
             self._extractors[m] = {"feature_extractor": feature_extractor, "target_features": target_features}
+
+        # --- Khởi tạo YOLO Processor cho auto-crop (bắt chước caube dòng 123-131) ---
+        self._yolo_processor = None
+        yolo_config = GlobalConfig.get("searcher", "yolo") or {}
+        yolo_model_path = yolo_config.get("model_path", "yolov8x.pt")
+        yolo_enabled = yolo_config.get("enable", True)
+
+        if yolo_enabled:
+            try:
+                from aic51.packages.analyse.processors.yolo_processor import YOLOProcessor
+
+                self._yolo_processor = YOLOProcessor(
+                    model_path=yolo_model_path,
+                    device=device,
+                    conf_threshold=float(yolo_config.get("conf_threshold", 0.25)),
+                    padding=int(yolo_config.get("padding", 15)),
+                )
+                if self._yolo_processor.is_available:
+                    logger.info(f"searcher: YOLOProcessor loaded from {yolo_model_path}")
+                else:
+                    logger.warning("searcher: YOLOProcessor model not available, auto_crop disabled")
+                    self._yolo_processor = None
+            except Exception as e:
+                logger.warning(f"searcher: Failed to load YOLOProcessor: {e}. auto_crop disabled")
+                self._yolo_processor = None
+

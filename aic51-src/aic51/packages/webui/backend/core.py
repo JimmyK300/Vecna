@@ -141,6 +141,47 @@ async def search_image(
         )
 
 
+# === (THÊM MỚI) Proxy cho tìm kiếm ảnh upload + YOLO auto-crop ===
+@app.post(constant.SEARCH_UPLOAD_IMAGE_ENDPOINT)
+async def search_upload_image(request: Request):
+    if len(SEARCH_SERVERS) == 0:
+        return JSONResponse(
+            status_code=404,
+            content=jsonable_encoder({constant.MESSAGE_KEY: "search function is not supported"}),
+        )
+
+    form = await request.form()
+    files = {}
+    data = {}
+    for key, value in form.items():
+        if hasattr(value, "read"):
+            content = await value.read()
+            files[key] = (value.filename, content, value.content_type)
+        else:
+            data[key] = value
+
+    import requests as sync_requests
+
+    for ss in SEARCH_SERVERS:
+        try:
+            target_url = urljoin(ss["host"], constant.SEARCH_UPLOAD_IMAGE_ENDPOINT)
+            resp = sync_requests.post(
+                target_url,
+                files=files,
+                data=data,
+                timeout=SEARCH_REQUEST_TIMEOUT,
+            )
+            if resp.ok:
+                return JSONResponse(status_code=resp.status_code, content=resp.json())
+        except Exception:
+            continue
+
+    return JSONResponse(
+        status_code=500,
+        content=jsonable_encoder({constant.MESSAGE_KEY: "search_upload_image errors"}),
+    )
+
+
 @app.get(constant.TARGET_FEATURES_ENDPOINT)
 async def target_features():
     async with target_features_lock:

@@ -5,6 +5,7 @@ DEFAULT_FILE_PORT = 4200
 
 SEARCH_MULTIMODAL_ENDPOINT = "/api/search_multimodal"
 SEARCH_IMAGE_ENDPOINT = "/api/search_image"
+SEARCH_UPLOAD_IMAGE_ENDPOINT = "/api/search_upload_image"
 TARGET_FEATURES_ENDPOINT = "/api/target_features"
 
 STREAM_FILE_ENDPOINT = "/api/stream"

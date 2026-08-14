@@ -1,9 +1,11 @@
+import io
 from contextlib import asynccontextmanager
 from typing import Annotated
 
-from fastapi import FastAPI, Query, Request
+from fastapi import FastAPI, File, Form, Query, Request, UploadFile
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
+from PIL import Image
 
 import aic51.packages.constant as constant
 from aic51.packages.config import GlobalConfig
@@ -163,6 +165,68 @@ async def search_image(
         "ocr_weight": ocr_weight,
         "max_interval": max_interval,
     }
+    return JSONResponse(
+        status_code=200,
+        content=jsonable_encoder({constant.MESSAGE_KEY: "success", **response}),
+    )
+
+
+# === (THÊM MỚI) API tìm kiếm bằng ảnh upload + YOLO auto-crop ===
+@app.post(constant.SEARCH_UPLOAD_IMAGE_ENDPOINT)
+async def search_upload_image(
+    request: Request,
+    file: UploadFile = File(...),
+    auto_crop: bool = Form(True),
+    target_features: str = Form(""),
+    offset: int = Form(0),
+    limit: int = Form(50),
+    nprobe: int = Form(32),
+):
+    if "searcher" not in internal:
+        return JSONResponse(
+            status_code=500,
+            content=jsonable_encoder({constant.MESSAGE_KEY: "searcher was not initialized"}),
+        )
+
+    searcher = internal["searcher"]
+
+    if target_features:
+        target_features_list = [t.strip() for t in target_features.split(",") if t.strip()]
+    else:
+        target_features_list = [f for f in searcher.target_features if f.startswith("image_")]
+
+    try:
+        image_bytes = await file.read()
+        image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+
+        searcher_res = searcher.search_by_image_upload(
+            image,
+            offset,
+            limit,
+            target_features_list,
+            nprobe=nprobe,
+            auto_crop=auto_crop,
+        )
+    except Exception as e:
+        logger.exception(e)
+        return JSONResponse(
+            status_code=500,
+            content=jsonable_encoder({constant.MESSAGE_KEY: "search_upload_image errors"}),
+        )
+
+    response = process_searcher_results(searcher_res)
+    response = process_search_results(request, response)
+
+    response[constant.RESULT_PARAMS_KEY] = {
+        "limit": limit,
+        "target_features": target_features,
+        "nprobe": nprobe,
+        "auto_crop": auto_crop,
+    }
+
+    if "crop_meta" in searcher_res:
+        response["crop_meta"] = searcher_res["crop_meta"]
+
     return JSONResponse(
         status_code=200,
         content=jsonable_encoder({constant.MESSAGE_KEY: "success", **response}),

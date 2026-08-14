@@ -133,6 +133,13 @@ searcher:
     asr_field: "asr_sparse"
     enable: true
 
+  yolo:
+    enable: true
+    model_path: "yolov8x.pt"
+    conf_threshold: 0.25
+    padding: 15
+
+
 frontend:
   dev_port: 5173
 
