@@ -141,6 +141,41 @@ async def search_image(
         )
 
 
+# === (THÊM MỚI) Proxy cho API expand_query bằng Groq LLM ===
+@app.post(constant.EXPAND_QUERY_ENDPOINT)
+async def expand_query_proxy(request: Request):
+    if len(SEARCH_SERVERS) == 0:
+        return JSONResponse(
+            status_code=404,
+            content=jsonable_encoder({constant.MESSAGE_KEY: "search function is not supported"}),
+        )
+
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+
+    import requests as sync_requests
+
+    for ss in SEARCH_SERVERS:
+        try:
+            target_url = urljoin(ss["host"], constant.EXPAND_QUERY_ENDPOINT)
+            resp = sync_requests.post(
+                target_url,
+                json=body,
+                timeout=SEARCH_REQUEST_TIMEOUT,
+            )
+            if resp.ok:
+                return JSONResponse(status_code=resp.status_code, content=resp.json())
+        except Exception:
+            continue
+
+    return JSONResponse(
+        status_code=500,
+        content=jsonable_encoder({constant.MESSAGE_KEY: "expand_query errors"}),
+    )
+
+
 @app.get(constant.TARGET_FEATURES_ENDPOINT)
 async def target_features():
     async with target_features_lock:

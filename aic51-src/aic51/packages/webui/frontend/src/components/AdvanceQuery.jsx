@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { getTargetFeatures, expandQuery } from "../services/search.js";
 
 const VIDEO_PREFIX_OPTIONS = [
   { prefix: "L21", name: "L21: HTV 60 Seconds (P1)" },
@@ -26,6 +27,12 @@ export function AdvanceQueryContainer({
   isSearching = false,
 }) {
   const [showPrefixMenu, setShowPrefixMenu] = useState(false);
+  const [targetFeatures, setTargetFeatures] = useState([]);
+
+  // (CẬP NHẬT) State cho Query Expansion (bắt chước caube script.js dòng 91-94)
+  const [isExpanding, setIsExpanding] = useState(false);
+  const [expansionVariants, setExpansionVariants] = useState([]);
+  const [expansionError, setExpansionError] = useState("");
 
   // Helper to parse OCR and ASR tags out of full query string
   const parseQuery = (queryString) => {
@@ -173,6 +180,40 @@ export function AdvanceQueryContainer({
     }
   };
 
+  // (CẬP NHẬT) Xử lý nút "🔎 Mở rộng câu truy vấn" bằng Groq LLM (bắt chước caube script.js dòng 366-412)
+  const handleExpandQuery = async () => {
+    if (!mainQuery || !mainQuery.trim()) {
+      setExpansionError("Nhập câu truy vấn trước khi mở rộng.");
+      return;
+    }
+    setIsExpanding(true);
+    setExpansionError("");
+    setExpansionVariants([]);
+
+    try {
+      const res = await expandQuery(mainQuery.trim());
+      const variants = res.variants || [];
+      if (variants.length === 0) {
+        setExpansionError("Không mở rộng được câu truy vấn.");
+      } else {
+        setExpansionVariants(variants);
+      }
+    } catch (err) {
+      console.error("Lỗi khi mở rộng câu truy vấn:", err);
+      setExpansionError("Lỗi kết nối LLM expand query.");
+    } finally {
+      setIsExpanding(false);
+    }
+  };
+
+  const handleSelectExpansionVariant = (variantText) => {
+    setMainQuery(variantText);
+    setExpansionVariants([]);
+    setExpansionError("");
+    const fullQuery = buildQuery(variantText, ocrQuery, asrQuery);
+    onChange(fullQuery);
+  };
+
   const handleMainQueryKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -223,6 +264,24 @@ export function AdvanceQueryContainer({
               </button>
             )}
 
+            {/* (CẬP NHẬT) Nút "🔎 Mở rộng câu truy vấn" (bắt chước caube script.js dòng 366-412) */}
+            <button
+              type="button"
+              onClick={handleExpandQuery}
+              disabled={isExpanding}
+              className={`text-[11px] font-bold px-2.5 py-0.5 rounded border transition-all shadow-sm flex items-center gap-1.5 cursor-pointer ${
+                isExpanding
+                  ? "bg-purple-300 text-purple-900 border-purple-400 cursor-wait animate-pulse"
+                  : "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white border-purple-700 hover:shadow"
+              }`}
+              title="Dùng LLM (Groq / Gemini) sinh 3 biến thể ngữ nghĩa: Sát nghĩa, Vai trò, Nơi chốn"
+            >
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              {isExpanding ? "Đang mở rộng..." : "🔎 Mở rộng câu truy vấn"}
+            </button>
+
             {isSearching && (
               <span className="text-xs text-sky-800 font-semibold animate-pulse ml-1">
                 Searching...
@@ -249,6 +308,47 @@ export function AdvanceQueryContainer({
           onChange={(e) => setMainQuery(e.target.value)}
           onKeyDown={handleMainQueryKeyDown}
         />
+
+        {/* (CẬP NHẬT) Hiển thị 3 chip lựa chọn biến thể Query Expansion (bắt chước caube script.js dòng 386-404) */}
+        {expansionError && (
+          <div className="text-xs text-red-600 font-semibold bg-red-50 border border-red-200 px-2 py-1 rounded">
+            {expansionError}
+          </div>
+        )}
+
+        {expansionVariants.length > 0 && (
+          <div className="flex flex-col gap-1 bg-white/90 border border-purple-300 p-2 rounded-lg shadow-sm animate-fadeIn">
+            <span className="text-[10px] font-bold text-purple-900 uppercase tracking-wider flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-purple-600 animate-ping"></span>
+              Chọn 1 biến thể để tìm kiếm ngay (Groq LLM 120B):
+            </span>
+            <div className="flex flex-wrap gap-1.5 pt-0.5">
+              {expansionVariants.map((variant, idx) => {
+                const labels = ["🎯 Sát nghĩa", "👤 Vai trò / Hành động", "📍 Nơi chốn / Bối cảnh"];
+                const label = labels[idx] || `Biến thể ${idx + 1}`;
+                const badgeColors = [
+                  "bg-purple-100 hover:bg-purple-600 text-purple-900 hover:text-white border-purple-300",
+                  "bg-indigo-100 hover:bg-indigo-600 text-indigo-900 hover:text-white border-indigo-300",
+                  "bg-emerald-100 hover:bg-emerald-600 text-emerald-900 hover:text-white border-emerald-300",
+                ];
+                const badgeColor = badgeColors[idx % badgeColors.length];
+
+                return (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => handleSelectExpansionVariant(variant)}
+                    className={`text-xs px-2.5 py-1 rounded-md border font-medium transition-all shadow-xs flex items-center gap-1.5 cursor-pointer text-left hover:scale-[1.02] active:scale-95 ${badgeColor}`}
+                    title={`Bấm để chọn: "${variant}"`}
+                  >
+                    <span className="font-bold text-[10px] opacity-80">{label}:</span>
+                    <span>"{variant}"</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Dynamic Full-Width Interactive Temporal Step Inputs (Rendered ONLY when hasTemporal is true) */}
         {hasTemporal && (

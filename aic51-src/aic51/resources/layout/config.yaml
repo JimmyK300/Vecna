@@ -133,6 +133,14 @@ searcher:
     asr_field: "asr_sparse"
     enable: true
 
+  # Groq LLM Query Expansion (bắt chước 100% caube gpt-oss-120b / llama3-70b)
+  llm:
+    enable: true
+    provider: "groq"                      # groq, gemini, hoặc openai
+    model_name: "openai/gpt-oss-120b"     # Mô hình 120B tham số trên Groq Cloud
+    api_key: ""                           # Để trống để tự lấy từ GROQ_API_KEY
+
+
 frontend:
   dev_port: 5173
 

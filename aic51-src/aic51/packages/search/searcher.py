@@ -745,3 +745,38 @@ class Searcher(object):
                 self._features[t] = m
 
             self._extractors[m] = {"feature_extractor": feature_extractor, "target_features": target_features}
+
+        # --- Khởi tạo LLM Query Expander (bắt chước caube dòng 81-100) ---
+        self._llm_expander = None
+        llm_config = GlobalConfig.get("searcher", "llm") or {}
+        llm_enabled = llm_config.get("enable", True)
+
+        if llm_enabled:
+            try:
+                from aic51.packages.search.llm_expander import LLMQueryExpander
+
+                self._llm_expander = LLMQueryExpander(
+                    api_key=llm_config.get("api_key"),
+                    model_name=llm_config.get("model_name", "openai/gpt-oss-120b"),
+                    provider=llm_config.get("provider", "groq"),
+                )
+                if self._llm_expander.is_available:
+                    logger.info("searcher: LLMQueryExpander loaded successfully")
+                else:
+                    logger.warning("searcher: LLMQueryExpander not available (check GROQ_API_KEY)")
+                    self._llm_expander = None
+            except Exception as e:
+                logger.warning(f"searcher: Failed to load LLMQueryExpander: {e}")
+                self._llm_expander = None
+
+    def expand_query(self, query_text: str) -> list[str]:
+        """Sinh 3 biến thể ngữ nghĩa (sát nghĩa / vai trò / nơi chốn) từ query gốc bằng LLM.
+
+        Bắt chước caube (D:\\AIC_2026\\caube\\app.py, /expand_query):
+        Trả về list các biến thể text để người dùng chọn trên giao diện UI.
+        """
+        if not self._llm_expander or not self._llm_expander.is_available:
+            logger.warning("searcher: expand_query called but LLMQueryExpander is not available")
+            return []
+        return self._llm_expander.expand_query(query_text)
+

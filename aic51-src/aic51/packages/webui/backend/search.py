@@ -169,6 +169,39 @@ async def search_image(
     )
 
 
+# === (THÊM MỚI) API /api/expand_query — sinh 3 biến thể query bằng Groq LLM ===
+# Bắt chước 100% caube (D:\AIC_2026\caube\app.py, POST /expand_query dòng 491-503)
+@app.post(constant.EXPAND_QUERY_ENDPOINT)
+async def expand_query_endpoint(request: Request):
+    """API sinh 3 biến thể ngữ nghĩa (sát nghĩa / vai trò / nơi chốn) bằng Groq LLM.
+
+    Request JSON: {"query": "cô gái nấu ăn"}
+    Response JSON: {"variants": ["con gái nấu", "nữ đầu bếp...", "..."]}
+    """
+    if "searcher" not in internal:
+        return JSONResponse(
+            status_code=500,
+            content=jsonable_encoder({constant.MESSAGE_KEY: "searcher was not initialized"}),
+        )
+
+    searcher = internal["searcher"]
+
+    try:
+        data = await request.json()
+        query_text = data.get("query", "").strip() if data else ""
+        if not query_text:
+            return JSONResponse(status_code=200, content={"variants": []})
+
+        variants = searcher.expand_query(query_text)
+        return JSONResponse(status_code=200, content={"variants": variants})
+    except Exception as e:
+        logger.exception(e)
+        return JSONResponse(
+            status_code=500,
+            content=jsonable_encoder({constant.MESSAGE_KEY: f"expand_query error: {str(e)}"}),
+        )
+
+
 @app.get(constant.TARGET_FEATURES_ENDPOINT)
 async def target_features():
     if "searcher" not in internal:

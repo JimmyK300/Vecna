@@ -135,6 +135,13 @@ export async function getTargetFeatures() {
   return data;
 }
 
+export async function expandQuery(queryText) {
+  const res = await axios.post(`http://127.0.0.1:${PORT}/api/expand_query`, {
+    query: queryText,
+  });
+  return res.data;
+}
+
 export async function getVideoTranscript(videoId) {
   const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/transcript/${videoId}`);
   const data = res.data;
