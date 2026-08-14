@@ -22,7 +22,7 @@ class GlobalConfig:
             logger.warning(f'"{GlobalConfig.CONFIG_FILE}" not found. Workspace need to be initialized first.')
             return {}
 
-        with open(work_dir / GlobalConfig.CONFIG_FILE, "r") as f:
+        with open(work_dir / GlobalConfig.CONFIG_FILE, "r", encoding="utf-8") as f:
             GlobalConfig.__config = safe_load(f)
 
         return GlobalConfig.__config
