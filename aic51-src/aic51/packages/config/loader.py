@@ -16,13 +16,15 @@ class GlobalConfig:
             return GlobalConfig.__config
 
         work_dir = Path.cwd()
-        config_path = work_dir / GlobalConfig.CONFIG_FILE
+        config_path = work_dir / "workspace" / GlobalConfig.CONFIG_FILE
+        if not config_path.exists():
+            config_path = work_dir / GlobalConfig.CONFIG_FILE
 
         if not config_path.exists():
             logger.warning(f'"{GlobalConfig.CONFIG_FILE}" not found. Workspace need to be initialized first.')
             return {}
 
-        with open(work_dir / GlobalConfig.CONFIG_FILE, "r", encoding="utf-8") as f:
+        with open(config_path, "r", encoding="utf-8") as f:
             GlobalConfig.__config = safe_load(f)
 
         return GlobalConfig.__config
