@@ -5,6 +5,7 @@ import unicodedata
 from typing import Optional
 
 import numpy as np
+from sympy import limit
 import torch
 from pymilvus import AnnSearchRequest, RRFRanker
 
@@ -16,6 +17,7 @@ from aic51.packages.logger import logger
 
 from . import constants
 from .utils import Query
+from sentence_transformers import CrossEncoder
 
 
 def remove_diacritics(text: str) -> str:
@@ -285,11 +287,11 @@ class Searcher(object):
             dense_extractor = self._extractors[dense_model_name]["feature_extractor"]
 
         for query_text in query_list:
-            has_exact = bool(re.findall(r'"([^"]+)"', query_text) or re.findall(r'"([^"]+)"', raw_query))
-            search_limit = max(subquery_limit * 5, 500) if has_exact else subquery_limit
-            clean_query = re.sub(r'"', ' ', query_text).strip()
-            query_input = clean_query if clean_query else query_text
+            # Luôn vớt ít nhất 500 candidates để Hybrid Search + Reranker có đủ pool
+            search_limit = max(subquery_limit * 5, 500) 
+            query_input = query_text.strip()
 
+            # 1. Sparse Search (BM25)
             if sparse_field:
                 search_results = self._database.search(
                     data=[query_input],
@@ -302,17 +304,12 @@ class Searcher(object):
                 if search_results and len(search_results) > 0:
                     for hit in search_results[0]:
                         fid = hit["entity"]["frame_id"]
-                        doc_text = hit["entity"].get(text_field, "")
-                        is_valid, phrase_count = check_exact_phrases(query_text, doc_text, fallback_query=raw_query)
-                        if not is_valid:
-                            continue
-
                         all_frame_ids.add(fid)
-                        boost = 1.5 if phrase_count > 0 else 1.0
-                        sparse_raw_scores[fid] = sparse_raw_scores.get(fid, 0) + hit["distance"] * boost
+                        sparse_raw_scores[fid] = sparse_raw_scores.get(fid, 0) + hit["distance"]
                         if fid not in entity_data:
                             entity_data[fid] = hit["entity"]
 
+            # 2. Dense Search (BGE-M3)
             if dense_field and dense_extractor is not None:
                 dense_query = dense_extractor.get_text_features([query_input])
                 dense_query = np.asarray(dense_query).reshape(-1).tolist()
@@ -328,17 +325,12 @@ class Searcher(object):
                 if search_results and len(search_results) > 0:
                     for hit in search_results[0]:
                         fid = hit["entity"]["frame_id"]
-                        doc_text = hit["entity"].get(text_field, "")
-                        is_valid, phrase_count = check_exact_phrases(query_text, doc_text, fallback_query=raw_query)
-                        if not is_valid:
-                            continue
-
                         all_frame_ids.add(fid)
-                        boost = 1.5 if phrase_count > 0 else 1.0
-                        dense_raw_scores[fid] = dense_raw_scores.get(fid, 0) + hit["distance"] * boost
+                        dense_raw_scores[fid] = dense_raw_scores.get(fid, 0) + hit["distance"]
                         if fid not in entity_data:
                             entity_data[fid] = hit["entity"]
 
+        # Normalize và tính điểm Hybrid
         sparse_norm = self._normalize_scores(sparse_raw_scores)
         dense_norm = self._normalize_scores(dense_raw_scores)
         results = []
@@ -360,20 +352,17 @@ class Searcher(object):
 
         results.sort(key=lambda x: x["distance"], reverse=True)
 
+        # Log top 5 để debug
         top_k = 5
         logger.info(f"[TOP {top_k}][{feature_key}] dense_model={dense_model_name} sparse_field={sparse_field} dense_field={dense_field}")
-
         for i, item in enumerate(results[:top_k], 1):
             fid = item["entity"]["frame_id"]
             s = item["scores"]
-
             logger.info(
                 f"[TOP {top_k}][{feature_key}] {i}. frame={fid} "
                 f"final={s['final']} "
                 f"dense={s['dense']} "
                 f"bm25={s['sparse']} "
-                f"dense_raw={s['dense_raw']} "
-                f"bm25_raw={s['sparse_raw']}"
             )
 
         return results, entity_data
@@ -527,6 +516,13 @@ class Searcher(object):
         nprobe: int = 8,
     ):
         query_features = query.data[0]["features"]
+        
+        # Lấy raw query text để rerank
+        raw_query = ""
+        if "text" in query_features:
+            raw_query = query_features["text"]
+        elif "text_translated" in query_features:
+            raw_query = query_features["text_translated"]
 
         if len(query.video_ids) > 0:
             results = self._similarity_search(
@@ -541,9 +537,8 @@ class Searcher(object):
                 nprobe=nprobe,
             )
             total = len(results)
-            results = results[offset : offset + limit]
         else:
-            # Fetch candidate pool (e.g. max 200 or offset+limit) for fast hybrid ranking
+            # Lấy nhiều candidates hơn để có pool cho Rerank
             candidate_limit = max(200, offset + limit)
             results = self._similarity_search(
                 query_features,
@@ -557,15 +552,111 @@ class Searcher(object):
                 nprobe=nprobe,
             )
             total = self._database.get_size()
-            results = results[offset : offset + limit]
 
+        # ====== RERANK Ở ĐÂY ======
+        if self._reranker is not None and raw_query:
+            rerank_k = max(limit, self._reranker_top_k)
+            results = self._rerank_candidates(raw_query, results, top_k=rerank_k)
+        # ===========================
+
+        results = results[offset : offset + limit]
         res = {
             "results": results,
             "total": total,
             "offset": offset,
         }
         return res
+    def _rerank_candidates(self, query_text: str, candidates: list, top_k: int = 50) -> list:
+        """
+        Rerank only the selected candidate pool using BGE CrossEncoder.
 
+        IMPORTANT:
+        - Never mix reranker scores with hybrid scores.
+        - Only candidates actually scored by the reranker are reordered.
+        - Candidates without reranker scores stay behind the reranked pool.
+        """
+
+        if self._reranker is None or not query_text or not candidates:
+            return candidates
+
+        # Number of candidates that will actually be reranked
+        rerank_limit = min(
+            max(top_k * 2, self._reranker_top_k),
+            len(candidates),
+        )
+
+        rerank_pool = candidates[:rerank_limit]
+        remaining = candidates[rerank_limit:]
+
+        pairs = []
+        valid_items = []
+
+        for item in rerank_pool:
+            entity = item.get("entity", {})
+
+            # Current schema: ASR + OCR only
+            doc_parts = []
+
+            asr = entity.get("asr")
+            if isinstance(asr, str) and asr.strip():
+                doc_parts.append(asr.strip())
+
+            ocr = entity.get("ocr")
+            if isinstance(ocr, str) and ocr.strip():
+                doc_parts.append(ocr.strip())
+
+            doc_text = " ".join(doc_parts)
+
+            if not doc_text:
+                continue
+
+            pairs.append([query_text, doc_text])
+            valid_items.append(item)
+
+        if not pairs:
+            return candidates
+
+        try:
+            rerank_scores = self._reranker.predict(
+                pairs,
+                convert_to_numpy=True,
+                show_progress_bar=False,
+            )
+        except Exception as e:
+            logger.error(f"searcher: Reranker prediction failed: {e}")
+            return candidates
+
+        # Assign reranker score ONLY to items that were actually scored
+        for item, score in zip(valid_items, rerank_scores):
+            item.setdefault("scores", {})
+            item["scores"]["hybrid"] = item["distance"]
+            item["scores"]["rerank"] = float(score)
+
+            # distance now means reranker score for this item
+            item["distance"] = float(score)
+
+        # Items with no text cannot be reranked.
+        # Put them after reranked items.
+        valid_ids = {id(item) for item in valid_items}
+
+        reranked_items = [
+            item for item in rerank_pool
+            if id(item) in valid_ids
+        ]
+
+        unrerrankable_items = [
+            item for item in rerank_pool
+            if id(item) not in valid_ids
+        ]
+
+        reranked_items.sort(
+            key=lambda x: x["scores"]["rerank"],
+            reverse=True
+        )
+
+        # IMPORTANT:
+        # Do NOT compare rerank score against hybrid score.
+        return reranked_items + unrerrankable_items + remaining
     def _temporal_search(
         self,
         query: Query,
@@ -799,3 +890,19 @@ class Searcher(object):
                 self._features[t] = m
 
             self._extractors[m] = {"feature_extractor": feature_extractor, "target_features": target_features}
+        reranker_enable = GlobalConfig.get("searcher", "reranker", "enable")
+        if reranker_enable:
+            reranker_model = GlobalConfig.get("searcher", "reranker", "model") or "BAAI/bge-reranker-v2-m3"
+            reranker_device = str(device).split(":")[0]  # "cuda:0" -> "cuda"
+            try:
+                logger.info(f"searcher: Loading Reranker model: {reranker_model}")
+                self._reranker = CrossEncoder(reranker_model, device=reranker_device)
+                self._reranker_top_k = int(GlobalConfig.get("searcher", "reranker", "top_k") or 50)
+                logger.info(f"searcher: Reranker loaded successfully (top_k={self._reranker_top_k})")
+            except Exception as e:
+                logger.error(f"searcher: Failed to load Reranker: {e}")
+                self._reranker = None
+                self._reranker_top_k = 0
+        else:
+            self._reranker = None
+            self._reranker_top_k = 0
