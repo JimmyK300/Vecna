@@ -192,15 +192,16 @@ export function AdvanceQueryContainer({
 
     try {
       const res = await expandQuery(mainQuery.trim());
-      const variants = res.variants || [];
-      if (variants.length === 0) {
-        setExpansionError("Không mở rộng được câu truy vấn.");
+      if (res && res.error) {
+        setExpansionError(res.error);
+      } else if (!res || !res.variants || res.variants.length === 0) {
+        setExpansionError("⚠️ Không mở rộng được câu truy vấn (kiểm tra lại GROQ_API_KEY).");
       } else {
-        setExpansionVariants(variants);
+        setExpansionVariants(res.variants);
       }
     } catch (err) {
       console.error("Lỗi khi mở rộng câu truy vấn:", err);
-      setExpansionError("Lỗi kết nối LLM expand query.");
+      setExpansionError("⚠️ Chưa điền GROQ_API_KEY trong workspace/config.yaml (hoặc biến môi trường GROQ_API_KEY)");
     } finally {
       setIsExpanding(false);
     }

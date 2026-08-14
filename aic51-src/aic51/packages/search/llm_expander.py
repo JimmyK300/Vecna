@@ -55,7 +55,7 @@ class LLMQueryExpander:
 
         if not resolved_key:
             logger.warning(
-                "LLMQueryExpander: Chưa tìm thấy GROQ_API_KEY. Query expansion sẽ không khả dụng."
+                "LLMQueryExpander: GROQ_API_KEY not found. Query expansion is disabled."
             )
             return
 
