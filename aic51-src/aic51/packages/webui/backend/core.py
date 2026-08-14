@@ -169,7 +169,7 @@ async def frame_info(request: Request, video_id: str, frame_id: str):
     crequest = CRequestPool(FILE_MAX_REQUESTS)
     health_requests = [
         GetRequest(
-            urljoin(ss["host"], f"{constant.HEALTH_ENDPOINT}/{video_id}/{frame_id}"),
+            urljoin(ss["host"], f"{constant.HEALTH_ENDPOINT}/{video_id}"),
             params=request.query_params,
             timeout=FILE_MAX_REQUESTS,
         )
@@ -404,6 +404,112 @@ async def get_frame_ocr(request: Request, video_id: str, frame_id: str):
             status_code=500,
             content=jsonable_encoder({constant.MESSAGE_KEY: "get_frame_ocr errors"}),
         )
+
+
+@app.get("/api/video/map-keyframes/{video_id}")
+async def get_video_map_keyframes(request: Request, video_id: str):
+    if len(FILE_SERVERS) == 0:
+        return JSONResponse(
+            status_code=404,
+            content=jsonable_encoder({constant.MESSAGE_KEY: "file function is not supported"}),
+        )
+
+    crequest = CRequestPool(FILE_MAX_REQUESTS)
+    health_requests = [
+        GetRequest(
+            urljoin(ss["host"], f"/api/video/map-keyframes/{video_id}"),
+            params=request.query_params,
+            timeout=FILE_MAX_REQUESTS,
+        )
+        for ss in FILE_SERVERS
+    ]
+    crequest.map(health_requests)
+
+    try:
+        for future in crequest.as_completed():
+            res = future.result()
+            if res and res.ok:
+                crequest.cancel_all()
+
+                parsed_url = urlparse(res.url)
+                redirected_url = parsed_url._replace(path=request.url.path).geturl()
+                return RedirectResponse(redirected_url)
+    except:
+        return JSONResponse(
+            status_code=500,
+            content=jsonable_encoder({constant.MESSAGE_KEY: "get_video_map_keyframes errors"}),
+        )
+
+
+@app.get("/api/video/max-frame/{video_id}")
+async def get_video_max_frame(request: Request, video_id: str):
+    if len(FILE_SERVERS) == 0:
+        return JSONResponse(
+            status_code=404,
+            content=jsonable_encoder({constant.MESSAGE_KEY: "file function is not supported"}),
+        )
+
+    crequest = CRequestPool(FILE_MAX_REQUESTS)
+    health_requests = [
+        GetRequest(
+            urljoin(ss["host"], f"/api/video/max-frame/{video_id}"),
+            params=request.query_params,
+            timeout=FILE_MAX_REQUESTS,
+        )
+        for ss in FILE_SERVERS
+    ]
+    crequest.map(health_requests)
+
+    try:
+        for future in crequest.as_completed():
+            res = future.result()
+            if res and res.ok:
+                crequest.cancel_all()
+
+                parsed_url = urlparse(res.url)
+                redirected_url = parsed_url._replace(path=request.url.path).geturl()
+                return RedirectResponse(redirected_url)
+    except:
+        return JSONResponse(
+            status_code=500,
+            content=jsonable_encoder({constant.MESSAGE_KEY: "get_video_max_frame errors"}),
+        )
+
+
+@app.get("/api/video/map-keyframes-around/{video_id}/{frame_id}")
+async def get_video_map_keyframes_around(request: Request, video_id: str, frame_id: str):
+    if len(FILE_SERVERS) == 0:
+        return JSONResponse(
+            status_code=404,
+            content=jsonable_encoder({constant.MESSAGE_KEY: "file function is not supported"}),
+        )
+
+    crequest = CRequestPool(FILE_MAX_REQUESTS)
+    health_requests = [
+        GetRequest(
+            urljoin(ss["host"], f"/api/video/map-keyframes-around/{video_id}/{frame_id}"),
+            params=request.query_params,
+            timeout=FILE_MAX_REQUESTS,
+        )
+        for ss in FILE_SERVERS
+    ]
+    crequest.map(health_requests)
+
+    try:
+        for future in crequest.as_completed():
+            res = future.result()
+            if res and res.ok:
+                crequest.cancel_all()
+
+                parsed_url = urlparse(res.url)
+                redirected_url = parsed_url._replace(path=request.url.path).geturl()
+                return RedirectResponse(redirected_url)
+    except:
+        return JSONResponse(
+            status_code=500,
+            content=jsonable_encoder({constant.MESSAGE_KEY: "get_video_map_keyframes_around errors"}),
+        )
+
 
 
 web_dir = Path.cwd() / constant.FRONTEND_DIST_DIR

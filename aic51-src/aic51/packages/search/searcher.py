@@ -108,20 +108,29 @@ class Searcher(object):
         target_features: list = [],
         /,
         nprobe: int = 8,
-        temporal_k: int = 10000,
+        temporal_k: int = 2000,
         ocr_weight: float = 0.5,
         asr_weight: float = 0.0,
         hybrid_alpha: float = 0.9,
-        max_interval: int = 250,
+        max_interval: int = 1000,
         selected: str | None = None,
         auto_translate: bool = False,
+        en_to_vi_translate: bool = False,
+        include_videos: str = "",
+        exclude_videos: str = "",
     ):
         start_time = time.time()
-        query = Query(q, auto_translate=auto_translate)
+        query = Query(
+            q,
+            auto_translate=auto_translate,
+            en_to_vi_translate=en_to_vi_translate,
+            include_videos=include_videos,
+            exclude_videos=exclude_videos,
+        )
 
         if query.simple:
-            logger.info(f"searcher: get video_ids={query.video_ids}")
-            res = self._get_videos(query.video_ids, offset, limit, selected)
+            logger.info(f"searcher: get include_video_ids={query.include_video_ids}, exclude_video_ids={query.exclude_video_ids}")
+            res = self._get_videos(query.include_video_ids, query.exclude_video_ids, offset, limit, selected)
         elif query.advance and not query.temporal:
             logger.info(f"searcher: advance_search query={query.data}")
             res = self._advance_search(
@@ -210,9 +219,16 @@ class Searcher(object):
         }
         return res
 
-    def _get_video_filter(self, video_ids: list[str]):
-        video_ids_fitler = " || ".join([f'frame_id like "{x.strip()}#%"' for x in video_ids])
-        return video_ids_fitler
+    def _get_video_filter(self, include_video_ids: list[str] = []):
+        clauses = []
+        if include_video_ids and len(include_video_ids) > 0:
+            inc_parts = [f'frame_id like "{x.strip()}%"' for x in include_video_ids if x.strip()]
+            if len(inc_parts) == 1:
+                clauses.append(inc_parts[0])
+            elif len(inc_parts) > 1:
+                clauses.append(f"({' || '.join(inc_parts)})")
+
+        return " && ".join(clauses) if clauses else ""
 
     @staticmethod
     def _normalize_scores(score_map: dict) -> dict:
@@ -366,6 +382,31 @@ class Searcher(object):
             )
 
         return results, entity_data
+    def _filter_exclude_videos(results: list[dict], exclude_video_ids: list[str]) -> list[dict]:
+        """Post-filtering helper to remove excluded videos from candidate or final search results."""
+        if not exclude_video_ids or len(exclude_video_ids) == 0 or not results:
+            return results
+        excludes = [x.lower().strip() for x in exclude_video_ids if x.strip()]
+        if not excludes:
+            return results
+
+        filtered_results = []
+        for r in results:
+            fid = str(r.get("entity", {}).get("frame_id", "")).lower()
+            vid = fid.split("#")[0] if "#" in fid else fid
+            if any(vid.startswith(ex) or fid.startswith(ex) or ex in vid for ex in excludes):
+                continue
+            if "time_line" in r and isinstance(r["time_line"], list):
+                if any(
+                    any(
+                        tfid.lower().startswith(ex) or tfid.lower().split("#")[0].startswith(ex) or ex in tfid.lower()
+                        for ex in excludes
+                    )
+                    for tfid in r["time_line"]
+                ):
+                    continue
+            filtered_results.append(r)
+        return filtered_results
 
     def _similarity_search(
         self,
@@ -379,12 +420,15 @@ class Searcher(object):
         asr_weight: float = 0.0,
         hybrid_alpha: float = 0.7,
         nprobe: int = 8,
+        exclude_video_ids: list[str] = [],
     ):
         ocr_weight = max(0, min(1, ocr_weight))
         asr_weight = max(0, min(1 - ocr_weight, asr_weight))
         video_filter = self._get_video_filter(video_ids)
 
         subquery_limit = offset + limit
+        if exclude_video_ids and len(exclude_video_ids) > 0:
+            subquery_limit = max(subquery_limit * 2, 300)
 
         # Score maps: frame_id -> raw score (per component)
         clip_raw_scores = {}  # frame_id -> sum of raw CLIP scores
@@ -394,10 +438,11 @@ class Searcher(object):
         # Store entity data for each frame_id
         entity_data = {}
 
-        # 1. CLIP Search (using general "text" query)
+        # 1. CLIP Search (using general "text" query or translated English "text_en" query)
         clip_weight = 1.0 - ocr_weight - asr_weight
         clip_req_count = 0
-        if "text" in query_features and clip_weight > 0:
+        clip_query_text = query_features.get("text_en", query_features.get("text", ""))
+        if clip_query_text and clip_weight > 0:
             text_embeddings = {}
             for target_name in target_features:
                 if target_name not in self._features:
@@ -407,7 +452,7 @@ class Searcher(object):
                 m = self._features[target_name]
                 if m not in text_embeddings:
                     text_embeddings[m] = (
-                        self._extractors[m]["feature_extractor"].get_text_features(query_features["text"]).tolist()[0]
+                        self._extractors[m]["feature_extractor"].get_text_features(clip_query_text).tolist()[0]
                     )
 
                 search_results = self._database.search(
@@ -501,6 +546,9 @@ class Searcher(object):
         # Sort by final score descending
         results.sort(key=lambda x: x["distance"], reverse=True)
 
+        # Fast Python Post-Filtering for Exclude Videos (Hybrid Strategy for Maximum Speed)
+        results = self._filter_exclude_videos(results, exclude_video_ids)
+
         return results
 
     def _advance_search(
@@ -524,10 +572,10 @@ class Searcher(object):
         elif "text_translated" in query_features:
             raw_query = query_features["text_translated"]
 
-        if len(query.video_ids) > 0:
+        if len(query.include_video_ids) > 0:
             results = self._similarity_search(
                 query_features,
-                query.video_ids,
+                query.include_video_ids,
                 0,
                 10000,
                 target_features,
@@ -535,23 +583,42 @@ class Searcher(object):
                 asr_weight=asr_weight,
                 hybrid_alpha=hybrid_alpha,
                 nprobe=nprobe,
+                exclude_video_ids=query.exclude_video_ids,
             )
             total = len(results)
         else:
-            # Lấy nhiều candidates hơn để có pool cho Rerank
-            candidate_limit = max(200, offset + limit)
-            results = self._similarity_search(
-                query_features,
-                [],
-                0,
-                candidate_limit,
-                target_features,
-                ocr_weight=ocr_weight,
-                asr_weight=asr_weight,
-                hybrid_alpha=hybrid_alpha,
-                nprobe=nprobe,
-            )
-            total = self._database.get_size()
+candidate_limit = (
+    max(300, (offset + limit) * 3)
+    if len(query.exclude_video_ids) > 0
+    else max(200, offset + limit)
+)
+
+db_size = self._database.get_size()
+
+while True:
+    results = self._similarity_search(
+        query_features,
+        [],
+        0,
+        candidate_limit,
+        target_features,
+        ocr_weight=ocr_weight,
+        asr_weight=asr_weight,
+        hybrid_alpha=hybrid_alpha,
+        nprobe=nprobe,
+        exclude_video_ids=query.exclude_video_ids,
+    )
+
+    if (
+        len(results) >= offset + limit
+        or candidate_limit >= db_size
+        or candidate_limit >= 10000
+    ):
+        break
+
+    candidate_limit = min(db_size, candidate_limit * 2)
+
+total = db_size
 
         # ====== RERANK Ở ĐÂY ======
         if self._reranker is not None and raw_query:
@@ -668,12 +735,13 @@ class Searcher(object):
         asr_weight: float = 0.0,
         hybrid_alpha: float = 0.7,
         nprobe: int = 8,
-        temporal_k: int = 100,
-        max_interval: int = 100,
+        temporal_k: int = 2000,
+        max_interval: int = 1000,
     ):
         params = {
             "query": query.data,
-            "video_ids": query.video_ids,
+            "video_ids": query.include_video_ids,
+            "exclude_video_ids": query.exclude_video_ids,
             "target_features": target_features,
             "ocr_weight": ocr_weight,
             "asr_weight": asr_weight,
@@ -693,7 +761,7 @@ class Searcher(object):
             for q in query.data:
                 results = self._similarity_search(
                     q["features"],
-                    query.video_ids,
+                    query.include_video_ids,
                     0,
                     temporal_k,
                     target_features,
@@ -701,6 +769,7 @@ class Searcher(object):
                     asr_weight=asr_weight,
                     hybrid_alpha=hybrid_alpha,
                     nprobe=nprobe,
+                    exclude_video_ids=query.exclude_video_ids,
                 )
                 results_list.append(results)
 
@@ -709,8 +778,9 @@ class Searcher(object):
 
             st = time.time()
             temporal_results = self._combine_temporal_results(results_list, max_interval)
+            temporal_results = self._filter_exclude_videos(temporal_results, query.exclude_video_ids)
             en = time.time()
-            logger.info(f"searcher: Take {en-st:.4f} seconds to combine results")
+            logger.info(f"searcher: Take {en-st:.4f} seconds to combine and filter results")
 
             self.cache[query_hash] = temporal_results
 
@@ -804,19 +874,30 @@ class Searcher(object):
 
         return best
 
-    def _get_videos(self, video_ids: list[str], offset: int = 0, limit: int = 10000, selected: Optional[str] = None):
-        query_str = f"{constants.CACHE_GET_VIDEOS}:{repr(video_ids)}"
+    def _get_videos(
+        self,
+        include_video_ids: list[str] = [],
+        exclude_video_ids: list[str] = [],
+        offset: int = 0,
+        limit: int = 10000,
+        selected: Optional[str] = None,
+    ):
+        query_str = f"{constants.CACHE_GET_VIDEOS}:{repr(include_video_ids)}:{repr(exclude_video_ids)}"
         query_hash = hashlib.sha256(query_str.encode("utf-8")).hexdigest()
 
         if query_hash in self.cache:
             videos = self.cache[query_hash]
-        elif len(video_ids) == 0:
+        elif len(include_video_ids) == 0 and len(exclude_video_ids) == 0:
             videos = []
         else:
-            video_ids_fitler = " || ".join([f'frame_id like "{x.strip()}#%"' for x in video_ids])
-            videos = self._database.query(video_ids_fitler, 0, 10000)
+            video_filter = self._get_video_filter(include_video_ids)
+            query_limit = 10000 if include_video_ids else max(500, (offset + limit) * 5)
+            videos = self._database.query(video_filter, 0, query_limit)
             videos = sorted(videos, key=lambda x: x["frame_id"])
             videos = [{"entity": x} for x in videos]
+
+            videos = self._filter_exclude_videos(videos, exclude_video_ids)
+
             self.cache[query_hash] = videos
 
         if selected:
