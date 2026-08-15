@@ -303,11 +303,17 @@ class Searcher(object):
             dense_extractor = self._extractors[dense_model_name]["feature_extractor"]
 
         for query_text in query_list:
-            # Luôn vớt ít nhất 500 candidates để Hybrid Search + Reranker có đủ pool
-            search_limit = max(subquery_limit * 5, 500) 
-            query_input = query_text.strip()
+            # 1. Detect xem user có dùng ngoặc kép " " không
+            has_exact = bool(re.findall(r'"([^"]+)"', query_text) or re.findall(r'"([^"]+)"', raw_query))
+            
+            # 2. Mở rộng pool nếu có ngoặc kép
+            search_limit = max(subquery_limit * 5, 500) if has_exact else max(subquery_limit * 2, 100)
+            
+            # 3. BÓC dấu ngoặc kép ra trước khi ném cho Milvus và BGE-M3
+            clean_query = re.sub(r'"', ' ', query_text).strip()
+            query_input = clean_query if clean_query else query_text
 
-            # 1. Sparse Search (BM25)
+            # === 1. SPARSE SEARCH (BM25) - GIỮ HARD FILTER ===
             if sparse_field:
                 search_results = self._database.search(
                     data=[query_input],
@@ -320,12 +326,22 @@ class Searcher(object):
                 if search_results and len(search_results) > 0:
                     for hit in search_results[0]:
                         fid = hit["entity"]["frame_id"]
+                        doc_text = hit["entity"].get(text_field, "")
+                        
+                        if has_exact:
+                            is_valid, phrase_count = check_exact_phrases(query_text, doc_text, fallback_query=raw_query)
+                            if not is_valid:
+                                continue # Vứt nếu không khớp exact phrase
+                            boost = 1.5 # Boost điểm BM25
+                        else:
+                            boost = 1.0
+                            
                         all_frame_ids.add(fid)
-                        sparse_raw_scores[fid] = sparse_raw_scores.get(fid, 0) + hit["distance"]
+                        sparse_raw_scores[fid] = sparse_raw_scores.get(fid, 0) + hit["distance"] * boost
                         if fid not in entity_data:
                             entity_data[fid] = hit["entity"]
 
-            # 2. Dense Search (BGE-M3)
+            # === 2. DENSE SEARCH (BGE-M3) - BỎ HARD FILTER, SEARCH SEMANTIC THUẦN ===
             if dense_field and dense_extractor is not None:
                 dense_query = dense_extractor.get_text_features([query_input])
                 dense_query = np.asarray(dense_query).reshape(-1).tolist()
@@ -341,6 +357,7 @@ class Searcher(object):
                 if search_results and len(search_results) > 0:
                     for hit in search_results[0]:
                         fid = hit["entity"]["frame_id"]
+                        # KHÔNG filter, KHÔNG continue. Để BGE-M3 tự do tìm semantic.
                         all_frame_ids.add(fid)
                         dense_raw_scores[fid] = dense_raw_scores.get(fid, 0) + hit["distance"]
                         if fid not in entity_data:
@@ -568,9 +585,11 @@ class Searcher(object):
         # Lấy raw query text để rerank
         raw_query = ""
         if "text" in query_features:
-            raw_query = query_features["text"]
+            val = query_features["text"]
+            raw_query = val[0] if isinstance(val, list) and len(val) > 0 else str(val)
         elif "text_translated" in query_features:
-            raw_query = query_features["text_translated"]
+            val = query_features["text_translated"]
+            raw_query = val[0] if isinstance(val, list) and len(val) > 0 else str(val)
 
         if len(query.include_video_ids) > 0:
             results = self._similarity_search(
@@ -587,38 +606,39 @@ class Searcher(object):
             )
             total = len(results)
         else:
-candidate_limit = (
-    max(300, (offset + limit) * 3)
-    if len(query.exclude_video_ids) > 0
-    else max(200, offset + limit)
-)
+            # FIX INDENTATION Ở ĐÂY
+            candidate_limit = (
+                max(300, (offset + limit) * 3)
+                if len(query.exclude_video_ids) > 0
+                else max(200, offset + limit)
+            )
 
-db_size = self._database.get_size()
+            db_size = self._database.get_size()
 
-while True:
-    results = self._similarity_search(
-        query_features,
-        [],
-        0,
-        candidate_limit,
-        target_features,
-        ocr_weight=ocr_weight,
-        asr_weight=asr_weight,
-        hybrid_alpha=hybrid_alpha,
-        nprobe=nprobe,
-        exclude_video_ids=query.exclude_video_ids,
-    )
+            while True:
+                results = self._similarity_search(
+                    query_features,
+                    [],
+                    0,
+                    candidate_limit,
+                    target_features,
+                    ocr_weight=ocr_weight,
+                    asr_weight=asr_weight,
+                    hybrid_alpha=hybrid_alpha,
+                    nprobe=nprobe,
+                    exclude_video_ids=query.exclude_video_ids,
+                )
 
-    if (
-        len(results) >= offset + limit
-        or candidate_limit >= db_size
-        or candidate_limit >= 10000
-    ):
-        break
+                if (
+                    len(results) >= offset + limit
+                    or candidate_limit >= db_size
+                    or candidate_limit >= 10000
+                ):
+                    break
 
-    candidate_limit = min(db_size, candidate_limit * 2)
+                candidate_limit = min(db_size, candidate_limit * 2)
 
-total = db_size
+            total = db_size
 
         # ====== RERANK Ở ĐÂY ======
         if self._reranker is not None and raw_query:
