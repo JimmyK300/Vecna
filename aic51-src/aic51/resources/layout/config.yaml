@@ -60,6 +60,19 @@ features: &analyse_features
       params:
         nlist: 512
 
+  qwen_vl:
+    model: "qwen_vl_embedding"
+    pretrained_model: "Qwen/Qwen3-VL-Embedding-2B"
+    analyse:
+      batch_size: 1
+    index:
+      datatype: "FLOAT_VECTOR"
+      dim: 2048
+      metric_type: "COSINE"
+      index_type: "SCANN"
+      params:
+        nlist: 512
+
   # video_clip_pe-l-14-336:
   #   model: "video_clip"
   #   source: "open_clip"
@@ -124,6 +137,12 @@ searcher:
       pretrained_model: "webli"
       target:
         - image_siglip_so400m-384
+
+    language_qwen_vl:
+      model: "qwen_vl_embedding"
+      pretrained_model: "Qwen/Qwen3-VL-Embedding-2B"
+      target:
+        - qwen_vl
 
   ocr:
     ocr_field: "ocr_sparse"
