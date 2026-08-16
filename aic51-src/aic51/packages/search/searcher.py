@@ -275,6 +275,9 @@ class Searcher(object):
         if exclude_video_ids and len(exclude_video_ids) > 0:
             subquery_limit = max(subquery_limit * 2, 300)
 
+        if not target_features or (isinstance(target_features, list) and (len(target_features) == 0 or target_features == [""])):
+            target_features = list(self._features.keys())
+
         # Score maps: frame_id -> raw score (per component)
         clip_raw_scores = {}  # frame_id -> sum of raw CLIP scores
         ocr_raw_scores = {}   # frame_id -> sum of raw OCR scores
@@ -769,10 +772,15 @@ class Searcher(object):
                 logger.warning(f"searcher: Failed to load LLMQueryExpander: {e}")
                 self._llm_expander = None
 
-    def expand_query(self, query_text: str) -> list[str]:
-        """Sinh 3 biến thể ngữ nghĩa (sát nghĩa / vai trò / nơi chốn) từ query gốc bằng LLM.
+    def expand_query_detailed(self, query_text: str) -> dict:
+        """Sinh 3 biến thể Jina AI (HyDE, Sub-queries/Keywords, Paraphrase) từ query gốc."""
+        if not self._llm_expander or not self._llm_expander.is_available:
+            logger.warning("searcher: expand_query called but LLMQueryExpander is not available")
+            return {}
+        return self._llm_expander.expand_query_detailed(query_text)
 
-        Bắt chước caube (D:\\AIC_2026\\caube\\app.py, /expand_query):
+    def expand_query(self, query_text: str) -> list[str]:
+        """Sinh 3 biến thể ngữ nghĩa Jina AI từ query gốc bằng LLM.
         Trả về list các biến thể text để người dùng chọn trên giao diện UI.
         """
         if not self._llm_expander or not self._llm_expander.is_available:

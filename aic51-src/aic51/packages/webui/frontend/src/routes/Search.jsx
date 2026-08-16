@@ -146,6 +146,7 @@ export default function Search() {
     newInc = includeVideos,
     newExc = excludeVideos
   ) => {
+    setQueryHeight(null);
     const activeAutoTranslate = liveAutoTranslate !== undefined ? liveAutoTranslate : autoTranslate;
     const activeEnToViTranslate = liveEnToViTranslate !== undefined ? liveEnToViTranslate : enToViTranslate;
     const activeOcrWeight = liveOcrWeight !== undefined ? liveOcrWeight : (params.ocr_weight !== undefined ? params.ocr_weight : 0.5);

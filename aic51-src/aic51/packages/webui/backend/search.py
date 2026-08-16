@@ -189,23 +189,24 @@ async def expand_query_endpoint(request: Request):
                 status_code=200,
                 content={
                     "variants": [],
-                    "error": "⚠️ Chưa điền GROQ_API_KEY trong workspace/config.yaml (hoặc biến môi trường GROQ_API_KEY)",
+                    "error": "GROQ_API_KEY is not configured in workspace/config.yaml (or GROQ_API_KEY environment variable)",
                 },
             )
 
+        detailed = searcher.expand_query_detailed(query_text)
         variants = searcher.expand_query(query_text)
         if not variants:
             return JSONResponse(
                 status_code=200,
-                content={"variants": [], "error": "⚠️ Groq API không trả về kết quả hợp lệ (kiểm tra lại API Key)"},
+                content={"variants": [], "detailed": {}, "error": "Groq API did not return valid variants (check API Key)"},
             )
 
-        return JSONResponse(status_code=200, content={"variants": variants})
+        return JSONResponse(status_code=200, content={"variants": variants, "detailed": detailed})
     except Exception as e:
         logger.exception(e)
         return JSONResponse(
             status_code=200,
-            content={"variants": [], "error": f"⚠️ Lỗi LLM: {str(e)}"},
+            content={"variants": [], "error": f"LLM Error: {str(e)}"},
         )
 
 

@@ -189,16 +189,33 @@ class MilvusDatabase(object):
 
         start_time = time.time()
 
-        res = self._client.search(
-            self._collection_name,
-            data=data,
-            filter=filter,
-            offset=offset,
-            limit=limit,
-            anns_field=self.process_field_name(anns_field),
-            search_params=search_params,
-            output_fields=["*"],
-        )
+        try:
+            res = self._client.search(
+                self._collection_name,
+                data=data,
+                filter=filter,
+                offset=offset,
+                limit=limit,
+                anns_field=self.process_field_name(anns_field),
+                search_params=search_params,
+                output_fields=["*"],
+            )
+        except Exception as e:
+            if "not loaded" in str(e).lower():
+                logger.info(f"milvus: Collection '{self._collection_name}' not loaded, auto-loading...")
+                self._client.load_collection(self._collection_name)
+                res = self._client.search(
+                    self._collection_name,
+                    data=data,
+                    filter=filter,
+                    offset=offset,
+                    limit=limit,
+                    anns_field=self.process_field_name(anns_field),
+                    search_params=search_params,
+                    output_fields=["*"],
+                )
+            else:
+                raise e
 
         finish_time = time.time()
         logger.debug(f"Takes {finish_time-start_time:.4f} seconds to search")
@@ -216,14 +233,29 @@ class MilvusDatabase(object):
 
         start_time = time.time()
 
-        res = self._client.hybrid_search(
-            self._collection_name,
-            reqs=reqs,
-            ranker=ranker,
-            offset=offset,
-            limit=limit,
-            output_fields=["*"],
-        )
+        try:
+            res = self._client.hybrid_search(
+                self._collection_name,
+                reqs=reqs,
+                ranker=ranker,
+                offset=offset,
+                limit=limit,
+                output_fields=["*"],
+            )
+        except Exception as e:
+            if "not loaded" in str(e).lower():
+                logger.info(f"milvus: Collection '{self._collection_name}' not loaded, auto-loading...")
+                self._client.load_collection(self._collection_name)
+                res = self._client.hybrid_search(
+                    self._collection_name,
+                    reqs=reqs,
+                    ranker=ranker,
+                    offset=offset,
+                    limit=limit,
+                    output_fields=["*"],
+                )
+            else:
+                raise e
 
         finish_time = time.time()
         logger.debug(f"Takes {finish_time-start_time:.4f} seconds to hybrid_search")
@@ -231,7 +263,14 @@ class MilvusDatabase(object):
         return res
 
     def get_size(self):
-        res = self._client.query(self._collection_name, output_fields=["count(*)"])
+        try:
+            res = self._client.query(self._collection_name, output_fields=["count(*)"])
+        except Exception as e:
+            if "not loaded" in str(e).lower():
+                self._client.load_collection(self._collection_name)
+                res = self._client.query(self._collection_name, output_fields=["count(*)"])
+            else:
+                raise e
         return res[0]["count(*)"]
 
     @classmethod
