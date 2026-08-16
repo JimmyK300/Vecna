@@ -69,6 +69,8 @@ class ImageHFCLIP(ImageCLIP):
         images: list[Path | str] | np.ndarray | torch.Tensor | list[Image.Image],
         callback: Optional[Callable] = None,
     ) -> np.ndarray:
+        if len(images) == 0:
+            return np.array([])
 
         dataset = ImageDataset(images, HFProcessorWrapper(self._processor))
 
@@ -81,21 +83,29 @@ class ImageHFCLIP(ImageCLIP):
             pin_memory=(True if GlobalConfig.get("analyse", "pin_memory") else False),
         )
 
-        image_features = torch.Tensor(0).to(self._device)
+        features_list = []
         num_batches = len(dataloader)
+        step = max(1, num_batches // 50)
+        use_autocast = self._device.type == "cuda"
 
         with torch.no_grad():
             if callback:
-                callback(self, 0, num_batches, image_features)
+                callback(self, 0, num_batches, [])
 
-            for i, data in enumerate(dataloader):
-                data = data.to(self._device)
-                batch_features = self._model.get_image_features(**data)
-                image_features = torch.cat([image_features, batch_features])
+            with torch.cuda.amp.autocast(enabled=use_autocast):
+                for i, data in enumerate(dataloader):
+                    data = data.to(self._device)
+                    batch_features = self._model.get_image_features(**data)
+                    features_list.append(batch_features)
 
-                if callback:
-                    callback(self, i + 1, num_batches, image_features)
-            image_features /= image_features.norm(dim=-1, keepdim=True)
+                    if callback and ((i + 1) % step == 0 or (i + 1) == num_batches):
+                        callback(self, i + 1, num_batches, features_list)
+
+            if len(features_list) == 0:
+                return np.array([])
+
+            image_features = torch.cat(features_list, dim=0)
+            image_features = image_features / image_features.norm(dim=-1, keepdim=True)
 
         return image_features.cpu().numpy()
 
@@ -106,9 +116,11 @@ class ImageHFCLIP(ImageCLIP):
             texts = [texts]
 
         tokenized_input = self._processor(text=texts, return_tensors="pt", padding=True).to(self._device)
+        use_autocast = self._device.type == "cuda"
         with torch.no_grad():
-            text_features = self._model.get_text_features(**tokenized_input)
-            text_features /= text_features.norm(dim=-1, keepdim=True)
+            with torch.cuda.amp.autocast(enabled=use_autocast):
+                text_features = self._model.get_text_features(**tokenized_input)
+                text_features = text_features / text_features.norm(dim=-1, keepdim=True)
         return text_features.cpu().numpy()
 
     def to(self, device: str | torch.device):
@@ -159,6 +171,8 @@ class ImageOpenCLIP(ImageCLIP):
         images: list[Path | str] | np.ndarray | torch.Tensor | list[Image.Image],
         callback: Optional[Callable] = None,
     ) -> np.ndarray:
+        if len(images) == 0:
+            return np.array([])
 
         dataset = ImageDataset(images, OpenCLIPPreprocessWrapper(self._preprocess))
 
@@ -171,22 +185,29 @@ class ImageOpenCLIP(ImageCLIP):
             pin_memory=(True if GlobalConfig.get("analyse", "pin_memory") else False),
         )
 
-        image_features = torch.Tensor(0).to(self._device)
+        features_list = []
         num_batches = len(dataloader)
+        step = max(1, num_batches // 50)
+        use_autocast = self._device.type == "cuda"
 
         with torch.no_grad():
             if callback:
-                callback(self, 0, num_batches, image_features)
+                callback(self, 0, num_batches, [])
 
-            for i, data in enumerate(dataloader):
-                data = data.to(self._device)
-                batch_features = self._model.encode_image(data)
-                image_features = torch.cat([image_features, batch_features])
+            with torch.cuda.amp.autocast(enabled=use_autocast):
+                for i, data in enumerate(dataloader):
+                    data = data.to(self._device)
+                    batch_features = self._model.encode_image(data)
+                    features_list.append(batch_features)
 
-                if callback:
-                    callback(self, i + 1, num_batches, image_features)
+                    if callback and ((i + 1) % step == 0 or (i + 1) == num_batches):
+                        callback(self, i + 1, num_batches, features_list)
 
-            image_features /= image_features.norm(dim=-1, keepdim=True)
+            if len(features_list) == 0:
+                return np.array([])
+
+            image_features = torch.cat(features_list, dim=0)
+            image_features = image_features / image_features.norm(dim=-1, keepdim=True)
 
         return image_features.cpu().numpy()
 

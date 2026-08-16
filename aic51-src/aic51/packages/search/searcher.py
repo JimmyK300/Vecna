@@ -1,7 +1,11 @@
 import hashlib
+import re
 import time
+import unicodedata
 from typing import Optional
 
+import numpy as np
+from sympy import limit
 import torch
 from pymilvus import AnnSearchRequest, RRFRanker
 
@@ -13,6 +17,56 @@ from aic51.packages.logger import logger
 
 from . import constants
 from .utils import Query
+from sentence_transformers import CrossEncoder
+
+
+def remove_diacritics(text: str) -> str:
+    if not text:
+        return ""
+    text = unicodedata.normalize("NFD", text)
+    text = "".join(c for c in text if unicodedata.category(c) != "Mn")
+    text = text.replace("đ", "d").replace("Đ", "D")
+    return unicodedata.normalize("NFC", text)
+
+
+def check_exact_phrases(query_str: str, target_text: str, fallback_query: str = "") -> tuple[bool, int]:
+    """
+    Extracts double-quoted exact phrases from query_str or fallback_query (e.g. "câu 3").
+    Returns (is_valid, phrase_count).
+    If exact phrases exist, target_text must match them (case-insensitive, diacritic-insensitive, exact word boundaries).
+    """
+    phrases = re.findall(r'"([^"]+)"', query_str) if query_str else []
+    if not phrases and fallback_query:
+        phrases = re.findall(r'"([^"]+)"', fallback_query)
+
+    phrases = [p.strip() for p in phrases if p.strip()]
+    if not phrases:
+        return True, 0
+
+    if not target_text:
+        return False, len(phrases)
+
+    norm_target = re.sub(r"\s+", " ", str(target_text).lower())
+    norm_target_no_accent = remove_diacritics(norm_target)
+
+    for phrase in phrases:
+        norm_phrase = re.sub(r"\s+", " ", phrase.lower())
+        norm_phrase_no_accent = remove_diacritics(norm_phrase)
+
+        # Allow flexible spacing between word and digit boundaries (e.g. "cau 3" vs "cau3")
+        flex_phrase = re.sub(r"(\w)\s+(\d)", r"\1\\s*\2", norm_phrase)
+        flex_phrase = re.sub(r"(\d)\s+(\w)", r"\1\\s*\2", flex_phrase)
+
+        flex_phrase_no_accent = re.sub(r"(\w)\s+(\d)", r"\1\\s*\2", norm_phrase_no_accent)
+        flex_phrase_no_accent = re.sub(r"(\d)\s+(\w)", r"\1\\s*\2", flex_phrase_no_accent)
+
+        pattern_exact = r"(?<!\w)" + flex_phrase + r"(?!\w)"
+        pattern_no_accent = r"(?<!\w)" + flex_phrase_no_accent + r"(?!\w)"
+
+        if not (re.search(pattern_exact, norm_target) or re.search(pattern_no_accent, norm_target_no_accent)):
+            return False, len(phrases)
+
+    return True, len(phrases)
 
 
 class Searcher(object):
@@ -36,7 +90,7 @@ class Searcher(object):
 
     @property
     def target_features(self):
-        return list(self._features.keys())
+        return [name for name in self._features.keys() if not name.endswith("_dense")]
 
     @property
     def support_ocr(self):
@@ -54,22 +108,41 @@ class Searcher(object):
         target_features: list = [],
         /,
         nprobe: int = 8,
-        temporal_k: int = 10000,
+        temporal_k: int = 2000,
         ocr_weight: float = 0.5,
         asr_weight: float = 0.0,
-        max_interval: int = 250,
+        hybrid_alpha: float = 0.9,
+        max_interval: int = 1000,
         selected: str | None = None,
         auto_translate: bool = False,
+        en_to_vi_translate: bool = False,
+        include_videos: str = "",
+        exclude_videos: str = "",
     ):
         start_time = time.time()
-        query = Query(q, auto_translate=auto_translate)
+        query = Query(
+            q,
+            auto_translate=auto_translate,
+            en_to_vi_translate=en_to_vi_translate,
+            include_videos=include_videos,
+            exclude_videos=exclude_videos,
+        )
 
         if query.simple:
-            logger.info(f"searcher: get video_ids={query.video_ids}")
-            res = self._get_videos(query.video_ids, offset, limit, selected)
+            logger.info(f"searcher: get include_video_ids={query.include_video_ids}, exclude_video_ids={query.exclude_video_ids}")
+            res = self._get_videos(query.include_video_ids, query.exclude_video_ids, offset, limit, selected)
         elif query.advance and not query.temporal:
             logger.info(f"searcher: advance_search query={query.data}")
-            res = self._advance_search(query, offset, limit, target_features, ocr_weight=ocr_weight, asr_weight=asr_weight, nprobe=nprobe)
+            res = self._advance_search(
+                query,
+                offset,
+                limit,
+                target_features,
+                ocr_weight=ocr_weight,
+                asr_weight=asr_weight,
+                hybrid_alpha=hybrid_alpha,
+                nprobe=nprobe,
+            )
         else:
             logger.info(f"searcher: temporal_search query={query.data}")
             res = self._temporal_search(
@@ -79,6 +152,7 @@ class Searcher(object):
                 target_features,
                 ocr_weight=ocr_weight,
                 asr_weight=asr_weight,
+                hybrid_alpha=hybrid_alpha,
                 nprobe=nprobe,
                 temporal_k=temporal_k,
                 max_interval=max_interval,
@@ -145,21 +219,211 @@ class Searcher(object):
         }
         return res
 
-    def _get_video_filter(self, video_ids: list[str]):
-        video_ids_fitler = " || ".join([f'frame_id like "{x.strip()}#%"' for x in video_ids])
-        return video_ids_fitler
+    def _get_video_filter(self, include_video_ids: list[str] = []):
+        clauses = []
+        if include_video_ids and len(include_video_ids) > 0:
+            inc_parts = [f'frame_id like "{x.strip()}%"' for x in include_video_ids if x.strip()]
+            if len(inc_parts) == 1:
+                clauses.append(inc_parts[0])
+            elif len(inc_parts) > 1:
+                clauses.append(f"({' || '.join(inc_parts)})")
+
+        return " && ".join(clauses) if clauses else ""
 
     @staticmethod
     def _normalize_scores(score_map: dict) -> dict:
-        """Min-max normalize scores to [0, 1] range."""
+        """Max-scale normalize scores to [0, 1] range relative to the maximum raw score."""
         if not score_map:
             return {}
         scores = list(score_map.values())
-        min_s = min(scores)
         max_s = max(scores)
-        if max_s == min_s:
-            return {k: 1.0 for k in score_map}
-        return {k: (v - min_s) / (max_s - min_s) for k, v in score_map.items()}
+        if max_s <= 0:
+            return {k: 0.0 for k in score_map}
+        return {k: v / max_s for k, v in score_map.items()}
+
+    @staticmethod
+    def _text_field_from_index_field(field_name: str | None) -> str:
+        if not field_name:
+            return ""
+        if field_name.endswith("_sparse"):
+            return field_name.removesuffix("_sparse")
+        if field_name.endswith("_dense"):
+            return field_name.removesuffix("_dense")
+        return field_name
+
+    @staticmethod
+    def _extract_query_texts(query_features: dict, feature_key: str) -> tuple[list[str], str]:
+        if f"{feature_key}_translated" in query_features:
+            query_list = query_features[f"{feature_key}_translated"]
+        elif feature_key in query_features:
+            query_list = query_features[feature_key]
+        elif "text_translated" in query_features:
+            query_list = [query_features["text_translated"]]
+        elif "text" in query_features:
+            query_list = [query_features["text"]]
+        else:
+            query_list = []
+
+        if isinstance(query_list, str):
+            query_list = [query_list]
+
+        raw_query = ""
+        if feature_key in query_features:
+            raw_value = query_features[feature_key]
+            raw_query = raw_value[0] if isinstance(raw_value, list) and len(raw_value) > 0 else str(raw_value)
+        elif "text" in query_features:
+            raw_query = query_features["text"]
+
+        return query_list, raw_query
+
+    def _search_text_component(
+        self,
+        query_features: dict,
+        feature_key: str,
+        sparse_field: str | None,
+        dense_field: str | None,
+        dense_model_name: str | None,
+        video_filter: str,
+        subquery_limit: int,
+        nprobe: int,
+        hybrid_alpha: float,
+    ) -> tuple[dict, dict]:
+        query_list, raw_query = self._extract_query_texts(query_features, feature_key)
+        if len(query_list) == 0:
+            return {}, {}
+
+        text_field = self._text_field_from_index_field(sparse_field or dense_field)
+        sparse_raw_scores = {}
+        dense_raw_scores = {}
+        entity_data = {}
+        all_frame_ids = set()
+
+        dense_extractor = None
+        if dense_model_name and dense_model_name in self._extractors:
+            dense_extractor = self._extractors[dense_model_name]["feature_extractor"]
+
+        for query_text in query_list:
+            # 1. Detect xem user có dùng ngoặc kép " " không
+            has_exact = bool(re.findall(r'"([^"]+)"', query_text) or re.findall(r'"([^"]+)"', raw_query))
+            
+            # 2. Mở rộng pool nếu có ngoặc kép
+            search_limit = max(subquery_limit * 5, 500) if has_exact else max(subquery_limit * 2, 100)
+            
+            # 3. BÓC dấu ngoặc kép ra trước khi ném cho Milvus và BGE-M3
+            clean_query = re.sub(r'"', ' ', query_text).strip()
+            query_input = clean_query if clean_query else query_text
+
+            # === 1. SPARSE SEARCH (BM25) - GIỮ HARD FILTER ===
+            if sparse_field:
+                search_results = self._database.search(
+                    data=[query_input],
+                    filter=video_filter,
+                    offset=0,
+                    limit=search_limit,
+                    anns_field=sparse_field,
+                    search_params={"metric_type": "BM25"},
+                )
+                if search_results and len(search_results) > 0:
+                    for hit in search_results[0]:
+                        fid = hit["entity"]["frame_id"]
+                        doc_text = hit["entity"].get(text_field, "")
+                        
+                        if has_exact:
+                            is_valid, phrase_count = check_exact_phrases(query_text, doc_text, fallback_query=raw_query)
+                            if not is_valid:
+                                continue # Vứt nếu không khớp exact phrase
+                            boost = 1.5 # Boost điểm BM25
+                        else:
+                            boost = 1.0
+                            
+                        all_frame_ids.add(fid)
+                        sparse_raw_scores[fid] = sparse_raw_scores.get(fid, 0) + hit["distance"] * boost
+                        if fid not in entity_data:
+                            entity_data[fid] = hit["entity"]
+
+            # === 2. DENSE SEARCH (BGE-M3) - BỎ HARD FILTER, SEARCH SEMANTIC THUẦN ===
+            if dense_field and dense_extractor is not None:
+                dense_query = dense_extractor.get_text_features([query_input])
+                dense_query = np.asarray(dense_query).reshape(-1).tolist()
+
+                search_results = self._database.search(
+                    data=[dense_query],
+                    filter=video_filter,
+                    offset=0,
+                    limit=search_limit,
+                    anns_field=dense_field,
+                    search_params={"nprobe": nprobe, "metric_type": "COSINE"},
+                )
+                if search_results and len(search_results) > 0:
+                    for hit in search_results[0]:
+                        fid = hit["entity"]["frame_id"]
+                        # KHÔNG filter, KHÔNG continue. Để BGE-M3 tự do tìm semantic.
+                        all_frame_ids.add(fid)
+                        dense_raw_scores[fid] = dense_raw_scores.get(fid, 0) + hit["distance"]
+                        if fid not in entity_data:
+                            entity_data[fid] = hit["entity"]
+
+        # Normalize và tính điểm Hybrid
+        sparse_norm = self._normalize_scores(sparse_raw_scores)
+        dense_norm = self._normalize_scores(dense_raw_scores)
+        results = []
+        for fid in all_frame_ids:
+            final_score = hybrid_alpha * dense_norm.get(fid, 0.0) + (1.0 - hybrid_alpha) * sparse_norm.get(fid, 0.0)
+            results.append(
+                {
+                    "entity": entity_data[fid],
+                    "distance": final_score,
+                    "scores": {
+                        "final": round(final_score, 6),
+                        "dense": round(dense_norm.get(fid, 0.0), 6),
+                        "sparse": round(sparse_norm.get(fid, 0.0), 6),
+                        "dense_raw": round(dense_raw_scores.get(fid, 0.0), 6),
+                        "sparse_raw": round(sparse_raw_scores.get(fid, 0.0), 6),
+                    },
+                }
+            )
+
+        results.sort(key=lambda x: x["distance"], reverse=True)
+
+        # Log top 5 để debug
+        top_k = 5
+        logger.info(f"[TOP {top_k}][{feature_key}] dense_model={dense_model_name} sparse_field={sparse_field} dense_field={dense_field}")
+        for i, item in enumerate(results[:top_k], 1):
+            fid = item["entity"]["frame_id"]
+            s = item["scores"]
+            logger.info(
+                f"[TOP {top_k}][{feature_key}] {i}. frame={fid} "
+                f"final={s['final']} "
+                f"dense={s['dense']} "
+                f"bm25={s['sparse']} "
+            )
+
+        return results, entity_data
+    def _filter_exclude_videos(results: list[dict], exclude_video_ids: list[str]) -> list[dict]:
+        """Post-filtering helper to remove excluded videos from candidate or final search results."""
+        if not exclude_video_ids or len(exclude_video_ids) == 0 or not results:
+            return results
+        excludes = [x.lower().strip() for x in exclude_video_ids if x.strip()]
+        if not excludes:
+            return results
+
+        filtered_results = []
+        for r in results:
+            fid = str(r.get("entity", {}).get("frame_id", "")).lower()
+            vid = fid.split("#")[0] if "#" in fid else fid
+            if any(vid.startswith(ex) or fid.startswith(ex) or ex in vid for ex in excludes):
+                continue
+            if "time_line" in r and isinstance(r["time_line"], list):
+                if any(
+                    any(
+                        tfid.lower().startswith(ex) or tfid.lower().split("#")[0].startswith(ex) or ex in tfid.lower()
+                        for ex in excludes
+                    )
+                    for tfid in r["time_line"]
+                ):
+                    continue
+            filtered_results.append(r)
+        return filtered_results
 
     def _similarity_search(
         self,
@@ -171,13 +435,17 @@ class Searcher(object):
         /,
         ocr_weight: float = 0.5,
         asr_weight: float = 0.0,
+        hybrid_alpha: float = 0.7,
         nprobe: int = 8,
+        exclude_video_ids: list[str] = [],
     ):
         ocr_weight = max(0, min(1, ocr_weight))
         asr_weight = max(0, min(1 - ocr_weight, asr_weight))
         video_filter = self._get_video_filter(video_ids)
 
         subquery_limit = offset + limit
+        if exclude_video_ids and len(exclude_video_ids) > 0:
+            subquery_limit = max(subquery_limit * 2, 300)
 
         # Score maps: frame_id -> raw score (per component)
         clip_raw_scores = {}  # frame_id -> sum of raw CLIP scores
@@ -187,10 +455,11 @@ class Searcher(object):
         # Store entity data for each frame_id
         entity_data = {}
 
-        # 1. CLIP Search (using general "text" query)
+        # 1. CLIP Search (using general "text" query or translated English "text_en" query)
         clip_weight = 1.0 - ocr_weight - asr_weight
         clip_req_count = 0
-        if "text" in query_features and clip_weight > 0:
+        clip_query_text = query_features.get("text_en", query_features.get("text", ""))
+        if clip_query_text and clip_weight > 0:
             text_embeddings = {}
             for target_name in target_features:
                 if target_name not in self._features:
@@ -200,7 +469,7 @@ class Searcher(object):
                 m = self._features[target_name]
                 if m not in text_embeddings:
                     text_embeddings[m] = (
-                        self._extractors[m]["feature_extractor"].get_text_features(query_features["text"]).tolist()[0]
+                        self._extractors[m]["feature_extractor"].get_text_features(clip_query_text).tolist()[0]
                     )
 
                 search_results = self._database.search(
@@ -221,71 +490,47 @@ class Searcher(object):
                         if fid not in entity_data:
                             entity_data[fid] = hit["entity"]
 
-        # 2. OCR Search
-        ocr_req_count = 0
+        # 2. OCR Search (dense + BM25 hybrid)
         if self._ocr_name and ocr_weight > 0:
-            ocr_list = []
-            if "ocr_translated" in query_features:
-                ocr_list = query_features["ocr_translated"]
-            elif "ocr" in query_features:
-                ocr_list = query_features["ocr"]
-            elif "text_translated" in query_features:
-                ocr_list = [query_features["text_translated"]]
-            elif "text" in query_features:
-                ocr_list = [query_features["text"]]
+            ocr_dense_name = getattr(self, "_ocr_dense_name", None)
+            ocr_dense_model = self._features.get(ocr_dense_name) if ocr_dense_name else None
+            ocr_results, ocr_entities = self._search_text_component(
+                query_features,
+                "ocr",
+                self._ocr_name,
+                ocr_dense_name,
+                ocr_dense_model,
+                video_filter,
+                subquery_limit,
+                nprobe,
+                hybrid_alpha,
+            )
+            for hit in ocr_results:
+                fid = hit["entity"]["frame_id"]
+                all_frame_ids.add(fid)
+                ocr_raw_scores[fid] = hit["distance"]
+                entity_data[fid] = ocr_entities[fid]
 
-            if len(ocr_list) > 0:
-                for ocr in ocr_list:
-                    search_results = self._database.search(
-                        data=[ocr],
-                        filter=video_filter,
-                        offset=0,
-                        limit=subquery_limit,
-                        anns_field=self._ocr_name,
-                        search_params={"metric_type": "BM25"},
-                    )
-                    ocr_req_count += 1
-
-                    if search_results and len(search_results) > 0:
-                        for hit in search_results[0]:
-                            fid = hit["entity"]["frame_id"]
-                            all_frame_ids.add(fid)
-                            ocr_raw_scores[fid] = ocr_raw_scores.get(fid, 0) + hit["distance"]
-                            if fid not in entity_data:
-                                entity_data[fid] = hit["entity"]
-
-        # 3. ASR Search
-        asr_req_count = 0
+        # 3. ASR Search (dense + BM25 hybrid)
         if self._asr_name and asr_weight > 0:
-            asr_list = []
-            if "asr_translated" in query_features:
-                asr_list = query_features["asr_translated"]
-            elif "asr" in query_features:
-                asr_list = query_features["asr"]
-            elif "text_translated" in query_features:
-                asr_list = [query_features["text_translated"]]
-            elif "text" in query_features:
-                asr_list = [query_features["text"]]
-
-            if len(asr_list) > 0:
-                for asr in asr_list:
-                    search_results = self._database.search(
-                        data=[asr],
-                        filter=video_filter,
-                        offset=0,
-                        limit=subquery_limit,
-                        anns_field=self._asr_name,
-                        search_params={"metric_type": "BM25"},
-                    )
-                    asr_req_count += 1
-
-                    if search_results and len(search_results) > 0:
-                        for hit in search_results[0]:
-                            fid = hit["entity"]["frame_id"]
-                            all_frame_ids.add(fid)
-                            asr_raw_scores[fid] = asr_raw_scores.get(fid, 0) + hit["distance"]
-                            if fid not in entity_data:
-                                entity_data[fid] = hit["entity"]
+            asr_dense_name = getattr(self, "_asr_dense_name", None)
+            asr_dense_model = self._features.get(asr_dense_name) if asr_dense_name else None
+            asr_results, asr_entities = self._search_text_component(
+                query_features,
+                "asr",
+                self._asr_name,
+                asr_dense_name,
+                asr_dense_model,
+                video_filter,
+                subquery_limit,
+                nprobe,
+                hybrid_alpha,
+            )
+            for hit in asr_results:
+                fid = hit["entity"]["frame_id"]
+                all_frame_ids.add(fid)
+                asr_raw_scores[fid] = hit["distance"]
+                entity_data[fid] = asr_entities[fid]
 
         # Normalize scores per component
         clip_norm = self._normalize_scores(clip_raw_scores)
@@ -318,6 +563,9 @@ class Searcher(object):
         # Sort by final score descending
         results.sort(key=lambda x: x["distance"], reverse=True)
 
+        # Fast Python Post-Filtering for Exclude Videos (Hybrid Strategy for Maximum Speed)
+        results = self._filter_exclude_videos(results, exclude_video_ids)
+
         return results
 
     def _advance_search(
@@ -329,46 +577,173 @@ class Searcher(object):
         /,
         ocr_weight: float = 0.5,
         asr_weight: float = 0.0,
+        hybrid_alpha: float = 0.7,
         nprobe: int = 8,
     ):
         query_features = query.data[0]["features"]
+        
+        # Lấy raw query text để rerank
+        raw_query = ""
+        if "text" in query_features:
+            val = query_features["text"]
+            raw_query = val[0] if isinstance(val, list) and len(val) > 0 else str(val)
+        elif "text_translated" in query_features:
+            val = query_features["text_translated"]
+            raw_query = val[0] if isinstance(val, list) and len(val) > 0 else str(val)
 
-        if len(query.video_ids) > 0:
+        if len(query.include_video_ids) > 0:
             results = self._similarity_search(
                 query_features,
-                query.video_ids,
+                query.include_video_ids,
                 0,
                 10000,
                 target_features,
                 ocr_weight=ocr_weight,
                 asr_weight=asr_weight,
+                hybrid_alpha=hybrid_alpha,
                 nprobe=nprobe,
+                exclude_video_ids=query.exclude_video_ids,
             )
             total = len(results)
-            results = results[offset : offset + limit]
         else:
-            # Fetch candidate pool (e.g. max 200 or offset+limit) for fast hybrid ranking
-            candidate_limit = max(200, offset + limit)
-            results = self._similarity_search(
-                query_features,
-                [],
-                0,
-                candidate_limit,
-                target_features,
-                ocr_weight=ocr_weight,
-                asr_weight=asr_weight,
-                nprobe=nprobe,
+            # FIX INDENTATION Ở ĐÂY
+            candidate_limit = (
+                max(300, (offset + limit) * 3)
+                if len(query.exclude_video_ids) > 0
+                else max(200, offset + limit)
             )
-            total = self._database.get_size()
-            results = results[offset : offset + limit]
 
+            db_size = self._database.get_size()
+
+            while True:
+                results = self._similarity_search(
+                    query_features,
+                    [],
+                    0,
+                    candidate_limit,
+                    target_features,
+                    ocr_weight=ocr_weight,
+                    asr_weight=asr_weight,
+                    hybrid_alpha=hybrid_alpha,
+                    nprobe=nprobe,
+                    exclude_video_ids=query.exclude_video_ids,
+                )
+
+                if (
+                    len(results) >= offset + limit
+                    or candidate_limit >= db_size
+                    or candidate_limit >= 10000
+                ):
+                    break
+
+                candidate_limit = min(db_size, candidate_limit * 2)
+
+            total = db_size
+
+        # ====== RERANK Ở ĐÂY ======
+        if self._reranker is not None and raw_query:
+            rerank_k = max(limit, self._reranker_top_k)
+            results = self._rerank_candidates(raw_query, results, top_k=rerank_k)
+        # ===========================
+
+        results = results[offset : offset + limit]
         res = {
             "results": results,
             "total": total,
             "offset": offset,
         }
         return res
+    def _rerank_candidates(self, query_text: str, candidates: list, top_k: int = 50) -> list:
+        """
+        Rerank only the selected candidate pool using BGE CrossEncoder.
 
+        IMPORTANT:
+        - Never mix reranker scores with hybrid scores.
+        - Only candidates actually scored by the reranker are reordered.
+        - Candidates without reranker scores stay behind the reranked pool.
+        """
+
+        if self._reranker is None or not query_text or not candidates:
+            return candidates
+
+        # Number of candidates that will actually be reranked
+        rerank_limit = min(
+            max(top_k * 2, self._reranker_top_k),
+            len(candidates),
+        )
+
+        rerank_pool = candidates[:rerank_limit]
+        remaining = candidates[rerank_limit:]
+
+        pairs = []
+        valid_items = []
+
+        for item in rerank_pool:
+            entity = item.get("entity", {})
+
+            # Current schema: ASR + OCR only
+            doc_parts = []
+
+            asr = entity.get("asr")
+            if isinstance(asr, str) and asr.strip():
+                doc_parts.append(asr.strip())
+
+            ocr = entity.get("ocr")
+            if isinstance(ocr, str) and ocr.strip():
+                doc_parts.append(ocr.strip())
+
+            doc_text = " ".join(doc_parts)
+
+            if not doc_text:
+                continue
+
+            pairs.append([query_text, doc_text])
+            valid_items.append(item)
+
+        if not pairs:
+            return candidates
+
+        try:
+            rerank_scores = self._reranker.predict(
+                pairs,
+                convert_to_numpy=True,
+                show_progress_bar=False,
+            )
+        except Exception as e:
+            logger.error(f"searcher: Reranker prediction failed: {e}")
+            return candidates
+
+        # Assign reranker score ONLY to items that were actually scored
+        for item, score in zip(valid_items, rerank_scores):
+            item.setdefault("scores", {})
+            item["scores"]["hybrid"] = item["distance"]
+            item["scores"]["rerank"] = float(score)
+
+            # distance now means reranker score for this item
+            item["distance"] = float(score)
+
+        # Items with no text cannot be reranked.
+        # Put them after reranked items.
+        valid_ids = {id(item) for item in valid_items}
+
+        reranked_items = [
+            item for item in rerank_pool
+            if id(item) in valid_ids
+        ]
+
+        unrerrankable_items = [
+            item for item in rerank_pool
+            if id(item) not in valid_ids
+        ]
+
+        reranked_items.sort(
+            key=lambda x: x["scores"]["rerank"],
+            reverse=True
+        )
+
+        # IMPORTANT:
+        # Do NOT compare rerank score against hybrid score.
+        return reranked_items + unrerrankable_items + remaining
     def _temporal_search(
         self,
         query: Query,
@@ -378,16 +753,19 @@ class Searcher(object):
         /,
         ocr_weight: float = 0.5,
         asr_weight: float = 0.0,
+        hybrid_alpha: float = 0.7,
         nprobe: int = 8,
-        temporal_k: int = 100,
-        max_interval: int = 100,
+        temporal_k: int = 2000,
+        max_interval: int = 1000,
     ):
         params = {
             "query": query.data,
-            "video_ids": query.video_ids,
+            "video_ids": query.include_video_ids,
+            "exclude_video_ids": query.exclude_video_ids,
             "target_features": target_features,
             "ocr_weight": ocr_weight,
             "asr_weight": asr_weight,
+            "hybrid_alpha": hybrid_alpha,
             "nprobe": nprobe,
             "temporal_k": temporal_k,
             "max_interval": max_interval,
@@ -403,13 +781,15 @@ class Searcher(object):
             for q in query.data:
                 results = self._similarity_search(
                     q["features"],
-                    query.video_ids,
+                    query.include_video_ids,
                     0,
                     temporal_k,
                     target_features,
                     ocr_weight=ocr_weight,
                     asr_weight=asr_weight,
+                    hybrid_alpha=hybrid_alpha,
                     nprobe=nprobe,
+                    exclude_video_ids=query.exclude_video_ids,
                 )
                 results_list.append(results)
 
@@ -418,8 +798,9 @@ class Searcher(object):
 
             st = time.time()
             temporal_results = self._combine_temporal_results(results_list, max_interval)
+            temporal_results = self._filter_exclude_videos(temporal_results, query.exclude_video_ids)
             en = time.time()
-            logger.info(f"searcher: Take {en-st:.4f} seconds to combine results")
+            logger.info(f"searcher: Take {en-st:.4f} seconds to combine and filter results")
 
             self.cache[query_hash] = temporal_results
 
@@ -513,19 +894,30 @@ class Searcher(object):
 
         return best
 
-    def _get_videos(self, video_ids: list[str], offset: int = 0, limit: int = 10000, selected: Optional[str] = None):
-        query_str = f"{constants.CACHE_GET_VIDEOS}:{repr(video_ids)}"
+    def _get_videos(
+        self,
+        include_video_ids: list[str] = [],
+        exclude_video_ids: list[str] = [],
+        offset: int = 0,
+        limit: int = 10000,
+        selected: Optional[str] = None,
+    ):
+        query_str = f"{constants.CACHE_GET_VIDEOS}:{repr(include_video_ids)}:{repr(exclude_video_ids)}"
         query_hash = hashlib.sha256(query_str.encode("utf-8")).hexdigest()
 
         if query_hash in self.cache:
             videos = self.cache[query_hash]
-        elif len(video_ids) == 0:
+        elif len(include_video_ids) == 0 and len(exclude_video_ids) == 0:
             videos = []
         else:
-            video_ids_fitler = " || ".join([f'frame_id like "{x.strip()}#%"' for x in video_ids])
-            videos = self._database.query(video_ids_fitler, 0, 10000)
+            video_filter = self._get_video_filter(include_video_ids)
+            query_limit = 10000 if include_video_ids else max(500, (offset + limit) * 5)
+            videos = self._database.query(video_filter, 0, query_limit)
             videos = sorted(videos, key=lambda x: x["frame_id"])
             videos = [{"entity": x} for x in videos]
+
+            videos = self._filter_exclude_videos(videos, exclude_video_ids)
+
             self.cache[query_hash] = videos
 
         if selected:
@@ -545,13 +937,17 @@ class Searcher(object):
         self._features = {}
         if GlobalConfig.get("searcher", "ocr", "enable"):
             self._ocr_name = GlobalConfig.get("searcher", "ocr", "ocr_field") or "ocr"
+            self._ocr_dense_name = GlobalConfig.get("searcher", "ocr", "ocr_dense_field")
         else:
             self._ocr_name = None
+            self._ocr_dense_name = None
 
         if GlobalConfig.get("searcher", "asr", "enable"):
             self._asr_name = GlobalConfig.get("searcher", "asr", "asr_field") or "asr"
+            self._asr_dense_name = GlobalConfig.get("searcher", "asr", "asr_dense_field")
         else:
             self._asr_name = None
+            self._asr_dense_name = None
 
         language_models = GlobalConfig.get("searcher", "language_models") or {}
 
@@ -560,6 +956,7 @@ class Searcher(object):
             model_name = GlobalConfig.get("searcher", "language_models", m, "model")
             arch_name = GlobalConfig.get("searcher", "language_models", m, "arch_name")
             pretrained_model = GlobalConfig.get("searcher", "language_models", m, "pretrained_model")
+            text_source = GlobalConfig.get("searcher", "language_models", m, "text_source")
             target_features = GlobalConfig.get("searcher", "language_models", m, "target")
             batch_size = 1
 
@@ -571,6 +968,7 @@ class Searcher(object):
                     source=source,
                     arch_name=arch_name,
                     pretrained_model=pretrained_model,
+                    text_source=text_source,
                     name=m,
                     batch_size=batch_size,
                     device=device,
@@ -593,3 +991,19 @@ class Searcher(object):
                 self._features[t] = m
 
             self._extractors[m] = {"feature_extractor": feature_extractor, "target_features": target_features}
+        reranker_enable = GlobalConfig.get("searcher", "reranker", "enable")
+        if reranker_enable:
+            reranker_model = GlobalConfig.get("searcher", "reranker", "model") or "BAAI/bge-reranker-v2-m3"
+            reranker_device = str(device).split(":")[0]  # "cuda:0" -> "cuda"
+            try:
+                logger.info(f"searcher: Loading Reranker model: {reranker_model}")
+                self._reranker = CrossEncoder(reranker_model, device=reranker_device)
+                self._reranker_top_k = int(GlobalConfig.get("searcher", "reranker", "top_k") or 50)
+                logger.info(f"searcher: Reranker loaded successfully (top_k={self._reranker_top_k})")
+            except Exception as e:
+                logger.error(f"searcher: Failed to load Reranker: {e}")
+                self._reranker = None
+                self._reranker_top_k = 0
+        else:
+            self._reranker = None
+            self._reranker_top_k = 0

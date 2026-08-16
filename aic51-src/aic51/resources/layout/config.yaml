@@ -16,7 +16,7 @@ add:
 
 analyse:
   # num_workers of DataLoader
-  num_workers: 0
+  num_workers: 4
   # pin_memory of DataLoader
   pin_memory: true
 
@@ -34,31 +34,59 @@ features: &analyse_features
     model: "image_clip"
     source: "open_clip"
     arch_name: "PE-Core-L-14-336"
-    pretrained_model: "meta" 
+    pretrained_model: "meta"
     analyse:
       batch_size: 64
     index:
       datatype: "FLOAT_VECTOR"
-      dim: 1024 
+      dim: 1024
       metric_type: "COSINE"
       index_type: "SCANN"
       params:
         nlist: 512
 
-  video_clip_pe-l-14-336:
-    model: "video_clip"
+  image_siglip_so400m-384:
+    model: "image_siglip"
     source: "open_clip"
-    arch_name: "PE-Core-L-14-336"
-    pretrained_model: "meta" 
+    arch_name: "ViT-SO400M-14-SigLIP-384"
+    pretrained_model: "webli"
     analyse:
-      batch_size: 4
+      batch_size: 64
     index:
       datatype: "FLOAT_VECTOR"
-      dim: 1024 
+      dim: 1152
       metric_type: "COSINE"
       index_type: "SCANN"
       params:
         nlist: 512
+
+  qwen_vl:
+    model: "qwen_vl_embedding"
+    pretrained_model: "Qwen/Qwen3-VL-Embedding-2B"
+    analyse:
+      batch_size: 1
+    index:
+      datatype: "FLOAT_VECTOR"
+      dim: 2048
+      metric_type: "COSINE"
+      index_type: "SCANN"
+      params:
+        nlist: 512
+
+  # video_clip_pe-l-14-336:
+  #   model: "video_clip"
+  #   source: "open_clip"
+  #   arch_name: "PE-Core-L-14-336"
+  #   pretrained_model: "meta"
+  #   analyse:
+  #     batch_size: 4
+  #   index:
+  #     datatype: "FLOAT_VECTOR"
+  #     dim: 1024
+  #     metric_type: "COSINE"
+  #     index_type: "SCANN"
+  #     params:
+  #       nlist: 512
 
   ocr:
     model: "ocr"
@@ -80,7 +108,7 @@ features: &analyse_features
     source: "whisperx"
     arch_name: "large-v3-turbo"
     analyse:
-      batch_size: 16   # đây là batch_size nội bộ của whisperx.transcribe (chunk theo VAD), KHÔNG phải số clip xử lý song song
+      batch_size: 16
     index:
       default_value: ""
       datatype: "VARCHAR"
@@ -91,24 +119,84 @@ features: &analyse_features
         bm25_b: 0.75
         inverted_index_algo: "TAAT_NAIVE"
 
+  ocr_dense:
+    model: "text_embedding"
+    source: "hf"
+    pretrained_model: "BAAI/bge-m3"
+    text_source: "ocr"
+    analyse:
+      batch_size: 16
+    index:
+      datatype: "FLOAT_VECTOR"
+      dim: 1024
+      metric_type: "COSINE"
+      index_type: "SCANN"
+      params:
+        nlist: 512
+
+  asr_dense:
+    model: "text_embedding"
+    source: "hf"
+    pretrained_model: "BAAI/bge-m3"
+    text_source: "asr"
+    analyse:
+      batch_size: 16
+    index:
+      datatype: "FLOAT_VECTOR"
+      dim: 1024
+      metric_type: "COSINE"
+      index_type: "SCANN"
+      params:
+        nlist: 512
+
 searcher:
   language_models:
     language_clip_pe-l-14-336:
       model: "image_clip"
       source: "open_clip"
       arch_name: "PE-Core-L-14-336"
-      pretrained_model: "meta" 
+      pretrained_model: "meta"
       target:
-        - image_clip_pe-l-14-336 
-        - video_clip_pe-l-14-336 
+        - image_clip_pe-l-14-336
+
+    language_siglip_so400m-384:
+      model: "image_siglip"
+      source: "open_clip"
+      arch_name: "ViT-SO400M-14-SigLIP-384"
+      pretrained_model: "webli"
+      target:
+        - image_siglip_so400m-384
+
+    language_qwen_vl:
+      model: "qwen_vl_embedding"
+      pretrained_model: "Qwen/Qwen3-VL-Embedding-2B"
+      target:
+        - qwen_vl
+
+    text_bge_m3:
+      model: "text_embedding"
+      source: "hf"
+      pretrained_model: "BAAI/bge-m3"
+      target:
+        - ocr_dense
+        - asr_dense
 
   ocr:
     ocr_field: "ocr_sparse"
+    ocr_dense_field: "ocr_dense"
     enable: true
-    
+    hybrid_alpha: 0.7
+
   asr:
     asr_field: "asr_sparse"
+    asr_dense_field: "asr_dense"
     enable: true
+    hybrid_alpha: 0.7
+
+  reranker:
+    enable: true
+    model: "BAAI/bge-reranker-v2-m3"
+    top_k: 20
 
 frontend:
   dev_port: 5173

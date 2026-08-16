@@ -75,6 +75,8 @@ class VideoHFCLIP(VideoCLIP):
         images: list[Path | str] | np.ndarray | torch.Tensor | list[Image.Image],
         callback: Optional[Callable] = None,
     ) -> np.ndarray:
+        if len(images) == 0:
+            return np.array([])
 
         dataset = VideoDataset(images, HFProcessorWrapper(self._processor))
 
@@ -174,6 +176,8 @@ class VideoOpenCLIP(VideoCLIP):
         images: list[Path | str] | np.ndarray | torch.Tensor | list[Image.Image],
         callback: Optional[Callable] = None,
     ) -> np.ndarray:
+        if len(images) == 0:
+            return np.array([])
 
         dataset = VideoDataset(images, OpenCLIPPreprocessWrapper(self._preprocess))
 
