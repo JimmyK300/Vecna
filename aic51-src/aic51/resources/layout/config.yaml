@@ -124,6 +124,17 @@ features: &analyse_features
     source: "hf"
     pretrained_model: "BAAI/bge-m3"
     text_source: "ocr"
+    # pytorch keeps the original Transformers path. onnx uses ONNX Runtime.
+    backend: "pytorch"
+    # auto prefers DirectML when the ORT build has it and GPU is allowed.
+    onnx_provider: "auto"
+    # auto/preload: tokenize the pending corpus, length-bucket, then infer.
+    # serial: old per-video tokenize-inside-the-loop path.
+    onnx_pipeline: "auto"
+    # auto: grow short-text batches up to onnx_max_batch so attention work
+    # stays near batch_size * onnx_max_length^2. off: fixed batch_size.
+    onnx_batch_adapt: "auto"
+    onnx_max_batch: 128
     analyse:
       batch_size: 16
     index:
@@ -139,6 +150,11 @@ features: &analyse_features
     source: "hf"
     pretrained_model: "BAAI/bge-m3"
     text_source: "asr"
+    backend: "pytorch"
+    onnx_provider: "auto"
+    onnx_pipeline: "auto"
+    onnx_batch_adapt: "auto"
+    onnx_max_batch: 128
     analyse:
       batch_size: 16
     index:
@@ -177,6 +193,8 @@ searcher:
       model: "text_embedding"
       source: "hf"
       pretrained_model: "BAAI/bge-m3"
+      backend: "pytorch"
+      onnx_provider: "auto"
       target:
         - ocr_dense
         - asr_dense
