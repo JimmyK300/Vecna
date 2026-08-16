@@ -43,6 +43,8 @@ provenance**/
 
 # Testing output & features
 test**/
+!aic51-src/tests/
+!aic51-src/tests/**
 *.npy
 
 # Workspace

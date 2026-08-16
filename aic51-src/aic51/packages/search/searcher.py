@@ -964,15 +964,31 @@ class Searcher(object):
 
             feature_extractor_cls = FeatureExtractorFactory.get(model_name)
             if feature_extractor_cls:
-                feature_extractor = feature_extractor_cls.from_pretrained(
-                    source=source,
-                    arch_name=arch_name,
-                    pretrained_model=pretrained_model,
-                    text_source=text_source,
-                    name=m,
-                    batch_size=batch_size,
-                    device=device,
-                )
+                init_kwargs = {
+                    "source": source,
+                    "arch_name": arch_name,
+                    "pretrained_model": pretrained_model,
+                    "text_source": text_source,
+                    "name": m,
+                    "batch_size": batch_size,
+                    "device": device,
+                }
+                if model_name == "text_embedding":
+                    init_kwargs["allow_gpu"] = bool(
+                        GlobalConfig.get("backends", "search", "gpu")
+                    )
+                    for key in (
+                        "backend",
+                        "onnx_provider",
+                        "onnx_model_path",
+                        "onnx_tokenizer_path",
+                        "onnx_max_length",
+                        "max_length",
+                    ):
+                        value = GlobalConfig.get("searcher", "language_models", m, key)
+                        if value is not None:
+                            init_kwargs[key] = value
+                feature_extractor = feature_extractor_cls.from_pretrained(**init_kwargs)
             else:
                 feature_extractor = None
 

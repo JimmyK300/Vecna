@@ -67,6 +67,23 @@ def file_sha256(path: Path, chunk_size: int = 8 * 1024 * 1024) -> str:
     return digest.hexdigest()
 
 
+ONNX_IDENTITY_KEYS = (
+    "backend",
+    "execution_framework",
+    "execution_provider",
+    "onnx_artifact_sha256",
+    "onnx_model_id",
+    "pretrained_model",
+    "max_length",
+    "precision",
+    "hidden_size",
+)
+
+
+def _onnx_identity(semantics: dict[str, Any]) -> tuple:
+    return tuple(semantics.get(key) for key in ONNX_IDENTITY_KEYS)
+
+
 def implementation_fingerprint(obj: Any) -> dict[str, Any]:
     target = obj if inspect.isclass(obj) else obj.__class__
     source_file = inspect.getsourcefile(target)
@@ -81,6 +98,28 @@ def implementation_fingerprint(obj: Any) -> dict[str, Any]:
         "class": target.__name__,
         "source_sha256": digest,
     }
+
+
+def atomic_save_npy(path: Path, array: np.ndarray) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp_path = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")
+    with open(tmp_path, "wb") as f:
+        np.save(f, array)
+        f.flush()
+        os.fsync(f.fileno())
+    os.replace(tmp_path, path)
+
+
+def preserve_artifact(path: Path, reason: str) -> Path | None:
+    """Rename a foreign artifact so a newer generation can occupy the canonical name."""
+    path = Path(path)
+    if not path.exists():
+        return None
+    stamp = utc_now().replace(":", "").replace("+", "")
+    safe_reason = "".join(ch if ch.isalnum() or ch in "._-" else "_" for ch in reason)[:80]
+    preserved = path.with_name(f"{path.stem}.preserved.{safe_reason}.{stamp}{path.suffix}")
+    os.replace(path, preserved)
+    return preserved
 
 
 def atomic_write_json(path: Path, value: Any) -> None:
@@ -115,9 +154,9 @@ class ProvenanceStore:
             return None
         path = Path(path)
         try:
-            return str(path.resolve().relative_to(self.work_dir.resolve()))
+            return path.resolve().relative_to(self.work_dir.resolve()).as_posix()
         except (OSError, ValueError):
-            return str(path)
+            return path.as_posix()
 
     def source_path(self, video_id: str) -> Path:
         return self.root / "sources" / f"{video_id}.json"
@@ -332,6 +371,100 @@ class ProvenanceStore:
             producer_identity="unknown",
             registration_origin="observed_at_analysis",
         )
+
+    def latest_frame_provider_generations(
+        self,
+        video_id: str,
+        feature_name: str,
+    ) -> dict[str, str]:
+        """Map frame_id -> provider_generation_id from the newest successful run."""
+        analysis_dir = self.root / "analysis" / video_id / feature_name
+        if not analysis_dir.is_dir():
+            return {}
+        latest: dict[str, tuple[str, str]] = {}
+        for path in analysis_dir.glob("*.json"):
+            record = read_json(path)
+            if not record or record.get("status") != "success":
+                continue
+            provider = record.get("provider_generation") or {}
+            provider_id = provider.get("provider_generation_id")
+            if not provider_id:
+                continue
+            finished_at = str(record.get("finished_at") or record.get("started_at") or "")
+            for output in record.get("outputs") or []:
+                frame_id = output.get("frame_id")
+                if not frame_id:
+                    continue
+                previous = latest.get(frame_id)
+                if previous is None or finished_at >= previous[0]:
+                    latest[frame_id] = (finished_at, str(provider_id))
+        return {frame_id: provider_id for frame_id, (_, provider_id) in latest.items()}
+
+    def unfinished_frame_provider_generations(
+        self,
+        video_id: str,
+        feature_name: str,
+    ) -> dict[str, str]:
+        """frame_id -> provider_generation_id for runs that crashed before finish.
+
+        A crash after atomic .npy writes leaves status=running and outputs=[].
+        Resume must still treat those files as this generation when the frame
+        was in requested_frame_ids.
+        """
+        analysis_dir = self.root / "analysis" / video_id / feature_name
+        if not analysis_dir.is_dir():
+            return {}
+        claimed: dict[str, str] = {}
+        for path in analysis_dir.glob("*.json"):
+            record = read_json(path)
+            if not record or record.get("status") == "success":
+                continue
+            provider = record.get("provider_generation") or {}
+            provider_id = provider.get("provider_generation_id")
+            if not provider_id:
+                continue
+            provider_id = str(provider_id)
+            for frame_id in record.get("requested_frame_ids") or []:
+                claimed[str(frame_id)] = provider_id
+            for output in record.get("outputs") or []:
+                frame_id = output.get("frame_id")
+                if frame_id:
+                    claimed[str(frame_id)] = provider_id
+        return claimed
+
+    def compatible_provider_generation_ids(
+        self,
+        feature_name: str,
+        runtime_semantics: dict[str, Any] | None,
+    ) -> set[str]:
+        """IDs that share ONNX/model identity, ignoring implementation source hash.
+
+        Pipeline or extractor-file edits must not force a rewrite of an already
+        valid BGE-M3 ONNX generation (same artifact SHA + provider + model).
+        """
+        wanted = _onnx_identity(runtime_semantics or {})
+        if not wanted[0]:
+            return set()
+        found: set[str] = set()
+        root = self.root / "analysis"
+        if not root.is_dir():
+            return found
+        for video_dir in root.iterdir():
+            folder = video_dir / feature_name
+            if not folder.is_dir():
+                continue
+            for path in folder.glob("*.json"):
+                data = read_json(path)
+                if not data or data.get("status") != "success":
+                    continue
+                generation = data.get("provider_generation") or {}
+                descriptor = generation.get("descriptor") or {}
+                if _onnx_identity(descriptor.get("runtime_semantics") or {}) != wanted:
+                    continue
+                provider_id = generation.get("provider_generation_id")
+                if provider_id:
+                    found.add(str(provider_id))
+        return found
 
     def provider_generation(
         self,
