@@ -275,7 +275,9 @@ class Searcher(object):
         if exclude_video_ids and len(exclude_video_ids) > 0:
             subquery_limit = max(subquery_limit * 2, 300)
 
-        if not target_features or (isinstance(target_features, list) and (len(target_features) == 0 or target_features == [""])):
+        if isinstance(target_features, list):
+            target_features = [f.strip() for f in target_features if f and f.strip()]
+        if not target_features:
             target_features = list(self._features.keys())
 
         # Score maps: frame_id -> raw score (per component)

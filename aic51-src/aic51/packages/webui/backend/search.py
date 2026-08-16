@@ -66,7 +66,7 @@ async def search_multimodal(
         )
 
     searcher = internal["searcher"]
-    target_features_list = target_features.split(",")
+    target_features_list = [f.strip() for f in target_features.split(",") if f.strip()]
 
     try:
         searcher_res = searcher.search_multimodal(
