@@ -5,3 +5,4 @@ from .ocr import OCR
 from .asr import ASR
 from .feature_extractor import FeatureExtractor, FeatureExtractorFactory
 
+from .text_embedding import TextEmbedding
