@@ -38,6 +38,12 @@ class AnalyseCommand(BaseCommand):
             help="Use image clip feature extractor",
         )
         parser.add_argument(
+            "--use-qwen-vl",
+            dest="use_qwen_vl",
+            action="store_true",
+            help="Use Qwen VL embedding feature extractor (CUDA only)",
+        )
+        parser.add_argument(
             "--use-image-siglip",
             dest="use_image_siglip",
             action="store_true",
@@ -69,6 +75,7 @@ class AnalyseCommand(BaseCommand):
         do_overwrite: bool,
         verbose: bool,
         use_image_clip: bool = False,
+        use_qwen_vl: bool = False,
         use_image_siglip: bool = False,
         use_video_clip: bool = False,
         use_asr: bool = False,
@@ -84,10 +91,19 @@ class AnalyseCommand(BaseCommand):
         video_ids = self._get_video_ids()
         logger.info(f"Starting analyse process with (device={device})")
 
-        any_use_flag = use_image_clip or use_image_siglip or use_video_clip or use_asr or use_ocr
+        any_use_flag = (
+            use_image_clip
+            or use_qwen_vl
+            or use_image_siglip
+            or use_video_clip
+            or use_asr
+            or use_ocr
+        )
         target_models = set()
         if use_image_clip:
             target_models.add("image_clip")
+        if use_qwen_vl:
+            target_models.add("qwen_vl_embedding")
         if use_image_siglip:
             target_models.add("image_siglip")
         if use_video_clip:
