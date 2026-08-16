@@ -30,7 +30,6 @@ internal = {}
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     internal["searcher"] = setup_searcher()
-
     yield
 
 
@@ -41,8 +40,7 @@ app = create_app(lifespan=lifespan)
 async def health():
     if "searcher" in internal:
         return JSONResponse(status_code=200, content=jsonable_encoder({constant.MESSAGE_KEY: "alive"}))
-    else:
-        return JSONResponse(status_code=500, content=jsonable_encoder({constant.MESSAGE_KEY: "dead"}))
+    return JSONResponse(status_code=500, content=jsonable_encoder({constant.MESSAGE_KEY: "dead"}))
 
 
 @app.get(constant.SEARCH_MULTIMODAL_ENDPOINT)
@@ -91,7 +89,6 @@ async def search_multimodal(
         )
     except Exception as e:
         logger.exception(e)
-
         return JSONResponse(
             status_code=500,
             content=jsonable_encoder({constant.MESSAGE_KEY: "search_multimodal errors"}),
@@ -118,8 +115,14 @@ async def search_multimodal(
         )
     if query_mode != "browse" and searcher.support_ocr and trace_ocr_weight > 0:
         traceability_features.append(GlobalConfig.get("searcher", "ocr", "ocr_field") or "ocr")
+        ocr_dense_field = GlobalConfig.get("searcher", "ocr", "ocr_dense_field")
+        if ocr_dense_field:
+            traceability_features.append(ocr_dense_field)
     if query_mode != "browse" and searcher.support_asr and trace_asr_weight > 0:
         traceability_features.append(GlobalConfig.get("searcher", "asr", "asr_field") or "asr")
+        asr_dense_field = GlobalConfig.get("searcher", "asr", "asr_dense_field")
+        if asr_dense_field:
+            traceability_features.append(asr_dense_field)
     traceability_features = sorted(set(traceability_features))
 
     response = process_searcher_results(
@@ -200,7 +203,6 @@ async def search_image(
         )
     except Exception as e:
         logger.exception(e)
-
         return JSONResponse(
             status_code=500,
             content=jsonable_encoder({constant.MESSAGE_KEY: "search_image errors"}),
@@ -232,7 +234,6 @@ async def target_features():
         )
 
     searcher = internal["searcher"]
-
     return JSONResponse(
         status_code=200,
         content=jsonable_encoder({constant.TARGET_FEATURES_KEY: searcher.target_features}),
