@@ -35,6 +35,9 @@ Desktop.ini
 dataset/
 data**/
 
+# Provenance
+provenance**/
+
 # Logs
 **.log
 

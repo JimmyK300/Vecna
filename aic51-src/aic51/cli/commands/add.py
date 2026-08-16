@@ -15,7 +15,10 @@ from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
 import aic51.packages.constant as constant
 from aic51.packages.config import GlobalConfig
 from aic51.packages.logger import logger
+from aic51.packages.utils.provenance import ProvenanceStore, implementation_fingerprint
+
 from .command import BaseCommand
+
 
 class AddCommand(BaseCommand):
     SUPPORTED_EXT = [
@@ -24,6 +27,7 @@ class AddCommand(BaseCommand):
 
     def __init__(self, *args, **kwargs):
         super(AddCommand, self).__init__(*args, **kwargs)
+        self._provenance = ProvenanceStore(self._work_dir)
 
     def add_args(self, subparser):
         parser = subparser.add_parser("add", help="Add video(s) to the work directory")
@@ -121,7 +125,6 @@ class AddCommand(BaseCommand):
             if video_path.is_dir():
                 self._logger.error(f"{video_path}: Not a file")
                 sys.exit(1)
-
             video_paths = [video_path]
 
         video_paths = sorted(video_paths, key=lambda path: path.stem)
@@ -150,7 +153,10 @@ class AddCommand(BaseCommand):
         verbose: bool,
     ):
         max_workers_ratio = GlobalConfig.get("max_workers_ratio") or 0
-        max_workers = max(1, min(int(max_workers_ratio * (os.cpu_count() or 0)), 8))  # Scale to 8 workers for 60-80% GPU utilization
+        max_workers = max(
+            1,
+            min(int(max_workers_ratio * (os.cpu_count() or 0)), 8),
+        )
         with (
             Progress(
                 TextColumn("{task.fields[name]}"),
@@ -169,7 +175,7 @@ class AddCommand(BaseCommand):
 
             def add_one_video(video_path: Path):
                 task_id = progress.add_task(
-                    description=f"Processing...",
+                    description="Processing...",
                     name=video_path.name,
                 )
                 try:
@@ -179,12 +185,16 @@ class AddCommand(BaseCommand):
                         do_overwrite,
                         show_progress(task_id),
                     )
+                    # Register the exact stored bytes before any optional re-encode.
+                    self._provenance.ensure_source(video_id, refresh=True)
 
                     if do_move:
                         video_path = output_path
 
                     if status_ok and do_compress and do_compress_first:
                         self._compress_video(video_id, show_progress(task_id))
+                        self._extract_video_info(output_path)
+                        self._provenance.ensure_source(video_id, refresh=True)
 
                     if do_audio:
                         self._extract_audio(video_path, do_overwrite, show_progress(task_id))
@@ -201,6 +211,8 @@ class AddCommand(BaseCommand):
 
                     if status_ok and do_compress and not do_compress_first:
                         self._compress_video(video_id, show_progress(task_id))
+                        self._extract_video_info(output_path)
+                        self._provenance.ensure_source(video_id, refresh=True)
                 except Exception as e:
                     logger.exception(e)
                     progress.update(
@@ -213,16 +225,18 @@ class AddCommand(BaseCommand):
                     except Exception:
                         pass
 
-            futures = []
-            for path in video_paths:
-                futures.append(executor.submit(add_one_video, path))
-            for f in futures:
-                f.result()
+            futures = [executor.submit(add_one_video, path) for path in video_paths]
+            for future in futures:
+                future.result()
 
     def _load_video(
-        self, video_path: Path, do_move: bool, do_overwrite: bool, update_progress: Callable
+        self,
+        video_path: Path,
+        do_move: bool,
+        do_overwrite: bool,
+        update_progress: Callable,
     ):
-        update_progress(description=f"Saving video", completed=0, total=1)
+        update_progress(description="Saving video", completed=0, total=1)
 
         video_id = video_path.stem
         output_path = self._work_dir / constant.VIDEO_DIR / f"{video_id}{video_path.suffix}"
@@ -237,10 +251,44 @@ class AddCommand(BaseCommand):
             shutil.copy(video_path, output_path)
 
         self._extract_video_info(output_path)
-
         update_progress(advance=1)
-
         return 1, output_path, video_id
+
+    def _record_keyframe_provenance(
+        self,
+        video_id: str,
+        keyframe_dir: Path,
+        *,
+        video_fps: int,
+        max_scene_length_seconds: float,
+        keyframe_ratio: float,
+        thumbnail_ratio: float,
+        default_size: list[int],
+        do_clip: bool,
+    ):
+        frame_ids = sorted(
+            p.stem
+            for p in keyframe_dir.glob("*")
+            if p.is_file() and not p.stem.startswith(".")
+        )
+        self._provenance.record_keyframe_generation(
+            video_id,
+            frame_ids,
+            producer_identity={
+                "name": "aic51.add.keyframe_selection",
+                "implementation": implementation_fingerprint(self),
+            },
+            producer_configuration={
+                "selection_rule": "ffprobe_packet_keyframes_plus_max_scene_gap",
+                "frame_rate_used": video_fps,
+                "max_scene_length_seconds": max_scene_length_seconds,
+                "keyframe_resize_ratio": keyframe_ratio,
+                "thumbnail_resize_ratio": thumbnail_ratio,
+                "default_size": default_size,
+                "clip_path_enabled": do_clip,
+                "jpeg_quality": 50,
+            },
+        )
 
     def _extract_keyframes(
         self,
@@ -252,10 +300,10 @@ class AddCommand(BaseCommand):
         update_progress: Callable,
     ):
         audio_path = self._work_dir / constant.AUDIO_DIR / f"{video_path.stem}.wav"
-        keyframe_dir = self._work_dir / constant.KEYFRAME_DIR / f"{video_path.stem}"
-        thumbnail_dir = self._work_dir / constant.THUMBNAIL_DIR / f"{video_path.stem}"
-        video_clips_dir = self._work_dir / constant.VIDEO_CLIP_DIR / f"{video_path.stem}"
-        audio_clips_dir = self._work_dir / constant.AUDIO_CLIP_DIR / f"{video_path.stem}"
+        keyframe_dir = self._work_dir / constant.KEYFRAME_DIR / video_path.stem
+        thumbnail_dir = self._work_dir / constant.THUMBNAIL_DIR / video_path.stem
+        video_clips_dir = self._work_dir / constant.VIDEO_CLIP_DIR / video_path.stem
+        audio_clips_dir = self._work_dir / constant.AUDIO_CLIP_DIR / video_path.stem
 
         if keyframe_dir.exists():
             if do_overwrite:
@@ -265,6 +313,9 @@ class AddCommand(BaseCommand):
                 if video_clips_dir.exists():
                     shutil.rmtree(video_clips_dir)
             else:
+                # Existing pre-v1 frames are registered truthfully as observed;
+                # their historical producer/configuration remains unknown.
+                self._provenance.ensure_keyframe_generation(video_path.stem)
                 return
 
         keyframe_dir.mkdir(parents=True, exist_ok=True)
@@ -274,19 +325,19 @@ class AddCommand(BaseCommand):
             if do_audio:
                 audio_clips_dir.mkdir(parents=True, exist_ok=True)
 
-        update_progress(description=f"Finding keyframes", completed=0, total=1)
+        update_progress(description="Finding keyframes", completed=0, total=1)
         keyframes_list = self._get_keyframes_list(raw_video_path)
         keyframes_set = set(keyframes_list)
         update_progress(advance=1)
         video_fps = self._get_fps(video_path)
 
-        max_scene_length = GlobalConfig.get("add", "max_scene_length") or 1  # in seconds
-        max_scene_length = max_scene_length * video_fps  # in frames
+        max_scene_length_seconds = GlobalConfig.get("add", "max_scene_length") or 1
+        max_scene_length = max_scene_length_seconds * video_fps
         keyframe_ratio = GlobalConfig.get("add", "keyframe_resize_ratio") or 0.5
         thumbnail_ratio = GlobalConfig.get("add", "thumbnail_resize_ratio") or 0.25
-        clip_length = GlobalConfig.get("add", "clip_length") or 7  # in seconds
+        clip_length = GlobalConfig.get("add", "clip_length") or 7
 
-        video_length = clip_length * video_fps  # in frames
+        video_length = clip_length * video_fps
         video_clip_fps = max(1, int(1 / (video_length / video_fps)))
         video_clip_interval = video_length // 7
 
@@ -297,22 +348,25 @@ class AddCommand(BaseCommand):
                 audio_frames = f.readframes(f.getnframes())
                 audio_frame_size = f.getsampwidth() * f.getnchannels()
 
-            audio_length = clip_length * audio_fps  # in frames
+            audio_length = clip_length * audio_fps
             audio_clip_interval = audio_length // 7
         else:
             wave_params = audio_fps = audio_frames = audio_frame_size = audio_length = (
                 audio_clip_interval
             ) = None
 
-        update_progress(description=f"Extracting keyframes", completed=0, total=len(keyframes_list))
+        update_progress(
+            description="Extracting keyframes",
+            completed=0,
+            total=len(keyframes_list),
+        )
 
         default_size = GlobalConfig.get("add", "default_size") or [1280, 720]
         target_w, target_h = default_size[0], default_size[1]
         cap = cv2.VideoCapture(str(video_path))
 
-        # Fast path when video clips are not required (e.g. add -d -ka)
         if not do_clip:
-            _frame_counter = 0
+            frame_counter = 0
             scene_length = 0
 
             while True:
@@ -320,7 +374,7 @@ class AddCommand(BaseCommand):
                 if not ret:
                     break
 
-                if scene_length >= max_scene_length or _frame_counter in keyframes_set:
+                if scene_length >= max_scene_length or frame_counter in keyframes_set:
                     if frame.shape[1] == target_w and frame.shape[0] == target_h:
                         current_frame = frame
                     else:
@@ -330,33 +384,50 @@ class AddCommand(BaseCommand):
                         keyframe_frame = current_frame
                     else:
                         keyframe_frame = cv2.resize(
-                            current_frame, None, fx=keyframe_ratio, fy=keyframe_ratio
+                            current_frame,
+                            None,
+                            fx=keyframe_ratio,
+                            fy=keyframe_ratio,
                         )
 
                     cv2.imwrite(
-                        str(keyframe_dir / f"{_frame_counter:06d}.jpg"),
+                        str(keyframe_dir / f"{frame_counter:06d}.jpg"),
                         keyframe_frame,
                         [cv2.IMWRITE_JPEG_QUALITY, 50],
                     )
 
-                    thumbnail = cv2.resize(current_frame, None, fx=thumbnail_ratio, fy=thumbnail_ratio)
+                    thumbnail = cv2.resize(
+                        current_frame,
+                        None,
+                        fx=thumbnail_ratio,
+                        fy=thumbnail_ratio,
+                    )
                     cv2.imwrite(
-                        str(thumbnail_dir / f"{_frame_counter:06d}.jpg"),
+                        str(thumbnail_dir / f"{frame_counter:06d}.jpg"),
                         thumbnail,
                         [cv2.IMWRITE_JPEG_QUALITY, 50],
                     )
                     scene_length = 0
 
                 scene_length += 1
-                _frame_counter += 1
+                frame_counter += 1
 
             update_progress(completed=len(keyframes_list))
             cap.release()
+            self._record_keyframe_provenance(
+                video_path.stem,
+                keyframe_dir,
+                video_fps=video_fps,
+                max_scene_length_seconds=max_scene_length_seconds,
+                keyframe_ratio=keyframe_ratio,
+                thumbnail_ratio=thumbnail_ratio,
+                default_size=default_size,
+                do_clip=do_clip,
+            )
             return
 
-        # Full sequential path with sliding window buffer when do_clip is True
         video_frames = []
-        _frame_counter = 0
+        frame_counter = 0
         scene_length = 0
 
         while True:
@@ -370,11 +441,10 @@ class AddCommand(BaseCommand):
                 default_size_frame = cv2.resize(frame, (target_w, target_h))
 
             video_frames.append(default_size_frame)
-
             if len(video_frames) >= 2 * video_length:
                 video_frames.pop(0)
 
-            video_frame_counter = _frame_counter - video_length + 1
+            video_frame_counter = frame_counter - video_length + 1
 
             if video_frame_counter in keyframes_set:
                 update_progress(advance=1)
@@ -386,7 +456,10 @@ class AddCommand(BaseCommand):
                     keyframe_frame = current_frame
                 else:
                     keyframe_frame = cv2.resize(
-                        current_frame, None, fx=keyframe_ratio, fy=keyframe_ratio
+                        current_frame,
+                        None,
+                        fx=keyframe_ratio,
+                        fy=keyframe_ratio,
                     )
 
                 cv2.imwrite(
@@ -395,20 +468,34 @@ class AddCommand(BaseCommand):
                     [cv2.IMWRITE_JPEG_QUALITY, 50],
                 )
 
-                thumbnail = cv2.resize(current_frame, None, fx=thumbnail_ratio, fy=thumbnail_ratio)
+                thumbnail = cv2.resize(
+                    current_frame,
+                    None,
+                    fx=thumbnail_ratio,
+                    fy=thumbnail_ratio,
+                )
                 cv2.imwrite(
                     str(thumbnail_dir / f"{video_frame_counter:06d}.jpg"),
                     thumbnail,
                     [cv2.IMWRITE_JPEG_QUALITY, 50],
                 )
-
                 scene_length = 0
 
             if video_frame_counter >= 0:
                 scene_length += 1
-            _frame_counter += 1
+            frame_counter += 1
 
         cap.release()
+        self._record_keyframe_provenance(
+            video_path.stem,
+            keyframe_dir,
+            video_fps=video_fps,
+            max_scene_length_seconds=max_scene_length_seconds,
+            keyframe_ratio=keyframe_ratio,
+            thumbnail_ratio=thumbnail_ratio,
+            default_size=default_size,
+            do_clip=do_clip,
+        )
 
     def _get_keyframes_list(self, video_path: Path):
         ffprobe_cmd = [
@@ -425,8 +512,7 @@ class AddCommand(BaseCommand):
         ]
         res = subprocess.run(ffprobe_cmd, capture_output=True, text=True)
         lines = [x for x in res.stdout.strip().split("\n") if x.startswith("packet")]
-        keyframes_list = [i for i, line in enumerate(lines) if "K" in line]
-        return keyframes_list
+        return [i for i, line in enumerate(lines) if "K" in line]
 
     def _extract_video_info(self, video_path: Path):
         info_file = self._work_dir / constant.VIDEO_INFO_DIR / f"{video_path.stem}.json"
@@ -447,11 +533,14 @@ class AddCommand(BaseCommand):
         res = subprocess.run(ffprobe_cmd, capture_output=True, text=True)
 
         fraction = str(res.stdout).split("=")[1].split("/")
-        fps = round(int(fraction[0]) / int(fraction[1]))
+        return round(int(fraction[0]) / int(fraction[1]))
 
-        return fps
-
-    def _extract_audio(self, video_path: Path, do_overwrite: bool, update_progress: Callable):
+    def _extract_audio(
+        self,
+        video_path: Path,
+        do_overwrite: bool,
+        update_progress: Callable,
+    ):
         audio_path = self._work_dir / constant.AUDIO_DIR / f"{video_path.stem}.wav"
 
         if audio_path.exists() and not do_overwrite:
@@ -460,14 +549,12 @@ class AddCommand(BaseCommand):
         audio_path.parent.mkdir(parents=True, exist_ok=True)
 
         update_progress(description="Extracting audio", completed=0, total=1)
-        # ffmpeg -i test.mp4 -ab 160k -ac 2 -ar 44100 -vn audio.wa
         ffmpeg_cmd = (
             ["ffmpeg", "-v", "quiet", "-y"]
             + ["-i", str(video_path)]
             + ["-ab", "160k", "-ac", "1", "-ar", "11000", "-vn", str(audio_path)]
         )
         subprocess.run(ffmpeg_cmd)
-
         update_progress(advance=1)
 
     def _compress_video(self, video_id: str, update_progress: Callable):
@@ -478,7 +565,6 @@ class AddCommand(BaseCommand):
         compress_size_rate = GlobalConfig.get("add", "compress_size_rate") or 0.5
 
         update_progress(description="Compress video", completed=0, total=1)
-        # ffmpeg -i input.mp4 -vf scale="iw:ih" -c:v libx264 -tune zerolatency -preset ultrafast -crf 40 -c:a aac -b:a 32k  output.mp4 -y
         default_size = GlobalConfig.get("add", "default_size") or [1280, 720]
         ffmpeg_cmd = (
             ["ffmpeg", "-hwaccel", "cuda", "-v", "quiet", "-y"]
@@ -504,5 +590,4 @@ class AddCommand(BaseCommand):
         subprocess.run(ffmpeg_cmd)
 
         os.remove(video_path)
-
         update_progress(advance=1)
