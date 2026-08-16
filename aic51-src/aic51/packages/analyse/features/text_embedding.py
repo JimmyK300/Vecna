@@ -1,34 +1,9 @@
-from pathlib import Path
-from typing import Any, Callable, Optional
-
-import numpy as np
-import torch
-from transformers import AutoModel, AutoTokenizer
-
-import aic51.packages.constant as constant
-
-from .feature_extractor import FeatureExtractor, FeatureExtractorFactory
-
-
-@FeatureExtractorFactory.register("text_embedding")
-class TextEmbedding(FeatureExtractor):
-    @staticmethod
-    def require_input() -> Any:
-        return constant.KEYFRAME_DIR
-
-    @staticmethod
-    def from_pretrained(source: str, *args, **kwargs) -> "TextEmbedding":
-        if source.lower() in {"hf", "transformers"}:
-            return HFTextEmbedding(*args, **kwargs)
-        raise RuntimeError(f"TextEmbedding: source={source} is invalid")
-
-
 class HFTextEmbedding(TextEmbedding):
     def __init__(
         self,
         pretrained_model: str,
         name: str = "text_embedding",
-        batch_size: int = 16,
+        batch_size: int = 64, # Tăng batch_size lên vì text ngắn + FP16 rất nhẹ
         device: str | torch.device = "cpu",
         text_source: str | None = None,
         work_dir: Path | str = ".",
@@ -40,18 +15,25 @@ class HFTextEmbedding(TextEmbedding):
         self._pretrained_model = pretrained_model
         self._text_source = text_source
         self._work_dir = Path(work_dir)
+        
         self._tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
-        self._model = AutoModel.from_pretrained(pretrained_model)
+        
+        # FIX 2: Bật torch_dtype=torch.float16 để giảm 50% VRAM và tăng tốc độ infer
+        self._model = AutoModel.from_pretrained(
+            pretrained_model, 
+            torch_dtype=torch.float16 
+        )
         self._model.eval()
         self.to(device)
 
+    # ... (Giữ nguyên hàm _load_text_for_keyframe) ...
     def _load_text_for_keyframe(self, image_path: Path | str) -> str:
         if self._text_source is None:
             return str(image_path)
 
         image_path = Path(image_path)
         text_path = self._work_dir.parent / constant.FEATURE_DIR / image_path.parent.stem / image_path.stem / f"{self._text_source}.npy"
-        print(f"Loading text from {text_path}", flush=True)
+        
         if not text_path.exists():
             return ""
 
@@ -71,33 +53,36 @@ class HFTextEmbedding(TextEmbedding):
             return ""
         return str(value)
 
-    def _mean_pool(self, last_hidden_state: torch.Tensor, attention_mask: torch.Tensor) -> torch.Tensor:
-        mask = attention_mask.unsqueeze(-1).expand(last_hidden_state.size()).float()
-        masked_embeddings = last_hidden_state * mask
-        summed = masked_embeddings.sum(dim=1)
-        counts = mask.sum(dim=1).clamp(min=1.0)
-        return summed / counts
+    # BỎ HÀM _mean_pool ĐI VÌ NÓ VÔ DỤNG VỚI BGE
 
     def _encode_texts(self, texts: list[str]) -> np.ndarray:
         if len(texts) == 0:
             return np.array([])
 
+        # BGE-M3 max length thực tế là 8192, nhưng để an toàn và nhanh thì 512 hoặc 1024 là đủ cho ASR/OCR
         tokenized = self._tokenizer(
             texts,
             return_tensors="pt",
             padding=True,
             truncation=True,
-            max_length=512,
+            max_length=1024, # BGE-M3 hỗ trợ context dài, tăng lên 1024 để không bị cắt mất nghĩa
         )
         tokenized = {k: v.to(self._device) for k, v in tokenized.items()}
 
         with torch.no_grad():
             outputs = self._model(**tokenized)
-            pooled = self._mean_pool(outputs.last_hidden_state, tokenized["attention_mask"])
-            pooled = torch.nn.functional.normalize(pooled, p=2, dim=-1)
+            
+            # FIX 1: Lấy token [CLS] (index 0) thay vì Mean Pooling
+            # Đây là chuẩn bài cho dòng BGE / BGE-M3
+            cls_embedding = outputs.last_hidden_state[:, 0]
+            
+            # Normalize vector
+            pooled = torch.nn.functional.normalize(cls_embedding, p=2, dim=-1)
 
-        return pooled.cpu().numpy()
+        # Chuyển về float32 trước khi xuống CPU để tránh lỗi precision của numpy
+        return pooled.float().cpu().numpy()
 
+    # ... (Giữ nguyên get_features và get_text_features) ...
     def get_features(self, images, callback: Optional[Callable] = None):
         if len(images) == 0:
             return np.array([])
