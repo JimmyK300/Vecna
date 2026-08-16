@@ -20,6 +20,12 @@ aic51-cli analyse [options]
 | `--use-video-clip` | — | Run ONLY the Video CLIP feature extractor (if configured) |
 | `--use-asr` | — | Run ONLY the ASR (WhisperX) feature extractor (if configured) |
 | `--use-ocr` | — | Run ONLY the OCR (Tesseract) feature extractor (if configured) |
+| `--use-text-embedding` | — | Run ONLY BGE-M3 text embedding (`ocr_dense` / `asr_dense`) |
+| `--keep-going` | — | Record a video failure and continue the remaining videos |
+| `--video ID` | — | Limit analysis to one or more video IDs (repeatable) |
+
+ONNX text-embedding progress lines include a representative document and the
+live batch width, e.g. `ocr_dense infer: batch=2500/L25_V048_ocr n=64 pad=32`.
 
 > **Behavior of `--use-*` flags:**
 > - If **none** of the `--use-*` flags are specified, all feature extractors defined in `config.yaml` are executed by default.

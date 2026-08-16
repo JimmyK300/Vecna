@@ -117,6 +117,8 @@ class ProvenanceStoreTest(unittest.TestCase):
         )
         self.store.finish_analysis_run(run, status="success", outputs=[output])
 
+        latest = self.store.latest_frame_provider_generations("V001", "image_test")
+        self.assertEqual(latest["000001"], provider["provider_generation_id"])
         self.assertEqual(output["path"], "features/V001/000001/image_test.npy")
         self.assertEqual(output["shape"], [2])
         self.assertEqual(output["dtype"], "float32")
