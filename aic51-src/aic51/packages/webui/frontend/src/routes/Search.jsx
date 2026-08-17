@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useLoaderData, useSubmit, useNavigation, useOutletContext } from "react-router-dom";
 import { search } from "../services/search.js";
 import { AdvanceQueryContainer } from "../components/AdvanceQuery.jsx";
@@ -99,6 +99,10 @@ export default function Search() {
   const [queryHeight, setQueryHeight] = useState(null);
   const [isResizingQuery, setIsResizingQuery] = useState(false);
 
+  const handleResetQueryHeight = useCallback(() => {
+    setQueryHeight(null);
+  }, []);
+
   const isSearching = navigation.state === "loading";
 
   useEffect(() => {
@@ -120,9 +124,9 @@ export default function Search() {
       const container = document.getElementById("query-section-wrapper");
       if (container) {
         const rect = container.getBoundingClientRect();
-        const contentH = container.firstElementChild ? container.firstElementChild.offsetHeight : 210;
-        const maxH = contentH + 4;
-        const newH = Math.min(Math.max(70, e.clientY - rect.top), maxH);
+        const blueBox = container.firstElementChild;
+        const maxAllowed = blueBox ? blueBox.offsetHeight + 8 : window.innerHeight - 80;
+        const newH = Math.min(Math.max(70, e.clientY - rect.top), maxAllowed);
         setQueryHeight(newH);
       }
     };
@@ -454,7 +458,7 @@ export default function Search() {
       <div
         id="query-section-wrapper"
         style={queryHeight ? { height: `${queryHeight}px` } : {}}
-        className="w-full flex flex-col shrink-0 overflow-y-auto"
+        className="w-full flex flex-col shrink-0 overflow-y-auto min-h-0"
       >
         <AdvanceQueryContainer
           q={searchQuery}
@@ -485,6 +489,7 @@ export default function Search() {
             triggerSearch(searchQuery, newInc, newExc);
           }}
           isSearching={isSearching}
+          onResetQueryHeight={handleResetQueryHeight}
         />
       </div>
 

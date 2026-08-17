@@ -11,33 +11,40 @@ from typing import Dict, List, Optional
 from aic51.packages.config import GlobalConfig
 from aic51.packages.logger import logger
 
-QUERY_EXPANSION_PROMPT_TEMPLATE = """You are a professional video search query optimization and spelling correction expert following Jina AI principles.
-Your task is to:
-1. AUTOMATICALLY FIX ANY TYPOS, UNACCENTED VIETNAMESE, OR SPELLING MISTAKES in the user's input query (e.g. "con cho" or "con chos" -> "con chó", "nguoi nau an" -> "người nấu ăn").
-2. Expand the spell-checked query into 3 visual search representations for CLIP/SigLIP vector matching:
-   - "corrected": The spell-checked, properly accented standard version of the user query.
-   - "hyde": A vivid, hypothetical visual scene/caption description matching video keyframes for CLIP/SigLIP.
-   - "paraphrase": A direct semantic rewrite or synonym variation.
+QUERY_EXPANSION_PROMPT_TEMPLATE = """You are a world-class multimodal video search expert and query expansion engine following Jina AI and HyDE (Hypothetical Document Embeddings) principles.
 
-CRITICAL INSTRUCTIONS:
-1. SPELLING & DIACRITIC CORRECTION: Fix missing Vietnamese tone marks/accents and typos first.
-2. STRICT FACTUAL BOUNDARY: DO NOT introduce unmentioned locations, proper nouns, or fake details not in the query.
-3. LANGUAGE PRESERVATION: Always preserve and match the SAME language as the input query for all output variations.
+Your task:
+1. SPELLING & DIACRITICS CORRECTION: Fix typos and diacritics while STRICTLY PRESERVING the original language of the input query. DO NOT translate English queries into Vietnamese in the "corrected" field!
+2. GENERATE 4 MULTI-ASPECT SEARCH REPRESENTATIONS optimized for vector similarity matching (OpenCLIP / SigLIP) and text matching (BM25 OCR/ASR):
+   - "corrected": Spell-checked version IN THE SAME LANGUAGE as the input query. If input is English (e.g. "dog", "a dgo"), keep it in English ("dog", "a dog"). If input is Vietnamese (e.g. "con cho"), add proper Vietnamese diacritics ("con chó").
+   - "hyde": A vivid, detailed visual scene caption in Vietnamese describing what would be seen in the video keyframe.
+   - "en_hyde": A high-quality English visual description translated and optimized specifically for English-pre-trained vision-language models (OpenCLIP / SigLIP).
+   - "paraphrase": Semantic rewrite or synonym variation IN THE SAME LANGUAGE as the input query (English for English queries, Vietnamese for Vietnamese queries).
+
+CRITICAL RULES:
+1. PRESERVE LANGUAGE FOR CORRECTED & PARAPHRASE: If the user inputs English ("dog"), "corrected" MUST be English ("dog"), NOT Vietnamese ("chó")!
+2. ACCURACY FIRST: Fix spelling errors and missing tone marks without translating the language of "corrected".
+3. STRICT FACTUAL BOUNDARY: DO NOT introduce unmentioned proper nouns, brand names, or fake details not in the query.
+4. ENGLISH OPTIMIZATION: "en_hyde" MUST be natural, descriptive English tailored for CLIP text encoders.
 
 Examples:
 
-[Example 1 - Vietnamese Typos / Unaccented Input]
-Input query: "con cho"
-Output JSON: {{"corrected": "con chó", "hyde": "bức ảnh một con chó đang đứng hoặc chạy trên thảm cỏ trong công viên", "paraphrase": "chú chó"}}
+[Example 1 - English Input Query]
+Input query: "a dgo running on the grass"
+Output JSON: {{"corrected": "a dog running on the grass", "hyde": "cảnh một chú chó đang chạy trên bãi cỏ xanh", "en_hyde": "A dog running on green grass in a sunny park", "paraphrase": "a canine running across a lawn"}}
 
-[Example 2 - Vietnamese Input]
-Input query: "cô gái nấu ăn"
-Output JSON: {{"corrected": "cô gái nấu ăn", "hyde": "cô gái đang đứng trong bếp làm món ăn nóng hổi", "paraphrase": "con gái đang nấu nướng"}}
+[Example 2 - Single English Word]
+Input query: "dog"
+Output JSON: {{"corrected": "dog", "hyde": "hình ảnh chú chó trong nhà hoặc ngoài trời", "en_hyde": "A close-up photo of a dog", "paraphrase": "canine"}}
+
+[Example 3 - Vietnamese Typos / Unaccented Input]
+Input query: "con cho chay tren co"
+Output JSON: {{"corrected": "con chó chạy trên cỏ", "hyde": "cảnh quay một chú chó đang chạy tung tăng trên thảm cỏ xanh trong công viên", "en_hyde": "A vivid photo of a dog running happily on green grass in a sunny park", "paraphrase": "chú chó đang đùa giỡn trên bãi cỏ"}}
 
 User query to expand: "{query}"
 
-Respond with ONLY a valid, single JSON object, with no explanations, notes, or markdown formatting, in the following exact format:
-{{"corrected": "...", "hyde": "...", "paraphrase": "..."}}"""
+Respond with ONLY a valid, single JSON object in this exact format, with no explanations or markdown formatting:
+{{"corrected": "...", "hyde": "...", "en_hyde": "...", "paraphrase": "..."}}"""
 
 
 class LLMQueryExpander:
@@ -105,10 +112,10 @@ class LLMQueryExpander:
         return self._client is not None
 
     def expand_query_detailed(self, query_text: str) -> Dict[str, str]:
-        """Sinh 3 biến thể ngữ nghĩa Jina AI (Corrected / HyDE / Paraphrase) từ query gốc có sử dụng Cache.
+        """Sinh 4 biến thể ngữ nghĩa Jina AI (Corrected / HyDE VN / HyDE EN / Paraphrase) từ query gốc có sử dụng Cache.
 
         Returns:
-            Dict[str, str]: {"corrected": "...", "hyde": "...", "paraphrase": "..."}
+            Dict[str, str]: {"corrected": "...", "hyde": "...", "en_hyde": "...", "paraphrase": "..."}
         """
         if not query_text or not query_text.strip() or not self.is_available:
             return {}
@@ -135,6 +142,7 @@ class LLMQueryExpander:
             detailed = {
                 "corrected": parsed.get("corrected", clean_query).strip(),
                 "hyde": parsed.get("hyde", "").strip(),
+                "en_hyde": parsed.get("en_hyde", "").strip(),
                 "paraphrase": parsed.get("paraphrase", "").strip(),
             }
 
@@ -149,7 +157,7 @@ class LLMQueryExpander:
             return {}
 
     def expand_query(self, query_text: str) -> List[str]:
-        """Trả về danh sách 3 biến thể text (Corrected, HyDE, Paraphrase)."""
+        """Trả về danh sách 4 biến thể text (Corrected, HyDE VN, HyDE EN, Paraphrase)."""
         detailed = self.expand_query_detailed(query_text)
         if not detailed:
             return []
@@ -157,6 +165,7 @@ class LLMQueryExpander:
         variants = [
             detailed.get("corrected", ""),
             detailed.get("hyde", ""),
+            detailed.get("en_hyde", ""),
             detailed.get("paraphrase", ""),
         ]
         return [v for v in variants if v and v.strip()]

@@ -563,4 +563,8 @@ if web_dir.exists():
 
     @app.get("/{rest_of_path:path}")
     async def client_app():
-        return FileResponse(web_dir / "dist/index.html")
+        response = FileResponse(web_dir / "dist/index.html")
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+        return response

@@ -138,7 +138,7 @@ searcher:
     enable: true
     provider: "groq"                      # groq, gemini, hoặc openai
     model_name: "openai/gpt-oss-120b"     # Mô hình 120B tham số trên Groq Cloud
-    api_key: ""                           # Để trống để lấy từ GROQ_API_KEY environment variable
+    api_key: "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"                           # Để trống để lấy từ GROQ_API_KEY environment variable
 
   # YOLO Auto-Crop Processor
   yolo:

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { getTargetFeatures, expandQuery } from "../services/search.js";
 
 const VIDEO_PREFIX_OPTIONS = [
@@ -27,6 +27,7 @@ export function AdvanceQueryContainer({
   isSearching = false,
   activePreset = "default",
   onSelectPreset,
+  onResetQueryHeight,
 }) {
   const [showPrefixMenu, setShowPrefixMenu] = useState(false);
   const [targetFeatures, setTargetFeatures] = useState([]);
@@ -35,6 +36,7 @@ export function AdvanceQueryContainer({
   const [isExpanding, setIsExpanding] = useState(false);
   const [autoFusion, setAutoFusion] = useState(false);
   const [expansionVariants, setExpansionVariants] = useState([]);
+  const [expansionDetailed, setExpansionDetailed] = useState(null);
   const [expansionError, setExpansionError] = useState("");
   const [suggestionInfo, setSuggestionInfo] = useState(null);
   const [showVariants, setShowVariants] = useState(false);
@@ -114,10 +116,14 @@ export function AdvanceQueryContainer({
     setMainQuery(currentSegments.join(temporalDelimiter));
   };
 
-  // Sync state if external q changes
+  const lastSubmittedRef = useRef("");
+
+  // Sync state if external q changes (NEVER overwrite mainQuery while user has typed text)
   useEffect(() => {
     const p = parseQuery(q);
-    setMainQuery(p.mainText);
+    if (!mainQuery || !mainQuery.trim()) {
+      setMainQuery(p.mainText);
+    }
     setOcrQuery(p.ocrText);
     setAsrQuery(p.asrText);
   }, [q]);
@@ -128,8 +134,8 @@ export function AdvanceQueryContainer({
     const timer = setTimeout(async () => {
       const trimmed = mainQuery.trim();
       if (!trimmed) {
+        lastSubmittedRef.current = "";
         setSuggestionInfo(null);
-        setShowVariants(false);
         const fullQuery = buildQuery("", ocrQuery, asrQuery);
         if (fullQuery !== q) onChange(fullQuery);
         return;
@@ -137,33 +143,40 @@ export function AdvanceQueryContainer({
 
       if (forceOriginal) {
         setSuggestionInfo(null);
+        lastSubmittedRef.current = trimmed;
         const fullQuery = buildQuery(trimmed, ocrQuery, asrQuery);
         if (fullQuery !== q) onChange(fullQuery);
         return;
       }
 
-      // Auto spellcheck / HyDE check in background without overwriting textarea
+      let textToSearch = trimmed;
+
+      // If Auto-Fusion is ON: expand query via LLM for vector search, WITHOUT modifying mainQuery textarea!
       if (autoFusion && !isExpanding) {
         try {
           const res = await expandQuery(trimmed);
           if (res && res.detailed) {
-            const corrected = res.detailed.corrected || res.detailed.hyde || trimmed;
+            const corrected = res.detailed.corrected || trimmed;
             if (corrected.toLowerCase() !== trimmed.toLowerCase()) {
               setSuggestionInfo({ original: trimmed, corrected });
-              const fullQuery = buildQuery(corrected, ocrQuery, asrQuery);
-              onChange(fullQuery);
-              return;
+              textToSearch = corrected;
+            } else {
+              setSuggestionInfo(null);
             }
+            setExpansionDetailed(res.detailed);
+            setExpansionVariants(res.variants || []);
           }
         } catch (e) {
-          console.error("Auto spellcheck error:", e);
+          console.error("Auto-Fusion background search error:", e);
         }
+      } else {
+        setSuggestionInfo(null);
       }
 
-      setSuggestionInfo(null);
-      const fullQuery = buildQuery(trimmed, ocrQuery, asrQuery);
+      lastSubmittedRef.current = trimmed;
+      const fullQuery = buildQuery(textToSearch, ocrQuery, asrQuery);
       if (fullQuery !== q) onChange(fullQuery);
-    }, 500);
+    }, 450);
     return () => clearTimeout(timer);
   }, [mainQuery, ocrQuery, asrQuery, autoSearch, autoFusion, forceOriginal]);
 
@@ -226,16 +239,18 @@ export function AdvanceQueryContainer({
     setIsExpanding(true);
     setExpansionError("");
     setExpansionVariants([]);
+    setExpansionDetailed(null);
     setShowVariants(true);
 
     try {
       const res = await expandQuery(mainQuery.trim());
       if (res && res.error) {
         setExpansionError(res.error);
-      } else if (!res || !res.variants || res.variants.length === 0) {
+      } else if (!res || (!res.variants && !res.detailed) || (res.variants && res.variants.length === 0)) {
         setExpansionError("Failed to expand query (check GROQ_API_KEY).");
       } else {
-        setExpansionVariants(res.variants);
+        setExpansionVariants(res.variants || []);
+        setExpansionDetailed(res.detailed || null);
       }
     } catch (err) {
       console.error("Error expanding query:", err);
@@ -250,16 +265,61 @@ export function AdvanceQueryContainer({
     setShowVariants(false);
     setSuggestionInfo(null);
     setExpansionVariants([]);
+    setExpansionDetailed(null);
     setExpansionError("");
+    if (onResetQueryHeight) onResetQueryHeight();
     const fullQuery = buildQuery(variantText, ocrQuery, asrQuery);
+    onChange(fullQuery);
+  };
+
+  const triggerManualSearch = async () => {
+    const trimmed = mainQuery.trim();
+    if (!trimmed) {
+      lastSubmittedRef.current = "";
+      const fullQuery = buildQuery("", ocrQuery, asrQuery);
+      onChange(fullQuery);
+      return;
+    }
+
+    if (forceOriginal) {
+      lastSubmittedRef.current = trimmed;
+      const fullQuery = buildQuery(trimmed, ocrQuery, asrQuery);
+      onChange(fullQuery);
+      return;
+    }
+
+    let textToSearch = trimmed;
+
+    if (autoFusion && !isExpanding) {
+      try {
+        const res = await expandQuery(trimmed);
+        if (res && res.detailed) {
+          const corrected = res.detailed.corrected || trimmed;
+          if (corrected.toLowerCase() !== trimmed.toLowerCase()) {
+            setSuggestionInfo({ original: trimmed, corrected });
+            textToSearch = corrected;
+          } else {
+            setSuggestionInfo(null);
+          }
+          setExpansionDetailed(res.detailed);
+          setExpansionVariants(res.variants || []);
+        }
+      } catch (e) {
+        console.error("Auto-Fusion manual search error:", e);
+      }
+    } else if (suggestionInfo && suggestionInfo.corrected) {
+      textToSearch = suggestionInfo.corrected;
+    }
+
+    lastSubmittedRef.current = trimmed;
+    const fullQuery = buildQuery(textToSearch, ocrQuery, asrQuery);
     onChange(fullQuery);
   };
 
   const handleMainQueryKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      const fullQuery = buildQuery(mainQuery, ocrQuery, asrQuery);
-      onChange(fullQuery);
+      triggerManualSearch();
     }
   };
 
@@ -291,10 +351,7 @@ export function AdvanceQueryContainer({
             {!autoSearch && (
               <button
                 type="button"
-                onClick={() => {
-                  const fullQuery = buildQuery(mainQuery, ocrQuery, asrQuery);
-                  onChange(fullQuery);
-                }}
+                onClick={triggerManualSearch}
                 className="text-[11px] font-bold px-2 py-0.5 rounded bg-blue-600 hover:bg-blue-700 text-white shadow-sm flex items-center gap-1 transition-colors"
                 title="Run search (or press Enter)"
               >
@@ -307,22 +364,35 @@ export function AdvanceQueryContainer({
 
             <button
               type="button"
-              onClick={handleExpandQuery}
+              onClick={() => {
+                if (showVariants && (expansionVariants.length > 0 || expansionDetailed)) {
+                  setShowVariants(false);
+                  if (onResetQueryHeight) onResetQueryHeight();
+                } else {
+                  handleExpandQuery();
+                }
+              }}
               disabled={isExpanding}
               className={`text-[11px] font-bold px-2.5 py-0.5 rounded border transition-all shadow-sm flex items-center gap-1.5 cursor-pointer ${
                 isExpanding
                   ? "bg-purple-300 text-purple-900 border-purple-400 cursor-wait animate-pulse"
+                  : showVariants && (expansionVariants.length > 0 || expansionDetailed)
+                  ? "bg-purple-100 hover:bg-purple-200 text-purple-900 border-purple-400"
                   : "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white border-purple-700 hover:shadow"
               }`}
-              title="Click to expand query into 3 visual search variants (Corrected, HyDE, Paraphrase)"
+              title="Click to expand query or toggle view"
             >
               <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
-              {isExpanding ? "Expanding..." : "Expand Query"}
+              {isExpanding
+                ? "Expanding..."
+                : showVariants && (expansionVariants.length > 0 || expansionDetailed)
+                ? "Hide Expansion ▴"
+                : "Expand Query ▾"}
             </button>
 
-            {/* Jina Auto-Fusion Toggle Button */}
+            {/* Auto-Fusion Toggle Button */}
             <button
               type="button"
               onClick={() => setAutoFusion(!autoFusion)}
@@ -333,11 +403,11 @@ export function AdvanceQueryContainer({
               }`}
               title={
                 autoFusion
-                  ? "Auto-Fusion ENABLED: Auto spell-checks and searches HyDE in background. Click to turn OFF."
-                  : "Auto-Fusion DISABLED: Manual expansion mode. Click to turn ON auto-fusion."
+                  ? "Auto-Fusion ON: Searches using background LLM typo-correction & HyDE WITHOUT altering your input text. Click to turn OFF."
+                  : "Auto-Fusion OFF: Searches raw input text without background LLM expansion. Click to turn ON."
               }
             >
-              <span className={`w-2 h-2 rounded-full ${autoFusion ? "bg-white animate-ping" : "bg-gray-400"}`}></span>
+              <span className={`w-2 h-2 rounded-full ${autoFusion ? "bg-white animate-pulse" : "bg-gray-400"}`}></span>
               Auto-Fusion: {autoFusion ? "ON" : "OFF"}
             </button>
 
@@ -382,8 +452,11 @@ export function AdvanceQueryContainer({
 
         <textarea
           data-query-input="main"
-          className={`w-full text-sm bg-white text-gray-900 border border-sky-400 rounded p-2 focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none font-sans transition-all flex-1 h-full min-h-[80px] max-h-48 overflow-y-auto`}
-          rows={hasTemporal ? 2 : 3}
+          spellCheck={false}
+          autoCorrect="off"
+          autoCapitalize="off"
+          className={`w-full text-xs bg-white text-gray-900 border border-sky-400 rounded p-2 focus:outline-none focus:ring-1 focus:ring-blue-500 font-sans transition-all flex-1 min-h-[80px] max-h-44 overflow-y-auto leading-relaxed resize-y`}
+          rows={hasTemporal ? 3 : 3}
           placeholder="Type search text here... (Temporal syntax: '\\' or '/' for sequence)"
           value={mainQuery}
           onChange={(e) => {
@@ -393,9 +466,9 @@ export function AdvanceQueryContainer({
           onKeyDown={handleMainQueryKeyDown}
         />
 
-        {/* Google-Style Spellcheck Suggestion Banner */}
-        {suggestionInfo && (
-          <div className="text-xs bg-white/95 border-l-4 border-blue-600 px-3 py-1.5 rounded shadow-xs flex flex-col gap-0.5 animate-fadeIn">
+        {/* Google-Style 2-Line Spellcheck Suggestion Banner (Shown ONLY when Auto-Fusion detects a typo) */}
+        {suggestionInfo && autoFusion && (
+          <div className="text-xs bg-white/95 border-l-4 border-purple-600 px-3 py-1.5 rounded shadow-xs flex flex-col gap-0.5 animate-fadeIn">
             <div className="text-gray-800 font-medium flex items-center gap-1 flex-wrap">
               Showing results for{" "}
               <button
@@ -406,7 +479,7 @@ export function AdvanceQueryContainer({
                   const fullQuery = buildQuery(suggestionInfo.corrected, ocrQuery, asrQuery);
                   onChange(fullQuery);
                 }}
-                className="font-bold text-blue-900 italic underline hover:text-blue-700 cursor-pointer max-w-full truncate"
+                className="font-bold text-purple-900 italic underline hover:text-purple-700 cursor-pointer max-w-full truncate"
                 title="Click to replace search box text with corrected query"
               >
                 "{suggestionInfo.corrected}"
@@ -422,7 +495,7 @@ export function AdvanceQueryContainer({
                   const fullQuery = buildQuery(suggestionInfo.original, ocrQuery, asrQuery);
                   onChange(fullQuery);
                 }}
-                className="text-blue-600 hover:text-blue-800 underline font-semibold cursor-pointer max-w-full truncate"
+                className="text-purple-600 hover:text-purple-800 underline font-semibold cursor-pointer max-w-full truncate"
               >
                 "{suggestionInfo.original}"
               </button>
@@ -430,58 +503,99 @@ export function AdvanceQueryContainer({
           </div>
         )}
 
-        {/* 3 Expansion Variant Dropdown Cards (Shown ONLY when Expand Query is clicked) */}
+        {/* 4 Expansion Variant Dropdown Cards (Shown ONLY when Expand Query is clicked) */}
         {expansionError && (
           <div className="text-xs text-red-600 font-semibold bg-red-50 border border-red-200 px-2 py-1 rounded">
             {expansionError}
           </div>
         )}
 
-        {showVariants && expansionVariants.length > 0 && (
-          <div className="flex flex-col gap-2 bg-white/95 border border-purple-300 p-2.5 rounded-lg shadow-sm animate-fadeIn w-full max-w-full min-w-0 overflow-hidden">
-            <div className="flex items-center justify-between min-w-0">
-              <span className="text-[10px] font-bold text-purple-900 uppercase tracking-wider flex items-center gap-1 truncate min-w-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-purple-600 animate-ping shrink-0"></span>
-                <span className="truncate">Jina AI Expansion Variants (Click card to search):</span>
+        {showVariants && (expansionVariants.length > 0 || expansionDetailed) && (
+          <div className="flex flex-col gap-1 bg-white/95 border border-purple-300 p-1.5 rounded-md shadow-xs animate-fadeIn w-full max-w-full min-w-0">
+            <div className="flex items-center justify-between min-w-0 pb-0.5 border-b border-purple-100">
+              <span className="text-[10px] font-extrabold text-purple-900 uppercase tracking-wider flex items-center gap-1 truncate min-w-0">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-600 shrink-0 inline-block"></span>
+                <span className="truncate">QUERY EXPANSION</span>
               </span>
               <button
                 type="button"
-                onClick={() => setShowVariants(false)}
-                className="text-xs text-gray-500 hover:text-gray-700 font-bold px-1 shrink-0 cursor-pointer"
-                title="Close variants"
+                onClick={() => {
+                  setShowVariants(false);
+                  if (onResetQueryHeight) onResetQueryHeight();
+                }}
+                className="text-[9px] text-gray-500 hover:text-red-600 font-semibold px-1 py-0 rounded bg-gray-100 hover:bg-red-50 shrink-0 cursor-pointer transition-colors border border-gray-200 flex items-center gap-0.5"
+                title="Close Query Expansion"
               >
-                ✕
+                ✕ Close
               </button>
             </div>
-            <div className="flex flex-col gap-2 pt-0.5 w-full max-w-full min-w-0">
-              {expansionVariants.map((variant, idx) => {
-                const labels = ["Corrected", "HyDE", "Paraphrase"];
-                const label = labels[idx] || `Variant ${idx + 1}`;
-                const badgeColors = [
-                  "bg-purple-50 hover:bg-purple-100 text-purple-950 border-purple-300",
-                  "bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border-emerald-300",
-                  "bg-indigo-50 hover:bg-indigo-100 text-indigo-950 border-indigo-300",
-                ];
-                const badgeColor = badgeColors[idx % badgeColors.length];
 
-                return (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => handleSelectExpansionVariant(variant)}
-                    className={`w-full max-w-full min-w-0 text-xs p-2 rounded-md border transition-all shadow-xs flex flex-col gap-1 cursor-pointer text-left hover:scale-[1.002] active:scale-98 ${badgeColor}`}
-                    title={`Click to select and search: "${variant}"`}
-                  >
-                    <div className="flex items-center justify-between w-full min-w-0">
-                      <span className="font-extrabold text-[11px] uppercase tracking-wide opacity-90">{label}:</span>
-                      <span className="text-[10px] opacity-60 font-normal">Click to search</span>
-                    </div>
-                    <div className="w-full max-h-16 overflow-y-auto whitespace-normal break-words pr-1 scrollbar-thin scrollbar-thumb-purple-400 scrollbar-track-transparent text-xs font-medium leading-relaxed">
-                      "{variant}"
-                    </div>
-                  </button>
-                );
-              })}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5 pt-0.5 w-full max-w-full min-w-0">
+              {(() => {
+                const boxes = [
+                  {
+                    key: "corrected",
+                    label: "corrected",
+                    sub: "Spell-check",
+                    value: expansionDetailed?.corrected || expansionVariants[0] || "",
+                    badgeColor: "bg-purple-50 hover:bg-purple-100/90 text-purple-950 border-purple-300",
+                    headerColor: "text-purple-800",
+                  },
+                  {
+                    key: "hyde",
+                    label: "vi-hyde",
+                    sub: "Vietnamese HyDE",
+                    value: expansionDetailed?.hyde || expansionVariants[1] || "",
+                    badgeColor: "bg-emerald-50 hover:bg-emerald-100/90 text-emerald-950 border-emerald-300",
+                    headerColor: "text-emerald-800",
+                  },
+                  {
+                    key: "en_hyde",
+                    label: "en-hyde",
+                    sub: "English visual",
+                    value: expansionDetailed?.en_hyde || expansionVariants[2] || "",
+                    badgeColor: "bg-sky-50 hover:bg-sky-100/90 text-sky-950 border-sky-300",
+                    headerColor: "text-sky-800",
+                  },
+                  {
+                    key: "paraphrase",
+                    label: "paraphrase",
+                    sub: "Rewrite & synonyms",
+                    value: expansionDetailed?.paraphrase || expansionVariants[3] || "",
+                    badgeColor: "bg-indigo-50 hover:bg-indigo-100/90 text-indigo-950 border-indigo-300",
+                    headerColor: "text-indigo-800",
+                  },
+                ];
+
+                return boxes
+                  .filter((b) => b.value && b.value.trim())
+                  .map((box) => (
+                    <button
+                      key={box.key}
+                      type="button"
+                      onClick={() => handleSelectExpansionVariant(box.value)}
+                      className={`w-full max-w-full min-w-0 text-xs p-1.5 rounded-md border transition-all shadow-xs flex flex-col gap-0.5 cursor-pointer text-left hover:shadow-md hover:scale-[1.002] active:scale-98 ${box.badgeColor}`}
+                      title={`Click to search: "${box.value}"`}
+                    >
+                      <div className="flex items-center justify-between w-full min-w-0 border-b border-black/5 pb-0.5">
+                        <div className="flex items-center gap-1 truncate">
+                          <span className={`font-extrabold text-[10px] lowercase font-mono tracking-wide ${box.headerColor}`}>
+                            {box.label}:
+                          </span>
+                          <span className="text-[9px] text-gray-500 font-normal hidden sm:inline truncate">
+                            • {box.sub}
+                          </span>
+                        </div>
+                        <span className="text-[9px] text-gray-500 hover:text-gray-800 font-semibold shrink-0">
+                          Search ↵
+                        </span>
+                      </div>
+                      <div className="w-full text-[11px] font-medium leading-snug max-h-14 overflow-y-auto whitespace-normal break-words scrollbar-thin pr-1">
+                        "{box.value}"
+                      </div>
+                    </button>
+                  ));
+              })()}
             </div>
           </div>
         )}
