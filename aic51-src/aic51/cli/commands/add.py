@@ -3,6 +3,7 @@ import os
 import shutil
 import subprocess
 import sys
+import threading
 import wave
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -15,15 +16,25 @@ from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
 import aic51.packages.constant as constant
 from aic51.packages.config import GlobalConfig
 from aic51.packages.logger import logger
+from aic51.packages.add.transnetv2 import get_scene_cuts, load_transnetv2_model
 from aic51.packages.utils.provenance import ProvenanceStore, implementation_fingerprint
 
 from .command import BaseCommand
 
+AIC51_ROOT = Path(__file__).resolve().parents[2]
+TRANSNET_PATH = AIC51_ROOT / "resources" / "TransNetV2"
 
 class AddCommand(BaseCommand):
     SUPPORTED_EXT = [
         ".mp4",
     ]
+
+    # Shared across all instances/threads: TransNetV2 model is loaded once
+    # (weight loading is expensive) and inference calls are serialized via
+    # the lock, since a single TF model instance isn't safe to run
+    # concurrently from multiple threads.
+    _transnetv2_model = TRANSNET_PATH / "inference" / "transnetv2-weights"
+    _transnetv2_lock = threading.Lock()
 
     def __init__(self, *args, **kwargs):
         super(AddCommand, self).__init__(*args, **kwargs)
@@ -497,22 +508,54 @@ class AddCommand(BaseCommand):
             do_clip=do_clip,
         )
 
+    def _get_transnetv2_model(self):
+        if AddCommand._transnetv2_model is None:
+            with AddCommand._transnetv2_lock:
+                if AddCommand._transnetv2_model is None:
+                    weights_dir = TRANSNET_PATH
+
+                    # assert(weights_dir.exists)
+                    if not weights_dir:
+                        raise RuntimeError(
+                            "Config `add.transnetv2_weights_dir` must be set to the path "
+                            "of TransNetV2's pretrained weights directory "
+                            "(e.g. TransNetV2/inference/transnetv2-weights/)."
+                        )
+                    use_gpu = GlobalConfig.get("add", "transnetv2_use_gpu")
+                    use_gpu = True if use_gpu is None else use_gpu
+                    logger.info("Loading TransNetV2 model...")
+                    AddCommand._transnetv2_model = load_transnetv2_model(
+                        weights_dir, use_gpu=use_gpu
+                    )
+        return AddCommand._transnetv2_model
+
     def _get_keyframes_list(self, video_path: Path):
-        ffprobe_cmd = [
-            "ffprobe",
-            "-v",
-            "quiet",
-            "-select_streams",
-            "v:0",
-            "-show_entries",
-            "packet=flags",
-            "-of",
-            "csv",
-            str(video_path),
-        ]
-        res = subprocess.run(ffprobe_cmd, capture_output=True, text=True)
-        lines = [x for x in res.stdout.strip().split("\n") if x.startswith("packet")]
-        return [i for i, line in enumerate(lines) if "K" in line]
+        try:
+            model = self._get_transnetv2_model()
+            # A single TF model instance isn't safe to call concurrently from
+            # multiple threads, so serialize actual inference here even though
+            # other steps (audio extraction, frame reads) still run in parallel.
+            with AddCommand._transnetv2_lock:
+                scenes = get_scene_cuts(video_path, _model=model)
+            keyframes_list = [start for start, _end in scenes]
+            return keyframes_list
+        except Exception as e:
+            logger.warning(f"TransNetV2 keyframe detection failed ({e}), falling back to ffprobe")
+            ffprobe_cmd = [
+                "ffprobe",
+                "-v",
+                "quiet",
+                "-select_streams",
+                "v:0",
+                "-show_entries",
+                "packet=flags",
+                "-of",
+                "csv",
+                str(video_path),
+            ]
+            res = subprocess.run(ffprobe_cmd, capture_output=True, text=True)
+            lines = [x for x in res.stdout.strip().split("\n") if x.startswith("packet")]
+            return [i for i, line in enumerate(lines) if "K" in line]
 
     def _extract_video_info(self, video_path: Path):
         info_file = self._work_dir / constant.VIDEO_INFO_DIR / f"{video_path.stem}.json"
