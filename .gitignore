@@ -14,7 +14,7 @@ eggs/
 # Virtual environments
 venv/
 env/
-.venv**/
+.venv*/
 
 # IDE
 .vscode/
@@ -31,58 +31,50 @@ Desktop.ini
 # Jupyter
 .ipynb_checkpoints/
 
-# Dataset (large files)
+# Datasets & Features (large files)
 dataset/
-data**/
+data*/
+features*/
+*.rar
+*.zip
+*.7z
+*.tar
+*.gz
+*.tgz
+*.bz2
 
-# Provenance
-provenance**/
+# Model weights & Large Binaries
+*.bin
+*.pt
+*.pth
+*.onnx
+*.safetensors
+*.h5
+*.tflite
+*.ckpt
+*.engine
+*.weights
 
-# Logs
-**.log
-
-# Testing output & features
-test**/
-!aic51-src/tests/
-!aic51-src/tests/**
+# Data & Embeddings
 *.npy
+*.npz
+*.parquet
+*.pkl
+*.pickle
 
-# Workspace
+# Provenance & Workspace & Logs
+provenance*/
 workspace/
 aic51-src/workspace
-
-# Agents / AI tooling
-.agents/
-.web/
-
-drive-download-20260718T204638Z-1-001/
-.secrets
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
-Thumbs.db
-Desktop.ini
-.DS_Store
-
-# Jupyter
-.ipynb_checkpoints/
-
-# Dataset (large files)
-dataset/
-data**/
-
-# Logs
 **.log
 
-# Workspace
-workspace/
+# Testing output
+test*/
+!aic51-src/tests/
+!aic51-src/tests/**
 
-# Agents / AI tooling
+# Agents & AI tooling
 .agents/
 .web/
+.secrets
+drive-download*/
