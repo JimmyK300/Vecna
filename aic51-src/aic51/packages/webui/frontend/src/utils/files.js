@@ -1,5 +1,9 @@
 export function getBlob(blobData, mimeType) {
-    return new Blob([blobData], {type: mimeType});
+    if (typeof blobData === "string" && mimeType && mimeType.includes("csv")) {
+        // Prepend UTF-8 BOM so Excel decodes Vietnamese characters (đ, ổ, ê...) correctly
+        return new Blob(["\uFEFF" + blobData], { type: "text/csv;charset=utf-8;" });
+    }
+    return new Blob([blobData], { type: mimeType });
 }
 
 export function downloadFile(blob, name) {

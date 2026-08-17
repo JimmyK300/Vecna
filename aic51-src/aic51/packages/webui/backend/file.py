@@ -1,5 +1,6 @@
 from pathlib import Path
 import re
+import csv
 import numpy as np
 
 from fastapi import Header, Request, Response
@@ -55,10 +56,38 @@ async def frame_info(request: Request, video_id: str, frame_id: str):
     )
 
 
+@app.get("/api/frame/ocr/{video_id}/{frame_id}")
+async def get_frame_ocr(video_id: str, frame_id: str):
+    ocr_file = Path.cwd() / constant.FEATURE_DIR / video_id / str(frame_id) / "ocr.npy"
+    if ocr_file.exists():
+        try:
+            text = str(np.load(ocr_file, allow_pickle=True))
+            return {"video_id": video_id, "frame_id": frame_id, "ocr": text}
+        except Exception as e:
+            logger.error(f"Error reading OCR for {video_id} {frame_id}: {e}")
+    return {"video_id": video_id, "frame_id": frame_id, "ocr": ""}
+
+
+def _find_image_file(folder_name: str, video_id: str, frame_id: str) -> Path | None:
+    base_dir = Path.cwd() / folder_name
+    p1 = base_dir / video_id / f"{frame_id}{constant.IMAGE_EXTENSION}"
+    if p1.exists() and not p1.is_dir():
+        return p1
+    if str(frame_id).isdigit():
+        val = int(frame_id)
+        p2 = base_dir / video_id / f"{val:06d}{constant.IMAGE_EXTENSION}"
+        if p2.exists() and not p2.is_dir():
+            return p2
+        p3 = base_dir / video_id / f"{val:05d}{constant.IMAGE_EXTENSION}"
+        if p3.exists() and not p3.is_dir():
+            return p3
+    return None
+
+
 @app.get(constant.FILE_ENDPOINT + "/{video_id}/{frame_id}")
 async def get_file(request: Request, video_id: str, frame_id: str):
-    file_path = Path.cwd() / f"{constant.THUMBNAIL_DIR}/{video_id}/{frame_id}{constant.IMAGE_EXTENSION}"
-    if file_path.exists() and not file_path.is_dir():
+    file_path = _find_image_file(constant.THUMBNAIL_DIR, video_id, frame_id)
+    if file_path:
         return FileResponse(file_path)
     else:
         return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
@@ -66,12 +95,12 @@ async def get_file(request: Request, video_id: str, frame_id: str):
 
 @app.get("/api/keyframes/{video_id}/{frame_id}")
 async def get_keyframe(request: Request, video_id: str, frame_id: str):
-    file_path = Path.cwd() / f"{constant.KEYFRAME_DIR}/{video_id}/{frame_id}{constant.IMAGE_EXTENSION}"
-    if file_path.exists() and not file_path.is_dir():
+    file_path = _find_image_file(constant.KEYFRAME_DIR, video_id, frame_id)
+    if file_path:
         return FileResponse(file_path)
     else:
-        file_path_thumb = Path.cwd() / f"{constant.THUMBNAIL_DIR}/{video_id}/{frame_id}{constant.IMAGE_EXTENSION}"
-        if file_path_thumb.exists() and not file_path_thumb.is_dir():
+        file_path_thumb = _find_image_file(constant.THUMBNAIL_DIR, video_id, frame_id)
+        if file_path_thumb:
             return FileResponse(file_path_thumb)
         return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
 
@@ -232,3 +261,149 @@ async def get_video_keyframes(video_id: str):
             keyframes.append(d.name)
             
     return keyframes
+
+
+def _get_map_keyframes_path(video_id: str) -> Path | None:
+    candidates = [
+        Path.cwd() / "workspace" / "map-keyframes" / f"{video_id}.csv",
+        Path.cwd() / "map-keyframes" / f"{video_id}.csv",
+        Path.cwd().parent / "workspace" / "map-keyframes" / f"{video_id}.csv",
+    ]
+    for p in candidates:
+        if p.exists() and p.is_file():
+            return p
+    return None
+
+
+def _load_map_keyframes_data(video_id: str):
+    csv_path = _get_map_keyframes_path(video_id)
+    if not csv_path:
+        return None
+    items = []
+    try:
+        with open(csv_path, mode="r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                try:
+                    raw_val = int(row["frame_idx"])
+                    items.append({
+                        "n": int(row["n"]),
+                        "pts_time": float(row["pts_time"]),
+                        "fps": float(row["fps"]) if "fps" in row and row["fps"] else 25.0,
+                        "frame_idx": f"{raw_val:06d}",
+                        "raw_idx": raw_val
+                    })
+                except (ValueError, KeyError):
+                    continue
+        return items
+    except Exception as e:
+        logger.error(f"Failed reading map-keyframes for {video_id}: {e}")
+        return None
+
+
+@app.get("/api/video/map-keyframes/{video_id}")
+async def get_video_map_keyframes(video_id: str):
+    items = _load_map_keyframes_data(video_id)
+    if items is None:
+        return JSONResponse(status_code=200, content=jsonable_encoder({"available": False, "keyframes": []}))
+    return JSONResponse(status_code=200, content=jsonable_encoder({"available": True, "keyframes": items}))
+
+
+@app.get("/api/video/max-frame/{video_id}")
+async def get_video_max_frame(video_id: str):
+    items = _load_map_keyframes_data(video_id)
+    if items and len(items) > 0:
+        max_idx = max(item["raw_idx"] for item in items)
+        return {"video_id": video_id, "max_frame": max_idx}
+
+    existing_indices = _get_existing_frame_indices(video_id)
+    if existing_indices:
+        return {"video_id": video_id, "max_frame": max(existing_indices)}
+
+    return {"video_id": video_id, "max_frame": 999999}
+
+
+def _get_existing_frame_indices(video_id: str) -> list[int]:
+    indices = set()
+    for dir_name in [constant.KEYFRAME_DIR, constant.THUMBNAIL_DIR]:
+        folder = Path.cwd() / dir_name / video_id
+        if folder.exists() and folder.is_dir():
+            for p in folder.iterdir():
+                if p.is_file() and p.suffix.lower() == constant.IMAGE_EXTENSION:
+                    stem = p.stem
+                    if stem.isdigit():
+                        indices.add(int(stem))
+                elif p.is_dir() and p.name.isdigit():
+                    indices.add(int(p.name))
+    return sorted(list(indices))
+
+
+def _get_closest_existing_image_frame(video_id: str, target_raw_idx: int) -> tuple[str, bool]:
+    formatted_target = f"{target_raw_idx:06d}"
+    if _find_image_file(constant.KEYFRAME_DIR, video_id, formatted_target) or \
+       _find_image_file(constant.THUMBNAIL_DIR, video_id, formatted_target):
+        return formatted_target, False
+
+    existing_list = _get_existing_frame_indices(video_id)
+    if not existing_list:
+        return formatted_target, False
+
+    closest_raw = min(existing_list, key=lambda x: abs(x - target_raw_idx))
+    return f"{closest_raw:06d}", True
+
+
+@app.get("/api/video/map-keyframes-around/{video_id}/{frame_id}")
+async def get_video_map_keyframes_around(video_id: str, frame_id: str):
+    items = _load_map_keyframes_data(video_id)
+    if not items:
+        return JSONResponse(status_code=200, content=jsonable_encoder({"available": False}))
+
+    try:
+        target_int = int(frame_id)
+    except (ValueError, TypeError):
+        target_int = -1
+
+    items.sort(key=lambda x: x["raw_idx"])
+
+    exact_match_item = next((item for item in items if item["raw_idx"] == target_int), None)
+
+    if exact_match_item:
+        is_exact_match = True
+        curr_item = exact_match_item
+        idx = items.index(exact_match_item)
+        prev_item = items[max(0, idx - 1)]
+        next_item = items[min(len(items) - 1, idx + 1)]
+    else:
+        is_exact_match = False
+        idx = 0
+        while idx < len(items) and items[idx]["raw_idx"] < target_int:
+            idx += 1
+
+        if idx == 0:
+            prev_item = items[0]
+            next_item = items[min(1, len(items) - 1)]
+        elif idx >= len(items):
+            prev_item = items[max(0, len(items) - 2)]
+            next_item = items[-1]
+        else:
+            prev_item = items[idx - 1]
+            next_item = items[idx]
+
+        curr_item = prev_item
+
+    def _enrich_item(item_dict):
+        item_copy = dict(item_dict)
+        disp_idx, is_fallback = _get_closest_existing_image_frame(video_id, item_copy["raw_idx"])
+        item_copy["display_frame_idx"] = disp_idx
+        item_copy["is_fallback_image"] = is_fallback
+        return item_copy
+
+    return JSONResponse(status_code=200, content=jsonable_encoder({
+        "available": True,
+        "target_frame_id": frame_id,
+        "is_exact_match": is_exact_match,
+        "prev": _enrich_item(prev_item),
+        "curr": _enrich_item(curr_item),
+        "next": _enrich_item(next_item),
+    }))
+

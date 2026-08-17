@@ -9,7 +9,11 @@ from .command import BaseCommand
 available_commands = set()
 package_dir = os.path.dirname(__file__)
 for _, module_name, _ in iter_modules([package_dir]):
-    module = import_module(f"{__name__}.{module_name}")
+    try:
+        module = import_module(f"{__name__}.{module_name}")
+    except Exception as e:
+        print(f"[Warning] Failed to load CLI command module '{module_name}': {e}")
+        continue
     for name, obj in inspect.getmembers(module):
         if inspect.isclass(obj) and issubclass(obj, BaseCommand) and obj != BaseCommand:
             available_commands.add(obj)

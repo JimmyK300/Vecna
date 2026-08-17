@@ -1,276 +1,822 @@
-import { useState, useEffect, useRef, useMemo } from "react";
-import classNames from "classnames";
-import AddButton from "../assets/add-btn.svg";
-import DeleteButton from "../assets/delete-btn.svg";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import { getTargetFeatures, expandQuery } from "../services/search.js";
+
+const VIDEO_PREFIX_OPTIONS = [
+  { prefix: "L21", name: "L21: HTV 60 Seconds (P1)" },
+  { prefix: "L22", name: "L22: HTV 60 Seconds (P2)" },
+  { prefix: "L23", name: "L23: HTV Cycling Cup 2024" },
+  { prefix: "L24", name: "L24: Lion Dance - Cho Lon Cup" },
+  { prefix: "L25", name: "L25: TN News - Exam 2024" },
+  { prefix: "L26", name: "L26: Daily Delicious Dishes" },
+  { prefix: "L27", name: "L27: Vietnam Travel S3" },
+  { prefix: "L28", name: "L28: Mekong Ramblings" },
+  { prefix: "L29", name: "L29: Eyes of Mekong" },
+  { prefix: "L30", name: "L30: Tuoi Tre News 2024" },
+];
 
 export function AdvanceQueryContainer({
-  q,
+  q = "",
   onChange,
-  onSubmit,
+  autoTranslate = false,
+  onToggleAutoTranslate,
+  includeVideos = "",
+  onIncludeVideosChange,
+  excludeVideos = "",
+  onExcludeVideosChange,
+  onApplyVideoFilters,
+  isSearching = false,
+  activePreset = "default",
+  onSelectPreset,
+  onResetQueryHeight,
 }) {
-  const temporalQueries = q.split(";");
-  const handleOnChange = (id, newTemporalQuery) => {
-    temporalQueries[id] = newTemporalQuery;
-    onChange(temporalQueries.join(";"));
-  };
-  const handleOnDelete = (id) => {
-    temporalQueries.splice(id, 1);
-    onChange(temporalQueries.join(";"));
-  };
-  return (
-    <div className="flex flex-row items-center flex-wrap">
-      {temporalQueries.map((tq, id) => (
-        <div key={id} className="basis-1/4 p-1">
-          <TemporalQueryContainer
-            onSubmit={onSubmit}
-            temporalQuery={tq}
-            onChange={(newTemporalQuery) => {
-              handleOnChange(id, newTemporalQuery);
-            }}
-            onDelete={() => {
-              handleOnDelete(id);
-            }}
-          />
-        </div>
-      ))}
-      <div className="basis-1/4">
-        <img
-          className="hover:bg-gray-300 active:bg-gray-400 m-auto"
-          src={AddButton}
-          width="30em"
-          draggable={false}
-          onClick={() => {
-            onChange(q + ";");
-          }}
-        />
-      </div>
-    </div>
-  );
-}
+  const [showPrefixMenu, setShowPrefixMenu] = useState(false);
+  const [targetFeatures, setTargetFeatures] = useState([]);
 
-export function TemporalQueryContainer({
-  temporalQuery,
-  onChange,
-  onDelete,
-  onSubmit
-}) {
+  // State cho Query Expansion, Google-style Suggestion & Jina Auto-Fusion
+  const [isExpanding, setIsExpanding] = useState(false);
+  const [autoFusion, setAutoFusion] = useState(false);
+  const [expansionVariants, setExpansionVariants] = useState([]);
+  const [expansionDetailed, setExpansionDetailed] = useState(null);
+  const [expansionError, setExpansionError] = useState("");
+  const [suggestionInfo, setSuggestionInfo] = useState(null);
+  const [showVariants, setShowVariants] = useState(false);
+  const [forceOriginal, setForceOriginal] = useState(false);
+
+  // State đóng/mở 2 bộ lọc bên cạnh (OCR/ASR Filters & Video Filters)
+  const [showOcrAsrPanel, setShowOcrAsrPanel] = useState(true);
+  const [showVideoPanel, setShowVideoPanel] = useState(true);
+
+  // Helper to parse OCR and ASR tags out of full query string
   const parseQuery = (queryString) => {
-    let q = queryString;
-    const ocrs = [];
-    const speeches = [];
-    
-    let ocrRegex = /\s?\[OCR:((".*?")|\S+)\]/gi;
-    const ocrMatches = q.matchAll(ocrRegex);
-    for (const match of ocrMatches) {
-      let content = match[1];
-      if (content.startsWith('"') && content.endsWith('"')) {
-        content = content.slice(1, -1);
-      }
-      ocrs.push(content);
-      q = q.replace(match[0], "");
+    let mainText = queryString || "";
+    let ocrText = "";
+    let asrText = "";
+
+    // Parse [OCR:"..."] or [OCR:text]
+    const ocrRegex = /\s?\[OCR:((".*?")|[^\]]+)\]/gi;
+    const ocrMatch = ocrRegex.exec(mainText);
+    if (ocrMatch) {
+      ocrText = ocrMatch[1].trim();
+      mainText = mainText.replace(ocrMatch[0], "");
     }
-    
-    let speechRegex = /\s?\[asr:((".*?")|\S+)\]/gi;
-    const speechMatches = q.matchAll(speechRegex);
-    for (const match of speechMatches) {
-      let content = match[1];
-      if (content.startsWith('"') && content.endsWith('"')) {
-        content = content.slice(1, -1);
-      }
-      speeches.push(content);
-      q = q.replace(match[0], "");
+
+    // Parse [asr:"..."] or [asr:text]
+    const asrRegex = /\s?\[asr:((".*?")|[^\]]+)\]/gi;
+    const asrMatch = asrRegex.exec(mainText);
+    if (asrMatch) {
+      asrText = asrMatch[1].trim();
+      mainText = mainText.replace(asrMatch[0], "");
     }
-    
-    return { text: q, ocrs, speeches };
-  };
-  
-  const buildQuery = (text, ocrs, speeches) => {
-    let selectorStr = [];
-    for (const ocr of ocrs) {
-      selectorStr.push(`[OCR:"${ocr}"]`);
-    }
-    for (const speech of speeches) {
-      selectorStr.push(`[asr:"${speech}"]`);
-    }
-    return text + (selectorStr.length > 0 ? " " + selectorStr.join(" ") : "");
+
+    return { mainText: mainText.trim(), ocrText, asrText };
   };
 
-  const { text: q, ocrs, speeches } = useMemo(() => parseQuery(temporalQuery), [temporalQuery]);
-
-  const handleOnChange = (e) => {
-    const newText = e.target.value;
-    onChange(buildQuery(newText, ocrs, speeches));
-  };
-  
-  const handleOnOCRChange = (e) => {
-    const newOcrs = e.target.value.length > 0 ? 
-      e.target.value.split(",").filter(ocr => ocr !== "") : [];
-    onChange(buildQuery(q, newOcrs, speeches));
-  };
-  
-  const handleOnSpeechChange = (e) => {
-    const newSpeeches = e.target.value.length > 0 ? 
-      e.target.value.split(",").filter(speech => speech !== "") : [];
-    onChange(buildQuery(q, ocrs, newSpeeches));
-  };
-
-  return (
-    <div className="text-sm bg-sky-300 flex flex-col p-1 space-y-1">
-      <img
-        className="mx-auto hover:bg-gray-300 active:bg-gray-400"
-        src={DeleteButton}
-        width="25em"
-        draggable={false}
-        onClick={() => {
-          onDelete();
-        }}
-       alt={"Delete Button"}/>
-      <textarea
-        data-query-input="main"
-        className="text-sm bg-slate-100 text-slate-400 focus:bg-white focus:text-black focus:outline-none"
-        rows={2}
-        value={q}
-        onChange={handleOnChange}
-        onKeyDown={(e) => {
-          if (e.keyCode === 13 && e.shiftKey === false) {
-            e.preventDefault();
-            onSubmit();
-          }
-        }}
-      />
-      <textarea
-        data-query-input="ocr"
-        className="text-sm bg-slate-100 text-slate-400 focus:bg-white focus:text-black focus:outline-none"
-        rows={1}
-        placeholder="OCR text"
-        value={ocrs.join(",")}
-        onKeyDown={(e) => {
-          if (e.keyCode === 13 && e.shiftKey === false) {
-            e.preventDefault();
-            onSubmit();
-          }
-          if (e.keyCode === 222 || e.keyCode === 13) {
-            e.preventDefault();
-          }
-        }}
-        onChange={handleOnOCRChange}
-      />
-      <textarea
-        data-query-input="speech"
-        className="text-sm bg-slate-100 text-slate-400 focus:bg-white focus:text-black focus:outline-none"
-        rows={1}
-        placeholder="Speech/Audio text"
-        value={speeches.join(",")}
-        onKeyDown={(e) => {
-          if (e.keyCode === 13 && e.shiftKey === false) {
-            e.preventDefault();
-            onSubmit();
-          }
-          if (e.keyCode === 222 || e.keyCode === 13) {
-            e.preventDefault();
-          }
-        }}
-        onChange={handleOnSpeechChange}
-      />
-    </div>
-  );
-}
-
-export function SearchableDropdown({ name, options, onSelect }) {
-  const [isFocus, setIsFocus] = useState(false);
-  const [search, setSearch] = useState("");
-  const dropdownElement = useRef(null);
-  const visibleOptions = [];
-  for (const opt of options) {
-    let l = 0;
-    const lowerOpt = opt.toLowerCase();
-    const lowerSearch = search.toLowerCase();
-    for (let r = 0; r < opt.length; ++r) {
-      if (lowerOpt[r] === lowerSearch[l]) ++l;
+  // Helper to rebuild query string from main, ocr, and asr inputs
+  const buildQuery = (mainText, ocrText, asrText) => {
+    let parts = [mainText.trim()];
+    if (ocrText.trim()) {
+      parts.push(`[OCR:${ocrText.trim()}]`);
     }
-    let score = 1;
-    if (search.length > 0) score = l / search.length;
-    if (score > 0) {
-      visibleOptions.push({ value: opt, score: score });
+    if (asrText.trim()) {
+      parts.push(`[asr:${asrText.trim()}]`);
     }
-  }
-  visibleOptions.sort((a, b) => {
-    if (a.score !== b.score) return b.score - a.score;
-    if (a.value.length !== b.value.length)
-      return a.value.length - b.value.length;
-    const v1 = a.value.toLowerCase();
-    const v2 = b.value.toLowerCase();
-    if (v1 < v2) return -1;
-    if (v1 > v2) return 1;
-    return 0;
+    return parts.filter(Boolean).join(" ");
+  };
+
+  const parsed = useMemo(() => parseQuery(q), [q]);
+
+  const [mainQuery, setMainQuery] = useState(parsed.mainText);
+  const [ocrQuery, setOcrQuery] = useState(parsed.ocrText);
+  const [asrQuery, setAsrQuery] = useState(parsed.asrText);
+
+  // Auto-Search toggle state (persisted in localStorage)
+  const [autoSearch, setAutoSearch] = useState(() => {
+    const saved = localStorage.getItem("vecna_auto_search");
+    return saved !== null ? JSON.parse(saved) : true;
   });
 
-  const handleOnChange = (e) => {
-    const text = e.target.value;
-    setSearch(text);
+  // Check if mainQuery has temporal delimiters \ or /
+  const hasTemporal = /[\/\\\\]/.test(mainQuery);
+
+  // Extract delimiter used (/ or \)
+  const temporalDelimiter = useMemo(() => {
+    if (mainQuery.includes("/")) return "/";
+    return "\\";
+  }, [mainQuery]);
+
+  // Split mainQuery into non-delimiter segment strings
+  const temporalSegments = useMemo(() => {
+    if (!hasTemporal) return [];
+    return mainQuery.split(/[\/\\\\]/);
+  }, [mainQuery, hasTemporal]);
+
+  const handleUpdateTemporalSegment = (stepIdx, newText) => {
+    const currentSegments = mainQuery.split(/[\/\\\\]/);
+    currentSegments[stepIdx] = newText;
+    setMainQuery(currentSegments.join(temporalDelimiter));
   };
 
-  useEffect(() => {
-    const handleOnClick = (e) => {
-      if (dropdownElement.current.contains(e.target)) {
-        setIsFocus(true);
-      } else {
-        setIsFocus(false);
-      }
-    };
-    document.addEventListener("click", handleOnClick);
+  const lastSubmittedRef = useRef("");
 
-    return () => {
-      document.removeEventListener("click", handleOnClick);
-    };
-  }, []);
+  // Sync state if external q changes (NEVER overwrite mainQuery while user has typed text)
+  useEffect(() => {
+    const p = parseQuery(q);
+    if (!mainQuery || !mainQuery.trim()) {
+      setMainQuery(p.mainText);
+    }
+    setOcrQuery(p.ocrText);
+    setAsrQuery(p.asrText);
+  }, [q]);
+
+  // Debounced live search trigger (only when autoSearch is true)
+  useEffect(() => {
+    if (!autoSearch) return;
+    const timer = setTimeout(async () => {
+      const trimmed = mainQuery.trim();
+      if (!trimmed) {
+        lastSubmittedRef.current = "";
+        setSuggestionInfo(null);
+        const fullQuery = buildQuery("", ocrQuery, asrQuery);
+        if (fullQuery !== q) onChange(fullQuery);
+        return;
+      }
+
+      if (forceOriginal) {
+        setSuggestionInfo(null);
+        lastSubmittedRef.current = trimmed;
+        const fullQuery = buildQuery(trimmed, ocrQuery, asrQuery);
+        if (fullQuery !== q) onChange(fullQuery);
+        return;
+      }
+
+      let textToSearch = trimmed;
+
+      // If Auto-Fusion is ON: expand query via LLM for vector search, WITHOUT modifying mainQuery textarea!
+      if (autoFusion && !isExpanding) {
+        try {
+          const res = await expandQuery(trimmed);
+          if (res && res.detailed) {
+            const corrected = res.detailed.corrected || trimmed;
+            if (corrected.toLowerCase() !== trimmed.toLowerCase()) {
+              setSuggestionInfo({ original: trimmed, corrected });
+              textToSearch = corrected;
+            } else {
+              setSuggestionInfo(null);
+            }
+            setExpansionDetailed(res.detailed);
+            setExpansionVariants(res.variants || []);
+          }
+        } catch (e) {
+          console.error("Auto-Fusion background search error:", e);
+        }
+      } else {
+        setSuggestionInfo(null);
+      }
+
+      lastSubmittedRef.current = trimmed;
+      const fullQuery = buildQuery(textToSearch, ocrQuery, asrQuery);
+      if (fullQuery !== q) onChange(fullQuery);
+    }, 450);
+    return () => clearTimeout(timer);
+  }, [mainQuery, ocrQuery, asrQuery, autoSearch, autoFusion, forceOriginal]);
+
+  const [incInput, setIncInput] = useState(includeVideos || "");
+  const [excInput, setExcInput] = useState(excludeVideos || "");
+
+  useEffect(() => {
+    setIncInput(includeVideos || "");
+    setExcInput(excludeVideos || "");
+  }, [includeVideos, excludeVideos]);
+
+  const handleApplyVideoFilters = (newInc = incInput, newExc = excInput) => {
+    if (onApplyVideoFilters) {
+      onApplyVideoFilters(newInc, newExc);
+    } else {
+      onIncludeVideosChange && onIncludeVideosChange(newInc);
+      onExcludeVideosChange && onExcludeVideosChange(newExc);
+    }
+  };
+
+  const handleClearVideoFilters = () => {
+    setIncInput("");
+    setExcInput("");
+    handleApplyVideoFilters("", "");
+  };
+
+  const handleVideoFilterKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleApplyVideoFilters();
+    }
+  };
+
+  const handleAddDirectPrefix = (prefixCode, type) => {
+    if (!prefixCode) return;
+    if (type === "include") {
+      const existing = incInput ? incInput.trim().split(/[,;\s]+/).filter(Boolean) : [];
+      let nextVal = incInput;
+      if (!existing.includes(prefixCode)) {
+        nextVal = existing.length > 0 ? `${incInput.trim()}, ${prefixCode}` : prefixCode;
+        setIncInput(nextVal);
+      }
+      handleApplyVideoFilters(nextVal, excInput);
+    } else {
+      const existing = excInput ? excInput.trim().split(/[,;\s]+/).filter(Boolean) : [];
+      let nextVal = excInput;
+      if (!existing.includes(prefixCode)) {
+        nextVal = existing.length > 0 ? `${excInput.trim()}, ${prefixCode}` : prefixCode;
+        setExcInput(nextVal);
+      }
+      handleApplyVideoFilters(incInput, nextVal);
+    }
+  };
+
+  const handleExpandQuery = async () => {
+    if (!mainQuery || !mainQuery.trim()) {
+      setExpansionError("Please enter a search query before expanding.");
+      return;
+    }
+    setIsExpanding(true);
+    setExpansionError("");
+    setExpansionVariants([]);
+    setExpansionDetailed(null);
+    setShowVariants(true);
+
+    try {
+      const res = await expandQuery(mainQuery.trim());
+      if (res && res.error) {
+        setExpansionError(res.error);
+      } else if (!res || (!res.variants && !res.detailed) || (res.variants && res.variants.length === 0)) {
+        setExpansionError("Failed to expand query (check GROQ_API_KEY).");
+      } else {
+        setExpansionVariants(res.variants || []);
+        setExpansionDetailed(res.detailed || null);
+      }
+    } catch (err) {
+      console.error("Error expanding query:", err);
+      setExpansionError("GROQ_API_KEY is not configured in workspace/config.yaml (or GROQ_API_KEY environment variable)");
+    } finally {
+      setIsExpanding(false);
+    }
+  };
+
+  const handleSelectExpansionVariant = (variantText) => {
+    setMainQuery(variantText);
+    setShowVariants(false);
+    setSuggestionInfo(null);
+    setExpansionVariants([]);
+    setExpansionDetailed(null);
+    setExpansionError("");
+    if (onResetQueryHeight) onResetQueryHeight();
+    const fullQuery = buildQuery(variantText, ocrQuery, asrQuery);
+    onChange(fullQuery);
+  };
+
+  const triggerManualSearch = async () => {
+    const trimmed = mainQuery.trim();
+    if (!trimmed) {
+      lastSubmittedRef.current = "";
+      const fullQuery = buildQuery("", ocrQuery, asrQuery);
+      onChange(fullQuery);
+      return;
+    }
+
+    if (forceOriginal) {
+      lastSubmittedRef.current = trimmed;
+      const fullQuery = buildQuery(trimmed, ocrQuery, asrQuery);
+      onChange(fullQuery);
+      return;
+    }
+
+    let textToSearch = trimmed;
+
+    if (autoFusion && !isExpanding) {
+      try {
+        const res = await expandQuery(trimmed);
+        if (res && res.detailed) {
+          const corrected = res.detailed.corrected || trimmed;
+          if (corrected.toLowerCase() !== trimmed.toLowerCase()) {
+            setSuggestionInfo({ original: trimmed, corrected });
+            textToSearch = corrected;
+          } else {
+            setSuggestionInfo(null);
+          }
+          setExpansionDetailed(res.detailed);
+          setExpansionVariants(res.variants || []);
+        }
+      } catch (e) {
+        console.error("Auto-Fusion manual search error:", e);
+      }
+    } else if (suggestionInfo && suggestionInfo.corrected) {
+      textToSearch = suggestionInfo.corrected;
+    }
+
+    lastSubmittedRef.current = trimmed;
+    const fullQuery = buildQuery(textToSearch, ocrQuery, asrQuery);
+    onChange(fullQuery);
+  };
+
+  const handleMainQueryKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      triggerManualSearch();
+    }
+  };
 
   return (
-    <div className="relative group h-5">
-      <div
-        id={"searchable-dropdown-" + name}
-        className={classNames("absolute flex flex-col w-full", {
-          "z-10": isFocus,
-        })}
-        ref={dropdownElement}
-      >
-        <input
-          className="bg-slate-100 text-slate-400 focus:bg-white focus:text-black focus:outline-none"
-          type="text"
-          value={search}
-          onChange={handleOnChange}
-          onKeyDown={(e) => {
-            if (e.keyCode === 13) {
-              e.preventDefault();
-              e.stopPropagation();
-            }
-          }}
-        />
-        <div
-          className={classNames(
-            "top-full bg-gray-100 p-1 w-full max-h-52 overflow-scroll",
-            {
-              visible: isFocus,
-              hidden: !isFocus,
-            },
-          )}
-        >
-          {visibleOptions.map((opt) => (
-            <div
-              key={opt.value}
-              className="hover:bg-blue-200"
-              onClick={(e) => {
-                e.stopPropagation();
-                setSearch("");
-                setIsFocus(false);
-                onSelect(opt.value);
-              }}
+    <div className="w-full flex flex-col lg:flex-row gap-2 bg-sky-200 border border-sky-300 p-2 rounded-lg shadow-sm mb-2">
+      {/* Primary Text Search Query Box */}
+      <div className="flex-1 flex flex-col gap-1.5 h-full">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            {/* Auto-Search Toggle Button */}
+            <button
+              type="button"
+              onClick={() => setAutoSearch(!autoSearch)}
+              className={`text-[11px] font-semibold px-2 py-0.5 rounded border transition-all flex items-center gap-1.5 shadow-sm ${
+                autoSearch
+                  ? "bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-700"
+                  : "bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-300"
+              }`}
+              title={
+                autoSearch
+                  ? "Auto-search enabled (searches 500ms after typing). Click to turn OFF."
+                  : "Manual search enabled (Press Enter to search). Click to turn ON auto-search."
+              }
             >
-              {opt.value}
-            </div>
-          ))}
+              <span className={`w-2 h-2 rounded-full ${autoSearch ? "bg-white animate-pulse" : "bg-gray-400"}`}></span>
+              Auto-Search: {autoSearch ? "ON" : "OFF"}
+            </button>
+
+            {!autoSearch && (
+              <button
+                type="button"
+                onClick={triggerManualSearch}
+                className="text-[11px] font-bold px-2 py-0.5 rounded bg-blue-600 hover:bg-blue-700 text-white shadow-sm flex items-center gap-1 transition-colors"
+                title="Run search (or press Enter)"
+              >
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                Search (Enter)
+              </button>
+            )}
+
+            <button
+              type="button"
+              onClick={() => {
+                if (showVariants && (expansionVariants.length > 0 || expansionDetailed)) {
+                  setShowVariants(false);
+                  if (onResetQueryHeight) onResetQueryHeight();
+                } else {
+                  handleExpandQuery();
+                }
+              }}
+              disabled={isExpanding}
+              className={`text-[11px] font-bold px-2.5 py-0.5 rounded border transition-all shadow-sm flex items-center gap-1.5 cursor-pointer ${
+                isExpanding
+                  ? "bg-purple-300 text-purple-900 border-purple-400 cursor-wait animate-pulse"
+                  : showVariants && (expansionVariants.length > 0 || expansionDetailed)
+                  ? "bg-purple-100 hover:bg-purple-200 text-purple-900 border-purple-400"
+                  : "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white border-purple-700 hover:shadow"
+              }`}
+              title="Click to expand query or toggle view"
+            >
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              {isExpanding
+                ? "Expanding..."
+                : showVariants && (expansionVariants.length > 0 || expansionDetailed)
+                ? "Hide Expansion ▴"
+                : "Expand Query ▾"}
+            </button>
+
+            {/* Auto-Fusion Toggle Button */}
+            <button
+              type="button"
+              onClick={() => setAutoFusion(!autoFusion)}
+              className={`text-[11px] font-semibold px-2 py-0.5 rounded border transition-all flex items-center gap-1 shadow-sm cursor-pointer ${
+                autoFusion
+                  ? "bg-purple-600 hover:bg-purple-700 text-white border-purple-700 font-bold"
+                  : "bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-300"
+              }`}
+              title={
+                autoFusion
+                  ? "Auto-Fusion ON: Searches using background LLM typo-correction & HyDE WITHOUT altering your input text. Click to turn OFF."
+                  : "Auto-Fusion OFF: Searches raw input text without background LLM expansion. Click to turn ON."
+              }
+            >
+              <span className={`w-2 h-2 rounded-full ${autoFusion ? "bg-white animate-pulse" : "bg-gray-400"}`}></span>
+              Auto-Fusion: {autoFusion ? "ON" : "OFF"}
+            </button>
+
+            {/* OCR/ASR Filter Panel Toggle */}
+            <button
+              type="button"
+              onClick={() => setShowOcrAsrPanel(!showOcrAsrPanel)}
+              className={`text-[11px] font-semibold px-2 py-0.5 rounded border transition-all flex items-center gap-1 shadow-sm cursor-pointer ${
+                showOcrAsrPanel
+                  ? "bg-amber-600 hover:bg-amber-700 text-white border-amber-700"
+                  : "bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-300"
+              }`}
+              title="Click to show / hide OCR & ASR Filters side panel"
+            >
+              <span className={`w-2 h-2 rounded-full ${showOcrAsrPanel ? "bg-white" : "bg-gray-400"}`}></span>
+              OCR/ASR: {showOcrAsrPanel ? "ON" : "OFF"}
+            </button>
+
+            {/* Video Filters Panel Toggle */}
+            <button
+              type="button"
+              onClick={() => setShowVideoPanel(!showVideoPanel)}
+              className={`text-[11px] font-semibold px-2 py-0.5 rounded border transition-all flex items-center gap-1 shadow-sm cursor-pointer ${
+                showVideoPanel
+                  ? "bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-700"
+                  : "bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-300"
+              }`}
+              title="Click to show / hide Video Filters side panel"
+            >
+              <span className={`w-2 h-2 rounded-full ${showVideoPanel ? "bg-white" : "bg-gray-400"}`}></span>
+              Video Filters: {showVideoPanel ? "ON" : "OFF"}
+            </button>
+
+            {isSearching && (
+              <span className="text-xs text-sky-800 font-semibold animate-pulse ml-1">
+                Searching...
+              </span>
+            )}
+
+          </div>
         </div>
+
+        <textarea
+          data-query-input="main"
+          spellCheck={false}
+          autoCorrect="off"
+          autoCapitalize="off"
+          className={`w-full text-xs bg-white text-gray-900 border border-sky-400 rounded p-2 focus:outline-none focus:ring-1 focus:ring-blue-500 font-sans transition-all flex-1 min-h-[80px] max-h-44 overflow-y-auto leading-relaxed resize-y`}
+          rows={hasTemporal ? 3 : 3}
+          placeholder="Type search text here... (Temporal syntax: '\\' or '/' for sequence)"
+          value={mainQuery}
+          onChange={(e) => {
+            setMainQuery(e.target.value);
+            setForceOriginal(false);
+          }}
+          onKeyDown={handleMainQueryKeyDown}
+        />
+
+        {/* Google-Style 2-Line Spellcheck Suggestion Banner (Shown ONLY when Auto-Fusion detects a typo) */}
+        {suggestionInfo && autoFusion && (
+          <div className="text-xs bg-white/95 border-l-4 border-purple-600 px-3 py-1.5 rounded shadow-xs flex flex-col gap-0.5 animate-fadeIn">
+            <div className="text-gray-800 font-medium flex items-center gap-1 flex-wrap">
+              Showing results for{" "}
+              <button
+                type="button"
+                onClick={() => {
+                  setMainQuery(suggestionInfo.corrected);
+                  setSuggestionInfo(null);
+                  const fullQuery = buildQuery(suggestionInfo.corrected, ocrQuery, asrQuery);
+                  onChange(fullQuery);
+                }}
+                className="font-bold text-purple-900 italic underline hover:text-purple-700 cursor-pointer max-w-full truncate"
+                title="Click to replace search box text with corrected query"
+              >
+                "{suggestionInfo.corrected}"
+              </button>
+            </div>
+            <div className="text-gray-600 text-[11px] flex items-center gap-1 flex-wrap">
+              Search instead for{" "}
+              <button
+                type="button"
+                onClick={() => {
+                  setForceOriginal(true);
+                  setSuggestionInfo(null);
+                  const fullQuery = buildQuery(suggestionInfo.original, ocrQuery, asrQuery);
+                  onChange(fullQuery);
+                }}
+                className="text-purple-600 hover:text-purple-800 underline font-semibold cursor-pointer max-w-full truncate"
+              >
+                "{suggestionInfo.original}"
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* 4 Expansion Variant Dropdown Cards (Shown ONLY when Expand Query is clicked) */}
+        {expansionError && (
+          <div className="text-xs text-red-600 font-semibold bg-red-50 border border-red-200 px-2 py-1 rounded">
+            {expansionError}
+          </div>
+        )}
+
+        {showVariants && (expansionVariants.length > 0 || expansionDetailed) && (
+          <div className="flex flex-col gap-1 bg-white/95 border border-purple-300 p-1.5 rounded-md shadow-xs animate-fadeIn w-full max-w-full min-w-0">
+            <div className="flex items-center justify-between min-w-0 pb-0.5 border-b border-purple-100">
+              <span className="text-[10px] font-extrabold text-purple-900 uppercase tracking-wider flex items-center gap-1 truncate min-w-0">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-600 shrink-0 inline-block"></span>
+                <span className="truncate">QUERY EXPANSION</span>
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowVariants(false);
+                  if (onResetQueryHeight) onResetQueryHeight();
+                }}
+                className="text-[9px] text-gray-500 hover:text-red-600 font-semibold px-1 py-0 rounded bg-gray-100 hover:bg-red-50 shrink-0 cursor-pointer transition-colors border border-gray-200 flex items-center gap-0.5"
+                title="Close Query Expansion"
+              >
+                ✕ Close
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5 pt-0.5 w-full max-w-full min-w-0">
+              {(() => {
+                const boxes = [
+                  {
+                    key: "corrected",
+                    label: "corrected",
+                    sub: "Spell-check",
+                    value: expansionDetailed?.corrected || expansionVariants[0] || "",
+                    badgeColor: "bg-purple-50 hover:bg-purple-100/90 text-purple-950 border-purple-300",
+                    headerColor: "text-purple-800",
+                  },
+                  {
+                    key: "hyde",
+                    label: "vi-hyde",
+                    sub: "Vietnamese HyDE",
+                    value: expansionDetailed?.hyde || expansionVariants[1] || "",
+                    badgeColor: "bg-emerald-50 hover:bg-emerald-100/90 text-emerald-950 border-emerald-300",
+                    headerColor: "text-emerald-800",
+                  },
+                  {
+                    key: "en_hyde",
+                    label: "en-hyde",
+                    sub: "English visual",
+                    value: expansionDetailed?.en_hyde || expansionVariants[2] || "",
+                    badgeColor: "bg-sky-50 hover:bg-sky-100/90 text-sky-950 border-sky-300",
+                    headerColor: "text-sky-800",
+                  },
+                  {
+                    key: "paraphrase",
+                    label: "paraphrase",
+                    sub: "Rewrite & synonyms",
+                    value: expansionDetailed?.paraphrase || expansionVariants[3] || "",
+                    badgeColor: "bg-indigo-50 hover:bg-indigo-100/90 text-indigo-950 border-indigo-300",
+                    headerColor: "text-indigo-800",
+                  },
+                ];
+
+                return boxes
+                  .filter((b) => b.value && b.value.trim())
+                  .map((box) => (
+                    <button
+                      key={box.key}
+                      type="button"
+                      onClick={() => handleSelectExpansionVariant(box.value)}
+                      className={`w-full max-w-full min-w-0 text-xs p-1.5 rounded-md border transition-all shadow-xs flex flex-col gap-0.5 cursor-pointer text-left hover:shadow-md hover:scale-[1.002] active:scale-98 ${box.badgeColor}`}
+                      title={`Click to search: "${box.value}"`}
+                    >
+                      <div className="flex items-center justify-between w-full min-w-0 border-b border-black/5 pb-0.5">
+                        <div className="flex items-center gap-1 truncate">
+                          <span className={`font-extrabold text-[10px] lowercase font-mono tracking-wide ${box.headerColor}`}>
+                            {box.label}:
+                          </span>
+                          <span className="text-[9px] text-gray-500 font-normal hidden sm:inline truncate">
+                            • {box.sub}
+                          </span>
+                        </div>
+                        <span className="text-[9px] text-gray-500 hover:text-gray-800 font-semibold shrink-0">
+                          Search ↵
+                        </span>
+                      </div>
+                      <div className="w-full text-[11px] font-medium leading-snug max-h-14 overflow-y-auto whitespace-normal break-words scrollbar-thin pr-1">
+                        "{box.value}"
+                      </div>
+                    </button>
+                  ));
+              })()}
+            </div>
+          </div>
+        )}
+
+        {/* Dynamic Full-Width Interactive Temporal Step Inputs (Rendered ONLY when hasTemporal is true) */}
+        {hasTemporal && (
+          <div className="flex flex-col gap-1.5 pt-1 border-t border-sky-300 w-full animate-fadeIn">
+            {temporalSegments.map((segmentText, stepIdx) => (
+              <div
+                key={stepIdx}
+                className="flex items-center bg-white border border-sky-400 px-2 py-1 rounded-lg text-xs font-semibold text-sky-950 font-mono shadow-sm focus-within:ring-1 focus-within:ring-blue-500 w-full"
+              >
+                <span className="text-[10px] text-sky-600 font-bold mr-1.5 shrink-0 select-none">
+                  #{stepIdx + 1}
+                </span>
+                <input
+                  type="text"
+                  value={segmentText}
+                  onChange={(e) => handleUpdateTemporalSegment(stepIdx, e.target.value)}
+                  onKeyDown={handleMainQueryKeyDown}
+                  className="bg-transparent text-xs font-mono font-bold text-sky-950 focus:outline-none w-full"
+                  placeholder={`Step ${stepIdx + 1} text...`}
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
+
+      {/* Dedicated OCR & ASR Filters Panel */}
+      {showOcrAsrPanel && (
+        <div className="w-full lg:w-56 shrink-0 flex flex-col gap-1.5 bg-white border border-sky-300 p-2 rounded shadow-sm animate-fadeIn">
+          <div className="flex items-center justify-between border-b border-gray-100 pb-1">
+            <label className="text-xs font-bold text-gray-800 flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+              OCR & ASR Filters
+            </label>
+            <button
+              type="button"
+              onClick={() => setShowOcrAsrPanel(false)}
+              className="text-xs text-gray-400 hover:text-red-600 font-bold px-1 cursor-pointer"
+              title="Close OCR/ASR Filters panel"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="flex flex-col gap-0.5">
+            <span className="text-[10px] font-bold text-blue-700">OCR Text (On-screen):</span>
+            <input
+              type="text"
+              data-query-input="ocr"
+              className="w-full bg-slate-50 border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-500 font-sans"
+              placeholder="e.g. Traffic Sign, Coffee"
+              value={ocrQuery}
+              onChange={(e) => setOcrQuery(e.target.value)}
+              onKeyDown={handleMainQueryKeyDown}
+            />
+          </div>
+
+          <div className="flex flex-col gap-0.5">
+            <span className="text-[10px] font-bold text-purple-700">ASR Text (Audio Speech):</span>
+            <input
+              type="text"
+              data-query-input="speech"
+              className="w-full bg-slate-50 border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:border-purple-500 font-sans"
+              placeholder="e.g. Spoken words"
+              value={asrQuery}
+              onChange={(e) => setAsrQuery(e.target.value)}
+              onKeyDown={handleMainQueryKeyDown}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Dedicated Include / Exclude Video Filter Panel with Header Menu */}
+      {showVideoPanel && (
+        <div className="w-full lg:w-56 shrink-0 flex flex-col gap-1.5 bg-white border border-sky-300 p-2 rounded shadow-sm relative animate-fadeIn">
+          {/* Header Line with Prefix Menu Button Right Beside Video Filters */}
+          <div className="flex items-center justify-between border-b border-gray-100 pb-1">
+            <label className="text-xs font-bold text-gray-800 flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+              Video Filters
+            </label>
+
+            <div className="flex items-center gap-1">
+              {/* Compact Prefix Menu Button */}
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setShowPrefixMenu(!showPrefixMenu)}
+                  className="px-2 py-0.5 text-[11px] font-bold bg-slate-100 hover:bg-slate-200 border border-gray-300 rounded text-gray-800 flex items-center gap-1 shadow-sm transition-colors cursor-pointer"
+                  title="Quick Select Prefix Code"
+                >
+                  Prefix ▾
+                </button>
+
+                {/* Popover Menu with + and - on EACH LINE */}
+                {showPrefixMenu && (
+                  <div
+                    className="absolute top-full right-0 mt-1 z-40 bg-white border border-gray-300 rounded-lg shadow-xl p-1.5 w-60 max-h-64 overflow-y-auto font-sans"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div className="text-[10px] font-bold text-gray-500 px-1 pb-1 border-b mb-1 flex justify-between items-center">
+                      <span>Select Prefix (+ Inc / - Exc):</span>
+                      <button
+                        onClick={() => setShowPrefixMenu(false)}
+                        className="text-red-500 font-bold hover:text-red-700 text-xs px-1"
+                      >
+                        ✕
+                      </button>
+                    </div>
+
+                    <div className="flex flex-col gap-1">
+                      {VIDEO_PREFIX_OPTIONS.map((opt) => (
+                        <div
+                          key={opt.prefix}
+                          className="flex items-center justify-between hover:bg-slate-50 p-1 rounded border border-gray-100 text-xs"
+                        >
+                          <span className="truncate text-[11px] font-medium text-gray-800 pr-1" title={opt.name}>
+                            {opt.name}
+                          </span>
+                          <div className="flex items-center gap-1 shrink-0">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                handleAddDirectPrefix(opt.prefix, "include");
+                                setShowPrefixMenu(false);
+                              }}
+                              className="w-5 h-5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded flex items-center justify-center text-xs shadow-sm cursor-pointer"
+                              title={`Add ${opt.prefix} to Include`}
+                            >
+                              +
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                handleAddDirectPrefix(opt.prefix, "exclude");
+                                setShowPrefixMenu(false);
+                              }}
+                              className="w-5 h-5 bg-red-600 hover:bg-red-700 text-white font-bold rounded flex items-center justify-center text-xs shadow-sm cursor-pointer"
+                              title={`Add ${opt.prefix} to Exclude`}
+                            >
+                              -
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowVideoPanel(false)}
+                className="text-xs text-gray-400 hover:text-red-600 font-bold px-1 cursor-pointer"
+                title="Close Video Filters panel"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+
+          {/* Dual Input Fields for Include and Exclude Video Filters */}
+          <div className="flex flex-col gap-1.5 pt-0.5">
+            {/* 1. Include Input Box */}
+            <div className="flex flex-col gap-0.5">
+              <span className="text-[10px] font-bold text-emerald-700 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                Include Video IDs / Prefix:
+              </span>
+              <input
+                type="text"
+                className="w-full bg-slate-50 border border-emerald-300 focus:border-emerald-500 rounded px-2 py-1 text-xs focus:outline-none font-sans"
+                placeholder="e.g. L21, L01_V001 (Press Enter ↵)"
+                value={incInput}
+                onChange={(e) => setIncInput(e.target.value)}
+                onKeyDown={handleVideoFilterKeyDown}
+              />
+            </div>
+
+            {/* 2. Exclude Input Box */}
+            <div className="flex flex-col gap-0.5">
+              <span className="text-[10px] font-bold text-rose-700 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                Exclude Video IDs / Prefix:
+              </span>
+              <input
+                type="text"
+                className="w-full bg-slate-50 border border-rose-300 focus:border-rose-500 rounded px-2 py-1 text-xs focus:outline-none font-sans"
+                placeholder="e.g. L25, L02_V005 (Press Enter ↵)"
+                value={excInput}
+                onChange={(e) => setExcInput(e.target.value)}
+                onKeyDown={handleVideoFilterKeyDown}
+              />
+            </div>
+          </div>
+
+          {/* Apply Filter & Clear Buttons */}
+          <div className="flex items-center justify-between pt-1 mt-auto">
+            <button
+              type="button"
+              onClick={handleClearVideoFilters}
+              className="px-2 py-0.5 text-xs font-bold bg-slate-100 hover:bg-rose-100 text-slate-700 hover:text-rose-700 border border-slate-300 hover:border-rose-300 rounded transition-colors cursor-pointer shadow-xs flex items-center gap-1"
+              title="Clear all video filters"
+            >
+              <span>Clear</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleApplyVideoFilters()}
+              className="px-2.5 py-1 text-xs font-bold bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded flex items-center gap-1 shadow-sm transition-all cursor-pointer"
+              title="Apply Video Filters (or press Enter in input)"
+            >
+              <span>Apply Filter</span>
+              <span className="text-[10px] opacity-80 font-mono">↵</span>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
