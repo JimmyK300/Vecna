@@ -35,11 +35,16 @@ Desktop.ini
 dataset/
 data**/
 
+# Provenance
+provenance**/
+
 # Logs
 **.log
 
 # Testing output & features
 test**/
+!aic51-src/tests/
+!aic51-src/tests/**
 *.npy
 
 # Workspace
