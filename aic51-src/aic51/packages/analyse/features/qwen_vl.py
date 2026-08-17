@@ -63,8 +63,8 @@ class QwenVLEmbedding(FeatureExtractor):
             if requested_device.type == "cuda":
                 dtype = torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16
             else:
-                dtype = torch.float16
-            model_kwargs = {"torch_dtype": dtype, "low_cpu_mem_usage": True}
+                dtype = torch.float32
+            model_kwargs = {"torch_dtype": dtype}
             self._compute_type = str(dtype).removeprefix("torch.")
         else:
             self._compute_type = str(model_kwargs.get("torch_dtype", "model_default"))
