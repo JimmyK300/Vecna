@@ -8,6 +8,7 @@ Qwen-VL and BGE-M3 backends) in the run metadata.
 """
 from __future__ import annotations
 
+from collections.abc import Mapping
 import importlib.metadata
 import importlib.util
 from pathlib import Path
@@ -25,6 +26,40 @@ def _load_headless_module():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def _json_safe(value: Any) -> Any:
+    """Recursively normalize runtime metadata into stdlib-JSON-safe values.
+
+    PyMilvus collection descriptions can contain protobuf repeated-field
+    containers (for example RepeatedScalarContainer), which behave like
+    iterables but are not directly serializable by json.dumps(). Keep the
+    benchmark metadata structured by converting mappings and generic iterables
+    recursively instead of stringifying the whole Milvus schema.
+    """
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, Path):
+        return str(value)
+    if isinstance(value, Mapping):
+        return {str(key): _json_safe(item) for key, item in value.items()}
+    if isinstance(value, (bytes, bytearray)):
+        return value.hex()
+    if isinstance(value, (list, tuple, set)):
+        return [_json_safe(item) for item in value]
+
+    to_dict = getattr(value, "to_dict", None)
+    if callable(to_dict):
+        try:
+            return _json_safe(to_dict())
+        except Exception:
+            pass
+
+    try:
+        iterator = iter(value)
+    except TypeError:
+        return str(value)
+    return [_json_safe(item) for item in iterator]
 
 
 def _runtime_semantics_for_extractor(extractor: Any) -> dict[str, Any]:
@@ -97,6 +132,7 @@ def install_benchmark_patches(headless: Any) -> dict[str, Any]:
     original_setup_searcher = search_backend.setup_searcher
     original_search_multimodal = Searcher.search_multimodal
     original_runtime_versions = headless.runtime_versions
+    original_write_run_metadata = headless.write_run_metadata
 
     def setup_searcher_with_runtime_capture():
         searcher = original_setup_searcher()
@@ -122,9 +158,13 @@ def install_benchmark_patches(headless: Any) -> dict[str, Any]:
         runtime["retrieval_extractors"] = state.get("extractors", {})
         return runtime
 
+    def write_run_metadata_json_safe(path: Path, metadata: dict[str, Any]) -> None:
+        original_write_run_metadata(path, _json_safe(metadata))
+
     search_backend.setup_searcher = setup_searcher_with_runtime_capture
     Searcher.search_multimodal = stable_search_multimodal
     headless.runtime_versions = enriched_runtime_versions
+    headless.write_run_metadata = write_run_metadata_json_safe
     headless.CRITICAL_CODE_PATHS = {
         **headless.CRITICAL_CODE_PATHS,
         "headless_integrated_wrapper": Path(__file__).resolve(),
