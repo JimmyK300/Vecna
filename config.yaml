@@ -125,6 +125,22 @@ searcher:
       target:
         - image_siglip_so400m-384
 
+    language_qwen_vl:
+      model: "qwen_vl_embedding"
+      pretrained_model: "Qwen/Qwen3-VL-Embedding-2B"
+      target:
+        - qwen_vl
+
+    text_bge_m3:
+      model: "text_embedding"
+      source: "hf"
+      pretrained_model: "BAAI/bge-m3"
+      backend: "pytorch"
+      onnx_provider: "auto"
+      target:
+        - ocr_dense
+        - asr_dense
+
   ocr:
     ocr_field: "ocr_sparse"
     enable: true

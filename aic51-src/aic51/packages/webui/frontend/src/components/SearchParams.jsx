@@ -219,6 +219,8 @@ export default function SearchParams({
                   let displayName = item;
                   if (lower.includes("siglip")) displayName = "SigLIP";
                   else if (lower.includes("clip")) displayName = "CLIP";
+                  else if (lower.includes("qwen")) displayName = "Qwen-VL";
+                  else if (lower.includes("bge") || lower.includes("dense")) displayName = "BGE-M3";
 
                   return (
                     <label key={item} className="flex items-center gap-1.5 text-xs text-gray-700 cursor-pointer hover:text-gray-900">
