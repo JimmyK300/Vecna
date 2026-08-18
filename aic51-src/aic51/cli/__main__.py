@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from aic51.packages.logger import logger
 
 os.environ["YOLO_VERBOSE"] = "False"
+os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
 load_dotenv()
 
 from . import commands
