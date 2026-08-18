@@ -11,40 +11,87 @@ from typing import Dict, List, Optional
 from aic51.packages.config import GlobalConfig
 from aic51.packages.logger import logger
 
-QUERY_EXPANSION_PROMPT_TEMPLATE = """You are a world-class multimodal video search expert and query expansion engine following Jina AI and HyDE (Hypothetical Document Embeddings) principles.
+QUERY_EXPANSION_PROMPT_TEMPLATE = """You are a specialized Query Expansion and Hypothetical Document Embeddings (HyDE) engine for a multimodal video and text retrieval database.
 
-Your task:
-1. SPELLING & DIACRITICS CORRECTION: Fix typos and diacritics while STRICTLY PRESERVING the original language of the input query. DO NOT translate English queries into Vietnamese in the "corrected" field!
-2. GENERATE 4 MULTI-ASPECT SEARCH REPRESENTATIONS optimized for vector similarity matching (OpenCLIP / SigLIP) and text matching (BM25 OCR/ASR):
-   - "corrected": Spell-checked version IN THE SAME LANGUAGE as the input query. If input is English (e.g. "dog", "a dgo"), keep it in English ("dog", "a dog"). If input is Vietnamese (e.g. "con cho"), add proper Vietnamese diacritics ("con chó").
-   - "hyde": A vivid, detailed visual scene caption in Vietnamese describing what would be seen in the video keyframe.
-   - "en_hyde": A high-quality English visual description translated and optimized specifically for English-pre-trained vision-language models (OpenCLIP / SigLIP).
-   - "paraphrase": Semantic rewrite or synonym variation IN THE SAME LANGUAGE as the input query (English for English queries, Vietnamese for Vietnamese queries).
+Your objective is to generate search representations that maximize cosine similarity in vision-language models (OpenCLIP, SigLIP, Qwen-VL) and BM25 text match (OCR/ASR) WITHOUT hallucinating ungrounded facts.
 
-CRITICAL RULES:
-1. PRESERVE LANGUAGE FOR CORRECTED & PARAPHRASE: If the user inputs English ("dog"), "corrected" MUST be English ("dog"), NOT Vietnamese ("chó")!
-2. ACCURACY FIRST: Fix spelling errors and missing tone marks without translating the language of "corrected".
-3. STRICT FACTUAL BOUNDARY: DO NOT introduce unmentioned proper nouns, brand names, or fake details not in the query.
-4. ENGLISH OPTIMIZATION: "en_hyde" MUST be natural, descriptive English tailored for CLIP text encoders.
+### CORE OPERATING PRINCIPLES:
+1. STRICT FACTUAL BOUNDARY (ZERO SPECULATION):
+   - NEVER introduce unmentioned named entities, specific people, brands, street names, license plates, numbers, or dates unless explicitly stated in the input.
+   - If the query is generic (e.g., "tai nạn giao thông"), describe generic visual attributes (e.g., "hai xe máy va chạm trên đường phố đông đúc"), NOT specific fictional locations (e.g., "ngã tư Hàng Xanh").
 
-Examples:
+2. VISUAL GROUNDING FOR HyDE (CLIP/SigLIP ALIGNMENT):
+   - Focus strictly on observable visual features: subject, action, camera angle (close-up/wide shot), environment (indoor/outdoor, day/night), lighting, and colors.
+   - Keep "en_hyde" within 15–35 words formatted in natural English image caption style (LAION/WebLI style).
 
-[Example 1 - English Input Query]
-Input query: "a dgo running on the grass"
-Output JSON: {{"corrected": "a dog running on the grass", "hyde": "cảnh một chú chó đang chạy trên bãi cỏ xanh", "en_hyde": "A dog running on green grass in a sunny park", "paraphrase": "a canine running across a lawn"}}
+3. MULTI-ASPECT OUTPUT SCHEMA:
+   - "corrected": Fix spelling and diacritics while STRICTLY PRESERVING the original language. (Do not translate English queries into Vietnamese in this field).
+   - "hyde": Vivid visual keyframe description in natural Vietnamese.
+   - "en_hyde": High-fidelity English visual caption optimized for English vision-language embeddings (OpenCLIP/SigLIP).
+   - "paraphrase": Direct semantic synonyms in the original input language, keeping keyword density high.
+   - "search_keywords": 3-5 core visual and textual keywords (separated by commas) for dense/sparse hybrid search.
 
-[Example 2 - Single English Word]
-Input query: "dog"
-Output JSON: {{"corrected": "dog", "hyde": "hình ảnh chú chó trong nhà hoặc ngoài trời", "en_hyde": "A close-up photo of a dog", "paraphrase": "canine"}}
+---
 
-[Example 3 - Vietnamese Typos / Unaccented Input]
-Input query: "con cho chay tren co"
-Output JSON: {{"corrected": "con chó chạy trên cỏ", "hyde": "cảnh quay một chú chó đang chạy tung tăng trên thảm cỏ xanh trong công viên", "en_hyde": "A vivid photo of a dog running happily on green grass in a sunny park", "paraphrase": "chú chó đang đùa giỡn trên bãi cỏ"}}
+### FEW-SHOT EXAMPLES:
 
+[Example 1 - General Action Query in Vietnamese]
+User query: "nguoi di bo sang duong"
+Output JSON:
+{{
+  "corrected": "người đi bộ sang đường",
+  "hyde": "cảnh quay góc rộng người đi bộ đang bước qua vạch kẻ đường cho người đi bộ trên đường phố ban ngày",
+  "en_hyde": "A wide shot of pedestrians crossing the street on a zebra crosswalk in urban daytime traffic",
+  "paraphrase": "người băng qua đường phố",
+  "search_keywords": "người đi bộ, sang đường, vạch kẻ đường, pedestrian, crosswalk"
+}}
+
+[Example 2 - News / TV Program Query with Specific Entity]
+User query: "tin tuc 60s htv hien truong chay nha"
+Output JSON:
+{{
+  "corrected": "tin tức 60s htv hiện trường cháy nhà",
+  "hyde": "bản tin truyền hình đưa tin hiện trường vụ hỏa hoạn với khói lửa bốc lên từ ngôi nhà và lực lượng cứu hỏa",
+  "en_hyde": "A news report footage showing a house fire scene with thick smoke and firefighters at work",
+  "paraphrase": "phóng sự hiện trường hỏa hoạn",
+  "search_keywords": "cháy nhà, hỏa hoạn, cứu hỏa, khói lửa, house fire"
+}}
+
+[Example 3 - English Input with Typo]
+User query: "a polcie car chaisng"
+Output JSON:
+{{
+  "corrected": "a police car chasing",
+  "hyde": "cảnh xe cảnh sát bật đèn ưu tiên đang rượt đuổi tốc độ cao trên đường",
+  "en_hyde": "A police car with flashing emergency lights in a high-speed vehicle pursuit on a highway",
+  "paraphrase": "police vehicle pursuing suspect",
+  "search_keywords": "police car, pursuit, chasing, emergency lights, highway"
+}}
+
+[Example 4 - Single Word / Short Entity]
+User query: "múa lân"
+Output JSON:
+{{
+  "corrected": "múa lân",
+  "hyde": "hình ảnh đoàn biểu diễn múa lân sư rồng rực rỡ với trang phục màu đỏ vàng trong lễ hội ngoài trời",
+  "en_hyde": "A colorful traditional lion dance performance with red and yellow costumes in a festive outdoor setting",
+  "paraphrase": "biểu diễn múa sư tử",
+  "search_keywords": "múa lân, lân sư rồng, lion dance, lễ hội, festival"
+}}
+
+---
+
+### TASK INPUT:
 User query to expand: "{query}"
 
-Respond with ONLY a valid, single JSON object in this exact format, with no explanations or markdown formatting:
-{{"corrected": "...", "hyde": "...", "en_hyde": "...", "paraphrase": "..."}}"""
+Respond ONLY with a valid JSON object matching this exact schema:
+{{
+  "corrected": "...",
+  "hyde": "...",
+  "en_hyde": "...",
+  "paraphrase": "...",
+  "search_keywords": "..."
+}}"""
 
 
 class LLMQueryExpander:
@@ -55,7 +102,7 @@ class LLMQueryExpander:
         api_key: Optional[str] = None,
         model_name: str = "openai/gpt-oss-120b",
         provider: str = "groq",
-        max_tokens: int = 150,
+        max_tokens: int = 300,
         temperature: float = 0.3,
     ):
         self._provider = provider.lower()
@@ -112,10 +159,10 @@ class LLMQueryExpander:
         return self._client is not None
 
     def expand_query_detailed(self, query_text: str) -> Dict[str, str]:
-        """Sinh 4 biến thể ngữ nghĩa Jina AI (Corrected / HyDE VN / HyDE EN / Paraphrase) từ query gốc có sử dụng Cache.
+        """Sinh 5 biến thể ngữ nghĩa Jina/HyDE (Corrected / HyDE VN / HyDE EN / Paraphrase / Search Keywords) từ query gốc có sử dụng Cache.
 
         Returns:
-            Dict[str, str]: {"corrected": "...", "hyde": "...", "en_hyde": "...", "paraphrase": "..."}
+            Dict[str, str]: {"corrected": "...", "hyde": "...", "en_hyde": "...", "paraphrase": "...", "search_keywords": "..."}
         """
         if not query_text or not query_text.strip() or not self.is_available:
             return {}
@@ -144,6 +191,7 @@ class LLMQueryExpander:
                 "hyde": parsed.get("hyde", "").strip(),
                 "en_hyde": parsed.get("en_hyde", "").strip(),
                 "paraphrase": parsed.get("paraphrase", "").strip(),
+                "search_keywords": parsed.get("search_keywords", "").strip(),
             }
 
             if len(self._cache) > 500:
@@ -157,7 +205,7 @@ class LLMQueryExpander:
             return {}
 
     def expand_query(self, query_text: str) -> List[str]:
-        """Trả về danh sách 4 biến thể text (Corrected, HyDE VN, HyDE EN, Paraphrase)."""
+        """Trả về danh sách các biến thể text (Corrected, HyDE VN, HyDE EN, Paraphrase, Search Keywords)."""
         detailed = self.expand_query_detailed(query_text)
         if not detailed:
             return []
@@ -167,6 +215,7 @@ class LLMQueryExpander:
             detailed.get("hyde", ""),
             detailed.get("en_hyde", ""),
             detailed.get("paraphrase", ""),
+            detailed.get("search_keywords", ""),
         ]
         return [v for v in variants if v and v.strip()]
 

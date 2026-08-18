@@ -17,6 +17,8 @@ export async function search(
   include_videos,
   exclude_videos,
   en_to_vi_translate,
+  ocr_alpha,
+  asr_alpha,
 ) {
   const params = {
     q: q,
@@ -28,6 +30,14 @@ export async function search(
     asr_weight: asr_weight,
     max_interval: max_interval,
   };
+
+  if (ocr_alpha !== undefined && ocr_alpha !== null) {
+    params.ocr_alpha = ocr_alpha;
+  }
+
+  if (asr_alpha !== undefined && asr_alpha !== null) {
+    params.asr_alpha = asr_alpha;
+  }
 
   if (auto_translate) {
     params.auto_translate = auto_translate;
@@ -149,9 +159,14 @@ export async function getVideoTranscript(videoId) {
 }
 
 export async function getVideoKeyframes(videoId) {
-  const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/keyframes/${videoId}`);
-  const data = res.data;
-  return data;
+  try {
+    const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/keyframes/${videoId}`);
+    const data = res.data;
+    return Array.isArray(data) ? data : (data?.keyframes || []);
+  } catch (err) {
+    console.warn(`Failed to fetch keyframes for ${videoId}:`, err);
+    return [];
+  }
 }
 
 export async function getVideoMaxFrame(videoId) {

@@ -46,6 +46,7 @@ export function AdvanceQueryContainer({
   const [showOcrAsrPanel, setShowOcrAsrPanel] = useState(true);
   const [showVideoPanel, setShowVideoPanel] = useState(true);
 
+  // Helper to parse OCR and ASR tags out of full que  // Parse single segment string into { visual, ocr, asr }
   // Helper to parse OCR and ASR tags out of full query string
   const parseQuery = (queryString) => {
     let mainText = queryString || "";
@@ -56,7 +57,7 @@ export function AdvanceQueryContainer({
     const ocrRegex = /\s?\[OCR:((".*?")|[^\]]+)\]/gi;
     const ocrMatch = ocrRegex.exec(mainText);
     if (ocrMatch) {
-      ocrText = ocrMatch[1].trim();
+      ocrText = (ocrMatch[1] || "").trim().replace(/^"|"$/g, "");
       mainText = mainText.replace(ocrMatch[0], "");
     }
 
@@ -64,7 +65,7 @@ export function AdvanceQueryContainer({
     const asrRegex = /\s?\[asr:((".*?")|[^\]]+)\]/gi;
     const asrMatch = asrRegex.exec(mainText);
     if (asrMatch) {
-      asrText = asrMatch[1].trim();
+      asrText = (asrMatch[1] || "").trim().replace(/^"|"$/g, "");
       mainText = mainText.replace(asrMatch[0], "");
     }
 
@@ -73,12 +74,14 @@ export function AdvanceQueryContainer({
 
   // Helper to rebuild query string from main, ocr, and asr inputs
   const buildQuery = (mainText, ocrText, asrText) => {
-    let parts = [mainText.trim()];
-    if (ocrText.trim()) {
-      parts.push(`[OCR:${ocrText.trim()}]`);
+    let parts = [mainText ? mainText.trim() : ""];
+    if (ocrText && ocrText.trim()) {
+      const o = ocrText.trim();
+      parts.push(`[OCR:${o}]`);
     }
-    if (asrText.trim()) {
-      parts.push(`[asr:${asrText.trim()}]`);
+    if (asrText && asrText.trim()) {
+      const a = asrText.trim();
+      parts.push(`[asr:${a}]`);
     }
     return parts.filter(Boolean).join(" ");
   };
@@ -133,7 +136,7 @@ export function AdvanceQueryContainer({
     if (!autoSearch) return;
     const timer = setTimeout(async () => {
       const trimmed = mainQuery.trim();
-      if (!trimmed) {
+      if (!trimmed && !ocrQuery.trim() && !asrQuery.trim()) {
         lastSubmittedRef.current = "";
         setSuggestionInfo(null);
         const fullQuery = buildQuery("", ocrQuery, asrQuery);
@@ -152,7 +155,7 @@ export function AdvanceQueryContainer({
       let textToSearch = trimmed;
 
       // If Auto-Fusion is ON: expand query via LLM for vector search, WITHOUT modifying mainQuery textarea!
-      if (autoFusion && !isExpanding) {
+      if (autoFusion && !isExpanding && trimmed) {
         try {
           const res = await expandQuery(trimmed);
           if (res && res.detailed) {
@@ -186,6 +189,9 @@ export function AdvanceQueryContainer({
   useEffect(() => {
     setIncInput(includeVideos || "");
     setExcInput(excludeVideos || "");
+    if (includeVideos || excludeVideos) {
+      setShowVideoPanel(true);
+    }
   }, [includeVideos, excludeVideos]);
 
   const handleApplyVideoFilters = (newInc = incInput, newExc = excInput) => {
@@ -530,7 +536,7 @@ export function AdvanceQueryContainer({
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5 pt-0.5 w-full max-w-full min-w-0">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5 pt-0.5 w-full max-w-full min-w-0">
               {(() => {
                 const boxes = [
                   {
@@ -564,6 +570,14 @@ export function AdvanceQueryContainer({
                     value: expansionDetailed?.paraphrase || expansionVariants[3] || "",
                     badgeColor: "bg-indigo-50 hover:bg-indigo-100/90 text-indigo-950 border-indigo-300",
                     headerColor: "text-indigo-800",
+                  },
+                  {
+                    key: "search_keywords",
+                    label: "keywords",
+                    sub: "Hybrid search keywords",
+                    value: expansionDetailed?.search_keywords || expansionVariants[4] || "",
+                    badgeColor: "bg-amber-50 hover:bg-amber-100/90 text-amber-950 border-amber-300",
+                    headerColor: "text-amber-800",
                   },
                 ];
 

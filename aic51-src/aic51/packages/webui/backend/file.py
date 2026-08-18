@@ -247,20 +247,27 @@ async def get_video_transcript(video_id: str):
     return final_transcript
 
 
+def _get_existing_frame_indices(video_id: str) -> list[int]:
+    indices = set()
+    for dir_name in [constant.KEYFRAME_DIR, constant.THUMBNAIL_DIR, constant.FEATURE_DIR]:
+        folder = Path.cwd() / dir_name / video_id
+        if folder.exists() and folder.is_dir():
+            for p in folder.iterdir():
+                if p.is_file() and p.suffix.lower() == constant.IMAGE_EXTENSION:
+                    stem = p.stem
+                    if stem.isdigit():
+                        indices.add(int(stem))
+                elif p.is_dir() and p.name.isdigit():
+                    indices.add(int(p.name))
+    return sorted(list(indices))
+
+
 @app.get("/api/video/keyframes/{video_id}")
 async def get_video_keyframes(video_id: str):
-    features_path = Path.cwd() / constant.FEATURE_DIR / video_id
-    if not features_path.exists():
-        return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
-    
-    keyframes = []
-    # Find all frame directories
-    frame_dirs = sorted(features_path.glob("*"))
-    for d in frame_dirs:
-        if d.is_dir() and d.name.isdigit():
-            keyframes.append(d.name)
-            
-    return keyframes
+    indices = _get_existing_frame_indices(video_id)
+    if indices:
+        return [f"{idx:06d}" for idx in indices]
+    return []
 
 
 def _get_map_keyframes_path(video_id: str) -> Path | None:
@@ -295,6 +302,7 @@ def _load_map_keyframes_data(video_id: str):
                     })
                 except (ValueError, KeyError):
                     continue
+        items.sort(key=lambda x: (x["pts_time"], x["raw_idx"]))
         return items
     except Exception as e:
         logger.error(f"Failed reading map-keyframes for {video_id}: {e}")
@@ -321,21 +329,6 @@ async def get_video_max_frame(video_id: str):
         return {"video_id": video_id, "max_frame": max(existing_indices)}
 
     return {"video_id": video_id, "max_frame": 999999}
-
-
-def _get_existing_frame_indices(video_id: str) -> list[int]:
-    indices = set()
-    for dir_name in [constant.KEYFRAME_DIR, constant.THUMBNAIL_DIR]:
-        folder = Path.cwd() / dir_name / video_id
-        if folder.exists() and folder.is_dir():
-            for p in folder.iterdir():
-                if p.is_file() and p.suffix.lower() == constant.IMAGE_EXTENSION:
-                    stem = p.stem
-                    if stem.isdigit():
-                        indices.add(int(stem))
-                elif p.is_dir() and p.name.isdigit():
-                    indices.add(int(p.name))
-    return sorted(list(indices))
 
 
 def _get_closest_existing_image_frame(video_id: str, target_raw_idx: int) -> tuple[str, bool]:

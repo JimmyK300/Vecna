@@ -111,9 +111,17 @@ export function VideoPlayer({ frameInfo, onCancel }) {
   useEffect(() => {
     if (!frameInfo?.video_id) return;
     getVideoKeyframes(frameInfo.video_id)
-      .then(setKeyframes)
+      .then((res) => {
+        const list = Array.isArray(res) ? res : (res?.keyframes || []);
+        setKeyframes(list);
+      })
       .catch(() => setKeyframes([]));
   }, [frameInfo?.video_id]);
+
+  const keyframesRef = useRef([]);
+  useEffect(() => {
+    keyframesRef.current = keyframes;
+  }, [keyframes]);
 
   // Load Official BTC Map-Keyframes Data
   const [mapBTCKeyframes, setMapBTCKeyframes] = useState([]);
@@ -190,6 +198,25 @@ export function VideoPlayer({ frameInfo, onCancel }) {
   const currentPercentage =
     duration > 0 ? (frameCounter / fps / duration) * 100 : 0;
 
+  // Helper function to get available keyframes list sorted by timestamp
+  const getNavKeyframeList = () => {
+    const btcList = mapBTCKeyframesRef.current;
+    if (btcList && btcList.length > 0) {
+      return [...btcList].sort((a, b) => a.pts_time - b.pts_time);
+    }
+    const kfList = keyframesRef.current;
+    if (kfList && kfList.length > 0) {
+      return kfList
+        .map((k) => {
+          const idx = parseInt(k, 10);
+          return isNaN(idx) ? null : { raw_idx: idx, pts_time: idx / fps };
+        })
+        .filter(Boolean)
+        .sort((a, b) => a.pts_time - b.pts_time);
+    }
+    return [];
+  };
+
   // Active Transcript Auto-Scroll
   useEffect(() => {
     if (transcript.length === 0) return;
@@ -249,12 +276,14 @@ export function VideoPlayer({ frameInfo, onCancel }) {
           if (!isInInput) {
             e.preventDefault();
             if (e.ctrlKey || e.metaKey) {
-              const list = mapBTCKeyframesRef.current;
+              if (!videoElement.paused) videoElement.pause();
+              const list = getNavKeyframeList();
               if (list && list.length > 0) {
                 const curTime = videoElement.currentTime;
-                const prevKf = [...list].reverse().find((item) => item.pts_time < curTime - 0.05);
+                const eps = Math.min(0.02, 0.5 / fps);
+                const prevKf = [...list].reverse().find((item) => item.pts_time < curTime - eps);
                 if (prevKf) {
-                  videoElement.currentTime = prevKf.pts_time;
+                  videoElement.currentTime = Math.max(prevKf.pts_time, 0);
                 } else {
                   videoElement.currentTime = 0;
                 }
@@ -282,12 +311,14 @@ export function VideoPlayer({ frameInfo, onCancel }) {
           if (!isInInput) {
             e.preventDefault();
             if (e.ctrlKey || e.metaKey) {
-              const list = mapBTCKeyframesRef.current;
+              if (!videoElement.paused) videoElement.pause();
+              const list = getNavKeyframeList();
               if (list && list.length > 0) {
                 const curTime = videoElement.currentTime;
-                const nextKf = list.find((item) => item.pts_time > curTime + 0.05);
+                const eps = Math.min(0.02, 0.5 / fps);
+                const nextKf = list.find((item) => item.pts_time > curTime + eps);
                 if (nextKf) {
-                  videoElement.currentTime = nextKf.pts_time;
+                  videoElement.currentTime = Math.min(nextKf.pts_time, videoElement.duration || Infinity);
                 } else if (videoElement.duration) {
                   videoElement.currentTime = videoElement.duration;
                 }
@@ -391,6 +422,11 @@ export function VideoPlayer({ frameInfo, onCancel }) {
     const matchedKf = mapBTCKeyframes.find((kf) => Math.abs(kf.pts_time - curTime) <= 0.12);
     if (matchedKf) {
       activeFrameNum = matchedKf.raw_idx;
+    }
+  } else if (keyframes && keyframes.length > 0) {
+    const matchedRaw = keyframes.find((k) => Math.abs(parseInt(k, 10) / fps - curTime) <= 0.12);
+    if (matchedRaw !== undefined) {
+      activeFrameNum = parseInt(matchedRaw, 10);
     }
   }
 

@@ -35,6 +35,8 @@ export default function Root() {
   const searchParams = new URLSearchParams(location.search);
   const [ocrWeight, setOcrWeight] = useState(parseFloat(searchParams.get("ocr_weight") || "0.5"));
   const [asrWeight, setAsrWeight] = useState(parseFloat(searchParams.get("asr_weight") || "0.0"));
+  const [ocrAlpha, setOcrAlpha] = useState(parseFloat(searchParams.get("ocr_alpha") || "0.5"));
+  const [asrAlpha, setAsrAlpha] = useState(parseFloat(searchParams.get("asr_alpha") || "0.5"));
   const [nprobe, setNprobe] = useState(searchParams.get("nprobe") || "32");
   const [limit, setLimit] = useState(searchParams.get("limit") || "20");
   const [temporalK, setTemporalK] = useState(searchParams.get("temporal_k") || "2000");
@@ -54,6 +56,8 @@ export default function Root() {
     const p = new URLSearchParams(location.search);
     setOcrWeight(parseFloat(p.get("ocr_weight") || "0.5"));
     setAsrWeight(parseFloat(p.get("asr_weight") || "0.0"));
+    setOcrAlpha(parseFloat(p.get("ocr_alpha") || "0.5"));
+    setAsrAlpha(parseFloat(p.get("asr_alpha") || "0.5"));
     setNprobe(p.get("nprobe") || "32");
     setLimit(p.get("limit") || "20");
     setTemporalK(p.get("temporal_k") || "2000");
@@ -127,6 +131,8 @@ export default function Root() {
       exclude_videos,
       ocr_weight: updatedObj.ocrWeight !== undefined ? updatedObj.ocrWeight : ocrWeight,
       asr_weight: updatedObj.asrWeight !== undefined ? updatedObj.asrWeight : asrWeight,
+      ocr_alpha: updatedObj.ocrAlpha !== undefined ? updatedObj.ocrAlpha : ocrAlpha,
+      asr_alpha: updatedObj.asrAlpha !== undefined ? updatedObj.asrAlpha : asrAlpha,
       nprobe: updatedObj.nprobe !== undefined ? updatedObj.nprobe : nprobe,
       limit: updatedObj.limit !== undefined ? updatedObj.limit : limit,
       temporal_k: updatedObj.temporalK !== undefined ? updatedObj.temporalK : temporalK,
@@ -295,6 +301,8 @@ export default function Root() {
                 <SearchParams
                   ocrWeight={ocrWeight}
                   asrWeight={asrWeight}
+                  ocrAlpha={ocrAlpha}
+                  asrAlpha={asrAlpha}
                   setWeights={(ocr, asr) => {
                     setOcrWeight(ocr);
                     setAsrWeight(asr);
@@ -307,6 +315,14 @@ export default function Root() {
                   setAsrWeight={(w) => {
                     setAsrWeight(w);
                     triggerParamsChange({ asrWeight: w });
+                  }}
+                  setOcrAlpha={(a) => {
+                    setOcrAlpha(a);
+                    triggerParamsChange({ ocrAlpha: a });
+                  }}
+                  setAsrAlpha={(a) => {
+                    setAsrAlpha(a);
+                    triggerParamsChange({ asrAlpha: a });
                   }}
                   nprobe={nprobe}
                   setNprobe={(n) => {
@@ -369,6 +385,8 @@ export default function Root() {
                   selectedFeatures,
                   ocrWeight,
                   asrWeight,
+                  ocrAlpha,
+                  asrAlpha,
                   nprobe,
                   limit,
                   temporalK,

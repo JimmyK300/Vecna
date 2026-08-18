@@ -334,6 +334,8 @@ def _channel_configuration(
     active_target_features: list[str],
     ocr_weight: float,
     asr_weight: float,
+    ocr_alpha: float = 0.5,
+    asr_alpha: float = 0.5,
     support_ocr: bool,
     support_asr: bool,
 ) -> dict[str, Any]:
@@ -356,11 +358,13 @@ def _channel_configuration(
         "ocr": {
             "enabled": bool(support_ocr) and ocr_weight > 0,
             "weight": ocr_weight,
+            "alpha": ocr_alpha,
             "field": GlobalConfig.get("searcher", "ocr", "ocr_field") or "ocr",
         },
         "asr": {
             "enabled": bool(support_asr) and asr_weight > 0,
             "weight": asr_weight,
+            "alpha": asr_alpha,
             "field": GlobalConfig.get("searcher", "asr", "asr_field") or "asr",
         },
     }
@@ -402,6 +406,8 @@ def build_serving_composition(
     temporal_k: int,
     ocr_weight: float,
     asr_weight: float,
+    ocr_alpha: float = 0.5,
+    asr_alpha: float = 0.5,
     max_interval: int,
     auto_translate: bool,
     en_to_vi_translate: bool,
@@ -417,6 +423,8 @@ def build_serving_composition(
         active_target_features=active_target_features,
         ocr_weight=ocr_weight,
         asr_weight=asr_weight,
+        ocr_alpha=ocr_alpha,
+        asr_alpha=asr_alpha,
         support_ocr=support_ocr,
         support_asr=support_asr,
     )
@@ -507,6 +515,8 @@ def build_search_trace(
     temporal_k: int,
     ocr_weight: float,
     asr_weight: float,
+    ocr_alpha: float = 0.5,
+    asr_alpha: float = 0.5,
     max_interval: int,
     auto_translate: bool,
     en_to_vi_translate: bool,
@@ -524,6 +534,8 @@ def build_search_trace(
         temporal_k=temporal_k,
         ocr_weight=ocr_weight,
         asr_weight=asr_weight,
+        ocr_alpha=ocr_alpha,
+        asr_alpha=asr_alpha,
         max_interval=max_interval,
         auto_translate=auto_translate,
         en_to_vi_translate=en_to_vi_translate,

@@ -19,6 +19,8 @@ export async function loader({ request }) {
   const temporal_k = parseInt(searchParams.get("temporal_k") || "2000", 10);
   const ocr_weight = parseFloat(searchParams.get("ocr_weight") || "0.5");
   const asr_weight = parseFloat(searchParams.get("asr_weight") || "0.0");
+  const ocr_alpha = parseFloat(searchParams.get("ocr_alpha") || "0.5");
+  const asr_alpha = parseFloat(searchParams.get("asr_alpha") || "0.5");
   const max_interval = parseInt(searchParams.get("max_interval") || "1000", 10);
   const auto_translate = searchParams.get("auto_translate") === "true";
   const en_to_vi_translate = searchParams.get("en_to_vi_translate") === "true";
@@ -30,7 +32,7 @@ export async function loader({ request }) {
   if (!q && !include_videos && !exclude_videos) {
     return {
       query: { q: "" },
-      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos },
+      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos },
       offset: 0,
       data: { total: 0, frames: [] },
     };
@@ -51,12 +53,14 @@ export async function loader({ request }) {
       auto_translate,
       include_videos,
       exclude_videos,
-      en_to_vi_translate
+      en_to_vi_translate,
+      ocr_alpha,
+      asr_alpha,
     );
 
     return {
       query: { q },
-      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos },
+      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos },
       offset: res.offset || _offset,
       data: { total: res.total || 0, frames: res.frames || [] },
     };
@@ -64,7 +68,7 @@ export async function loader({ request }) {
     console.error("Search failed:", err);
     return {
       query: { q },
-      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos },
+      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos },
       offset: _offset,
       data: { total: 0, frames: [] },
       error: err.message,
@@ -78,6 +82,8 @@ export default function Search() {
     selectedFeatures,
     ocrWeight: liveOcrWeight,
     asrWeight: liveAsrWeight,
+    ocrAlpha: liveOcrAlpha,
+    asrAlpha: liveAsrAlpha,
     nprobe: liveNprobe,
     limit: liveLimit,
     temporalK: liveTemporalK,
@@ -155,6 +161,8 @@ export default function Search() {
     const activeEnToViTranslate = liveEnToViTranslate !== undefined ? liveEnToViTranslate : enToViTranslate;
     const activeOcrWeight = liveOcrWeight !== undefined ? liveOcrWeight : (params.ocr_weight !== undefined ? params.ocr_weight : 0.5);
     const activeAsrWeight = liveAsrWeight !== undefined ? liveAsrWeight : (params.asr_weight !== undefined ? params.asr_weight : 0.0);
+    const activeOcrAlpha = liveOcrAlpha !== undefined ? liveOcrAlpha : (params.ocr_alpha !== undefined ? params.ocr_alpha : 0.5);
+    const activeAsrAlpha = liveAsrAlpha !== undefined ? liveAsrAlpha : (params.asr_alpha !== undefined ? params.asr_alpha : 0.5);
     const activeNprobe = liveNprobe ?? params.nprobe ?? 32;
     const activeLimit = liveLimit ?? params.limit ?? 20;
     const activeTemporalK = liveTemporalK ?? params.temporal_k ?? 2000;
@@ -170,6 +178,8 @@ export default function Search() {
         target_features: (selectedFeatures || []).join(","),
         ocr_weight: activeOcrWeight,
         asr_weight: activeAsrWeight,
+        ocr_alpha: activeOcrAlpha,
+        asr_alpha: activeAsrAlpha,
         nprobe: activeNprobe,
         limit: activeLimit,
         temporal_k: activeTemporalK,
@@ -186,7 +196,6 @@ export default function Search() {
     if (!existing.includes(vid)) {
       const nextInc = [...existing, vid].join(", ");
       setIncludeVideos(nextInc);
-      triggerSearch(searchQuery, nextInc, excludeVideos);
     }
   };
 
@@ -196,18 +205,20 @@ export default function Search() {
     if (!existing.includes(vid)) {
       const nextExc = [...existing, vid].join(", ");
       setExcludeVideos(nextExc);
-      triggerSearch(searchQuery, includeVideos, nextExc);
     }
   };
 
   const rawFrames = (data && data.frames) || [];
   const limit = parseInt(params.limit || "20", 10);
 
-  // Client-side strict filtering for Exclude and Include video IDs
+  // Client-side strict filtering for Exclude and Include video IDs based on applied params
   let displayFrames = rawFrames;
 
-  if (excludeVideos && excludeVideos.trim().length > 0) {
-    const excludes = excludeVideos
+  const appliedExclude = params.exclude_videos || "";
+  const appliedInclude = params.include_videos || "";
+
+  if (appliedExclude && appliedExclude.trim().length > 0) {
+    const excludes = appliedExclude
       .split(/[,;\s]+/)
       .map((s) => s.trim().toLowerCase())
       .filter(Boolean);
@@ -219,8 +230,8 @@ export default function Search() {
     }
   }
 
-  if (includeVideos && includeVideos.trim().length > 0) {
-    const includes = includeVideos
+  if (appliedInclude && appliedInclude.trim().length > 0) {
+    const includes = appliedInclude
       .split(/[,;\s]+/)
       .map((s) => s.trim().toLowerCase())
       .filter(Boolean);

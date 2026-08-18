@@ -14,11 +14,19 @@ def translate_vi_to_en(text: str) -> str:
   if not text or not text.strip():
     return text
   try:
-    translated = GoogleTranslator(source="auto", target="en").translate(text)
-    logger.info(f"translate_vi_to_en: '{text}' -> '{translated}'")
-    return translated
+    translated = GoogleTranslator(source="auto", target="en").translate(text.strip())
+    if translated and translated.strip():
+      try:
+        logger.info(f"translate_vi_to_en: '{text}' -> '{translated}'")
+      except Exception:
+        pass
+      return translated.strip()
+    return text
   except Exception as e:
-    logger.error(f"translate_vi_to_en failed for '{text}': {e}")
+    try:
+      logger.error(f"translate_vi_to_en failed for '{text}': {e}")
+    except Exception:
+      pass
     return text
 
 
@@ -27,11 +35,19 @@ def translate_en_to_vi(text: str) -> str:
   if not text or not text.strip():
     return text
   try:
-    translated = GoogleTranslator(source="auto", target="vi").translate(text)
-    logger.info(f"translate_en_to_vi: '{text}' -> '{translated}'")
-    return translated
+    translated = GoogleTranslator(source="auto", target="vi").translate(text.strip())
+    if translated and translated.strip():
+      try:
+        logger.info(f"translate_en_to_vi: '{text}' -> '{translated}'")
+      except Exception:
+        pass
+      return translated.strip()
+    return text
   except Exception as e:
-    logger.error(f"translate_en_to_vi failed for '{text}': {e}")
+    try:
+      logger.error(f"translate_en_to_vi failed for '{text}': {e}")
+    except Exception:
+      pass
     return text
 
 
@@ -203,6 +219,7 @@ class Query:
       if self._en_to_vi_translate:
         # EN -> VI translation for OCR/ASR
         features["text_vi"] = translate_en_to_vi(raw)
+        features["text_translated"] = features["text_vi"]
 
     if len(ocr_list):
       features["ocr"] = ocr_list

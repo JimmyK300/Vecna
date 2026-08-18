@@ -111,7 +111,9 @@ class Searcher(object):
         temporal_k: int = 2000,
         ocr_weight: float = 0.5,
         asr_weight: float = 0.0,
-        hybrid_alpha: float = 0.9,
+        ocr_alpha: float = 0.5,
+        asr_alpha: float = 0.5,
+        hybrid_alpha: float | None = None,
         max_interval: int = 1000,
         selected: str | None = None,
         auto_translate: bool = False,
@@ -119,6 +121,9 @@ class Searcher(object):
         include_videos: str = "",
         exclude_videos: str = "",
     ):
+        if hybrid_alpha is not None:
+            ocr_alpha = hybrid_alpha
+            asr_alpha = hybrid_alpha
         start_time = time.time()
         query = Query(
             q,
@@ -140,7 +145,8 @@ class Searcher(object):
                 target_features,
                 ocr_weight=ocr_weight,
                 asr_weight=asr_weight,
-                hybrid_alpha=hybrid_alpha,
+                ocr_alpha=ocr_alpha,
+                asr_alpha=asr_alpha,
                 nprobe=nprobe,
             )
         else:
@@ -152,7 +158,8 @@ class Searcher(object):
                 target_features,
                 ocr_weight=ocr_weight,
                 asr_weight=asr_weight,
-                hybrid_alpha=hybrid_alpha,
+                ocr_alpha=ocr_alpha,
+                asr_alpha=asr_alpha,
                 nprobe=nprobe,
                 temporal_k=temporal_k,
                 max_interval=max_interval,
@@ -257,6 +264,8 @@ class Searcher(object):
             query_list = query_features[f"{feature_key}_translated"]
         elif feature_key in query_features:
             query_list = query_features[feature_key]
+        elif "text_vi" in query_features:
+            query_list = [query_features["text_vi"]]
         elif "text_translated" in query_features:
             query_list = [query_features["text_translated"]]
         elif "text" in query_features:
@@ -268,9 +277,16 @@ class Searcher(object):
             query_list = [query_list]
 
         raw_query = ""
-        if feature_key in query_features:
+        if f"{feature_key}_translated" in query_features:
+            raw_value = query_features[f"{feature_key}_translated"]
+            raw_query = raw_value[0] if isinstance(raw_value, list) and len(raw_value) > 0 else str(raw_value)
+        elif feature_key in query_features:
             raw_value = query_features[feature_key]
             raw_query = raw_value[0] if isinstance(raw_value, list) and len(raw_value) > 0 else str(raw_value)
+        elif "text_vi" in query_features:
+            raw_query = query_features["text_vi"]
+        elif "text_translated" in query_features:
+            raw_query = query_features["text_translated"]
         elif "text" in query_features:
             raw_query = query_features["text"]
 
@@ -435,12 +451,19 @@ class Searcher(object):
         /,
         ocr_weight: float = 0.5,
         asr_weight: float = 0.0,
-        hybrid_alpha: float = 0.7,
+        ocr_alpha: float = 0.5,
+        asr_alpha: float = 0.5,
+        hybrid_alpha: float | None = None,
         nprobe: int = 8,
         exclude_video_ids: list[str] = [],
     ):
+        if hybrid_alpha is not None:
+            ocr_alpha = hybrid_alpha
+            asr_alpha = hybrid_alpha
         ocr_weight = max(0, min(1, ocr_weight))
         asr_weight = max(0, min(1 - ocr_weight, asr_weight))
+        ocr_alpha = max(0.0, min(1.0, float(ocr_alpha)))
+        asr_alpha = max(0.0, min(1.0, float(asr_alpha)))
         video_filter = self._get_video_filter(video_ids)
 
         subquery_limit = offset + limit
@@ -508,7 +531,7 @@ class Searcher(object):
                 video_filter,
                 subquery_limit,
                 nprobe,
-                hybrid_alpha,
+                ocr_alpha,
             )
             for hit in ocr_results:
                 fid = hit["entity"]["frame_id"]
@@ -529,7 +552,7 @@ class Searcher(object):
                 video_filter,
                 subquery_limit,
                 nprobe,
-                hybrid_alpha,
+                asr_alpha,
             )
             for hit in asr_results:
                 fid = hit["entity"]["frame_id"]
@@ -582,9 +605,14 @@ class Searcher(object):
         /,
         ocr_weight: float = 0.5,
         asr_weight: float = 0.0,
-        hybrid_alpha: float = 0.7,
+        ocr_alpha: float = 0.5,
+        asr_alpha: float = 0.5,
+        hybrid_alpha: float | None = None,
         nprobe: int = 8,
     ):
+        if hybrid_alpha is not None:
+            ocr_alpha = hybrid_alpha
+            asr_alpha = hybrid_alpha
         query_features = query.data[0]["features"]
         
         # Lấy raw query text để rerank
@@ -605,7 +633,8 @@ class Searcher(object):
                 target_features,
                 ocr_weight=ocr_weight,
                 asr_weight=asr_weight,
-                hybrid_alpha=hybrid_alpha,
+                ocr_alpha=ocr_alpha,
+                asr_alpha=asr_alpha,
                 nprobe=nprobe,
                 exclude_video_ids=query.exclude_video_ids,
             )
@@ -629,7 +658,8 @@ class Searcher(object):
                     target_features,
                     ocr_weight=ocr_weight,
                     asr_weight=asr_weight,
-                    hybrid_alpha=hybrid_alpha,
+                    ocr_alpha=ocr_alpha,
+                    asr_alpha=asr_alpha,
                     nprobe=nprobe,
                     exclude_video_ids=query.exclude_video_ids,
                 )
@@ -758,11 +788,16 @@ class Searcher(object):
         /,
         ocr_weight: float = 0.5,
         asr_weight: float = 0.0,
-        hybrid_alpha: float = 0.7,
+        ocr_alpha: float = 0.5,
+        asr_alpha: float = 0.5,
+        hybrid_alpha: float | None = None,
         nprobe: int = 8,
         temporal_k: int = 2000,
         max_interval: int = 1000,
     ):
+        if hybrid_alpha is not None:
+            ocr_alpha = hybrid_alpha
+            asr_alpha = hybrid_alpha
         params = {
             "query": query.data,
             "video_ids": query.include_video_ids,
@@ -770,7 +805,8 @@ class Searcher(object):
             "target_features": target_features,
             "ocr_weight": ocr_weight,
             "asr_weight": asr_weight,
-            "hybrid_alpha": hybrid_alpha,
+            "ocr_alpha": ocr_alpha,
+            "asr_alpha": asr_alpha,
             "nprobe": nprobe,
             "temporal_k": temporal_k,
             "max_interval": max_interval,
@@ -792,7 +828,8 @@ class Searcher(object):
                     target_features,
                     ocr_weight=ocr_weight,
                     asr_weight=asr_weight,
-                    hybrid_alpha=hybrid_alpha,
+                    ocr_alpha=ocr_alpha,
+                    asr_alpha=asr_alpha,
                     nprobe=nprobe,
                     exclude_video_ids=query.exclude_video_ids,
                 )
