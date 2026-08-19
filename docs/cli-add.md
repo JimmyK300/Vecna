@@ -118,10 +118,10 @@ Because I-frames are independently decodable and are often inserted at scene cha
 Learn more about I-frames [here](https://en.wikipedia.org/wiki/Video_compression_picture_types).
 
 #### `_extract_video_info`
-Runs `_get_fps` and writes `{fps: ...}` as JSON to `data/video_info/<video_id>.json`. This is currently the only metadata persisted per video.
+Runs `_get_fps_info` and writes exact rational FPS metadata (`frame_rate`, `frame_rate_fraction`, `r_frame_rate`, `avg_frame_rate`) as JSON to `data/video_info/<video_id>.json`.
 
 #### `_get_fps`
-Parses `ffprobe` to return the integer FPS of the video.
+Parses `ffprobe` output via `Fraction` to return the exact float FPS of the video.
 
 #### `_extract_audio`
 Runs `ffmpeg` to extract audio to `data/audio/<video_id>.wav`. *(Unused in current pipeline.)*

@@ -31,14 +31,34 @@ def create_app(*args, **kwargs):
     return app
 
 
-def get_fps(video_id: str):
+def get_fps(video_id: str) -> float:
     try:
         with open(f"{constant.VIDEO_INFO_DIR}/{video_id}.json", "r") as f:
-            fps = json.load(f)[constant.FPS_KEY]
+            data = json.load(f)
+            fps = float(data[constant.FPS_KEY])
     except:
-        fps = constant.DEFAULT_FPS
+        fps = float(constant.DEFAULT_FPS)
 
     return fps
+
+
+def get_fps_info(video_id: str) -> dict:
+    try:
+        with open(f"{constant.VIDEO_INFO_DIR}/{video_id}.json", "r") as f:
+            data = json.load(f)
+            return {
+                constant.FPS_KEY: float(data.get(constant.FPS_KEY, constant.DEFAULT_FPS)),
+                constant.FPS_FRACTION_KEY: data.get(constant.FPS_FRACTION_KEY),
+                constant.R_FRAME_RATE_KEY: data.get(constant.R_FRAME_RATE_KEY),
+                constant.AVG_FRAME_RATE_KEY: data.get(constant.AVG_FRAME_RATE_KEY),
+            }
+    except:
+        return {
+            constant.FPS_KEY: float(constant.DEFAULT_FPS),
+            constant.FPS_FRACTION_KEY: f"{constant.DEFAULT_FPS}/1",
+            constant.R_FRAME_RATE_KEY: f"{constant.DEFAULT_FPS}/1",
+            constant.AVG_FRAME_RATE_KEY: f"{constant.DEFAULT_FPS}/1",
+        }
 
 
 def process_searcher_results(

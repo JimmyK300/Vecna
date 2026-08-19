@@ -179,7 +179,10 @@ class ProvenanceStore:
         video_path = self.work_dir / constant.VIDEO_DIR / f"{video_id}{constant.VIDEO_EXTENSION}"
         info_path = self.work_dir / constant.VIDEO_INFO_DIR / f"{video_id}.json"
         info = read_json(info_path) or {}
-        rounded_fps = info.get(constant.FPS_KEY)
+        raw_fps = info.get(constant.FPS_KEY)
+        fps_fraction = info.get(constant.FPS_FRACTION_KEY)
+        rounded_fps = round(raw_fps) if isinstance(raw_fps, (int, float)) else None
+        exact_fps = float(raw_fps) if isinstance(raw_fps, (int, float)) else None
 
         # Legacy video IDs are the only stable pre-v1 source handles available.
         # Use them as an explicit migration identity without claiming recovered
@@ -213,9 +216,13 @@ class ProvenanceStore:
             "container": video_path.suffix.lower() if video_path.exists() else None,
             "file_size_bytes": video_path.stat().st_size if video_path.exists() else None,
             "native_timing": "unknown",
+            "exact_fps": exact_fps,
+            "fps_fraction": fps_fraction,
             "legacy_rounded_fps": rounded_fps,
             "legacy_time_projection_quality": (
-                "reconstructed_from_rounded_fps" if rounded_fps else "unknown"
+                "reconstructed_from_exact_fps"
+                if (fps_fraction is not None or (exact_fps is not None and not isinstance(raw_fps, int)))
+                else ("reconstructed_from_rounded_fps" if rounded_fps is not None else "unknown")
             ),
             "historical_rendition_derivation": "unknown",
         }

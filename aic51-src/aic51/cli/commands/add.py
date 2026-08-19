@@ -6,6 +6,7 @@ import sys
 import threading
 import wave
 from concurrent.futures import ThreadPoolExecutor
+from fractions import Fraction
 from pathlib import Path
 from typing import Callable
 
@@ -270,7 +271,7 @@ class AddCommand(BaseCommand):
         video_id: str,
         keyframe_dir: Path,
         *,
-        video_fps: int,
+        video_fps: float | int,
         max_scene_length_seconds: float,
         keyframe_ratio: float,
         thumbnail_ratio: float,
@@ -343,14 +344,14 @@ class AddCommand(BaseCommand):
         video_fps = self._get_fps(video_path)
 
         max_scene_length_seconds = GlobalConfig.get("add", "max_scene_length") or 1
-        max_scene_length = max_scene_length_seconds * video_fps
+        max_scene_length = int(round(max_scene_length_seconds * video_fps))
         keyframe_ratio = GlobalConfig.get("add", "keyframe_resize_ratio") or 0.5
         thumbnail_ratio = GlobalConfig.get("add", "thumbnail_resize_ratio") or 0.25
         clip_length = GlobalConfig.get("add", "clip_length") or 7
 
-        video_length = clip_length * video_fps
-        video_clip_fps = max(1, int(1 / (video_length / video_fps)))
-        video_clip_interval = video_length // 7
+        video_length = int(round(clip_length * video_fps))
+        video_clip_fps = max(1, int(round(1 / (video_length / video_fps)))) if video_length > 0 else 1
+        video_clip_interval = max(1, video_length // 7)
 
         if do_audio:
             with wave.open(str(audio_path), "rb") as f:
@@ -557,26 +558,79 @@ class AddCommand(BaseCommand):
             lines = [x for x in res.stdout.strip().split("\n") if x.startswith("packet")]
             return [i for i, line in enumerate(lines) if "K" in line]
 
-    def _extract_video_info(self, video_path: Path):
-        info_file = self._work_dir / constant.VIDEO_INFO_DIR / f"{video_path.stem}.json"
-        info_file.parent.mkdir(parents=True, exist_ok=True)
-
-        data = {constant.FPS_KEY: self._get_fps(video_path)}
-        with open(info_file, "w") as f:
-            json.dump(data, f)
-
-    def _get_fps(self, video_path: Path):
-        ffprobe_cmd = ["ffprobe", "-v", "quiet", "-of", "compact=p=0"] + [
+    def _get_fps_info(self, video_path: Path) -> dict:
+        ffprobe_cmd = [
+            "ffprobe",
+            "-v",
+            "quiet",
+            "-of",
+            "compact=p=0",
             "-select_streams",
-            "0",
+            "v:0",
             "-show_entries",
-            "stream=r_frame_rate",
+            "stream=r_frame_rate,avg_frame_rate",
             str(video_path),
         ]
         res = subprocess.run(ffprobe_cmd, capture_output=True, text=True)
 
-        fraction = str(res.stdout).split("=")[1].split("/")
-        return round(int(fraction[0]) / int(fraction[1]))
+        if not res.stdout.strip():
+            ffprobe_cmd = [
+                "ffprobe",
+                "-v",
+                "quiet",
+                "-of",
+                "compact=p=0",
+                "-select_streams",
+                "0",
+                "-show_entries",
+                "stream=r_frame_rate,avg_frame_rate",
+                str(video_path),
+            ]
+            res = subprocess.run(ffprobe_cmd, capture_output=True, text=True)
+
+        entry_dict = {}
+        for item in res.stdout.strip().replace("stream|", "").split("|"):
+            if "=" in item:
+                k, v = item.split("=", 1)
+                entry_dict[k] = v
+
+        r_fps_str = entry_dict.get("r_frame_rate", "25/1")
+        avg_fps_str = entry_dict.get("avg_frame_rate", r_fps_str)
+
+        fps_fraction = None
+        for cand in [r_fps_str, avg_fps_str]:
+            if cand and cand != "0/0":
+                try:
+                    frac = Fraction(cand)
+                    if frac > 0:
+                        fps_fraction = frac
+                        break
+                except (ValueError, ZeroDivisionError):
+                    continue
+
+        if fps_fraction is None:
+            fps_fraction = Fraction(constant.DEFAULT_FPS, 1)
+
+        fps_float = float(fps_fraction)
+
+        return {
+            constant.FPS_KEY: fps_float,
+            constant.FPS_FRACTION_KEY: str(fps_fraction),
+            constant.R_FRAME_RATE_KEY: r_fps_str,
+            constant.AVG_FRAME_RATE_KEY: avg_fps_str,
+        }
+
+    def _get_fps(self, video_path: Path) -> float:
+        info = self._get_fps_info(video_path)
+        return info[constant.FPS_KEY]
+
+    def _extract_video_info(self, video_path: Path):
+        info_file = self._work_dir / constant.VIDEO_INFO_DIR / f"{video_path.stem}.json"
+        info_file.parent.mkdir(parents=True, exist_ok=True)
+
+        data = self._get_fps_info(video_path)
+        with open(info_file, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
 
     def _extract_audio(
         self,
