@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useLoaderData, useSubmit, useNavigation, useOutletContext } from "react-router-dom";
-import { search } from "../services/search.js";
+import { search, cancelCurrentSearch } from "../services/search.js";
 import { AdvanceQueryContainer } from "../components/AdvanceQuery.jsx";
 import { FrameItem, FrameContainer } from "../components/Frame.jsx";
 import { usePlayVideo } from "../components/VideoPlayer.jsx";
@@ -107,6 +107,13 @@ export default function Search() {
 
   const handleResetQueryHeight = useCallback(() => {
     setQueryHeight(null);
+  }, []);
+
+  const handleCancelSearch = useCallback(() => {
+    cancelCurrentSearch();
+    try {
+      window.stop();
+    } catch (e) {}
   }, []);
 
   const isSearching = navigation.state === "loading";
@@ -500,6 +507,7 @@ export default function Search() {
             triggerSearch(searchQuery, newInc, newExc);
           }}
           isSearching={isSearching}
+          onCancelSearch={handleCancelSearch}
           onResetQueryHeight={handleResetQueryHeight}
         />
       </div>

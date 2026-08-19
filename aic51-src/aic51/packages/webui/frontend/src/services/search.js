@@ -2,6 +2,17 @@ import axios from "axios";
 
 const PORT = (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.VITE_PORT) || 6900;
 
+let currentSearchAbortController = null;
+
+export function cancelCurrentSearch() {
+  if (currentSearchAbortController) {
+    try {
+      currentSearchAbortController.abort();
+    } catch (e) {}
+    currentSearchAbortController = null;
+  }
+}
+
 export async function search(
   q,
   offset,
@@ -20,6 +31,15 @@ export async function search(
   ocr_alpha,
   asr_alpha,
 ) {
+  // Cancel any previously running search
+  if (currentSearchAbortController) {
+    try {
+      currentSearchAbortController.abort();
+    } catch (e) {}
+  }
+  currentSearchAbortController = new AbortController();
+  const signal = currentSearchAbortController.signal;
+
   const params = {
     q: q,
     offset: offset,
@@ -63,9 +83,23 @@ export async function search(
     params.exclude_videos = exclude_videos;
   }
 
-  const res = await axios.get(`http://127.0.0.1:${PORT}/api/search_multimodal`, {
-    params: params,
-  });
+  let res;
+  try {
+    res = await axios.get(`http://127.0.0.1:${PORT}/api/search_multimodal`, {
+      params: params,
+      signal: signal,
+    });
+  } catch (err) {
+    if (axios.isCancel(err) || err.name === "CanceledError" || err.name === "AbortError") {
+      console.log("Search request cancelled by user.");
+      return { canceled: true, frames: [], total: 0 };
+    }
+    throw err;
+  } finally {
+    if (currentSearchAbortController?.signal === signal) {
+      currentSearchAbortController = null;
+    }
+  }
   let data = res.data;
 
   // Strict Exclude & Include Video Filtering

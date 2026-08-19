@@ -315,7 +315,7 @@ class Searcher(object):
         all_frame_ids = set()
 
         dense_extractor = None
-        if dense_model_name and dense_model_name in self._extractors:
+        if hybrid_alpha > 0.0 and dense_model_name and dense_model_name in self._extractors:
             dense_extractor = self._extractors[dense_model_name]["feature_extractor"]
 
         for query_text in query_list:
@@ -329,8 +329,8 @@ class Searcher(object):
             clean_query = re.sub(r'"', ' ', query_text).strip()
             query_input = clean_query if clean_query else query_text
 
-            # === 1. SPARSE SEARCH (BM25) - GIỮ HARD FILTER ===
-            if sparse_field:
+            # === 1. SPARSE SEARCH (BM25) - GIỮ HARD FILTER (Chỉ chạy khi hybrid_alpha < 1.0) ===
+            if sparse_field and hybrid_alpha < 1.0:
                 search_results = self._database.search(
                     data=[query_input],
                     filter=video_filter,
@@ -357,8 +357,8 @@ class Searcher(object):
                         if fid not in entity_data:
                             entity_data[fid] = hit["entity"]
 
-            # === 2. DENSE SEARCH (BGE-M3) - BỎ HARD FILTER, SEARCH SEMANTIC THUẦN ===
-            if dense_field and dense_extractor is not None:
+            # === 2. DENSE SEARCH (BGE-M3) - BỎ HARD FILTER, SEARCH SEMANTIC THUẦN (Chỉ chạy khi hybrid_alpha > 0.0) ===
+            if dense_field and dense_extractor is not None and hybrid_alpha > 0.0:
                 dense_query = dense_extractor.get_text_features([query_input])
                 dense_query = np.asarray(dense_query).reshape(-1).tolist()
 
@@ -380,11 +380,16 @@ class Searcher(object):
                             entity_data[fid] = hit["entity"]
 
         # Normalize và tính điểm Hybrid
-        sparse_norm = self._normalize_scores(sparse_raw_scores)
-        dense_norm = self._normalize_scores(dense_raw_scores)
+        sparse_norm = self._normalize_scores(sparse_raw_scores) if hybrid_alpha < 1.0 else {}
+        dense_norm = self._normalize_scores(dense_raw_scores) if hybrid_alpha > 0.0 else {}
         results = []
         for fid in all_frame_ids:
-            final_score = hybrid_alpha * dense_norm.get(fid, 0.0) + (1.0 - hybrid_alpha) * sparse_norm.get(fid, 0.0)
+            if hybrid_alpha <= 0.0:
+                final_score = sparse_norm.get(fid, 0.0)
+            elif hybrid_alpha >= 1.0:
+                final_score = dense_norm.get(fid, 0.0)
+            else:
+                final_score = hybrid_alpha * dense_norm.get(fid, 0.0) + (1.0 - hybrid_alpha) * sparse_norm.get(fid, 0.0)
             results.append(
                 {
                     "entity": entity_data[fid],
@@ -403,7 +408,9 @@ class Searcher(object):
 
         # Log top 5 để debug
         top_k = 5
-        logger.info(f"[TOP {top_k}][{feature_key}] dense_model={dense_model_name} sparse_field={sparse_field} dense_field={dense_field}")
+        dense_status = dense_model_name if (hybrid_alpha > 0.0 and dense_field) else "SKIPPED (BM25 only)"
+        sparse_status = sparse_field if hybrid_alpha < 1.0 else "SKIPPED (Dense only)"
+        logger.info(f"[TOP {top_k}][{feature_key}] alpha={hybrid_alpha} dense_model={dense_status} sparse_field={sparse_status}")
         for i, item in enumerate(results[:top_k], 1):
             fid = item["entity"]["frame_id"]
             s = item["scores"]

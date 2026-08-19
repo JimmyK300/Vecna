@@ -14,6 +14,61 @@ const VIDEO_PREFIX_OPTIONS = [
   { prefix: "L30", name: "L30: Tuoi Tre News 2024" },
 ];
 
+/**
+ * Helper to parse a single segment string into { visual, ocr, asr }
+ */
+export const parseSegment = (segmentStr = "") => {
+  let visual = segmentStr || "";
+  let ocr = "";
+  let asr = "";
+
+  // Parse [OCR:"..."] or [OCR:text]
+  const ocrRegex = /\s?\[OCR:\s*((".*?")|[^\]]+)\]/i;
+  const ocrMatch = ocrRegex.exec(visual);
+  if (ocrMatch) {
+    ocr = (ocrMatch[1] || "").trim().replace(/^"|"$/g, "");
+    visual = visual.replace(ocrMatch[0], "");
+  }
+
+  // Parse [asr:"..."], [speech:"..."], [asr:text], or [speech:text]
+  const asrRegex = /\s?\[(?:asr|speech):\s*((".*?")|[^\]]+)\]/i;
+  const asrMatch = asrRegex.exec(visual);
+  if (asrMatch) {
+    asr = (asrMatch[1] || "").trim().replace(/^"|"$/g, "");
+    visual = visual.replace(asrMatch[0], "");
+  }
+
+  return { visual: visual.trim(), ocr: ocr.trim(), asr: asr.trim() };
+};
+
+/**
+ * Helper to build a single segment string from { visual, ocr, asr }
+ */
+export const buildSegment = ({ visual = "", ocr = "", asr = "" }) => {
+  const parts = [];
+  if (visual && visual.trim()) {
+    parts.push(visual.trim());
+  }
+  if (ocr && ocr.trim()) {
+    parts.push(`[OCR:${ocr.trim()}]`);
+  }
+  if (asr && asr.trim()) {
+    parts.push(`[asr:${asr.trim()}]`);
+  }
+  return parts.join(" ");
+};
+
+/**
+ * Helper to rebuild full multi-segment query from segments array
+ */
+export const buildFullQuery = (segments, delimiter = "/") => {
+  if (!segments || segments.length === 0) return "";
+  if (segments.length === 1) {
+    return buildSegment(segments[0]);
+  }
+  return segments.map((s) => buildSegment(s)).join(` ${delimiter} `);
+};
+
 export function AdvanceQueryContainer({
   q = "",
   onChange,
@@ -25,6 +80,7 @@ export function AdvanceQueryContainer({
   onExcludeVideosChange,
   onApplyVideoFilters,
   isSearching = false,
+  onCancelSearch,
   activePreset = "default",
   onSelectPreset,
   onResetQueryHeight,
@@ -43,54 +99,11 @@ export function AdvanceQueryContainer({
   const [forceOriginal, setForceOriginal] = useState(false);
 
   // State đóng/mở 2 bộ lọc bên cạnh (OCR/ASR Filters & Video Filters)
-  const [showOcrAsrPanel, setShowOcrAsrPanel] = useState(true);
+  const [showOcrAsrPanel, setShowOcrAsrPanel] = useState(() => !/[\/\\\\]/.test(q || ""));
   const [showVideoPanel, setShowVideoPanel] = useState(true);
 
-  // Helper to parse OCR and ASR tags out of full que  // Parse single segment string into { visual, ocr, asr }
-  // Helper to parse OCR and ASR tags out of full query string
-  const parseQuery = (queryString) => {
-    let mainText = queryString || "";
-    let ocrText = "";
-    let asrText = "";
-
-    // Parse [OCR:"..."] or [OCR:text]
-    const ocrRegex = /\s?\[OCR:((".*?")|[^\]]+)\]/gi;
-    const ocrMatch = ocrRegex.exec(mainText);
-    if (ocrMatch) {
-      ocrText = (ocrMatch[1] || "").trim().replace(/^"|"$/g, "");
-      mainText = mainText.replace(ocrMatch[0], "");
-    }
-
-    // Parse [asr:"..."] or [asr:text]
-    const asrRegex = /\s?\[asr:((".*?")|[^\]]+)\]/gi;
-    const asrMatch = asrRegex.exec(mainText);
-    if (asrMatch) {
-      asrText = (asrMatch[1] || "").trim().replace(/^"|"$/g, "");
-      mainText = mainText.replace(asrMatch[0], "");
-    }
-
-    return { mainText: mainText.trim(), ocrText, asrText };
-  };
-
-  // Helper to rebuild query string from main, ocr, and asr inputs
-  const buildQuery = (mainText, ocrText, asrText) => {
-    let parts = [mainText ? mainText.trim() : ""];
-    if (ocrText && ocrText.trim()) {
-      const o = ocrText.trim();
-      parts.push(`[OCR:${o}]`);
-    }
-    if (asrText && asrText.trim()) {
-      const a = asrText.trim();
-      parts.push(`[asr:${a}]`);
-    }
-    return parts.filter(Boolean).join(" ");
-  };
-
-  const parsed = useMemo(() => parseQuery(q), [q]);
-
-  const [mainQuery, setMainQuery] = useState(parsed.mainText);
-  const [ocrQuery, setOcrQuery] = useState(parsed.ocrText);
-  const [asrQuery, setAsrQuery] = useState(parsed.asrText);
+  // Main active query string in input box
+  const [mainQuery, setMainQuery] = useState(q || "");
 
   // Auto-Search toggle state (persisted in localStorage)
   const [autoSearch, setAutoSearch] = useState(() => {
@@ -101,61 +114,119 @@ export function AdvanceQueryContainer({
   // Check if mainQuery has temporal delimiters \ or /
   const hasTemporal = /[\/\\\\]/.test(mainQuery);
 
+  // Auto-close OCR/ASR panel when entering temporal search mode, restore when leaving
+  const prevHasTemporalRef = useRef(hasTemporal);
+  useEffect(() => {
+    if (hasTemporal) {
+      setShowOcrAsrPanel(false);
+    } else if (prevHasTemporalRef.current) {
+      setShowOcrAsrPanel(true);
+    }
+    prevHasTemporalRef.current = hasTemporal;
+  }, [hasTemporal]);
+
   // Extract delimiter used (/ or \)
   const temporalDelimiter = useMemo(() => {
-    if (mainQuery.includes("/")) return "/";
-    return "\\";
+    if (mainQuery.includes("\\")) return "\\";
+    return "/";
   }, [mainQuery]);
 
-  // Split mainQuery into non-delimiter segment strings
+  // Split mainQuery into parsed segment objects { visual, ocr, asr }
   const temporalSegments = useMemo(() => {
-    if (!hasTemporal) return [];
-    return mainQuery.split(/[\/\\\\]/);
+    if (!hasTemporal) {
+      return [parseSegment(mainQuery)];
+    }
+    const rawSegments = mainQuery.split(/[\/\\\\]/);
+    return rawSegments.map((seg) => parseSegment(seg));
   }, [mainQuery, hasTemporal]);
 
-  const handleUpdateTemporalSegment = (stepIdx, newText) => {
-    const currentSegments = mainQuery.split(/[\/\\\\]/);
-    currentSegments[stepIdx] = newText;
-    setMainQuery(currentSegments.join(temporalDelimiter));
-  };
+  // Global OCR/ASR values for single query mode
+  const singleParsed = useMemo(() => parseSegment(mainQuery), [mainQuery]);
+  const [ocrQuery, setOcrQuery] = useState(singleParsed.ocr);
+  const [asrQuery, setAsrQuery] = useState(singleParsed.asr);
+
+  useEffect(() => {
+    setOcrQuery(singleParsed.ocr);
+    setAsrQuery(singleParsed.asr);
+  }, [singleParsed.ocr, singleParsed.asr]);
 
   const lastSubmittedRef = useRef("");
 
-  // Sync state if external q changes (NEVER overwrite mainQuery while user has typed text)
+  // Sync state if external q changes (never overwrite mainQuery if user is actively typing)
   useEffect(() => {
-    const p = parseQuery(q);
     if (!mainQuery || !mainQuery.trim()) {
-      setMainQuery(p.mainText);
+      setMainQuery(q || "");
     }
-    setOcrQuery(p.ocrText);
-    setAsrQuery(p.asrText);
   }, [q]);
+
+  // Update a specific field (visual, ocr, asr) of step stepIdx
+  const handleUpdateTemporalField = (stepIdx, field, value) => {
+    const currentSegments = hasTemporal
+      ? mainQuery.split(/[\/\\\\]/).map((s) => parseSegment(s))
+      : [parseSegment(mainQuery)];
+
+    while (currentSegments.length <= stepIdx) {
+      currentSegments.push({ visual: "", ocr: "", asr: "" });
+    }
+
+    currentSegments[stepIdx] = {
+      ...currentSegments[stepIdx],
+      [field]: value,
+    };
+
+    const newFullQuery = buildFullQuery(currentSegments, temporalDelimiter);
+    setMainQuery(newFullQuery);
+    setForceOriginal(false);
+  };
+
+
+  // Update side panel OCR query (for single query mode)
+  const handleSideOcrChange = (newOcr) => {
+    setOcrQuery(newOcr);
+    if (!hasTemporal) {
+      const single = parseSegment(mainQuery);
+      single.ocr = newOcr;
+      setMainQuery(buildSegment(single));
+    } else {
+      handleUpdateTemporalField(0, "ocr", newOcr);
+    }
+  };
+
+  // Update side panel ASR query (for single query mode)
+  const handleSideAsrChange = (newAsr) => {
+    setAsrQuery(newAsr);
+    if (!hasTemporal) {
+      const single = parseSegment(mainQuery);
+      single.asr = newAsr;
+      setMainQuery(buildSegment(single));
+    } else {
+      handleUpdateTemporalField(0, "asr", newAsr);
+    }
+  };
 
   // Debounced live search trigger (only when autoSearch is true)
   useEffect(() => {
     if (!autoSearch) return;
     const timer = setTimeout(async () => {
       const trimmed = mainQuery.trim();
-      if (!trimmed && !ocrQuery.trim() && !asrQuery.trim()) {
+      if (!trimmed) {
         lastSubmittedRef.current = "";
         setSuggestionInfo(null);
-        const fullQuery = buildQuery("", ocrQuery, asrQuery);
-        if (fullQuery !== q) onChange(fullQuery);
+        if (q !== "") onChange("");
         return;
       }
 
-      if (forceOriginal) {
+      if (forceOriginal || hasTemporal) {
         setSuggestionInfo(null);
         lastSubmittedRef.current = trimmed;
-        const fullQuery = buildQuery(trimmed, ocrQuery, asrQuery);
-        if (fullQuery !== q) onChange(fullQuery);
+        if (trimmed !== q) onChange(trimmed);
         return;
       }
 
       let textToSearch = trimmed;
 
-      // If Auto-Fusion is ON: expand query via LLM for vector search, WITHOUT modifying mainQuery textarea!
-      if (autoFusion && !isExpanding && trimmed) {
+      // If Auto-Fusion is ON and NOT temporal: expand query via LLM for vector search
+      if (autoFusion && !isExpanding && trimmed && !hasTemporal) {
         try {
           const res = await expandQuery(trimmed);
           if (res && res.detailed) {
@@ -177,11 +248,10 @@ export function AdvanceQueryContainer({
       }
 
       lastSubmittedRef.current = trimmed;
-      const fullQuery = buildQuery(textToSearch, ocrQuery, asrQuery);
-      if (fullQuery !== q) onChange(fullQuery);
+      if (textToSearch !== q) onChange(textToSearch);
     }, 450);
     return () => clearTimeout(timer);
-  }, [mainQuery, ocrQuery, asrQuery, autoSearch, autoFusion, forceOriginal]);
+  }, [mainQuery, autoSearch, autoFusion, forceOriginal, hasTemporal]);
 
   const [incInput, setIncInput] = useState(includeVideos || "");
   const [excInput, setExcInput] = useState(excludeVideos || "");
@@ -274,29 +344,26 @@ export function AdvanceQueryContainer({
     setExpansionDetailed(null);
     setExpansionError("");
     if (onResetQueryHeight) onResetQueryHeight();
-    const fullQuery = buildQuery(variantText, ocrQuery, asrQuery);
-    onChange(fullQuery);
+    onChange(variantText);
   };
 
   const triggerManualSearch = async () => {
     const trimmed = mainQuery.trim();
     if (!trimmed) {
       lastSubmittedRef.current = "";
-      const fullQuery = buildQuery("", ocrQuery, asrQuery);
-      onChange(fullQuery);
+      onChange("");
       return;
     }
 
-    if (forceOriginal) {
+    if (forceOriginal || hasTemporal) {
       lastSubmittedRef.current = trimmed;
-      const fullQuery = buildQuery(trimmed, ocrQuery, asrQuery);
-      onChange(fullQuery);
+      onChange(trimmed);
       return;
     }
 
     let textToSearch = trimmed;
 
-    if (autoFusion && !isExpanding) {
+    if (autoFusion && !isExpanding && !hasTemporal) {
       try {
         const res = await expandQuery(trimmed);
         if (res && res.detailed) {
@@ -318,8 +385,7 @@ export function AdvanceQueryContainer({
     }
 
     lastSubmittedRef.current = trimmed;
-    const fullQuery = buildQuery(textToSearch, ocrQuery, asrQuery);
-    onChange(fullQuery);
+    onChange(textToSearch);
   };
 
   const handleMainQueryKeyDown = (e) => {
@@ -332,21 +398,27 @@ export function AdvanceQueryContainer({
   return (
     <div className="w-full flex flex-col lg:flex-row gap-2 bg-sky-200 border border-sky-300 p-2 rounded-lg shadow-sm mb-2">
       {/* Primary Text Search Query Box */}
-      <div className="flex-1 flex flex-col gap-1.5 h-full">
+      <div className="flex-1 flex flex-col gap-1.5 min-w-0">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 flex-wrap">
             {/* Auto-Search Toggle Button */}
             <button
               type="button"
-              onClick={() => setAutoSearch(!autoSearch)}
-              className={`text-[11px] font-semibold px-2 py-0.5 rounded border transition-all flex items-center gap-1.5 shadow-sm ${
+              onClick={() => {
+                const next = !autoSearch;
+                setAutoSearch(next);
+                try {
+                  localStorage.setItem("vecna_auto_search", JSON.stringify(next));
+                } catch (e) {}
+              }}
+              className={`text-[11px] font-semibold px-2 py-0.5 rounded border transition-all flex items-center gap-1.5 shadow-sm cursor-pointer ${
                 autoSearch
                   ? "bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-700"
                   : "bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-300"
               }`}
               title={
                 autoSearch
-                  ? "Auto-search enabled (searches 500ms after typing). Click to turn OFF."
+                  ? "Auto-search enabled (searches 450ms after typing). Click to turn OFF."
                   : "Manual search enabled (Press Enter to search). Click to turn ON auto-search."
               }
             >
@@ -354,19 +426,35 @@ export function AdvanceQueryContainer({
               Auto-Search: {autoSearch ? "ON" : "OFF"}
             </button>
 
-            {!autoSearch && (
+            {isSearching ? (
               <button
                 type="button"
-                onClick={triggerManualSearch}
-                className="text-[11px] font-bold px-2 py-0.5 rounded bg-blue-600 hover:bg-blue-700 text-white shadow-sm flex items-center gap-1 transition-colors"
-                title="Run search (or press Enter)"
+                onClick={onCancelSearch}
+                className="text-[11px] font-bold px-2.5 py-0.5 rounded bg-rose-600 hover:bg-rose-700 text-white shadow-sm flex items-center gap-1.5 transition-colors cursor-pointer animate-pulse"
+                title="Cancel / Stop current search"
               >
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
                 </svg>
-                Search (Enter)
+                Cancel (Stop)
               </button>
+            ) : (
+              !autoSearch && (
+                <button
+                  type="button"
+                  onClick={triggerManualSearch}
+                  className="text-[11px] font-bold px-2 py-0.5 rounded bg-blue-600 hover:bg-blue-700 text-white shadow-sm flex items-center gap-1 transition-colors cursor-pointer"
+                  title="Run search (or press Enter)"
+                >
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  Search (Enter)
+                </button>
+              )
             )}
+
+
 
             <button
               type="button"
@@ -452,18 +540,18 @@ export function AdvanceQueryContainer({
                 Searching...
               </span>
             )}
-
           </div>
         </div>
 
+        {/* Primary Query Textarea */}
         <textarea
           data-query-input="main"
           spellCheck={false}
           autoCorrect="off"
           autoCapitalize="off"
-          className={`w-full text-xs bg-white text-gray-900 border border-sky-400 rounded p-2 focus:outline-none focus:ring-1 focus:ring-blue-500 font-sans transition-all flex-1 min-h-[80px] max-h-44 overflow-y-auto leading-relaxed resize-y`}
-          rows={hasTemporal ? 3 : 3}
-          placeholder="Type search text here... (Temporal syntax: '\\' or '/' for sequence)"
+          className="w-full text-xs bg-white text-gray-900 border border-sky-400 rounded p-2 focus:outline-none focus:ring-1 focus:ring-blue-500 font-sans transition-all shrink-0 min-h-[120px] max-h-64 overflow-y-auto leading-relaxed resize-y"
+          rows={4}
+          placeholder="Type search text here... (Temporal syntax: '/' or '\' between events, [OCR: text], [asr: speech])"
           value={mainQuery}
           onChange={(e) => {
             setMainQuery(e.target.value);
@@ -472,7 +560,7 @@ export function AdvanceQueryContainer({
           onKeyDown={handleMainQueryKeyDown}
         />
 
-        {/* Google-Style 2-Line Spellcheck Suggestion Banner (Shown ONLY when Auto-Fusion detects a typo) */}
+        {/* Google-Style 2-Line Spellcheck Suggestion Banner */}
         {suggestionInfo && autoFusion && (
           <div className="text-xs bg-white/95 border-l-4 border-purple-600 px-3 py-1.5 rounded shadow-xs flex flex-col gap-0.5 animate-fadeIn">
             <div className="text-gray-800 font-medium flex items-center gap-1 flex-wrap">
@@ -482,8 +570,7 @@ export function AdvanceQueryContainer({
                 onClick={() => {
                   setMainQuery(suggestionInfo.corrected);
                   setSuggestionInfo(null);
-                  const fullQuery = buildQuery(suggestionInfo.corrected, ocrQuery, asrQuery);
-                  onChange(fullQuery);
+                  onChange(suggestionInfo.corrected);
                 }}
                 className="font-bold text-purple-900 italic underline hover:text-purple-700 cursor-pointer max-w-full truncate"
                 title="Click to replace search box text with corrected query"
@@ -498,8 +585,7 @@ export function AdvanceQueryContainer({
                 onClick={() => {
                   setForceOriginal(true);
                   setSuggestionInfo(null);
-                  const fullQuery = buildQuery(suggestionInfo.original, ocrQuery, asrQuery);
-                  onChange(fullQuery);
+                  onChange(suggestionInfo.original);
                 }}
                 className="text-purple-600 hover:text-purple-800 underline font-semibold cursor-pointer max-w-full truncate"
               >
@@ -509,7 +595,7 @@ export function AdvanceQueryContainer({
           </div>
         )}
 
-        {/* 4 Expansion Variant Dropdown Cards (Shown ONLY when Expand Query is clicked) */}
+        {/* Query Expansion Dropdown Cards */}
         {expansionError && (
           <div className="text-xs text-red-600 font-semibold bg-red-50 border border-red-200 px-2 py-1 rounded">
             {expansionError}
@@ -614,25 +700,77 @@ export function AdvanceQueryContainer({
           </div>
         )}
 
-        {/* Dynamic Full-Width Interactive Temporal Step Inputs (Rendered ONLY when hasTemporal is true) */}
+        {/* Minimal Compact Interactive Temporal Multi-Step Inputs */}
         {hasTemporal && (
-          <div className="flex flex-col gap-1.5 pt-1 border-t border-sky-300 w-full animate-fadeIn">
-            {temporalSegments.map((segmentText, stepIdx) => (
+          <div className="flex flex-col gap-1.5 pt-1.5 border-t border-sky-300 w-full animate-fadeIn">
+            {temporalSegments.map((segment, stepIdx) => (
               <div
                 key={stepIdx}
-                className="flex items-center bg-white border border-sky-400 px-2 py-1 rounded-lg text-xs font-semibold text-sky-950 font-mono shadow-sm focus-within:ring-1 focus-within:ring-blue-500 w-full"
+                className="flex flex-col gap-1 bg-white/95 border border-sky-300 rounded-md p-1.5 shadow-xs"
               >
-                <span className="text-[10px] text-sky-600 font-bold mr-1.5 shrink-0 select-none">
-                  #{stepIdx + 1}
-                </span>
-                <input
-                  type="text"
-                  value={segmentText}
-                  onChange={(e) => handleUpdateTemporalSegment(stepIdx, e.target.value)}
-                  onKeyDown={handleMainQueryKeyDown}
-                  className="bg-transparent text-xs font-mono font-bold text-sky-950 focus:outline-none w-full"
-                  placeholder={`Step ${stepIdx + 1} text...`}
-                />
+                {/* Step Label on Top */}
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono font-bold text-sky-900 select-none">
+                    Step #{stepIdx + 1}
+                  </span>
+                </div>
+
+                {/* 3 Columns: Text/Visual (60%), OCR (20%), ASR (20%) with Labels on Top */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-1.5">
+                  {/* Visual / Text Query */}
+                  <div className="md:col-span-6 flex flex-col gap-0.5">
+                    <span className="text-[9px] font-bold text-sky-800 flex items-center gap-1 select-none">
+                      <span className="w-1.5 h-1.5 rounded-full bg-sky-500"></span>
+                      Text / Visual:
+                    </span>
+                    <textarea
+                      rows={1}
+                      value={segment.visual}
+                      onChange={(e) =>
+                        handleUpdateTemporalField(stepIdx, "visual", e.target.value)
+                      }
+                      onKeyDown={handleMainQueryKeyDown}
+                      className="w-full bg-sky-50/50 border border-sky-300 focus:border-sky-600 rounded px-2 py-1 text-xs text-gray-900 focus:outline-none focus:bg-white transition-all font-sans resize-y min-h-[28px] max-h-24 leading-relaxed overflow-y-auto"
+                      placeholder={`Step #${stepIdx + 1} text...`}
+                    />
+                  </div>
+
+                  {/* OCR Text */}
+                  <div className="md:col-span-3 flex flex-col gap-0.5">
+                    <span className="text-[9px] font-bold text-amber-800 flex items-center gap-1 select-none">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                      OCR:
+                    </span>
+                    <textarea
+                      rows={1}
+                      value={segment.ocr}
+                      onChange={(e) =>
+                        handleUpdateTemporalField(stepIdx, "ocr", e.target.value)
+                      }
+                      onKeyDown={handleMainQueryKeyDown}
+                      className="w-full bg-amber-50/40 border border-amber-300 focus:border-amber-600 rounded px-1.5 py-1 text-xs text-gray-900 focus:outline-none focus:bg-white transition-all font-sans resize-y min-h-[28px] max-h-20 leading-relaxed overflow-y-auto"
+                      placeholder="On-screen text"
+                    />
+                  </div>
+
+                  {/* ASR Speech */}
+                  <div className="md:col-span-3 flex flex-col gap-0.5">
+                    <span className="text-[9px] font-bold text-purple-800 flex items-center gap-1 select-none">
+                      <span className="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
+                      ASR:
+                    </span>
+                    <textarea
+                      rows={1}
+                      value={segment.asr}
+                      onChange={(e) =>
+                        handleUpdateTemporalField(stepIdx, "asr", e.target.value)
+                      }
+                      onKeyDown={handleMainQueryKeyDown}
+                      className="w-full bg-purple-50/40 border border-purple-300 focus:border-purple-600 rounded px-1.5 py-1 text-xs text-gray-900 focus:outline-none focus:bg-white transition-all font-sans resize-y min-h-[28px] max-h-20 leading-relaxed overflow-y-auto"
+                      placeholder="Audio speech"
+                    />
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -665,7 +803,7 @@ export function AdvanceQueryContainer({
               className="w-full bg-slate-50 border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-500 font-sans"
               placeholder="e.g. Traffic Sign, Coffee"
               value={ocrQuery}
-              onChange={(e) => setOcrQuery(e.target.value)}
+              onChange={(e) => handleSideOcrChange(e.target.value)}
               onKeyDown={handleMainQueryKeyDown}
             />
           </div>
@@ -678,7 +816,7 @@ export function AdvanceQueryContainer({
               className="w-full bg-slate-50 border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:border-purple-500 font-sans"
               placeholder="e.g. Spoken words"
               value={asrQuery}
-              onChange={(e) => setAsrQuery(e.target.value)}
+              onChange={(e) => handleSideAsrChange(e.target.value)}
               onKeyDown={handleMainQueryKeyDown}
             />
           </div>
