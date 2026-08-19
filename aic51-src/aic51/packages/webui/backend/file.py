@@ -2,6 +2,7 @@ from pathlib import Path
 import re
 import csv
 import numpy as np
+import cv2
 
 from fastapi import Header, Request, Response
 from fastapi.encoders import jsonable_encoder
@@ -11,8 +12,52 @@ import aic51.packages.constant as constant
 from aic51.packages.logger import logger
 
 from .utils import create_app, get_fps
+from .video_catalog import AmbiguousVideoError, resolve_video_path
 
 app = create_app()
+
+
+def _source_frame_response(video_id: str, frame_id: str):
+    """Render a requested frame directly when extracted JPEGs are absent."""
+
+    try:
+        frame_number = int(frame_id)
+        if frame_number < 0:
+            return None
+        video_path = resolve_video_path(video_id)
+    except (ValueError, AmbiguousVideoError) as exc:
+        if isinstance(exc, AmbiguousVideoError):
+            logger.error(str(exc))
+        return None
+
+    if video_path is None:
+        return None
+
+    capture = cv2.VideoCapture(str(video_path))
+    try:
+        capture.set(cv2.CAP_PROP_POS_FRAMES, frame_number)
+        ok, frame = capture.read()
+    finally:
+        capture.release()
+
+    if not ok or frame is None:
+        return None
+
+    height, width = frame.shape[:2]
+    max_dimension = max(height, width)
+    if max_dimension > 640:
+        scale = 640 / max_dimension
+        frame = cv2.resize(frame, (max(1, int(width * scale)), max(1, int(height * scale))))
+
+    ok, encoded = cv2.imencode(".jpg", frame, [int(cv2.IMWRITE_JPEG_QUALITY), 82])
+    if not ok:
+        return None
+
+    return Response(
+        content=encoded.tobytes(),
+        media_type="image/jpeg",
+        headers={"Cache-Control": "public, max-age=3600"},
+    )
 
 
 @app.get(constant.HEALTH_ENDPOINT + "/{video_id}/{frame_id}")
@@ -20,14 +65,25 @@ async def frame_health(request: Request, video_id: str, frame_id: str):
     file_path = Path.cwd() / f"{constant.THUMBNAIL_DIR}/{video_id}/{frame_id}{constant.IMAGE_EXTENSION}"
     if file_path.exists() and not file_path.is_dir():
         return JSONResponse(status_code=200, content=jsonable_encoder({constant.MESSAGE_KEY: "available"}))
+    try:
+        if resolve_video_path(video_id) is not None:
+            return JSONResponse(status_code=200, content=jsonable_encoder({constant.MESSAGE_KEY: "available"}))
+    except AmbiguousVideoError as exc:
+        logger.error(str(exc))
+
     else:
         return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
+    return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
 
 
 @app.get(constant.HEALTH_ENDPOINT + "/{video_id}")
 async def video_health(request: Request, video_id: str):
-    file_path = Path.cwd() / f"{constant.VIDEO_DIR}/{video_id}{constant.VIDEO_EXTENSION}"
-    if file_path.exists() and not file_path.is_dir():
+    try:
+        file_path = resolve_video_path(video_id)
+    except AmbiguousVideoError as exc:
+        logger.error(str(exc))
+        file_path = None
+    if file_path is not None:
         return JSONResponse(status_code=200, content=jsonable_encoder({constant.MESSAGE_KEY: "available"}))
     else:
         return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
@@ -40,6 +96,13 @@ async def health(request: Request):
 
 @app.get(constant.FILE_INFO_ENDPOINT + "/{video_id}/{frame_id}")
 async def frame_info(request: Request, video_id: str, frame_id: str):
+    try:
+        if resolve_video_path(video_id) is None:
+            return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
+    except AmbiguousVideoError as exc:
+        logger.error(str(exc))
+        return JSONResponse(status_code=409, content=jsonable_encoder({constant.MESSAGE_KEY: "ambiguous video id"}))
+
     id = f"{video_id}#{frame_id}"
     fps = get_fps(video_id)
     
@@ -89,8 +152,10 @@ async def get_file(request: Request, video_id: str, frame_id: str):
     file_path = _find_image_file(constant.THUMBNAIL_DIR, video_id, frame_id)
     if file_path:
         return FileResponse(file_path)
-    else:
-        return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
+    source_response = _source_frame_response(video_id, frame_id)
+    if source_response is not None:
+        return source_response
+    return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
 
 
 @app.get("/api/keyframes/{video_id}/{frame_id}")
@@ -102,6 +167,9 @@ async def get_keyframe(request: Request, video_id: str, frame_id: str):
         file_path_thumb = _find_image_file(constant.THUMBNAIL_DIR, video_id, frame_id)
         if file_path_thumb:
             return FileResponse(file_path_thumb)
+        source_response = _source_frame_response(video_id, frame_id)
+        if source_response is not None:
+            return source_response
         return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
 
 
@@ -109,18 +177,36 @@ CHUNK_SIZE = 1024 * 1024
 
 
 @app.get(constant.FILE_ENDPOINT + "/{video_id}")
-async def get_video(request: Request, video_id: str, range: str = Header(None)):
-    file_path = Path.cwd() / f"{constant.VIDEO_DIR}/{video_id}{constant.VIDEO_EXTENSION}"
-    if not file_path.exists() or file_path.is_dir():
+async def get_video(request: Request, video_id: str, range_header: str | None = Header(default=None, alias="Range")):
+    try:
+        file_path = resolve_video_path(video_id)
+    except AmbiguousVideoError as exc:
+        logger.error(str(exc))
+        file_path = None
+    if file_path is None:
         return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
 
-    start, end = range.replace("bytes=", "").split("-")
-    start = int(start)
-    end = int(end) if end else start + CHUNK_SIZE
+    if not range_header:
+        return FileResponse(
+            file_path,
+            media_type=constant.VIDEO_MEDIA_TYPE,
+            headers={"Accept-Ranges": "bytes"},
+        )
+
+    range_value = range_header.replace("bytes=", "", 1)
+    start_text, end_text = range_value.split("-", 1)
+    if start_text:
+        start = int(start_text)
+        end = int(end_text) if end_text else start + CHUNK_SIZE
+    else:
+        filesize = file_path.stat().st_size
+        suffix_length = int(end_text)
+        start = max(0, filesize - suffix_length)
+        end = filesize - 1
 
     with open(file_path, "rb") as video:
         video.seek(start)
-        data = video.read(end - start)
+        data = video.read(max(0, end - start + 1))
         filesize = file_path.stat().st_size
         headers = {
             "Content-Range": f"bytes {str(start)}-{str(min(end, filesize-1))}/{str(filesize)}",
@@ -286,6 +372,7 @@ def _load_map_keyframes_data(video_id: str):
     csv_path = _get_map_keyframes_path(video_id)
     if not csv_path:
         return None
+    source_fps = get_fps(video_id)
     items = []
     try:
         with open(csv_path, mode="r", encoding="utf-8") as f:
@@ -296,7 +383,7 @@ def _load_map_keyframes_data(video_id: str):
                     items.append({
                         "n": int(row["n"]),
                         "pts_time": float(row["pts_time"]),
-                        "fps": float(row["fps"]) if "fps" in row and row["fps"] else 25.0,
+                        "fps": source_fps,
                         "frame_idx": f"{raw_val:06d}",
                         "raw_idx": raw_val
                     })

@@ -1,12 +1,16 @@
 import axios from "axios";
 
-const PORT = (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.VITE_PORT) || 6900;
+// Keep browser requests on the page's origin so a Mac/Tailscale client does
+// not try to contact its own 127.0.0.1.  VITE_API_BASE remains available for
+// deployments where the API is intentionally hosted elsewhere.
+const API_BASE =
+  (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.VITE_API_BASE) || "";
 
 let currentSearchAbortController = null;
 
 export async function cancelSearchBackend() {
   try {
-    await axios.post(`http://127.0.0.1:${PORT}/api/cancel_search`, {}, { timeout: 2000 });
+    await axios.post(`${API_BASE}/api/cancel_search`, {}, { timeout: 2000 });
   } catch (e) {}
 }
 
@@ -95,7 +99,7 @@ export async function search(
 
   let res;
   try {
-    res = await axios.get(`http://127.0.0.1:${PORT}/api/search_multimodal`, {
+    res = await axios.get(`${API_BASE}/api/search_multimodal`, {
       params: params,
       signal: signal,
     });
@@ -174,7 +178,7 @@ export async function searchSimilar(
     params.target_features = target_features;
   }
 
-  const res = await axios.get(`http://127.0.0.1:${PORT}/api/search_image`, {
+  const res = await axios.get(`${API_BASE}/api/search_image`, {
     params: params,
   });
   const data = res.data;
@@ -182,33 +186,36 @@ export async function searchSimilar(
 }
 
 export async function getFrameInfo(videoId, frameId) {
-  const res = await axios.get(`http://127.0.0.1:${PORT}/api/files/info/${videoId}/${frameId}`);
+  const res = await axios.get(`${API_BASE}/api/files/info/${videoId}/${frameId}`);
   const data = res.data;
   return data;
 }
 
 export async function getTargetFeatures() {
-  const res = await axios.get(`http://127.0.0.1:${PORT}/api/target_features`);
+  const res = await axios.get(`${API_BASE}/api/target_features`);
   const data = res.data;
   return data;
 }
 
 export async function expandQuery(queryText) {
-  const res = await axios.post(`http://127.0.0.1:${PORT}/api/expand_query`, {
+  const res = await axios.post(`${API_BASE}/api/expand_query`, {
     query: queryText,
   });
   return res.data;
 }
 
 export async function getVideoTranscript(videoId) {
-  const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/transcript/${videoId}`);
-  const data = res.data;
-  return data;
+  try {
+    const res = await axios.get(`${API_BASE}/api/video/transcript/${videoId}`);
+    return Array.isArray(res.data) ? res.data : [];
+  } catch (err) {
+    return [];
+  }
 }
 
 export async function getVideoKeyframes(videoId) {
   try {
-    const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/keyframes/${videoId}`);
+    const res = await axios.get(`${API_BASE}/api/video/keyframes/${videoId}`);
     const data = res.data;
     return Array.isArray(data) ? data : (data?.keyframes || []);
   } catch (err) {
@@ -220,14 +227,14 @@ export async function getVideoKeyframes(videoId) {
 export async function getVideoMaxFrame(videoId) {
   if (!videoId || videoId === "undefined" || videoId === "null") return 999999;
   try {
-    const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/max-frame/${videoId}`);
+    const res = await axios.get(`${API_BASE}/api/video/max-frame/${videoId}`);
     if (res.data && typeof res.data.max_frame === "number") {
       return res.data.max_frame;
     }
   } catch (err) {}
 
   try {
-    const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/map-keyframes/${videoId}`);
+    const res = await axios.get(`${API_BASE}/api/video/map-keyframes/${videoId}`);
     if (res.data && res.data.keyframes && res.data.keyframes.length > 0) {
       const rawIndices = res.data.keyframes
         .map((k) => k.raw_idx || parseInt(k.frame_idx, 10))
@@ -253,7 +260,7 @@ export async function getVideoMaxFrame(videoId) {
 
 export async function getFrameOcr(videoId, frameId) {
   try {
-    const res = await axios.get(`http://127.0.0.1:${PORT}/api/frame/ocr/${videoId}/${frameId}`);
+    const res = await axios.get(`${API_BASE}/api/frame/ocr/${videoId}/${frameId}`);
     return res.data.ocr || "";
   } catch (err) {
     console.error(`Failed to fetch OCR for ${videoId} ${frameId}:`, err);
@@ -263,7 +270,7 @@ export async function getFrameOcr(videoId, frameId) {
 
 export async function getVideoMapKeyframes(videoId) {
   try {
-    const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/map-keyframes/${videoId}`);
+    const res = await axios.get(`${API_BASE}/api/video/map-keyframes/${videoId}`);
     return res.data;
   } catch (err) {
     console.error(`Failed to fetch map keyframes for ${videoId}:`, err);
@@ -273,7 +280,7 @@ export async function getVideoMapKeyframes(videoId) {
 
 export async function getMapKeyframesAround(videoId, frameId) {
   try {
-    const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/map-keyframes-around/${videoId}/${frameId}`);
+    const res = await axios.get(`${API_BASE}/api/video/map-keyframes-around/${videoId}/${frameId}`);
     return res.data;
   } catch (err) {
     console.error(`Failed to fetch map keyframes around for ${videoId} ${frameId}:`, err);

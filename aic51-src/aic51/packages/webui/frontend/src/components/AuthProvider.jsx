@@ -27,9 +27,11 @@ export default function AuthProvider({ children }) {
       const localSessionId = await localforage.getItem("sessionId");
       if (localSessionId) {
         sessionId.current = localSessionId;
+      } else {
+        return;
       }
       const evalRes = await getEvaluationIdAPI(sessionId.current);
-      if (evalRes.status === 200) {
+      if (evalRes?.status === 200) {
         const evalIds = [];
         for (const e of evalRes.data) {
           evalIds.push({
@@ -40,13 +42,15 @@ export default function AuthProvider({ children }) {
         setEvaluationIds(evalIds);
       }
     };
-    fetchEval();
+    fetchEval().catch((err) => {
+      console.warn("Evaluation lookup skipped:", err);
+    });
   }, []);
   const updateAuth = async (username, password) => {
     setUsername(username);
     setPassword(password);
     const res = await signIn(username, password);
-    if (res.status === 200) {
+    if (res?.status === 200) {
       sessionId.current = res.data["sessionId"];
       await localforage.setItem("sessionId", sessionId.current);
 
@@ -63,7 +67,7 @@ export default function AuthProvider({ children }) {
         setEvaluationIds(evalIds);
       }
     } else {
-      alert(res.data["description"]);
+      alert(res?.data?.description || "Login failed or the evaluation service is unavailable.");
     }
   };
 
@@ -73,8 +77,8 @@ export default function AuthProvider({ children }) {
       return;
     }
     const res = await submitAnswerAPI(sessionId.current, answer);
-    alert(res.data["description"]);
-    if (res.status === 200) {
+    alert(res?.data?.description || "The evaluation service is unavailable.");
+    if (res?.status === 200) {
       fetcher.submit(
         { correct: 0 + (res.data["submission"] !== "WRONG"), ...answer },
         { method: "POST", action: "/answers" },

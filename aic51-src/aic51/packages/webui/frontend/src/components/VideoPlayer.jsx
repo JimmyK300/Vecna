@@ -17,6 +17,13 @@ export default function VideoProvider({ children }) {
 
     try {
       const res = await getFrameInfo(vId, kId);
+      if (!res || typeof res !== "object" || !res.video_id) {
+        throw new Error(`Video frame info unavailable for ${vId}#${kId}`);
+      }
+      if (res.video_uri) {
+        const videoUrl = new URL(res.video_uri, window.location.origin);
+        res.video_uri = `${window.location.origin}${videoUrl.pathname}${videoUrl.search}`;
+      }
       res.frame_id = kId;
       setFrameInfo(res);
     } catch (err) {
@@ -103,7 +110,7 @@ export function VideoPlayer({ frameInfo, onCancel }) {
   useEffect(() => {
     if (!frameInfo?.video_id) return;
     getVideoTranscript(frameInfo.video_id)
-      .then(setTranscript)
+      .then((items) => setTranscript(Array.isArray(items) ? items : []))
       .catch(() => setTranscript([]));
   }, [frameInfo?.video_id]);
 
@@ -115,6 +122,7 @@ export function VideoPlayer({ frameInfo, onCancel }) {
         const list = Array.isArray(res) ? res : (res?.keyframes || []);
         setKeyframes(list);
       })
+
       .catch(() => setKeyframes([]));
   }, [frameInfo?.video_id]);
 
@@ -680,7 +688,7 @@ export function VideoPlayer({ frameInfo, onCancel }) {
                     className="flex-1 h-14 relative group overflow-hidden pointer-events-none border-r border-gray-800"
                   >
                     <img
-                      src={`http://127.0.0.1:6900/api/files/${frameInfo.video_id}/${kf}`}
+                      src={`/api/files/${frameInfo.video_id}/${kf}`}
                       alt={kf}
                       loading="lazy"
                       className="h-full w-full object-cover bg-black"

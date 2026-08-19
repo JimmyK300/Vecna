@@ -1,9 +1,11 @@
 import concurrent.futures
 import json
 import logging
+from functools import lru_cache
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
+import cv2
 import requests
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -14,6 +16,8 @@ from aic51.packages.search.traceability import (
     build_result_traceability,
     load_current_index_generation,
 )
+
+from .video_catalog import AmbiguousVideoError, resolve_video_path
 
 
 def create_app(*args, **kwargs):
@@ -31,15 +35,40 @@ def create_app(*args, **kwargs):
     return app
 
 
-def get_fps(video_id: str) -> float:
+@lru_cache(maxsize=1024)
+def get_fps(video_id: str):
+    """Return the FPS used to translate frame IDs into playback time.
+
+    Older workspaces may not have ``data/video_info`` for externally mounted
+    videos. In that case, read the FPS from the source media instead of using
+    the historical 25 FPS fallback.
+    """
+
+    # The source media is authoritative. A sidecar can be stale, especially
+    # for externally mounted videos whose metadata was never regenerated.
+    try:
+        video_path = resolve_video_path(video_id)
+        if video_path is not None:
+            capture = cv2.VideoCapture(str(video_path))
+            try:
+                fps = float(capture.get(cv2.CAP_PROP_FPS))
+            finally:
+                capture.release()
+            if fps > 0:
+                return fps
+    except (AmbiguousVideoError, OSError, TypeError, ValueError):
+        pass
+
+    # Keep legacy workspaces usable when the source media is unavailable.
     try:
         with open(f"{constant.VIDEO_INFO_DIR}/{video_id}.json", "r") as f:
-            data = json.load(f)
-            fps = float(data[constant.FPS_KEY])
-    except:
-        fps = float(constant.DEFAULT_FPS)
+            fps = float(json.load(f)[constant.FPS_KEY])
+        if fps > 0:
+            return fps
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        pass
 
-    return fps
+    return constant.DEFAULT_FPS
 
 
 def get_fps_info(video_id: str) -> dict:

@@ -71,6 +71,23 @@ async def lifespan(app: FastAPI):
 app = create_app(lifespan=lifespan)
 
 
+def _public_redirect_url(request: Request, resolved_url: str) -> str:
+    """Keep backend redirects reachable from a remote browser client."""
+
+    parsed_url = urlparse(resolved_url)
+    hostname = request.url.hostname
+    if not hostname:
+        return parsed_url._replace(path=request.url.path).geturl()
+    if ":" in hostname and not hostname.startswith("["):
+        hostname = f"[{hostname}]"
+    port = f":{parsed_url.port}" if parsed_url.port else ""
+    return parsed_url._replace(
+        scheme=request.url.scheme,
+        netloc=f"{hostname}{port}",
+        path=request.url.path,
+    ).geturl()
+
+
 @app.get(constant.SEARCH_MULTIMODAL_ENDPOINT)
 async def search_multimodal(
     request: Request,
@@ -96,8 +113,7 @@ async def search_multimodal(
             if res and res.ok:
                 crequest.cancel_all()
 
-                parsed_url = urlparse(res.url)
-                redirected_url = parsed_url._replace(path=request.url.path).geturl()
+                redirected_url = _public_redirect_url(request, res.url)
                 return RedirectResponse(redirected_url)
     except:
         return JSONResponse(
@@ -131,8 +147,7 @@ async def search_image(
             if res and res.ok:
                 crequest.cancel_all()
 
-                parsed_url = urlparse(res.url)
-                redirected_url = parsed_url._replace(path=request.url.path).geturl()
+                redirected_url = _public_redirect_url(request, res.url)
                 return RedirectResponse(redirected_url)
     except:
         return JSONResponse(
@@ -228,7 +243,7 @@ async def frame_info(request: Request, video_id: str, frame_id: str):
     crequest = CRequestPool(FILE_MAX_REQUESTS)
     health_requests = [
         GetRequest(
-            urljoin(ss["host"], f"{constant.HEALTH_ENDPOINT}/{video_id}"),
+        urljoin(ss["host"], f"{constant.FILE_INFO_ENDPOINT}/{video_id}/{frame_id}"),
             params=request.query_params,
             timeout=FILE_MAX_REQUESTS,
         )
@@ -242,8 +257,7 @@ async def frame_info(request: Request, video_id: str, frame_id: str):
             if res and res.ok:
                 crequest.cancel_all()
 
-                parsed_url = urlparse(res.url)
-                redirected_url = parsed_url._replace(path=request.url.path).geturl()
+                redirected_url = _public_redirect_url(request, res.url)
                 return RedirectResponse(redirected_url)
     except:
         return JSONResponse(
@@ -277,8 +291,7 @@ async def get_frame(request: Request, video_id: str, frame_id: str):
             if res and res.ok:
                 crequest.cancel_all()
 
-                parsed_url = urlparse(res.url)
-                redirected_url = parsed_url._replace(path=request.url.path).geturl()
+                redirected_url = _public_redirect_url(request, res.url)
                 return RedirectResponse(redirected_url)
     except:
         return JSONResponse(
@@ -312,8 +325,7 @@ async def get_keyframe(request: Request, video_id: str, frame_id: str):
             if res and res.ok:
                 crequest.cancel_all()
 
-                parsed_url = urlparse(res.url)
-                redirected_url = parsed_url._replace(path=request.url.path).geturl()
+                redirected_url = _public_redirect_url(request, res.url)
                 return RedirectResponse(redirected_url)
     except:
         return JSONResponse(
@@ -350,8 +362,7 @@ async def get_video(request: Request, video_id: str):
             if res and res.ok:
                 crequest.cancel_all()
 
-                parsed_url = urlparse(res.url)
-                redirected_url = parsed_url._replace(path=request.url.path).geturl()
+                redirected_url = _public_redirect_url(request, res.url)
                 return RedirectResponse(redirected_url)
     except:
         return JSONResponse(
@@ -385,14 +396,17 @@ async def get_video_transcript(request: Request, video_id: str):
             if res and res.ok:
                 crequest.cancel_all()
 
-                parsed_url = urlparse(res.url)
-                redirected_url = parsed_url._replace(path=request.url.path).geturl()
+                redirected_url = _public_redirect_url(request, res.url)
                 return RedirectResponse(redirected_url)
     except:
         return JSONResponse(
             status_code=500,
             content=jsonable_encoder({constant.MESSAGE_KEY: "get_video_transcript errors"}),
         )
+    return JSONResponse(
+        status_code=404,
+        content=jsonable_encoder({constant.MESSAGE_KEY: "transcript unavailable"}),
+    )
 
 
 @app.get("/api/video/keyframes/{video_id}")
@@ -420,14 +434,17 @@ async def get_video_keyframes(request: Request, video_id: str):
             if res and res.ok:
                 crequest.cancel_all()
 
-                parsed_url = urlparse(res.url)
-                redirected_url = parsed_url._replace(path=request.url.path).geturl()
+                redirected_url = _public_redirect_url(request, res.url)
                 return RedirectResponse(redirected_url)
     except:
         return JSONResponse(
             status_code=500,
             content=jsonable_encoder({constant.MESSAGE_KEY: "get_video_keyframes errors"}),
         )
+    return JSONResponse(
+        status_code=404,
+        content=jsonable_encoder({constant.MESSAGE_KEY: "keyframes unavailable"}),
+    )
 
 
 @app.get("/api/frame/ocr/{video_id}/{frame_id}")
@@ -455,8 +472,7 @@ async def get_frame_ocr(request: Request, video_id: str, frame_id: str):
             if res and res.ok:
                 crequest.cancel_all()
 
-                parsed_url = urlparse(res.url)
-                redirected_url = parsed_url._replace(path=request.url.path).geturl()
+                redirected_url = _public_redirect_url(request, res.url)
                 return RedirectResponse(redirected_url)
     except:
         return JSONResponse(
@@ -490,8 +506,7 @@ async def get_video_map_keyframes(request: Request, video_id: str):
             if res and res.ok:
                 crequest.cancel_all()
 
-                parsed_url = urlparse(res.url)
-                redirected_url = parsed_url._replace(path=request.url.path).geturl()
+                redirected_url = _public_redirect_url(request, res.url)
                 return RedirectResponse(redirected_url)
     except:
         return JSONResponse(
@@ -525,8 +540,7 @@ async def get_video_max_frame(request: Request, video_id: str):
             if res and res.ok:
                 crequest.cancel_all()
 
-                parsed_url = urlparse(res.url)
-                redirected_url = parsed_url._replace(path=request.url.path).geturl()
+                redirected_url = _public_redirect_url(request, res.url)
                 return RedirectResponse(redirected_url)
     except:
         return JSONResponse(
@@ -560,8 +574,7 @@ async def get_video_map_keyframes_around(request: Request, video_id: str, frame_
             if res and res.ok:
                 crequest.cancel_all()
 
-                parsed_url = urlparse(res.url)
-                redirected_url = parsed_url._replace(path=request.url.path).geturl()
+                redirected_url = _public_redirect_url(request, res.url)
                 return RedirectResponse(redirected_url)
     except:
         return JSONResponse(

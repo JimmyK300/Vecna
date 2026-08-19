@@ -29,7 +29,7 @@ export function FrameItem({
     keyframe ||
     (thumbnail
       ? thumbnail.replace("/api/files/", "/api/keyframes/")
-      : `http://127.0.0.1:6900/api/keyframes/${video_id}/${frame_id}`);
+      : `/api/keyframes/${video_id}/${frame_id}`);
 
   const [zoomImgSrc, setZoomImgSrc] = useState(keyframeUrl);
 
@@ -595,7 +595,7 @@ export function FrameItem({
                         >
                           {/* Thumbnail Image */}
                           <img
-                            src={`http://127.0.0.1:6900/api/files/${video_id}/${kf}`}
+                            src={`/api/files/${video_id}/${kf}`}
                             alt={kf}
                             loading="lazy"
                             className="w-full h-full object-cover"
@@ -676,10 +676,10 @@ export function FrameItem({
                     )}
                     <div className="w-full aspect-video rounded-xl overflow-hidden bg-gray-100 relative border border-blue-300 shadow-inner">
                       <img
-                        src={`http://127.0.0.1:6900/api/keyframes/${video_id}/${mapAroundData.curr.display_frame_idx || mapAroundData.curr.frame_idx}`}
+                        src={`/api/keyframes/${video_id}/${mapAroundData.curr.display_frame_idx || mapAroundData.curr.frame_idx}`}
                         onError={(e) => {
                           e.target.onerror = null;
-                          e.target.src = `http://127.0.0.1:6900/api/files/${video_id}/${mapAroundData.curr.display_frame_idx || mapAroundData.curr.frame_idx}`;
+                          e.target.src = `/api/files/${video_id}/${mapAroundData.curr.display_frame_idx || mapAroundData.curr.frame_idx}`;
                         }}
                         alt={`n=${mapAroundData.curr.n}`}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -717,10 +717,10 @@ export function FrameItem({
                     )}
                     <div className="w-full aspect-video rounded-xl overflow-hidden bg-gray-100 relative border border-blue-200 shadow-inner">
                       <img
-                        src={`http://127.0.0.1:6900/api/keyframes/${video_id}/${mapAroundData.prev.display_frame_idx || mapAroundData.prev.frame_idx}`}
+                        src={`/api/keyframes/${video_id}/${mapAroundData.prev.display_frame_idx || mapAroundData.prev.frame_idx}`}
                         onError={(e) => {
                           e.target.onerror = null;
-                          e.target.src = `http://127.0.0.1:6900/api/files/${video_id}/${mapAroundData.prev.display_frame_idx || mapAroundData.prev.frame_idx}`;
+                          e.target.src = `/api/files/${video_id}/${mapAroundData.prev.display_frame_idx || mapAroundData.prev.frame_idx}`;
                         }}
                         alt={`n=${mapAroundData.prev.n}`}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -782,10 +782,10 @@ export function FrameItem({
                     )}
                     <div className="w-full aspect-video rounded-xl overflow-hidden bg-gray-100 relative border border-blue-200 shadow-inner">
                       <img
-                        src={`http://127.0.0.1:6900/api/keyframes/${video_id}/${mapAroundData.next.display_frame_idx || mapAroundData.next.frame_idx}`}
+                        src={`/api/keyframes/${video_id}/${mapAroundData.next.display_frame_idx || mapAroundData.next.frame_idx}`}
                         onError={(e) => {
                           e.target.onerror = null;
-                          e.target.src = `http://127.0.0.1:6900/api/files/${video_id}/${mapAroundData.next.display_frame_idx || mapAroundData.next.frame_idx}`;
+                          e.target.src = `/api/files/${video_id}/${mapAroundData.next.display_frame_idx || mapAroundData.next.frame_idx}`;
                         }}
                         alt={`n=${mapAroundData.next.n}`}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"

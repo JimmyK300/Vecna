@@ -1091,7 +1091,7 @@ export default function Search() {
                       id={frameKey}
                       video_id={frame.video_id}
                       frame_id={kf}
-                      thumbnail={`http://127.0.0.1:6900/api/files/${frame.video_id}/${kf}`}
+                      thumbnail={`/api/files/${frame.video_id}/${kf}`}
                       scores={sc}
                       ocr={frame.ocr}
                       temporalStep={isTemporalSeq ? `${kfIdx + 1}/${keyframesList.length}` : null}
