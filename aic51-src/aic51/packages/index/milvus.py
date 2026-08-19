@@ -46,6 +46,21 @@ class MilvusDatabase(object):
             self._client.create_collection(collection_name, schema=schema, index_params=index_params)
 
         self._client.load_collection(self._collection_name)
+        self._init_default_output_fields()
+
+    def _init_default_output_fields(self):
+        output_fields = ["frame_id"]
+        features = GlobalConfig.get("features")
+        if features and isinstance(features, dict):
+            for feature_name, feature_cfg in features.items():
+                if not isinstance(feature_cfg, dict):
+                    continue
+                datatype = feature_cfg.get("index", {}).get("datatype", "")
+                if datatype not in ("FLOAT_VECTOR", "SPARSE_FLOAT_VECTOR", "FLOAT16_VECTOR", "BFLOAT16_VECTOR", "BINARY_VECTOR"):
+                    field_name = self.process_field_name(feature_name)
+                    if field_name not in output_fields:
+                        output_fields.append(field_name)
+        self._default_output_fields = output_fields
 
     def process_field_name(self, field_name: str):
         res = field_name.replace("-", "_")
@@ -178,11 +193,15 @@ class MilvusDatabase(object):
         limit: int = 50,
         anns_field: str = "clip",
         search_params: dict = {},
+        output_fields: list | None = None,
     ):
         limit = min(limit, self.SEARCH_LIMIT)
 
         if "metric_type" not in search_params:
             search_params["metric_type"] = "IP"
+
+        if output_fields is None:
+            output_fields = getattr(self, "_default_output_fields", ["frame_id", "ocr", "asr"])
 
         logger.debug(f'"{self._collection_name}": searching')
         logger.debug(f"Search_params: {search_params}")
@@ -198,7 +217,7 @@ class MilvusDatabase(object):
                 limit=limit,
                 anns_field=self.process_field_name(anns_field),
                 search_params=search_params,
-                output_fields=["*"],
+                output_fields=output_fields,
             )
         except Exception as e:
             if "not loaded" in str(e).lower():
@@ -212,7 +231,7 @@ class MilvusDatabase(object):
                     limit=limit,
                     anns_field=self.process_field_name(anns_field),
                     search_params=search_params,
-                    output_fields=["*"],
+                    output_fields=output_fields,
                 )
             else:
                 raise e
@@ -228,8 +247,11 @@ class MilvusDatabase(object):
         ranker,
         offset: int = 0,
         limit: int = 50,
+        output_fields: list | None = None,
     ):
         limit = min(limit, self.SEARCH_LIMIT)
+        if output_fields is None:
+            output_fields = getattr(self, "_default_output_fields", ["frame_id", "ocr", "asr"])
 
         start_time = time.time()
 
@@ -240,7 +262,7 @@ class MilvusDatabase(object):
                 ranker=ranker,
                 offset=offset,
                 limit=limit,
-                output_fields=["*"],
+                output_fields=output_fields,
             )
         except Exception as e:
             if "not loaded" in str(e).lower():
@@ -252,7 +274,7 @@ class MilvusDatabase(object):
                     ranker=ranker,
                     offset=offset,
                     limit=limit,
-                    output_fields=["*"],
+                    output_fields=output_fields,
                 )
             else:
                 raise e

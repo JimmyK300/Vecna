@@ -107,16 +107,23 @@ export function AdvanceQueryContainer({
     return "\\";
   }, [mainQuery]);
 
-  // Split mainQuery into non-delimiter segment strings
-  const temporalSegments = useMemo(() => {
+  // Split mainQuery into non-delimiter segment strings and parse OCR/ASR per step
+  const parsedTemporalSegments = useMemo(() => {
     if (!hasTemporal) return [];
-    return mainQuery.split(/[\/\\\\]/);
+    const segments = mainQuery.split(/[\/\\\\]/);
+    return segments.map((seg) => parseQuery(seg));
   }, [mainQuery, hasTemporal]);
 
-  const handleUpdateTemporalSegment = (stepIdx, newText) => {
-    const currentSegments = mainQuery.split(/[\/\\\\]/);
-    currentSegments[stepIdx] = newText;
-    setMainQuery(currentSegments.join(temporalDelimiter));
+  const handleUpdateTemporalStep = (stepIdx, field, value) => {
+    const segments = mainQuery.split(/[\/\\\\]/);
+    const currentParsed = parseQuery(segments[stepIdx] || "");
+    const updated = {
+      ...currentParsed,
+      [field]: value,
+    };
+    segments[stepIdx] = buildQuery(updated.mainText, updated.ocrText, updated.asrText);
+    const delim = temporalDelimiter === "\\" ? " \\ " : " / ";
+    setMainQuery(segments.join(delim));
   };
 
   const lastSubmittedRef = useRef("");
@@ -616,23 +623,70 @@ export function AdvanceQueryContainer({
 
         {/* Dynamic Full-Width Interactive Temporal Step Inputs (Rendered ONLY when hasTemporal is true) */}
         {hasTemporal && (
-          <div className="flex flex-col gap-1.5 pt-1 border-t border-sky-300 w-full animate-fadeIn">
-            {temporalSegments.map((segmentText, stepIdx) => (
+          <div className="flex flex-col gap-2 pt-1.5 border-t border-sky-300 w-full animate-fadeIn">
+            <div className="flex items-center justify-between px-0.5">
+              <span className="text-[11px] font-bold text-sky-900 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-sky-600 animate-pulse"></span>
+                TEMPORAL STEPS (Individual Visual / OCR / ASR per step):
+              </span>
+              <span className="text-[10px] text-gray-500 font-mono">
+                Delimiter: "{temporalDelimiter}"
+              </span>
+            </div>
+
+            {parsedTemporalSegments.map((step, stepIdx) => (
               <div
                 key={stepIdx}
-                className="flex items-center bg-white border border-sky-400 px-2 py-1 rounded-lg text-xs font-semibold text-sky-950 font-mono shadow-sm focus-within:ring-1 focus-within:ring-blue-500 w-full"
+                className="flex flex-col md:flex-row items-stretch md:items-center gap-1.5 bg-white border border-sky-300 hover:border-sky-500 p-1.5 rounded-lg shadow-xs transition-colors w-full"
               >
-                <span className="text-[10px] text-sky-600 font-bold mr-1.5 shrink-0 select-none">
-                  #{stepIdx + 1}
-                </span>
-                <input
-                  type="text"
-                  value={segmentText}
-                  onChange={(e) => handleUpdateTemporalSegment(stepIdx, e.target.value)}
-                  onKeyDown={handleMainQueryKeyDown}
-                  className="bg-transparent text-xs font-mono font-bold text-sky-950 focus:outline-none w-full"
-                  placeholder={`Step ${stepIdx + 1} text...`}
-                />
+                {/* Step Index Badge */}
+                <div className="flex items-center gap-1 shrink-0">
+                  <span className="px-1.5 py-0.5 bg-sky-100 text-sky-800 rounded text-[11px] font-black font-mono select-none">
+                    #{stepIdx + 1}
+                  </span>
+                </div>
+
+                {/* Step Main Visual Query Text */}
+                <div className="flex-1 min-w-[140px] flex items-center bg-slate-50 border border-gray-300 focus-within:border-sky-500 focus-within:bg-white rounded px-2 py-1">
+                  <input
+                    type="text"
+                    value={step.mainText}
+                    onChange={(e) => handleUpdateTemporalStep(stepIdx, "mainText", e.target.value)}
+                    onKeyDown={handleMainQueryKeyDown}
+                    className="bg-transparent text-xs font-semibold text-gray-900 focus:outline-none w-full placeholder:text-gray-400 font-sans"
+                    placeholder={`Step #${stepIdx + 1} visual description (CLIP/SigLIP)...`}
+                  />
+                </div>
+
+                {/* Step OCR Input */}
+                <div className="w-full md:w-44 shrink-0 flex items-center bg-blue-50/50 border border-blue-200 focus-within:border-blue-500 focus-within:bg-white rounded px-1.5 py-1">
+                  <span className="text-[10px] font-bold text-blue-700 uppercase font-mono mr-1 select-none shrink-0">
+                    OCR:
+                  </span>
+                  <input
+                    type="text"
+                    value={step.ocrText}
+                    onChange={(e) => handleUpdateTemporalStep(stepIdx, "ocrText", e.target.value)}
+                    onKeyDown={handleMainQueryKeyDown}
+                    className="bg-transparent text-xs font-medium text-blue-900 focus:outline-none w-full placeholder:text-blue-300 font-sans"
+                    placeholder="On-screen text..."
+                  />
+                </div>
+
+                {/* Step ASR Input */}
+                <div className="w-full md:w-44 shrink-0 flex items-center bg-purple-50/50 border border-purple-200 focus-within:border-purple-500 focus-within:bg-white rounded px-1.5 py-1">
+                  <span className="text-[10px] font-bold text-purple-700 uppercase font-mono mr-1 select-none shrink-0">
+                    ASR:
+                  </span>
+                  <input
+                    type="text"
+                    value={step.asrText}
+                    onChange={(e) => handleUpdateTemporalStep(stepIdx, "asrText", e.target.value)}
+                    onKeyDown={handleMainQueryKeyDown}
+                    className="bg-transparent text-xs font-medium text-purple-900 focus:outline-none w-full placeholder:text-purple-300 font-sans"
+                    placeholder="Speech audio..."
+                  />
+                </div>
               </div>
             ))}
           </div>

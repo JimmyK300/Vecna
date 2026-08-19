@@ -408,7 +408,8 @@ def build_serving_composition(
     asr_weight: float,
     ocr_alpha: float = 0.5,
     asr_alpha: float = 0.5,
-    max_interval: int,
+    max_interval: int = 1000,
+    min_interval: int = 1,
     auto_translate: bool,
     en_to_vi_translate: bool,
     support_ocr: bool,
@@ -464,6 +465,7 @@ def build_serving_composition(
         descriptor["search_parameters"].update(
             {
                 "temporal_k": int(temporal_k),
+                "min_interval": int(min_interval),
                 "max_interval": int(max_interval),
             }
         )
@@ -517,7 +519,8 @@ def build_search_trace(
     asr_weight: float,
     ocr_alpha: float = 0.5,
     asr_alpha: float = 0.5,
-    max_interval: int,
+    max_interval: int = 1000,
+    min_interval: int = 1,
     auto_translate: bool,
     en_to_vi_translate: bool,
     support_ocr: bool,
@@ -537,6 +540,7 @@ def build_search_trace(
         ocr_alpha=ocr_alpha,
         asr_alpha=asr_alpha,
         max_interval=max_interval,
+        min_interval=min_interval,
         auto_translate=auto_translate,
         en_to_vi_translate=en_to_vi_translate,
         support_ocr=support_ocr,

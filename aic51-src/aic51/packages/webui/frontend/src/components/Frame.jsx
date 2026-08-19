@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelected } from "./SelectedProvider.jsx";
-import { getVideoKeyframes, getFrameOcr, getMapKeyframesAround } from "../services/search.js";
+import { getVideoKeyframes, getFrameOcr, getMapKeyframesAround, pinpointMoment } from "../services/search.js";
 
 export function FrameItem({
   id,
@@ -15,8 +15,10 @@ export function FrameItem({
   onSearchSimilar,
   onSearchNearby,
   temporalStep,
+  totalScore,
   onAddIncludeVideo,
   onAddExcludeVideo,
+  currentQuery,
 }) {
   const { selected, addSelected, removeSelected } = useSelected();
   const isSelected = selected.includes(id);
@@ -62,6 +64,60 @@ export function FrameItem({
   const [showMapModal, setShowMapModal] = useState(false);
   const [mapAroundData, setMapAroundData] = useState(null);
   const [loadingMap, setLoadingMap] = useState(false);
+
+  // Pinpoint First Occurrence Modal State
+  const extractEventQuery = (queryText, step) => {
+    if (!queryText) return "";
+    let cleanQ = String(queryText).replace(/\[(?:video|!video|exclude_video):[^\]]+\]/gi, "").trim();
+    const steps = cleanQ.split(/[\\/]/).map((s) => s.trim()).filter(Boolean);
+    if (steps.length > 1 && step) {
+      const match = String(step).match(/(\d+)\s*\/\s*(\d+)/);
+      if (match) {
+        const idx = parseInt(match[1], 10) - 1;
+        if (idx >= 0 && idx < steps.length) {
+          return steps[idx];
+        }
+      }
+    }
+    return steps.length > 0 ? steps[0] : cleanQ;
+  };
+
+  const [showPinpointModal, setShowPinpointModal] = useState(false);
+  const [loadingPinpoint, setLoadingPinpoint] = useState(false);
+  const [pinpointData, setPinpointData] = useState(null);
+  const [pinpointError, setPinpointError] = useState(null);
+  const [pinpointQueryInput, setPinpointQueryInput] = useState(extractEventQuery(currentQuery || "", temporalStep));
+
+  useEffect(() => {
+    if (currentQuery) {
+      setPinpointQueryInput(extractEventQuery(currentQuery, temporalStep));
+    }
+  }, [currentQuery, temporalStep]);
+
+  const handleOpenPinpoint = async () => {
+    setShowPinpointModal(true);
+    const queryToUse = pinpointQueryInput || extractEventQuery(currentQuery || "", temporalStep);
+    if (!pinpointData) {
+      await handleExecutePinpoint(queryToUse);
+    }
+  };
+
+  const handleExecutePinpoint = async (queryText) => {
+    setLoadingPinpoint(true);
+    setPinpointError(null);
+    try {
+      const res = await pinpointMoment(video_id, frame_id, queryText || "", 30.0, 5.0);
+      if (res && res.status === "success") {
+        setPinpointData(res);
+      } else {
+        setPinpointError(res?.message || "Không thể định vị được khoảnh khắc.");
+      }
+    } catch (err) {
+      setPinpointError(err?.response?.data?.message || err.message || "Lỗi kết nối khi gửi yêu cầu Pinpoint.");
+    } finally {
+      setLoadingPinpoint(false);
+    }
+  };
 
   const handleSelect = async (e) => {
     if (e && e.stopPropagation) e.stopPropagation();
@@ -220,8 +276,14 @@ export function FrameItem({
           {/* Detailed Score Popup on Hover */}
           {showScores && scores && (
             <div className="absolute bottom-0 left-0 right-0 bg-black/90 backdrop-blur-md text-white text-[10px] font-mono p-1.5 space-y-0.5 pointer-events-none border-t border-gray-800 animate-fadeIn z-20">
+              {totalScore !== null && totalScore !== undefined && (
+                <div className="flex justify-between border-b border-gray-700 pb-0.5 mb-0.5">
+                  <span className="text-amber-300 font-bold">Seq Total:</span>
+                  <span className="font-extrabold text-amber-300">{totalScore?.toFixed(4) ?? "-"}</span>
+                </div>
+              )}
               <div className="flex justify-between">
-                <span>Final:</span>
+                <span>{temporalStep ? "Step Score:" : "Final:"}</span>
                 <span className="font-bold text-yellow-400">{scores.final?.toFixed(4) ?? "-"}</span>
               </div>
               <div className="flex justify-between">
@@ -302,9 +364,22 @@ export function FrameItem({
                 </svg>
               </button>
             )}
+
+            {/* 6. Pinpoint First Occurrence / Action Boundary Button */}
+            <button
+              onClick={handleOpenPinpoint}
+              className="p-1 bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-700 rounded-md border border-rose-200 transition-all shadow-sm hover:scale-105 active:scale-95 flex items-center justify-center shrink-0"
+              title="🎯 Pinpoint First Occurrence (Exact Frame)"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="9" />
+                <circle cx="12" cy="12" r="3" fill="currentColor" />
+                <path strokeLinecap="round" d="M12 2v3m0 14v3M2 12h3m14 0h3" />
+              </svg>
+            </button>
           </div>
 
-          {/* 6. Add / Selected Toggle Icon Button (6th Priority, Rightmost) */}
+          {/* 7. Add / Selected Toggle Icon Button (Rightmost) */}
           <button
             onClick={handleSelect}
             className={`p-1 rounded-md transition-all shadow-sm flex items-center justify-center border shrink-0 ${
@@ -808,6 +883,234 @@ export function FrameItem({
                 )}
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Pinpoint First Occurrence / Action Boundary Inspector Modal */}
+      {showPinpointModal && (
+        <div
+          onClick={() => setShowPinpointModal(false)}
+          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 animate-fadeIn"
+        >
+          <div
+            className="relative max-w-5xl max-h-[95vh] w-full bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="px-4 py-3 bg-slate-900 border-b border-slate-800 flex justify-between items-center shrink-0 flex-wrap gap-2">
+              <div className="flex items-center gap-2 font-mono text-sm font-bold text-white">
+                <span className="w-3 h-3 rounded-full bg-rose-500 animate-ping"></span>
+                <span className="text-rose-400 font-extrabold flex items-center gap-1">
+                  🎯 3-Tier Pinpoint Inspector:
+                </span>
+                <span className="text-blue-300 font-extrabold">{video_id}</span>
+                <span className="text-gray-400">#</span>
+                <span className="text-emerald-400 font-extrabold">{frame_id}</span>
+                {temporalStep && (
+                  <span className="px-2 py-0.5 rounded text-[10px] bg-blue-900/90 text-blue-200 border border-blue-600 font-mono font-bold">
+                    Event {temporalStep}
+                  </span>
+                )}
+                <span className="px-2 py-0.5 rounded text-[10px] bg-rose-950/80 text-rose-300 border border-rose-800 uppercase tracking-wider font-bold">
+                  First Occurrence
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowPinpointModal(false)}
+                className="w-7 h-7 bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white rounded-lg flex items-center justify-center transition-all cursor-pointer font-bold text-xs"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Action Query Input Bar */}
+            <div className="px-4 py-2.5 bg-slate-900/60 border-b border-slate-800/80 flex items-center gap-2">
+              <span className="text-xs font-semibold text-slate-300 shrink-0">Hành động:</span>
+              <input
+                type="text"
+                value={pinpointQueryInput}
+                onChange={(e) => setPinpointQueryInput(e.target.value)}
+                placeholder="Nhập mô tả hành động (ví dụ: thịt bò chạm chảo, người mở cửa...)"
+                className="flex-1 px-3 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 font-medium"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleExecutePinpoint(pinpointQueryInput);
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => handleExecutePinpoint(pinpointQueryInput)}
+                disabled={loadingPinpoint}
+                className="px-3 py-1.5 bg-gradient-to-r from-rose-600 to-amber-600 hover:from-rose-500 hover:to-amber-500 text-white font-bold text-xs rounded-lg shadow transition-all flex items-center gap-1.5 disabled:opacity-50 cursor-pointer"
+              >
+                {loadingPinpoint ? "Đang quét..." : "🎯 Re-Pinpoint"}
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-4 overflow-y-auto flex-1 flex flex-col gap-4 min-h-0">
+              {loadingPinpoint ? (
+                <div className="flex flex-col items-center justify-center py-16 gap-4">
+                  <div className="relative w-16 h-16">
+                    <div className="absolute inset-0 rounded-full border-4 border-rose-500/20 border-t-rose-500 animate-spin"></div>
+                    <div className="absolute inset-2 rounded-full border-4 border-amber-500/20 border-t-amber-500 animate-spin" style={{ animationDirection: "reverse" }}></div>
+                  </div>
+                  <div className="text-center space-y-1">
+                    <p className="text-sm font-bold text-white">Đang thực thi Phễu lọc 3 tầng...</p>
+                    <p className="text-xs text-slate-400">1. Cắt 200 Dense Frames (5 fps) ➔ 2. Chấm điểm Dense CLIP ➔ 3. VLM Xác thực ranh giới</p>
+                  </div>
+                </div>
+              ) : pinpointError ? (
+                <div className="p-4 bg-rose-950/40 border border-rose-800 rounded-xl text-rose-300 text-xs flex flex-col gap-2">
+                  <div className="font-bold flex items-center gap-1 text-sm">
+                    <span>⚠️ Lỗi định vị khoảnh khắc:</span>
+                  </div>
+                  <p>{pinpointError}</p>
+                  <button
+                    onClick={() => handleExecutePinpoint(pinpointQueryInput)}
+                    className="self-start px-3 py-1 bg-rose-800 hover:bg-rose-700 text-white rounded text-xs font-bold mt-1"
+                  >
+                    Thử lại
+                  </button>
+                </div>
+              ) : pinpointData ? (
+                <div className="flex flex-col gap-4">
+                  {/* Top Split: Exact Snapshot + Decision Card */}
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    {/* Exact Frame Image */}
+                    <div className="md:col-span-6 flex flex-col gap-1.5">
+                      <div className="text-xs font-bold text-slate-300 flex items-center justify-between">
+                        <span className="flex items-center gap-1 text-rose-400">
+                          <span>📸 Exact First Occurrence Frame:</span>
+                        </span>
+                        <span className="font-mono text-emerald-400">#{pinpointData.exact_frame_idx}</span>
+                      </div>
+                      <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-black border border-rose-500/50 shadow-lg shadow-rose-950/50 group">
+                        <img
+                          src={pinpointData.exact_frame_url}
+                          alt={`Exact Frame ${pinpointData.exact_frame_idx}`}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute bottom-2 left-2 bg-black/80 backdrop-blur-sm px-2 py-1 rounded text-xs font-mono text-white flex gap-2 border border-slate-700">
+                          <span className="text-rose-300 font-bold">⏱️ {pinpointData.formatted_time}</span>
+                          <span className="text-slate-400">({pinpointData.exact_timestamp}s)</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Reasoning & Actions Box */}
+                    <div className="md:col-span-6 flex flex-col justify-between gap-3 bg-slate-900/90 p-4 rounded-xl border border-slate-800">
+                      <div className="space-y-2.5">
+                        <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                          <span className="text-xs font-bold text-slate-400">Độ tin cậy VLM:</span>
+                          <span className="px-2 py-0.5 bg-emerald-950 text-emerald-300 border border-emerald-800 rounded font-mono text-xs font-extrabold">
+                            {Math.round((pinpointData.confidence || 0.9) * 100)}% Confidence
+                          </span>
+                        </div>
+
+                        {/* Reasoning Text */}
+                        <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs text-slate-200 leading-relaxed">
+                          <div className="text-[11px] font-bold text-amber-400 uppercase tracking-wide mb-1 flex items-center gap-1">
+                            <span>🤖 Lời giải thích VLM:</span>
+                          </div>
+                          {pinpointData.reason}
+                        </div>
+
+                        {/* Submission Metadata */}
+                        <div className="grid grid-cols-2 gap-2 text-xs font-mono">
+                          <div className="p-2 bg-slate-950 rounded-lg border border-slate-800 flex flex-col gap-1">
+                            <span className="text-[10px] text-slate-400 uppercase">Exact Frame IDX:</span>
+                            <div className="flex items-center justify-between">
+                              <span className="font-bold text-white text-sm">{pinpointData.exact_frame_idx}</span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  navigator.clipboard.writeText(String(pinpointData.exact_frame_idx));
+                                  alert(`Copied Frame IDX: ${pinpointData.exact_frame_idx}`);
+                                }}
+                                className="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 text-[10px] text-slate-300 rounded cursor-pointer"
+                                title="Copy Frame IDX"
+                              >
+                                Copy
+                              </button>
+                            </div>
+                          </div>
+
+                          <div className="p-2 bg-slate-950 rounded-lg border border-slate-800 flex flex-col gap-1">
+                            <span className="text-[10px] text-slate-400 uppercase">Map Keyframe (BTC):</span>
+                            <div className="flex items-center justify-between">
+                              <span className="font-bold text-emerald-400 text-sm">#{pinpointData.nearest_keyframe_id}</span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  navigator.clipboard.writeText(`${video_id}#${pinpointData.nearest_keyframe_id}`);
+                                  alert(`Copied: ${video_id}#${pinpointData.nearest_keyframe_id}`);
+                                }}
+                                className="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 text-[10px] text-slate-300 rounded cursor-pointer"
+                                title="Copy Keyframe ID"
+                              >
+                                Copy
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex items-center gap-2 pt-2 border-t border-slate-800">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (onPlay) {
+                              onPlay();
+                            }
+                          }}
+                          className="flex-1 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-lg transition-all flex items-center justify-center gap-1.5 shadow cursor-pointer"
+                        >
+                          <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                          <span>Xem Video tại {pinpointData.formatted_time}</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            addSelected(`${video_id}#${pinpointData.nearest_keyframe_id || pinpointData.exact_frame_idx}`);
+                            setShowPinpointModal(false);
+                          }}
+                          className="py-2 px-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg transition-all flex items-center justify-center gap-1 shadow cursor-pointer"
+                          title="Thêm frame này vào danh sách nộp bài"
+                        >
+                          + Thêm vào Payload
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Storyboard Grid Section */}
+                  {pinpointData.storyboard_grid_url && (
+                    <div className="flex flex-col gap-2 mt-2 pt-3 border-t border-slate-800">
+                      <div className="flex items-center justify-between text-xs font-bold text-slate-300">
+                        <span className="flex items-center gap-1 text-sky-400">
+                          <span>🎞️ Chronological Storyboard (10 Candidate Frames):</span>
+                        </span>
+                        <span className="text-[11px] font-normal text-slate-400">
+                          (Đã sắp xếp thứ tự thời gian & chấm điểm Dense CLIP)
+                        </span>
+                      </div>
+                      <div className="w-full rounded-xl overflow-hidden bg-black border border-slate-800 shadow">
+                        <img
+                          src={pinpointData.storyboard_grid_url}
+                          alt="Storyboard Grid"
+                          className="w-full h-auto object-contain"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : null}
+            </div>
           </div>
         </div>
       )}

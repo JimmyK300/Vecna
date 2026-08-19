@@ -176,6 +176,42 @@ async def expand_query_proxy(request: Request):
     )
 
 
+# === (THÊM MỚI) Proxy cho API pinpoint_moment ===
+@app.post(constant.PINPOINT_MOMENT_ENDPOINT)
+async def pinpoint_moment_proxy(request: Request):
+    if len(SEARCH_SERVERS) == 0:
+        return JSONResponse(
+            status_code=404,
+            content=jsonable_encoder({constant.MESSAGE_KEY: "search function is not supported"}),
+        )
+
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+
+    import requests as sync_requests
+
+    for ss in SEARCH_SERVERS:
+        try:
+            target_url = urljoin(ss["host"], constant.PINPOINT_MOMENT_ENDPOINT)
+            resp = sync_requests.post(
+                target_url,
+                json=body,
+                timeout=SEARCH_REQUEST_TIMEOUT or 30.0,
+            )
+            if resp.ok:
+                return JSONResponse(status_code=resp.status_code, content=resp.json())
+        except Exception as e:
+            logger.warning(f"Error forwarding pinpoint_moment to {ss['host']}: {e}")
+            continue
+
+    return JSONResponse(
+        status_code=500,
+        content=jsonable_encoder({constant.MESSAGE_KEY: "pinpoint_moment errors"}),
+    )
+
+
 @app.get(constant.TARGET_FEATURES_ENDPOINT)
 async def target_features():
     async with target_features_lock:
@@ -295,6 +331,41 @@ async def get_keyframe(request: Request, video_id: str, frame_id: str):
         return JSONResponse(
             status_code=500,
             content=jsonable_encoder({constant.MESSAGE_KEY: "get_keyframe errors"}),
+        )
+
+
+@app.get("/api/video/extract-frame/{video_id}/{frame_idx}")
+async def extract_exact_frame_proxy(request: Request, video_id: str, frame_idx: int):
+    if len(FILE_SERVERS) == 0:
+        return JSONResponse(
+            status_code=404,
+            content=jsonable_encoder({constant.MESSAGE_KEY: "file function is not supported"}),
+        )
+
+    crequest = CRequestPool(FILE_MAX_REQUESTS)
+    health_requests = [
+        GetRequest(
+            urljoin(ss["host"], f"{constant.HEALTH_ENDPOINT}/{video_id}"),
+            params=request.query_params,
+            timeout=FILE_MAX_REQUESTS,
+        )
+        for ss in FILE_SERVERS
+    ]
+    crequest.map(health_requests)
+
+    try:
+        for future in crequest.as_completed():
+            res = future.result()
+            if res and res.ok:
+                crequest.cancel_all()
+
+                parsed_url = urlparse(res.url)
+                redirected_url = parsed_url._replace(path=request.url.path).geturl()
+                return RedirectResponse(redirected_url)
+    except:
+        return JSONResponse(
+            status_code=500,
+            content=jsonable_encoder({constant.MESSAGE_KEY: "extract_frame errors"}),
         )
 
 

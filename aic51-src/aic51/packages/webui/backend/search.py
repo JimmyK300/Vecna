@@ -56,7 +56,10 @@ async def search_multimodal(
     asr_weight: float = 0,
     ocr_alpha: float = 0.5,
     asr_alpha: float = 0.5,
+    min_interval: int = 1,
     max_interval: int = 1000,
+    decay_weight: float = 0.0,
+    nms_threshold: int = 25,
     selected: str | None = None,
     auto_translate: bool = False,
     en_to_vi_translate: bool = False,
@@ -84,7 +87,10 @@ async def search_multimodal(
             asr_weight=asr_weight,
             ocr_alpha=ocr_alpha,
             asr_alpha=asr_alpha,
+            min_interval=min_interval,
             max_interval=max_interval,
+            decay_weight=decay_weight,
+            nms_threshold=nms_threshold,
             selected=selected,
             auto_translate=auto_translate,
             en_to_vi_translate=en_to_vi_translate,
@@ -147,7 +153,10 @@ async def search_multimodal(
         "asr_weight": asr_weight,
         "ocr_alpha": ocr_alpha,
         "asr_alpha": asr_alpha,
+        "min_interval": min_interval,
         "max_interval": max_interval,
+        "decay_weight": decay_weight,
+        "nms_threshold": nms_threshold,
         "auto_translate": auto_translate,
         "en_to_vi_translate": en_to_vi_translate,
         "include_videos": include_videos,
@@ -166,6 +175,7 @@ async def search_multimodal(
             asr_weight=asr_weight,
             ocr_alpha=ocr_alpha,
             asr_alpha=asr_alpha,
+            min_interval=min_interval,
             max_interval=max_interval,
             auto_translate=auto_translate,
             en_to_vi_translate=en_to_vi_translate,
@@ -271,6 +281,58 @@ async def expand_query_endpoint(request: Request):
         return JSONResponse(
             status_code=200,
             content={"variants": [], "error": f"LLM Error: {str(e)}"},
+        )
+
+
+# === (THÊM MỚI) API /api/pinpoint_moment — 3-Tier Funnel First Occurrence Verifier ===
+@app.post(constant.PINPOINT_MOMENT_ENDPOINT)
+async def pinpoint_moment_endpoint(request: Request):
+    """API định vị ranh giới khoảnh khắc đầu tiên (First Occurrence / Action Boundary)
+    sử dụng Phễu 3 tầng (Coarse Search -> Dense CLIP -> VLM Verifier).
+    
+    Request JSON:
+      {
+        "video_id": "L18_V001",
+        "frame_id": "000150",
+        "query": "thịt bò chạm chảo",
+        "window_sec": 30.0,
+        "target_fps": 5.0
+      }
+    """
+    try:
+        data = await request.json()
+        video_id = str(data.get("video_id", "")).strip()
+        frame_id = str(data.get("frame_id", "")).strip()
+        query_text = str(data.get("query", "")).strip()
+        window_sec = float(data.get("window_sec", 30.0))
+        target_fps = float(data.get("target_fps", 5.0))
+
+        if not video_id:
+            return JSONResponse(
+                status_code=400,
+                content={"status": "error", "message": "video_id is required"},
+            )
+
+        searcher = internal.get("searcher")
+        if not searcher:
+            return JSONResponse(
+                status_code=500,
+                content={"status": "error", "message": "searcher was not initialized"},
+            )
+
+        res = searcher.pinpoint_moment(
+            video_id=video_id,
+            frame_id=frame_id,
+            query=query_text,
+            window_sec=window_sec,
+            target_fps=target_fps,
+        )
+        return JSONResponse(status_code=200, content=jsonable_encoder(res))
+    except Exception as e:
+        logger.exception(e)
+        return JSONResponse(
+            status_code=500,
+            content={"status": "error", "message": f"Pinpoint Error: {str(e)}"},
         )
 
 

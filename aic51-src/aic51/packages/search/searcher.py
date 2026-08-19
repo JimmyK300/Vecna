@@ -114,7 +114,10 @@ class Searcher(object):
         ocr_alpha: float = 0.5,
         asr_alpha: float = 0.5,
         hybrid_alpha: float | None = None,
+        min_interval: int = 1,
         max_interval: int = 1000,
+        decay_weight: float = 0.1,
+        nms_threshold: int = 25,
         selected: str | None = None,
         auto_translate: bool = False,
         en_to_vi_translate: bool = False,
@@ -162,7 +165,10 @@ class Searcher(object):
                 asr_alpha=asr_alpha,
                 nprobe=nprobe,
                 temporal_k=temporal_k,
+                min_interval=min_interval,
                 max_interval=max_interval,
+                decay_weight=decay_weight,
+                nms_threshold=nms_threshold,
             )
 
         end_time = time.time()
@@ -415,6 +421,8 @@ class Searcher(object):
             )
 
         return results, entity_data
+
+    @staticmethod
     def _filter_exclude_videos(results: list[dict], exclude_video_ids: list[str]) -> list[dict]:
         """Post-filtering helper to remove excluded videos from candidate or final search results."""
         if not exclude_video_ids or len(exclude_video_ids) == 0 or not results:
@@ -779,6 +787,41 @@ class Searcher(object):
         # IMPORTANT:
         # Do NOT compare rerank score against hybrid score.
         return reranked_items + unrerrankable_items + remaining
+    @staticmethod
+    def _temporal_nms(candidates: list[dict], nms_threshold: int = 25) -> list[dict]:
+        """
+        Suppresses candidate sequences from the same video whose keyframes
+        all overlap within nms_threshold frames of an already accepted candidate.
+        """
+        if not candidates or nms_threshold <= 0:
+            return candidates
+
+        accepted = []
+        video_to_accepted: dict[str, list[list[int]]] = {}
+
+        for cand in candidates:
+            vid = cand.get("_id", ("", 0))[0]
+            cand_fids = cand.get("step_fids")
+            if not cand_fids:
+                cand_fids = [int(f) for f in cand.get("time_line", [])]
+
+            is_suppressed = False
+            if vid in video_to_accepted:
+                for prev_fids in video_to_accepted[vid]:
+                    if len(cand_fids) == len(prev_fids) and all(
+                        abs(c_f - p_f) <= nms_threshold for c_f, p_f in zip(cand_fids, prev_fids)
+                    ):
+                        is_suppressed = True
+                        break
+
+            if not is_suppressed:
+                accepted.append(cand)
+                if vid not in video_to_accepted:
+                    video_to_accepted[vid] = []
+                video_to_accepted[vid].append(cand_fids)
+
+        return accepted
+
     def _temporal_search(
         self,
         query: Query,
@@ -793,7 +836,10 @@ class Searcher(object):
         hybrid_alpha: float | None = None,
         nprobe: int = 8,
         temporal_k: int = 2000,
+        min_interval: int = 1,
         max_interval: int = 1000,
+        decay_weight: float = 0.0,
+        nms_threshold: int = 25,
     ):
         if hybrid_alpha is not None:
             ocr_alpha = hybrid_alpha
@@ -809,7 +855,10 @@ class Searcher(object):
             "asr_alpha": asr_alpha,
             "nprobe": nprobe,
             "temporal_k": temporal_k,
+            "min_interval": min_interval,
             "max_interval": max_interval,
+            "decay_weight": decay_weight,
+            "nms_threshold": nms_threshold,
         }
         query_str = f"{constants.CACHE_TEMPORAL_SEARCH}:{repr(params)}"
         query_hash = hashlib.sha256(query_str.encode("utf-8")).hexdigest()
@@ -839,7 +888,13 @@ class Searcher(object):
             logger.info(f"searcher: Take {en-st:.4f} seconds to search results")
 
             st = time.time()
-            temporal_results = self._combine_temporal_results(results_list, max_interval)
+            temporal_results = self._combine_temporal_results(
+                results_list,
+                min_interval=min_interval,
+                max_interval=max_interval,
+                decay_weight=decay_weight,
+                nms_threshold=nms_threshold,
+            )
             temporal_results = self._filter_exclude_videos(temporal_results, query.exclude_video_ids)
             en = time.time()
             logger.info(f"searcher: Take {en-st:.4f} seconds to combine and filter results")
@@ -858,16 +913,33 @@ class Searcher(object):
         }
         return res
 
-    def _combine_temporal_results(self, results_list: list, max_interval: int):
+    def _combine_temporal_results(
+        self,
+        results_list: list,
+        min_interval: int = 1,
+        max_interval: int = 1000,
+        decay_weight: float = 0.0,
+        nms_threshold: int = 25,
+    ):
+        if not results_list:
+            return []
+
+        min_interval = max(0, int(min_interval))
+        max_interval = max(min_interval, int(max_interval))
+        decay_weight = max(0.0, min(1.0, float(decay_weight)))
+
         best = None
 
         for i in range(len(results_list)):
             res = results_list[i]
             for j in range(len(res)):
                 video_id, frame_id = results_list[i][j]["entity"]["frame_id"].split("#")
-                results_list[i][j]["_id"] = (video_id, int(frame_id))
+                fid_int = int(frame_id)
+                results_list[i][j]["_id"] = (video_id, fid_int)
                 results_list[i][j]["time_line"] = [frame_id]
                 results_list[i][j]["time_line_scores"] = [results_list[i][j].get("scores", {})]
+                results_list[i][j]["step_scores"] = [float(results_list[i][j].get("distance", 0.0))]
+                results_list[i][j]["step_fids"] = [fid_int]
 
         for i, res in enumerate(results_list[::-1]):
             if best is None:
@@ -882,36 +954,47 @@ class Searcher(object):
             for cur in res:
                 cur_vid, cur_fid = cur["_id"]
 
-                low_id = (cur_vid, cur_fid)
+                low_id = (cur_vid, cur_fid + min_interval)
                 high_id = (cur_vid, cur_fid + max_interval)
 
-                cur_fid = int(cur_fid)
+                while l < len(best) and best[l]["_id"] < low_id:
+                    l += 1
 
-                while l < len(best):
-                    next_id = best[l]["_id"]
-
-                    if next_id > low_id:
-                        break
-                    else:
-                        l += 1
-
-                while r < len(best):
-                    next_id = best[r]["_id"]
-
-                    if next_id > high_id:
-                        break
-                    else:
-                        r += 1
+                while r < len(best) and best[r]["_id"] <= high_id:
+                    r += 1
 
                 if l < r:
-                    for next in best[l:r]:
-                        _, cur_fid = cur["_id"]
-                        combined_dist = cur["distance"] + next["distance"]
-                        cur_scores = cur.get("scores", {})
-                        next_scores = next.get("scores", {})
+                    for next_item in best[l:r]:
+                        combined_timeline = [*cur["time_line"], *next_item["time_line"]]
+                        cur_tls = cur.get("time_line_scores", [cur.get("scores", {})])
+                        next_tls = next_item.get("time_line_scores", [next_item.get("scores", {})])
+                        combined_tls = [*cur_tls, *next_tls]
 
+                        combined_step_scores = [
+                            *cur.get("step_scores", [cur.get("distance", 0.0)]),
+                            *next_item.get("step_scores", [next_item.get("distance", 0.0)]),
+                        ]
+                        combined_step_fids = [
+                            *cur.get("step_fids", [cur_fid]),
+                            *next_item.get("step_fids", [next_item["_id"][1]]),
+                        ]
+
+                        # Cumulative Additive Scoring (as originally used: cur + next)
+                        combined_dist = cur["distance"] + next_item["distance"]
+
+                        # Temporal Distance Decay across transitions (if enabled)
+                        if decay_weight > 0.0 and max_interval > min_interval:
+                            delta_f = next_item["_id"][1] - cur_fid
+                            norm_gap = max(0.0, min(1.0, (delta_f - min_interval) / (max_interval - min_interval)))
+                            decay_factor = 1.0 - decay_weight * norm_gap
+                            combined_dist = combined_dist * decay_factor
+
+                        final_distance = round(combined_dist, 6)
+
+                        cur_scores = cur.get("scores", {})
+                        next_scores = next_item.get("scores", {})
                         combined_scores = {
-                            "final": round(combined_dist, 6),
+                            "final": final_distance,
                             "clip": round(cur_scores.get("clip", 0.0) + next_scores.get("clip", 0.0), 6),
                             "ocr": round(cur_scores.get("ocr", 0.0) + next_scores.get("ocr", 0.0), 6),
                             "asr": round(cur_scores.get("asr", 0.0) + next_scores.get("asr", 0.0), 6),
@@ -919,20 +1002,28 @@ class Searcher(object):
                             "ocr_raw": round(cur_scores.get("ocr_raw", 0.0) + next_scores.get("ocr_raw", 0.0), 6),
                             "asr_raw": round(cur_scores.get("asr_raw", 0.0) + next_scores.get("asr_raw", 0.0), 6),
                         }
-                        cur_tls = cur.get("time_line_scores", [cur_scores])
-                        next_tls = next.get("time_line_scores", [next_scores])
+
                         tmp.append(
                             {
                                 **cur,
-                                "distance": combined_dist,
+                                "distance": final_distance,
                                 "scores": combined_scores,
-                                "time_line": [*cur["time_line"], *next["time_line"]],
-                                "time_line_scores": [*cur_tls, *next_tls],
+                                "time_line": combined_timeline,
+                                "time_line_scores": combined_tls,
+                                "step_scores": combined_step_scores,
+                                "step_fids": combined_step_fids,
                             }
                         )
 
-            tmp = sorted(tmp, key=lambda x: x["distance"], reverse=True)
+            tmp.sort(key=lambda x: x["distance"], reverse=True)
             best = tmp[: constant.TEMPORAL_QUEUE_SIZE]
+
+        if best is None:
+            return []
+
+        # 3. Temporal Non-Maximum Suppression (Temporal NMS)
+        if nms_threshold > 0:
+            best = self._temporal_nms(best, nms_threshold=nms_threshold)
 
         return best
 
@@ -1105,3 +1196,34 @@ class Searcher(object):
             logger.warning("searcher: expand_query called but LLMQueryExpander is not available")
             return []
         return self._llm_expander.expand_query(query_text)
+
+    def pinpoint_moment(
+        self,
+        video_id: str,
+        frame_id: str,
+        query: str,
+        window_sec: float = 30.0,
+        target_fps: float = 5.0,
+    ) -> dict:
+        """
+        Executes 3-Tier Funnel Verification (Dense CLIP + VLM Boundary Verifier)
+        to pinpoint the exact First Occurrence moment / frame_idx of an action.
+        """
+        from aic51.packages.search.pinpoint import pinpoint_first_occurrence
+
+        extractor = None
+        for feat_name, ext in self._extractors.items():
+            if "clip" in feat_name.lower() or "siglip" in feat_name.lower():
+                extractor = ext
+                break
+        if extractor is None and len(self._extractors) > 0:
+            extractor = list(self._extractors.values())[0]
+
+        return pinpoint_first_occurrence(
+            video_id=video_id,
+            reference_frame_id=frame_id,
+            query_text=query,
+            feature_extractor=extractor,
+            window_sec=window_sec,
+            target_fps=target_fps,
+        )

@@ -233,3 +233,20 @@ export async function getMapKeyframesAround(videoId, frameId) {
   }
 }
 
+export async function pinpointMoment(videoId, frameId, queryText, windowSec = 30.0, targetFps = 5.0) {
+  try {
+    const res = await axios.post(`http://127.0.0.1:${PORT}/api/pinpoint_moment`, {
+      video_id: videoId,
+      frame_id: frameId,
+      query: queryText,
+      window_sec: windowSec,
+      target_fps: targetFps,
+    });
+    return res.data;
+  } catch (err) {
+    console.error(`Failed to pinpoint moment for ${videoId} #${frameId}:`, err);
+    throw err;
+  }
+}
+
+

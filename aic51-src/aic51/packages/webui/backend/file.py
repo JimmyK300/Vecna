@@ -105,6 +105,36 @@ async def get_keyframe(request: Request, video_id: str, frame_id: str):
         return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
 
 
+@app.get("/api/video/extract-frame/{video_id}/{frame_idx}")
+async def extract_exact_frame(request: Request, video_id: str, frame_idx: int):
+    """Trích xuất tức thì frame bất kỳ từ video gốc .mp4 phục vụ hiển thị exact frame."""
+    file_path = _find_image_file(constant.KEYFRAME_DIR, video_id, str(frame_idx))
+    if file_path:
+        return FileResponse(file_path)
+
+    video_path = Path.cwd() / f"{constant.VIDEO_DIR}/{video_id}{constant.VIDEO_EXTENSION}"
+    if not video_path.exists():
+        video_path = Path.cwd() / "data" / "videos" / f"{video_id}.mp4"
+
+    if not video_path.exists():
+        return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "video not found"}))
+
+    try:
+        import cv2
+
+        cap = cv2.VideoCapture(str(video_path))
+        cap.set(cv2.CAP_PROP_POS_FRAMES, frame_idx)
+        ret, frame = cap.read()
+        cap.release()
+        if ret and frame is not None:
+            _, buffer = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 90])
+            return Response(content=buffer.tobytes(), media_type="image/jpeg")
+    except Exception as e:
+        logger.error(f"Error extracting frame {frame_idx} from {video_id}: {e}")
+
+    return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "frame extraction failed"}))
+
+
 CHUNK_SIZE = 1024 * 1024
 
 

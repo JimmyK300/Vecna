@@ -531,9 +531,15 @@ export default function Search() {
                 const scoresList = frame.time_line_scores || [];
                 const isTemporalSeq = keyframesList.length > 1;
 
+                // Extract single-step query if temporal sequence query (e.g. "step1 / step2")
+                const cleanQuery = (searchQuery || "").replace(/\[(?:video|!video|exclude_video):[^\]]+\]/gi, "").trim();
+                const querySteps = cleanQuery.split(/[\\/]/).map((s) => s.trim()).filter(Boolean);
+
                 return keyframesList.map((kf, kfIdx) => {
                   const sc = (scoresList && scoresList[kfIdx]) || frame.scores;
                   const frameKey = `${frame.video_id}#${kf}`;
+                  const stepQuery = (querySteps.length > kfIdx && querySteps[kfIdx]) ? querySteps[kfIdx] : (querySteps[0] || searchQuery);
+
                   return (
                     <FrameItem
                       key={`${frameKey}-${idx}-${kfIdx}`}
@@ -542,12 +548,14 @@ export default function Search() {
                       frame_id={kf}
                       thumbnail={`http://127.0.0.1:6900/api/files/${frame.video_id}/${kf}`}
                       scores={sc}
+                      totalScore={isTemporalSeq ? frame.scores?.final : null}
                       ocr={frame.ocr}
                       temporalStep={isTemporalSeq ? `${kfIdx + 1}/${keyframesList.length}` : null}
                       onPlay={() => playVideo({ video_id: frame.video_id, frame_id: kf }, kf)}
                       onSearchSimilar={() => handleSearchSimilar(frameKey)}
                       onAddIncludeVideo={handleAddIncludeVideo}
                       onAddExcludeVideo={handleAddExcludeVideo}
+                      currentQuery={stepQuery}
                     />
                   );
                 });
