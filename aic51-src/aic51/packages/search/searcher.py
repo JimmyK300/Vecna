@@ -1,8 +1,9 @@
 import hashlib
 import re
+import threading
 import time
 import unicodedata
-from typing import Optional
+from typing import Callable, Optional
 
 import numpy as np
 from sympy import limit
@@ -20,6 +21,21 @@ from .utils import Query
 from sentence_transformers import CrossEncoder
 
 
+class SearchCancelledException(Exception):
+    """Raised when a search operation is cancelled by the client or superseded by a new search."""
+    pass
+
+
+def _check_cancelled(cancel_event):
+    if cancel_event is None:
+        return
+    if callable(cancel_event):
+        if cancel_event():
+            raise SearchCancelledException("Search operation cancelled.")
+    elif hasattr(cancel_event, "is_set") and cancel_event.is_set():
+        raise SearchCancelledException("Search operation cancelled.")
+
+
 def remove_diacritics(text: str) -> str:
     if not text:
         return ""
@@ -27,6 +43,33 @@ def remove_diacritics(text: str) -> str:
     text = "".join(c for c in text if unicodedata.category(c) != "Mn")
     text = text.replace("đ", "d").replace("Đ", "D")
     return unicodedata.normalize("NFC", text)
+
+
+def _build_exact_regex(phrase: str) -> tuple[str, str]:
+    """
+    Builds compiled regex patterns for exact phrase matching with:
+    - Safe escaping of special regex characters.
+    - Word boundary checks (?<!\w) ... (?!\w).
+    - Flexible spacing between words and between letter-number boundaries (e.g. "cau 3" vs "cau3", "vtv1" vs "vtv 1").
+    Returns (pattern_exact, pattern_no_accent).
+    """
+    norm = re.sub(r"\s+", " ", phrase.strip().lower())
+    norm_no_accent = remove_diacritics(norm)
+
+    def _make_pattern(p_str: str) -> str:
+        words = [w for w in p_str.split(" ") if w]
+        if not words:
+            return ""
+        escaped_words = [re.escape(w) for w in words]
+        pattern = r"\s+".join(escaped_words)
+        # Allow optional spacing between letter and digit (e.g. "cau 3" -> "cau\s*3", "vtv1" -> "vtv\s*1")
+        pattern = re.sub(r"(\w)\\s\+(\d)", r"\1\\s*\2", pattern)
+        pattern = re.sub(r"(\d)\\s\+(\w)", r"\1\\s*\2", pattern)
+        pattern = re.sub(r"([a-zA-Z\u00C0-\u024F\u1EA0-\u1EF9])(\d)", r"\1\\s*\2", pattern)
+        pattern = re.sub(r"(\d)([a-zA-Z\u00C0-\u024F\u1EA0-\u1EF9])", r"\1\\s*\2", pattern)
+        return r"(?<!\w)" + pattern + r"(?!\w)"
+
+    return _make_pattern(norm), _make_pattern(norm_no_accent)
 
 
 def check_exact_phrases(query_str: str, target_text: str, fallback_query: str = "") -> tuple[bool, int]:
@@ -50,20 +93,19 @@ def check_exact_phrases(query_str: str, target_text: str, fallback_query: str = 
     norm_target_no_accent = remove_diacritics(norm_target)
 
     for phrase in phrases:
-        norm_phrase = re.sub(r"\s+", " ", phrase.lower())
-        norm_phrase_no_accent = remove_diacritics(norm_phrase)
+        pat_exact, pat_no_accent = _build_exact_regex(phrase)
+        if not pat_exact:
+            continue
+        try:
+            matched = bool(
+                re.search(pat_exact, norm_target)
+                or (pat_no_accent and re.search(pat_no_accent, norm_target_no_accent))
+            )
+        except Exception:
+            p_lower = phrase.lower()
+            matched = (p_lower in norm_target) or (remove_diacritics(p_lower) in norm_target_no_accent)
 
-        # Allow flexible spacing between word and digit boundaries (e.g. "cau 3" vs "cau3")
-        flex_phrase = re.sub(r"(\w)\s+(\d)", r"\1\\s*\2", norm_phrase)
-        flex_phrase = re.sub(r"(\d)\s+(\w)", r"\1\\s*\2", flex_phrase)
-
-        flex_phrase_no_accent = re.sub(r"(\w)\s+(\d)", r"\1\\s*\2", norm_phrase_no_accent)
-        flex_phrase_no_accent = re.sub(r"(\d)\s+(\w)", r"\1\\s*\2", flex_phrase_no_accent)
-
-        pattern_exact = r"(?<!\w)" + flex_phrase + r"(?!\w)"
-        pattern_no_accent = r"(?<!\w)" + flex_phrase_no_accent + r"(?!\w)"
-
-        if not (re.search(pattern_exact, norm_target) or re.search(pattern_no_accent, norm_target_no_accent)):
+        if not matched:
             return False, len(phrases)
 
     return True, len(phrases)
@@ -120,7 +162,9 @@ class Searcher(object):
         en_to_vi_translate: bool = False,
         include_videos: str = "",
         exclude_videos: str = "",
+        cancel_event: threading.Event | Callable = None,
     ):
+        _check_cancelled(cancel_event)
         if hybrid_alpha is not None:
             ocr_alpha = hybrid_alpha
             asr_alpha = hybrid_alpha
@@ -135,7 +179,7 @@ class Searcher(object):
 
         if query.simple:
             logger.info(f"searcher: get include_video_ids={query.include_video_ids}, exclude_video_ids={query.exclude_video_ids}")
-            res = self._get_videos(query.include_video_ids, query.exclude_video_ids, offset, limit, selected)
+            res = self._get_videos(query.include_video_ids, query.exclude_video_ids, offset, limit, selected, cancel_event=cancel_event)
         elif query.advance and not query.temporal:
             logger.info(f"searcher: advance_search query={query.data}")
             res = self._advance_search(
@@ -148,6 +192,7 @@ class Searcher(object):
                 ocr_alpha=ocr_alpha,
                 asr_alpha=asr_alpha,
                 nprobe=nprobe,
+                cancel_event=cancel_event,
             )
         else:
             logger.info(f"searcher: temporal_search query={query.data}")
@@ -163,6 +208,7 @@ class Searcher(object):
                 nprobe=nprobe,
                 temporal_k=temporal_k,
                 max_interval=max_interval,
+                cancel_event=cancel_event,
             )
 
         end_time = time.time()
@@ -177,7 +223,9 @@ class Searcher(object):
         target_features: list = [],
         /,
         nprobe: int = 8,
+        cancel_event: threading.Event | Callable = None,
     ):
+        _check_cancelled(cancel_event)
         record = self._database.get(id)
         if len(record) == 0:
             return {"results": [], "total": 0, "offset": 0}
@@ -186,6 +234,7 @@ class Searcher(object):
         subquery_limit = offset + limit
 
         for target_name in target_features:
+            _check_cancelled(cancel_event)
             if target_name not in self._features:
                 logger.warning(f"searcher: {target_name} is invalid feature")
                 continue
@@ -210,6 +259,7 @@ class Searcher(object):
         ranker = RRFRanker()
 
         if len(reqs) > 0:
+            _check_cancelled(cancel_event)
             results = self._database.hybrid_search(
                 reqs,
                 ranker,
@@ -303,7 +353,9 @@ class Searcher(object):
         subquery_limit: int,
         nprobe: int,
         hybrid_alpha: float,
+        cancel_event: threading.Event | Callable = None,
     ) -> tuple[dict, dict]:
+        _check_cancelled(cancel_event)
         query_list, raw_query = self._extract_query_texts(query_features, feature_key)
         if len(query_list) == 0:
             return {}, {}
@@ -319,6 +371,7 @@ class Searcher(object):
             dense_extractor = self._extractors[dense_model_name]["feature_extractor"]
 
         for query_text in query_list:
+            _check_cancelled(cancel_event)
             # 1. Detect xem user có dùng ngoặc kép " " không
             has_exact = bool(re.findall(r'"([^"]+)"', query_text) or re.findall(r'"([^"]+)"', raw_query))
             
@@ -331,6 +384,7 @@ class Searcher(object):
 
             # === 1. SPARSE SEARCH (BM25) - GIỮ HARD FILTER (Chỉ chạy khi hybrid_alpha < 1.0) ===
             if sparse_field and hybrid_alpha < 1.0:
+                _check_cancelled(cancel_event)
                 search_results = self._database.search(
                     data=[query_input],
                     filter=video_filter,
@@ -357,11 +411,13 @@ class Searcher(object):
                         if fid not in entity_data:
                             entity_data[fid] = hit["entity"]
 
-            # === 2. DENSE SEARCH (BGE-M3) - BỎ HARD FILTER, SEARCH SEMANTIC THUẦN (Chỉ chạy khi hybrid_alpha > 0.0) ===
+            # === 2. DENSE SEARCH (BGE-M3) (Chỉ chạy khi hybrid_alpha > 0.0) ===
             if dense_field and dense_extractor is not None and hybrid_alpha > 0.0:
+                _check_cancelled(cancel_event)
                 dense_query = dense_extractor.get_text_features([query_input])
                 dense_query = np.asarray(dense_query).reshape(-1).tolist()
 
+                _check_cancelled(cancel_event)
                 search_results = self._database.search(
                     data=[dense_query],
                     filter=video_filter,
@@ -373,13 +429,23 @@ class Searcher(object):
                 if search_results and len(search_results) > 0:
                     for hit in search_results[0]:
                         fid = hit["entity"]["frame_id"]
-                        # KHÔNG filter, KHÔNG continue. Để BGE-M3 tự do tìm semantic.
+                        doc_text = hit["entity"].get(text_field, "")
+                        
+                        if has_exact:
+                            is_valid, phrase_count = check_exact_phrases(query_text, doc_text, fallback_query=raw_query)
+                            if not is_valid:
+                                continue  # Vứt nếu không khớp exact phrase
+                            boost = 1.5
+                        else:
+                            boost = 1.0
+
                         all_frame_ids.add(fid)
-                        dense_raw_scores[fid] = dense_raw_scores.get(fid, 0) + hit["distance"]
+                        dense_raw_scores[fid] = dense_raw_scores.get(fid, 0) + hit["distance"] * boost
                         if fid not in entity_data:
                             entity_data[fid] = hit["entity"]
 
         # Normalize và tính điểm Hybrid
+        _check_cancelled(cancel_event)
         sparse_norm = self._normalize_scores(sparse_raw_scores) if hybrid_alpha < 1.0 else {}
         dense_norm = self._normalize_scores(dense_raw_scores) if hybrid_alpha > 0.0 else {}
         results = []
@@ -422,6 +488,8 @@ class Searcher(object):
             )
 
         return results, entity_data
+
+    @staticmethod
     def _filter_exclude_videos(results: list[dict], exclude_video_ids: list[str]) -> list[dict]:
         """Post-filtering helper to remove excluded videos from candidate or final search results."""
         if not exclude_video_ids or len(exclude_video_ids) == 0 or not results:
@@ -463,7 +531,9 @@ class Searcher(object):
         hybrid_alpha: float | None = None,
         nprobe: int = 8,
         exclude_video_ids: list[str] = [],
+        cancel_event: threading.Event | Callable = None,
     ):
+        _check_cancelled(cancel_event)
         if hybrid_alpha is not None:
             ocr_alpha = hybrid_alpha
             asr_alpha = hybrid_alpha
@@ -497,16 +567,19 @@ class Searcher(object):
         if clip_query_text and clip_weight > 0:
             text_embeddings = {}
             for target_name in target_features:
+                _check_cancelled(cancel_event)
                 if target_name not in self._features:
                     logger.warning(f"searcher: {target_name} is invalid feature")
                     continue
 
                 m = self._features[target_name]
                 if m not in text_embeddings:
+                    _check_cancelled(cancel_event)
                     text_embeddings[m] = (
                         self._extractors[m]["feature_extractor"].get_text_features(clip_query_text).tolist()[0]
                     )
 
+                _check_cancelled(cancel_event)
                 search_results = self._database.search(
                     data=[text_embeddings[m]],
                     filter=video_filter,
@@ -527,6 +600,7 @@ class Searcher(object):
 
         # 2. OCR Search (dense + BM25 hybrid)
         if self._ocr_name and ocr_weight > 0:
+            _check_cancelled(cancel_event)
             ocr_dense_name = getattr(self, "_ocr_dense_name", None)
             ocr_dense_model = self._features.get(ocr_dense_name) if ocr_dense_name else None
             ocr_results, ocr_entities = self._search_text_component(
@@ -539,6 +613,7 @@ class Searcher(object):
                 subquery_limit,
                 nprobe,
                 ocr_alpha,
+                cancel_event=cancel_event,
             )
             for hit in ocr_results:
                 fid = hit["entity"]["frame_id"]
@@ -548,6 +623,7 @@ class Searcher(object):
 
         # 3. ASR Search (dense + BM25 hybrid)
         if self._asr_name and asr_weight > 0:
+            _check_cancelled(cancel_event)
             asr_dense_name = getattr(self, "_asr_dense_name", None)
             asr_dense_model = self._features.get(asr_dense_name) if asr_dense_name else None
             asr_results, asr_entities = self._search_text_component(
@@ -560,6 +636,7 @@ class Searcher(object):
                 subquery_limit,
                 nprobe,
                 asr_alpha,
+                cancel_event=cancel_event,
             )
             for hit in asr_results:
                 fid = hit["entity"]["frame_id"]
@@ -568,6 +645,7 @@ class Searcher(object):
                 entity_data[fid] = asr_entities[fid]
 
         # Normalize scores per component
+        _check_cancelled(cancel_event)
         clip_norm = self._normalize_scores(clip_raw_scores)
         ocr_norm = self._normalize_scores(ocr_raw_scores)
         asr_norm = self._normalize_scores(asr_raw_scores)
@@ -616,7 +694,9 @@ class Searcher(object):
         asr_alpha: float = 0.5,
         hybrid_alpha: float | None = None,
         nprobe: int = 8,
+        cancel_event: threading.Event | Callable = None,
     ):
+        _check_cancelled(cancel_event)
         if hybrid_alpha is not None:
             ocr_alpha = hybrid_alpha
             asr_alpha = hybrid_alpha
@@ -644,10 +724,10 @@ class Searcher(object):
                 asr_alpha=asr_alpha,
                 nprobe=nprobe,
                 exclude_video_ids=query.exclude_video_ids,
+                cancel_event=cancel_event,
             )
             total = len(results)
         else:
-            # FIX INDENTATION Ở ĐÂY
             candidate_limit = (
                 max(300, (offset + limit) * 3)
                 if len(query.exclude_video_ids) > 0
@@ -657,6 +737,7 @@ class Searcher(object):
             db_size = self._database.get_size()
 
             while True:
+                _check_cancelled(cancel_event)
                 results = self._similarity_search(
                     query_features,
                     [],
@@ -669,6 +750,7 @@ class Searcher(object):
                     asr_alpha=asr_alpha,
                     nprobe=nprobe,
                     exclude_video_ids=query.exclude_video_ids,
+                    cancel_event=cancel_event,
                 )
 
                 if (
@@ -684,8 +766,9 @@ class Searcher(object):
 
         # ====== RERANK Ở ĐÂY ======
         if self._reranker is not None and raw_query:
+            _check_cancelled(cancel_event)
             rerank_k = max(limit, self._reranker_top_k)
-            results = self._rerank_candidates(raw_query, results, top_k=rerank_k)
+            results = self._rerank_candidates(raw_query, results, top_k=rerank_k, cancel_event=cancel_event)
         # ===========================
 
         results = results[offset : offset + limit]
@@ -695,7 +778,8 @@ class Searcher(object):
             "offset": offset,
         }
         return res
-    def _rerank_candidates(self, query_text: str, candidates: list, top_k: int = 50) -> list:
+
+    def _rerank_candidates(self, query_text: str, candidates: list, top_k: int = 50, cancel_event: threading.Event | Callable = None) -> list:
         """
         Rerank only the selected candidate pool using BGE CrossEncoder.
 
@@ -704,7 +788,7 @@ class Searcher(object):
         - Only candidates actually scored by the reranker are reordered.
         - Candidates without reranker scores stay behind the reranked pool.
         """
-
+        _check_cancelled(cancel_event)
         if self._reranker is None or not query_text or not candidates:
             return candidates
 
@@ -745,6 +829,7 @@ class Searcher(object):
         if not pairs:
             return candidates
 
+        _check_cancelled(cancel_event)
         try:
             rerank_scores = self._reranker.predict(
                 pairs,
@@ -786,6 +871,7 @@ class Searcher(object):
         # IMPORTANT:
         # Do NOT compare rerank score against hybrid score.
         return reranked_items + unrerrankable_items + remaining
+
     def _temporal_search(
         self,
         query: Query,
@@ -801,7 +887,9 @@ class Searcher(object):
         nprobe: int = 8,
         temporal_k: int = 2000,
         max_interval: int = 1000,
+        cancel_event: threading.Event | Callable = None,
     ):
+        _check_cancelled(cancel_event)
         if hybrid_alpha is not None:
             ocr_alpha = hybrid_alpha
             asr_alpha = hybrid_alpha
@@ -827,6 +915,7 @@ class Searcher(object):
             st = time.time()
             results_list = []
             for q in query.data:
+                _check_cancelled(cancel_event)
                 results = self._similarity_search(
                     q["features"],
                     query.include_video_ids,
@@ -839,14 +928,16 @@ class Searcher(object):
                     asr_alpha=asr_alpha,
                     nprobe=nprobe,
                     exclude_video_ids=query.exclude_video_ids,
+                    cancel_event=cancel_event,
                 )
                 results_list.append(results)
 
             en = time.time()
             logger.info(f"searcher: Take {en-st:.4f} seconds to search results")
 
+            _check_cancelled(cancel_event)
             st = time.time()
-            temporal_results = self._combine_temporal_results(results_list, max_interval)
+            temporal_results = self._combine_temporal_results(results_list, max_interval, cancel_event=cancel_event)
             temporal_results = self._filter_exclude_videos(temporal_results, query.exclude_video_ids)
             en = time.time()
             logger.info(f"searcher: Take {en-st:.4f} seconds to combine and filter results")
@@ -865,7 +956,8 @@ class Searcher(object):
         }
         return res
 
-    def _combine_temporal_results(self, results_list: list, max_interval: int):
+    def _combine_temporal_results(self, results_list: list, max_interval: int, cancel_event: threading.Event | Callable = None):
+        _check_cancelled(cancel_event)
         best = None
 
         for i in range(len(results_list)):
@@ -877,6 +969,7 @@ class Searcher(object):
                 results_list[i][j]["time_line_scores"] = [results_list[i][j].get("scores", {})]
 
         for i, res in enumerate(results_list[::-1]):
+            _check_cancelled(cancel_event)
             if best is None:
                 best = res[: constant.TEMPORAL_QUEUE_SIZE]
                 continue
@@ -950,7 +1043,9 @@ class Searcher(object):
         offset: int = 0,
         limit: int = 10000,
         selected: Optional[str] = None,
+        cancel_event: threading.Event | Callable = None,
     ):
+        _check_cancelled(cancel_event)
         query_str = f"{constants.CACHE_GET_VIDEOS}:{repr(include_video_ids)}:{repr(exclude_video_ids)}"
         query_hash = hashlib.sha256(query_str.encode("utf-8")).hexdigest()
 
@@ -961,6 +1056,7 @@ class Searcher(object):
         else:
             video_filter = self._get_video_filter(include_video_ids)
             query_limit = 10000 if include_video_ids else max(500, (offset + limit) * 5)
+            _check_cancelled(cancel_event)
             videos = self._database.query(video_filter, 0, query_limit)
             videos = sorted(videos, key=lambda x: x["frame_id"])
             videos = [{"entity": x} for x in videos]

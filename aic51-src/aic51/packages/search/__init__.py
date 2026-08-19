@@ -11,4 +11,7 @@ def __getattr__(name):
             Searcher.__dict__["_filter_exclude_videos"]
         )
         return Searcher
+    if name == "SearchCancelledException":
+        from .searcher import SearchCancelledException
+        return SearchCancelledException
     raise AttributeError(name)

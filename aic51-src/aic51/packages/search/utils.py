@@ -13,14 +13,22 @@ from . import constants
 def translate_vi_to_en(text: str) -> str:
   if not text or not text.strip():
     return text
+  stripped = text.strip()
+  is_quoted = stripped.startswith('"') and stripped.endswith('"') and len(stripped) >= 2
+  inner_text = stripped[1:-1].strip() if is_quoted else stripped
+  if not inner_text:
+    return text
   try:
-    translated = GoogleTranslator(source="auto", target="en").translate(text.strip())
+    translated = GoogleTranslator(source="auto", target="en").translate(inner_text)
     if translated and translated.strip():
+      res = translated.strip()
+      if is_quoted:
+        res = f'"{res.strip(chr(34))}"'
       try:
-        logger.info(f"translate_vi_to_en: '{text}' -> '{translated}'")
+        logger.info(f"translate_vi_to_en: '{text}' -> '{res}'")
       except Exception:
         pass
-      return translated.strip()
+      return res
     return text
   except Exception as e:
     try:
@@ -34,14 +42,22 @@ def translate_vi_to_en(text: str) -> str:
 def translate_en_to_vi(text: str) -> str:
   if not text or not text.strip():
     return text
+  stripped = text.strip()
+  is_quoted = stripped.startswith('"') and stripped.endswith('"') and len(stripped) >= 2
+  inner_text = stripped[1:-1].strip() if is_quoted else stripped
+  if not inner_text:
+    return text
   try:
-    translated = GoogleTranslator(source="auto", target="vi").translate(text.strip())
+    translated = GoogleTranslator(source="auto", target="vi").translate(inner_text)
     if translated and translated.strip():
+      res = translated.strip()
+      if is_quoted:
+        res = f'"{res.strip(chr(34))}"'
       try:
-        logger.info(f"translate_en_to_vi: '{text}' -> '{translated}'")
+        logger.info(f"translate_en_to_vi: '{text}' -> '{res}'")
       except Exception:
         pass
-      return translated.strip()
+      return res
     return text
   except Exception as e:
     try:
@@ -174,7 +190,8 @@ class Query:
       ocr_str = ocr_str.strip("[]")
       ocr = ":".join(ocr_str.split(":")[1:]).strip()
 
-      ocr_list.append(ocr.lower())
+      if ocr and ocr != '""' and ocr != "''":
+        ocr_list.append(ocr.lower())
       new_query = new_query.replace(ocr_match.group(), "", 1)
 
     return new_query, ocr_list
@@ -193,7 +210,8 @@ class Query:
       asr_str = asr_str.strip("[]")
       asr = ":".join(asr_str.split(":")[1:]).strip()
 
-      asr_list.append(asr.lower())
+      if asr and asr != '""' and asr != "''":
+        asr_list.append(asr.lower())
       new_query = new_query.replace(asr_match.group(), "", 1)
 
     return new_query, asr_list

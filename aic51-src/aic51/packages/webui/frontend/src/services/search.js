@@ -4,6 +4,12 @@ const PORT = (typeof import.meta !== "undefined" && import.meta.env && import.me
 
 let currentSearchAbortController = null;
 
+export async function cancelSearchBackend() {
+  try {
+    await axios.post(`http://127.0.0.1:${PORT}/api/cancel_search`, {}, { timeout: 2000 });
+  } catch (e) {}
+}
+
 export function cancelCurrentSearch() {
   if (currentSearchAbortController) {
     try {
@@ -11,6 +17,7 @@ export function cancelCurrentSearch() {
     } catch (e) {}
     currentSearchAbortController = null;
   }
+  cancelSearchBackend();
 }
 
 export async function search(
@@ -31,19 +38,22 @@ export async function search(
   ocr_alpha,
   asr_alpha,
 ) {
-  // Cancel any previously running search
+  // Cancel any previously running search on both client and backend
   if (currentSearchAbortController) {
     try {
       currentSearchAbortController.abort();
     } catch (e) {}
+    cancelSearchBackend();
   }
   currentSearchAbortController = new AbortController();
   const signal = currentSearchAbortController.signal;
 
+  const fetchLimit = Math.max(parseInt(limit || 20, 10), 300);
+
   const params = {
     q: q,
     offset: offset,
-    limit: limit,
+    limit: fetchLimit,
     nprobe: nprobe,
     temporal_k: temporal_k,
     ocr_weight: ocr_weight,
@@ -101,6 +111,10 @@ export async function search(
     }
   }
   let data = res.data;
+
+  if (data && data.canceled) {
+    return { canceled: true, frames: [], total: 0 };
+  }
 
   // Strict Exclude & Include Video Filtering
   if (data && Array.isArray(data.frames)) {

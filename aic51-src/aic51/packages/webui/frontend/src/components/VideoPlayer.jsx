@@ -417,14 +417,17 @@ export function VideoPlayer({ frameInfo, onCancel }) {
 
   const curTime = videoElementRef.current ? videoElementRef.current.currentTime : (frameCounter / fps);
 
-  let activeFrameNum = Math.round(frameCounter);
+  // Precision snapping threshold (< 0.4 of a single frame duration)
+  // Ensures keyframe IDs match when directly on keyframes, but releases immediately on single-frame stepping
+  const snapThreshold = Math.min(0.015, 0.4 / fps);
+  let activeFrameNum = Math.round(curTime * fps);
   if (mapBTCKeyframes && mapBTCKeyframes.length > 0) {
-    const matchedKf = mapBTCKeyframes.find((kf) => Math.abs(kf.pts_time - curTime) <= 0.12);
+    const matchedKf = mapBTCKeyframes.find((kf) => Math.abs(kf.pts_time - curTime) <= snapThreshold);
     if (matchedKf) {
       activeFrameNum = matchedKf.raw_idx;
     }
   } else if (keyframes && keyframes.length > 0) {
-    const matchedRaw = keyframes.find((k) => Math.abs(parseInt(k, 10) / fps - curTime) <= 0.12);
+    const matchedRaw = keyframes.find((k) => Math.abs(parseInt(k, 10) / fps - curTime) <= snapThreshold);
     if (matchedRaw !== undefined) {
       activeFrameNum = parseInt(matchedRaw, 10);
     }
@@ -580,8 +583,8 @@ export function VideoPlayer({ frameInfo, onCancel }) {
                 const newAnswer = {
                   ...data,
                   video_id: frameInfo.video_id,
-                  frame_id: String(Math.round(frameCounter)),
-                  frame_counter: frameCounter,
+                  frame_id: String(activeFrameNum),
+                  frame_counter: activeFrameNum,
                   time: videoElementRef.current?.currentTime || 0,
                 };
                 if (submitAnswer) submitAnswer(newAnswer);

@@ -7,6 +7,7 @@ SEARCH_MULTIMODAL_ENDPOINT = "/api/search_multimodal"
 SEARCH_IMAGE_ENDPOINT = "/api/search_image"
 EXPAND_QUERY_ENDPOINT = "/api/expand_query"
 TARGET_FEATURES_ENDPOINT = "/api/target_features"
+CANCEL_SEARCH_ENDPOINT = "/api/cancel_search"
 
 STREAM_FILE_ENDPOINT = "/api/stream"
 FILE_ENDPOINT = "/api/files"

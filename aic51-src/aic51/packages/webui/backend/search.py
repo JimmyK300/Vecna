@@ -1,3 +1,5 @@
+import asyncio
+import threading
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Annotated
@@ -9,7 +11,7 @@ from fastapi.responses import JSONResponse
 import aic51.packages.constant as constant
 from aic51.packages.config import GlobalConfig
 from aic51.packages.logger import logger
-from aic51.packages.search import Searcher
+from aic51.packages.search import Searcher, SearchCancelledException
 from aic51.packages.search.traceability import build_search_trace
 from aic51.packages.search.utils import Query as ParsedQuery
 from aic51.packages.utils import get_device
@@ -25,6 +27,27 @@ def setup_searcher():
 
 
 internal = {}
+active_search_lock = threading.Lock()
+current_search_cancel_event: threading.Event | None = None
+
+
+def begin_search_session() -> threading.Event:
+    global current_search_cancel_event
+    with active_search_lock:
+        if current_search_cancel_event is not None and not current_search_cancel_event.is_set():
+            logger.info("search backend: Superseding / cancelling active previous search.")
+            current_search_cancel_event.set()
+        cancel_event = threading.Event()
+        current_search_cancel_event = cancel_event
+        return cancel_event
+
+
+def cancel_active_search_session():
+    global current_search_cancel_event
+    with active_search_lock:
+        if current_search_cancel_event is not None and not current_search_cancel_event.is_set():
+            logger.info("search backend: Received cancel signal, cancelling active search.")
+            current_search_cancel_event.set()
 
 
 @asynccontextmanager
@@ -41,6 +64,16 @@ async def health():
     if "searcher" in internal:
         return JSONResponse(status_code=200, content=jsonable_encoder({constant.MESSAGE_KEY: "alive"}))
     return JSONResponse(status_code=500, content=jsonable_encoder({constant.MESSAGE_KEY: "dead"}))
+
+
+@app.post(constant.CANCEL_SEARCH_ENDPOINT)
+@app.get(constant.CANCEL_SEARCH_ENDPOINT)
+async def cancel_search_endpoint():
+    cancel_active_search_session()
+    return JSONResponse(
+        status_code=200,
+        content=jsonable_encoder({constant.MESSAGE_KEY: "search cancel signal received"}),
+    )
 
 
 @app.get(constant.SEARCH_MULTIMODAL_ENDPOINT)
@@ -72,8 +105,24 @@ async def search_multimodal(
     searcher = internal["searcher"]
     target_features_list = [f.strip() for f in target_features.split(",") if f.strip()]
 
+    cancel_event = begin_search_session()
+
+    async def monitor_disconnect():
+        try:
+            while not cancel_event.is_set():
+                if await request.is_disconnected():
+                    logger.info("search backend: Client disconnected, cancelling search.")
+                    cancel_event.set()
+                    break
+                await asyncio.sleep(0.1)
+        except asyncio.CancelledError:
+            pass
+
+    monitor_task = asyncio.create_task(monitor_disconnect())
+
     try:
-        searcher_res = searcher.search_multimodal(
+        searcher_res = await asyncio.to_thread(
+            searcher.search_multimodal,
             q,
             offset,
             limit,
@@ -90,12 +139,43 @@ async def search_multimodal(
             en_to_vi_translate=en_to_vi_translate,
             include_videos=include_videos,
             exclude_videos=exclude_videos,
+            cancel_event=cancel_event,
+        )
+    except SearchCancelledException:
+        logger.info("search backend: Search multimodal was cancelled.")
+        return JSONResponse(
+            status_code=200,
+            content=jsonable_encoder({
+                constant.MESSAGE_KEY: "search cancelled",
+                "canceled": True,
+                "frames": [],
+                "total": 0,
+                "offset": offset,
+            }),
         )
     except Exception as e:
         logger.exception(e)
         return JSONResponse(
             status_code=500,
             content=jsonable_encoder({constant.MESSAGE_KEY: "search_multimodal errors"}),
+        )
+    finally:
+        monitor_task.cancel()
+        try:
+            await monitor_task
+        except asyncio.CancelledError:
+            pass
+
+    if cancel_event.is_set():
+        return JSONResponse(
+            status_code=200,
+            content=jsonable_encoder({
+                constant.MESSAGE_KEY: "search cancelled",
+                "canceled": True,
+                "frames": [],
+                "total": 0,
+                "offset": offset,
+            }),
         )
 
     parsed_query = ParsedQuery(q)
@@ -201,19 +281,66 @@ async def search_image(
     searcher = internal["searcher"]
     target_features_list = target_features.split(",")
 
+    cancel_event = begin_search_session()
+
+    async def monitor_disconnect():
+        try:
+            while not cancel_event.is_set():
+                if await request.is_disconnected():
+                    logger.info("search backend: Client disconnected, cancelling image search.")
+                    cancel_event.set()
+                    break
+                await asyncio.sleep(0.1)
+        except asyncio.CancelledError:
+            pass
+
+    monitor_task = asyncio.create_task(monitor_disconnect())
+
     try:
-        searcher_res = searcher.search_image(
+        searcher_res = await asyncio.to_thread(
+            searcher.search_image,
             id,
             offset,
             limit,
             target_features_list,
             nprobe=nprobe,
+            cancel_event=cancel_event,
+        )
+    except SearchCancelledException:
+        logger.info("search backend: Search image was cancelled.")
+        return JSONResponse(
+            status_code=200,
+            content=jsonable_encoder({
+                constant.MESSAGE_KEY: "search cancelled",
+                "canceled": True,
+                "frames": [],
+                "total": 0,
+                "offset": offset,
+            }),
         )
     except Exception as e:
         logger.exception(e)
         return JSONResponse(
             status_code=500,
             content=jsonable_encoder({constant.MESSAGE_KEY: "search_image errors"}),
+        )
+    finally:
+        monitor_task.cancel()
+        try:
+            await monitor_task
+        except asyncio.CancelledError:
+            pass
+
+    if cancel_event.is_set():
+        return JSONResponse(
+            status_code=200,
+            content=jsonable_encoder({
+                constant.MESSAGE_KEY: "search cancelled",
+                "canceled": True,
+                "frames": [],
+                "total": 0,
+                "offset": offset,
+            }),
         )
 
     response = process_searcher_results(searcher_res)

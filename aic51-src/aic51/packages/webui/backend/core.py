@@ -176,6 +176,30 @@ async def expand_query_proxy(request: Request):
     )
 
 
+@app.post(constant.CANCEL_SEARCH_ENDPOINT)
+@app.get(constant.CANCEL_SEARCH_ENDPOINT)
+async def cancel_search_proxy(request: Request):
+    if len(SEARCH_SERVERS) == 0:
+        return JSONResponse(
+            status_code=200,
+            content=jsonable_encoder({constant.MESSAGE_KEY: "no search servers"}),
+        )
+
+    import requests as sync_requests
+
+    for ss in SEARCH_SERVERS:
+        try:
+            target_url = urljoin(ss["host"], constant.CANCEL_SEARCH_ENDPOINT)
+            sync_requests.post(target_url, timeout=2.0)
+        except Exception:
+            continue
+
+    return JSONResponse(
+        status_code=200,
+        content=jsonable_encoder({constant.MESSAGE_KEY: "search cancel signal sent"}),
+    )
+
+
 @app.get(constant.TARGET_FEATURES_ENDPOINT)
 async def target_features():
     async with target_features_lock:

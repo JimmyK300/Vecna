@@ -23,18 +23,18 @@ export const parseSegment = (segmentStr = "") => {
   let asr = "";
 
   // Parse [OCR:"..."] or [OCR:text]
-  const ocrRegex = /\s?\[OCR:\s*((".*?")|[^\]]+)\]/i;
+  const ocrRegex = /\s?\[OCR:\s*([^\]]*)\]/i;
   const ocrMatch = ocrRegex.exec(visual);
   if (ocrMatch) {
-    ocr = (ocrMatch[1] || "").trim().replace(/^"|"$/g, "");
+    ocr = (ocrMatch[1] || "").trim();
     visual = visual.replace(ocrMatch[0], "");
   }
 
   // Parse [asr:"..."], [speech:"..."], [asr:text], or [speech:text]
-  const asrRegex = /\s?\[(?:asr|speech):\s*((".*?")|[^\]]+)\]/i;
+  const asrRegex = /\s?\[(?:asr|speech):\s*([^\]]*)\]/i;
   const asrMatch = asrRegex.exec(visual);
   if (asrMatch) {
-    asr = (asrMatch[1] || "").trim().replace(/^"|"$/g, "");
+    asr = (asrMatch[1] || "").trim();
     visual = visual.replace(asrMatch[0], "");
   }
 
@@ -294,16 +294,16 @@ export function AdvanceQueryContainer({
       if (!existing.includes(prefixCode)) {
         nextVal = existing.length > 0 ? `${incInput.trim()}, ${prefixCode}` : prefixCode;
         setIncInput(nextVal);
+        onIncludeVideosChange && onIncludeVideosChange(nextVal);
       }
-      handleApplyVideoFilters(nextVal, excInput);
     } else {
       const existing = excInput ? excInput.trim().split(/[,;\s]+/).filter(Boolean) : [];
       let nextVal = excInput;
       if (!existing.includes(prefixCode)) {
         nextVal = existing.length > 0 ? `${excInput.trim()}, ${prefixCode}` : prefixCode;
         setExcInput(nextVal);
+        onExcludeVideosChange && onExcludeVideosChange(nextVal);
       }
-      handleApplyVideoFilters(incInput, nextVal);
     }
   };
 
@@ -549,8 +549,8 @@ export function AdvanceQueryContainer({
           spellCheck={false}
           autoCorrect="off"
           autoCapitalize="off"
-          className="w-full text-xs bg-white text-gray-900 border border-sky-400 rounded p-2 focus:outline-none focus:ring-1 focus:ring-blue-500 font-sans transition-all shrink-0 min-h-[120px] max-h-64 overflow-y-auto leading-relaxed resize-y"
-          rows={4}
+          className="w-full text-xs bg-white text-gray-900 border border-sky-400 rounded p-2 focus:outline-none focus:ring-1 focus:ring-blue-500 font-sans transition-all min-h-[48px] max-h-64 overflow-y-auto leading-relaxed resize-y"
+          rows={3}
           placeholder="Type search text here... (Temporal syntax: '/' or '\' between events, [OCR: text], [asr: speech])"
           value={mainQuery}
           onChange={(e) => {
@@ -779,7 +779,7 @@ export function AdvanceQueryContainer({
 
       {/* Dedicated OCR & ASR Filters Panel */}
       {showOcrAsrPanel && (
-        <div className="w-full lg:w-56 shrink-0 flex flex-col gap-1.5 bg-white border border-sky-300 p-2 rounded shadow-sm animate-fadeIn">
+        <div className="w-full lg:w-56 shrink-0 flex flex-col gap-1.5 bg-white border border-sky-300 p-2 rounded shadow-sm self-start animate-fadeIn">
           <div className="flex items-center justify-between border-b border-gray-100 pb-1">
             <label className="text-xs font-bold text-gray-800 flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-amber-500"></span>
@@ -825,7 +825,7 @@ export function AdvanceQueryContainer({
 
       {/* Dedicated Include / Exclude Video Filter Panel with Header Menu */}
       {showVideoPanel && (
-        <div className="w-full lg:w-56 shrink-0 flex flex-col gap-1.5 bg-white border border-sky-300 p-2 rounded shadow-sm relative animate-fadeIn">
+        <div className="w-full lg:w-56 shrink-0 flex flex-col gap-1.5 bg-white border border-sky-300 p-2 rounded shadow-sm relative self-start animate-fadeIn">
           {/* Header Line with Prefix Menu Button Right Beside Video Filters */}
           <div className="flex items-center justify-between border-b border-gray-100 pb-1">
             <label className="text-xs font-bold text-gray-800 flex items-center gap-1">
@@ -948,7 +948,7 @@ export function AdvanceQueryContainer({
           </div>
 
           {/* Apply Filter & Clear Buttons */}
-          <div className="flex items-center justify-between pt-1 mt-auto">
+          <div className="flex items-center justify-between pt-1">
             <button
               type="button"
               onClick={handleClearVideoFilters}
