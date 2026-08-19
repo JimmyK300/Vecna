@@ -64,6 +64,38 @@ class AnswerParsingTests(unittest.TestCase):
 
 
 class MetricsTests(unittest.TestCase):
+    def test_qa_is_evidence_only(self):
+        qa = case([{"video_id": "V001", "kind": "video"}]) | {"task_type": "qa"}
+        metrics = benchmark.metrics_for_results([result("V009", 1), result("V001", 2)], qa, 0)
+        self.assertEqual(metrics["first_correct_rank"], 2)
+        self.assertEqual(metrics["evidence_retrieval"]["evidence_recall_at_20"], 1.0)
+        self.assertIsNone(metrics.get("answer_accuracy"))
+        self.assertTrue(metrics["evidence_retrieval"]["evidence_no_hit_within_20"] is False)
+
+        wrong = benchmark.metrics_for_results([result("V009", 1)], qa, 0)
+        self.assertEqual(wrong["evidence_retrieval"]["evidence_recall_at_20"], 0.0)
+
+    def test_trake_video_retrieval_and_event_candidates_are_separate(self):
+        targets = [{"video_id": "V001", "kind": "point", "frame": 10}, {"video_id": "V001", "kind": "point", "frame": 20}]
+        metrics = benchmark.metrics_for_results([result("V001", 99), result("V001", 10)], case(targets, "events") | {"task_type": "trake"}, 0)
+        self.assertEqual(metrics["video_retrieval"]["first_correct_video_rank"], 1)
+        self.assertEqual(metrics["event_candidate_coverage"]["event_candidate_recall_at_20"], 0.5)
+        self.assertIsNone(metrics.get("end_to_end_trake_success"))
+
+    def test_trake_video_uses_alternative_groups_without_event_frame_hit(self):
+        trake = case(
+            [{"video_id": "V001", "kind": "point", "frame": 10}], "events"
+        ) | {"task_type": "trake", "accepted_groups": [
+            [{"video_id": "V001", "kind": "point", "frame": 10}],
+            [{"video_id": "V002", "kind": "point", "frame": 20}],
+        ]}
+        metrics = benchmark.metrics_for_results([result("V002", 99)], trake, 0)
+        self.assertEqual(metrics["video_retrieval"]["video_recall_at_20"], 1.0)
+        self.assertEqual(metrics["event_candidate_coverage"]["event_candidate_recall_at_20"], 0.0)
+        self.assertEqual(metrics["localization_status"], "not_implemented")
+        self.assertIsNone(metrics["end_to_end_trake_success"])
+        self.assertIsNone(metrics["frame_localization_error"])
+
     def test_rank_boundaries_and_no_hit(self):
         target = {"video_id": "V999", "kind": "point", "frame": 7}
         for rank, expected in [
@@ -98,10 +130,44 @@ class MetricsTests(unittest.TestCase):
         )
         self.assertEqual(metrics["recall_at_20"], 0.5)
         self.assertFalse(metrics["all_targets_hit_at_20"])
+        self.assertIn("first_correct_rank", metrics)
+        self.assertIn("reciprocal_rank", metrics)
+        self.assertIn("target_ranks", metrics)
         interval = {"video_id": "V002", "kind": "interval", "start": 100, "end": 200}
         self.assertTrue(benchmark.target_matches(result("V002", 100), interval, 0))
         self.assertTrue(benchmark.target_matches(result("V002", 200), interval, 0))
         self.assertFalse(benchmark.target_matches(result("V002", 201), interval, 0))
+
+    def test_timestamp_point_matcher_uses_per_video_fps(self):
+        config = benchmark.MatchConfig(
+            fps_by_video={"V001": 25.0, "L24_V033": 30.0},
+            retrieval_point_tolerance_seconds=2.0,
+            official_point_tolerance_frames=12,
+        )
+        gold = {"video_id": "V001", "kind": "point", "frame": 2471}
+        # 5 frames at 25 fps = 0.2 s → retrieval HIT
+        self.assertTrue(benchmark.target_matches(result("V001", 2466), gold, config))
+        # 51 frames at 25 fps = 2.04 s → retrieval MISS
+        self.assertFalse(benchmark.target_matches(result("V001", 2471 + 51), gold, config))
+        # official ±12: 11 frames HIT, 13 MISS
+        close = {"video_id": "L24_V033", "kind": "point", "frame": 16009}
+        self.assertTrue(benchmark.target_matches(result("L24_V033", 16020), close, config, mode="official"))
+        self.assertFalse(benchmark.target_matches(result("L24_V033", 16022), close, config, mode="official"))
+        # interval still has no extra slack
+        interval = {"video_id": "V002", "kind": "interval", "start": 3247, "end": 3608}
+        self.assertTrue(benchmark.target_matches(result("V002", 3471), interval, config))
+        self.assertFalse(benchmark.target_matches(result("V002", 3610), interval, config))
+
+        metrics = benchmark.metrics_for_results(
+            [result("V001", 2466)],
+            case([gold]),
+            config,
+        )
+        self.assertEqual(metrics["first_correct_rank"], 1)
+        self.assertTrue(metrics["retrieval_hit_2s"])
+        self.assertTrue(metrics["official_tolerance_hit"])
+        self.assertEqual(metrics["nearest_gold_delta_frames"], 5)
+        self.assertAlmostEqual(metrics["nearest_gold_delta_seconds"], 0.2)
 
     def test_stable_tie_break_and_result_schema(self):
         rows = [result("V002", 4, 0.8), result("V001", 9, 0.8), result("V001", 3, 0.8)]
@@ -294,12 +360,48 @@ class CanonicalContractTests(unittest.TestCase):
         self.assertIsNone(partition["primary_q0"])
         self.assertEqual(set(partition["by_source"]), {"Questions.txt", "p1.txt"})
 
+    def test_task_summary_partitions_and_preserves_legacy_metrics(self):
+        current = [case for case in self.cases if case["evaluation_scope"] == "include_current_dataset"]
+        chosen = {task: next(item for item in current if item["task_type"] == task and item["scoreable"])
+                  for task in ("tkis", "qa", "trake")}
+        records = []
+        for task, item in chosen.items():
+            metrics = benchmark.metrics_for_results(
+                [result(item["accepted_groups"][0][0]["video_id"], 1)], item, 0
+            )
+            records.append({
+                "task_type": task, "source": item["source"], "condition": "Q0",
+                "is_primary_baseline": True, "is_all_hints": True,
+                "status": "scored_provisional", "latency_ms": 1.0, **metrics,
+            })
+        summary = benchmark.summarize(records, current)
+        self.assertEqual(set(summary["task_metrics"]), {"tkis", "qa", "trake"})
+        self.assertIn("evidence_recall_at_20", summary["task_metrics"]["qa"]["evidence_retrieval"])
+        self.assertEqual(summary["task_metrics"]["trake"]["localization_status"], "not_implemented")
+        self.assertIsNone(summary["task_metrics"]["trake"]["end_to_end_trake_success"])
+        self.assertIn("legacy_mixed_retrieval_diagnostic", summary)
+        self.assertEqual(summary["reporting"]["primary_report"], "task_metrics")
+        self.assertTrue(summary["reporting"]["legacy_reports_are_compatibility_only"])
+
+    def test_unscoreable_qa_is_excluded_and_reasoned(self):
+        current = [case for case in self.cases if case["evaluation_scope"] == "include_current_dataset"]
+        q22 = next(case for case in current if case["query_id"] == "p1_q22")
+        self.assertEqual(q22["task_type"], "qa")
+        self.assertFalse(q22["scoreable"])
+        summary = benchmark.summarize([], current)
+        qa = summary["task_metrics"]["qa"]
+        self.assertIn("p1_q22", qa["unscoreable_cases"])
+        self.assertEqual(summary["dataset"]["unscoreable_reasons"]["p1_q22"], "missing official answer ground truth")
+        self.assertIsNone(qa["evidence_retrieval"])
+
 
 class GuardrailTests(unittest.TestCase):
     def args(self, **changes):
         values = {
             "top_k": 20,
             "point_tolerance_frames": 0,
+            "point_tolerance_seconds": 2.0,
+            "official_point_tolerance_frames": 12,
             "ocr_weight": 0.5,
             "asr_weight": 0.0,
         }
