@@ -1,5 +1,5 @@
 import { useFetcher, useSubmit, useSearchParams } from "react-router-dom";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import classNames from "classnames";
 
 import FindButton from "../assets/search-btn.svg";
@@ -267,8 +267,27 @@ function AnswerHeader() {
 }
 
 function SelectedFramesPreview() {
-  const { selected, removeSelected } = useSelected();
+  const { selected, removeSelected, clearSelected } = useSelected();
   const playVideo = usePlayVideo();
+  const [isConfirmingClear, setIsConfirmingClear] = useState(false);
+  const confirmRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (confirmRef.current && !confirmRef.current.contains(e.target)) {
+        setIsConfirmingClear(false);
+      }
+    };
+
+    if (isConfirmingClear) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("touchstart", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [isConfirmingClear]);
 
   if (selected.length === 0) return null;
 
@@ -307,7 +326,63 @@ function SelectedFramesPreview() {
   return (
     <div className="p-1.5 bg-green-50 border border-green-300 rounded mb-1 text-xs w-full overflow-hidden">
       <div className="font-bold text-green-900 mb-1 text-[11px] flex justify-between items-center">
-        <span>Selected Frames ({selected.length}):</span>
+        <div className="flex items-center gap-1.5">
+          <span>Selected Frames ({selected.length}):</span>
+          <div ref={confirmRef} className="inline-flex items-center gap-1">
+            {!isConfirmingClear ? (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsConfirmingClear(true);
+                }}
+                className="px-1.5 py-0.5 bg-red-100 hover:bg-red-200 active:bg-red-300 text-red-700 hover:text-red-800 border border-red-300 rounded text-[10px] font-bold flex items-center gap-0.5 transition-colors cursor-pointer shadow-2xs"
+                title="Clear all selected frames from payload"
+              >
+                <svg
+                  className="w-3 h-3 text-red-600"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+                <span>Clear All</span>
+              </button>
+            ) : (
+              <div className="inline-flex items-center gap-1 animate-fadeIn">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    clearSelected();
+                    setIsConfirmingClear(false);
+                  }}
+                  className="px-1.5 py-0.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black rounded text-[10px] flex items-center justify-center transition-colors cursor-pointer shadow-2xs border border-emerald-700"
+                  title="Confirm delete all"
+                >
+                  ✓
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsConfirmingClear(false);
+                  }}
+                  className="px-1.5 py-0.5 bg-gray-200 hover:bg-gray-300 active:bg-gray-400 text-gray-700 font-black rounded text-[10px] flex items-center justify-center transition-colors cursor-pointer shadow-2xs border border-gray-400"
+                  title="Cancel"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
         <span className="text-[9px] text-green-700 font-normal">Click item to play</span>
       </div>
       <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto">
