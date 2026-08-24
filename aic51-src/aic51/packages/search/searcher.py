@@ -19,7 +19,49 @@ from aic51.packages.logger import logger
 from . import constants
 from .utils import Query
 from sentence_transformers import CrossEncoder
+import bisect
+import json
+from pathlib import Path
 
+
+class SegmentClustering:
+    """Gom các frame trong cùng segment (bản tin) lại, giống OpenCubee2."""
+    def __init__(self, path="segment_map.json"):
+        p = Path(path)
+        self.map = json.load(open(p)) if p.exists() else {}
+        if not self.map:
+            logger.warning("SegmentClustering: segment_map.json not found - clustering disabled")
+
+    def seg_of(self, vid: str, fid: int) -> int:
+        m = self.map.get(vid)
+        if not m:
+            return -1
+        i = bisect.bisect_left(m["fids"], fid)
+        if i < len(m["fids"]) and m["fids"][i] == fid:
+            return m["segs"][i]
+        return -1
+
+    def diversify(self, results: list) -> list:
+        """Lấy best frame (first-seen) per segment. Input đã sort theo score."""
+        if not self.map:
+            return results
+        seen = set()
+        reps = []
+        for r in results:
+            fid_full = r["entity"]["frame_id"]
+            if "#" not in fid_full:
+                continue
+            vid, fid_s = fid_full.split("#", 1)
+            try:
+                fid = int(fid_s)
+            except ValueError:
+                continue
+            key = (vid, self.seg_of(vid, fid))
+            if key in seen:
+                continue
+            seen.add(key)
+            reps.append(r)
+        return reps
 
 class SearchCancelledException(Exception):
     """Raised when a search operation is cancelled by the client or superseded by a new search."""
@@ -117,6 +159,7 @@ class Searcher(object):
     def __init__(self, collection_name: str, device: torch.device = torch.device("cpu")):
         self._database = MilvusDatabase(collection_name)
         self._prepare_feature_extractors(device)
+        self._clustering = SegmentClustering("/Users/saladhouse/Vecna/segment_map.json")  
 
     def to(self, device):
         self._device = torch.device(device)
@@ -764,17 +807,23 @@ class Searcher(object):
 
             total = db_size
 
-        # ====== RERANK Ở ĐÂY ======
+       # ====== RERANK Ở ĐÂY ======
         if self._reranker is not None and raw_query:
             _check_cancelled(cancel_event)
             rerank_k = max(limit, self._reranker_top_k)
             results = self._rerank_candidates(raw_query, results, top_k=rerank_k, cancel_event=cancel_event)
-        # ===========================
+
+        # ====== CLUSTERING: Diversify trên pool gốc (ranking ổn định) ======
+        TOP_DIVERSE = min(len(results), max(200, (offset + limit) * 4))
+        results_top = results[:TOP_DIVERSE]
+        results_diverse = self._clustering.diversify(results_top)
+        results_remaining = results[TOP_DIVERSE:]
+        results = results_diverse + results_remaining
 
         results = results[offset : offset + limit]
         res = {
             "results": results,
-            "total": total,
+            "total": len(results_diverse) + len(results_remaining),
             "offset": offset,
         }
         return res
