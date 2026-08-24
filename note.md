@@ -15,3 +15,5 @@ pip install whisperx --no-deps
 
 pip install faster-whisper "ctranslate2>=4.5.0" pyannote.audio nltk pandas
     
+# setup clustering
+python  aic51-src/aic51/packages/search/build_segment_map.py
