@@ -1,0 +1,31 @@
+{
+  "packet": "issue58-baseline-sweep",
+  "purpose": "Reproducible current-system baseline sweep for GitHub issue JimmyK300/Vecna#58",
+  "started_at": "2026-08-25T15:00:12.640547+00:00",
+  "launcher_path": "C:\\Users\\minhc\\Documents\\Codex\\2026-08-25\\turn-on-actions-runner\\worktrees\\vecna-issue-58\\aic51-src\\script\\run_issue58_baseline_sweep.py",
+  "launcher_sha256": "5ac3bb085f5673117bceadd044df5c38b28f5fd6b525e568a3bcd7af1cc85090",
+  "python": "C:\\Users\\minhc\\Code\\Vecna\\.venv\\Scripts\\python.exe",
+  "pythondontwritebytecode": true,
+  "primary_root": "C:\\Users\\minhc\\Code\\Vecna",
+  "primary_runtime_inputs": {
+    "config_yaml_sha256": "d8a5fbc1ec0eff59e6beb134656c9449c9bb0eab264f8639653cc31f893adba8",
+    "headless_benchmark_sha256": "39d4196b16f191dc7eda9749b28ce76d8acd776eeed2b34892e312c01b1d6233",
+    "runner_sha256": "fb758833989dd17393a07a1e187dd5344bb86cdd77f197c234d01b63e5b15f12",
+    "queries_csv_sha256": "b732a623deba352db037bcb8acb5f99923ba9cd01e761ad3f4417307de42057c",
+    "fps_csv_sha256": "c2747dde734b50a7e9f4d25b0f743142bc7cbe38b34a03944fcd2b934e6d5b83"
+  },
+  "output_dir": "C:\\Users\\minhc\\Documents\\Codex\\2026-08-25\\turn-on-actions-runner\\worktrees\\vecna-issue-58\\benchmark-results\\issue58-baseline-sweep",
+  "cell": "clip_siglip_qwen_sparse",
+  "limit_queries": null,
+  "overwrite": false,
+  "worktree_git": {
+    "worktree_root": "C:\\Users\\minhc\\Documents\\Codex\\2026-08-25\\turn-on-actions-runner\\worktrees\\vecna-issue-58",
+    "sha": "9b8a871e8531aae85de6eb87fea400bef8669d48",
+    "branch": "codex/issue-58-baseline-sweep",
+    "dirty": true
+  },
+  "status": "complete",
+  "ended_at": "2026-08-25T15:04:08.743737+00:00",
+  "elapsed_s": 235.961,
+  "returncode": 0
+}
