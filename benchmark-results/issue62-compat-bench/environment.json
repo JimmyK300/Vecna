@@ -1,0 +1,221 @@
+{
+  "issue": "JimmyK300/Vecna#62",
+  "generated_utc": "2026-08-25T19:57:55.145866+00:00",
+  "worktree_branch": "codex/issue-62-compat-bench",
+  "worktree_base_commit": "9b8a871e8531aae85de6eb87fea400bef8669d48",
+  "os": "Windows 11 build 10.0.26200",
+  "machine": "AMD64",
+  "python_host": "3.12.1",
+  "offline_env_enforced": [
+    "HF_HUB_OFFLINE=1",
+    "TRANSFORMERS_OFFLINE=1",
+    "PYTHONDONTWRITEBYTECODE=1"
+  ],
+  "downloads_allowed": false,
+  "venvs": {
+    "pytorch-cpu": {
+      "root": "C:\\Users\\minhc\\Code\\Vecna\\.venv",
+      "interpreter": "C:\\Users\\minhc\\Code\\Vecna\\.venv\\Scripts\\python.exe",
+      "exists": true,
+      "python_version": "3.12.1",
+      "pip_versions": {
+        "torch": "2.8.0",
+        "torchvision": "0.23.0",
+        "torch-directml": "0.2.5.dev240914",
+        "open-clip-torch": "3.3.0",
+        "transformers": "4.57.6",
+        "numpy": "1.26.4",
+        "onnxruntime": "1.27.0",
+        "onnxruntime-directml": null,
+        "tokenizers": "0.22.2",
+        "pillow": "11.3.0",
+        "sentence-transformers": "5.4.0"
+      },
+      "runtime_probe": {
+        "torch_build": "2.8.0+cpu",
+        "torch_cuda_version": null,
+        "cuda_available": false,
+        "torch_directml_importable": true
+      }
+    },
+    "pytorch-directml": {
+      "root": "C:\\Users\\minhc\\Code\\Vecna\\.venv-amd",
+      "interpreter": "C:\\Users\\minhc\\Code\\Vecna\\.venv-amd\\Scripts\\python.exe",
+      "exists": true,
+      "python_version": "3.12.1",
+      "pip_versions": {
+        "torch": "2.4.1",
+        "torchvision": "0.19.1",
+        "torch-directml": "0.2.5.dev240914",
+        "open-clip-torch": "3.3.0",
+        "transformers": "5.13.1",
+        "numpy": "2.5.1",
+        "onnxruntime": null,
+        "onnxruntime-directml": null,
+        "tokenizers": "0.22.2",
+        "pillow": "12.3.0",
+        "sentence-transformers": null
+      },
+      "runtime_probe": {
+        "torch_build": "2.4.1+cpu",
+        "torch_cuda_version": null,
+        "cuda_available": false,
+        "torch_directml_importable": true
+      }
+    }
+  },
+  "gpu": [
+    "AMD Radeon RX 6900 XT|driver=32.0.21045.1000"
+  ],
+  "workload": {
+    "frames_source": "C:\\Users\\minhc\\Code\\Vecna\\data-staging\\keyframes\\sample_video",
+    "frames_used_embed": [
+      "0001.jpg",
+      "0002.jpg",
+      "0003.jpg",
+      "0004.jpg",
+      "0005.jpg",
+      "0006.jpg",
+      "0007.jpg",
+      "0008.jpg",
+      "0009.jpg",
+      "0010.jpg",
+      "0011.jpg",
+      "0012.jpg"
+    ],
+    "qwen_embed_frame_cap": 4,
+    "frame_sha256_first12": {
+      "0001.jpg": "ff86b120082bb2fb9b6e6b76e8b70115171e11f5c51968305a97e7d9085f12b0",
+      "0002.jpg": "0dbca8c54beff6bb1c3848db05392bfe876195b4ebcdd55218e81bf217577111",
+      "0003.jpg": "d3780d8b057203dbf9ccb97abe5459c34ed0fd265d40b6930c8860ff6c7e84db",
+      "0004.jpg": "f4e3adc9b2f36e12f5ce5edfe37e0ed96039fd99c79507cee1683c5860a8c74d",
+      "0005.jpg": "18ad2a8f50c249f5ec74541f75ab9e0655395a5b3eb22701518dd73cd3a1e4b7",
+      "0006.jpg": "620af53fd8b652d09e19e27ddf18c9b87f1f70deae858b5fcd23c964f9583ab6",
+      "0007.jpg": "4dfcb020d6350fb1acedf5abc6beef64e6717cc130307d3bfbf6fa6253110789",
+      "0008.jpg": "d512e31b1ced8a3e33a91273803f3e659eca8368f4de035368dd62525b71ffa9",
+      "0009.jpg": "c59d78c5ad234525e9cce64b30acb95a13d216deb6dd209ec77d2d895913a87f",
+      "0010.jpg": "86f3a1e8d02558a89bc2657c1ed6ae8281e82a939eed6e268fc775764b982865",
+      "0011.jpg": "64f9425201f93cfd6780b86ef82f947dc4a0a6d072c086f308cae5075b4b3267",
+      "0012.jpg": "2faf8523cede35a7732d918601dc4ea2303984f76329a1c00243c9481bcd78a6"
+    },
+    "queries_vi_en": [
+      "một người đang cầm micro trên sân khấu",
+      "cảnh quay bên trong nhà bếp có khói",
+      "hai người đang chơi bóng rổ trong nhà thi đấu",
+      "a person holding a microphone on a stage",
+      "smoke inside a kitchen while cooking",
+      "two people playing basketball in an arena"
+    ],
+    "image_batch_levels": [
+      1,
+      4,
+      16,
+      32,
+      64
+    ],
+    "image_reps": 2,
+    "text_reps": 3
+  },
+  "static_inventory": [
+    {
+      "candidate": "torch-directml inside primary .venv (any model)",
+      "eligible": false,
+      "status": "failed-not-runnable",
+      "error_class": "ImportError",
+      "evidence": "import torch_directml -> ImportError: DLL load failed while importing torch_directml_native: The specified procedure could not be found (torch-directml 0.2.5.dev240914 vs torch 2.8.0 in C:\\Users\\minhc\\Code\\Vecna\\.venv)"
+    },
+    {
+      "candidate": "onnxruntime DirectML EP (both venvs)",
+      "eligible": false,
+      "status": "not-installed-locally",
+      "error_class": null,
+      "evidence": ".venv has onnxruntime==1.27.0 with providers [AzureExecutionProvider, CPUExecutionProvider]; onnxruntime-directml not installed anywhere; installing it is a new dependency (out of scope)"
+    },
+    {
+      "candidate": "qwen_vl repo path in .venv-amd",
+      "eligible": false,
+      "status": "dependency-missing",
+      "error_class": null,
+      "evidence": "repo feature module imports qwen_vl_utils; .venv-amd does not have qwen_vl_utils installed; harness uses self-contained preprocessing instead"
+    },
+    {
+      "candidate": "registered BGE-M3 ONNX backend artifact (fp16 dense-only)",
+      "eligible": false,
+      "status": "artifact-absent-locally",
+      "error_class": null,
+      "evidence": "bge_onnx.py expects BAAI-bge-m3_fp16.onnx (hotchpotch/vespa-onnx-BAAI-bge-m3-only-dense); no such file found under C:\\Users\\minhc\\Code\\Vecna; downloading is prohibited by issue #62"
+    }
+  ],
+  "directml": {
+    "venv-amd": {
+      "count": 1,
+      "name": "AMD Radeon RX 6900 XT\u0000"
+    },
+    "primary_venv": {
+      "import_error": "torch_directml DLL load failed in primary .venv (deterministic; see static_inventory)"
+    }
+  },
+  "model_weights_evidence": [
+    {
+      "repo_id": "timm/PE-Core-L-14-336",
+      "present_locally": true,
+      "snapshot_revision": "8eff41b3f687e50a323662c2dda5eb3588c6dd35",
+      "files": {
+        "open_clip_model.safetensors": {
+          "exists": true,
+          "bytes": 2684623612
+        }
+      }
+    },
+    {
+      "repo_id": "timm/ViT-SO400M-14-SigLIP-384",
+      "present_locally": true,
+      "snapshot_revision": "ac16108d567c4389e6cd2b11c9b8585f7474435b",
+      "files": {
+        "open_clip_model.safetensors": {
+          "exists": true,
+          "bytes": 3511918424
+        },
+        "open_clip_config.json": {
+          "exists": true,
+          "bytes": 921
+        }
+      }
+    },
+    {
+      "repo_id": "Qwen/Qwen3-VL-Embedding-2B",
+      "present_locally": true,
+      "snapshot_revision": "9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda",
+      "files": {
+        "model.safetensors": {
+          "exists": true,
+          "bytes": 4255140312
+        }
+      }
+    },
+    {
+      "repo_id": "BAAI/bge-m3",
+      "present_locally": true,
+      "snapshot_revision": "5617a9f61b028005a4858fdac845db406aefb181",
+      "files": {
+        "pytorch_model.bin": {
+          "exists": true,
+          "bytes": 2271145830
+        },
+        "model.safetensors": {
+          "exists": false,
+          "bytes": null
+        },
+        "onnx/model.onnx": {
+          "exists": true,
+          "bytes": 724923
+        },
+        "onnx/model.onnx_data": {
+          "exists": true,
+          "bytes": 2266820608
+        }
+      }
+    }
+  ],
+  "cpu_ram": "Intel(R) Core(TM) i5-14600K cores=14 logical=20 ram_gb=31.8"
+}

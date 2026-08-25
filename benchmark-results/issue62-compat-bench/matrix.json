@@ -1,0 +1,765 @@
+{
+  "manifest": {
+    "issue": "JimmyK300/Vecna#62",
+    "generated_utc": "2026-08-25T19:57:55.145866+00:00",
+    "worktree_branch": "codex/issue-62-compat-bench",
+    "worktree_base_commit": "9b8a871e8531aae85de6eb87fea400bef8669d48",
+    "os": "Windows 11 build 10.0.26200",
+    "machine": "AMD64",
+    "python_host": "3.12.1",
+    "offline_env_enforced": [
+      "HF_HUB_OFFLINE=1",
+      "TRANSFORMERS_OFFLINE=1",
+      "PYTHONDONTWRITEBYTECODE=1"
+    ],
+    "downloads_allowed": false,
+    "venvs": {
+      "pytorch-cpu": {
+        "root": "C:\\Users\\minhc\\Code\\Vecna\\.venv",
+        "interpreter": "C:\\Users\\minhc\\Code\\Vecna\\.venv\\Scripts\\python.exe",
+        "exists": true,
+        "python_version": "3.12.1",
+        "pip_versions": {
+          "torch": "2.8.0",
+          "torchvision": "0.23.0",
+          "torch-directml": "0.2.5.dev240914",
+          "open-clip-torch": "3.3.0",
+          "transformers": "4.57.6",
+          "numpy": "1.26.4",
+          "onnxruntime": "1.27.0",
+          "onnxruntime-directml": null,
+          "tokenizers": "0.22.2",
+          "pillow": "11.3.0",
+          "sentence-transformers": "5.4.0"
+        },
+        "runtime_probe": {
+          "torch_build": "2.8.0+cpu",
+          "torch_cuda_version": null,
+          "cuda_available": false,
+          "torch_directml_importable": true
+        }
+      },
+      "pytorch-directml": {
+        "root": "C:\\Users\\minhc\\Code\\Vecna\\.venv-amd",
+        "interpreter": "C:\\Users\\minhc\\Code\\Vecna\\.venv-amd\\Scripts\\python.exe",
+        "exists": true,
+        "python_version": "3.12.1",
+        "pip_versions": {
+          "torch": "2.4.1",
+          "torchvision": "0.19.1",
+          "torch-directml": "0.2.5.dev240914",
+          "open-clip-torch": "3.3.0",
+          "transformers": "5.13.1",
+          "numpy": "2.5.1",
+          "onnxruntime": null,
+          "onnxruntime-directml": null,
+          "tokenizers": "0.22.2",
+          "pillow": "12.3.0",
+          "sentence-transformers": null
+        },
+        "runtime_probe": {
+          "torch_build": "2.4.1+cpu",
+          "torch_cuda_version": null,
+          "cuda_available": false,
+          "torch_directml_importable": true
+        }
+      }
+    },
+    "gpu": [
+      "AMD Radeon RX 6900 XT|driver=32.0.21045.1000"
+    ],
+    "workload": {
+      "frames_source": "C:\\Users\\minhc\\Code\\Vecna\\data-staging\\keyframes\\sample_video",
+      "frames_used_embed": [
+        "0001.jpg",
+        "0002.jpg",
+        "0003.jpg",
+        "0004.jpg",
+        "0005.jpg",
+        "0006.jpg",
+        "0007.jpg",
+        "0008.jpg",
+        "0009.jpg",
+        "0010.jpg",
+        "0011.jpg",
+        "0012.jpg"
+      ],
+      "qwen_embed_frame_cap": 4,
+      "frame_sha256_first12": {
+        "0001.jpg": "ff86b120082bb2fb9b6e6b76e8b70115171e11f5c51968305a97e7d9085f12b0",
+        "0002.jpg": "0dbca8c54beff6bb1c3848db05392bfe876195b4ebcdd55218e81bf217577111",
+        "0003.jpg": "d3780d8b057203dbf9ccb97abe5459c34ed0fd265d40b6930c8860ff6c7e84db",
+        "0004.jpg": "f4e3adc9b2f36e12f5ce5edfe37e0ed96039fd99c79507cee1683c5860a8c74d",
+        "0005.jpg": "18ad2a8f50c249f5ec74541f75ab9e0655395a5b3eb22701518dd73cd3a1e4b7",
+        "0006.jpg": "620af53fd8b652d09e19e27ddf18c9b87f1f70deae858b5fcd23c964f9583ab6",
+        "0007.jpg": "4dfcb020d6350fb1acedf5abc6beef64e6717cc130307d3bfbf6fa6253110789",
+        "0008.jpg": "d512e31b1ced8a3e33a91273803f3e659eca8368f4de035368dd62525b71ffa9",
+        "0009.jpg": "c59d78c5ad234525e9cce64b30acb95a13d216deb6dd209ec77d2d895913a87f",
+        "0010.jpg": "86f3a1e8d02558a89bc2657c1ed6ae8281e82a939eed6e268fc775764b982865",
+        "0011.jpg": "64f9425201f93cfd6780b86ef82f947dc4a0a6d072c086f308cae5075b4b3267",
+        "0012.jpg": "2faf8523cede35a7732d918601dc4ea2303984f76329a1c00243c9481bcd78a6"
+      },
+      "queries_vi_en": [
+        "một người đang cầm micro trên sân khấu",
+        "cảnh quay bên trong nhà bếp có khói",
+        "hai người đang chơi bóng rổ trong nhà thi đấu",
+        "a person holding a microphone on a stage",
+        "smoke inside a kitchen while cooking",
+        "two people playing basketball in an arena"
+      ],
+      "image_batch_levels": [
+        1,
+        4,
+        16,
+        32,
+        64
+      ],
+      "image_reps": 2,
+      "text_reps": 3
+    },
+    "static_inventory": [
+      {
+        "candidate": "torch-directml inside primary .venv (any model)",
+        "eligible": false,
+        "status": "failed-not-runnable",
+        "error_class": "ImportError",
+        "evidence": "import torch_directml -> ImportError: DLL load failed while importing torch_directml_native: The specified procedure could not be found (torch-directml 0.2.5.dev240914 vs torch 2.8.0 in C:\\Users\\minhc\\Code\\Vecna\\.venv)"
+      },
+      {
+        "candidate": "onnxruntime DirectML EP (both venvs)",
+        "eligible": false,
+        "status": "not-installed-locally",
+        "error_class": null,
+        "evidence": ".venv has onnxruntime==1.27.0 with providers [AzureExecutionProvider, CPUExecutionProvider]; onnxruntime-directml not installed anywhere; installing it is a new dependency (out of scope)"
+      },
+      {
+        "candidate": "qwen_vl repo path in .venv-amd",
+        "eligible": false,
+        "status": "dependency-missing",
+        "error_class": null,
+        "evidence": "repo feature module imports qwen_vl_utils; .venv-amd does not have qwen_vl_utils installed; harness uses self-contained preprocessing instead"
+      },
+      {
+        "candidate": "registered BGE-M3 ONNX backend artifact (fp16 dense-only)",
+        "eligible": false,
+        "status": "artifact-absent-locally",
+        "error_class": null,
+        "evidence": "bge_onnx.py expects BAAI-bge-m3_fp16.onnx (hotchpotch/vespa-onnx-BAAI-bge-m3-only-dense); no such file found under C:\\Users\\minhc\\Code\\Vecna; downloading is prohibited by issue #62"
+      }
+    ],
+    "directml": {
+      "venv-amd": {
+        "count": 1,
+        "name": "AMD Radeon RX 6900 XT\u0000"
+      },
+      "primary_venv": {
+        "import_error": "torch_directml DLL load failed in primary .venv (deterministic; see static_inventory)"
+      }
+    },
+    "model_weights_evidence": [
+      {
+        "repo_id": "timm/PE-Core-L-14-336",
+        "present_locally": true,
+        "snapshot_revision": "8eff41b3f687e50a323662c2dda5eb3588c6dd35",
+        "files": {
+          "open_clip_model.safetensors": {
+            "exists": true,
+            "bytes": 2684623612
+          }
+        }
+      },
+      {
+        "repo_id": "timm/ViT-SO400M-14-SigLIP-384",
+        "present_locally": true,
+        "snapshot_revision": "ac16108d567c4389e6cd2b11c9b8585f7474435b",
+        "files": {
+          "open_clip_model.safetensors": {
+            "exists": true,
+            "bytes": 3511918424
+          },
+          "open_clip_config.json": {
+            "exists": true,
+            "bytes": 921
+          }
+        }
+      },
+      {
+        "repo_id": "Qwen/Qwen3-VL-Embedding-2B",
+        "present_locally": true,
+        "snapshot_revision": "9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda",
+        "files": {
+          "model.safetensors": {
+            "exists": true,
+            "bytes": 4255140312
+          }
+        }
+      },
+      {
+        "repo_id": "BAAI/bge-m3",
+        "present_locally": true,
+        "snapshot_revision": "5617a9f61b028005a4858fdac845db406aefb181",
+        "files": {
+          "pytorch_model.bin": {
+            "exists": true,
+            "bytes": 2271145830
+          },
+          "model.safetensors": {
+            "exists": false,
+            "bytes": null
+          },
+          "onnx/model.onnx": {
+            "exists": true,
+            "bytes": 724923
+          },
+          "onnx/model.onnx_data": {
+            "exists": true,
+            "bytes": 2266820608
+          }
+        }
+      }
+    ],
+    "cpu_ram": "Intel(R) Core(TM) i5-14600K cores=14 logical=20 ram_gb=31.8"
+  },
+  "cells": [
+    {
+      "cell_id": "pytorch-cpu::image_clip_pe-l-14-336::embed",
+      "harness": "pytorch-cpu",
+      "model": "image_clip_pe-l-14-336",
+      "side": "embed",
+      "device_resolved": "cpu",
+      "device_name": "cpu",
+      "load_s": 5.87,
+      "first_inference_ms": 740.7,
+      "embed_dim": 1024,
+      "precision": "fp32",
+      "batch_results": [
+        {
+          "batch": 1,
+          "status": "ok",
+          "throughput_img_per_s": 1.44,
+          "p50_batch_ms": 4191.1,
+          "worst_pass_batch_ms": 4191.1
+        },
+        {
+          "batch": 4,
+          "status": "ok",
+          "throughput_img_per_s": 1.56,
+          "p50_batch_ms": 3870.4,
+          "worst_pass_batch_ms": 3870.4
+        },
+        {
+          "batch": 16,
+          "status": "ok",
+          "throughput_img_per_s": 1.4,
+          "p50_batch_ms": 4327.5,
+          "worst_pass_batch_ms": 4327.5
+        },
+        {
+          "batch": 32,
+          "status": "ok",
+          "throughput_img_per_s": 1.39,
+          "p50_batch_ms": 4333.1,
+          "worst_pass_batch_ms": 4333.1
+        },
+        {
+          "batch": 64,
+          "status": "ok",
+          "throughput_img_per_s": 1.41,
+          "p50_batch_ms": 4273.7,
+          "worst_pass_batch_ms": 4273.7
+        }
+      ],
+      "best_throughput_img_per_s": 1.56,
+      "batch_ceiling_tested": 4,
+      "tokenizer_meta": {
+        "path": "open_clip.get_tokenizer",
+        "fallback": null,
+        "returns_tensor": true,
+        "context_length": 32
+      },
+      "status": "ok",
+      "wall_s": 94.722,
+      "peak_rss_mb": 5562.2,
+      "rss_delta_mb": 5673184.0,
+      "orchestrator_wall_s": 95.67,
+      "peak_rss_bytes": 5832351744.0,
+      "peak_rss_unit": "MiB(normalized-from-legacy-KB)"
+    },
+    {
+      "cell_id": "pytorch-cpu::image_clip_pe-l-14-336::query_text",
+      "harness": "pytorch-cpu",
+      "model": "image_clip_pe-l-14-336",
+      "side": "query_text",
+      "device_resolved": "cpu",
+      "device_name": "cpu",
+      "load_s": 4.73,
+      "first_inference_ms": 79.0,
+      "query_latency_p50_ms": 42.9,
+      "query_throughput_text_per_s": 23.23,
+      "embed_dim_text": 1024,
+      "precision": "fp32",
+      "tokenizer_meta": {
+        "path": "open_clip.get_tokenizer",
+        "fallback": null,
+        "returns_tensor": true,
+        "context_length": 32
+      },
+      "status": "ok",
+      "wall_s": 9.788,
+      "peak_rss_mb": 5560.1,
+      "rss_delta_mb": 5671176.0,
+      "orchestrator_wall_s": 11.56,
+      "peak_rss_bytes": 5830180864.0,
+      "peak_rss_unit": "MiB(normalized-from-legacy-KB)"
+    },
+    {
+      "cell_id": "pytorch-cpu::image_siglip_so400m-384::embed",
+      "harness": "pytorch-cpu",
+      "model": "image_siglip_so400m-384",
+      "side": "embed",
+      "device_resolved": "cpu",
+      "device_name": "cpu",
+      "load_s": 6.01,
+      "first_inference_ms": 1166.8,
+      "embed_dim": 1152,
+      "precision": "fp32",
+      "batch_results": [
+        {
+          "batch": 1,
+          "status": "ok",
+          "throughput_img_per_s": 0.91,
+          "p50_batch_ms": 6623.5,
+          "worst_pass_batch_ms": 6623.5
+        },
+        {
+          "batch": 4,
+          "status": "ok",
+          "throughput_img_per_s": 0.96,
+          "p50_batch_ms": 6287.9,
+          "worst_pass_batch_ms": 6287.9
+        },
+        {
+          "batch": 16,
+          "status": "ok",
+          "throughput_img_per_s": 0.89,
+          "p50_batch_ms": 6727.3,
+          "worst_pass_batch_ms": 6727.3
+        },
+        {
+          "batch": 32,
+          "status": "ok",
+          "throughput_img_per_s": 0.88,
+          "p50_batch_ms": 6813.7,
+          "worst_pass_batch_ms": 6813.7
+        },
+        {
+          "batch": 64,
+          "status": "ok",
+          "throughput_img_per_s": 0.9,
+          "p50_batch_ms": 6655.1,
+          "worst_pass_batch_ms": 6655.1
+        }
+      ],
+      "best_throughput_img_per_s": 0.96,
+      "batch_ceiling_tested": 4,
+      "tokenizer_meta": {
+        "path": "open_clip.get_tokenizer",
+        "fallback": null,
+        "returns_tensor": true,
+        "context_length": 64
+      },
+      "status": "ok",
+      "wall_s": 143.82,
+      "peak_rss_mb": 7142.0,
+      "rss_delta_mb": 7290992.0,
+      "orchestrator_wall_s": 145.81,
+      "peak_rss_bytes": 7488966656.0,
+      "peak_rss_unit": "MiB(normalized-from-legacy-KB)"
+    },
+    {
+      "cell_id": "pytorch-cpu::image_siglip_so400m-384::query_text",
+      "harness": "pytorch-cpu",
+      "model": "image_siglip_so400m-384",
+      "side": "query_text",
+      "device_resolved": "cpu",
+      "device_name": "cpu",
+      "load_s": 6.063,
+      "first_inference_ms": 145.6,
+      "query_latency_p50_ms": 92.06,
+      "query_throughput_text_per_s": 10.89,
+      "embed_dim_text": 1152,
+      "precision": "fp32",
+      "tokenizer_meta": {
+        "path": "open_clip.get_tokenizer",
+        "fallback": null,
+        "returns_tensor": true,
+        "context_length": 64
+      },
+      "status": "ok",
+      "wall_s": 12.281,
+      "peak_rss_mb": 7141.8,
+      "rss_delta_mb": 7291096.0,
+      "orchestrator_wall_s": 14.24,
+      "peak_rss_bytes": 7488761856.0,
+      "peak_rss_unit": "MiB(normalized-from-legacy-KB)"
+    },
+    {
+      "cell_id": "pytorch-cpu::qwen_vl::embed",
+      "harness": "pytorch-cpu",
+      "model": "qwen_vl",
+      "side": "embed",
+      "device_resolved": "cpu",
+      "device_name": "cpu",
+      "dtype_requested": "torch.bfloat16",
+      "load_s": 0.645,
+      "first_inference_ms": 39301.4,
+      "embed_dim": 2048,
+      "frames_completed": 4,
+      "throughput_img_per_s": 0.023,
+      "p50_image_s": 43.53,
+      "batch_ceiling_tested": 1,
+      "precision": "bf16",
+      "status": "ok",
+      "wall_s": 224.825,
+      "peak_rss_mb": 4322.0,
+      "rss_delta_mb": 4403348.0,
+      "orchestrator_wall_s": 226.91,
+      "peak_rss_bytes": 4531912704.0,
+      "peak_rss_unit": "MiB(normalized-from-legacy-KB)"
+    },
+    {
+      "cell_id": "pytorch-cpu::qwen_vl::query_text",
+      "harness": "pytorch-cpu",
+      "model": "qwen_vl",
+      "side": "query_text",
+      "device_resolved": "cpu",
+      "device_name": "cpu",
+      "dtype_requested": "torch.bfloat16",
+      "load_s": 0.544,
+      "first_inference_ms": 1214.0,
+      "query_latency_p50_ms": 976.04,
+      "query_throughput_text_per_s": 1.02,
+      "embed_dim_text": 2048,
+      "precision": "bf16",
+      "status": "ok",
+      "wall_s": 26.51,
+      "peak_rss_mb": 3367.6,
+      "rss_delta_mb": 3425992.0,
+      "orchestrator_wall_s": 28.54,
+      "peak_rss_bytes": 3531169792.0,
+      "peak_rss_unit": "MiB(normalized-from-legacy-KB)"
+    },
+    {
+      "cell_id": "pytorch-cpu::text_bge_m3_pytorch::query_text",
+      "harness": "pytorch-cpu",
+      "model": "text_bge_m3_pytorch",
+      "side": "query_text",
+      "device_resolved": "cpu",
+      "device_name": "cpu",
+      "load_s": 4.585,
+      "first_inference_ms": 157.9,
+      "query_latency_p50_ms": 21.98,
+      "query_throughput_text_per_s": 44.9,
+      "embed_dim_text": 1024,
+      "precision": "fp32",
+      "pooling": "cls+l2norm",
+      "max_length": 1024,
+      "status": "ok",
+      "wall_s": 9.153,
+      "peak_rss_mb": 3040.6,
+      "rss_delta_mb": 3091116.0,
+      "orchestrator_wall_s": 11.26,
+      "peak_rss_bytes": 3188269056.0,
+      "peak_rss_unit": "MiB(normalized-from-legacy-KB)"
+    },
+    {
+      "cell_id": "pytorch-directml::image_clip_pe-l-14-336::embed",
+      "harness": "pytorch-directml",
+      "model": "image_clip_pe-l-14-336",
+      "side": "embed",
+      "device_resolved": "privateuseone:0",
+      "device_name": "AMD Radeon RX 6900 XT",
+      "load_s": 6.909,
+      "first_inference_ms": 1129.5,
+      "embed_dim": 1024,
+      "precision": "fp32",
+      "batch_results": [
+        {
+          "batch": 1,
+          "status": "ok",
+          "throughput_img_per_s": 4.28,
+          "p50_batch_ms": 1532.0,
+          "worst_pass_batch_ms": 1532.0
+        },
+        {
+          "batch": 4,
+          "status": "failed",
+          "error_class": "RuntimeError",
+          "error_message": "Could not allocate tensor with 28340220 bytes. There is not enough GPU video memory available!",
+          "error_origin": "pos_embed_sincos.py:231 in rot",
+          "error_signature_sha256": "8252d9df49f7d9cde77d7beaf6d5454298276fee026068adc4ed34035b4fe3a2"
+        }
+      ],
+      "best_throughput_img_per_s": 4.28,
+      "batch_ceiling_tested": 1,
+      "tokenizer_meta": {
+        "path": "open_clip.get_tokenizer",
+        "fallback": null,
+        "returns_tensor": true,
+        "context_length": 32
+      },
+      "status": "ok",
+      "wall_s": 24.854,
+      "peak_rss_mb": 5600.7,
+      "rss_delta_mb": 5712952.0,
+      "orchestrator_wall_s": 27.2,
+      "peak_rss_bytes": 5872717824.0,
+      "peak_rss_unit": "MiB(normalized-from-legacy-KB)"
+    },
+    {
+      "cell_id": "pytorch-directml::image_clip_pe-l-14-336::query_text",
+      "harness": "pytorch-directml",
+      "model": "image_clip_pe-l-14-336",
+      "side": "query_text",
+      "device_resolved": "privateuseone:0",
+      "device_name": "AMD Radeon RX 6900 XT",
+      "load_s": 6.948,
+      "first_inference_ms": 69.2,
+      "query_latency_p50_ms": 5.79,
+      "query_throughput_text_per_s": 170.79,
+      "embed_dim_text": 1024,
+      "precision": "fp32",
+      "tokenizer_meta": {
+        "path": "open_clip.get_tokenizer",
+        "fallback": null,
+        "returns_tensor": true,
+        "context_length": 32
+      },
+      "status": "ok",
+      "wall_s": 11.659,
+      "peak_rss_mb": 5601.5,
+      "rss_delta_mb": 5713800.0,
+      "orchestrator_wall_s": 13.63,
+      "peak_rss_bytes": 5873582080.0,
+      "peak_rss_unit": "MiB(normalized-from-legacy-KB)"
+    },
+    {
+      "cell_id": "pytorch-directml::image_siglip_so400m-384::embed",
+      "harness": "pytorch-directml",
+      "model": "image_siglip_so400m-384",
+      "side": "embed",
+      "device_resolved": "privateuseone:0",
+      "device_name": "AMD Radeon RX 6900 XT",
+      "load_s": 9.144,
+      "first_inference_ms": 512.1,
+      "embed_dim": 1152,
+      "precision": "fp32",
+      "batch_results": [
+        {
+          "batch": 1,
+          "status": "ok",
+          "throughput_img_per_s": 3.73,
+          "p50_batch_ms": 1831.9,
+          "worst_pass_batch_ms": 1831.9
+        },
+        {
+          "batch": 4,
+          "status": "ok",
+          "throughput_img_per_s": 1.35,
+          "p50_batch_ms": 4951.2,
+          "worst_pass_batch_ms": 4951.2
+        },
+        {
+          "batch": 16,
+          "status": "failed",
+          "error_class": "RuntimeError",
+          "error_message": "Could not allocate tensor with 408146688 bytes. There is not enough GPU video memory available!",
+          "error_origin": "attention.py:124 in forward",
+          "error_signature_sha256": "4174ddec85513104becc3415e94730264d75b03fb17cfb0d348ac827d74188fa"
+        }
+      ],
+      "best_throughput_img_per_s": 3.73,
+      "batch_ceiling_tested": 1,
+      "tokenizer_meta": {
+        "path": "open_clip.get_tokenizer",
+        "fallback": "PreTrainedTokenizerFast(tokenizer.json) - AutoTokenizer offline load failed: OSError: We couldn't connect to 'https://huggingface.co' to load the files, and couldn't find them in the cached files.",
+        "returns_tensor": true,
+        "context_length": 64
+      },
+      "status": "ok",
+      "wall_s": 41.737,
+      "peak_rss_mb": 7186.9,
+      "rss_delta_mb": 7337264.0,
+      "orchestrator_wall_s": 44.52,
+      "peak_rss_bytes": 7536029696.0,
+      "peak_rss_unit": "MiB(normalized-from-legacy-KB)"
+    },
+    {
+      "cell_id": "pytorch-directml::image_siglip_so400m-384::query_text",
+      "harness": "pytorch-directml",
+      "model": "image_siglip_so400m-384",
+      "side": "query_text",
+      "device_resolved": "privateuseone:0",
+      "device_name": "AMD Radeon RX 6900 XT",
+      "load_s": 8.675,
+      "first_inference_ms": 352.9,
+      "query_latency_p50_ms": 73.12,
+      "query_throughput_text_per_s": 13.69,
+      "embed_dim_text": 1152,
+      "precision": "fp32",
+      "tokenizer_meta": {
+        "path": "open_clip.get_tokenizer",
+        "fallback": "PreTrainedTokenizerFast(tokenizer.json) - AutoTokenizer offline load failed: OSError: We couldn't connect to 'https://huggingface.co' to load the files, and couldn't find them in the cached files.",
+        "returns_tensor": true,
+        "context_length": 64
+      },
+      "status": "ok",
+      "wall_s": 14.888,
+      "peak_rss_mb": 7188.7,
+      "rss_delta_mb": 7339092.0,
+      "orchestrator_wall_s": 16.79,
+      "peak_rss_bytes": 7537893376.0,
+      "peak_rss_unit": "MiB(normalized-from-legacy-KB)"
+    },
+    {
+      "cell_id": "pytorch-directml::qwen_vl_bf16_registered::query_text",
+      "harness": "pytorch-directml",
+      "model": "qwen_vl_bf16_registered",
+      "side": "query_text",
+      "status": "failed",
+      "stderr_tail": [
+        "Loading weights:   0%|          | 0/625 [00:00<?, ?it/s]",
+        "Loading weights: 100%|██████████| 625/625 [00:00<00:00, 8199.38it/s]",
+        "[F826 02:51:07.000000000 dml_util.cc:118] Invalid or unsupported data type BFloat16."
+      ],
+      "returncode": 3221226505,
+      "error_class": "DirectMLFatalAbort_BFloat16Unsupported",
+      "error_message": "DirectML fatal abort: Invalid or unsupported data type BFloat16 (torch-directml cannot execute bf16 ops)",
+      "error_signature_sha256": "c10b171bd89b725f231bd04f24de8ca70d058a294405dcc2373e2cd4cc32dce2",
+      "process_exit_code_hex": "0xc0000409",
+      "orchestrator_wall_s": 12.5
+    },
+    {
+      "cell_id": "pytorch-directml::qwen_vl_fp32_forced::query_text",
+      "harness": "pytorch-directml",
+      "model": "qwen_vl_fp32_forced",
+      "side": "query_text",
+      "device_resolved": "privateuseone:0",
+      "device_name": "AMD Radeon RX 6900 XT",
+      "dtype_requested": "torch.float32",
+      "load_s": 9.377,
+      "first_inference_ms": 308.9,
+      "query_latency_p50_ms": 73.55,
+      "query_throughput_text_per_s": 17.34,
+      "embed_dim_text": 2048,
+      "precision": "fp32(forced)",
+      "status": "ok",
+      "wall_s": 15.383,
+      "peak_rss_mb": 14897.2,
+      "rss_delta_mb": 15232480.0,
+      "orchestrator_wall_s": 18.49,
+      "peak_rss_bytes": 15620829184.0,
+      "peak_rss_unit": "MiB(normalized-from-legacy-KB)"
+    },
+    {
+      "cell_id": "pytorch-directml::qwen_vl_fp32_forced::embed",
+      "harness": "pytorch-directml",
+      "model": "qwen_vl_fp32_forced",
+      "side": "embed",
+      "status": "failed",
+      "error_class": "RuntimeError",
+      "error_message": "input must be 4-dimensional",
+      "error_origin": "conv.py:603 in _conv_forward",
+      "error_signature_sha256": "12c0f71585439dfdf203704686374f34ac3cb91464fce38ae0151a72987823f7",
+      "wall_s": 12.497,
+      "peak_rss_mb": 13135.3,
+      "rss_delta_mb": 13428444.0,
+      "orchestrator_wall_s": 15.25,
+      "peak_rss_bytes": 13773402112.0,
+      "peak_rss_unit": "MiB(normalized-from-legacy-KB)"
+    },
+    {
+      "cell_id": "pytorch-directml::text_bge_m3_pytorch::query_text",
+      "harness": "pytorch-directml",
+      "model": "text_bge_m3_pytorch",
+      "side": "query_text",
+      "status": "failed",
+      "error_class": "ValueError",
+      "error_message": "Due to a serious vulnerability issue in `torch.load`, even with `weights_only=True`, we now require users to upgrade torch to at least v2.6 in order to use the function. This version restriction does not apply when loading files with safetensors.",
+      "error_origin": "import_utils.py:1440 in check_torch_load_is_safe",
+      "error_signature_sha256": "124c75b4c425589c2afc59effdfd5947e52fd8da680e592c37864cec7cfb39ce",
+      "wall_s": 5.848,
+      "peak_rss_mb": 779.1,
+      "rss_delta_mb": 775628.0,
+      "orchestrator_wall_s": 7.57,
+      "peak_rss_bytes": 816967680.0,
+      "peak_rss_unit": "MiB(normalized-from-legacy-KB)"
+    },
+    {
+      "cell_id": "onnxruntime-cpu::text_bge_m3_onnx_local_artifact::query_text",
+      "harness": "onnxruntime-cpu",
+      "model": "text_bge_m3_onnx_local_artifact",
+      "side": "query_text",
+      "artifact": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\onnx\\model.onnx",
+      "session_create_s": 3.877,
+      "providers": [
+        "CPUExecutionProvider"
+      ],
+      "inputs": {
+        "input_ids": [
+          "batch_size",
+          "sequence_length"
+        ],
+        "attention_mask": [
+          "batch_size",
+          "sequence_length"
+        ]
+      },
+      "first_inference_ms": 155.4,
+      "query_latency_p50_ms": 22.36,
+      "query_throughput_text_per_s": 47.49,
+      "embed_dim_text": 1024,
+      "finite": true,
+      "precision": "fp32",
+      "pooling": "cls+l2norm",
+      "max_length": 1024,
+      "status": "ok",
+      "wall_s": 11.399,
+      "peak_rss_mb": 1870.4,
+      "rss_delta_mb": 1892796.0,
+      "orchestrator_wall_s": 13.2,
+      "peak_rss_bytes": 1961234432.0,
+      "peak_rss_unit": "MiB(normalized-from-legacy-KB)"
+    }
+  ],
+  "static_inventory": [
+    {
+      "candidate": "torch-directml inside primary .venv (any model)",
+      "eligible": false,
+      "status": "failed-not-runnable",
+      "error_class": "ImportError",
+      "evidence": "import torch_directml -> ImportError: DLL load failed while importing torch_directml_native: The specified procedure could not be found (torch-directml 0.2.5.dev240914 vs torch 2.8.0 in C:\\Users\\minhc\\Code\\Vecna\\.venv)"
+    },
+    {
+      "candidate": "onnxruntime DirectML EP (both venvs)",
+      "eligible": false,
+      "status": "not-installed-locally",
+      "error_class": null,
+      "evidence": ".venv has onnxruntime==1.27.0 with providers [AzureExecutionProvider, CPUExecutionProvider]; onnxruntime-directml not installed anywhere; installing it is a new dependency (out of scope)"
+    },
+    {
+      "candidate": "qwen_vl repo path in .venv-amd",
+      "eligible": false,
+      "status": "dependency-missing",
+      "error_class": null,
+      "evidence": "repo feature module imports qwen_vl_utils; .venv-amd does not have qwen_vl_utils installed; harness uses self-contained preprocessing instead"
+    },
+    {
+      "candidate": "registered BGE-M3 ONNX backend artifact (fp16 dense-only)",
+      "eligible": false,
+      "status": "artifact-absent-locally",
+      "error_class": null,
+      "evidence": "bge_onnx.py expects BAAI-bge-m3_fp16.onnx (hotchpotch/vespa-onnx-BAAI-bge-m3-only-dense); no such file found under C:\\Users\\minhc\\Code\\Vecna; downloading is prohibited by issue #62"
+    }
+  ]
+}
