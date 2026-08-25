@@ -1,0 +1,118 @@
+{
+  "policy_id": "issue61-decomposition-v1",
+  "status": "FROZEN",
+  "frozen_at_utc": "2026-08-25T18:20:30.000Z",
+  "revision_history": [
+    {
+      "rev": 1,
+      "at_utc": "2026-08-25T18:20:30.000Z",
+      "reason": "Pre-scoring defect found during freeze dry-run (NO search results seen): headless_benchmark.load_cases does not surface the declared metadata columns, so C2/C3/C4 could never fire. Fix: harness joins evidence_visual/evidence_ocr/evidence_asr/semantic_constraint_types/temporal_requirement from the SAME canonical CSV by query_id before classification. TRAKE rule reviewed against the corrected preview and kept verbatim-all-event-lines (bilingual VI+EN lines both retained; no editorializing). No fragment or routing change motivated by any retrieval outcome.",
+      "scoring_runs_before_revision": 0
+    }
+  ],
+  "input_enrichment": {
+    "note": "Declared metadata columns are joined from the canonical CSV by query_id inside the harness because hb.load_cases drops them.",
+    "columns": ["evidence_visual", "evidence_ocr", "evidence_asr", "semantic_constraint_types", "temporal_requirement"]
+  },
+  "frozen_before": "any Arm B (or Arm A confirmatory) scoring in this experiment",
+  "authority": "GitHub issue JimmyK300/Vecna#61 (parent #34)",
+  "nature": "Deterministic rule-based query decomposition for OFFLINE A/B measurement only. No LLM calls. No production integration. No result-dependent tuning.",
+  "allowed_inputs": [
+    "original Q0 query text (case['query']; hints ignored)",
+    "declared CSV category/modality fields: task_type, temporal_requirement, semantic_constraint_types, evidence_visual, evidence_ocr, evidence_asr, scoreable, evaluation_scope, query_mode"
+  ],
+  "forbidden": [
+    "LLM or any model-based subquery generation",
+    "free-form iterative rewriting",
+    "result-dependent prompt/policy tuning after seeing confirmatory outcomes",
+    "changes to retrieval/model/index/backend code or configs"
+  ],
+  "complexity_classifier": {
+    "purpose": "Route each current-scope text query to COMPLEX (decompose) or SIMPLE (identity control) before any search call.",
+    "rule": "COMPLEX iff any of C1..C4 hold; else SIMPLE.",
+    "C1": "task_type in {trake, qa}",
+    "C2": "temporal_requirement in {exact_boundary_multi_event, ordered_sequence, multi_scene_sequence, long_temporal_relation}",
+    "C3": "number of non-empty ';'-separated entries in semantic_constraint_types >= 5",
+    "C4": "evidence_ocr == 'strong' OR evidence_asr == 'strong'",
+    "simple_definition_note": "SIMPLE = single-scene KIS-style target: task tkis, temporal_requirement in {segment, segment_start, video}, no strong OCR/ASR evidence, <= 4 declared semantic constraint types. These form the 'decomposition adds no value' control group."
+  },
+  "fragment_derivation": {
+    "general": {
+      "sentence_splitting": "Normalize CRLF to LF; split into lines; strip empties; within each line split on (?<=[.!?])\\s+; keep order.",
+      "meta_sentence_drop": "A sentence is META iff it ends with '?' OR (it matches ^(find|h\\u00e3y t\\u00ecm|t\\u00ecm)\\s+(the\\s+)?(clip|video)\\b case-insensitive AND word count <= 12). META sentences are dropped from fragments (never from the Arm A full query).",
+      "texty_classifier": "A kept sentence is TEXTY iff it contains any digit OR contains a double-quote OR has >= 2 mid-sentence tokens starting with an uppercase letter (token regex [A-Za-z\\u00c0-\\u1ef9][\\w\\-']* ; the sentence-initial token never counts). Else VISUAL.",
+      "sanitization_all_fragments": "Replace '/' with ' ', replace backslash with ' ', collapse all whitespace runs to single spaces, strip. Rationale: p1_q06's raw text contains '/', which would route the call to the production temporal-chain path; sanitization guarantees every fragment call uses the same similarity code path as ordinary single-query calls. Arm A always receives the RAW query verbatim (production behavior)."
+    },
+    "trake_rule": {
+      "trigger": "task_type == 'trake'",
+      "steps": [
+        "Split query into stripped lines.",
+        "Event fragment = each line matching ^E\\s*\\d+\\s*[:.] case-insensitive, taken VERBATIM (label retained). Preamble/other lines are dropped.",
+        "If fewer than 2 event lines are found, fall through to generic_rule."
+      ],
+      "kind": "event",
+      "expected_effect_under_test": "Per-event subqueries instead of one diluted multi-event paragraph vector (issue #59 mechanism single_vector_multi_event_no_decomposition)."
+    },
+    "generic_rule": {
+      "trigger": "COMPLEX and not trake-with->=2-event-lines",
+      "steps": [
+        "Sentence-split; drop META sentences.",
+        "V = join of VISUAL sentences with single spaces; T = join of TEXTY sentences with single spaces.",
+        "If evidence_ocr == 'strong' OR evidence_asr == 'strong' OR task_type == 'qa': fragments = ([V] if V else []) + ([T] if T else []), kinds visual/text respectively.",
+        "Else: fragments = ([V] if V else []), kind visual. (Tests whether removing entity/fact clauses helps pure visual surfaces.)",
+        "Guard: if exactly one fragment was produced and its sanitized text equals the sanitized full query, mark derived='identity'; if any produced V/T fragment has < 3 words, discard fragments and fall back to identity."
+      ]
+    },
+    "simple_rule": {
+      "trigger": "SIMPLE complexity class",
+      "confirmatory_behavior": "IDENTITY: one fragment equal to the sanitized full Q0 text, kind 'identity', baseline routing. Arm B must therefore reproduce Arm A up to whitespace/separator normalization; deltas are expected to be exactly zero and verify the complexity gate.",
+      "diagnostic_behavior_predeclared": "Additionally run a FORCED DECOMPOSITION via generic_rule, recorded in armB-diagnostic-simple.jsonl with status diagnostic_forced_decomposition. Excluded from all headline deltas; used only for the value/harm control report. Declared here BEFORE any scoring."
+    },
+    "unscoreable_cases": "Cases with scoreable=false (p1_q22) run Arm A and Arm B identity for latency parity only; never scored."
+  },
+  "routing": {
+    "principle": "Tool-appropriate surface per fragment kind, using ONLY existing searcher parameters. All other parameters identical to Arm A in every call.",
+    "event": {"ocr_weight": 0.0, "asr_weight": 0.0, "rationale": "CLIP/SigLIP/Qwen visual surfaces only; matches declared evidence_visual strength for TRAKE events."},
+    "visual": {"ocr_weight": 0.0, "asr_weight": 0.0, "rationale": "Same as event: visual-scene fragment served to visual surfaces."},
+    "text": {"ocr_weight": 0.25, "asr_weight": 0.25, "rationale": "Baseline weights kept (no re-weighting confound); OCR/ASR sparse channels active. The visual channel also embeds this fragment because the existing API cannot suppress it; recorded as an approximation."},
+    "identity": {"ocr_weight": 0.25, "asr_weight": 0.25, "rationale": "Exact replica of the Arm A call."},
+    "fixed_params_all_calls": {"top_k": 20, "nprobe": 32, "temporal_k": 2000, "max_interval": 1000, "auto_translate": false, "en_to_vi_translate": false, "rerank": false, "features": ["image_clip_pe-l-14-336", "image_siglip_so400m-384", "qwen_vl"]}
+  },
+  "fusion": {
+    "algorithm": "Reciprocal Rank Fusion, frozen k=60",
+    "score_formula": "score(d) = sum over fragments of 1/(60 + rank_f(d)) where rank_f is d's 1-based position in fragment f's top-20 normalized list",
+    "dedup": "by (video_id, frame_id); first occurrence (highest fused score; ties broken by earlier fragment index, then lower rank within that fragment)",
+    "output_depth": 20,
+    "scoring": "Fused list scored against the ORIGINAL case ground truth via headless_benchmark.metrics_for_results (official tolerance contract, provisional tier). The original full query is preserved for final evaluation; it is never replaced in scoring."
+  },
+  "execution_protocol": {
+    "order": "One discarded warmup call (first scoreable case, Arm A params). Then per query, interleaved: Arm A call(s), then Arm B confirmatory call(s), then Arm B diagnostic if pre-declared. Balances cache drift across arms.",
+    "same_searcher_instance": true,
+    "determinism_probe": "After the main loop, re-run Arm A for the first two scoreable query ids and compare ranking fingerprints (video#frame sequence at depth 20) against the main-loop results; record match booleans.",
+    "latency_accounting": "Per-call latency_ms recorded per fragment. Arm B reports latency_ms = max(fragment latencies) (critical path) and sum_fragment_latency_ms (sequential cost). extra_calls = n_fragments - 1."
+  },
+  "failure_taxonomy_rules_frozen": {
+    "hit": "first_correct_rank is not None and <= 20 under official tolerance.",
+    "on_miss_assign": [
+      "knowledge_bridge_requires_llm IF 'world_knowledge_bridge' appears in semantic_constraint_types (pre-declared: rule-based policy cannot resolve knowledge clues like Spielberg-1975 -> Jaws -> shark).",
+      "correct_result_outside_top20 ALWAYS on miss (literal, mirrors issue58 convention)."
+    ],
+    "additional_flags_on_miss": [
+      "temporal_understanding_required IF temporal_requirement in {exact_boundary_multi_event, ordered_sequence, multi_scene_sequence, long_temporal_relation}",
+      "poor_frame_sampling IF nearest_gold_delta_seconds is not None and > 10.0",
+      "gold_video_absent_from_top20 fact recorded when no top-20 entry shares the gold video id"
+    ],
+    "thresholds": {"high_latency_or_timeout_ms": 60000, "timestamp_alignment_near_s": 10.0}
+  },
+  "metrics_contract": {
+    "headline": ["mean_recall_at_1", "mean_recall_at_5", "mean_recall_at_10", "mean_recall_at_20", "mrr_at_20 (= mean reciprocal_rank)", "no_hit_within_20_count"],
+    "separate_reporting": ["TRAKE video-level vs event-candidate metrics", "QA evidence retrieval", "per-complexity-class", "per-task-type", "simple-control value/harm"],
+    "ground_truth_tier": "provisional (source_text_verified_needs_corpus_validation); absolute numbers carry this caveat"
+  },
+  "recommendation_mapping_frozen": {
+    "no_benefit": "Complex-group Recall@20 delta <= +0.05 AND MRR@20 delta <= +0.03, or deltas negative.",
+    "conditional_benefit": "Positive complex-group gains concentrated in a declared slice (e.g., TRAKE event coverage) without harming other slices beyond noise (-0.05 R@20 / -0.03 MRR), OR simple-control shows harm that gating avoids.",
+    "strong_benefit": "Complex-group Recall@20 delta >= +0.15 AND MRR@20 delta >= +0.08 with no simple-control harm in the gated policy.",
+    "note": "Small n (22 queries, 21 scoreable, provisional GT): any recommendation below strong_benefit cannot justify production integration without owner-side GT validation."
+  }
+}

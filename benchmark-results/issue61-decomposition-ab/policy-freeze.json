@@ -1,0 +1,803 @@
+{
+  "manifest_version": "issue61-freeze-v1",
+  "created_at_utc": "2026-08-25T18:12:12.625168+00:00",
+  "policy_id": "issue61-decomposition-v1",
+  "policy_json_sha256": "94db843a6b4e8748c158fd91cec77d2bcc60be673fe9387f798501f3852dc71c",
+  "policy_md_sha256": "fee39aa56e196249292f5598947a43e89afe031e34c95f473b3ab5abff3a47b8",
+  "derivation_preview_sha256": "4a5f71c118d9c96beebd5832763fb1344b1cdacbcd4ceb76115a17a6ec8ed8dd",
+  "query_count": 22,
+  "plan": [
+    {
+      "query_id": "p1_q01",
+      "task_type": "tkis",
+      "scoreable": true,
+      "complexity_class": "complex",
+      "complexity_reasons": [
+        "C4"
+      ],
+      "confirmatory_mode": "generic",
+      "confirmatory_derivation": "generic_rule.visual_plus_text",
+      "fragments": [
+        {
+          "index": 0,
+          "kind": "visual",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "Đây là một giống hổ quý hiếm This is a rare species of tiger."
+        },
+        {
+          "index": 1,
+          "kind": "text",
+          "routing": {
+            "ocr_weight": 0.25,
+            "asr_weight": 0.25
+          },
+          "text": "Mẩu tin giới thiệu về đàn hổ tại một địa phương ở miền Nam vừa có thêm khoảng 3-6 con hổ con. The news report mentioned that a tiger colony in a southern locality had recently welcomed 3-6 cubs."
+        }
+      ],
+      "diagnostic_plan": null
+    },
+    {
+      "query_id": "p1_q02",
+      "task_type": "trake",
+      "scoreable": true,
+      "complexity_class": "complex",
+      "complexity_reasons": [
+        "C1",
+        "C2"
+      ],
+      "confirmatory_mode": "trake_events",
+      "confirmatory_derivation": "trake_rule",
+      "fragments": [
+        {
+          "index": 0,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E1: Khoảnh khắc đầu tiên bột được bỏ vào tô măng tây."
+        },
+        {
+          "index": 1,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E2: Khoảnh khắc đầu tiên thấy miến măng tây đầu tiên tiếp xúc với dầu trong chảo."
+        },
+        {
+          "index": 2,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E3: Khoảnh khắc miếng măng tây đầu tiên rời khỏi chảo dầu."
+        },
+        {
+          "index": 3,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E4: Khoảng khắc miếng măng tây cuối cùng rời chảo dầu và nằm hoàn toàn trên dĩa."
+        },
+        {
+          "index": 4,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E1: The first moment the batter is added to the asparagus bowl."
+        },
+        {
+          "index": 5,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E2: The first moment the first asparagus spear touches the oil in the pan."
+        },
+        {
+          "index": 6,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E3: The moment the first asparagus spear leaves the pan of oil."
+        },
+        {
+          "index": 7,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E4: The moment the last asparagus spear leaves the pan of oil and rests completely on the plate."
+        }
+      ],
+      "diagnostic_plan": null
+    },
+    {
+      "query_id": "p1_q03",
+      "task_type": "tkis",
+      "scoreable": true,
+      "complexity_class": "complex",
+      "complexity_reasons": [
+        "C3"
+      ],
+      "confirmatory_mode": "identity_derived",
+      "confirmatory_derivation": "generic_rule.visual_only.identity",
+      "fragments": [
+        {
+          "index": 0,
+          "kind": "identity",
+          "routing": {
+            "ocr_weight": 0.25,
+            "asr_weight": 0.25
+          },
+          "text": "Đoạn clip cần tìm là cảnh hai người phụ nữ đang cho dê ăn: một người mặc áo thun trắng quàng áo đỏ trên vai, người kia mặc áo dài tay kẻ sọc tím truyền thống. Cả hai đều mỉm cười, tỏ vẻ thích thú. Không gian trại rộng rãi, có mái che bằng tôn và hàng rào gỗ chia thành nhiều dãy chuồng, trong đó có hàng dài dê được nuôi nhốt. The clip we're looking for shows two women feeding goats: one wearing a white t-shirt with a red shawl draped over her shoulders, the other a traditional purple striped long-sleeved shirt. Both are smiling, appearing to be enjoying themselves. The farm is spacious, with a corrugated iron roof and wooden fences dividing it into several rows of pens, in which long lines of goats are kept."
+        }
+      ],
+      "diagnostic_plan": null
+    },
+    {
+      "query_id": "p1_q04",
+      "task_type": "tkis",
+      "scoreable": true,
+      "complexity_class": "simple",
+      "complexity_reasons": [],
+      "confirmatory_mode": "identity_control",
+      "confirmatory_derivation": "simple_rule.identity",
+      "fragments": [
+        {
+          "index": 0,
+          "kind": "identity",
+          "routing": {
+            "ocr_weight": 0.25,
+            "asr_weight": 0.25
+          },
+          "text": "Đoạn clip cần tìm bắt đầu bằng cảnh 1 người đầu bếp đặt đang đặt món gỏi cuốn chay bày trên đĩa, nhân gồm rau xanh cuộn tròn và đậu hũ, gói trong bánh tráng màu vàng và tím. Đĩa được trang trí thêm lá xanh và hoa pansy tím-vàng, tạo cảm giác thanh mát và tinh tế. The clip we're looking for begins with a chef arranging vegetarian spring rolls on a plate. The filling consists of rolled green vegetables and tofu, wrapped in yellow and purple rice paper. The plate is decorated with green leaves and purple-yellow pansies, creating a refreshing and delicate feel."
+        }
+      ],
+      "diagnostic_plan": {
+        "mode": "forced_decomposition_generic",
+        "fragments": [
+          {
+            "index": 0,
+            "kind": "visual",
+            "routing": {
+              "ocr_weight": 0.0,
+              "asr_weight": 0.0
+            },
+            "text": "Đĩa được trang trí thêm lá xanh và hoa pansy tím-vàng, tạo cảm giác thanh mát và tinh tế. The clip we're looking for begins with a chef arranging vegetarian spring rolls on a plate. The filling consists of rolled green vegetables and tofu, wrapped in yellow and purple rice paper. The plate is decorated with green leaves and purple-yellow pansies, creating a refreshing and delicate feel."
+          }
+        ]
+      }
+    },
+    {
+      "query_id": "p1_q05",
+      "task_type": "tkis",
+      "scoreable": true,
+      "complexity_class": "simple",
+      "complexity_reasons": [],
+      "confirmatory_mode": "identity_control",
+      "confirmatory_derivation": "simple_rule.identity",
+      "fragments": [
+        {
+          "index": 0,
+          "kind": "identity",
+          "routing": {
+            "ocr_weight": 0.25,
+            "asr_weight": 0.25
+          },
+          "text": "Đoạn clip cần tìm là cảnh quay trong một khu rừng, dưới gốc cây to với nhiều lá khô phủ đầy mặt đất. Nổi bật ở cận cảnh là một chú chim có bộ lông đen ánh xanh ở đầu và thân trên, còn cánh và lưng màu nâu đỏ. Đôi mắt chim đỏ rực, tạo điểm nhấn rõ ràng. Đây là loài chim thường thấy ở vùng Nam Bộ Việt Nam. The clip we're looking for shows a scene in a forest, under a large tree with many dry leaves covering the ground. Prominently featured in the close-up is a bird with black and bluish feathers on its head and upper body, and reddish-brown wings and back. Its bright red eyes create a striking contrast. This is a species of bird commonly found in the southern regions of Vietnam."
+        }
+      ],
+      "diagnostic_plan": {
+        "mode": "forced_decomposition_generic",
+        "fragments": [
+          {
+            "index": 0,
+            "kind": "visual",
+            "routing": {
+              "ocr_weight": 0.0,
+              "asr_weight": 0.0
+            },
+            "text": "Đoạn clip cần tìm là cảnh quay trong một khu rừng, dưới gốc cây to với nhiều lá khô phủ đầy mặt đất. Nổi bật ở cận cảnh là một chú chim có bộ lông đen ánh xanh ở đầu và thân trên, còn cánh và lưng màu nâu đỏ. Đôi mắt chim đỏ rực, tạo điểm nhấn rõ ràng. The clip we're looking for shows a scene in a forest, under a large tree with many dry leaves covering the ground. Prominently featured in the close-up is a bird with black and bluish feathers on its head and upper body, and reddish-brown wings and back. Its bright red eyes create a striking contrast. This is a species of bird commonly found in the southern regions of Vietnam."
+          }
+        ]
+      }
+    },
+    {
+      "query_id": "p1_q06",
+      "task_type": "tkis",
+      "scoreable": true,
+      "complexity_class": "simple",
+      "complexity_reasons": [],
+      "confirmatory_mode": "identity_control",
+      "confirmatory_derivation": "simple_rule.identity",
+      "fragments": [
+        {
+          "index": 0,
+          "kind": "identity",
+          "routing": {
+            "ocr_weight": 0.25,
+            "asr_weight": 0.25
+          },
+          "text": "Đoạn video về một lễ hội ẩm thực Nhật Bản lớn nhất thế giới. Hãy tìm chính xác phân cảnh một cô bé đeo một con bạch tuộc con mực màu đỏ phía trước ngực. Trên tay cô bé có cầm một chiếc túi giấy. This video is of the world's largest Japanese food festival. Find the exact scene where a little girl is wearing a red octopus squid on her chest. She is holding a paper bag in her hand."
+        }
+      ],
+      "diagnostic_plan": {
+        "mode": "forced_decomposition_generic",
+        "fragments": [
+          {
+            "index": 0,
+            "kind": "visual",
+            "routing": {
+              "ocr_weight": 0.0,
+              "asr_weight": 0.0
+            },
+            "text": "Hãy tìm chính xác phân cảnh một cô bé đeo một con bạch tuộc con mực màu đỏ phía trước ngực. Trên tay cô bé có cầm một chiếc túi giấy. This video is of the world's largest Japanese food festival. Find the exact scene where a little girl is wearing a red octopus squid on her chest. She is holding a paper bag in her hand."
+          }
+        ]
+      }
+    },
+    {
+      "query_id": "p1_q07",
+      "task_type": "tkis",
+      "scoreable": true,
+      "complexity_class": "simple",
+      "complexity_reasons": [],
+      "confirmatory_mode": "identity_control",
+      "confirmatory_derivation": "simple_rule.identity",
+      "fragments": [
+        {
+          "index": 0,
+          "kind": "identity",
+          "routing": {
+            "ocr_weight": 0.25,
+            "asr_weight": 0.25
+          },
+          "text": "Đoạn clip là cảnh thu hoạch dứa ở miền Tây: một bà cụ ngồi bên giỏ dứa trò chuyện với cô gái mặc áo hồng quàng khăn rằn; xung quanh chất đầy dứa, phía sau có người phụ nữ đội nón lá cầm trái dứa và một chiếc ghe xanh đậu cạnh bờ, tạo không khí nông thôn mộc mạc, yên bình. The clip depicts a pineapple harvest in the Mekong Delta: an elderly woman sits beside a basket of pineapples, chatting with a young girl in a pink shirt and checkered scarf; pineapples are piled high around them, and behind them, a woman wearing a conical hat holds a pineapple, while a green boat is moored by the shore, creating a rustic and peaceful rural atmosphere."
+        }
+      ],
+      "diagnostic_plan": {
+        "mode": "forced_decomposition_generic",
+        "fragments": [
+          {
+            "index": 0,
+            "kind": "visual",
+            "routing": {
+              "ocr_weight": 0.0,
+              "asr_weight": 0.0
+            },
+            "text": "Đoạn clip là cảnh thu hoạch dứa ở miền Tây: một bà cụ ngồi bên giỏ dứa trò chuyện với cô gái mặc áo hồng quàng khăn rằn; xung quanh chất đầy dứa, phía sau có người phụ nữ đội nón lá cầm trái dứa và một chiếc ghe xanh đậu cạnh bờ, tạo không khí nông thôn mộc mạc, yên bình."
+          }
+        ]
+      }
+    },
+    {
+      "query_id": "p1_q08",
+      "task_type": "tkis",
+      "scoreable": true,
+      "complexity_class": "complex",
+      "complexity_reasons": [
+        "C3"
+      ],
+      "confirmatory_mode": "generic",
+      "confirmatory_derivation": "generic_rule.visual_only",
+      "fragments": [
+        {
+          "index": 0,
+          "kind": "visual",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "Tìm chính xác đoạn clip ngắn có ba người (hai phụ nữ và một nam giới) đang ngồi cạnh nhau, tập trung chơi nhạc cụ kim loại có dạng tròn, rỗng, với các vết lõm để tạo ra âm thanh khi gõ tay. Bối cảnh phía sau là một kệ sách nhiều ngăn, xếp đầy sách với nhiều màu sắc Find the exact short clip showing three people (two women and one man) sitting together, focusing on playing a round, hollow metal instrument with indentations to produce sound when tapped. One person wearing a white shirt is sitting between the two people wearing black shirts. In the background is a multi-tiered bookshelf filled with books of various colors."
+        }
+      ],
+      "diagnostic_plan": null
+    },
+    {
+      "query_id": "p1_q09",
+      "task_type": "tkis",
+      "scoreable": true,
+      "complexity_class": "complex",
+      "complexity_reasons": [
+        "C3"
+      ],
+      "confirmatory_mode": "identity_derived",
+      "confirmatory_derivation": "generic_rule.visual_only.identity",
+      "fragments": [
+        {
+          "index": 0,
+          "kind": "identity",
+          "routing": {
+            "ocr_weight": 0.25,
+            "asr_weight": 0.25
+          },
+          "text": "Trong đoạn clip có là một chàng trai đội mũ lưỡi trai đen, mặc áo thun trắng có dòng chữ tiếng Anh, đang ngồi cạnh một chiếc hộp. Trên hộp, anh sắp xếp nhiều mảnh bìa cắt rời với hình thù ngẫu nhiên. Nhờ ánh sáng chiếu từ một phía, các mảnh bìa đó đổ bóng lên tường, tạo thành hình chân dung một người đàn ông với khuôn mặt rõ nét, tóc vuốt gọn và mặc vest. The clip shows a young man wearing a black baseball cap and a white t-shirt with English lettering, sitting next to a box. On the box, he has arranged many randomly shaped pieces of cardboard. Thanks to the light shining from one side, these pieces of cardboard cast shadows on the wall, creating a portrait of a man with a clear face, neatly styled hair, and wearing a suit."
+        }
+      ],
+      "diagnostic_plan": null
+    },
+    {
+      "query_id": "p1_q10",
+      "task_type": "tkis",
+      "scoreable": true,
+      "complexity_class": "complex",
+      "complexity_reasons": [
+        "C2"
+      ],
+      "confirmatory_mode": "generic",
+      "confirmatory_derivation": "generic_rule.visual_only",
+      "fragments": [
+        {
+          "index": 0,
+          "kind": "visual",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "Đoạn video mô tả cảnh trang trí bánh rán. Phân cảnh bắt đầu là một chiếc đĩa sứ màu trắng nằm trên một khay gỗ hình chữ nhật. Ngoài ra, bên cạnh đĩa sứ còn có một chén sứ nhỏ màu trắng đựng chuối đã được cắt sẵn và một cái thìa nhỏ màu nâu. Bước đầu tiên là việc rưới chocolate lên trên mặt bánh. Sau đó, đầu bếp đặt các lát chuối lên trên một chiếc bánh rán, chiếc còn lại được đặt các lát dâu tây lên. The video depicts the decorating of donuts. The scene begins with a white ceramic plate on a rectangular wooden tray. Next to the plate is a bowl containing a few strawberries, but two have fallen out. Also next to the plate is a small white ceramic bowl containing sliced ​​bananas and a small brown spoon. The next scene shows the chef placing two donuts on the ceramic plate and beginning to decorate them. The first step is to drizzle chocolate over the donuts. Then, the chef places slices of banana on one donut and slices of strawberries on the other."
+        }
+      ],
+      "diagnostic_plan": null
+    },
+    {
+      "query_id": "p1_q11",
+      "task_type": "tkis",
+      "scoreable": true,
+      "complexity_class": "complex",
+      "complexity_reasons": [
+        "C2"
+      ],
+      "confirmatory_mode": "identity_derived",
+      "confirmatory_derivation": "generic_rule.visual_only.identity",
+      "fragments": [
+        {
+          "index": 0,
+          "kind": "identity",
+          "routing": {
+            "ocr_weight": 0.25,
+            "asr_weight": 0.25
+          },
+          "text": "Đoạn video mô tả một người ngồi vệ sinh máy ảnh. Công đoạn này bắt đầu bằng việc tháo rời máy ảnh. Tiếp theo, chiếc ống kính đã được tháo rời và được đặt ngay ngắn trên một chiếc khăn màu tím hồng. Phân cảnh cuối cùng là vệ sinh ống kính (lens) bằng một chiếc tăm bông. The video shows a person cleaning a camera. The process begins with disassembling the camera. Next, the lens is detached and placed neatly on a pinkish-purple cloth. The final scene shows cleaning the lens with a cotton swab."
+        }
+      ],
+      "diagnostic_plan": null
+    },
+    {
+      "query_id": "p1_q12",
+      "task_type": "tkis",
+      "scoreable": true,
+      "complexity_class": "complex",
+      "complexity_reasons": [
+        "C2",
+        "C3"
+      ],
+      "confirmatory_mode": "generic",
+      "confirmatory_derivation": "generic_rule.visual_only",
+      "fragments": [
+        {
+          "index": 0,
+          "kind": "visual",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "Đoạn clip bắt đầu với cảnh một tác phẩm điêu khắc cát hoành tráng tại Lễ hội điêu khắc trên cát. Tác phẩm mô tả cảnh những thanh niên chơi thể thao đường phố: một người trượt patin, hai người trượt ván Nền phía sau là họa tiết vòm cong lớn và có khắc chữ. The sculpture depicts young people playing street sports: one roller skater, two skateboarders. The background features a large arched pattern with engraved lettering. This is followed by scenes of several other sand sculptures, and two columns of pink smoke."
+        }
+      ],
+      "diagnostic_plan": null
+    },
+    {
+      "query_id": "p1_q13",
+      "task_type": "qa",
+      "scoreable": true,
+      "complexity_class": "complex",
+      "complexity_reasons": [
+        "C1",
+        "C4"
+      ],
+      "confirmatory_mode": "generic",
+      "confirmatory_derivation": "generic_rule.visual_plus_text",
+      "fragments": [
+        {
+          "index": 0,
+          "kind": "visual",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "Đoạn video về một chương trình từ thiện của một câu lạc bộ tên là FANA. (tại thời điểm đó) This video shows a charity program by a club called FANA."
+        },
+        {
+          "index": 1,
+          "kind": "text",
+          "routing": {
+            "ocr_weight": 0.25,
+            "asr_weight": 0.25
+          },
+          "text": "Trong đoạn video có thể thấy câu lạc bộ này đang đi trao quà tại một xã thuộc tỉnh Khánh Hòa. The video shows the club distributing gifts in a commune in Khanh Hoa province."
+        }
+      ],
+      "diagnostic_plan": null
+    },
+    {
+      "query_id": "p1_q14",
+      "task_type": "trake",
+      "scoreable": true,
+      "complexity_class": "complex",
+      "complexity_reasons": [
+        "C1",
+        "C2"
+      ],
+      "confirmatory_mode": "trake_events",
+      "confirmatory_derivation": "trake_rule",
+      "fragments": [
+        {
+          "index": 0,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E1: Lân quay vòng trên cột số 4 bằng 2 chân trước rồi tiếp đất. Khoảnh khắc đầu tiên mà lân bắt đầu xoay vòng."
+        },
+        {
+          "index": 1,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E2: Khoảnh khắc 4 chân hoàn toàn chạm đất đầu tiên."
+        },
+        {
+          "index": 2,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E3: Khoảnh khắc đầu tiên 2 người biểu diễn lân cuối chào ban giám khảo."
+        },
+        {
+          "index": 3,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E4: Sau đó lân tiến lại chào một con rồng. Khoảnh khắc đầu tiên con rồng cử động đầu."
+        },
+        {
+          "index": 4,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E1: The lion spins around pole number 4 on its two front legs before landing. The first moment the lion begins to spin."
+        },
+        {
+          "index": 5,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E2: The first moment all four legs completely touch the ground."
+        },
+        {
+          "index": 6,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E3: The first moment the two lion dancers bow to the judges."
+        },
+        {
+          "index": 7,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E4: Then the lion approaches and bows to a dragon. The first moment the dragon moves its head."
+        }
+      ],
+      "diagnostic_plan": null
+    },
+    {
+      "query_id": "p1_q15",
+      "task_type": "tkis",
+      "scoreable": true,
+      "complexity_class": "complex",
+      "complexity_reasons": [
+        "C3",
+        "C4"
+      ],
+      "confirmatory_mode": "generic",
+      "confirmatory_derivation": "generic_rule.visual_plus_text",
+      "fragments": [
+        {
+          "index": 0,
+          "kind": "visual",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "Trong cảnh có hai người đàn ông (mặc áo sơ mi hồng và sơ mi trắng) đứng hai bên, đại diện ban tổ chức. Ở giữa là bốn em nhỏ và thiếu niên, trong đó có em mặc áo đỏ, em mặc áo trắng, em mặc váy hồng và em mặc áo xanh. Trước mặt mỗi em là túi quà lớn mang logo y tế. Phía sau là phông nền màu đỏ với khẩu hiệu đón xuân và thông tin sự kiện. Two men (one wearing a pink shirt and the other a white shirt) stand on either side, representing the organizing committee. In the middle are four children and teenagers, one wearing a red shirt, another a white shirt, one a pink dress, and one a blue shirt. Behind them is a red backdrop with a spring greeting slogan and event information."
+        },
+        {
+          "index": 1,
+          "kind": "text",
+          "routing": {
+            "ocr_weight": 0.25,
+            "asr_weight": 0.25
+          },
+          "text": "Đoạn video trong buổi trao quà từ thiện diễn ra tại 1 bệnh viện trong dịp Xuân 2024. Các em được trao bảng tượng trưng với nội dung “Chương trình: Trao kinh phí hỗ trợ cho trẻ em mồ côi do dịch COVID-19”. The video shows a charity gift-giving event at a hospital during the Spring Festival of 2024. They are presented with symbolic plaques that read, \"Program: Providing financial support to orphaned children affected by COVID-19.\" Each child holds a large gift bag bearing the medical logo."
+        }
+      ],
+      "diagnostic_plan": null
+    },
+    {
+      "query_id": "p1_q16",
+      "task_type": "trake",
+      "scoreable": true,
+      "complexity_class": "complex",
+      "complexity_reasons": [
+        "C1",
+        "C2"
+      ],
+      "confirmatory_mode": "trake_events",
+      "confirmatory_derivation": "trake_rule",
+      "fragments": [
+        {
+          "index": 0,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E1: Khoảnh khắc đầu tiên thấy cắt nấm."
+        },
+        {
+          "index": 1,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E2: Khoảnh khắc đầu tiên cắt củ năng."
+        },
+        {
+          "index": 2,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E2: Khoảnh khắc đầu tiên cắt đậu hủ."
+        },
+        {
+          "index": 3,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E4: Khoảnh khắc chảo đặt lên bếp, đầu bếp mở lửa và thấy lửa bắt đầu xuất hiện"
+        },
+        {
+          "index": 4,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E1: The first moment of cutting the mushrooms."
+        },
+        {
+          "index": 5,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E2: The first moment of cutting the water chestnuts."
+        },
+        {
+          "index": 6,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E3: The first moment of cutting the tofu."
+        },
+        {
+          "index": 7,
+          "kind": "event",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "E4: The moment the pan is placed on the stove, the chef turns on the heat and the flames begin to appear."
+        }
+      ],
+      "diagnostic_plan": null
+    },
+    {
+      "query_id": "p1_q17",
+      "task_type": "qa",
+      "scoreable": true,
+      "complexity_class": "complex",
+      "complexity_reasons": [
+        "C1",
+        "C4"
+      ],
+      "confirmatory_mode": "generic",
+      "confirmatory_derivation": "generic_rule.visual_plus_text",
+      "fragments": [
+        {
+          "index": 0,
+          "kind": "text",
+          "routing": {
+            "ocr_weight": 0.25,
+            "asr_weight": 0.25
+          },
+          "text": "Trong đoạn video có 2 câu thơ của một nhà thơ ca ngợi anh hùng Nguyễn Trung Trực trong đình thần Nguyễn Trung Trực tại Kiên Giang. The video features two verses by a poet praising the hero Nguyen Trung Truc at the Nguyen Trung Truc shrine in Kien Giang."
+        }
+      ],
+      "diagnostic_plan": null
+    },
+    {
+      "query_id": "p1_q18",
+      "task_type": "tkis",
+      "scoreable": true,
+      "complexity_class": "complex",
+      "complexity_reasons": [
+        "C3"
+      ],
+      "confirmatory_mode": "generic",
+      "confirmatory_derivation": "generic_rule.visual_only",
+      "fragments": [
+        {
+          "index": 0,
+          "kind": "visual",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "Mỗi ly panna cotta có lớp kem mịn màu trắng ngà, bên trên trang trí vài lát nho đỏ, thêm lá bạc hà xanh tạo điểm nhấn tươi mát. Bên cạnh trên đĩa còn có hai bông hoa ăn được (màu đỏ và vàng) để tăng phần đẹp mắt. On a white round plate is one panna cotta. A hand then places two more panna cottas onto the plate. Each panna cotta has a smooth, creamy white base, topped with slices of red grapes and a fresh green mint leaf. Beside each panna cotta are two edible flowers (red and yellow) for added visual appeal."
+        }
+      ],
+      "diagnostic_plan": null
+    },
+    {
+      "query_id": "p1_q19",
+      "task_type": "tkis",
+      "scoreable": true,
+      "complexity_class": "complex",
+      "complexity_reasons": [
+        "C4"
+      ],
+      "confirmatory_mode": "generic",
+      "confirmatory_derivation": "generic_rule.visual_plus_text",
+      "fragments": [
+        {
+          "index": 0,
+          "kind": "visual",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "The clip shows a coastal town attracting curious tourists thanks to a dangerous marine animal."
+        },
+        {
+          "index": 1,
+          "kind": "text",
+          "routing": {
+            "ocr_weight": 0.25,
+            "asr_weight": 0.25
+          },
+          "text": "Đoạn clip về 1 thị trấn ven biển thu hút du khách hiếu kỳ nhờ 1 loài động vật biển nguy hiểm. Loài động vật này nổi tiếng trong 1 bộ phim của đạo diễn Steven Spielberg được sản xuất vào năm 1975 This animal became famous in a 1975 film directed by Steven Spielberg."
+        }
+      ],
+      "diagnostic_plan": null
+    },
+    {
+      "query_id": "p1_q20",
+      "task_type": "tkis",
+      "scoreable": true,
+      "complexity_class": "complex",
+      "complexity_reasons": [
+        "C3"
+      ],
+      "confirmatory_mode": "generic",
+      "confirmatory_derivation": "generic_rule.visual_only",
+      "fragments": [
+        {
+          "index": 0,
+          "kind": "visual",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "Đoạn video về tường thuật một cuộc đua xe đạp. Tìm phân cảnh với góc quay trực diện từ trên cao xuống dõi theo các tay đua. Tay đua đầu tiên đội nón trắng, tay đua thứ hai đội nón đỏ và tay đua cuối cùng đội nón đen. The video depicts a cycling race. Find the scene with a direct overhead shot following the riders. The frame shows three riders cycling in a straight line. All three riders are from the same team, wearing white shirts and yellow and green shorts. The first rider wears a white cap, the second a red cap, and the last a black cap."
+        }
+      ],
+      "diagnostic_plan": null
+    },
+    {
+      "query_id": "p1_q21",
+      "task_type": "tkis",
+      "scoreable": true,
+      "complexity_class": "complex",
+      "complexity_reasons": [
+        "C2"
+      ],
+      "confirmatory_mode": "identity_derived",
+      "confirmatory_derivation": "generic_rule.visual_only.identity",
+      "fragments": [
+        {
+          "index": 0,
+          "kind": "identity",
+          "routing": {
+            "ocr_weight": 0.25,
+            "asr_weight": 0.25
+          },
+          "text": "Tìm một đoạn video đua xe đạp, góc quay từ flycam trên cao, một vận động viên mặc áo xanh dương, trắng đang vượt ba vận động viên khác và lên vị trí dẫn đầu. Biết sau đó vận động viên này dẫn đầu suốt đoạn đường còn lại đến đích."
+        }
+      ],
+      "diagnostic_plan": null
+    },
+    {
+      "query_id": "p1_q22",
+      "task_type": "qa",
+      "scoreable": false,
+      "complexity_class": "complex",
+      "complexity_reasons": [
+        "C1",
+        "C4"
+      ],
+      "confirmatory_mode": "generic",
+      "confirmatory_derivation": "generic_rule.visual_plus_text",
+      "fragments": [
+        {
+          "index": 0,
+          "kind": "visual",
+          "routing": {
+            "ocr_weight": 0.0,
+            "asr_weight": 0.0
+          },
+          "text": "Đoạn video về một người phụ nữ dạy nấu ăn cho những người khác."
+        },
+        {
+          "index": 1,
+          "kind": "text",
+          "routing": {
+            "ocr_weight": 0.25,
+            "asr_weight": 0.25
+          },
+          "text": "Trong đoạn video có thể thấy một người đang cầm công thức món ăn với nguyên liệu chính là 200g thịt nạc xay."
+        }
+      ],
+      "diagnostic_plan": null
+    }
+  ]
+}

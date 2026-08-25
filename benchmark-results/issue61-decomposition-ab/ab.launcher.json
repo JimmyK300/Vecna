@@ -1,0 +1,41 @@
+{
+  "packet": "issue61-decomposition-ab",
+  "purpose": "Frozen A/B experiment: rule-based query decomposition vs full query (issue #61)",
+  "started_at": "2026-08-25T18:15:01.508821+00:00",
+  "launcher_path": "C:\\Users\\minhc\\Documents\\Codex\\2026-08-25\\turn-on-actions-runner\\worktrees\\vecna-issue-61\\aic51-src\\script\\run_issue61_decomposition_ab.py",
+  "launcher_sha256": "258c53126ad3ce7dd4621a37f43078d8ecafec24c362b82112376023f3e0ae6f",
+  "python": "C:\\Users\\minhc\\Code\\Vecna\\.venv\\Scripts\\python.exe",
+  "pythondontwritebytecode": true,
+  "primary_root": "C:\\Users\\minhc\\Code\\Vecna",
+  "primary_runtime_inputs": {
+    "config_yaml_sha256": "d8a5fbc1ec0eff59e6beb134656c9449c9bb0eab264f8639653cc31f893adba8",
+    "headless_benchmark_sha256": "39d4196b16f191dc7eda9749b28ce76d8acd776eeed2b34892e312c01b1d6233",
+    "runner_sha256": "fb758833989dd17393a07a1e187dd5344bb86cdd77f197c234d01b63e5b15f12",
+    "queries_csv_sha256": "b732a623deba352db037bcb8acb5f99923ba9cd01e761ad3f4417307de42057c",
+    "fps_csv_sha256": "c2747dde734b50a7e9f4d25b0f743142bc7cbe38b34a03944fcd2b934e6d5b83"
+  },
+  "canonical_content_sha256": "1aba0cf592976a7ec3e2417ff7e9c46628ad2269dc786125fa07c26e0a34470e",
+  "expected_canonical_content_sha256": "1aba0cf592976a7ec3e2417ff7e9c46628ad2269dc786125fa07c26e0a34470e",
+  "inventory_complete": true,
+  "cell": "clip_siglip_qwen_sparse",
+  "policy_json_sha256": "94db843a6b4e8748c158fd91cec77d2bcc60be673fe9387f798501f3852dc71c",
+  "output_dir": "C:\\Users\\minhc\\Documents\\Codex\\2026-08-25\\turn-on-actions-runner\\worktrees\\vecna-issue-61\\benchmark-results\\issue61-decomposition-ab",
+  "worktree_git": {
+    "worktree_root": "C:\\Users\\minhc\\Documents\\Codex\\2026-08-25\\turn-on-actions-runner\\worktrees\\vecna-issue-61",
+    "sha": "9b8a871e8531aae85de6eb87fea400bef8669d48",
+    "branch": "codex/issue-61-query-decomposition",
+    "dirty": true
+  },
+  "status": "complete",
+  "ended_at": "2026-08-25T18:22:04.000812+00:00",
+  "records_arm_a": 22,
+  "records_arm_b": 22,
+  "records_arm_b_diagnostic": 4,
+  "results_sha256": {
+    "armA-full-query.jsonl": "8b039fabe9be15086515c7a27378cb60a839da989a73df7165d4388c24070e50",
+    "armB-decomposed.jsonl": "6951b03bfd6163d67ba88c71b67d08a51e05f41f5d3ea4071e4e799559602894",
+    "armB-diagnostic-simple.jsonl": "8c67010904251d55d1191cbb0025ac31aec42021476a9e5c649e10808cb0d529"
+  },
+  "determinism_probe_all_match": true,
+  "recommendation_frozen_mapping": "no_benefit"
+}
