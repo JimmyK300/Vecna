@@ -1,0 +1,211 @@
+{
+  "collection": "official_l21_l30_all_v2",
+  "method": "ffprobe_reconstruction_fallback (Milvus engine unavailable)",
+  "rule": "ffprobe_packet_keyframes_plus_max_scene_gap, max_scene_length=2s, rounded fps",
+  "videos": {
+    "l26_v194": {
+      "source_video": "D:\\Official-Dataset\\videos\\L26B\\L26_V194.mp4",
+      "indexed_frame_count_reconstructed": 237,
+      "fps": 25.0,
+      "gap_seconds_median": 1.4,
+      "gap_seconds_p95": 2.0,
+      "gap_seconds_max": 2.0,
+      "per_gold_point": [
+        {
+          "event": "E1",
+          "gold_frame": 4707,
+          "nearest_indexed_frame": 4707,
+          "delta_frames": 0,
+          "delta_seconds": 0.0,
+          "indexed_frame_within_2s": true,
+          "indexed_frame_within_official_12f": true
+        },
+        {
+          "event": "E2",
+          "gold_frame": 5142,
+          "nearest_indexed_frame": 5139,
+          "delta_frames": 3,
+          "delta_seconds": 0.12,
+          "indexed_frame_within_2s": true,
+          "indexed_frame_within_official_12f": true
+        },
+        {
+          "event": "E3",
+          "gold_frame": 5430,
+          "nearest_indexed_frame": 5415,
+          "delta_frames": 15,
+          "delta_seconds": 0.6,
+          "indexed_frame_within_2s": true,
+          "indexed_frame_within_official_12f": false
+        },
+        {
+          "event": "E4",
+          "gold_frame": 5527,
+          "nearest_indexed_frame": 5535,
+          "delta_frames": 8,
+          "delta_seconds": 0.32,
+          "indexed_frame_within_2s": true,
+          "indexed_frame_within_official_12f": true
+        }
+      ]
+    },
+    "l24_v033": {
+      "source_video": "D:\\Official-Dataset\\videos\\L24\\L24_V033.mp4",
+      "indexed_frame_count_reconstructed": 372,
+      "fps": 30.0,
+      "gap_seconds_median": 2.0,
+      "gap_seconds_p95": 2.0,
+      "gap_seconds_max": 2.0,
+      "per_gold_point": [
+        {
+          "event": "E1",
+          "gold_frame": 15945,
+          "nearest_indexed_frame": 15960,
+          "delta_frames": 15,
+          "delta_seconds": 0.5,
+          "indexed_frame_within_2s": true,
+          "indexed_frame_within_official_12f": false
+        },
+        {
+          "event": "E2",
+          "gold_frame": 16009,
+          "nearest_indexed_frame": 16020,
+          "delta_frames": 11,
+          "delta_seconds": 0.3667,
+          "indexed_frame_within_2s": true,
+          "indexed_frame_within_official_12f": true
+        },
+        {
+          "event": "E3",
+          "gold_frame": 16355,
+          "nearest_indexed_frame": 16384,
+          "delta_frames": 29,
+          "delta_seconds": 0.9667,
+          "indexed_frame_within_2s": true,
+          "indexed_frame_within_official_12f": false
+        },
+        {
+          "event": "E4",
+          "gold_frame": 16900,
+          "nearest_indexed_frame": 16872,
+          "delta_frames": 28,
+          "delta_seconds": 0.9333,
+          "indexed_frame_within_2s": true,
+          "indexed_frame_within_official_12f": false
+        }
+      ]
+    },
+    "l26_v072": {
+      "source_video": "D:\\Official-Dataset\\videos\\L26A\\L26_V072.mp4",
+      "indexed_frame_count_reconstructed": 249,
+      "fps": 25.0,
+      "gap_seconds_median": 1.44,
+      "gap_seconds_p95": 2.0,
+      "gap_seconds_max": 2.0,
+      "per_gold_point": [
+        {
+          "event": "E1",
+          "gold_frame": 2471,
+          "nearest_indexed_frame": 2466,
+          "delta_frames": 5,
+          "delta_seconds": 0.2,
+          "indexed_frame_within_2s": true,
+          "indexed_frame_within_official_12f": true
+        },
+        {
+          "event": "E2",
+          "gold_frame": 3136,
+          "nearest_indexed_frame": 3133,
+          "delta_frames": 3,
+          "delta_seconds": 0.12,
+          "indexed_frame_within_2s": true,
+          "indexed_frame_within_official_12f": true
+        },
+        {
+          "event": "E3",
+          "gold_frame": 3427,
+          "nearest_indexed_frame": 3420,
+          "delta_frames": 7,
+          "delta_seconds": 0.28,
+          "indexed_frame_within_2s": true,
+          "indexed_frame_within_official_12f": true
+        },
+        {
+          "event": "E4",
+          "gold_frame": 3800,
+          "nearest_indexed_frame": 3788,
+          "delta_frames": 12,
+          "delta_seconds": 0.48,
+          "indexed_frame_within_2s": true,
+          "indexed_frame_within_official_12f": true
+        }
+      ]
+    }
+  },
+  "validation": {
+    "l26_v194": {
+      "observed_in_retrieval_evidence": [
+        4662,
+        4707,
+        4736,
+        5120,
+        5376,
+        5585,
+        5845,
+        6296,
+        6346,
+        6379,
+        6400,
+        6450,
+        6528
+      ],
+      "observed_missing_from_reconstructed_set": [],
+      "validated": true
+    },
+    "l24_v033": {
+      "observed_in_retrieval_evidence": [
+        0,
+        272,
+        304,
+        1216,
+        1336,
+        1580,
+        2856,
+        3066,
+        3186,
+        3312,
+        4059,
+        4408,
+        7812,
+        7872,
+        8813,
+        8816,
+        10336,
+        12128,
+        12736,
+        12768,
+        13124,
+        13284,
+        15928,
+        15960,
+        16020,
+        16112,
+        16384,
+        16568,
+        16992,
+        17024
+      ],
+      "observed_missing_from_reconstructed_set": [],
+      "validated": true
+    },
+    "l26_v072": {
+      "observed_in_retrieval_evidence": [
+        2466,
+        2664,
+        4125
+      ],
+      "observed_missing_from_reconstructed_set": [],
+      "validated": true
+    }
+  }
+}

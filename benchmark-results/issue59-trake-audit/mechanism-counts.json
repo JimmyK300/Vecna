@@ -1,0 +1,42 @@
+{
+  "schema_version": "issue59-mechanism-counts-v1",
+  "generated_at": "2026-08-25T16:02:43.219412+00:00",
+  "note": "query-level flags (one query can carry several mechanisms); rules fixed in run_issue59_trake_audit.py; density input via reconstruction fallback",
+  "queries_analyzed": [
+    "p1_q02",
+    "p1_q14",
+    "p1_q16"
+  ],
+  "mechanism_counts": {
+    "single_vector_multi_event_no_decomposition": 3,
+    "correct_video_but_event_window_missing_from_top20": 3,
+    "event_window_absent_entirely_from_top1000": 3,
+    "visual_semantics_wrong_video_crowding": 3,
+    "index_frame_gap_at_gold_point_over_2s": 0,
+    "duplicate_results_same_video_slot_flooding": 3,
+    "unresolved": 0
+  },
+  "per_query_mechanisms": {
+    "p1_q02": [
+      "single_vector_multi_event_no_decomposition",
+      "correct_video_but_event_window_missing_from_top20",
+      "event_window_absent_entirely_from_top1000",
+      "visual_semantics_wrong_video_crowding",
+      "duplicate_results_same_video_slot_flooding"
+    ],
+    "p1_q14": [
+      "single_vector_multi_event_no_decomposition",
+      "correct_video_but_event_window_missing_from_top20",
+      "event_window_absent_entirely_from_top1000",
+      "visual_semantics_wrong_video_crowding",
+      "duplicate_results_same_video_slot_flooding"
+    ],
+    "p1_q16": [
+      "single_vector_multi_event_no_decomposition",
+      "correct_video_but_event_window_missing_from_top20",
+      "event_window_absent_entirely_from_top1000",
+      "visual_semantics_wrong_video_crowding",
+      "duplicate_results_same_video_slot_flooding"
+    ]
+  }
+}

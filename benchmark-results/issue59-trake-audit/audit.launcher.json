@@ -1,0 +1,74 @@
+{
+  "packet": "issue59-trake-audit",
+  "purpose": "Read-only diagnosis: why the current stack misses exact TRAKE event timing even when video-level retrieval succeeds",
+  "started_at": "2026-08-25T15:39:57.478262+00:00",
+  "script_path": "C:\\Users\\minhc\\Documents\\Codex\\2026-08-25\\turn-on-actions-runner\\worktrees\\vecna-issue-59\\benchmark-results\\issue59-trake-audit\\run_issue59_trake_audit.py",
+  "script_sha256": "05c14dc53347f5d6200332cf37d5b7f0b670097fbf19e49d717a4a54a561c0b2",
+  "python": "C:\\Users\\minhc\\Code\\Vecna\\.venv\\Scripts\\python.exe",
+  "pythondontwritebytecode": true,
+  "primary_root": "C:\\Users\\minhc\\Code\\Vecna",
+  "worktree_root": "C:\\Users\\minhc\\Documents\\Codex\\2026-08-25\\turn-on-actions-runner\\worktrees\\vecna-issue-59",
+  "worktree_git": {
+    "sha": "9b8a871e8531aae85de6eb87fea400bef8669d48",
+    "branch": "codex/issue-59-trake-audit",
+    "dirty": true
+  },
+  "primary_git": {
+    "sha": "fd879fb0529165a441745374ab72244df8aadd5e",
+    "branch": "masterplan/ox-alpha-20260824",
+    "dirty": true
+  },
+  "audit_k": 1000,
+  "cell": "clip_siglip_qwen_sparse",
+  "ranking_note": "k raised from 20 to 1000 to expose deeper ranks; scoring/fusion path identical to issue58 baseline sweep; no ranking behavior changed",
+  "frozen_set": {
+    "path": "C:\\Users\\minhc\\Code\\Vecna\\aic51-src\\benchmark\\issue34_headless_queries.csv",
+    "raw_file_sha256": "b732a623deba352db037bcb8acb5f99923ba9cd01e761ad3f4417307de42057c",
+    "canonical_content_sha256": "1aba0cf592976a7ec3e2417ff7e9c46628ad2269dc786125fa07c26e0a34470e",
+    "expected_canonical_content_sha256": "1aba0cf592976a7ec3e2417ff7e9c46628ad2269dc786125fa07c26e0a34470e",
+    "schema_version": "issue34-v1",
+    "inventory_complete": true,
+    "ground_truth_tier": "provisional (source_text_verified_needs_corpus_validation)",
+    "trake_total": 5,
+    "trake_included": [
+      "p1_q02",
+      "p1_q14",
+      "p1_q16"
+    ],
+    "trake_excluded": [
+      {
+        "query_id": "set1_q03",
+        "reason": "evaluation_scope=exclude_different_dataset (corpus not in current index)"
+      },
+      {
+        "query_id": "set1_q19",
+        "reason": "evaluation_scope=exclude_different_dataset (corpus not in current index)"
+      }
+    ]
+  },
+  "status": "complete_with_offline_density_fallback",
+  "ended_at": "2026-08-25T16:05:00Z+00:00",
+  "incidents": [
+    {
+      "run": 1,
+      "note": "full search phase completed (trake-audit.jsonl valid); density probe returned 0 rows due to case-sensitive LIKE filter (lowercased video id)",
+      "resolution": "filter fixed to original-case video id"
+    },
+    {
+      "run": 2,
+      "note": "re-run with fixed filter aborted: Docker Desktop engine on the host went down mid-search (grpc 10053 / pipe gone); Milvus localhost:19530 unreachable afterwards; no artifacts were written by run 2",
+      "resolution": "density computed offline by reconstruct_keyframe_density.py via deterministic ingest-rule replay (ffprobe packet keyframes + max_scene_length=2s), cross-validated: every gold-video frame observed in retrieval evidence is present in the reconstructed indexed set for all 3 videos"
+    },
+    {
+      "run": "n/a",
+      "note": "collection auto-unload observed after process exit (stack-normal MilvusDatabase.__del__ behavior); load_collection was only ever called through the official preflight_collection() path"
+    }
+  ],
+  "outputs": {
+    "trake_audit_jsonl_sha256": "5d10d72b91241585124b53529cd4db0b755d98c4dbfaf745f6fce9fcd8bbc46c",
+    "keyframe_density_sha256": "11ed1f9b5035f43912fc221769351a0d298cf6e6768eaa411a4795fa580acc11",
+    "mechanism_counts_sha256": "2878299b0992d1f3cb278e66307332cbab229049fa5e2ef24cfa350453e1114a",
+    "reconstruct_script_sha256": "60cdea0bfab304704467e0c52cdac7005f0b2e77b192de95708a930fbc513197"
+  },
+  "milvus_incident_note": "Milvus containers were NOT stopped/restarted by this audit; the host Docker Desktop engine stopped on its own during run 2 and did not return during the session."
+}
