@@ -1,0 +1,17 @@
+{
+  "flags_jsonl_sha256": "fb5cebd4804d6799cd7a44624eaf74170647e819a1fd4ac88d3a3c88b758042d",
+  "foreign_listing_sha256": "abf18708858b90139c6967e760c105cd3b32251ae0752eac9ee5bb7702de0ed7",
+  "inputs": {
+    "flagged_and_owned_samples": {
+      "data-index/keyframe_metadata.npy": "61f12803e2b6ff5472a841a5531f50e1c2751b5b5f741dca0b520a18ef5f4558",
+      "data-index/transcript_metadata.json": "3557457c0265f1773c015f5ef1ae8aa07651d4b438ae9c42b4ef11fe904c914f",
+      "provenance/indexes/official_l21_l30_all_v2.json": "34e5897827bce62cd2ad6a6c5618e59f71cef0b1478edddae90621387f99ee74"
+    },
+    "registry_sha256_canonical": "17fc29bcd74f01cd1497c6ef7a093e808ee4fcf3d523ae5b977255a6541731b1",
+    "registry_sha256_raw": "34e5897827bce62cd2ad6a6c5618e59f71cef0b1478edddae90621387f99ee74"
+  },
+  "markdown_sha256": "6432e5d0620b29fd7b64ebb2440b2da1eb94b09d81f1850e1cc32c855f6b6436",
+  "per_video_stats_sha256": "e0014ebc1757e31f310a721768ce508c94c2af2830d9795bf02400100bbc8a6d",
+  "report_content_sha256": "6c0e2ab56fb04db1ed625621d255d43af5942259c0d06407169d605eb03641b7",
+  "report_json_sha256": "21add3fefcb650786fe81ba537750989bc68b5d78952a0792dd2ee7256ad4b87"
+}

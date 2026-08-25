@@ -1,0 +1,251 @@
+{
+  "audited_scope": {
+    "active_collection": "official_l21_l30_all_v2",
+    "audited_roots": [
+      "data-index",
+      "data-source",
+      "data-staging",
+      "temp-extraction",
+      "provenance",
+      "benchmark-results"
+    ],
+    "content_loaded_videos": 4,
+    "deep_scanned_videos": 32,
+    "expected_video_ids": 873,
+    "feature_root": "data-source/features/features_L21-L30/features",
+    "feature_video_dirs": 873,
+    "index_generation_id": "idx_6baede5b9bc447e099c0004d8428ca7e",
+    "source_media_ids": 873,
+    "total_artifact_files": 1291696,
+    "total_frames": 322924
+  },
+  "duplicates": {
+    "duplicate_video_ids_across_roots": [
+      {
+        "also_present_in": [
+          "temp-extraction"
+        ],
+        "video_id": "L21_V001"
+      },
+      {
+        "also_present_in": [
+          "temp-extraction"
+        ],
+        "video_id": "L21_V002"
+      },
+      {
+        "also_present_in": [
+          "temp-extraction"
+        ],
+        "video_id": "L21_V003"
+      },
+      {
+        "also_present_in": [
+          "temp-extraction"
+        ],
+        "video_id": "L21_V005"
+      },
+      {
+        "also_present_in": [
+          "temp-extraction"
+        ],
+        "video_id": "L21_V006"
+      }
+    ],
+    "notes": []
+  },
+  "foreign_artifact_groups": [
+    {
+      "path": "data-index/",
+      "statuses": {
+        "legacy_unknown": 6
+      }
+    },
+    {
+      "path": "data-source/features/",
+      "statuses": {
+        "foreign_unowned": 73
+      }
+    },
+    {
+      "path": "data-source/metadata/",
+      "statuses": {
+        "foreign_unowned": 277
+      }
+    },
+    {
+      "path": "data-staging/audio-chunk-timestamps/",
+      "statuses": {
+        "legacy_unknown": 2
+      }
+    },
+    {
+      "path": "data-staging/audios/",
+      "statuses": {
+        "legacy_unknown": 2
+      }
+    },
+    {
+      "path": "data-staging/clip-features/",
+      "statuses": {
+        "legacy_unknown": 3
+      }
+    },
+    {
+      "path": "data-staging/keyframes/",
+      "statuses": {
+        "legacy_unknown": 62
+      }
+    },
+    {
+      "path": "data-staging/map-keyframes/",
+      "statuses": {
+        "legacy_unknown": 2
+      }
+    },
+    {
+      "path": "data-staging/preprocessing/",
+      "statuses": {
+        "legacy_unknown": 2
+      }
+    },
+    {
+      "path": "data-staging/transcripts/",
+      "statuses": {
+        "legacy_unknown": 2
+      }
+    },
+    {
+      "path": "temp-extraction/",
+      "statuses": {
+        "foreign_unowned": 16830
+      }
+    }
+  ],
+  "foreign_ownership_counts": {
+    "foreign_unowned": 17180,
+    "legacy_unknown": 81,
+    "valid": 1615951
+  },
+  "generated_at_excluded_from_hash": "2026-08-25T17:32:12.401133+00:00",
+  "hashes": {
+    "flagged_and_owned_samples": {
+      "data-index/keyframe_metadata.npy": "61f12803e2b6ff5472a841a5531f50e1c2751b5b5f741dca0b520a18ef5f4558",
+      "data-index/transcript_metadata.json": "3557457c0265f1773c015f5ef1ae8aa07651d4b438ae9c42b4ef11fe904c914f",
+      "provenance/indexes/official_l21_l30_all_v2.json": "34e5897827bce62cd2ad6a6c5618e59f71cef0b1478edddae90621387f99ee74"
+    },
+    "registry_sha256_canonical": "17fc29bcd74f01cd1497c6ef7a093e808ee4fcf3d523ae5b977255a6541731b1",
+    "registry_sha256_raw": "34e5897827bce62cd2ad6a6c5618e59f71cef0b1478edddae90621387f99ee74"
+  },
+  "incomplete_run_markers": {
+    "examples": [],
+    "markers_found": 0
+  },
+  "parameters": {
+    "collection": "official_l21_l30_all_v2",
+    "content_sample_videos": 4,
+    "corpus_root": "C:\\Users\\minhc\\Code\\Vecna",
+    "deep_sample_videos": 32,
+    "full_headers": false,
+    "max_examples_per_category": 200,
+    "media_root": "D:\\Official-Dataset\\videos"
+  },
+  "provenance_coverage": {
+    "corpus_root_stores": {
+      "analysis": {
+        "json_manifest_count": 0,
+        "present": false
+      },
+      "evidence": {
+        "json_manifest_count": 0,
+        "present": false
+      },
+      "index_registries": [
+        "provenance/indexes/official_l21_l30_all_v2.json"
+      ],
+      "keyframes": {
+        "json_manifest_count": 0,
+        "present": false
+      },
+      "sources": {
+        "json_manifest_count": 0,
+        "present": false
+      },
+      "staging_p11_sample": {
+        "analysis": 2,
+        "evidence": 0,
+        "keyframes": 1,
+        "sources": 1
+      }
+    },
+    "coverage_statement": "All 873 lineage videos lack new-format per-video sidecars at the audited root; dense-field claims inside the registry cannot be dereferenced locally.",
+    "lineage_resolution": {
+      "claim_id_referenceability": "unresolvable_locally: provenance/{sources,keyframes,analysis,evidence} absent at corpus root, so src_/rnd_/sel_/prv_ identifiers cannot be dereferenced within the audited corpus",
+      "lineage_claim_records_total": 1746,
+      "per_feature_states": {
+        "asr": {
+          "absent": 0,
+          "mixed": 0,
+          "resolved": 0,
+          "unavailable": 873
+        },
+        "asr_dense": {
+          "absent": 0,
+          "mixed": 0,
+          "resolved": 873,
+          "unavailable": 0
+        },
+        "image_clip_pe-l-14-336": {
+          "absent": 0,
+          "mixed": 0,
+          "resolved": 0,
+          "unavailable": 873
+        },
+        "image_siglip_so400m-384": {
+          "absent": 0,
+          "mixed": 0,
+          "resolved": 0,
+          "unavailable": 873
+        },
+        "ocr": {
+          "absent": 0,
+          "mixed": 0,
+          "resolved": 0,
+          "unavailable": 873
+        },
+        "ocr_dense": {
+          "absent": 0,
+          "mixed": 0,
+          "resolved": 873,
+          "unavailable": 0
+        },
+        "qwen_vl": {
+          "absent": 0,
+          "mixed": 0,
+          "resolved": 0,
+          "unavailable": 873
+        }
+      }
+    }
+  },
+  "report_content_sha256": "6c0e2ab56fb04db1ed625621d255d43af5942259c0d06407169d605eb03641b7",
+  "runtime_seconds": 585.338,
+  "schema_version": "vecna.issue60-audit.v1",
+  "status_counts": {
+    "foreign_unowned": 8,
+    "legacy_unknown": 8,
+    "missing": 4
+  },
+  "status_counts_by_category": {
+    "duplicates": {
+      "foreign_unowned": 5
+    },
+    "foreign_artifacts": {
+      "foreign_unowned": 3,
+      "legacy_unknown": 8
+    },
+    "provenance_sidecar_store": {
+      "missing": 4
+    }
+  }
+}
