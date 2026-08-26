@@ -1,10 +1,18 @@
 const CORE_PORT =
   (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.VITE_PORT) || 6900;
 
+function teamworkHost() {
+  return window.location.hostname || "127.0.0.1";
+}
+
+export function teamworkHttpBase() {
+  const protocol = window.location.protocol === "https:" ? "https" : "http";
+  return `${protocol}://${teamworkHost()}:${CORE_PORT}`;
+}
+
 export function teamworkWebSocketUrl() {
   const protocol = window.location.protocol === "https:" ? "wss" : "ws";
-  const host = window.location.hostname || "127.0.0.1";
-  return `${protocol}://${host}:${CORE_PORT}/ws/team`;
+  return `${protocol}://${teamworkHost()}:${CORE_PORT}/ws/team`;
 }
 
 export function connectTeamwork({ onSync, onStatus, onError } = {}) {
