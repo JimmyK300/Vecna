@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useSelected } from "../components/SelectedProvider.jsx";
-import { connectTeamwork } from "../services/teamwork.js";
+import { connectTeamwork, teamworkHttpBase } from "../services/teamwork.js";
 
 export default function Team() {
   const { selected } = useSelected();
@@ -12,6 +12,7 @@ export default function Team() {
   const [sender, setSender] = useState(() => localStorage.getItem("vecna_team_sender") || "");
   const [note, setNote] = useState("");
   const clientRef = useRef(null);
+  const mediaBase = useMemo(() => teamworkHttpBase(), []);
 
   useEffect(() => {
     const client = connectTeamwork({
@@ -124,7 +125,7 @@ export default function Team() {
             {items.map((item) => (
               <div key={item.frame_id} className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
                 <img
-                  src={`http://127.0.0.1:6900/api/files/${item.video_id}/${String(item.frame).padStart(6, "0")}`}
+                  src={`${mediaBase}/api/files/${item.video_id}/${String(item.frame).padStart(6, "0")}`}
                   alt={item.frame_id}
                   className="w-full aspect-video object-cover bg-black"
                   loading="lazy"
