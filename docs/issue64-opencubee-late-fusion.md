@@ -61,18 +61,23 @@ Added:
   - no input mutation;
   - default-off compatibility;
   - invalid strategy/input rejection.
+- `aic51-src/script/run_issue64_legacy.py`
+  - identity-matched control arm;
+  - runs the repaired primary P20/P21 quality cell unchanged;
+  - writes artifacts only to the Issue #64 worktree;
+  - records primary runtime/config/query hashes and Git state before/after;
+  - fails if the primary checkout changes.
 - `aic51-src/script/run_issue64_opencubee_fusion.py`
   - treats `C:\Users\minhc\Code\Vecna` (or supplied primary root) as a read-only repaired runtime;
   - loads only the experimental files from this worktree into the primary package namespace;
   - swaps the `Searcher` symbol in-memory before importing the primary P20/P21 runner;
-  - runs the existing `clip_siglip_qwen_sparse` quality cell unchanged;
-  - records primary runtime/config/query hashes and Git state before/after;
-  - fails the safety gate if the primary checkout changes.
+  - runs the same existing `clip_siglip_qwen_sparse` quality cell;
+  - records the same runtime/config/query identity and before/after Git safety evidence.
 - `aic51-src/script/evaluate_issue64_opencubee_fusion.py`
-  - compares the real legacy and donor headless JSONL runs;
+  - compares the real identity-matched legacy and donor headless JSONL runs;
   - validates identical query/ground-truth identity;
   - rejects a legacy arm containing donor markers;
-  - requires donor result markers proving the experimental Searcher actually ran;
+  - requires donor markers proving the experimental Searcher actually ran;
   - reports R@1/R@5/R@20/MRR, task-type slices, per-query rank deltas, gained/lost top-20 hits, and observed end-to-end latency.
 - `docs/issue64-opencubee-late-fusion.md`
   - donor mapping, frozen policy, evidence gate, interpretation and rollback.
@@ -83,26 +88,28 @@ No production `Searcher`, config, index schema, frontend, model, corpus, or prov
 
 Before looking at donor outcomes:
 
-- baseline: current repaired Vecna default headless result arm;
-- donor: the same headless quality cell with `OpenCubeeFusionSearcher` injected in-memory;
+- legacy and donor are both generated back-to-back from the same repaired primary runtime;
+- baseline: current repaired Vecna default `clip_siglip_qwen_sparse` quality arm;
+- donor: the identical quality cell with `OpenCubeeFusionSearcher` injected in-memory;
 - visual model weights: equal across active selected visual target features;
 - outer weights/config/query truth/index identity: identical to baseline;
 - top-k and temporal settings: identical to the current baseline runner;
 - reranker: unchanged from the baseline cell (currently default-off for this baseline);
 - no post-result weight or donor-logic tuning in Issue #64;
-- current Issue #58 benchmark is acceptable if Issue #63 expanded truth is not yet frozen; label the result `pre-expansion`.
+- current Issue #58 / Issue #34 truth is acceptable if Issue #63 expanded truth is not yet frozen; label the result `pre-expansion`.
 
 ## Required local evidence
 
-1. record exact repaired primary HEAD/branch/dirty status, config hashes and index-generation identity;
-2. use the existing current/default baseline arm, or rerun it if its runtime identity no longer matches the donor run;
-3. run `run_issue64_opencubee_fusion.py --overwrite` from an isolated checkout/worktree of this branch;
-4. confirm `primary_unchanged=true` in `issue64-run.json`;
-5. run `tests/test_experimental_fusion.py` in the repaired environment;
-6. compare legacy vs donor with `evaluate_issue64_opencubee_fusion.py`;
-7. preserve both raw JSONL files, runner manifests, A/B summary and exact hashes together.
+1. create an isolated checkout/worktree of this branch; do not modify the repaired primary checkout;
+2. record exact repaired primary HEAD/branch/dirty status, config/query/runner hashes, collection/index-generation identity and row count;
+3. run `run_issue64_legacy.py --overwrite`;
+4. run `run_issue64_opencubee_fusion.py --overwrite` immediately against the same primary runtime;
+5. require `primary_unchanged=true` in both arm manifests and matching primary-input identities;
+6. run `tests/test_experimental_fusion.py` in the repaired Python environment;
+7. compare legacy vs donor with `evaluate_issue64_opencubee_fusion.py`;
+8. preserve both raw JSONL files, runner manifests, A/B summary and exact hashes together.
 
-The donor runner itself produces real end-to-end query latency, so latency can be compared against an identity-matched legacy run. Do not compare latency across materially different runtime/config/dirty states.
+Because both arms use the same live runtime, observed end-to-end latency is interpretable if machine conditions are not materially disturbed between arms.
 
 ## Acceptance interpretation
 
@@ -112,7 +119,7 @@ Use if donor fusion materially worsens retrieval, loses important top-20 hits, o
 
 ### `KEEP_EXPERIMENTAL`
 
-Use if evidence is mixed/underpowered, if quality moves little, or if a possible gain remains confounded by runtime identity. Keep the helper/harness available but do not wire production.
+Use if evidence is mixed/underpowered, if quality moves little, or if a possible gain remains confounded. Keep the helper/harness available but do not wire production.
 
 ### `PROMOTE_CANDIDATE`
 
@@ -124,4 +131,4 @@ The experimental donor changes ranking composition, so any future production int
 
 ## Rollback
 
-Current rollback is trivial: remove the six Issue #64 experimental files/commits. No production behavior, database, index, corpus, or configuration is changed.
+Current rollback is trivial: remove the seven Issue #64 experimental files/commits. No production behavior, database, index, corpus, or configuration is changed.
