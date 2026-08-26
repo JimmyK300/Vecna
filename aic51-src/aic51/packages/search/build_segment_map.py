@@ -1,12 +1,36 @@
+import os
 import json
-import numpy as np
 from pathlib import Path
+import numpy as np
 from pymilvus import MilvusClient
 
-KEYFRAMES_DIR = Path("aic51-src/workspace/data/keyframes")
+# Resolve keyframes directory dynamically for Windows / Linux / macOS
+SCRIPT_DIR = Path(__file__).resolve().parent
+# search (0) -> packages (1) -> aic51 (2) -> aic51-src (3) -> repo root (3 relative to SCRIPT_DIR)
+REPO_ROOT = SCRIPT_DIR.parents[3]
+
+def find_keyframes_dir() -> Path:
+    env_dir = os.environ.get("KEYFRAMES_DIR")
+    if env_dir:
+        return Path(env_dir)
+    
+    candidates = [
+        REPO_ROOT / "workspace" / "data" / "keyframes",
+        Path("workspace/data/keyframes"),
+        Path("data/keyframes"),
+        REPO_ROOT / "data" / "keyframes",
+    ]
+    for candidate in candidates:
+        if candidate.exists() and candidate.is_dir():
+            return candidate.resolve()
+            
+    return candidates[0]
+
+KEYFRAMES_DIR = find_keyframes_dir()
+MILVUS_URI = os.environ.get("MILVUS_URI", "http://localhost:19530")
 COLLECTION = "milvus"
 MODEL_FIELD = "image_clip_pe_l_14_336"
-OUT = "segment_map.json"
+OUT = Path(os.environ.get("SEGMENT_MAP_OUT", "segment_map.json"))
 
 # Keyframe mỗi 2 giây
 KF_INTERVAL_SEC = 2
@@ -22,13 +46,15 @@ MIN_GAP_SEC = 5
 MIN_GAP_FRAMES = MIN_GAP_SEC // KF_INTERVAL_SEC
 
 
-client = MilvusClient(uri="http://localhost:19530")
+if not KEYFRAMES_DIR.is_dir():
+    raise FileNotFoundError(f"Keyframes directory not found: {KEYFRAMES_DIR}")
+
+print(f"Using KEYFRAMES_DIR: {KEYFRAMES_DIR}")
+
+client = MilvusClient(uri=MILVUS_URI)
 segment_map = {}
 
 for video_dir in sorted(KEYFRAMES_DIR.iterdir()):
-    if not video_dir.is_dir():
-        continue
-
     vid = video_dir.name
 
     rows = client.query(
@@ -86,87 +112,25 @@ for video_dir in sorted(KEYFRAMES_DIR.iterdir()):
         mode="valid"
     )
 
-    # --------------------------------------------------
-    # 5. Adaptive threshold
-    # --------------------------------------------------
-    thr = np.quantile(smooth, Q)
+    # Auto-select threshold: thử 3 giá trị, chọn cái cho nseg hợp lý
+    candidates = []
+    for abs_floor in [0.35, 0.55, 0.75]:
+        thr = min(np.quantile(smooth, Q), abs_floor)
+        nseg = int((smooth < thr).sum()) + 1
+        candidates.append((abs_floor, thr, nseg))
 
-    # Những frame có similarity thấp → candidate boundary
-    candidates = np.where(smooth < thr)[0]
+    # Chọn candidate có nseg gần nhất với kỳ vọng (1 seg per 60s)
+    duration_min = len(fids) * 2 / 60  # mỗi kf 2s
+    target_segs = max(1, int(duration_min))  # kỳ vọng ~1 seg/phút
+    best = min(candidates, key=lambda c: abs(c[2] - target_segs))
 
-    # --------------------------------------------------
-    # 6. Merge boundaries quá gần nhau
-    #
-    # Ví dụ:
-    #
-    # 20s
-    # 22s
-    # 24s
-    #
-    # → chỉ giữ boundary mạnh nhất
-    # --------------------------------------------------
-    boundaries = []
+    abs_floor, thr, nseg = best
+    segs = np.concatenate([[0], np.cumsum((smooth < thr).astype(int))]).tolist()
 
-    for b in candidates:
+    segment_map[vid] = {"fids": fids, "segs": segs}
+    print(f"{vid}: {len(fids)} kf → {nseg} segs (threshold={thr:.3f})")
 
-        if not boundaries:
-            boundaries.append(b)
-            continue
+with open(OUT, "w", encoding="utf-8") as f:
+    json.dump(segment_map, f, indent=2)
 
-        prev = boundaries[-1]
-
-        if b - prev < MIN_GAP_FRAMES:
-            # Hai boundary quá gần nhau.
-            # Giữ boundary có similarity thấp hơn
-            # (= visual change mạnh hơn)
-            if smooth[b] < smooth[prev]:
-                boundaries[-1] = b
-
-        else:
-            boundaries.append(b)
-
-    boundaries = np.array(
-        boundaries,
-        dtype=np.int32
-    )
-
-    # --------------------------------------------------
-    # 7. Convert boundaries → segment IDs
-    # --------------------------------------------------
-    segs = np.zeros(
-        len(fids),
-        dtype=np.int32
-    )
-
-    for b in boundaries:
-        segs[b + 1:] += 1
-
-    segs = segs.tolist()
-
-    nseg = (
-        int(segs[-1]) + 1
-        if segs
-        else 0
-    )
-
-    # --------------------------------------------------
-    # 8. Save
-    # --------------------------------------------------
-    segment_map[vid] = {
-        "fids": fids,
-        "segs": segs,
-    }
-
-    print(
-        f"{vid}: "
-        f"{len(fids)} kf → "
-        f"{nseg} segments | "
-        f"threshold={thr:.3f} | "
-        f"min_gap={MIN_GAP_SEC}s"
-    )
-
-
-with open(OUT, "w") as f:
-    json.dump(segment_map, f)
-
-print(f"DONE → {OUT}")
+print(f"DONE → {OUT.resolve()}")

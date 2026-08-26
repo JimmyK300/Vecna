@@ -64,8 +64,8 @@ Queries passed to `search_multimodal` are parsed by the `Query` helper class int
 | `limit` | `int` | `50` | Maximum number of search results to return |
 | `target_features` | `list[str]` | `[]` | List of target feature field names in Milvus database (e.g. `["image_clip_pe-l-14-336"]`) |
 | `nprobe` | `int` | `8` | Milvus index search probe parameter for vector search accuracy/speed tradeoff |
-| `temporal_k` | `int` | `2000` | Top candidates to retrieve per temporal segment before sequential matching |
-| `ocr_weight` | `float` | `0.5` | Weight for OCR text matching score (range `[0.0, 1.0]`) |
+| `temporal_k` | `int` | `200` | Top candidates to retrieve per temporal segment before sequential matching |
+| `ocr_weight` | `float` | `0.0` | Weight for OCR text matching score (range `[0.0, 1.0]`) |
 | `asr_weight` | `float` | `0.0` | Weight for ASR spoken text matching score (range `[0.0, 1.0 - ocr_weight]`) |
 | `max_interval` | `int` | `1000` | Maximum allowed frame gap between consecutive steps in a temporal sequence |
 | `selected` | `str \| None` | `None` | Optional target `frame_id` to automatically set page offset to include the selected item |
@@ -170,7 +170,7 @@ Handles single-step multimodal queries with dynamic replenishment:
 #### `_temporal_search`
 Handles multi-step sequential queries (e.g., `"step1 / step2"`).
 - Computes SHA-256 hash of search parameters (including `include_video_ids` and `exclude_video_ids`) to utilize `cache`.
-- Executes `_similarity_search` per step up to `temporal_k` candidates (default: `2000`).
+- Executes `_similarity_search` per step up to `temporal_k` candidates (default: `200`).
 - Combines sequence alignment within `max_interval` frames (default: `1000`).
 - Applies `_filter_exclude_videos` to exclude restricted video IDs.
 

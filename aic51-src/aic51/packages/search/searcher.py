@@ -1,3 +1,4 @@
+import os
 import hashlib
 import re
 import threading
@@ -28,7 +29,20 @@ class SegmentClustering:
     """Gom các frame trong cùng segment (bản tin) lại, giống OpenCubee2."""
     def __init__(self, path="segment_map.json"):
         p = Path(path)
-        self.map = json.load(open(p)) if p.exists() else {}
+        if not p.exists():
+            script_dir = Path(__file__).resolve().parent
+            repo_root = script_dir.parents[3]
+            candidates = [
+                repo_root / path,
+                repo_root / "workspace" / path,
+                Path("workspace") / path,
+            ]
+            for candidate in candidates:
+                if candidate.exists():
+                    p = candidate
+                    break
+
+        self.map = json.load(open(p, encoding="utf-8")) if p.exists() else {}
         if not self.map:
             logger.warning("SegmentClustering: segment_map.json not found - clustering disabled")
 
@@ -159,7 +173,8 @@ class Searcher(object):
     def __init__(self, collection_name: str, device: torch.device = torch.device("cpu")):
         self._database = MilvusDatabase(collection_name)
         self._prepare_feature_extractors(device)
-        self._clustering = SegmentClustering("/Users/saladhouse/Vecna/segment_map.json")  
+        segment_map_path = os.environ.get("SEGMENT_MAP_PATH", "segment_map.json")
+        self._clustering = SegmentClustering(segment_map_path)  
 
     def to(self, device):
         self._device = torch.device(device)
@@ -193,11 +208,11 @@ class Searcher(object):
         target_features: list = [],
         /,
         nprobe: int = 8,
-        temporal_k: int = 2000,
-        ocr_weight: float = 0.5,
+        temporal_k: int = 200,
+        ocr_weight: float = 0.0,
         asr_weight: float = 0.0,
-        ocr_alpha: float = 0.5,
-        asr_alpha: float = 0.5,
+        ocr_alpha: float = 0.0,
+        asr_alpha: float = 0.0,
         hybrid_alpha: float | None = None,
         max_interval: int = 1000,
         selected: str | None = None,
@@ -567,10 +582,10 @@ class Searcher(object):
         limit: int = 50,
         target_features: list = [],
         /,
-        ocr_weight: float = 0.5,
+        ocr_weight: float = 0.0,
         asr_weight: float = 0.0,
-        ocr_alpha: float = 0.5,
-        asr_alpha: float = 0.5,
+        ocr_alpha: float = 0.0,
+        asr_alpha: float = 0.0,
         hybrid_alpha: float | None = None,
         nprobe: int = 8,
         exclude_video_ids: list[str] = [],
@@ -731,10 +746,10 @@ class Searcher(object):
         limit: int = 50,
         target_features: list = [],
         /,
-        ocr_weight: float = 0.5,
+        ocr_weight: float = 0.0,
         asr_weight: float = 0.0,
-        ocr_alpha: float = 0.5,
-        asr_alpha: float = 0.5,
+        ocr_alpha: float = 0.0,
+        asr_alpha: float = 0.0,
         hybrid_alpha: float | None = None,
         nprobe: int = 8,
         cancel_event: threading.Event | Callable = None,
@@ -928,13 +943,13 @@ class Searcher(object):
         limit: int = 50,
         target_features: list = [],
         /,
-        ocr_weight: float = 0.5,
+        ocr_weight: float = 0.0,
         asr_weight: float = 0.0,
-        ocr_alpha: float = 0.5,
-        asr_alpha: float = 0.5,
+        ocr_alpha: float = 0.0,
+        asr_alpha: float = 0.0,
         hybrid_alpha: float | None = None,
         nprobe: int = 8,
-        temporal_k: int = 2000,
+        temporal_k: int = 200,
         max_interval: int = 1000,
         cancel_event: threading.Event | Callable = None,
     ):

@@ -47,11 +47,11 @@ export async function loader({ request }) {
   const requestedOffset = parseInt(searchParams.get("offset") || "0", 10);
   const limit = parseInt(searchParams.get("limit") || "20", 10);
   const nprobe = parseInt(searchParams.get("nprobe") || "32", 10);
-  const temporal_k = parseInt(searchParams.get("temporal_k") || "2000", 10);
-  const ocr_weight = parseFloat(searchParams.get("ocr_weight") || "0.5");
+  const temporal_k = parseInt(searchParams.get("temporal_k") || "200", 10);
+  const ocr_weight = parseFloat(searchParams.get("ocr_weight") || "0.0");
   const asr_weight = parseFloat(searchParams.get("asr_weight") || "0.0");
-  const ocr_alpha = parseFloat(searchParams.get("ocr_alpha") || "0.5");
-  const asr_alpha = parseFloat(searchParams.get("asr_alpha") || "0.5");
+  const ocr_alpha = parseFloat(searchParams.get("ocr_alpha") || "0.0");
+  const asr_alpha = parseFloat(searchParams.get("asr_alpha") || "0.0");
   const max_interval = parseInt(searchParams.get("max_interval") || "1000", 10);
   const auto_translate = searchParams.get("auto_translate") === "true";
   const en_to_vi_translate = searchParams.get("en_to_vi_translate") === "true";
@@ -111,7 +111,7 @@ export async function loader({ request }) {
       offset: requestedOffset,
       chunkStart: res.offset !== undefined ? res.offset : chunkStart,
       initialLocalOffset,
-      data: { total: res.total || 0, frames: res.frames || [] },
+      data: { total: res.total || 0, frames: res.frames || [], translation_failed: !!res.translation_failed },
     };
   } catch (err) {
     console.error("Search failed:", err);
@@ -220,13 +220,13 @@ export default function Search() {
   ) => {
     const activeAutoTranslate = liveAutoTranslate !== undefined ? liveAutoTranslate : autoTranslate;
     const activeEnToViTranslate = liveEnToViTranslate !== undefined ? liveEnToViTranslate : enToViTranslate;
-    const activeOcrWeight = liveOcrWeight !== undefined ? liveOcrWeight : (params.ocr_weight !== undefined ? params.ocr_weight : 0.5);
+    const activeOcrWeight = liveOcrWeight !== undefined ? liveOcrWeight : (params.ocr_weight !== undefined ? params.ocr_weight : 0.0);
     const activeAsrWeight = liveAsrWeight !== undefined ? liveAsrWeight : (params.asr_weight !== undefined ? params.asr_weight : 0.0);
-    const activeOcrAlpha = liveOcrAlpha !== undefined ? liveOcrAlpha : (params.ocr_alpha !== undefined ? params.ocr_alpha : 0.5);
-    const activeAsrAlpha = liveAsrAlpha !== undefined ? liveAsrAlpha : (params.asr_alpha !== undefined ? params.asr_alpha : 0.5);
+    const activeOcrAlpha = liveOcrAlpha !== undefined ? liveOcrAlpha : (params.ocr_alpha !== undefined ? params.ocr_alpha : 0.0);
+    const activeAsrAlpha = liveAsrAlpha !== undefined ? liveAsrAlpha : (params.asr_alpha !== undefined ? params.asr_alpha : 0.0);
     const activeNprobe = liveNprobe ?? params.nprobe ?? 32;
     const activeLimit = liveLimit ?? params.limit ?? 20;
-    const activeTemporalK = liveTemporalK ?? params.temporal_k ?? 2000;
+    const activeTemporalK = liveTemporalK ?? params.temporal_k ?? 200;
     const activeMaxInterval = liveMaxInterval ?? params.max_interval ?? 1000;
 
     submit(
@@ -691,11 +691,11 @@ export default function Search() {
       {
         id: frameKey,
         target_features: (selectedFeatures || []).join(","),
-        ocr_weight: params.ocr_weight !== undefined ? params.ocr_weight : 0.5,
+        ocr_weight: params.ocr_weight !== undefined ? params.ocr_weight : 0.0,
         asr_weight: params.asr_weight !== undefined ? params.asr_weight : 0.0,
         nprobe: params.nprobe ?? 32,
         limit: params.limit ?? 20,
-        temporal_k: params.temporal_k ?? 2000,
+        temporal_k: params.temporal_k ?? 200,
         max_interval: params.max_interval ?? 1000,
       },
       { action: "/similar" }
@@ -744,6 +744,7 @@ export default function Search() {
           isSearching={isSearching}
           onCancelSearch={handleCancelSearch}
           onResetQueryHeight={handleResetQueryHeight}
+          translationFailed={!!data?.translation_failed}
         />
       </div>
 

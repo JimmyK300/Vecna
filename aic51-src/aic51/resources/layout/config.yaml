@@ -203,13 +203,13 @@ searcher:
     ocr_field: "ocr_sparse"
     ocr_dense_field: "ocr_dense"
     enable: true
-    hybrid_alpha: 0.7
+    hybrid_alpha: 0.0
 
   asr:
     asr_field: "asr_sparse"
     asr_dense_field: "asr_dense"
     enable: true
-    hybrid_alpha: 0.7
+    hybrid_alpha: 0.0
 
   reranker:
     enable: true

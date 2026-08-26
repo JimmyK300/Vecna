@@ -33,13 +33,13 @@ export default function Root() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const searchParams = new URLSearchParams(location.search);
-  const [ocrWeight, setOcrWeight] = useState(parseFloat(searchParams.get("ocr_weight") || "0.5"));
+  const [ocrWeight, setOcrWeight] = useState(parseFloat(searchParams.get("ocr_weight") || "0.0"));
   const [asrWeight, setAsrWeight] = useState(parseFloat(searchParams.get("asr_weight") || "0.0"));
-  const [ocrAlpha, setOcrAlpha] = useState(parseFloat(searchParams.get("ocr_alpha") || "0.5"));
-  const [asrAlpha, setAsrAlpha] = useState(parseFloat(searchParams.get("asr_alpha") || "0.5"));
+  const [ocrAlpha, setOcrAlpha] = useState(parseFloat(searchParams.get("ocr_alpha") || "0.0"));
+  const [asrAlpha, setAsrAlpha] = useState(parseFloat(searchParams.get("asr_alpha") || "0.0"));
   const [nprobe, setNprobe] = useState(searchParams.get("nprobe") || "32");
   const [limit, setLimit] = useState(searchParams.get("limit") || "20");
-  const [temporalK, setTemporalK] = useState(searchParams.get("temporal_k") || "2000");
+  const [temporalK, setTemporalK] = useState(searchParams.get("temporal_k") || "200");
   const [maxInterval, setMaxInterval] = useState(searchParams.get("max_interval") || "1000");
 
   const [autoTranslate, setAutoTranslate] = useState(searchParams.get("auto_translate") === "true");
@@ -54,13 +54,13 @@ export default function Root() {
   // Synchronize state with URL parameters when location.search changes
   useEffect(() => {
     const p = new URLSearchParams(location.search);
-    setOcrWeight(parseFloat(p.get("ocr_weight") || "0.5"));
+    setOcrWeight(parseFloat(p.get("ocr_weight") || "0.0"));
     setAsrWeight(parseFloat(p.get("asr_weight") || "0.0"));
-    setOcrAlpha(parseFloat(p.get("ocr_alpha") || "0.5"));
-    setAsrAlpha(parseFloat(p.get("asr_alpha") || "0.5"));
+    setOcrAlpha(parseFloat(p.get("ocr_alpha") || "0.0"));
+    setAsrAlpha(parseFloat(p.get("asr_alpha") || "0.0"));
     setNprobe(p.get("nprobe") || "32");
     setLimit(p.get("limit") || "20");
-    setTemporalK(p.get("temporal_k") || "2000");
+    setTemporalK(p.get("temporal_k") || "200");
     setMaxInterval(p.get("max_interval") || "1000");
     setAutoTranslate(p.get("auto_translate") === "true");
     setEnToViTranslate(p.get("en_to_vi_translate") === "true");

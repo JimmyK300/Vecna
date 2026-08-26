@@ -9,17 +9,50 @@ import aic51.packages.constant as global_constant
 from . import constants
 
 
-@lru_cache(maxsize=1024)
-def translate_vi_to_en(text: str) -> str:
+ERROR_SIGNATURES = (
+    "error 500",
+    "server error",
+    "that’s an error",
+    "that's an error",
+    "please try again later",
+    "that’s all we know",
+    "that's all we know",
+)
+
+
+def _is_translation_error(text: str) -> bool:
   if not text or not text.strip():
-    return text
+    return True
+  lower = text.lower()
+  return any(sig in lower for sig in ERROR_SIGNATURES)
+
+
+@lru_cache(maxsize=1024)
+def _raw_translate_vi_to_en(inner_text: str) -> str:
+  translated = GoogleTranslator(source="auto", target="en").translate(inner_text)
+  if _is_translation_error(translated):
+    raise ValueError(f"GoogleTranslator returned error/invalid response: '{translated}'")
+  return translated
+
+
+@lru_cache(maxsize=1024)
+def _raw_translate_en_to_vi(inner_text: str) -> str:
+  translated = GoogleTranslator(source="auto", target="vi").translate(inner_text)
+  if _is_translation_error(translated):
+    raise ValueError(f"GoogleTranslator returned error/invalid response: '{translated}'")
+  return translated
+
+
+def translate_vi_to_en_with_status(text: str) -> tuple[str, bool]:
+  if not text or not text.strip():
+    return text, True
   stripped = text.strip()
   is_quoted = stripped.startswith('"') and stripped.endswith('"') and len(stripped) >= 2
   inner_text = stripped[1:-1].strip() if is_quoted else stripped
   if not inner_text:
-    return text
+    return text, True
   try:
-    translated = GoogleTranslator(source="auto", target="en").translate(inner_text)
+    translated = _raw_translate_vi_to_en(inner_text)
     if translated and translated.strip():
       res = translated.strip()
       if is_quoted:
@@ -28,17 +61,21 @@ def translate_vi_to_en(text: str) -> str:
         logger.info(f"translate_vi_to_en: '{text}' -> '{res}'")
       except Exception:
         pass
-      return res
-    return text
+      return res, True
+    return text, True
   except Exception as e:
     try:
       logger.error(f"translate_vi_to_en failed for '{text}': {e}")
     except Exception:
       pass
-    return text
+    return text, False
 
 
-@lru_cache(maxsize=1024)
+def translate_vi_to_en(text: str) -> str:
+  res, _ = translate_vi_to_en_with_status(text)
+  return res
+
+
 def translate_en_to_vi(text: str) -> str:
   if not text or not text.strip():
     return text
@@ -48,7 +85,7 @@ def translate_en_to_vi(text: str) -> str:
   if not inner_text:
     return text
   try:
-    translated = GoogleTranslator(source="auto", target="vi").translate(inner_text)
+    translated = _raw_translate_en_to_vi(inner_text)
     if translated and translated.strip():
       res = translated.strip()
       if is_quoted:
@@ -65,6 +102,7 @@ def translate_en_to_vi(text: str) -> str:
     except Exception:
       pass
     return text
+
 
 
 class Query:
@@ -87,8 +125,14 @@ class Query:
     self._en_to_vi_translate = en_to_vi_translate  # EN -> VI for OCR/ASR
     self._init_include_videos = include_videos
     self._init_exclude_videos = exclude_videos
+    self._translation_failed = False
 
     self._parse()
+
+  @property
+  def translation_failed(self) -> bool:
+    return getattr(self, "_translation_failed", False)
+
 
   @property
   def simple(self):
@@ -233,7 +277,10 @@ class Query:
       features["text"] = raw
       if self._auto_translate:
         # VI -> EN translation for CLIP
-        features["text_en"] = translate_vi_to_en(raw)
+        translated, success = translate_vi_to_en_with_status(raw)
+        features["text_en"] = translated
+        if not success:
+          self._translation_failed = True
       if self._en_to_vi_translate:
         # EN -> VI translation for OCR/ASR
         features["text_vi"] = translate_en_to_vi(raw)
