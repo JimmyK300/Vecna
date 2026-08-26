@@ -15,13 +15,13 @@ The relevant behavior is spread across:
 - `backend/services/search.py::search_semantic_asr_*`: selects the sentence-level mapping/index when `sentence_level=true`;
 - `opencubee2-ui/src/App.jsx`: uses the toggle for pure semantic-ASR search and candidate-scoped ASR filtering.
 
-Therefore this donor is **not** defined as a modification to OpenCubee's ordinary visual fusion, and the Vecna experiment must not alter ordinary `search_multimodal` behavior.
+Therefore this donor is **not** defined as a modification to OpenCubee's ordinary visual fusion, and the Vecna integration must not alter ordinary `search_multimodal` behavior.
 
 ## Vecna connection
 
 Vecna's existing WhisperX extractor already produces timed text segments, but the indexed representation projects a segment's text onto multiple keyframes. The #59 TRAKE audit independently found `same-transcript keyframe slot flooding` and proposed `ASR dedup accounting` as a falsifiable follow-up.
 
-The experiment deliberately uses the already-indexed text. No transcription, embedding, index, corpus, or provenance regeneration is permitted.
+The donor deliberately uses the already-indexed text. No transcription, embedding, index, corpus, or provenance regeneration is permitted.
 
 ## Frozen approximation
 
@@ -31,49 +31,79 @@ A first-pass sentence/utterance identity is:
 (video_id, lowercase(collapse_whitespace(asr_text)))
 ```
 
-This is an explicit experimental approximation. It can merge two distinct occurrences of literally identical text in one video. No temporal-gap rule is added because doing so would introduce a second semantic variable.
+This can merge two distinct occurrences of literally identical text in one video. No temporal-gap rule is added because doing so would introduce a second semantic variable.
 
-One depth-1000 `asr_sparse` BM25 exposure is used per frozen query. From that same exposure:
+One depth-1000 `asr_sparse` BM25 exposure is used. From that same exposure:
 
-- **Raw arm:** first 20 valid frame hits.
-- **Sentence arm:** group all valid depth-1000 hits by the frozen key, score each group by its maximum member BM25 score, retain all member frames, return top 20 groups.
+- **Raw mode (default):** individual frame hits.
+- **Sentence mode (explicit opt-in):** group hits by the frozen key, score each group by its maximum member BM25 score, retain all member frames.
 
-This mirrors OpenCubee's operator-level idea that one semantic ASR unit can map back to multiple keyframes.
+## Frozen evaluation result
 
-## Frozen query and truth sources
+Local A/B on the accepted repaired runtime (`fd879fb0529165a441745374ab72244df8aadd5e`) passed the safety gate.
 
-Queries: `p1_q02`, `p1_q14`, `p1_q16`, resolved at run time from the accepted repaired runtime's canonical `aic51-src/benchmark/issue34_headless_queries.csv`; exact path and SHA-256 are recorded before search.
+Across `p1_q02`, `p1_q14`, and `p1_q16`:
 
-Gold event metadata comes from #59 commit `6f81433a437c9aef1fbc86efb8c655199662dcf6`, `benchmark-results/issue59-trake-audit/trake-audit.jsonl`, blob `df52e74211b71e766d79a74f94959aa76c8eeb88`. The same ±2-second event exposure contract is used.
+- raw top-20 slots: 60;
+- effective unique sentence units in those raw slots: 4;
+- duplicate raw slots removed by grouping: 56;
+- raw unique-video exposure: effectively 1 video/query;
+- sentence-group mode: 8–9 videos/query;
+- correct-video exposure: 0/3 raw → 0/3 grouped;
+- ±2s gold-event exposure: 0/12 raw → 0/12 grouped.
 
-## Measurements
+Thus grouping **clearly reduced inspection flooding without worsening the measured truth exposure**. It did not prove better relevance, because neither arm found the gold events. Under the frozen Issue #68 policy this earned `PROMOTE_CANDIDATE` as an **operator feature**, not as a new ranking default.
 
-For each query:
+Evidence artifact from the frozen experiment:
 
-- unique sentence identities occupying raw top 20;
-- largest repeated-sentence slot count in raw top 20;
-- unique videos in both arms;
-- first correct-video rank in both arms;
-- number and ranks of gold events exposed in both arms;
-- sentence-group member counts and exact member frames.
+`benchmark-results/issue68-sentence-asr/ab.json`
 
-The sentence arm can expose a gold frame through any member of a top-level sentence group. This is intentional: OpenCubee's sentence unit likewise maps one ASR unit to all keyframes in its interval. It should be interpreted as **operator inspection exposure**, not a claim that each member independently earned the top-level score.
+SHA-256:
 
-## Terminal policy
+`F2EAA1A682C621FB05FA0DA5236E4803090A114B85326FCD9A25CFDE33B3C928`
 
-- `REJECT_DONOR` if flooding is not materially reduced or correct-video/event exposure worsens.
-- `KEEP_EXPERIMENTAL` if flooding improves but exposure/inspection value does not materially improve.
-- `PROMOTE_CANDIDATE` only if flooding clearly improves while correct-video/event exposure is maintained or improved and the top-level result unit is visibly easier to inspect.
+## Promotion implementation
 
-No post-result tuning is allowed inside #68.
+The candidate is exposed as a dedicated operator surface rather than changing the main search route:
 
-## Safety
+- `aic51-src/aic51/packages/search/asr_operator.py`
+  - performs one existing ASR BM25 search;
+  - raw mode is default;
+  - grouped mode reuses the frozen exact-text grouping helper;
+  - no Milvus write path.
+- `aic51-src/aic51/packages/webui/backend/search_issue68.py`
+  - imports the normal search FastAPI app unchanged;
+  - registers only `/api/search_asr_operator`;
+  - `sentence_level=false` is the API default.
+- `aic51-src/aic51/packages/webui/backend/__init__.py`
+  - points the search server at the thin extension app so all normal routes remain intact.
+- `aic51-src/aic51/packages/webui/frontend/src/routes/AsrSearch.jsx`
+  - dedicated `/asr` page;
+  - raw-frame mode is visibly the default;
+  - sentence grouping is an explicit checkbox;
+  - grouped results retain and show all member frame IDs.
+- `aic51-src/aic51/packages/webui/frontend/src/main.jsx`
+  - registers `/asr` only; existing `/search` and `/similar` routes are unchanged.
 
-The experiment branch adds only:
+## Safety invariants
 
-- `aic51-src/aic51/packages/search/experimental_sentence_asr.py`
-- `aic51-src/tests/test_experimental_sentence_asr.py`
-- `aic51-src/script/run_issue68_sentence_asr.py`
-- this document
+- `Searcher.search_multimodal` is not modified.
+- Existing `/api/search_multimodal` and `/api/search_image` implementations are not modified.
+- Main `/search` frontend route is not modified.
+- Sentence grouping is structurally unreachable unless `/api/search_asr_operator` is invoked.
+- Raw ASR operator mode is the default (`sentence_level=false`).
+- No re-transcription, re-embedding, reindexing, corpus mutation, or Milvus write is part of the feature.
 
-No existing production file is modified. The runner uses read-only Milvus `search`/count/index metadata and records primary Git/config/collection/index identity before and after.
+## Remaining promotion gate
+
+Before merge/promote to the repaired local line, run:
+
+1. focused tests for the original grouping helper and promoted operator helper;
+2. frontend build;
+3. one live smoke against the accepted repaired collection showing:
+   - `/api/search_asr_operator` raw mode works;
+   - `sentence_level=true` returns grouped results with member frames;
+   - ordinary `/api/search_multimodal` remains callable and unchanged in behavior for an identity-pinned canary;
+   - primary Git/config/collection/index identity is unchanged before/after.
+
+Terminal promotion verdict after that smoke: `PROMOTED` or `BLOCKED`.
