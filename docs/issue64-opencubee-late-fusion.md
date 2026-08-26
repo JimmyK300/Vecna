@@ -27,11 +27,13 @@ Observed donor behavior:
 
 The first Vecna donor adapter intentionally copies **only that late-fusion behavior**. It does not copy Qdrant, Meilisearch, model workers, async orchestration, spatial search, similarity labels, DRES, realtime UI, or other OpenCubee architecture.
 
-## Why this is a meaningful difference from current Vecna
+## Mapping into Vecna
 
 Current Vecna's `_similarity_search` loops over selected visual target features, sums their raw distances into one `clip_raw_scores` map, then normalizes that aggregate as one visual channel before combining it with OCR/ASR.
 
-The donor experiment instead preserves each visual model as an explicit arm until the late-fusion boundary. That makes model contribution auditable and permits a bounded A/B without changing OCR/ASR, indexes, embeddings, or ground truth.
+The donor experiment instead preserves each visual model as an explicit arm until the late-fusion boundary. To preserve Vecna's existing outer channel contract, the experimental adapter fuses each model's **existing Vecna-normalized visual score** with equal active-model weights, then applies the unchanged Vecna visual/OCR/ASR outer weights. OCR and ASR each execute once; they are not re-fused per visual model.
+
+This is an adaptation of the OpenCubee late-fusion pattern, not a claim that Vecna copied OpenCubee's entire scoring stack byte-for-byte.
 
 ## Browser implementation
 
@@ -40,11 +42,17 @@ Branch: `btl/issue-64-opencubee-late-fusion`
 Added:
 
 - `aic51-src/aic51/packages/search/experimental_fusion.py`
-  - pure donor adapter;
-  - no production import/call site;
+  - pure donor late-fusion helper;
   - deterministic frame-ID tie break;
+  - active-model weight normalization;
   - donor identity embedded in experimental output metadata;
   - exact `legacy` switch returns the original legacy result sequence unchanged.
+- `aic51-src/aic51/packages/search/experimental_searcher.py`
+  - default-off `OpenCubeeFusionSearcher` subclass;
+  - reuses production component retrieval through `super()._similarity_search`;
+  - visual models run as isolated visual-only arms;
+  - OCR and ASR run once each through existing Vecna logic;
+  - only visual model fusion differs from legacy semantics.
 - `aic51-src/tests/test_experimental_fusion.py`
   - weight normalization;
   - inactive/missing model handling;
@@ -53,35 +61,48 @@ Added:
   - no input mutation;
   - default-off compatibility;
   - invalid strategy/input rejection.
+- `aic51-src/script/run_issue64_opencubee_fusion.py`
+  - treats `C:\Users\minhc\Code\Vecna` (or supplied primary root) as a read-only repaired runtime;
+  - loads only the experimental files from this worktree into the primary package namespace;
+  - swaps the `Searcher` symbol in-memory before importing the primary P20/P21 runner;
+  - runs the existing `clip_siglip_qwen_sparse` quality cell unchanged;
+  - records primary runtime/config/query hashes and Git state before/after;
+  - fails the safety gate if the primary checkout changes.
 - `aic51-src/script/evaluate_issue64_opencubee_fusion.py`
-  - offline confirmatory evaluator over frozen per-model headless JSONL arms;
-  - validates identical query/ground-truth identity across arms;
-  - validates candidate ground-truth flags do not disagree;
-  - freezes weights before scoring;
-  - emits raw fused JSONL, run hashes, aggregate metrics, and per-query rank deltas;
-  - labels latency as unresolved by offline replay rather than fabricating a production-latency claim.
+  - compares the real legacy and donor headless JSONL runs;
+  - validates identical query/ground-truth identity;
+  - rejects a legacy arm containing donor markers;
+  - requires donor result markers proving the experimental Searcher actually ran;
+  - reports R@1/R@5/R@20/MRR, task-type slices, per-query rank deltas, gained/lost top-20 hits, and observed end-to-end latency.
+- `docs/issue64-opencubee-late-fusion.md`
+  - donor mapping, frozen policy, evidence gate, interpretation and rollback.
 
-No production `Searcher`, config, index schema, frontend, model, or corpus file changes in this browser slice.
+No production `Searcher`, config, index schema, frontend, model, corpus, or provenance file is modified by this browser slice.
 
 ## Frozen confirmatory policy
 
 Before looking at donor outcomes:
 
 - baseline: current repaired Vecna default headless result arm;
-- donor inputs: one headless ranking arm per current visual model (`clip`, `siglip`, `qwen` naming may be mapped to exact local feature names in the run manifest);
-- weights: equal `1.0 / 1.0 / 1.0` unless a different policy was already frozen before the first confirmatory run;
-- top-k: 20;
-- no post-result weight tuning in Issue #64;
-- current Issue #58 benchmark is acceptable if Issue #63 expanded truth is not yet frozen; label such a result `pre-expansion`.
+- donor: the same headless quality cell with `OpenCubeeFusionSearcher` injected in-memory;
+- visual model weights: equal across active selected visual target features;
+- outer weights/config/query truth/index identity: identical to baseline;
+- top-k and temporal settings: identical to the current baseline runner;
+- reranker: unchanged from the baseline cell (currently default-off for this baseline);
+- no post-result weight or donor-logic tuning in Issue #64;
+- current Issue #58 benchmark is acceptable if Issue #63 expanded truth is not yet frozen; label the result `pre-expansion`.
 
-Required local evidence:
+## Required local evidence
 
-1. run the repaired local stack and preserve exact commit/status/config/index-generation identity;
-2. produce the current/default arm and single-visual-model arms on identical queries/truth/config except the isolated visual target;
-3. invoke `evaluate_issue64_opencubee_fusion.py` over those frozen arm files;
-4. preserve raw JSONL + summary + run manifest together;
+1. record exact repaired primary HEAD/branch/dirty status, config hashes and index-generation identity;
+2. use the existing current/default baseline arm, or rerun it if its runtime identity no longer matches the donor run;
+3. run `run_issue64_opencubee_fusion.py --overwrite` from an isolated checkout/worktree of this branch;
+4. confirm `primary_unchanged=true` in `issue64-run.json`;
 5. run `tests/test_experimental_fusion.py` in the repaired environment;
-6. if donor quality is good enough to consider promotion, run a separate runtime microbenchmark before changing production defaults. Offline replay is not latency evidence.
+6. compare legacy vs donor with `evaluate_issue64_opencubee_fusion.py`;
+7. preserve both raw JSONL files, runner manifests, A/B summary and exact hashes together.
+
+The donor runner itself produces real end-to-end query latency, so latency can be compared against an identity-matched legacy run. Do not compare latency across materially different runtime/config/dirty states.
 
 ## Acceptance interpretation
 
@@ -91,16 +112,16 @@ Use if donor fusion materially worsens retrieval, loses important top-20 hits, o
 
 ### `KEEP_EXPERIMENTAL`
 
-Use if evidence is mixed/underpowered or quality improves but promotion still lacks runtime/provenance evidence. Keep the helper/harness available but do not wire production.
+Use if evidence is mixed/underpowered, if quality moves little, or if a possible gain remains confounded by runtime identity. Keep the helper/harness available but do not wire production.
 
 ### `PROMOTE_CANDIDATE`
 
-Use only if the frozen donor arm produces a material retrieval improvement with no important regression and a separate runtime check shows acceptable overhead. Promotion must be a new bounded integration target; Issue #64 itself does not silently change production defaults.
+Use only if the frozen donor arm produces a material retrieval improvement with no important regression and acceptable identity-matched runtime overhead. Promotion must be a new bounded integration target; Issue #64 itself does not silently change production defaults.
 
 ## Provenance / traceability rule
 
-The experimental donor changes ranking composition, so any future production integration must make the fusion strategy and material model weights part of `ServingComposition` identity. Until then, the offline result artifact identifies the strategy and donor source explicitly and must not be presented as a normal production search response.
+The experimental donor changes ranking composition, so any future production integration must make the fusion strategy and material model weights part of `ServingComposition` identity. The current experimental result carries donor markers in its score diagnostics and a separate run manifest; it must not be presented as ordinary production search without that qualification.
 
 ## Rollback
 
-Current rollback is trivial: delete the three Issue #64 experimental files/commits. No production behavior, database, index, corpus, or configuration was changed.
+Current rollback is trivial: remove the six Issue #64 experimental files/commits. No production behavior, database, index, corpus, or configuration is changed.
