@@ -154,16 +154,6 @@ def create_teamwork_router(
     async def broadcast_snapshot() -> None:
         await manager.broadcast(encode_event("team_sync", state.snapshot()))
 
-    @router.get("/api/team_shortlist")
-    async def team_shortlist_snapshot():
-        async with state_lock:
-            return {
-                "status": "success",
-                "items": state.snapshot(),
-                "connection_count": manager.connection_count,
-                "persistence": "process_local_memory",
-            }
-
     @router.websocket("/ws/team")
     async def teamwork_socket(websocket: WebSocket):
         await manager.connect(websocket)
