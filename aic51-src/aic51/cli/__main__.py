@@ -8,6 +8,10 @@ from dotenv import load_dotenv
 from aic51.packages.logger import logger
 
 os.environ["YOLO_VERBOSE"] = "False"
+# Ultralytics may otherwise install the CPU onnxruntime wheel while exporting,
+# which can replace an existing onnxruntime-directml installation.  Vecna owns
+# its runtime dependencies explicitly; never let model code mutate the venv.
+os.environ.setdefault("YOLO_AUTOINSTALL", "false")
 load_dotenv()
 
 from . import commands
