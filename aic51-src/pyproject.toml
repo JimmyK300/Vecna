@@ -43,6 +43,15 @@ onnx-directml = [
 yolo = [
   "ultralytics>=8.4.0",
 ]
+# Known-good runtime family for the baked YOLOE-26x DirectML artifact.  Keep
+# this separate from the CPU ONNX extra: onnxruntime and
+# onnxruntime-directml must not coexist in the same environment.
+yolo-directml = [
+  "onnxruntime-directml>=1.24.4",
+]
+yolo-onnx = [
+  "onnxruntime>=1.24.4",
+]
 
 [project.scripts]
 aic51-cli = "aic51.cli:__main__.main"
