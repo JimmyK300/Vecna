@@ -37,10 +37,39 @@ class AnalyseYoloCommand(AnalyseCommand):
             action="store_true",
             help="Write YOLO detector text but skip the BGE-M3 yolo_semantic projection",
         )
+        parser.add_argument(
+            "--yolo-backend",
+            choices=("auto", "ultralytics", "onnx"),
+            default=None,
+            help="Override features.yolo.backend for this run",
+        )
+        parser.add_argument(
+            "--yolo-onnx-provider",
+            choices=("auto", "dml", "cpu"),
+            default=None,
+            help="Override features.yolo.onnx_provider for this run",
+        )
+        parser.add_argument(
+            "--yolo-onnx-model",
+            default=None,
+            help="Path to the baked-vocabulary YOLOE ONNX artifact",
+        )
+        parser.add_argument(
+            "--yolo-class-names",
+            default=None,
+            help="Optional JSON/TXT class-name map if the ONNX metadata has no names",
+        )
         parser.set_defaults(func=self)
 
     @staticmethod
-    def _feature_kwargs(feature_name: str, device: torch.device, work_dir) -> tuple[str, dict[str, Any]]:
+    def _feature_kwargs(
+        feature_name: str,
+        device: torch.device,
+        work_dir,
+        *,
+        allow_gpu: bool,
+        overrides: dict[str, Any] | None = None,
+    ) -> tuple[str, dict[str, Any]]:
         model_name = GlobalConfig.get("features", feature_name, "model")
         if model_name is None:
             raise RuntimeError(f"features.{feature_name} is missing from config")
@@ -61,6 +90,7 @@ class AnalyseYoloCommand(AnalyseCommand):
         }
 
         if model_name == "yolo":
+            kwargs["allow_gpu"] = bool(allow_gpu)
             for key in (
                 "confidence",
                 "imgsz",
@@ -68,13 +98,24 @@ class AnalyseYoloCommand(AnalyseCommand):
                 "iou",
                 "max_details",
                 "vocabulary",
+                "backend",
+                "onnx_provider",
+                "onnx_model_path",
+                "onnx_class_names_path",
+                "onnx_device_id",
             ):
                 value = GlobalConfig.get("features", feature_name, key)
                 if value is not None:
                     kwargs[key] = value
+            for key, value in (overrides or {}).items():
+                if value is not None:
+                    kwargs[key] = value
 
         if model_name == "text_embedding":
-            kwargs["allow_gpu"] = device.type != "cpu"
+            # This is intentionally based on the user's GPU permission, not on
+            # torch.device.  On Windows AMD, get_device() is CPU while the BGE
+            # ONNX backend may still legitimately use DirectML.
+            kwargs["allow_gpu"] = bool(allow_gpu)
             for key in (
                 "backend",
                 "onnx_provider",
@@ -97,14 +138,27 @@ class AnalyseYoloCommand(AnalyseCommand):
         do_overwrite: bool,
         verbose: bool,
         video_ids_filter: list[str] | None,
+        *,
+        allow_gpu: bool,
+        overrides: dict[str, Any] | None = None,
     ) -> None:
-        model_name, init_kwargs = self._feature_kwargs(feature_name, device, self._work_dir)
+        model_name, init_kwargs = self._feature_kwargs(
+            feature_name,
+            device,
+            self._work_dir,
+            allow_gpu=allow_gpu,
+            overrides=overrides,
+        )
         extractor_cls = FeatureExtractorFactory.get(model_name)
         if extractor_cls is None:
-            raise RuntimeError(
-                f"Feature extractor {model_name!r} is unavailable. "
-                "For YOLO install with: pip install -e 'aic51-src[yolo]'"
-            )
+            if model_name == "yolo":
+                hint = (
+                    "Install `aic51-src[yolo]` for the Ultralytics/CUDA path or "
+                    "`aic51-src[yolo-directml]` for the ONNX DirectML runtime path."
+                )
+            else:
+                hint = f"Feature extractor {model_name!r} failed to register."
+            raise RuntimeError(hint)
 
         extractor = extractor_cls.from_pretrained(**init_kwargs)
         source = GlobalConfig.get("features", feature_name, "source")
@@ -144,10 +198,11 @@ class AnalyseYoloCommand(AnalyseCommand):
             video_ids = [video_id for video_id in video_ids if video_id in allowed]
 
         logger.info(
-            "%s: %d videos, provider_generation=%s",
+            "%s: %d videos, provider_generation=%s semantics=%s",
             feature_name,
             len(video_ids),
             provider_generation["provider_generation_id"],
+            runtime_semantics,
         )
 
         processed = 0
@@ -182,11 +237,29 @@ class AnalyseYoloCommand(AnalyseCommand):
         verbose: bool,
         raw_only: bool = False,
         video_ids_filter: list[str] | None = None,
+        yolo_backend: str | None = None,
+        yolo_onnx_provider: str | None = None,
+        yolo_onnx_model: str | None = None,
+        yolo_class_names: str | None = None,
         *args,
         **kwargs,
     ):
         device = get_device(do_gpu)
-        self._run_feature("yolo", device, do_overwrite, verbose, video_ids_filter)
+        yolo_overrides = {
+            "backend": yolo_backend,
+            "onnx_provider": yolo_onnx_provider,
+            "onnx_model_path": yolo_onnx_model,
+            "onnx_class_names_path": yolo_class_names,
+        }
+        self._run_feature(
+            "yolo",
+            device,
+            do_overwrite,
+            verbose,
+            video_ids_filter,
+            allow_gpu=do_gpu,
+            overrides=yolo_overrides,
+        )
         if not raw_only:
             self._run_feature(
                 "yolo_semantic",
@@ -194,4 +267,5 @@ class AnalyseYoloCommand(AnalyseCommand):
                 do_overwrite,
                 verbose,
                 video_ids_filter,
+                allow_gpu=do_gpu,
             )
