@@ -43,11 +43,11 @@ onnx-directml = [
 yolo = [
   "ultralytics>=8.4.0",
 ]
-# Known-good runtime family for the baked YOLOE-26x DirectML artifact.  Keep
-# this separate from the CPU ONNX extra: onnxruntime and
+# Exact runtime proven with the baked YOLOE-26x artifact on the RX 6900 XT.
+# Keep this separate from the CPU ONNX extra: onnxruntime and
 # onnxruntime-directml must not coexist in the same environment.
 yolo-directml = [
-  "onnxruntime-directml>=1.24.4",
+  "onnxruntime-directml==1.24.4",
 ]
 yolo-onnx = [
   "onnxruntime>=1.24.4",
