@@ -73,7 +73,6 @@ features: &analyse_features
       params:
         nlist: 512
 
-
   # video_clip_pe-l-14-336:
   #   model: "video_clip"
   #   source: "open_clip"
@@ -120,6 +119,48 @@ features: &analyse_features
         bm25_b: 0.75
         inverted_index_algo: "TAAT_NAIVE"
 
+  # Detector knowledge is stored as readable text first. This gives us an
+  # inspectable/BM25 object channel and a clean source for the dense projection.
+  yolo:
+    model: "yolo"
+    source: "ultralytics"
+    pretrained_model: "yoloe-26s-seg-pf.pt"
+    confidence: 0.20
+    imgsz: 640
+    max_det: 100
+    iou: 0.7
+    max_details: 12
+    analyse:
+      batch_size: 16
+    index:
+      default_value: ""
+      datatype: "VARCHAR"
+      max_length: 4096
+      index_type: "BM25"
+      params:
+        bm25_k1: 1.2
+        bm25_b: 0.75
+        inverted_index_algo: "TAAT_NAIVE"
+
+  # BGE-M3 projection of the YOLO semantic text. Because this is a normal
+  # FLOAT_VECTOR feature, the current searcher can fuse it with image features
+  # without a detector-specific query path.
+  yolo_semantic:
+    model: "text_embedding"
+    source: "hf"
+    pretrained_model: "BAAI/bge-m3"
+    text_source: "yolo"
+    backend: "pytorch"
+    analyse:
+      batch_size: 64
+    index:
+      datatype: "FLOAT_VECTOR"
+      dim: 1024
+      metric_type: "COSINE"
+      index_type: "SCANN"
+      params:
+        nlist: 512
+
 searcher:
   language_models:
     language_clip_pe-l-14-336:
@@ -160,6 +201,7 @@ searcher:
       target:
         - ocr_dense
         - asr_dense
+        - yolo_semantic
 
   ocr:
     ocr_field: "ocr_sparse"
@@ -176,14 +218,12 @@ searcher:
     model_name: "openai/gpt-oss-120b"     # Mô hình 120B tham số trên Groq Cloud
     api_key: "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"                           # Để trống để lấy từ GROQ_API_KEY environment variable
 
-  # YOLO Auto-Crop Processor
+  # YOLO Auto-Crop Processor (legacy query-image path; separate from yolo_semantic)
   yolo:
     enable: true
     model_path: "yolov8x.pt"
     conf_threshold: 0.25
     padding: 15
-
-
 
 frontend:
   dev_port: 5173
@@ -211,4 +251,3 @@ backends:
   file:
     port: 4200
     workers: 1
-    
