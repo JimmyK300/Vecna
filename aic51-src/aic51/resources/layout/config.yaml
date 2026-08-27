@@ -119,6 +119,27 @@ features: &analyse_features
         bm25_b: 0.75
         inverted_index_algo: "TAAT_NAIVE"
 
+  yolo:
+    model: "yolo"
+    source: "ultralytics"
+    pretrained_model: "yoloe-26s-seg-pf.pt"
+    confidence: 0.20
+    imgsz: 640
+    max_det: 100
+    iou: 0.7
+    max_details: 12
+    analyse:
+      batch_size: 16
+    index:
+      default_value: ""
+      datatype: "VARCHAR"
+      max_length: 4096
+      index_type: "BM25"
+      params:
+        bm25_k1: 1.2
+        bm25_b: 0.75
+        inverted_index_algo: "TAAT_NAIVE"
+
   ocr_dense:
     model: "text_embedding"
     source: "hf"
@@ -165,6 +186,26 @@ features: &analyse_features
       params:
         nlist: 512
 
+  yolo_semantic:
+    model: "text_embedding"
+    source: "hf"
+    pretrained_model: "BAAI/bge-m3"
+    text_source: "yolo"
+    backend: "pytorch"
+    onnx_provider: "auto"
+    onnx_pipeline: "auto"
+    onnx_batch_adapt: "auto"
+    onnx_max_batch: 256
+    analyse:
+      batch_size: 32
+    index:
+      datatype: "FLOAT_VECTOR"
+      dim: 1024
+      metric_type: "COSINE"
+      index_type: "SCANN"
+      params:
+        nlist: 512
+
 searcher:
   language_models:
     language_clip_pe-l-14-336:
@@ -198,6 +239,7 @@ searcher:
       target:
         - ocr_dense
         - asr_dense
+        - yolo_semantic
 
   ocr:
     ocr_field: "ocr_sparse"
@@ -229,8 +271,6 @@ searcher:
     model_path: "yolov8x.pt"
     conf_threshold: 0.25
     padding: 15
-
-
 
 frontend:
   dev_port: 5173
