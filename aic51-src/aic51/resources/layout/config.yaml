@@ -119,17 +119,25 @@ features: &analyse_features
         bm25_b: 0.75
         inverted_index_algo: "TAAT_NAIVE"
 
+  # Accuracy-first corpus detector. `auto` keeps RTX hosts on Ultralytics/CUDA
+  # and uses the baked ONNX artifact through DirectML when it is available on
+  # a Windows AMD host. Set VECNA_YOLO_ONNX or features.yolo.onnx_model_path
+  # to point at yoloe-26x-det-ram-plus-640-b1.onnx.
   yolo:
     model: "yolo"
     source: "ultralytics"
-    pretrained_model: "yoloe-26s-seg-pf.pt"
+    pretrained_model: "yoloe-26x-seg.pt"
+    backend: "auto"
+    onnx_provider: "auto"
     confidence: 0.20
     imgsz: 640
     max_det: 100
     iou: 0.7
     max_details: 12
     analyse:
-      batch_size: 16
+      # The proven DirectML export is fixed batch 1. CUDA may be benchmarked
+      # separately with larger batches later.
+      batch_size: 1
     index:
       default_value: ""
       datatype: "VARCHAR"
