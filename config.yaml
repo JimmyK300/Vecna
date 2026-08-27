@@ -121,17 +121,19 @@ features: &analyse_features
 
   # Detector knowledge is stored as readable text first. This gives us an
   # inspectable/BM25 object channel and a clean source for the dense projection.
+  # Accuracy-first experiment: YOLOE-26x with its broad LVIS-style vocabulary.
+  # Start at batch 1; benchmark locally before increasing this on 8 GB GPUs.
   yolo:
     model: "yolo"
     source: "ultralytics"
-    pretrained_model: "yoloe-26s-seg-pf.pt"
+    pretrained_model: "yoloe-26x-seg.pt"
     confidence: 0.20
     imgsz: 640
     max_det: 100
     iou: 0.7
     max_details: 12
     analyse:
-      batch_size: 16
+      batch_size: 1
     index:
       default_value: ""
       datatype: "VARCHAR"
