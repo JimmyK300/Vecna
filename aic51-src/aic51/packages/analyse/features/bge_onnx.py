@@ -168,6 +168,10 @@ def create_session(model_path: Path, choice: str):
     so = ort.SessionOptions()
     so.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
     so.log_severity_level = 3
+    if choice == "dml":
+        # Required by ONNX Runtime's DirectML execution provider.
+        so.enable_mem_pattern = False
+        so.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL
     disabled = list(CPU_DISABLED_OPTIMIZERS) if choice == "cpu" else None
     return ort.InferenceSession(
         str(model_path),
