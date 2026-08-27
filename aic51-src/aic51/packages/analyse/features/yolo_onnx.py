@@ -7,10 +7,9 @@ exports such as the proven RX 6900 XT artifact:
     1x3x640x640 -> 1x300x6
 
 The six output values are expected to be ``x1, y1, x2, y2, confidence, class``
-in letterboxed input coordinates.  The model is end-to-end/NMS-free; Vecna
-therefore applies the same corpus-facing policy it expects from Ultralytics:
-confidence filtering followed by top-``max_det`` selection, then scales boxes
-back to the original image.
+in letterboxed input coordinates.  The model is end-to-end/NMS-free.  Vecna
+matches Ultralytics' end-to-end postprocess: confidence-filter in model order,
+keep the first ``max_det`` rows, then scale boxes back to the original image.
 """
 
 from __future__ import annotations
@@ -290,17 +289,18 @@ def decode_detections(
     confidence: float,
     max_det: int,
 ) -> list[dict[str, Any]]:
-    """Filter the end-to-end export and restore boxes to original coordinates."""
+    """Apply Ultralytics end-to-end filtering and restore original coordinates."""
     rows = _rows_from_output(output)
     if rows.size == 0:
         return []
     finite = np.isfinite(rows).all(axis=1)
-    rows = rows[finite & (rows[:, 4] >= float(confidence))]
+    rows = rows[finite & (rows[:, 4] > float(confidence))]
     if rows.size == 0:
         return []
 
-    order = np.argsort(-rows[:, 4], kind="stable")
-    rows = rows[order[: max(0, int(max_det))]]
+    # Ultralytics' current end-to-end/Nx300x6 path preserves model order and
+    # takes the first max_det surviving rows.  Do not re-sort or run NMS here.
+    rows = rows[: max(0, int(max_det))]
     detections: list[dict[str, Any]] = []
     ratio = max(float(transform.ratio), 1e-12)
 
@@ -370,8 +370,6 @@ class YOLOOnnxBackend:
                 f"got input shape {self.input_shape}"
             )
         if warning:
-            # Keep this backend dependency-light: caller/logger can surface the
-            # provider through runtime_semantics; warning is retained for tests/debug.
             self.warning = warning
         else:
             self.warning = None
@@ -387,7 +385,7 @@ class YOLOOnnxBackend:
             "input_shape": self.input_shape,
             "input_dtype": str(np.dtype(self.input_dtype)),
             "vocabulary_size": len(self.names),
-            "decode": "end-to-end conf-filter + top-max_det + deletterbox-v1",
+            "decode": "end-to-end conf-filter + model-order max_det + deletterbox-v1",
         }
 
     def predict_one(
