@@ -40,6 +40,9 @@ onnx-directml = [
   "onnxruntime-directml>=1.20",
   "tokenizers",
 ]
+yolo = [
+  "ultralytics>=8.4.0",
+]
 
 [project.scripts]
 aic51-cli = "aic51.cli:__main__.main"
