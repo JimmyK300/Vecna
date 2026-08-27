@@ -7,10 +7,15 @@ import numpy as np
 import torch
 from PIL import Image
 
-from aic51.packages.analyse.features.yolo import _select_backend
+from aic51.packages.analyse.features.yolo import (
+    _select_backend,
+    _semantic_detection,
+    _semantic_text,
+)
 from aic51.packages.analyse.features.yolo_onnx import (
     DirectMLUnavailable,
     LetterboxTransform,
+    assert_requested_provider,
     create_session,
     decode_detections,
     letterbox_rgb,
@@ -30,6 +35,14 @@ class _SessionWithMeta:
 
     def get_modelmeta(self):
         return _ModelMeta(self._metadata)
+
+
+class _ProviderSession:
+    def __init__(self, providers):
+        self._providers = list(providers)
+
+    def get_providers(self):
+        return list(self._providers)
 
 
 class YoloOnnxBackendTest(unittest.TestCase):
@@ -54,6 +67,17 @@ class YoloOnnxBackendTest(unittest.TestCase):
         choice, warning = resolve_provider_choice("dml", allow_gpu=False)
         self.assertEqual(choice, "cpu")
         self.assertIn("disabled", warning or "")
+
+    def test_requested_dml_refuses_silent_cpu_activation(self):
+        with self.assertRaises(DirectMLUnavailable):
+            assert_requested_provider(_ProviderSession(["CPUExecutionProvider"]), "dml")
+
+    def test_requested_dml_accepts_cpu_only_as_second_provider(self):
+        active = assert_requested_provider(
+            _ProviderSession(["DmlExecutionProvider", "CPUExecutionProvider"]),
+            "dml",
+        )
+        self.assertEqual(active, "DmlExecutionProvider")
 
     def test_onnx_metadata_names_are_used(self):
         session = _SessionWithMeta({"names": "{0: 'traffic sign', 1: 'doodle'}"})
@@ -88,7 +112,7 @@ class YoloOnnxBackendTest(unittest.TestCase):
             input_w=640,
             input_h=640,
         )
-        # Letterboxed coordinates.  First row maps to [100, 50, 300, 250]
+        # Letterboxed coordinates. First row maps to [100, 50, 300, 250]
         # in the original frame. Third row is below threshold.
         output = np.array(
             [[
@@ -112,6 +136,84 @@ class YoloOnnxBackendTest(unittest.TestCase):
             [100.0, 50.0, 300.0, 250.0],
             atol=1e-5,
         )
+
+    def test_end2end_decode_does_not_apply_external_nms(self):
+        transform = LetterboxTransform(
+            orig_w=640,
+            orig_h=640,
+            ratio=1.0,
+            left=0,
+            top=0,
+            input_w=640,
+            input_h=640,
+        )
+        # End-to-end YOLO26/YOLOE rows are already final one-to-one predictions.
+        # Two overlapping rows must survive if both clear the confidence threshold.
+        output = np.array(
+            [[
+                [10, 10, 110, 110, 0.90, 1],
+                [12, 12, 108, 108, 0.80, 1],
+            ]],
+            dtype=np.float32,
+        )
+        detections = decode_detections(
+            output,
+            transform,
+            {1: "person"},
+            confidence=0.20,
+            max_det=100,
+        )
+        self.assertEqual(len(detections), 2)
+
+    def test_300_row_export_posthoc_cap_is_not_export_time_parity(self):
+        transform = LetterboxTransform(
+            orig_w=640,
+            orig_h=640,
+            ratio=1.0,
+            left=0,
+            top=0,
+            input_w=640,
+            input_h=640,
+        )
+        rows = []
+        for index in range(300):
+            score = 1.0 - index / 1000.0
+            rows.append([index, 0, index + 1, 1, score, 0])
+        detections = decode_detections(
+            np.asarray([rows], dtype=np.float32),
+            transform,
+            {0: "object"},
+            confidence=0.0,
+            max_det=100,
+        )
+        self.assertEqual(len(detections), 100)
+        # Contract note: a 1x300x6 artifact was exported with max_det=300 in the
+        # YOLO end-to-end head. Capping its rows to 100 here is a corpus cap only;
+        # it is not guaranteed to be identical to a model/export whose head ran
+        # with max_det=100. Exact PyTorch/ONNX parity requires matching max_det at
+        # export time (or standardizing both backends on 300).
+
+    def test_semantic_text_is_backend_independent_for_equivalent_boxes(self):
+        def semantic(label, confidence, bbox):
+            return _semantic_detection(
+                label=label,
+                confidence=confidence,
+                bbox=bbox,
+                orig_w=640,
+                orig_h=480,
+            )
+
+        pytorch_like = [
+            semantic("person", 0.9, [0, 0, 200, 400]),
+            semantic("bicycle", 0.8, [300, 240, 500, 440]),
+        ]
+        onnx_like = [
+            semantic("person", 0.9, [0, 0, 200, 400]),
+            semantic("bicycle", 0.8, [300, 240, 500, 440]),
+        ]
+        pytorch_like = [item for item in pytorch_like if item is not None]
+        onnx_like = [item for item in onnx_like if item is not None]
+        self.assertEqual(_semantic_text(pytorch_like), _semantic_text(onnx_like))
 
     def test_auto_backend_keeps_cuda_on_ultralytics(self):
         choice = _select_backend(
