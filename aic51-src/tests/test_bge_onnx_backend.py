@@ -1,4 +1,5 @@
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 import numpy as np
@@ -7,6 +8,7 @@ from aic51.packages.analyse.features.bge_onnx import (
     DirectMLUnavailable,
     adaptive_batch_limit,
     build_ready_batches,
+    create_session,
     estimate_preload_bytes,
     l2_normalize,
     length_bucket,
@@ -87,6 +89,43 @@ class BgeOnnxBackendTest(unittest.TestCase):
         ):
             choice, _ = resolve_provider_choice("auto", allow_gpu=True)
         self.assertEqual(choice, "dml")
+
+    def test_directml_session_disables_mem_pattern_and_parallel_execution(self):
+        captured = {}
+
+        class FakeOptions:
+            def __init__(self):
+                self.graph_optimization_level = None
+                self.log_severity_level = None
+                self.enable_mem_pattern = True
+                self.execution_mode = None
+
+        class FakeSession:
+            def __init__(self, path, sess_options, providers, disabled_optimizers=None):
+                captured["path"] = path
+                captured["options"] = sess_options
+                captured["providers"] = providers
+                captured["disabled_optimizers"] = disabled_optimizers
+
+        class FakeOrt:
+            class GraphOptimizationLevel:
+                ORT_ENABLE_ALL = "all"
+
+            class ExecutionMode:
+                ORT_SEQUENTIAL = "sequential"
+
+            SessionOptions = FakeOptions
+            InferenceSession = FakeSession
+
+        with patch(
+            "aic51.packages.analyse.features.bge_onnx.import_onnxruntime",
+            return_value=FakeOrt,
+        ):
+            create_session(Path("bge.onnx"), "dml")
+
+        self.assertFalse(captured["options"].enable_mem_pattern)
+        self.assertEqual(captured["options"].execution_mode, "sequential")
+        self.assertEqual(captured["providers"][0][0], "DmlExecutionProvider")
 
     def test_length_buckets_group_short_and_long(self):
         self.assertEqual(length_bucket(12), 32)
