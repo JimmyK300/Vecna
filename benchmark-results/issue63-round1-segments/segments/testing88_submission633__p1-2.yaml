@@ -1,0 +1,35 @@
+query_id: p1-2
+query: 'KIS: Southern locality intro with ~3-6 rare tiger/panther cubs'
+query_text_status: official_test_round_p1
+source_submission: testing88_submission633
+source_submission_sha256: c2e284078c5ad088b312f76e9086b3ec2965c14681cbb92f69ab4aa5a0b0ef37
+source_csv: query-p1-2-kis.csv
+submitted_type: kis
+video_id: L21_V029
+video_path: C:\Users\minhc\Code\Official-Dataset\videos\L21\L21_V029.mp4
+video_duration_s: 1156.3
+video_fps_projection: 30.0
+frame_time_projection_note: t = frame_id / ffprobe_avg_fps; provenance v1 marks legacy_time_projection_quality
+  unknown; drift possible
+submitted_anchor_frames:
+- 10908
+submitted_timestamps_s:
+- 363.6
+qa_answer_verbatim: null
+proposed_correct_ranges:
+- start_s: 375
+  end_s: 425
+  start_frame: 11250
+  end_frame: 12750
+confidence: medium
+boundary_reasoning: 'Official query = Southern locality with ~3-6 rare tiger/panther
+  cubs. Anchor 363.6s = story intro (adult Bengal cats, chyron ''DONG NAI: 2 meo Bengal
+  quy hiem sinh 3 con tai khu du lich Von Xoai''); cubs-on-grass shots run ~375-425s
+  (3 cubs walking). Range covers cubs footage; story intro [~358,375] is an alternative
+  inclusion.'
+conflict_notes: Anchor sits on the adult-cat intro shot, not the cubs shots; boundary
+  estimated from 10s grid.
+reviewer_note: 'Minh: decide whether the story intro counts.'
+review_status: NEEDS_MINH_REVIEW
+stage: A
+benchmark_writeback: FORBIDDEN_UNTIL_MINH_REVIEW

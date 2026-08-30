@@ -1,0 +1,33 @@
+query_id: p1-15
+query: 'QA: FANA charity commune in Khanh Hoa; name the commune'
+query_text_status: round1_text_unavailable
+source_submission: final_round1_10_4of13
+source_submission_sha256: 7ed1c73ba5ee1dafe6bd9879a93cbd119ecf8b1bf31969d1296568439588ef65
+source_csv: query-p1-15-qa.csv
+submitted_type: qa
+video_id: L21_V010
+video_path: C:\Users\minhc\Code\Official-Dataset\videos\L21\L21_V010.mp4
+video_duration_s: 1132.44
+video_fps_projection: 25.0
+frame_time_projection_note: t = frame_id / ffprobe_avg_fps; provenance v1 marks legacy_time_projection_quality
+  unknown; drift possible
+submitted_anchor_frames:
+- 19430
+submitted_timestamps_s:
+- 777.2
+qa_answer_verbatim: ''
+proposed_correct_ranges:
+- start_s: 770
+  end_s: 800
+  start_frame: 19250
+  end_frame: 20000
+confidence: low
+boundary_reasoning: 'HTV9 60s news. Japan earthquake story: ANCHOR 777.2 = seismic-intensity
+  map graphic (Japan Meteorological Agency), warning maps (Shikoku/Ehime/Oita/Kochi/Miyazaki/Kagoshima)
+  787-797, next item ~807. Proposed range [770,800]. Submitted QA answer ''12''.'
+conflict_notes: Round-1 text unavailable; official test-round P1-15 (FANA commune
+  QA) does not match. Answer '12' unverified.
+reviewer_note: null
+review_status: NEEDS_MINH_REVIEW
+stage: A
+benchmark_writeback: FORBIDDEN_UNTIL_MINH_REVIEW

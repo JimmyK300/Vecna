@@ -1,0 +1,33 @@
+query_id: p1-9
+query: 'KIS: Mekong harvest scene; girl in pink + checkered scarf; baskets; blue boat'
+query_text_status: round1_text_unavailable
+source_submission: final_round1_10_4of13
+source_submission_sha256: 5cab29de72bb66d70b4698900ad0dc1a081c58b4c78d02b170c57725b9a8ed70
+source_csv: query-p1-9-qa.csv
+submitted_type: qa
+video_id: L21_V003
+video_path: C:\Users\minhc\Code\Official-Dataset\videos\L21\L21_V003.mp4
+video_duration_s: 1197.84
+video_fps_projection: 25.0
+frame_time_projection_note: t = frame_id / ffprobe_avg_fps; provenance v1 marks legacy_time_projection_quality
+  unknown; drift possible
+submitted_anchor_frames:
+- 26220
+submitted_timestamps_s:
+- 1048.8
+qa_answer_verbatim: 2,15
+proposed_correct_ranges:
+- start_s: 1030
+  end_s: 1075
+  start_frame: 25750
+  end_frame: 26875
+confidence: low
+boundary_reasoning: 'HTV9 news. Amphicar story: intro ~1028, ANCHOR 1048.8 = amphicar
+  driving on water under bridge, amphicars on canal 1068, presenter 1078. Proposed
+  range [1030,1075]. Submitted QA answer ''2,15''.'
+conflict_notes: Round-1 text unavailable; official test-round P1-09 is KIS (pineapple
+  harvest) - type+content conflict. Answer '2,15' unverified.
+reviewer_note: null
+review_status: NEEDS_MINH_REVIEW
+stage: A
+benchmark_writeback: FORBIDDEN_UNTIL_MINH_REVIEW

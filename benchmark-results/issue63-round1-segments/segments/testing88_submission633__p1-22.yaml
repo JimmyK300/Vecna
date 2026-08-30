@@ -1,0 +1,34 @@
+query_id: p1-22
+query: 'QA: recipe card with 200g ground pork; give dish title'
+query_text_status: official_test_round_p1
+source_submission: testing88_submission633
+source_submission_sha256: 6cc09d4ba1c96a645224b56570e7801c5f344c4dd281ef7cd2ef64aea3f5b41a
+source_csv: query-p1-22-qa.csv
+submitted_type: qa
+video_id: L30_V078
+video_path: C:\Users\minhc\Code\Official-Dataset\videos\L30\L30_V078.mp4
+video_duration_s: 197.88
+video_fps_projection: 25.0
+frame_time_projection_note: t = frame_id / ffprobe_avg_fps; provenance v1 marks legacy_time_projection_quality
+  unknown; drift possible
+submitted_anchor_frames:
+- 1788
+submitted_timestamps_s:
+- 71.52
+qa_answer_verbatim: Nhân bánh cuốn
+proposed_correct_ranges:
+- start_s: 68
+  end_s: 78
+  start_frame: 1700
+  end_frame: 1950
+confidence: low
+boundary_reasoning: 'Anchor 71.52s = hands holding a printed recipe card (queried
+  evidence: ''200g thit noc xay''). Card text too small at tile resolution; submitted
+  answer ''Nhan banh cuon'' cannot be visually confirmed (video shows a charity baking
+  event with cupcakes/cakes).'
+conflict_notes: 'Answer-vs-video consistency unresolved: card needs zoom/OCR; ''banh
+  cuon'' vs baked cakes is suspicious.'
+reviewer_note: 'Minh: zoom recipe card ~71.5s; verify ''200g thit noc xay'' and title.'
+review_status: NEEDS_MINH_REVIEW
+stage: A
+benchmark_writeback: FORBIDDEN_UNTIL_MINH_REVIEW

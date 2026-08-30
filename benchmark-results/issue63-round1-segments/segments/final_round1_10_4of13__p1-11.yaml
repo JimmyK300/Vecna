@@ -1,0 +1,33 @@
+query_id: p1-11
+query: 'KIS: shadow-portrait art from wood pieces on a box'
+query_text_status: round1_text_unavailable
+source_submission: final_round1_10_4of13
+source_submission_sha256: 14c422645113a9efcb3aa4eb659dc39a5b2cf1fe36573171faffa15ad479c18a
+source_csv: query-p1-11-kis.csv
+submitted_type: kis
+video_id: L23_V021
+video_path: C:\Users\minhc\Code\Official-Dataset\videos\L23\L23_V021.mp4
+video_duration_s: 543.8
+video_fps_projection: 25.0
+frame_time_projection_note: t = frame_id / ffprobe_avg_fps; provenance v1 marks legacy_time_projection_quality
+  unknown; drift possible
+submitted_anchor_frames:
+- 6972
+submitted_timestamps_s:
+- 278.88
+qa_answer_verbatim: null
+proposed_correct_ranges:
+- start_s: 250
+  end_s: 300
+  start_frame: 6250
+  end_frame: 7500
+confidence: low
+boundary_reasoning: 'HTV The Thao cycling race. Sprint finish at DICH arch: aerial
+  peloton 218-248, finish-line sprints 258-298 (ANCHOR 278.88 = three riders sprinting),
+  replays 298-368. Proposed range = finish sprint [250,300].'
+conflict_notes: Round-1 text unavailable; official test-round P1-11 (shadow portrait
+  art) does not match.
+reviewer_note: null
+review_status: NEEDS_MINH_REVIEW
+stage: A
+benchmark_writeback: FORBIDDEN_UNTIL_MINH_REVIEW

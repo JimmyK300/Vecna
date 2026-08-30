@@ -1,0 +1,34 @@
+query_id: p1-20
+query: 'KIS: panna cotta; 1 glass on plate; hand adds 2; grapes; mint; 2 flowers'
+query_text_status: official_test_round_p1
+source_submission: testing88_submission633
+source_submission_sha256: c3090237a92c4932ff8b01b4933b51d891daff75869177c4f0d8c17f40966c02
+source_csv: query-p1-20-kis.csv
+submitted_type: kis
+video_id: L26_V004
+video_path: C:\Users\minhc\Code\Official-Dataset\videos\L26A\L26_V004.mp4
+video_duration_s: 294.36
+video_fps_projection: 25.0
+frame_time_projection_note: t = frame_id / ffprobe_avg_fps; provenance v1 marks legacy_time_projection_quality
+  unknown; drift possible
+submitted_anchor_frames:
+- 5400
+submitted_timestamps_s:
+- 216.0
+qa_answer_verbatim: null
+proposed_correct_ranges:
+- start_s: 214
+  end_s: 278
+  start_frame: 5350
+  end_frame: 6950
+confidence: medium
+boundary_reasoning: 'Strong match: query = white round plate with 1 panna cotta; hand
+  adds 2 more glasses; each topped with white cream, red grape slices, mint; two edible
+  flowers (red+yellow) beside. Anchor 216.0s = single-glass-on-plate moment with two
+  flowers; two-glasses closeups 236-276; host tasting 226.'
+conflict_notes: The literal 'hand placing 2 more glasses' action not isolated in 10s
+  grid (between 216-236).
+reviewer_note: null
+review_status: NEEDS_MINH_REVIEW
+stage: A
+benchmark_writeback: FORBIDDEN_UNTIL_MINH_REVIEW

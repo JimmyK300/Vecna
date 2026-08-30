@@ -1,0 +1,53 @@
+query_id: p1-4
+query: 'TRAKE: net-casting events E1-E4'
+query_text_status: official_text_unmappable
+source_submission: testing88_submission633
+source_submission_sha256: 26880886b845c3b55159004ec3148770c1e6ce5a828b687509e1af62be128c4a
+source_csv: query-p1-4-trake.csv
+submitted_type: trake
+video_id: L26_V194
+video_path: C:\Users\minhc\Code\Official-Dataset\videos\L26B\L26_V194.mp4
+video_duration_s: 317.96
+video_fps_projection: 25.0
+frame_time_projection_note: t = frame_id / ffprobe_avg_fps; provenance v1 marks legacy_time_projection_quality
+  unknown; drift possible
+submitted_anchor_frames:
+- 4707
+- 5139
+- 5427
+- 5865
+submitted_timestamps_s:
+- 188.28
+- 205.56
+- 217.08
+- 234.6
+qa_answer_verbatim: null
+proposed_correct_ranges:
+- start_s: 188
+  end_s: 193
+  start_frame: 4700
+  end_frame: 4825
+- start_s: 205
+  end_s: 208
+  start_frame: 5125
+  end_frame: 5200
+- start_s: 217
+  end_s: 220
+  start_frame: 5425
+  end_frame: 5500
+- start_s: 233
+  end_s: 236
+  start_frame: 5825
+  end_frame: 5900
+confidence: low
+boundary_reasoning: 'All four anchors land inside an HTV ''Mon Ngon Moi Ngay'' cooking
+  segment (asparagus tempura): E1 188.28s = asparagus in bowl with flour; E2 205.56s
+  = lid on bowl; E3 217.08s = deep-frying in oil; E4 234.6s = frying with chopsticks.
+  NO net-casting content exists in this window; official P1-04 events (net casting)
+  cannot be mapped onto this footage.'
+conflict_notes: 'MAJOR: submitted video appears unrelated to official P1-04 net-casting
+  query. Ranges are mechanical windows around anchors, not semantic events.'
+reviewer_note: null
+review_status: NEEDS_MINH_REVIEW
+stage: A
+benchmark_writeback: FORBIDDEN_UNTIL_MINH_REVIEW

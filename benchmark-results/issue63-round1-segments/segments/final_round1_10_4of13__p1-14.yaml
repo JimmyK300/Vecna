@@ -1,0 +1,33 @@
+query_id: p1-14
+query: 'KIS: sand-sculpture festival; youth-sports relief; arch; 2 pink blocks'
+query_text_status: round1_text_unavailable
+source_submission: final_round1_10_4of13
+source_submission_sha256: 12787a6b298c8c52b6ba77c44fc9b79bfdb951920a0744676dff8973f90d1810
+source_csv: query-p1-14-kis.csv
+submitted_type: kis
+video_id: L26_V171
+video_path: C:\Users\minhc\Code\Official-Dataset\videos\L26B\L26_V171.mp4
+video_duration_s: 321.36
+video_fps_projection: 25.0
+frame_time_projection_note: t = frame_id / ffprobe_avg_fps; provenance v1 marks legacy_time_projection_quality
+  unknown; drift possible
+submitted_anchor_frames:
+- 5455
+submitted_timestamps_s:
+- 218.2
+qa_answer_verbatim: null
+proposed_correct_ranges:
+- start_s: 205
+  end_s: 260
+  start_frame: 5125
+  end_frame: 6500
+confidence: low
+boundary_reasoning: Identical submitted answer to p1-8 (L26_V171 @5455...). Same steamed-egg
+  segment; proposed range identical [205,260].
+conflict_notes: 'DUPLICATE-ANSWER CONFLICT: same video+frames submitted for two different
+  queries (p1-8 and p1-14) in one submission; at most one can be correct. Round-1
+  text unavailable.'
+reviewer_note: null
+review_status: NEEDS_MINH_REVIEW
+stage: A
+benchmark_writeback: FORBIDDEN_UNTIL_MINH_REVIEW

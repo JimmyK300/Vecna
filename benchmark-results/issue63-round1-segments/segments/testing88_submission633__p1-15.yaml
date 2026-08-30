@@ -1,0 +1,34 @@
+query_id: p1-15
+query: 'QA: FANA charity commune in Khanh Hoa; name the commune'
+query_text_status: official_test_round_p1
+source_submission: testing88_submission633
+source_submission_sha256: 424f1f65bc87f44bea1ed52c86ed11cc9e289ce87c04e991441f126516bd35b7
+source_csv: query-p1-15-qa.csv
+submitted_type: qa
+video_id: L30_V072
+video_path: C:\Users\minhc\Code\Official-Dataset\videos\L30\L30_V072.mp4
+video_duration_s: 86.76
+video_fps_projection: 25.0
+frame_time_projection_note: t = frame_id / ffprobe_avg_fps; provenance v1 marks legacy_time_projection_quality
+  unknown; drift possible
+submitted_anchor_frames:
+- 1745
+submitted_timestamps_s:
+- 69.8
+qa_answer_verbatim: Giang Ly
+proposed_correct_ranges:
+- start_s: 55
+  end_s: 85
+  start_frame: 1375
+  end_frame: 2125
+confidence: medium
+boundary_reasoning: 'Video = 87s reader-submitted charity clip (''Cung Em Den Truong'').
+  Anchor 69.8s = stage ceremony, children holding red gift bags. Range covers stage
+  + children leaving with bags. Submitted QA answer: ''Giang Ly'' / ''Xa nay co ten
+  la Giang Ly''.'
+conflict_notes: Commune-name evidence (sign/voiceover) not verifiable from tiles;
+  banner ~29.8s and audio need check.
+reviewer_note: 'Minh: zoom banner ~29.8s / listen; confirm ''Giang Ly''.'
+review_status: NEEDS_MINH_REVIEW
+stage: A
+benchmark_writeback: FORBIDDEN_UNTIL_MINH_REVIEW

@@ -1,0 +1,38 @@
+query_id: p1-11
+query: 'KIS: shadow-portrait art from wood pieces on a box'
+query_text_status: official_test_round_p1
+source_submission: testing88_submission633
+source_submission_sha256: 9351c2fb63e396f5afb937c4a3c30dd91cb23bdc3362fd95fb12187bd263733f
+source_csv: query-p1-11-kis.csv
+submitted_type: kis
+video_id: L30_V057
+video_path: C:\Users\minhc\Code\Official-Dataset\videos\L30\L30_V057.mp4
+video_duration_s: 186.6
+video_fps_projection: 25.0
+frame_time_projection_note: t = frame_id / ffprobe_avg_fps; provenance v1 marks legacy_time_projection_quality
+  unknown; drift possible
+submitted_anchor_frames:
+- 3082
+submitted_timestamps_s:
+- 123.28
+qa_answer_verbatim: null
+proposed_correct_ranges:
+- start_s: 118
+  end_s: 135
+  start_frame: 2950
+  end_frame: 3375
+- start_s: 190
+  end_s: 225
+  start_frame: 4750
+  end_frame: 5625
+confidence: medium
+boundary_reasoning: 'Strong match: query = man in black cap + white English-text tee
+  arranging cut wood on a box, side light casting a suited-man portrait shadow on
+  wall. Anchor 123.28s = exactly this shadow-art shot. The demonstration appears TWICE:
+  [~118,135] (anchor) and [~190,225] (wide + ''Tac gia: Minh Hung'' ~213). Interview
+  shots ~143-183 sit between.'
+conflict_notes: Two separated ranges proposed per issue's multiple-range allowance.
+reviewer_note: null
+review_status: NEEDS_MINH_REVIEW
+stage: A
+benchmark_writeback: FORBIDDEN_UNTIL_MINH_REVIEW

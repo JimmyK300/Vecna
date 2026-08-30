@@ -1,0 +1,34 @@
+query_id: p1-14
+query: 'KIS: sand-sculpture festival; youth-sports relief; arch; 2 pink blocks'
+query_text_status: official_test_round_p1
+source_submission: testing88_submission633
+source_submission_sha256: 9422f75af40e14e031cfaf8fd20f87511139ac7acc8c074442f09d67d13b8960
+source_csv: query-p1-14-kis.csv
+submitted_type: kis
+video_id: L21_V027
+video_path: C:\Users\minhc\Code\Official-Dataset\videos\L21\L21_V027.mp4
+video_duration_s: 1160.13
+video_fps_projection: 30.0
+frame_time_projection_note: t = frame_id / ffprobe_avg_fps; provenance v1 marks legacy_time_projection_quality
+  unknown; drift possible
+submitted_anchor_frames:
+- 26831
+submitted_timestamps_s:
+- 894.367
+qa_answer_verbatim: null
+proposed_correct_ranges:
+- start_s: 890
+  end_s: 940
+  start_frame: 26700
+  end_frame: 28200
+confidence: medium
+boundary_reasoning: 'Strong match: query = sand-sculpture festival, horizontal-cut
+  sculpture of youth street sports (1 skater, 2 skateboarders), large arch + carved
+  text, later 2 pink sand blocks. Anchor 894.37s = sand relief with figures (St. Petersburg
+  festival chyron); David-bust 904; hand carving ''CAT'' 924; pink smoke 934.'
+conflict_notes: Specific '2 pink sand blocks' not confirmed in 10s grid; anchor sculpture
+  not clearly the sports scene.
+reviewer_note: 'Minh: verify sports-relief sculpture appears within [890,940].'
+review_status: NEEDS_MINH_REVIEW
+stage: A
+benchmark_writeback: FORBIDDEN_UNTIL_MINH_REVIEW

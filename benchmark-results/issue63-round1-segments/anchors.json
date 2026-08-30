@@ -1,0 +1,905 @@
+[
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-1",
+    "query_number": 1,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-1-kis.csv",
+    "csv_sha256": "1693fe6eb6b0a0b1b8fb33880e5004c06eab818309aeb617ff67341e29327c0b",
+    "row_count": 100,
+    "video_id": "L30_V046",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L30\\L30_V046.mp4",
+    "anchor_frames": [
+      6648
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      265.92
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-10",
+    "query_number": 10,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-10-kis.csv",
+    "csv_sha256": "5ad7beef6bac03f1f362b90f89c50df860a935d4fd3ff9eca91d519e8f5827a7",
+    "row_count": 100,
+    "video_id": "L29_V013",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L29\\L29_V013.mp4",
+    "anchor_frames": [
+      11278
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      451.12
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-11",
+    "query_number": 11,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-11-kis.csv",
+    "csv_sha256": "14c422645113a9efcb3aa4eb659dc39a5b2cf1fe36573171faffa15ad479c18a",
+    "row_count": 100,
+    "video_id": "L23_V021",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L23\\L23_V021.mp4",
+    "anchor_frames": [
+      6972
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      278.88
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-12",
+    "query_number": 12,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-12-kis.csv",
+    "csv_sha256": "7db884d16188ce0101cb95e51c10f9384186db3252f87cf04d63e22fced4f6cf",
+    "row_count": 100,
+    "video_id": "L22_V001",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L22\\L22_V001.mp4",
+    "anchor_frames": [
+      3155
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      105.167
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-13",
+    "query_number": 13,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-13-kis.csv",
+    "csv_sha256": "a35f675f655ba0452a168ef97fcd29291755af10e481b205b2a915a9a900688b",
+    "row_count": 100,
+    "video_id": "L29_V021",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L29\\L29_V021.mp4",
+    "anchor_frames": [
+      6230
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      249.2
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-14",
+    "query_number": 14,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-14-kis.csv",
+    "csv_sha256": "12787a6b298c8c52b6ba77c44fc9b79bfdb951920a0744676dff8973f90d1810",
+    "row_count": 100,
+    "video_id": "L26_V171",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L26B\\L26_V171.mp4",
+    "anchor_frames": [
+      5455
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      218.2
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-15",
+    "query_number": 15,
+    "submitted_type": "qa",
+    "source_csv": "query-p1-15-qa.csv",
+    "csv_sha256": "7ed1c73ba5ee1dafe6bd9879a93cbd119ecf8b1bf31969d1296568439588ef65",
+    "row_count": 100,
+    "video_id": "L21_V010",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L21\\L21_V010.mp4",
+    "anchor_frames": [
+      19430
+    ],
+    "qa_answer_verbatim": "",
+    "derived_anchor_times_s": [
+      777.2
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-16",
+    "query_number": 16,
+    "submitted_type": "trake",
+    "source_csv": "query-p1-16-trake.csv",
+    "csv_sha256": "8a454d8c7036f0c322f93599fccbb7163e513519bba51a214029d5c265f85efe",
+    "row_count": 100,
+    "video_id": "L24_V024",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L24\\L24_V024.mp4",
+    "anchor_frames": [
+      9785,
+      10135,
+      10191
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      326.167,
+      337.833,
+      339.7
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-17",
+    "query_number": 17,
+    "submitted_type": "qa",
+    "source_csv": "query-p1-17-qa.csv",
+    "csv_sha256": "ae5ce153d6df90e525382d885cdc1ca02225f48d821d6a204fc563eff73576da",
+    "row_count": 100,
+    "video_id": "L22_V008",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L22\\L22_V008.mp4",
+    "anchor_frames": [
+      5638
+    ],
+    "qa_answer_verbatim": "Tà Pứa",
+    "derived_anchor_times_s": [
+      225.52
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-18",
+    "query_number": 18,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-18-kis.csv",
+    "csv_sha256": "da80768b41418219c5846337b9c12eb615e1743dcf6b245c6b621eefbd5c1298",
+    "row_count": 100,
+    "video_id": "L26_V389",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L26D\\L26_V389.mp4",
+    "anchor_frames": [
+      5795
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      231.8
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-19",
+    "query_number": 19,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-19-kis.csv",
+    "csv_sha256": "823a00658e0b914b648022ff012ae79b2b2c19fbedd9fe79db0637cbcc18ed16",
+    "row_count": 100,
+    "video_id": "L24_V035",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L24\\L24_V035.mp4",
+    "anchor_frames": [
+      13824
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      460.8
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-2",
+    "query_number": 2,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-2-kis.csv",
+    "csv_sha256": "d1f4429e866856c2e300a020900f5c451384030c97704a80c3ac3c7d6bfd6862",
+    "row_count": 100,
+    "video_id": "L28_V018",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L28\\L28_V018.mp4",
+    "anchor_frames": [
+      3032
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      121.28
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-20",
+    "query_number": 20,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-20-kis.csv",
+    "csv_sha256": "67c372008a6ef81299c93022aa6b17c6c462b3237d79632b114ec441d8ce70de",
+    "row_count": 100,
+    "video_id": "L21_V026",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L21\\L21_V026.mp4",
+    "anchor_frames": [
+      7454
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      248.467
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-21",
+    "query_number": 21,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-21-kis.csv",
+    "csv_sha256": "b55539d9ff2cf7425830828ad995b7833b6b4f3ca94adb1041dcda10cf994d75",
+    "row_count": 100,
+    "video_id": "L22_V011",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L22\\L22_V011.mp4",
+    "anchor_frames": [
+      15244
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      508.133
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-22",
+    "query_number": 22,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-22-kis.csv",
+    "csv_sha256": "24e20ffee9af96322ee85b338f847aceca2a52264c4d42ea1ca7dd52421beee5",
+    "row_count": 100,
+    "video_id": "L25_V041",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L25\\L25_V041.mp4",
+    "anchor_frames": [
+      17152
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      686.08
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-23",
+    "query_number": 23,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-23-kis.csv",
+    "csv_sha256": "8490f28432e1ac70217302fd80f03c015f6cbecd4805568d3c8ed241ad429385",
+    "row_count": 100,
+    "video_id": "L25_V060",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L25\\L25_V060.mp4",
+    "anchor_frames": [
+      26533
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      1061.32
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-24",
+    "query_number": 24,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-24-kis.csv",
+    "csv_sha256": "e2269b37dfdcfc47d7c62297e8b57627a221c31a4cb0fb8fcaea8c9bb5464e0b",
+    "row_count": 100,
+    "video_id": "L29_V001",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L29\\L29_V001.mp4",
+    "anchor_frames": [
+      9100
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      364.0
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-25",
+    "query_number": 25,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-25-kis.csv",
+    "csv_sha256": "c104c96b6f7b50e391f35a660a6d97fef0c371c016bed34f3e5ce0c992b191fd",
+    "row_count": 100,
+    "video_id": "L30_V003",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L30\\L30_V003.mp4",
+    "anchor_frames": [
+      6611
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      264.44
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-3",
+    "query_number": 3,
+    "submitted_type": "qa",
+    "source_csv": "query-p1-3-qa.csv",
+    "csv_sha256": "d4ac48374e61340082051b6ebcd0d7f9dad98039e4734c3078139fa1fda35b06",
+    "row_count": 100,
+    "video_id": "L21_V023",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L21\\L21_V023.mp4",
+    "anchor_frames": [
+      26042
+    ],
+    "qa_answer_verbatim": "",
+    "derived_anchor_times_s": [
+      868.067
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-4",
+    "query_number": 4,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-4-kis.csv",
+    "csv_sha256": "d856d4c622e91e1662750a2a4bd533971e3c56db75f6c5fc1d7c05f975c2c88f",
+    "row_count": 100,
+    "video_id": "L22_V021",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L22\\L22_V021.mp4",
+    "anchor_frames": [
+      19738
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      657.933
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-5",
+    "query_number": 5,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-5-kis.csv",
+    "csv_sha256": "e344ae792bd8f79f472daa23f04ff540165d7ae4f6a5003c252d1317c87b3887",
+    "row_count": 100,
+    "video_id": "L26_V035",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L26A\\L26_V035.mp4",
+    "anchor_frames": [
+      5069
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      202.76
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-6",
+    "query_number": 6,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-6-kis.csv",
+    "csv_sha256": "0ff26dd9e286348bb859974cf9053b0cf23a7c653d22bf55dfc339ecd59c196d",
+    "row_count": 100,
+    "video_id": "L22_V023",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L22\\L22_V023.mp4",
+    "anchor_frames": [
+      18180
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      727.2
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-7",
+    "query_number": 7,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-7-kis.csv",
+    "csv_sha256": "21901f654bad051c51235d0c1d58286d877bbaa3728ce41d34bc65006fb245d2",
+    "row_count": 100,
+    "video_id": "L26_V041",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L26A\\L26_V041.mp4",
+    "anchor_frames": [
+      3656
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      146.24
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-8",
+    "query_number": 8,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-8-kis.csv",
+    "csv_sha256": "12787a6b298c8c52b6ba77c44fc9b79bfdb951920a0744676dff8973f90d1810",
+    "row_count": 100,
+    "video_id": "L26_V171",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L26B\\L26_V171.mp4",
+    "anchor_frames": [
+      5455
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      218.2
+    ]
+  },
+  {
+    "submission": "final_round1_10_4of13",
+    "query_id": "p1-9",
+    "query_number": 9,
+    "submitted_type": "qa",
+    "source_csv": "query-p1-9-qa.csv",
+    "csv_sha256": "5cab29de72bb66d70b4698900ad0dc1a081c58b4c78d02b170c57725b9a8ed70",
+    "row_count": 100,
+    "video_id": "L21_V003",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L21\\L21_V003.mp4",
+    "anchor_frames": [
+      26220
+    ],
+    "qa_answer_verbatim": "2,15",
+    "derived_anchor_times_s": [
+      1048.8
+    ]
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-1",
+    "query_number": 1,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-1-kis.csv",
+    "csv_sha256": "29e36cccb5ef8d18a438949730cf55020b4f031bdbb49cf4cacd00488b95f73c",
+    "row_count": 100,
+    "video_id": "L21_V015",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L21\\L21_V015.mp4",
+    "anchor_frames": [
+      25283
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      842.767
+    ]
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-10",
+    "query_number": 10,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-10-kis.csv",
+    "csv_sha256": "c07621fbfcab99e4b14b3bce77ad86fcde15773de2419e69e7f34045eb0ce8a7",
+    "row_count": 100,
+    "video_id": "L30_V017",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L30\\L30_V017.mp4",
+    "anchor_frames": [
+      2986
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      119.44
+    ]
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-11",
+    "query_number": 11,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-11-kis.csv",
+    "csv_sha256": "9351c2fb63e396f5afb937c4a3c30dd91cb23bdc3362fd95fb12187bd263733f",
+    "row_count": 100,
+    "video_id": "L30_V057",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L30\\L30_V057.mp4",
+    "anchor_frames": [
+      3082
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      123.28
+    ]
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-12",
+    "query_number": 12,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-12-kis.csv",
+    "csv_sha256": "7d0495ba47b5bd15c8d7d636cb67c46b3993535c5075f2028ee4bb58e408712a",
+    "row_count": 100,
+    "video_id": "L26_V200",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L26C\\L26_V200.mp4",
+    "anchor_frames": [
+      4480
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      179.2
+    ]
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-13",
+    "query_number": 13,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-13-kis.csv",
+    "csv_sha256": "29f7071fd51495ee9314cc2e6570dfb51b391d167ad59b75512e124cd4e2f3a6",
+    "row_count": 100,
+    "video_id": "L30_V095",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L30\\L30_V095.mp4",
+    "anchor_frames": [
+      2672
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      106.88
+    ]
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-14",
+    "query_number": 14,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-14-kis.csv",
+    "csv_sha256": "9422f75af40e14e031cfaf8fd20f87511139ac7acc8c074442f09d67d13b8960",
+    "row_count": 100,
+    "video_id": "L21_V027",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L21\\L21_V027.mp4",
+    "anchor_frames": [
+      26831
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      894.367
+    ]
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-15",
+    "query_number": 15,
+    "submitted_type": "qa",
+    "source_csv": "query-p1-15-qa.csv",
+    "csv_sha256": "424f1f65bc87f44bea1ed52c86ed11cc9e289ce87c04e991441f126516bd35b7",
+    "row_count": 100,
+    "video_id": "L30_V072",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L30\\L30_V072.mp4",
+    "anchor_frames": [
+      1745
+    ],
+    "qa_answer_verbatim": "Giang Ly",
+    "derived_anchor_times_s": [
+      69.8
+    ]
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-16",
+    "query_number": 16,
+    "submitted_type": "trake",
+    "source_csv": "query-p1-16-trake.csv",
+    "csv_sha256": "b37425d184b7be89e1b210acacaff785e12b30f99a4f2522f479e6f1dff10844",
+    "row_count": 100,
+    "video_id": "L24_V033",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L24\\L24_V033.mp4",
+    "anchor_frames": [
+      15945,
+      16006,
+      16354,
+      16901
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      531.5,
+      533.533,
+      545.133,
+      563.367
+    ]
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-17",
+    "query_number": 17,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-17-kis.csv",
+    "csv_sha256": "25e314b9bf42c22e3dc3bdfb7591e0d99127d569fad8df0c5f822ec29215f4c9",
+    "row_count": 100,
+    "video_id": "L30_V092",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L30\\L30_V092.mp4",
+    "anchor_frames": [
+      2491
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      99.64
+    ]
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-18",
+    "query_number": 18,
+    "submitted_type": "trake",
+    "source_csv": "query-p1-18-trake.csv",
+    "csv_sha256": "6501bbc7e9bb57233245f1595c914b2fda372ece1420cf131f4ee274524cee03",
+    "row_count": 100,
+    "video_id": "L26_V072",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L26A\\L26_V072.mp4",
+    "anchor_frames": [
+      2466,
+      3133,
+      3420,
+      3800
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      98.64,
+      125.32,
+      136.8,
+      152.0
+    ]
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-19",
+    "query_number": 19,
+    "submitted_type": "qa",
+    "source_csv": "query-p1-19-qa.csv",
+    "csv_sha256": "006ba45facbd62baef888d5a7a0169b9a668ce841df8b3c3bb8e04f9ca89e2da",
+    "row_count": 100,
+    "video_id": "L27_V010",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L27\\L27_V010.mp4",
+    "anchor_frames": [
+      5535
+    ],
+    "qa_answer_verbatim": "HỎA HỒNG NHẬT TẢO OANH THIÊN ĐỊA\\nKIẾM BẠT KIÊN GIANG KHẤP QUỶ THẦN",
+    "derived_anchor_times_s": [
+      221.4
+    ]
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-2",
+    "query_number": 2,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-2-kis.csv",
+    "csv_sha256": "c2e284078c5ad088b312f76e9086b3ec2965c14681cbb92f69ab4aa5a0b0ef37",
+    "row_count": 100,
+    "video_id": "L21_V029",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L21\\L21_V029.mp4",
+    "anchor_frames": [
+      10908
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      363.6
+    ]
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-20",
+    "query_number": 20,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-20-kis.csv",
+    "csv_sha256": "c3090237a92c4932ff8b01b4933b51d891daff75869177c4f0d8c17f40966c02",
+    "row_count": 100,
+    "video_id": "L26_V004",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L26A\\L26_V004.mp4",
+    "anchor_frames": [
+      5400
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      216.0
+    ]
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-21",
+    "query_number": 21,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-21-kis.csv",
+    "csv_sha256": "4ad46c075effff5112da0203cf3132af1c535d16bfdfc4652ebabbbba649cc9d",
+    "row_count": 100,
+    "video_id": "L21_V004",
+    "video_path": null,
+    "anchor_frames": [
+      21690
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": null,
+    "blocker": "source_video_not_found_locally"
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-22",
+    "query_number": 22,
+    "submitted_type": "qa",
+    "source_csv": "query-p1-22-qa.csv",
+    "csv_sha256": "6cc09d4ba1c96a645224b56570e7801c5f344c4dd281ef7cd2ef64aea3f5b41a",
+    "row_count": 100,
+    "video_id": "L30_V078",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L30\\L30_V078.mp4",
+    "anchor_frames": [
+      1788
+    ],
+    "qa_answer_verbatim": "Nhân bánh cuốn",
+    "derived_anchor_times_s": [
+      71.52
+    ]
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-23",
+    "query_number": 23,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-23-kis.csv",
+    "csv_sha256": "61df229a12310f59449fb76a093c7d440f1c86923a01ae07903a5a37e18d8945",
+    "row_count": 100,
+    "video_id": "L22_V022",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L22\\L22_V022.mp4",
+    "anchor_frames": [
+      16755
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      558.5
+    ]
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-24",
+    "query_number": 24,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-24-kis.csv",
+    "csv_sha256": "cd8e53ccf597bb4fb37317ab36c92a1f745bea1da802999c1079da1c762381e7",
+    "row_count": 100,
+    "video_id": "L23_V007",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L23\\L23_V007.mp4",
+    "anchor_frames": [
+      3246
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      129.84
+    ]
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-25",
+    "query_number": 25,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-25-kis.csv",
+    "csv_sha256": "9c11f161e98ad05ddc6e370089b1ab215857522bd459b18d348f7b054bac3b60",
+    "row_count": 100,
+    "video_id": "L23_V017",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L23\\L23_V017.mp4",
+    "anchor_frames": [
+      1108
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      44.32
+    ]
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-4",
+    "query_number": 4,
+    "submitted_type": "trake",
+    "source_csv": "query-p1-4-trake.csv",
+    "csv_sha256": "26880886b845c3b55159004ec3148770c1e6ce5a828b687509e1af62be128c4a",
+    "row_count": 100,
+    "video_id": "L26_V194",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L26B\\L26_V194.mp4",
+    "anchor_frames": [
+      4707,
+      5139,
+      5427,
+      5865
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      188.28,
+      205.56,
+      217.08,
+      234.6
+    ]
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-5",
+    "query_number": 5,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-5-kis.csv",
+    "csv_sha256": "213f676bb45af3f49e8900683a8dd310ee849f37834b8683ae8a399dcf8c9055",
+    "row_count": 100,
+    "video_id": "L27_V014",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L27\\L27_V014.mp4",
+    "anchor_frames": [
+      7297
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      291.88
+    ]
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-6",
+    "query_number": 6,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-6-kis.csv",
+    "csv_sha256": "fa397ae7ef1dfaf85a8461ee4cce2ace8e2639bae64e9ea17050fd9dd0896c86",
+    "row_count": 100,
+    "video_id": "L26_V056",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L26A\\L26_V056.mp4",
+    "anchor_frames": [
+      6300
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      252.0
+    ]
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-7",
+    "query_number": 7,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-7-kis.csv",
+    "csv_sha256": "1041f21af79c211b03f42a0eda49be6d16118f66620ba514824a6b75cebd89c5",
+    "row_count": 100,
+    "video_id": "L29_V023",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L29\\L29_V023.mp4",
+    "anchor_frames": [
+      10915
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      436.6
+    ]
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-8",
+    "query_number": 8,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-8-kis.csv",
+    "csv_sha256": "a519e57c05f0261f3c7cd31dad8ff1b2bff0979a43fe85f322ade0bd547742a4",
+    "row_count": 100,
+    "video_id": "L22_V030",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L22\\L22_V030.mp4",
+    "anchor_frames": [
+      18327
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      733.08
+    ]
+  },
+  {
+    "submission": "testing88_submission633",
+    "query_id": "p1-9",
+    "query_number": 9,
+    "submitted_type": "kis",
+    "source_csv": "query-p1-9-kis.csv",
+    "csv_sha256": "e93da4ad9336bfe9254347d7c17c82eaa568e58d3a1d37c43a7ef53b72325bdd",
+    "row_count": 100,
+    "video_id": "L27_V013",
+    "video_path": "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L27\\L27_V013.mp4",
+    "anchor_frames": [
+      5050
+    ],
+    "qa_answer_verbatim": null,
+    "derived_anchor_times_s": [
+      202.0
+    ]
+  }
+]

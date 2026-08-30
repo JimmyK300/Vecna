@@ -1,0 +1,38 @@
+query_id: p1-10
+query: 'KIS: handpan trio, white-shirt player between two in black, bookshelves'
+query_text_status: official_test_round_p1
+source_submission: testing88_submission633
+source_submission_sha256: c07621fbfcab99e4b14b3bce77ad86fcde15773de2419e69e7f34045eb0ce8a7
+source_csv: query-p1-10-kis.csv
+submitted_type: kis
+video_id: L30_V017
+video_path: C:\Users\minhc\Code\Official-Dataset\videos\L30\L30_V017.mp4
+video_duration_s: 290.6
+video_fps_projection: 25.0
+frame_time_projection_note: t = frame_id / ffprobe_avg_fps; provenance v1 marks legacy_time_projection_quality
+  unknown; drift possible
+submitted_anchor_frames:
+- 2986
+submitted_timestamps_s:
+- 119.44
+qa_answer_verbatim: null
+proposed_correct_ranges:
+- start_s: 115
+  end_s: 125
+  start_frame: 2875
+  end_frame: 3125
+- start_s: 100
+  end_s: 140
+  start_frame: 2500
+  end_frame: 3500
+confidence: medium
+boundary_reasoning: 'Strong match: query = three players (2 women + 1 man) playing
+  handpans, one in WHITE centered between two in BLACK, bookshelves behind. Anchor
+  119.44s = exactly this trio (TuoitreTV handpan story). Primary = trio shot [115,125];
+  wider [100,140] adds adjacent solo/closeup shots of same session.'
+conflict_notes: Trio shot brief; adjacent shots same location/different framing -
+  Minh decides inclusiveness.
+reviewer_note: null
+review_status: NEEDS_MINH_REVIEW
+stage: A
+benchmark_writeback: FORBIDDEN_UNTIL_MINH_REVIEW

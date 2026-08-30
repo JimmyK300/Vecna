@@ -1,0 +1,38 @@
+query_id: p1-3
+query: null
+query_text_status: round1_text_unavailable
+source_submission: final_round1_10_4of13
+source_submission_sha256: d4ac48374e61340082051b6ebcd0d7f9dad98039e4734c3078139fa1fda35b06
+source_csv: query-p1-3-qa.csv
+submitted_type: qa
+video_id: L21_V023
+video_path: C:\Users\minhc\Code\Official-Dataset\videos\L21\L21_V023.mp4
+video_duration_s: 1179.7
+video_fps_projection: 30.0
+frame_time_projection_note: t = frame_id / ffprobe_avg_fps; provenance v1 marks legacy_time_projection_quality
+  unknown; drift possible
+submitted_anchor_frames:
+- 26042
+submitted_timestamps_s:
+- 868.067
+qa_answer_verbatim: ''
+proposed_correct_ranges:
+- start_s: 848
+  end_s: 940
+  start_frame: 25440
+  end_frame: 28200
+- start_s: 856
+  end_s: 874
+  start_frame: 25680
+  end_frame: 26220
+confidence: low
+boundary_reasoning: 'HTV9 news block. Banded (bamboo) shark story ~[848,940]: pufferfish
+  848, shark weighed on scale (ANCHOR 868.07), closeups 878-898, tub 908-938; interview
+  Tiensy Jode Rummer ~918. Submitted QA answer ''5''. Secondary tight range = weighing
+  shot [856,874].'
+conflict_notes: p1-3 does NOT exist in the official 24-query test-round list (extra
+  file). Query text unknown; answer '5' unverified (possibly shark count).
+reviewer_note: null
+review_status: NEEDS_MINH_REVIEW
+stage: A
+benchmark_writeback: FORBIDDEN_UNTIL_MINH_REVIEW

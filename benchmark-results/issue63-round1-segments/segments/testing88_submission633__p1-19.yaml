@@ -1,0 +1,36 @@
+query_id: p1-19
+query: 'QA: two couplets at Nguyen Trung Truc temple, Kien Giang'
+query_text_status: official_test_round_p1
+source_submission: testing88_submission633
+source_submission_sha256: 006ba45facbd62baef888d5a7a0169b9a668ce841df8b3c3bb8e04f9ca89e2da
+source_csv: query-p1-19-qa.csv
+submitted_type: qa
+video_id: L27_V010
+video_path: C:\Users\minhc\Code\Official-Dataset\videos\L27\L27_V010.mp4
+video_duration_s: 584.48
+video_fps_projection: 25.0
+frame_time_projection_note: t = frame_id / ffprobe_avg_fps; provenance v1 marks legacy_time_projection_quality
+  unknown; drift possible
+submitted_anchor_frames:
+- 5535
+submitted_timestamps_s:
+- 221.4
+qa_answer_verbatim: HỎA HỒNG NHẬT TẢO OANH THIÊN ĐỊA\nKIẾM BẠT KIÊN GIANG KHẤP QUỶ
+  THẦN
+proposed_correct_ranges:
+- start_s: 215
+  end_s: 232
+  start_frame: 5375
+  end_frame: 5800
+confidence: medium
+boundary_reasoning: 'Strong match: anchor 221.4s = bronze bust flanked by couplet
+  panels reading ''HONG NHAO PHAT OANH THIEN DIA / BAT KIEN GIANG KHAP QUI THAN''
+  - one of the two queried couplets at Nguyen Trung Truc temple (Kien Giang). Submitted
+  answer transcribes this couplet. Altar/portrait 241-291; possible second couplet
+  on stone stele ~305-315 (unconfirmed).'
+conflict_notes: Second couplet evidence unconfirmed; answer text variants between
+  rows preserved verbatim.
+reviewer_note: 'Minh: locate/confirm second couplet (possibly ~305-315).'
+review_status: NEEDS_MINH_REVIEW
+stage: A
+benchmark_writeback: FORBIDDEN_UNTIL_MINH_REVIEW

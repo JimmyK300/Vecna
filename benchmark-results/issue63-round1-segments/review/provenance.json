@@ -1,0 +1,298 @@
+{
+  "artifacts": {
+    "submission-final-round1.zip": {
+      "path": "C:\\Users\\minhc\\Downloads\\submission-final-round1.zip",
+      "sha256": "802732a492a3aa1c09189720d248ba430132aeb55b2913e0a4665bcdcbba0158",
+      "bytes": 11602
+    },
+    "submission-testing8.8": {
+      "path": "C:\\Users\\minhc\\Downloads\\submission-testing8.8\\submission",
+      "sha256_of_member_csvs": true,
+      "bytes": null
+    }
+  },
+  "video_probes": {
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L30\\L30_V046.mp4": {
+      "fps": 25.0,
+      "nb_frames": 6932,
+      "duration_s": 277.28,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L29\\L29_V013.mp4": {
+      "fps": 25.0,
+      "nb_frames": 26829,
+      "duration_s": 1073.16,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L23\\L23_V021.mp4": {
+      "fps": 25.0,
+      "nb_frames": 13595,
+      "duration_s": 543.8,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L22\\L22_V001.mp4": {
+      "fps": 30.0,
+      "nb_frames": 34901,
+      "duration_s": 1163.366667,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L29\\L29_V021.mp4": {
+      "fps": 25.0,
+      "nb_frames": 27006,
+      "duration_s": 1080.24,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L26B\\L26_V171.mp4": {
+      "fps": 25.0,
+      "nb_frames": 8034,
+      "duration_s": 321.36,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L21\\L21_V010.mp4": {
+      "fps": 25.0,
+      "nb_frames": 28311,
+      "duration_s": 1132.44,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L24\\L24_V024.mp4": {
+      "fps": 30.0,
+      "nb_frames": 16922,
+      "duration_s": 564.066667,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L22\\L22_V008.mp4": {
+      "fps": 25.0,
+      "nb_frames": 27393,
+      "duration_s": 1095.72,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L26D\\L26_V389.mp4": {
+      "fps": 25.0,
+      "nb_frames": 7648,
+      "duration_s": 305.92,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L24\\L24_V035.mp4": {
+      "fps": 30.0,
+      "nb_frames": 19851,
+      "duration_s": 661.7,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L28\\L28_V018.mp4": {
+      "fps": 25.0,
+      "nb_frames": 28238,
+      "duration_s": 1129.52,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L21\\L21_V026.mp4": {
+      "fps": 30.0,
+      "nb_frames": 34546,
+      "duration_s": 1151.533333,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L22\\L22_V011.mp4": {
+      "fps": 30.0,
+      "nb_frames": 32881,
+      "duration_s": 1096.033333,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L25\\L25_V041.mp4": {
+      "fps": 25.0,
+      "nb_frames": 35707,
+      "duration_s": 1428.28,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L25\\L25_V060.mp4": {
+      "fps": 25.0,
+      "nb_frames": 39569,
+      "duration_s": 1582.76,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L29\\L29_V001.mp4": {
+      "fps": 25.0,
+      "nb_frames": 27076,
+      "duration_s": 1083.04,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L30\\L30_V003.mp4": {
+      "fps": 25.0,
+      "nb_frames": 8092,
+      "duration_s": 323.68,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L21\\L21_V023.mp4": {
+      "fps": 30.0,
+      "nb_frames": 35391,
+      "duration_s": 1179.7,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L22\\L22_V021.mp4": {
+      "fps": 30.0,
+      "nb_frames": 38124,
+      "duration_s": 1270.8,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L26A\\L26_V035.mp4": {
+      "fps": 25.0,
+      "nb_frames": 8122,
+      "duration_s": 324.88,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L22\\L22_V023.mp4": {
+      "fps": 25.0,
+      "nb_frames": 31066,
+      "duration_s": 1242.64,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L26A\\L26_V041.mp4": {
+      "fps": 25.0,
+      "nb_frames": 8237,
+      "duration_s": 329.48,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L21\\L21_V003.mp4": {
+      "fps": 25.0,
+      "nb_frames": 29946,
+      "duration_s": 1197.84,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L21\\L21_V015.mp4": {
+      "fps": 30.0,
+      "nb_frames": 39117,
+      "duration_s": 1303.9,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L30\\L30_V017.mp4": {
+      "fps": 25.0,
+      "nb_frames": 7265,
+      "duration_s": 290.6,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L30\\L30_V057.mp4": {
+      "fps": 25.0,
+      "nb_frames": 4665,
+      "duration_s": 186.6,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L26C\\L26_V200.mp4": {
+      "fps": 25.0,
+      "nb_frames": 8043,
+      "duration_s": 321.72,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L30\\L30_V095.mp4": {
+      "fps": 25.0,
+      "nb_frames": 7739,
+      "duration_s": 309.56,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L21\\L21_V027.mp4": {
+      "fps": 30.0,
+      "nb_frames": 34804,
+      "duration_s": 1160.133333,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L30\\L30_V072.mp4": {
+      "fps": 25.0,
+      "nb_frames": 2169,
+      "duration_s": 86.76,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L24\\L24_V033.mp4": {
+      "fps": 30.0,
+      "nb_frames": 17596,
+      "duration_s": 586.533333,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L30\\L30_V092.mp4": {
+      "fps": 25.0,
+      "nb_frames": 4335,
+      "duration_s": 173.4,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L26A\\L26_V072.mp4": {
+      "fps": 25.0,
+      "nb_frames": 8174,
+      "duration_s": 326.96,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L27\\L27_V010.mp4": {
+      "fps": 25.0,
+      "nb_frames": 14612,
+      "duration_s": 584.48,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L21\\L21_V029.mp4": {
+      "fps": 30.0,
+      "nb_frames": 34689,
+      "duration_s": 1156.3,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L26A\\L26_V004.mp4": {
+      "fps": 25.0,
+      "nb_frames": 7359,
+      "duration_s": 294.36,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L30\\L30_V078.mp4": {
+      "fps": 25.0,
+      "nb_frames": 4947,
+      "duration_s": 197.88,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L22\\L22_V022.mp4": {
+      "fps": 30.0,
+      "nb_frames": 34149,
+      "duration_s": 1138.3,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L23\\L23_V007.mp4": {
+      "fps": 25.0,
+      "nb_frames": 9869,
+      "duration_s": 394.76,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L23\\L23_V017.mp4": {
+      "fps": 25.0,
+      "nb_frames": 7947,
+      "duration_s": 317.88,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L26B\\L26_V194.mp4": {
+      "fps": 25.0,
+      "nb_frames": 7949,
+      "duration_s": 317.96,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L27\\L27_V014.mp4": {
+      "fps": 25.0,
+      "nb_frames": 14490,
+      "duration_s": 579.6,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L26A\\L26_V056.mp4": {
+      "fps": 25.0,
+      "nb_frames": 8067,
+      "duration_s": 322.68,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L29\\L29_V023.mp4": {
+      "fps": 25.0,
+      "nb_frames": 27057,
+      "duration_s": 1082.28,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L22\\L22_V030.mp4": {
+      "fps": 25.0,
+      "nb_frames": 27945,
+      "duration_s": 1117.8,
+      "sha256_skipped_large_corpus": true
+    },
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\videos\\L27\\L27_V013.mp4": {
+      "fps": 25.0,
+      "nb_frames": 14295,
+      "duration_s": 571.8,
+      "sha256_skipped_large_corpus": true
+    }
+  }
+}

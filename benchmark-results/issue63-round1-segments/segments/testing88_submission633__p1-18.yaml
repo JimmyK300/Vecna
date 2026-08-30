@@ -1,0 +1,53 @@
+query_id: p1-18
+query: 'TRAKE: mushroom dish; E1 first slices; E2 shiitake; E2dup tofu; E4 sauce+flames'
+query_text_status: official_test_round_p1
+source_submission: testing88_submission633
+source_submission_sha256: 6501bbc7e9bb57233245f1595c914b2fda372ece1420cf131f4ee274524cee03
+source_csv: query-p1-18-trake.csv
+submitted_type: trake
+video_id: L26_V072
+video_path: C:\Users\minhc\Code\Official-Dataset\videos\L26A\L26_V072.mp4
+video_duration_s: 326.96
+video_fps_projection: 25.0
+frame_time_projection_note: t = frame_id / ffprobe_avg_fps; provenance v1 marks legacy_time_projection_quality
+  unknown; drift possible
+submitted_anchor_frames:
+- 2466
+- 3133
+- 3420
+- 3800
+submitted_timestamps_s:
+- 98.64
+- 125.32
+- 136.8
+- 152.0
+qa_answer_verbatim: null
+proposed_correct_ranges:
+- start_s: 95
+  end_s: 103
+  start_frame: 2375
+  end_frame: 2575
+- start_s: 120
+  end_s: 128
+  start_frame: 3000
+  end_frame: 3200
+- start_s: 139
+  end_s: 147
+  start_frame: 3475
+  end_frame: 3675
+- start_s: 163
+  end_s: 182
+  start_frame: 4075
+  end_frame: 4550
+confidence: low
+boundary_reasoning: Mushroom dish cooking. E1 98.64 = slicing white mushrooms (first
+  slices ~96-101); E2 125.32 = slicing shiitake; E3 136.8 = MEO card + tofu, first
+  cuts ~140-146; E4 anchor 152.0 = cutting cu nang, but official E4 = sauce poured
+  + flames; oil/flame sequence ~163-182 (scallions 166.8, mushrooms into oil ~181),
+  open flame not directly observed at 5s granularity.
+conflict_notes: E4 anchor sits in a cutting shot, not the flame shot - anchor likely
+  misaligned for E4; official text duplicates 'E2' label (preserved).
+reviewer_note: 'Minh: confirm flame moment for E4 (likely ~166-181).'
+review_status: NEEDS_MINH_REVIEW
+stage: A
+benchmark_writeback: FORBIDDEN_UNTIL_MINH_REVIEW

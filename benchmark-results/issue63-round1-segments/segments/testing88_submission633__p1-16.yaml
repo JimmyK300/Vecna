@@ -1,0 +1,54 @@
+query_id: p1-16
+query: 'TRAKE: lion dance; E1 spin start; E2 4 legs down; E3 at judges; E4 dragon
+  head'
+query_text_status: official_test_round_p1
+source_submission: testing88_submission633
+source_submission_sha256: b37425d184b7be89e1b210acacaff785e12b30f99a4f2522f479e6f1dff10844
+source_csv: query-p1-16-trake.csv
+submitted_type: trake
+video_id: L24_V033
+video_path: C:\Users\minhc\Code\Official-Dataset\videos\L24\L24_V033.mp4
+video_duration_s: 586.53
+video_fps_projection: 30.0
+frame_time_projection_note: t = frame_id / ffprobe_avg_fps; provenance v1 marks legacy_time_projection_quality
+  unknown; drift possible
+submitted_anchor_frames:
+- 15945
+- 16006
+- 16354
+- 16901
+submitted_timestamps_s:
+- 531.5
+- 533.533
+- 545.133
+- 563.367
+qa_answer_verbatim: null
+proposed_correct_ranges:
+- start_s: 495
+  end_s: 533
+  start_frame: 14850
+  end_frame: 15990
+- start_s: 531
+  end_s: 545
+  start_frame: 15930
+  end_frame: 16350
+- start_s: 545
+  end_s: 562
+  start_frame: 16350
+  end_frame: 16860
+- start_s: 562
+  end_s: 595
+  start_frame: 16860
+  end_frame: 17850
+confidence: low
+boundary_reasoning: Lion dance (white/black) on poles at night, HTV The Thao. E1 531.5
+  = lion on structure near judges (spin/dismount ~495-533); E2 533.53 = lion crouched
+  on ground by judges ('4 legs on ground'); E3 545.13 = lion lifted at judges table;
+  E4 563.37 = lion at dragon structure, dragon head visible; performance ends before
+  HTV card ~598.
+conflict_notes: Semantics fit but exact first-instance boundaries need frame-accurate
+  passes; 5s grid only brackets.
+reviewer_note: null
+review_status: NEEDS_MINH_REVIEW
+stage: A
+benchmark_writeback: FORBIDDEN_UNTIL_MINH_REVIEW

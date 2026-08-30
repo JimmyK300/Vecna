@@ -1,0 +1,38 @@
+query_id: p1-8
+query: 'KIS: Japanese food festival; girl with red octopus/squid + paper bag'
+query_text_status: official_test_round_p1
+source_submission: testing88_submission633
+source_submission_sha256: a519e57c05f0261f3c7cd31dad8ff1b2bff0979a43fe85f322ade0bd547742a4
+source_csv: query-p1-8-kis.csv
+submitted_type: kis
+video_id: L22_V030
+video_path: C:\Users\minhc\Code\Official-Dataset\videos\L22\L22_V030.mp4
+video_duration_s: 1117.8
+video_fps_projection: 25.0
+frame_time_projection_note: t = frame_id / ffprobe_avg_fps; provenance v1 marks legacy_time_projection_quality
+  unknown; drift possible
+submitted_anchor_frames:
+- 18327
+submitted_timestamps_s:
+- 733.08
+qa_answer_verbatim: null
+proposed_correct_ranges:
+- start_s: 730
+  end_s: 737
+  start_frame: 18250
+  end_frame: 18425
+- start_s: 700
+  end_s: 740
+  start_frame: 17500
+  end_frame: 18500
+confidence: medium
+boundary_reasoning: 'Strong match: query = woman at Japanese food festival with red
+  octopus/squid at chest + paper bag in hand. Anchor 733.08s = girl holding red octopus-shaped
+  item at BENTO Fest street-food stall. Primary = octopus shot [730,737]; wider [700,740]
+  = festival-food story (okonomiyaki 713-723).'
+conflict_notes: Octopus shot is very short (~5-8s); story continues into unrelated
+  fire item ~743.
+reviewer_note: null
+review_status: NEEDS_MINH_REVIEW
+stage: A
+benchmark_writeback: FORBIDDEN_UNTIL_MINH_REVIEW

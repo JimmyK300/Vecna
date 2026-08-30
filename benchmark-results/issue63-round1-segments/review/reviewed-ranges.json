@@ -1,0 +1,961 @@
+{
+  "schema_version": 1,
+  "purpose": "Issue #63 Stage A human range review",
+  "source_packet": "C:\\Users\\minhc\\Code\\vecna-issue-63\\benchmark-results\\issue63-round1-segments",
+  "benchmark_writeback": false,
+  "saved_at_utc": "2026-08-30T05:20:20.596404+00:00",
+  "reviews": {
+    "testing88_submission633::p1-1": {
+      "query_id": "p1-1",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L21_V015",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 840.0,
+          "end_s": 905.0,
+          "start_frame": 25200,
+          "end_frame": 27150
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T04:49:22.887Z"
+    },
+    "testing88_submission633::p1-2": {
+      "query_id": "p1-2",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L21_V029",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 375.0,
+          "end_s": 425.0,
+          "start_frame": 11250,
+          "end_frame": 12750
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T04:50:06.431Z"
+    },
+    "testing88_submission633::p1-4": {
+      "query_id": "p1-4",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L26_V194",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 188.0,
+          "end_s": 193.0,
+          "start_frame": 4700,
+          "end_frame": 4825
+        },
+        {
+          "start_s": 205.0,
+          "end_s": 208.0,
+          "start_frame": 5125,
+          "end_frame": 5200
+        },
+        {
+          "start_s": 217.0,
+          "end_s": 220.0,
+          "start_frame": 5425,
+          "end_frame": 5500
+        },
+        {
+          "start_s": 233.0,
+          "end_s": 236.0,
+          "start_frame": 5825,
+          "end_frame": 5900
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T04:50:16.555Z"
+    },
+    "testing88_submission633::p1-5": {
+      "query_id": "p1-5",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L27_V014",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 280.0,
+          "end_s": 335.0,
+          "start_frame": 7000,
+          "end_frame": 8375
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T04:50:19.136Z"
+    },
+    "testing88_submission633::p1-6": {
+      "query_id": "p1-6",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L26_V056",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 245.0,
+          "end_s": 295.0,
+          "start_frame": 6125,
+          "end_frame": 7375
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T04:50:20.718Z"
+    },
+    "testing88_submission633::p1-7": {
+      "query_id": "p1-7",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L29_V023",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 433.0,
+          "end_s": 441.0,
+          "start_frame": 10825,
+          "end_frame": 11025
+        },
+        {
+          "start_s": 425.0,
+          "end_s": 455.0,
+          "start_frame": 10625,
+          "end_frame": 11375
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T04:50:22.106Z"
+    },
+    "testing88_submission633::p1-8": {
+      "query_id": "p1-8",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L22_V030",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 730.0,
+          "end_s": 737.0,
+          "start_frame": 18250,
+          "end_frame": 18425
+        },
+        {
+          "start_s": 700.0,
+          "end_s": 740.0,
+          "start_frame": 17500,
+          "end_frame": 18500
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T04:50:23.979Z"
+    },
+    "testing88_submission633::p1-9": {
+      "query_id": "p1-9",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L27_V013",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 195.0,
+          "end_s": 245.0,
+          "start_frame": 4875,
+          "end_frame": 6125
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T04:50:25.957Z"
+    },
+    "testing88_submission633::p1-10": {
+      "query_id": "p1-10",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L30_V017",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 115.0,
+          "end_s": 125.0,
+          "start_frame": 2875,
+          "end_frame": 3125
+        },
+        {
+          "start_s": 100.0,
+          "end_s": 140.0,
+          "start_frame": 2500,
+          "end_frame": 3500
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T04:50:28.349Z"
+    },
+    "testing88_submission633::p1-11": {
+      "query_id": "p1-11",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L30_V057",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 118.0,
+          "end_s": 135.0,
+          "start_frame": 2950,
+          "end_frame": 3375
+        },
+        {
+          "start_s": 190.0,
+          "end_s": 225.0,
+          "start_frame": 4750,
+          "end_frame": 5625
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T04:50:30.017Z"
+    },
+    "testing88_submission633::p1-12": {
+      "query_id": "p1-12",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L26_V200",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 172.0,
+          "end_s": 272.0,
+          "start_frame": 4300,
+          "end_frame": 6800
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T04:50:32.287Z"
+    },
+    "testing88_submission633::p1-13": {
+      "query_id": "p1-13",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L30_V095",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 100.0,
+          "end_s": 112.0,
+          "start_frame": 2500,
+          "end_frame": 2800
+        },
+        {
+          "start_s": 150.0,
+          "end_s": 205.0,
+          "start_frame": 3750,
+          "end_frame": 5125
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T04:51:12.753Z"
+    },
+    "testing88_submission633::p1-14": {
+      "query_id": "p1-14",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L21_V027",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 890.0,
+          "end_s": 940.0,
+          "start_frame": 26700,
+          "end_frame": 28200
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T04:51:14.832Z"
+    },
+    "testing88_submission633::p1-15": {
+      "query_id": "p1-15",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L30_V072",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 55.0,
+          "end_s": 85.0,
+          "start_frame": 1375,
+          "end_frame": 2125
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T04:51:16.322Z"
+    },
+    "testing88_submission633::p1-16": {
+      "query_id": "p1-16",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L24_V033",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 495.0,
+          "end_s": 533.0,
+          "start_frame": 14850,
+          "end_frame": 15990
+        },
+        {
+          "start_s": 531.0,
+          "end_s": 545.0,
+          "start_frame": 15930,
+          "end_frame": 16350
+        },
+        {
+          "start_s": 545.0,
+          "end_s": 562.0,
+          "start_frame": 16350,
+          "end_frame": 16860
+        },
+        {
+          "start_s": 562.0,
+          "end_s": 595.0,
+          "start_frame": 16860,
+          "end_frame": 17850
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T04:51:18.162Z"
+    },
+    "testing88_submission633::p1-17": {
+      "query_id": "p1-17",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L30_V092",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 93.0,
+          "end_s": 108.0,
+          "start_frame": 2325,
+          "end_frame": 2700
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T04:51:19.582Z"
+    },
+    "testing88_submission633::p1-18": {
+      "query_id": "p1-18",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L26_V072",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 95.0,
+          "end_s": 103.0,
+          "start_frame": 2375,
+          "end_frame": 2575
+        },
+        {
+          "start_s": 120.0,
+          "end_s": 128.0,
+          "start_frame": 3000,
+          "end_frame": 3200
+        },
+        {
+          "start_s": 139.0,
+          "end_s": 147.0,
+          "start_frame": 3475,
+          "end_frame": 3675
+        },
+        {
+          "start_s": 163.0,
+          "end_s": 182.0,
+          "start_frame": 4075,
+          "end_frame": 4550
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T04:51:21.542Z"
+    },
+    "testing88_submission633::p1-19": {
+      "query_id": "p1-19",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L27_V010",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 215.0,
+          "end_s": 232.0,
+          "start_frame": 5375,
+          "end_frame": 5800
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T04:53:32.760Z"
+    },
+    "testing88_submission633::p1-20": {
+      "query_id": "p1-20",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L26_V004",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 214.0,
+          "end_s": 278.0,
+          "start_frame": 5350,
+          "end_frame": 6950
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T04:53:37.837Z"
+    },
+    "testing88_submission633::p1-21": {
+      "query_id": "p1-21",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L21_V004",
+      "decision": "ambiguous",
+      "reviewed_ranges": [],
+      "reviewer_note": "Ambiguous: source video L21_V004.mp4 is not present in the recovered/local dataset, so the exact score and frame range cannot be verified.",
+      "updated_at_utc": "2026-08-30T05:22:00.757Z"
+    },
+    "testing88_submission633::p1-22": {
+      "query_id": "p1-22",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L30_V078",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 68.0,
+          "end_s": 78.0,
+          "start_frame": 1700,
+          "end_frame": 1950
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T04:54:00.460Z"
+    },
+    "testing88_submission633::p1-23": {
+      "query_id": "p1-23",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L22_V022",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 555.0,
+          "end_s": 645.0,
+          "start_frame": 16650,
+          "end_frame": 19350
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T04:54:03.379Z"
+    },
+    "testing88_submission633::p1-24": {
+      "query_id": "p1-24",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L23_V007",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 126.0,
+          "end_s": 142.0,
+          "start_frame": 3150,
+          "end_frame": 3550
+        },
+        {
+          "start_s": 120.0,
+          "end_s": 160.0,
+          "start_frame": 3000,
+          "end_frame": 4000
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T04:54:09.054Z"
+    },
+    "testing88_submission633::p1-25": {
+      "query_id": "p1-25",
+      "source_submission": "testing88_submission633",
+      "source_label": "Testing 8.8 submission",
+      "video_id": "L23_V017",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 40.0,
+          "end_s": 60.0,
+          "start_frame": 1000,
+          "end_frame": 1500
+        },
+        {
+          "start_s": 60.0,
+          "end_s": 180.0,
+          "start_frame": 1500,
+          "end_frame": 4500
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T04:54:12.605Z"
+    },
+    "final_round1_10_4of13::p1-1": {
+      "query_id": "p1-1",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L30_V046",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 254.0,
+          "end_s": 274.4,
+          "start_frame": 6350,
+          "end_frame": 6860
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:14:32.151Z"
+    },
+    "final_round1_10_4of13::p1-2": {
+      "query_id": "p1-2",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L28_V018",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 105.0,
+          "end_s": 128.0,
+          "start_frame": 2625,
+          "end_frame": 3200
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:15:58.375Z"
+    },
+    "final_round1_10_4of13::p1-3": {
+      "query_id": "p1-3",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L21_V023",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 848.0,
+          "end_s": 940.0,
+          "start_frame": 25440,
+          "end_frame": 28200
+        },
+        {
+          "start_s": 856.0,
+          "end_s": 874.0,
+          "start_frame": 25680,
+          "end_frame": 26220
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:16:01.719Z"
+    },
+    "final_round1_10_4of13::p1-4": {
+      "query_id": "p1-4",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L22_V021",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 645.0,
+          "end_s": 715.0,
+          "start_frame": 19350,
+          "end_frame": 21450
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:16:25.551Z"
+    },
+    "final_round1_10_4of13::p1-5": {
+      "query_id": "p1-5",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L26_V035",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 185.0,
+          "end_s": 265.0,
+          "start_frame": 4625,
+          "end_frame": 6625
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:16:37.333Z"
+    },
+    "final_round1_10_4of13::p1-6": {
+      "query_id": "p1-6",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L22_V023",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 705.0,
+          "end_s": 770.0,
+          "start_frame": 17625,
+          "end_frame": 19250
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:16:51.525Z"
+    },
+    "final_round1_10_4of13::p1-7": {
+      "query_id": "p1-7",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L26_V041",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 125.0,
+          "end_s": 215.0,
+          "start_frame": 3125,
+          "end_frame": 5375
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:17:01.809Z"
+    },
+    "final_round1_10_4of13::p1-8": {
+      "query_id": "p1-8",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L26_V171",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 205.0,
+          "end_s": 260.0,
+          "start_frame": 5125,
+          "end_frame": 6500
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:17:31.721Z"
+    },
+    "final_round1_10_4of13::p1-9": {
+      "query_id": "p1-9",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L21_V003",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 1030.0,
+          "end_s": 1075.0,
+          "start_frame": 25750,
+          "end_frame": 26875
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:17:37.029Z"
+    },
+    "final_round1_10_4of13::p1-10": {
+      "query_id": "p1-10",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L29_V013",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 440.0,
+          "end_s": 525.0,
+          "start_frame": 11000,
+          "end_frame": 13125
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:17:40.349Z"
+    },
+    "final_round1_10_4of13::p1-11": {
+      "query_id": "p1-11",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L23_V021",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 250.0,
+          "end_s": 300.0,
+          "start_frame": 6250,
+          "end_frame": 7500
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:17:51.775Z"
+    },
+    "final_round1_10_4of13::p1-12": {
+      "query_id": "p1-12",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L22_V001",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 100.0,
+          "end_s": 113.0,
+          "start_frame": 3000,
+          "end_frame": 3390
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:18:12.285Z"
+    },
+    "final_round1_10_4of13::p1-13": {
+      "query_id": "p1-13",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L29_V021",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 235.0,
+          "end_s": 285.0,
+          "start_frame": 5875,
+          "end_frame": 7125
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:18:31.702Z"
+    },
+    "final_round1_10_4of13::p1-14": {
+      "query_id": "p1-14",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L26_V171",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 205.0,
+          "end_s": 260.0,
+          "start_frame": 5125,
+          "end_frame": 6500
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:18:35.822Z"
+    },
+    "final_round1_10_4of13::p1-15": {
+      "query_id": "p1-15",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L21_V010",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 770.0,
+          "end_s": 800.0,
+          "start_frame": 19250,
+          "end_frame": 20000
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:18:46.101Z"
+    },
+    "final_round1_10_4of13::p1-16": {
+      "query_id": "p1-16",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L24_V024",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 285.0,
+          "end_s": 390.0,
+          "start_frame": 8550,
+          "end_frame": 11700
+        },
+        {
+          "start_s": 320.0,
+          "end_s": 332.0,
+          "start_frame": 9600,
+          "end_frame": 9960
+        },
+        {
+          "start_s": 336.0,
+          "end_s": 341.0,
+          "start_frame": 10080,
+          "end_frame": 10230
+        },
+        {
+          "start_s": 338.0,
+          "end_s": 348.0,
+          "start_frame": 10140,
+          "end_frame": 10440
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:18:48.557Z"
+    },
+    "final_round1_10_4of13::p1-17": {
+      "query_id": "p1-17",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L22_V008",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 220.0,
+          "end_s": 250.0,
+          "start_frame": 5500,
+          "end_frame": 6250
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:18:59.554Z"
+    },
+    "final_round1_10_4of13::p1-18": {
+      "query_id": "p1-18",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L26_V389",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 225.0,
+          "end_s": 240.0,
+          "start_frame": 5625,
+          "end_frame": 6000
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:19:23.682Z"
+    },
+    "final_round1_10_4of13::p1-19": {
+      "query_id": "p1-19",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L24_V035",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 385.0,
+          "end_s": 600.0,
+          "start_frame": 11550,
+          "end_frame": 18000
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:20:07.000Z"
+    },
+    "final_round1_10_4of13::p1-20": {
+      "query_id": "p1-20",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L21_V026",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 245.0,
+          "end_s": 262.0,
+          "start_frame": 7350,
+          "end_frame": 7860
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:20:09.434Z"
+    },
+    "final_round1_10_4of13::p1-21": {
+      "query_id": "p1-21",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L22_V011",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 500.0,
+          "end_s": 545.0,
+          "start_frame": 15000,
+          "end_frame": 16350
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:20:12.772Z"
+    },
+    "final_round1_10_4of13::p1-22": {
+      "query_id": "p1-22",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L25_V041",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 645.0,
+          "end_s": 692.0,
+          "start_frame": 16125,
+          "end_frame": 17300
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:20:14.528Z"
+    },
+    "final_round1_10_4of13::p1-23": {
+      "query_id": "p1-23",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L25_V060",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 1050.0,
+          "end_s": 1160.0,
+          "start_frame": 26250,
+          "end_frame": 29000
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:20:16.184Z"
+    },
+    "final_round1_10_4of13::p1-24": {
+      "query_id": "p1-24",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L29_V001",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 350.0,
+          "end_s": 380.0,
+          "start_frame": 8750,
+          "end_frame": 9500
+        },
+        {
+          "start_s": 340.0,
+          "end_s": 430.0,
+          "start_frame": 8500,
+          "end_frame": 10750
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:20:18.382Z"
+    },
+    "final_round1_10_4of13::p1-25": {
+      "query_id": "p1-25",
+      "source_submission": "final_round1_10_4of13",
+      "source_label": "Preliminary Round 1 · 10.4/13",
+      "video_id": "L30_V003",
+      "decision": "accept",
+      "reviewed_ranges": [
+        {
+          "start_s": 260.0,
+          "end_s": 300.0,
+          "start_frame": 6500,
+          "end_frame": 7500
+        }
+      ],
+      "reviewer_note": "",
+      "updated_at_utc": "2026-08-30T05:20:20.340Z"
+    }
+  }
+}

@@ -1,0 +1,34 @@
+query_id: p1-2
+query: 'KIS: Southern locality intro with ~3-6 rare tiger/panther cubs'
+query_text_status: round1_text_unavailable
+source_submission: final_round1_10_4of13
+source_submission_sha256: d1f4429e866856c2e300a020900f5c451384030c97704a80c3ac3c7d6bfd6862
+source_csv: query-p1-2-kis.csv
+submitted_type: kis
+video_id: L28_V018
+video_path: C:\Users\minhc\Code\Official-Dataset\videos\L28\L28_V018.mp4
+video_duration_s: 1129.52
+video_fps_projection: 25.0
+frame_time_projection_note: t = frame_id / ffprobe_avg_fps; provenance v1 marks legacy_time_projection_quality
+  unknown; drift possible
+submitted_anchor_frames:
+- 3032
+submitted_timestamps_s:
+- 121.28
+qa_answer_verbatim: null
+proposed_correct_ranges:
+- start_s: 105
+  end_s: 128
+  start_frame: 2625
+  end_frame: 3200
+confidence: low
+boundary_reasoning: HTV 'Den va o lai - Tap 18' Mekong documentary. Anchor 121.28s
+  sits inside a satellite-map graphic (Kenh T3/T4/T5, Kenh Ha Tien - Rach Gia) spanning
+  ~105-128s, between canal aerials (<=101s) and bridge footage (>=129s). Proposed
+  range = the map segment.
+conflict_notes: Round-1 text unavailable; official test-round P1-02 (village with
+  dog cubs) does not match. Map start/end estimated from 10s grid.
+reviewer_note: null
+review_status: NEEDS_MINH_REVIEW
+stage: A
+benchmark_writeback: FORBIDDEN_UNTIL_MINH_REVIEW

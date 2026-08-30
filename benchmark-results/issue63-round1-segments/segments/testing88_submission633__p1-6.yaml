@@ -1,0 +1,34 @@
+query_id: p1-6
+query: 'KIS: fresh rolls placed on flower-decorated tray (opening scene)'
+query_text_status: official_test_round_p1
+source_submission: testing88_submission633
+source_submission_sha256: fa397ae7ef1dfaf85a8461ee4cce2ace8e2639bae64e9ea17050fd9dd0896c86
+source_csv: query-p1-6-kis.csv
+submitted_type: kis
+video_id: L26_V056
+video_path: C:\Users\minhc\Code\Official-Dataset\videos\L26A\L26_V056.mp4
+video_duration_s: 322.68
+video_fps_projection: 25.0
+frame_time_projection_note: t = frame_id / ffprobe_avg_fps; provenance v1 marks legacy_time_projection_quality
+  unknown; drift possible
+submitted_anchor_frames:
+- 6300
+submitted_timestamps_s:
+- 252.0
+qa_answer_verbatim: null
+proposed_correct_ranges:
+- start_s: 245
+  end_s: 295
+  start_frame: 6125
+  end_frame: 7375
+confidence: medium
+boundary_reasoning: 'Strong match: query = opening scene, fresh rice-paper rolls with
+  greens+tofu placed on tray decorated with purple leaves and yellow-white pansies.
+  Anchor 252.0s = hands arranging purple roll on flower-decorated tray; plated closeups
+  through ~292s. Rolling ~202-242, sauce ~152-192 are earlier phases.'
+conflict_notes: Start boundary between 'rolling' and 'plating' estimated; query says
+  the clip BEGINS with the plating scene.
+reviewer_note: null
+review_status: NEEDS_MINH_REVIEW
+stage: A
+benchmark_writeback: FORBIDDEN_UNTIL_MINH_REVIEW

@@ -1,0 +1,53 @@
+query_id: p1-16
+query: 'TRAKE: lion dance; E1 spin start; E2 4 legs down; E3 at judges; E4 dragon
+  head'
+query_text_status: round1_text_unavailable
+source_submission: final_round1_10_4of13
+source_submission_sha256: 8a454d8c7036f0c322f93599fccbb7163e513519bba51a214029d5c265f85efe
+source_csv: query-p1-16-trake.csv
+submitted_type: trake
+video_id: L24_V024
+video_path: C:\Users\minhc\Code\Official-Dataset\videos\L24\L24_V024.mp4
+video_duration_s: 564.07
+video_fps_projection: 30.0
+frame_time_projection_note: t = frame_id / ffprobe_avg_fps; provenance v1 marks legacy_time_projection_quality
+  unknown; drift possible
+submitted_anchor_frames:
+- 9785
+- 10135
+- 10191
+submitted_timestamps_s:
+- 326.167
+- 337.833
+- 339.7
+qa_answer_verbatim: null
+proposed_correct_ranges:
+- start_s: 285
+  end_s: 390
+  start_frame: 8550
+  end_frame: 11700
+- start_s: 320
+  end_s: 332
+  start_frame: 9600
+  end_frame: 9960
+- start_s: 336
+  end_s: 341
+  start_frame: 10080
+  end_frame: 10230
+- start_s: 338
+  end_s: 348
+  start_frame: 10140
+  end_frame: 10440
+confidence: low
+boundary_reasoning: HTV The Thao lion dance on poles (white lion). Continuous performance
+  ~286-385+. E1 anchor 326.17 = lion on pole wide; E2 anchor 337.83 = closeup on pole;
+  E3 anchor 339.7 = gong-strike closeup during performance. Per-event windows are
+  mechanical; continuous range [285,390] proposed (end uncertain, performance continues
+  past window).
+conflict_notes: Official test-round P1-16 is a 4-event snake/lion query; final submits
+  only 3 anchors and Round-1 event definitions are unknown. Event-to-range mapping
+  is not semantic here.
+reviewer_note: null
+review_status: NEEDS_MINH_REVIEW
+stage: A
+benchmark_writeback: FORBIDDEN_UNTIL_MINH_REVIEW

@@ -1,0 +1,33 @@
+query_id: p1-25
+query: 'KIS: drone; blue-white rider overtakes 3 then leads to finish'
+query_text_status: round1_text_unavailable
+source_submission: final_round1_10_4of13
+source_submission_sha256: c104c96b6f7b50e391f35a660a6d97fef0c371c016bed34f3e5ce0c992b191fd
+source_csv: query-p1-25-kis.csv
+submitted_type: kis
+video_id: L30_V003
+video_path: C:\Users\minhc\Code\Official-Dataset\videos\L30\L30_V003.mp4
+video_duration_s: 323.68
+video_fps_projection: 25.0
+frame_time_projection_note: t = frame_id / ffprobe_avg_fps; provenance v1 marks legacy_time_projection_quality
+  unknown; drift possible
+submitted_anchor_frames:
+- 6611
+submitted_timestamps_s:
+- 264.44
+qa_answer_verbatim: null
+proposed_correct_ranges:
+- start_s: 260
+  end_s: 300
+  start_frame: 6500
+  end_frame: 7500
+confidence: low
+boundary_reasoning: TuoitreTV student story. ANCHOR 264.44 = boy presenting at 'LEADERSHIP
+  STEAM FAIR 2021' podium; stage presentations 254-294; kids group 304-314; medals
+  table 334. Proposed range = STEAM-fair presentation [260,300].
+conflict_notes: Round-1 text unavailable; official test-round P1-25 (drone cyclist
+  overtake) does not match.
+reviewer_note: null
+review_status: NEEDS_MINH_REVIEW
+stage: A
+benchmark_writeback: FORBIDDEN_UNTIL_MINH_REVIEW

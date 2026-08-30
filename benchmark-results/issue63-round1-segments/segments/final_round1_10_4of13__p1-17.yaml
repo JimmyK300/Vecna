@@ -1,0 +1,35 @@
+query_id: p1-17
+query: 'KIS: spring-2024 hospital charity; 2 men + 4 children; plaques; red backdrop'
+query_text_status: round1_text_unavailable
+source_submission: final_round1_10_4of13
+source_submission_sha256: ae5ce153d6df90e525382d885cdc1ca02225f48d821d6a204fc563eff73576da
+source_csv: query-p1-17-qa.csv
+submitted_type: qa
+video_id: L22_V008
+video_path: C:\Users\minhc\Code\Official-Dataset\videos\L22\L22_V008.mp4
+video_duration_s: 1095.72
+video_fps_projection: 25.0
+frame_time_projection_note: t = frame_id / ffprobe_avg_fps; provenance v1 marks legacy_time_projection_quality
+  unknown; drift possible
+submitted_anchor_frames:
+- 5638
+submitted_timestamps_s:
+- 225.52
+qa_answer_verbatim: Tà Pứa
+proposed_correct_ranges:
+- start_s: 220
+  end_s: 250
+  start_frame: 5500
+  end_frame: 6250
+confidence: medium
+boundary_reasoning: 'HTV7 news. Landslide story: ANCHOR 225.52 = Tua Pua pass landslide
+  blocking road (chyron ''BINH THUAN: SAT LO DEO TA PUA GAY ACH TAC GIAO THONG'');
+  mud shots 235-245; Lai Chau boulder item ~255. Submitted QA answers ''Ta Pua'' /
+  ''Deo Ta Pua'' MATCH the visible chyron. Proposed range [220,250].'
+conflict_notes: 'TYPE CONFLICT: official test-round P1-17 is KIS (hospital charity)
+  but final submits QA; however the QA answer aligns with the on-screen text, so this
+  is likely a genuine Round-1 QA item.'
+reviewer_note: null
+review_status: NEEDS_MINH_REVIEW
+stage: A
+benchmark_writeback: FORBIDDEN_UNTIL_MINH_REVIEW

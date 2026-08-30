@@ -1,0 +1,34 @@
+query_id: p1-9
+query: 'KIS: Mekong harvest scene; girl in pink + checkered scarf; baskets; blue boat'
+query_text_status: official_test_round_p1
+source_submission: testing88_submission633
+source_submission_sha256: e93da4ad9336bfe9254347d7c17c82eaa568e58d3a1d37c43a7ef53b72325bdd
+source_csv: query-p1-9-kis.csv
+submitted_type: kis
+video_id: L27_V013
+video_path: C:\Users\minhc\Code\Official-Dataset\videos\L27\L27_V013.mp4
+video_duration_s: 571.8
+video_fps_projection: 25.0
+frame_time_projection_note: t = frame_id / ffprobe_avg_fps; provenance v1 marks legacy_time_projection_quality
+  unknown; drift possible
+submitted_anchor_frames:
+- 5050
+submitted_timestamps_s:
+- 202.0
+qa_answer_verbatim: null
+proposed_correct_ranges:
+- start_s: 195
+  end_s: 245
+  start_frame: 4875
+  end_frame: 6125
+confidence: medium
+boundary_reasoning: 'Strong match after OCR correction: official ''ban gio dua / thu
+  hoach dua'' is almost certainly PINEAPPLE (dua). Anchor 202.0s = two women (pink
+  shirt + checkered scarf; older in purple) with yellow basket of pineapples, blue
+  boat behind - matches query structure exactly. Peeling 232-242; host holds pineapple
+  192.'
+conflict_notes: Official capture text OCR-garbled (dua vs dua); match is structural+visual.
+reviewer_note: 'Minh: confirm dua reading; decide start (~192 host vs ~195 women+basket).'
+review_status: NEEDS_MINH_REVIEW
+stage: A
+benchmark_writeback: FORBIDDEN_UNTIL_MINH_REVIEW
