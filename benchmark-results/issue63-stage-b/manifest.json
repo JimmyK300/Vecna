@@ -1,0 +1,53 @@
+{
+  "created_at": "2026-08-30T06:51:55.142351+00:00",
+  "files": {
+    "expanded-inventory.json": {
+      "sha256": "06a2c1528a29152f664005749f698696d17cd9aaf126bbbfddd1bf7af6782c99",
+      "bytes": 230150
+    },
+    "expanded-results.jsonl": {
+      "sha256": "409b7fdf63b5d609d75f4705b25081e7474c6e5edad69888d2a01be77699802e",
+      "bytes": 1507302
+    },
+    "legacy-canonical.csv": {
+      "sha256": "b732a623deba352db037bcb8acb5f99923ba9cd01e761ad3f4417307de42057c",
+      "bytes": 69110
+    },
+    "old-results.jsonl": {
+      "sha256": "3867609db752e2337fa80ee3c3fd71afd4e83379e0ee4e34c4e184ed31e22ac7",
+      "bytes": 467376
+    },
+    "PROTOCOL.md": {
+      "sha256": "9807d422d436e9b12fc87f7066c38ab51981a18a4dd801ea8578b417bccca8b4",
+      "bytes": 2413
+    },
+    "README.md": {
+      "sha256": "9c093ab63f610550f370b6ae1c2a0bf53cbe26de5b005e3dcf43e2227464c8ff",
+      "bytes": 1622
+    },
+    "reconstructed-results.jsonl": {
+      "sha256": "b5fa4725642bd0f2e0edd7ff7a19a0b62ccc9a28c99258b3adb68194ed7fd9fc",
+      "bytes": 1039926
+    },
+    "reconstructed-truth.json": {
+      "sha256": "016e13507071b05df1a5474f125d18755fc8ce0b58ce3a71b6f217c670abc782",
+      "bytes": 117706
+    },
+    "RERUN.md": {
+      "sha256": "612566402ee1e1d7f5fe54afc868daf9769ab823a07e2c96f5331c8a67305fef",
+      "bytes": 314
+    },
+    "run.json": {
+      "sha256": "76f9840ecad6174725a737eacc124d20545cf023545818be1e371febba09861b",
+      "bytes": 1489937
+    },
+    "summary.json": {
+      "sha256": "fb07aacc5fa18851bfe8a2528cb5cc57be9cefe30ad0ae7cd1a592fd6d039677",
+      "bytes": 5977
+    },
+    "TESTS.md": {
+      "sha256": "628d4d2bfd16c247cf4470249dbe459fe8105968a101546e2c314b499317922b",
+      "bytes": 853
+    }
+  }
+}

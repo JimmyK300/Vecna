@@ -1,0 +1,196 @@
+{
+  "created_at": "2026-08-30T06:51:55.092432+00:00",
+  "counts": {
+    "legacy_scoreable": 21,
+    "reconstructed_scoreable_added": 48,
+    "expanded_scoreable_total": 69,
+    "reconstructed_excluded": 1,
+    "legacy_excluded": 1,
+    "all_inventory_excluded": 2
+  },
+  "same_runtime_metrics": {
+    "old": {
+      "scoreable_count": 21,
+      "recall_at_1": 0.52381,
+      "recall_at_5": 0.630952,
+      "recall_at_10": 0.738095,
+      "recall_at_20": 0.797619,
+      "mrr_at_20": 0.58868,
+      "no_hit_within_20_count": 3,
+      "failed_search_count": 0
+    },
+    "reconstructed_only": {
+      "scoreable_count": 48,
+      "recall_at_1": 0.270833,
+      "recall_at_5": 0.479167,
+      "recall_at_10": 0.5625,
+      "recall_at_20": 0.6875,
+      "mrr_at_20": 0.367793,
+      "no_hit_within_20_count": 15,
+      "failed_search_count": 0
+    },
+    "expanded": {
+      "scoreable_count": 69,
+      "recall_at_1": 0.347826,
+      "recall_at_5": 0.525362,
+      "recall_at_10": 0.615942,
+      "recall_at_20": 0.721014,
+      "mrr_at_20": 0.435019,
+      "no_hit_within_20_count": 18,
+      "failed_search_count": 0
+    }
+  },
+  "historical_issue58_guardrail": {
+    "scoreable_count": 21,
+    "recall_at_1": 0.52381,
+    "recall_at_5": 0.630952,
+    "recall_at_20": 0.797619,
+    "mrr_at_20": 0.58868
+  },
+  "old_metric_drift_vs_issue58": {
+    "recall_at_1": 0.0,
+    "recall_at_5": 0.0,
+    "recall_at_20": 0.0,
+    "mrr_at_20": 0.0
+  },
+  "slices": {
+    "source": {
+      "p1.txt": {
+        "scoreable_count": 21,
+        "recall_at_1": 0.52381,
+        "recall_at_5": 0.630952,
+        "recall_at_10": 0.738095,
+        "recall_at_20": 0.797619,
+        "mrr_at_20": 0.58868,
+        "no_hit_within_20_count": 3,
+        "failed_search_count": 0,
+        "small_n_warning": false
+      },
+      "final_round1_10_4of13": {
+        "scoreable_count": 25,
+        "recall_at_1": 0.28,
+        "recall_at_5": 0.48,
+        "recall_at_10": 0.56,
+        "recall_at_20": 0.72,
+        "mrr_at_20": 0.377285,
+        "no_hit_within_20_count": 7,
+        "failed_search_count": 0,
+        "small_n_warning": false
+      },
+      "testing88_submission633": {
+        "scoreable_count": 23,
+        "recall_at_1": 0.26087,
+        "recall_at_5": 0.478261,
+        "recall_at_10": 0.565217,
+        "recall_at_20": 0.652174,
+        "mrr_at_20": 0.357475,
+        "no_hit_within_20_count": 8,
+        "failed_search_count": 0,
+        "small_n_warning": false
+      }
+    },
+    "task_type": {
+      "tkis": {
+        "scoreable_count": 16,
+        "recall_at_1": 0.625,
+        "recall_at_5": 0.6875,
+        "recall_at_10": 0.8125,
+        "recall_at_20": 0.875,
+        "mrr_at_20": 0.668876,
+        "no_hit_within_20_count": 2,
+        "failed_search_count": 0,
+        "small_n_warning": false
+      },
+      "trake": {
+        "scoreable_count": 7,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.035714,
+        "recall_at_10": 0.357143,
+        "recall_at_20": 0.392857,
+        "mrr_at_20": 0.100275,
+        "no_hit_within_20_count": 3,
+        "failed_search_count": 0,
+        "small_n_warning": true
+      },
+      "qa": {
+        "scoreable_count": 9,
+        "recall_at_1": 0.111111,
+        "recall_at_5": 0.444444,
+        "recall_at_10": 0.444444,
+        "recall_at_20": 0.666667,
+        "mrr_at_20": 0.243177,
+        "no_hit_within_20_count": 3,
+        "failed_search_count": 0,
+        "small_n_warning": true
+      },
+      "kis": {
+        "scoreable_count": 37,
+        "recall_at_1": 0.351351,
+        "recall_at_5": 0.567568,
+        "recall_at_10": 0.621622,
+        "recall_at_20": 0.72973,
+        "mrr_at_20": 0.443887,
+        "no_hit_within_20_count": 10,
+        "failed_search_count": 0,
+        "small_n_warning": false
+      }
+    },
+    "truth_tier": {
+      "legacy_existing_contract": {
+        "scoreable_count": 21,
+        "recall_at_1": 0.52381,
+        "recall_at_5": 0.630952,
+        "recall_at_10": 0.738095,
+        "recall_at_20": 0.797619,
+        "mrr_at_20": 0.58868,
+        "no_hit_within_20_count": 3,
+        "failed_search_count": 0,
+        "small_n_warning": false
+      },
+      "reconstructed_round1_human_reviewed": {
+        "scoreable_count": 48,
+        "recall_at_1": 0.270833,
+        "recall_at_5": 0.479167,
+        "recall_at_10": 0.5625,
+        "recall_at_20": 0.6875,
+        "mrr_at_20": 0.367793,
+        "no_hit_within_20_count": 15,
+        "failed_search_count": 0,
+        "small_n_warning": false
+      }
+    }
+  },
+  "no_hit_query_ids": {
+    "old": [
+      "p1_q16",
+      "p1_q20",
+      "p1_q21"
+    ],
+    "reconstructed": [
+      "final_round1_10_4of13::p1-1",
+      "final_round1_10_4of13::p1-18",
+      "final_round1_10_4of13::p1-19",
+      "final_round1_10_4of13::p1-2",
+      "final_round1_10_4of13::p1-23",
+      "final_round1_10_4of13::p1-24",
+      "final_round1_10_4of13::p1-3",
+      "testing88_submission633::p1-15",
+      "testing88_submission633::p1-16",
+      "testing88_submission633::p1-17",
+      "testing88_submission633::p1-22",
+      "testing88_submission633::p1-24",
+      "testing88_submission633::p1-25",
+      "testing88_submission633::p1-4",
+      "testing88_submission633::p1-9"
+    ]
+  },
+  "failed_searches": [],
+  "interpretation": "Expanded metrics add human-reviewed semantic interval truth. Cross-source records remain independent even when bare p1 IDs match.",
+  "query_input_caveat": {
+    "affected_records": [
+      "final_round1_10_4of13::p1-17",
+      "final_round1_10_4of13::p1-25"
+    ],
+    "detail": "The frozen parser retained the immediately following task-section label as a final line of these two supplied questions. Exact query_text used is preserved in reconstructed-results.jsonl; no retry was permitted by the exactly-once protocol."
+  }
+}
