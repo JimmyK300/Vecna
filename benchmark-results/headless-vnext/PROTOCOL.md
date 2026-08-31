@@ -6,12 +6,25 @@ This packet implements the approved Issue #75 metric contract plus Minh's TRAKE 
 
 - Issue #63 reconstructed truth: `benchmark-results/issue63-stage-b/reconstructed-truth.json`, SHA-256 `92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603`, accepted lineage through `ec4a38d397c9a3a49a821812b37db47f52327049`.
 - Issue #75 approved contract commit: `2344023ea4e2a152d1e9dc15778d8feb436dc396`.
-- `official-dataset-control` identity commit: `646ec85c75141bb68078fa94ec26b9a1dbef6d04`.
+- `official-dataset-control` identity/query authority commit: `646ec85c75141bb68078fa94ec26b9a1dbef6d04`.
 - P0 canonical source `test_round_8_8` maps to immutable Vecna provenance source `testing88_submission633`.
 - P1 canonical source `actual_p1_10_4` maps to immutable Vecna provenance source `final_round1_10_4of13`.
 - P2 is absent.
 
 `build_headless_vnext_manifest.py` verifies the Issue #63 truth bytes before projecting the accepted 48 rows into the additive vNext manifest. Frozen Issue #63 artifacts are never rewritten. The byte hash above was independently recomputed by the Issue #76 CI checkout; the older Stage-B return text quoted `016e1350…`, but `b1856c6…` and `ec4a38d…` differ only by `BTL-RETURN.md`, so the accepted truth file itself is unchanged across those commits.
+
+## Canonical query-text authority
+
+vNext query text is **not copied from Issue #63 reconstructed truth**. It comes from the pinned `benchmark-results/headless-vnext/canonical-query-texts.json` projection of the reconciled `official-dataset-control@646ec85c…` sources.
+
+- P0 registry: `Official-Queries/current-rounds/p0-test-round-8.8.md`, blob `7d1688f94ba6a47eee9f6e2928c1ce52fe91f181`.
+- P0 literal text source referenced by that registry: `Official-Queries/aic-2025/preliminary-groupA-p1.md`, blob `7c05c0e27b91739a62b802327f8cd131c013af6c`.
+- P1 registry + literal text source: `Official-Queries/current-rounds/p1-actual-round-10.4.md`, blob `2e56009d2a2fd09ead2b468a2394b3434417953e`.
+- Authority projection SHA-256: `512c5a0f1dc44ef4318d2205dd76a7c80af7be797c9450764c51854e40a55c9c`.
+
+The builder hard-fails unless the authority projection is pinned to the expected ODC commit/source blobs, contains exactly 23 P0 + 25 P1 scoreable entries, matches each Issue #63 row's task type, and is consumed exactly once across all 48 rows. `query_text_sha256` is recomputed from the canonical projected text.
+
+This repairs the two known P1 section-boundary contaminations (`actual_p1_10_4::p1-17` and `actual_p1_10_4::p1-25`) and also replaces reconstruction-era P0 shorthand/paraphrase text with the literal reconciled source text. Issue #63 video/range/provenance truth remains untouched.
 
 ## Denominators
 
