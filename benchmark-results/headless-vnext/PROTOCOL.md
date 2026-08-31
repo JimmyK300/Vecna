@@ -4,14 +4,14 @@ This packet implements the approved Issue #75 metric contract plus Minh's TRAKE 
 
 ## Frozen truth and identity
 
-- Issue #63 reconstructed truth: `benchmark-results/issue63-stage-b/reconstructed-truth.json`, SHA-256 `016e13507071b05df1a5474f125d18755fc8ce0b58ce3a71b6f217c670abc782`, accepted lineage through `ec4a38d397c9a3a49a821812b37db47f52327049`.
+- Issue #63 reconstructed truth: `benchmark-results/issue63-stage-b/reconstructed-truth.json`, SHA-256 `92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603`, accepted lineage through `ec4a38d397c9a3a49a821812b37db47f52327049`.
 - Issue #75 approved contract commit: `2344023ea4e2a152d1e9dc15778d8feb436dc396`.
 - `official-dataset-control` identity commit: `646ec85c75141bb68078fa94ec26b9a1dbef6d04`.
 - P0 canonical source `test_round_8_8` maps to immutable Vecna provenance source `testing88_submission633`.
 - P1 canonical source `actual_p1_10_4` maps to immutable Vecna provenance source `final_round1_10_4of13`.
 - P2 is absent.
 
-`build_headless_vnext_manifest.py` verifies the Issue #63 truth hash before projecting the accepted 48 rows into the additive vNext manifest. Frozen Issue #63 artifacts are never rewritten.
+`build_headless_vnext_manifest.py` verifies the Issue #63 truth bytes before projecting the accepted 48 rows into the additive vNext manifest. Frozen Issue #63 artifacts are never rewritten. The byte hash above was independently recomputed by the Issue #76 CI checkout; the older Stage-B return text quoted `016e1350…`, but `b1856c6…` and `ec4a38d…` differ only by `BTL-RETURN.md`, so the accepted truth file itself is unchanged across those commits.
 
 ## Denominators
 
