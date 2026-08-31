@@ -1,0 +1,28 @@
+name: issue76-query-text-repair
+on:
+  push:
+    branches: [btl/issue-76-headless-vnext-scorer]
+permissions:
+  contents: write
+jobs:
+  verify-query-text-repair:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: btl/issue-76-headless-vnext-scorer
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python aic51-src/script/build_headless_vnext_manifest.py
+      - run: python -m unittest discover -s aic51-src/tests -p 'test_headless_vnext.py' -v
+      - run: python aic51-src/script/score_headless_vnext.py benchmark-results/headless-vnext/example-rankings.jsonl --allow-partial --out-dir benchmark-results/headless-vnext/example-output
+      - name: Materialize repaired manifest
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add benchmark-results/headless-vnext/manifest.json benchmark-results/headless-vnext/example-output/
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Materialize authoritative #76 query-text repair'
+          git push origin HEAD:btl/issue-76-headless-vnext-scorer
