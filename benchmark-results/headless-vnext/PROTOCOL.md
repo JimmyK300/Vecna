@@ -17,7 +17,7 @@ This packet implements the approved Issue #75 metric contract plus Minh's TRAKE 
 
 - video: 48 rows;
 - ordinary semantic range: 44 non-TRAKE rows;
-- TRAKE: 4 queries, with event denominator equal to the mechanically recovered submitted event anchors.
+- TRAKE: 4 queries / 15 mechanically recovered submitted event anchors.
 
 A count mismatch is a hard error, not an automatic denominator adjustment.
 
@@ -31,13 +31,19 @@ TRAKE rows do not enter ordinary `range_R`.
 
 JSONL (or JSON `queries` list), one query per object. Query identity may be canonical or immutable Vecna provenance. Results live in `results` or Issue-63-compatible `top_results` and contain:
 
-- `rank`;
+- explicit `rank` when available; rank gaps are preserved rather than compacted;
 - `video_id` (or `video`);
 - point identity via `frame_id`, `frame`, or `time_line` / `timeline`; and/or
 - explicit `start_frame` + `end_frame` segment;
 - arbitrary provider/scores/provenance fields are preserved untouched.
 
-The scored JSONL preserves the complete supplied top-K ranking.
+The scored JSONL preserves the complete supplied top-K ranking. Duplicate ranks, duplicate query rows, unknown query IDs, or supplying both canonical and provenance aliases for the same query are hard errors.
+
+### Coverage safety
+
+A real benchmark arm is **strictly complete by default**: all 48 manifest queries must have a saved-ranking row. Missing rows raise an error rather than being counted as retrieval misses.
+
+`--allow-partial` exists only for synthetic/debug fixtures. A partial summary is labeled `input_status: partial_fixture` and reports both frozen `manifest_counts` and actual `scored_counts`; subset rows therefore cannot masquerade as a full benchmark denominator.
 
 ## Metrics
 
@@ -54,7 +60,10 @@ QA answer correctness is not evaluated; `qa_answer.status = not_evaluated`.
 ```bash
 python aic51-src/script/build_headless_vnext_manifest.py
 python -m unittest discover -s aic51-src/tests -p 'test_headless_vnext.py' -v
-python aic51-src/script/score_headless_vnext.py benchmark-results/headless-vnext/example-rankings.jsonl --out-dir benchmark-results/headless-vnext/example-output
+# synthetic two-query fixture only
+python aic51-src/script/score_headless_vnext.py benchmark-results/headless-vnext/example-rankings.jsonl --allow-partial --out-dir benchmark-results/headless-vnext/example-output
+# real arm: no --allow-partial
+python aic51-src/script/score_headless_vnext.py path/to/full-48-query-rankings.jsonl --out-dir path/to/scored-output
 ```
 
 No command above runs retrieval or a model.
