@@ -9,6 +9,22 @@ DEFAULT_MANIFEST = ROOT / 'benchmark-results' / 'headless-vnext' / 'manifest.jso
 KS = (1, 5, 20)
 
 def norm_video(v: Any) -> str: return Path(str(v or '').strip()).stem.upper()
+def result_rank(item: dict[str, Any], fallback: int) -> int:
+    try: rank = int(item.get('rank', fallback))
+    except (TypeError, ValueError): rank = fallback
+    if rank < 1: raise ValueError(f'invalid saved rank: {rank}')
+    return rank
+
+def ranked(results: list[dict[str, Any]]) -> list[tuple[int, dict[str, Any]]]:
+    pairs = [(result_rank(item, i), item) for i, item in enumerate(results, 1)]
+    pairs.sort(key=lambda pair: pair[0])
+    ranks = [rank for rank, _ in pairs]
+    if len(ranks) != len(set(ranks)): raise ValueError('duplicate saved ranks are not allowed')
+    return pairs
+
+def top_k(pairs: list[tuple[int, dict[str, Any]]], k: int) -> list[tuple[int, dict[str, Any]]]:
+    return [(rank, item) for rank, item in pairs if rank <= k]
+
 def result_frames(item: dict[str, Any]) -> list[int]:
     raw = item.get('time_line', item.get('timeline'))
     if raw is None: raw = [item.get('frame_id', item.get('frame'))]
@@ -58,31 +74,32 @@ def distance_to_anchor(item: dict[str, Any], anchor: int) -> int | None:
     fs=result_frames(item)
     return min((abs(f-anchor) for f in fs), default=None)
 
-def first_rank(results: list[dict[str,Any]], pred) -> int | None:
-    for i,item in enumerate(results,1):
-        if pred(item): return i
+def first_rank(pairs: list[tuple[int,dict[str,Any]]], pred) -> int | None:
+    for rank,item in pairs:
+        if pred(item): return rank
     return None
 
 def score_row(record: dict[str,Any], results: list[dict[str,Any]]) -> dict[str,Any]:
-    results=sorted(results,key=lambda x:int(x.get('rank',10**9)))
+    pairs=ranked(results)
+    ordered=[item for _,item in pairs]
     video=norm_video(record['accepted_video_id'])
     is_correct=lambda x: norm_video(x.get('video_id') or x.get('video')) == video
-    vr=first_rank(results,is_correct)
+    vr=first_rank(pairs,is_correct)
     out={
       'canonical_query_id':record['canonical_query_id'],'vecna_provenance_id':record['vecna_provenance_id'],
       'task_type':record['task_type'],'operational_phase':record['operational_phase'],
       'first_correct_video_rank':vr,'video':{f'R@{k}': float(vr is not None and vr<=k) for k in KS},
       'video_reciprocal_rank_at_20':0.0 if vr is None or vr>20 else 1.0/vr,
-      'qa_answer':{'status':'not_evaluated'},'rankings':results,
+      'qa_answer':{'status':'not_evaluated'},'rankings':ordered,
     }
     if record['scoreability']['range']:
         ranges=record['accepted_ranges']
-        rr=first_rank(results,lambda x:is_correct(x) and overlaps(x,ranges))
-        first_video_item=next((x for x in results if is_correct(x)),None)
+        rr=first_rank(pairs,lambda x:is_correct(x) and overlaps(x,ranges))
+        first_video_item=next((x for _,x in pairs if is_correct(x)),None)
         dfirst=None if first_video_item is None else distance_to_ranges(first_video_item,ranges)
         dnear={}
         for k in KS:
-            ds=[distance_to_ranges(x,ranges) for x in results[:k] if is_correct(x)]
+            ds=[distance_to_ranges(x,ranges) for _,x in top_k(pairs,k) if is_correct(x)]
             ds=[d for d in ds if d is not None]
             dnear[str(k)]={'status':'ok' if ds else 'no_correct_video_in_topK','frames':min(ds) if ds else None}
         out['range']={
@@ -93,7 +110,7 @@ def score_row(record: dict[str,Any], results: list[dict[str,Any]]) -> dict[str,A
           'nearest_correct_video_distance_to_range':dnear,
           'video_to_range_rank_delta': None if vr is None or rr is None else rr-vr,
           'slots_before_first_range_hit': None if rr is None else rr-1,
-          'correct_video_slots_before_first_range_hit': None if rr is None else sum(1 for x in results[:rr-1] if is_correct(x)),
+          'correct_video_slots_before_first_range_hit': None if rr is None else sum(1 for rank,x in pairs if rank < rr and is_correct(x)),
           'video_found_but_range_missed':{str(k): bool(vr is not None and vr<=k and (rr is None or rr>k)) for k in KS},
         }
     else: out['range']={'status':'not_applicable_trake'}
@@ -101,9 +118,9 @@ def score_row(record: dict[str,Any], results: list[dict[str,Any]]) -> dict[str,A
         events=[]
         for ev in record['trake_event_truth']:
             window=[ev['proxy_window']]
-            er=first_rank(results,lambda x:is_correct(x) and overlaps(x,window))
-            hit_item=next((x for i,x in enumerate(results,1) if i==er),None) if er else None
-            correct20=[x for x in results[:20] if is_correct(x)]
+            er=first_rank(pairs,lambda x:is_correct(x) and overlaps(x,window))
+            hit_item=next((x for rank,x in pairs if rank==er),None) if er else None
+            correct20=[x for _,x in top_k(pairs,20) if is_correct(x)]
             dproxy=[distance_to_ranges(x,window) for x in correct20]; dproxy=[d for d in dproxy if d is not None]
             danchor=[distance_to_anchor(x,int(ev['submitted_frame'])) for x in correct20]; danchor=[d for d in danchor if d is not None]
             events.append({
