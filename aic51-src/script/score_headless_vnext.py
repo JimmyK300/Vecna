@@ -142,23 +142,31 @@ def pct(values:list[float],q:float)->float|None:
     xs=sorted(values); i=(len(xs)-1)*q; lo=math.floor(i); hi=math.ceil(i)
     return xs[lo] if lo==hi else xs[lo]+(xs[hi]-xs[lo])*(i-lo)
 
-def aggregate(rows:list[dict[str,Any]], manifest:dict[str,Any])->dict[str,Any]:
-    video_rows=rows; range_rows=[r for r in rows if r['range'].get('status')!='not_applicable_trake']; trake=[r for r in rows if 'trake' in r]
-    out={'counts':manifest['counts'],'video':{},'range':{},'trake':{},'qa_answer':{'status':'not_evaluated'}}
+def aggregate(rows:list[dict[str,Any]], manifest:dict[str,Any], *, partial: bool=False)->dict[str,Any]:
+    video_rows=rows
+    range_rows=[r for r in rows if r['range'].get('status')!='not_applicable_trake']
+    trake=[r for r in rows if 'trake' in r]
+    scored_counts={
+      'queries':len(rows),'video_scoreable':len(video_rows),'range_scoreable_non_trake':len(range_rows),
+      'trake_rows':len(trake),'trake_events':sum(r['trake']['event_count'] for r in trake),
+      'p0_rows':sum(r['operational_phase']=='P0' for r in rows),'p1_rows':sum(r['operational_phase']=='P1' for r in rows),
+    }
+    out={'input_status':'partial_fixture' if partial else 'complete','manifest_counts':manifest['counts'],'scored_counts':scored_counts,
+         'video':{},'range':{},'trake':{},'qa_answer':{'status':'not_evaluated'}}
     nv=len(video_rows)
-    for k in KS: out['video'][f'R@{k}']=sum(r['video'][f'R@{k}'] for r in video_rows)/nv
-    out['video']['MRR@20']=sum(r['video_reciprocal_rank_at_20'] for r in video_rows)/nv
+    for k in KS: out['video'][f'R@{k}']=None if not nv else sum(r['video'][f'R@{k}'] for r in video_rows)/nv
+    out['video']['MRR@20']=None if not nv else sum(r['video_reciprocal_rank_at_20'] for r in video_rows)/nv
     nr=len(range_rows)
     for k in KS:
-        out['range'][f'R@{k}']=sum(r['range'][f'R@{k}'] for r in range_rows)/nr
+        out['range'][f'R@{k}']=None if not nr else sum(r['range'][f'R@{k}'] for r in range_rows)/nr
         eligible=[r for r in range_rows if r['first_correct_video_rank'] is not None and r['first_correct_video_rank']<=k]
         hit=sum(r['range'][f'R@{k}'] for r in eligible)
         out['range'][f'range_success_given_video@{k}']={'numerator':int(hit),'denominator':len(eligible),'rate':None if not eligible else hit/len(eligible)}
-        out['range'][f'video_found_but_range_missed@{k}']=sum(r['range']['video_found_but_range_missed'][str(k)] for r in range_rows)/nr
-    out['range']['MRR@20']=sum(r['range']['reciprocal_rank_at_20'] for r in range_rows)/nr
+        out['range'][f'video_found_but_range_missed@{k}']=None if not nr else sum(r['range']['video_found_but_range_missed'][str(k)] for r in range_rows)/nr
+    out['range']['MRR@20']=None if not nr else sum(r['range']['reciprocal_rank_at_20'] for r in range_rows)/nr
     firstd=[r['range']['first_correct_video_distance_to_range']['frames'] for r in range_rows if r['range']['first_correct_video_distance_to_range']['frames'] is not None]
     out['range']['first_correct_video_distance_frames']={'n':len(firstd),'p50':pct(firstd,.5),'p90':pct(firstd,.9)}
-    total_events=sum(r['trake']['event_count'] for r in trake)
+    total_events=scored_counts['trake_events']
     out['trake']['query_denominator']=len(trake); out['trake']['event_denominator']=total_events; out['trake']['truth_tier']='provisional_submission_anchor'
     for k in KS:
         hits=sum(sum(e['first_event_hit_rank'] is not None and e['first_event_hit_rank']<=k for e in r['trake']['events']) for r in trake)
@@ -174,19 +182,38 @@ def load_rankings(path:Path)->dict[str,list[dict[str,Any]]]:
     out={}
     for row in rows:
         qid=row.get('canonical_query_id') or row.get('vecna_provenance_id') or row.get('source_qualified_id') or row.get('query_id')
-        out[str(qid)]=row.get('results',row.get('top_results',[]))
+        if not qid: raise ValueError('saved-ranking row lacks query identity')
+        qid=str(qid)
+        if qid in out: raise ValueError(f'duplicate saved-ranking query identity: {qid}')
+        out[qid]=row.get('results',row.get('top_results',[]))
     return out
 
-def score(manifest:dict[str,Any], rankings:dict[str,list[dict[str,Any]]])->tuple[list[dict[str,Any]],dict[str,Any]]:
-    scored=[]
+def score(manifest:dict[str,Any], rankings:dict[str,list[dict[str,Any]]], *, allow_partial: bool=False)->tuple[list[dict[str,Any]],dict[str,Any]]:
+    aliases={}
     for record in manifest['records']:
-        res=rankings.get(record['canonical_query_id'],rankings.get(record['vecna_provenance_id'],[]))
-        scored.append(score_row(record,res))
-    return scored,aggregate(scored,manifest)
+        for key in (record['canonical_query_id'],record['vecna_provenance_id']):
+            if key in aliases: raise ValueError(f'duplicate manifest alias: {key}')
+            aliases[key]=record['canonical_query_id']
+    unknown=sorted(set(rankings)-set(aliases))
+    if unknown: raise ValueError(f'unknown saved-ranking query identities: {unknown[:5]}')
+    scored=[]; missing=[]
+    for record in manifest['records']:
+        canonical=record['canonical_query_id']; provenance=record['vecna_provenance_id']
+        present=[key for key in (canonical,provenance) if key in rankings]
+        if len(present)>1: raise ValueError(f'both canonical and provenance ranking rows supplied for {canonical}')
+        if not present:
+            missing.append(canonical); continue
+        scored.append(score_row(record,rankings[present[0]]))
+    if missing and not allow_partial:
+        raise ValueError(f'incomplete saved-ranking arm: missing {len(missing)} of {len(manifest["records"])} queries; first={missing[:3]}')
+    if not scored: raise ValueError('saved-ranking input matched zero manifest queries')
+    return scored,aggregate(scored,manifest,partial=bool(missing))
 
 def main()->int:
-    ap=argparse.ArgumentParser(); ap.add_argument('rankings',type=Path); ap.add_argument('--manifest',type=Path,default=DEFAULT_MANIFEST); ap.add_argument('--out-dir',type=Path,required=True); args=ap.parse_args()
-    manifest=json.loads(args.manifest.read_text(encoding='utf-8')); rankings=load_rankings(args.rankings); rows,summary=score(manifest,rankings)
+    ap=argparse.ArgumentParser(); ap.add_argument('rankings',type=Path); ap.add_argument('--manifest',type=Path,default=DEFAULT_MANIFEST); ap.add_argument('--out-dir',type=Path,required=True)
+    ap.add_argument('--allow-partial',action='store_true',help='Debug/fixture mode only: score supplied subset and label summary partial_fixture.')
+    args=ap.parse_args()
+    manifest=json.loads(args.manifest.read_text(encoding='utf-8')); rankings=load_rankings(args.rankings); rows,summary=score(manifest,rankings,allow_partial=args.allow_partial)
     args.out_dir.mkdir(parents=True,exist_ok=True)
     (args.out_dir/'scored.jsonl').write_text(''.join(json.dumps(r,ensure_ascii=False,sort_keys=True)+'\n' for r in rows),encoding='utf-8')
     (args.out_dir/'summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2,sort_keys=True)+'\n',encoding='utf-8')
