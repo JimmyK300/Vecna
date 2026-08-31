@@ -9,6 +9,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
 import aic51.packages.constant as constant
+import torch
 from aic51.packages.config import GlobalConfig
 from aic51.packages.logger import logger
 from aic51.packages.search import Searcher, SearchCancelledException
@@ -165,6 +166,8 @@ async def search_multimodal(
             await monitor_task
         except asyncio.CancelledError:
             pass
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
 
     if cancel_event.is_set():
         return JSONResponse(

@@ -147,8 +147,12 @@ class MilvusDatabase(object):
         return index_params
 
     def __del__(self):
-        self._client.release_collection(self._collection_name)
-        self._client.close()
+        if hasattr(self, "_client") and self._client:
+            try:
+                self._client.release_collection(self._collection_name)
+                self._client.close()
+            except Exception:
+                pass
 
     def insert(self, data, do_update: bool = False):
         if do_update:
@@ -286,6 +290,15 @@ class MilvusDatabase(object):
             "-d",
         ]
         subprocess.run(compose_cmd)
+
+        # Wait for Milvus server to be ready
+        for _ in range(30):
+            try:
+                client = MilvusClient()
+                client.close()
+                break
+            except Exception:
+                time.sleep(2)
 
     @classmethod
     def stop_server(cls):

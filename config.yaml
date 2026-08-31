@@ -11,8 +11,8 @@ add:
   thumbnail_resize_ratio: 0.25
   # Max clips length around the keyframes (in seconds)
   clip_length: 7
-  # Video compress ratio
-  compress_size_rate: 0.5
+  # Video compress ratio (1.0 = keep original 100% quality/resolution)
+  compress_size_rate: 1.0
 
 analyse:
   # num_workers of DataLoader

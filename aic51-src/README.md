@@ -46,7 +46,7 @@ aic51-cli init
 3. Add videos to workspace
 
 ```bash
-aic51-cli add <path/to/videos> -d -kc
+aic51-cli add <path/to/videos> -d -ka -m
 ```
 
 3. Analyse videos

@@ -1,0 +1,98 @@
+﻿# ==============================================================================
+# VECNA / AIC51 - FULL REQUIREMENTS & DOWNLOAD GUIDE
+# ==============================================================================
+#
+# QUICK INSTALL COMMANDS:
+# ------------------------------------------------------------------------------
+# 1. Activate Virtual Environment:
+#    .\.venv\Scripts\Activate.ps1
+#
+# 2. Install PyTorch with CUDA 12.8:
+#    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
+#
+# 3. Install core aic51 package:
+#    pip install -e aic51-src
+#
+# 4. Install WhisperX & ASR stack:
+#    pip install whisperx --no-deps
+#    pip install faster-whisper ctranslate2 pyannote.audio nltk ultralytics
+# ==============================================================================
+
+# --- 1. PYTORCH & CUDA (GPU ACCELERATION) ---
+--extra-index-url https://download.pytorch.org/whl/cu128
+torch==2.11.0+cu128
+torchvision==0.26.0+cu128
+torchaudio==2.11.0+cu128
+
+# --- 2. CORE LOCAL PACKAGE ---
+-e ./aic51-src
+
+# --- 3. SPEECH & ASR (WHISPERX / PYANNOTE) ---
+whisperx==3.2.0
+faster-whisper>=1.2.0
+ctranslate2>=4.8.0
+pyannote-audio>=4.0.0
+
+# --- 4. COMPUTER VISION & EMBEDDINGS ---
+open_clip_torch>=3.3.0
+transformers>=4.40.0
+sentence-transformers>=3.0.0
+opencv-python>=4.11.0
+pillow>=10.0.0
+ultralytics>=8.3.0
+timm>=1.0.17
+
+# --- 5. VECTOR DATABASE & SEARCH ---
+pymilvus>=2.6.0
+pyyaml>=6.0
+python-dotenv>=1.0.0
+omegaconf>=2.3.0
+deep-translator>=1.11.4
+pytesseract>=0.3.10
+nltk>=3.9.0
+pandas>=2.2.0
+scikit-learn>=1.5.0
+scipy>=1.14.0
+
+# --- 6. WEB SERVER & API ---
+fastapi>=0.115.0
+uvicorn>=0.32.0
+rich>=13.9.0
+apscheduler>=3.10.0
+
+# ==============================================================================
+# --- 7. EXTERNAL SYSTEM TOOLS (DOWNLOAD & INSTALL ONCE) ---
+# ==============================================================================
+# 1. Docker Desktop:
+#    - Purpose: Run Milvus Vector Database
+#    - Download: https://www.docker.com/products/docker-desktop/
+#
+# 2. FFmpeg (Essentials Build):
+#    - Purpose: Video decoding and keyframe extraction
+#    - Download: https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip
+#    - Path: E:\Model\ffmpeg\bin\ffmpeg.exe
+#
+# 3. Tesseract OCR (UB-Mannheim 64-bit):
+#    - Purpose: Text extraction from keyframe images
+#    - Download: https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-5.4.0.20240606.exe
+#    - Path: E:\Model\tesseract\tesseract.exe
+#
+# ==============================================================================
+# --- 8. PRE-TRAINED AI MODELS (STORED IN E:\Model) ---
+# ==============================================================================
+# - YOLOv8x: E:\Model\yolov8x.pt
+# - OpenCLIP PE-Core-L-14-336 (meta): Cached in E:\Model\open_clip or E:\Model\huggingface
+# - OpenCLIP SigLIP ViT-SO400M-14-SigLIP-384 (webli): Cached in E:\Model\open_clip
+# - Text Embedding BAAI/bge-m3: Cached in E:\Model\huggingface\hub
+# - WhisperX ASR large-v3-turbo: Cached in E:\Model\huggingface\hub
+#
+# ==============================================================================
+# --- 9. REQUIRED ENVIRONMENT VARIABLES ---
+# ==============================================================================
+# HF_HOME=E:\Model\huggingface
+# TORCH_HOME=E:\Model\torch
+# TRANSFORMERS_CACHE=E:\Model\huggingface\hub
+# OPEN_CLIP_CACHE_DIR=E:\Model\open_clip
+# YOLO_CONFIG_DIR=E:\Model\yolo
+# TESSDATA_PREFIX=E:\Model\tesseract\tessdata
+# ==============================================================================
