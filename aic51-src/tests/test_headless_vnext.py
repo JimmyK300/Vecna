@@ -58,6 +58,22 @@ class ScorerTests(unittest.TestCase):
         self.assertTrue(p0['canonical_query_id'].startswith('test_round_8_8::')); self.assertTrue(p0['vecna_provenance_id'].startswith('testing88_submission633::'))
         self.assertTrue(p1['canonical_query_id'].startswith('actual_p1_10_4::')); self.assertTrue(p1['vecna_provenance_id'].startswith('final_round1_10_4of13::'))
         self.assertTrue(all((r['task_type']=='trake') != r['scoreability']['range'] for r in doc['records']))
+    def test_all_48_manifest_texts_match_authoritative_projection(self):
+        doc=builder.build(); authority,_=builder.load_authority()
+        expected={f'{source_id}::{raw_id}':entry for source_id,queries in authority['queries'].items() for raw_id,entry in queries.items()}
+        self.assertEqual(len(expected),48); self.assertEqual(len(doc['records']),48)
+        for row in doc['records']:
+            entry=expected[row['canonical_query_id']]
+            self.assertEqual(row['query_text'],entry['query_text'],row['canonical_query_id'])
+            self.assertEqual(row['query_text_sha256'],builder.sha256_text(entry['query_text']),row['canonical_query_id'])
+            self.assertEqual(row['task_type'],entry['task_type'],row['canonical_query_id'])
+            self.assertEqual(row['provenance']['official_dataset_control_query_text_blob_sha'],authority['sources'][row['canonical_source_id']]['query_text_blob_sha'])
+    def test_contaminated_p1_section_headings_are_not_query_text(self):
+        rows={r['canonical_query_id']:r for r in builder.build()['records']}
+        self.assertNotIn('Temporal Retrieval and Alignment of Key Events (TRAKE)',rows['actual_p1_10_4::p1-17']['query_text'])
+        self.assertNotIn('Question Answering (Q&A)',rows['actual_p1_10_4::p1-25']['query_text'])
+        self.assertTrue(rows['actual_p1_10_4::p1-17']['query_text'].endswith('Tên của con đèo là gì?'))
+        self.assertTrue(rows['actual_p1_10_4::p1-25']['query_text'].endswith('một cây đàn piano.'))
     def test_incomplete_arm_fails_by_default(self):
         doc=builder.build(); first=doc['records'][0]
         with self.assertRaisesRegex(ValueError,'incomplete saved-ranking arm'):
