@@ -17,7 +17,7 @@ jobs:
           python-version: '3.12'
       - run: python aic51-src/script/build_headless_vnext_manifest.py
       - run: python -m unittest discover -s aic51-src/tests -p 'test_headless_vnext.py' -v
-      - run: python aic51-src/script/score_headless_vnext.py benchmark-results/headless-vnext/example-rankings.jsonl --out-dir benchmark-results/headless-vnext/example-output
+      - run: python aic51-src/script/score_headless_vnext.py benchmark-results/headless-vnext/example-rankings.jsonl --allow-partial --out-dir benchmark-results/headless-vnext/example-output
       - name: Materialize deterministic artifacts
         run: |
           git config user.name 'github-actions[bot]'
