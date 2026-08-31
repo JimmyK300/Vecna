@@ -58,6 +58,18 @@ class ScorerTests(unittest.TestCase):
         self.assertTrue(p0['canonical_query_id'].startswith('test_round_8_8::')); self.assertTrue(p0['vecna_provenance_id'].startswith('testing88_submission633::'))
         self.assertTrue(p1['canonical_query_id'].startswith('actual_p1_10_4::')); self.assertTrue(p1['vecna_provenance_id'].startswith('final_round1_10_4of13::'))
         self.assertTrue(all((r['task_type']=='trake') != r['scoreability']['range'] for r in doc['records']))
+    def test_incomplete_arm_fails_by_default(self):
+        doc=builder.build(); first=doc['records'][0]
+        with self.assertRaisesRegex(ValueError,'incomplete saved-ranking arm'):
+            score.score(doc,{first['canonical_query_id']:[]})
+    def test_partial_fixture_is_explicit_and_uses_subset_denominators(self):
+        doc=builder.build(); ordinary=next(r for r in doc['records'] if r['scoreability']['range']); trake=next(r for r in doc['records'] if r['scoreability']['trake_event'])
+        rankings={ordinary['canonical_query_id']:[],trake['vecna_provenance_id']:[]}
+        rows,summary=score.score(doc,rankings,allow_partial=True)
+        self.assertEqual(len(rows),2); self.assertEqual(summary['input_status'],'partial_fixture')
+        self.assertEqual(summary['manifest_counts']['execution_rows'],48); self.assertEqual(summary['scored_counts']['queries'],2)
+        self.assertEqual(summary['scored_counts']['range_scoreable_non_trake'],1); self.assertEqual(summary['scored_counts']['trake_rows'],1)
+        self.assertEqual(summary['range']['R@1'],0.0)
     def test_aggregate_range_denominator_excludes_trake(self):
         m={'counts':{'execution_rows':2,'video_scoreable':2,'range_scoreable_non_trake':1,'trake_rows':1,'p0_rows':2,'p1_rows':0,'p2_rows':0,'trake_events':1}}
         a=score.score_row(rec(ranges=[{'start_frame':1,'end_frame':2}]),[{'rank':1,'video_id':'V1','frame_id':1}])
