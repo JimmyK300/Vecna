@@ -1,0 +1,85 @@
+{
+  "counts": {
+    "execution_rows": 48,
+    "p0_rows": 23,
+    "p1_rows": 25,
+    "p2_rows": 0,
+    "range_scoreable_non_trake": 44,
+    "trake_events": 15,
+    "trake_rows": 4,
+    "video_scoreable": 48
+  },
+  "qa_answer": {
+    "status": "not_evaluated"
+  },
+  "range": {
+    "MRR@20": 0.011363636363636364,
+    "R@1": 0.0,
+    "R@20": 0.022727272727272728,
+    "R@5": 0.022727272727272728,
+    "first_correct_video_distance_frames": {
+      "n": 1,
+      "p50": 0,
+      "p90": 0
+    },
+    "range_success_given_video@1": {
+      "denominator": 0,
+      "numerator": 0,
+      "rate": null
+    },
+    "range_success_given_video@20": {
+      "denominator": 1,
+      "numerator": 1,
+      "rate": 1.0
+    },
+    "range_success_given_video@5": {
+      "denominator": 1,
+      "numerator": 1,
+      "rate": 1.0
+    },
+    "video_found_but_range_missed@1": 0.0,
+    "video_found_but_range_missed@20": 0.0,
+    "video_found_but_range_missed@5": 0.0
+  },
+  "trake": {
+    "all_events_covered@1": {
+      "denominator": 4,
+      "numerator": 0,
+      "rate": 0.0
+    },
+    "all_events_covered@20": {
+      "denominator": 4,
+      "numerator": 0,
+      "rate": 0.0
+    },
+    "all_events_covered@5": {
+      "denominator": 4,
+      "numerator": 0,
+      "rate": 0.0
+    },
+    "event_coverage@1": {
+      "denominator": 15,
+      "numerator": 1,
+      "rate": 0.06666666666666667
+    },
+    "event_coverage@20": {
+      "denominator": 15,
+      "numerator": 3,
+      "rate": 0.2
+    },
+    "event_coverage@5": {
+      "denominator": 15,
+      "numerator": 3,
+      "rate": 0.2
+    },
+    "event_denominator": 15,
+    "query_denominator": 4,
+    "truth_tier": "provisional_submission_anchor"
+  },
+  "video": {
+    "MRR@20": 0.03125,
+    "R@1": 0.020833333333333332,
+    "R@20": 0.041666666666666664,
+    "R@5": 0.041666666666666664
+  }
+}

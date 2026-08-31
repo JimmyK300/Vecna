@@ -1,0 +1,2485 @@
+{
+  "benchmark_id": "headless-main-vnext-p0-p1-v1",
+  "contract_commit": "2344023ea4e2a152d1e9dc15778d8feb436dc396",
+  "counts": {
+    "execution_rows": 48,
+    "p0_rows": 23,
+    "p1_rows": 25,
+    "p2_rows": 0,
+    "range_scoreable_non_trake": 44,
+    "trake_events": 15,
+    "trake_rows": 4,
+    "video_scoreable": 48
+  },
+  "issue63_truth": {
+    "commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+    "path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+    "sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603"
+  },
+  "official_dataset_control": {
+    "commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04"
+  },
+  "purpose": "Frozen 48-row P0/P1 scoring manifest for retrieval-independent Headless vNext.",
+  "records": [
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 6860,
+          "end_s": 274.4,
+          "start_frame": 6350,
+          "start_s": 254.0
+        }
+      ],
+      "accepted_video_id": "L30_V046",
+      "canonical_query_id": "actual_p1_10_4::p1-1",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-1.yaml",
+        "issue63_segment_source_sha256": "68c01a3eae284dd4ca3a2e1b160ecfc6e060170e99be34064c13d89c000569c7",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-1-kis.csv",
+        "source_csv_sha256": "1693fe6eb6b0a0b1b8fb33880e5004c06eab818309aeb617ff67341e29327c0b",
+        "submitted_anchor_frames": [
+          6648
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Cảnh quay một nhóm hơn 5 người xếp thành hàng tập thể dục, cùng thực hiện động tác hai tay chạm mũi chân. Trong nhóm chỉ có một người đeo kính và ba người đội nón có màu đỏ.",
+      "query_text_sha256": "1579455bb7f5b2138e7887f3f7bb401951ddc74e44f72adfa72843ff1ddd453d",
+      "raw_query_id": "p1-1",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-1"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 13125,
+          "end_s": 525.0,
+          "start_frame": 11000,
+          "start_s": 440.0
+        }
+      ],
+      "accepted_video_id": "L29_V013",
+      "canonical_query_id": "actual_p1_10_4::p1-10",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-10.yaml",
+        "issue63_segment_source_sha256": "16cc348a0354379eec9640a909675c7f408a409674111defe333d650e93ff16b",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-10-kis.csv",
+        "source_csv_sha256": "5ad7beef6bac03f1f362b90f89c50df860a935d4fd3ff9eca91d519e8f5827a7",
+        "submitted_anchor_frames": [
+          11278
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Hành động cắt chùm nho bằng kéo từ giàn nho bằng một chiếc kéo màu đen. Có thể thấy có một sợi dây màu xanh dương được buộc vào cuống của chùm nho này trước khi nó được cắt.",
+      "query_text_sha256": "cf6f4637d24efb830553f551a01cce83934dc57d414c6a1cb1ea9b6aedfc23de",
+      "raw_query_id": "p1-10",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-10"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 7500,
+          "end_s": 300.0,
+          "start_frame": 6250,
+          "start_s": 250.0
+        }
+      ],
+      "accepted_video_id": "L23_V021",
+      "canonical_query_id": "actual_p1_10_4::p1-11",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-11.yaml",
+        "issue63_segment_source_sha256": "1159c9acb3fb783dc3afb0b9151c8075cbdad71a58c54a499a4e87c9c2f7f59f",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-11-kis.csv",
+        "source_csv_sha256": "14c422645113a9efcb3aa4eb659dc39a5b2cf1fe36573171faffa15ad479c18a",
+        "submitted_anchor_frames": [
+          6972
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Cảnh quay chậm tại vị trí vạch đích của cuộc đua xe đạp. Góc máy sát mặt đường bắt trọn khoảnh khắc về đích theo thứ tự nhất, nhì, ba lần lượt là 1 tay đua áo vàng quần đen, 1 tay đua áo xanh dương quần đen và 1 tay đua áo xanh dương quần đỏ",
+      "query_text_sha256": "9a9c3d63b723f36894b9ba6d7c8f8ed4b285b2a9278888baa365b29bce7cfbdc",
+      "raw_query_id": "p1-11",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-11"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 3390,
+          "end_s": 113.0,
+          "start_frame": 3000,
+          "start_s": 100.0
+        }
+      ],
+      "accepted_video_id": "L22_V001",
+      "canonical_query_id": "actual_p1_10_4::p1-12",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-12.yaml",
+        "issue63_segment_source_sha256": "0ef6d1ca52ec418d37a93a1fa9206ef505304f865fe440fa5a72554b601dff34",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-12-kis.csv",
+        "source_csv_sha256": "7db884d16188ce0101cb95e51c10f9384186db3252f87cf04d63e22fced4f6cf",
+        "submitted_anchor_frames": [
+          3155
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Có thể thấy trong cảnh quay có 4 tài xế xe ôm công nghệ trong trạm xăng, trong đó 3 người đứng đợi còn 1 người lái xe từ trái sang phải khung hình. Trước đó là cảnh một người đậy nắp bình xăng xe máy của họ. Có thông tin về giá dầu mazut được hiển thị trong khung hình.",
+      "query_text_sha256": "6ec9be33b0ae5cb4c181e58f35de6729922b9e57e56b696e4a3c2580fb27d43b",
+      "raw_query_id": "p1-12",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-12"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 7125,
+          "end_s": 285.0,
+          "start_frame": 5875,
+          "start_s": 235.0
+        }
+      ],
+      "accepted_video_id": "L29_V021",
+      "canonical_query_id": "actual_p1_10_4::p1-13",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-13.yaml",
+        "issue63_segment_source_sha256": "2fb5af29048494987e68e5e548d8f1034d056cc22f8244cf34819f6d4b55c4a3",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-13-kis.csv",
+        "source_csv_sha256": "a35f675f655ba0452a168ef97fcd29291755af10e481b205b2a915a9a900688b",
+        "submitted_anchor_frames": [
+          6230
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Một người đứng dưới nước và rọi đèn. Tiếp theo là cảnh người này kéo lưới cá lúc bình minh, sau đó được một nhóm người khác tiến đến dùng máy quay ghi hình.",
+      "query_text_sha256": "9f4b16307a2cf0a2991052bb10eb6ca831d177e38a410841b0136ab54c8f3c3f",
+      "raw_query_id": "p1-13",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-13"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 6500,
+          "end_s": 260.0,
+          "start_frame": 5125,
+          "start_s": 205.0
+        }
+      ],
+      "accepted_video_id": "L26_V171",
+      "canonical_query_id": "actual_p1_10_4::p1-14",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-14.yaml",
+        "issue63_segment_source_sha256": "33bf55905937903e0862f98b0078cdcdef249d24e160185a2ba5535af40e7521",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-14-kis.csv",
+        "source_csv_sha256": "12787a6b298c8c52b6ba77c44fc9b79bfdb951920a0744676dff8973f90d1810",
+        "submitted_anchor_frames": [
+          5455
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Người đầu bếp lần lượt đặt các miếng nguyên liệu dạng thanh và những lát cắt hình hoa vào một đĩa đang được hấp trong nồi.\nCác nguyên liệu được dùng đũa sắp xếp xen kẽ xung quanh phần thức ăn đã có sẵn trên đĩa.\nSau đó, đầu bếp dùng muỗng lấy thêm một loại nguyên liệu mềm từ tô thủy tinh.\nPhần nguyên liệu này được đặt vào giữa đĩa, xung quanh là các miếng dạng thanh và hình hoa đã được sắp xếp trước đó.",
+      "query_text_sha256": "aa101b4abe8b30327a30f15a0a8a5b23daacd048ca35ca64a6ffc5297a3daa45",
+      "raw_query_id": "p1-14",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-14"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 20000,
+          "end_s": 800.0,
+          "start_frame": 19250,
+          "start_s": 770.0
+        }
+      ],
+      "accepted_video_id": "L21_V010",
+      "canonical_query_id": "actual_p1_10_4::p1-15",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-15.yaml",
+        "issue63_segment_source_sha256": "d0e359e930f73404d23b7dfc460d32596d8d30e2c738f9ae539658ff1f1d6ceb",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-15-qa.csv",
+        "source_csv_sha256": "7ed1c73ba5ee1dafe6bd9879a93cbd119ecf8b1bf31969d1296568439588ef65",
+        "submitted_anchor_frames": [
+          19430
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Bản đồ phân bố động đất tại một vùng trên thế giới, với một bảng chú giải phía bên trái gồm các kí hiệu nhiều màu sắc tương ứng với các vị trí tâm chấn có cấp độ động đất khác nhau. Không tính bảng chú giải, có bao nhiêu vị trí ghi nhận động đất cấp độ 4?",
+      "query_text_sha256": "f4678072b92a852f85dec7abb412192609f1eca137aedf5f70116f1a6808551e",
+      "raw_query_id": "p1-15",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "qa",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-15"
+    },
+    {
+      "accepted_ranges": [],
+      "accepted_video_id": "L24_V024",
+      "canonical_query_id": "actual_p1_10_4::p1-16",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-16.yaml",
+        "issue63_segment_source_sha256": "8973df34dc01498c53026dac6a697207c1dcf5593aa517f9aa7d844ad4a3a455",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-16-trake.csv",
+        "source_csv_sha256": "8a454d8c7036f0c322f93599fccbb7163e513519bba51a214029d5c265f85efe",
+        "submitted_anchor_frames": [
+          9785,
+          10135,
+          10191
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Đoạn video bắt đầu bằng ảnh cận đầu một con lân trắng, mũi đỏ, bên cạnh lá cờ trắng viền đỏ.\nE1 Khoảnh khắc đầu tiên xuất hiện đầy đủ hai con rồng vàng đang xoay vòng.\nE2 Khoảnh khắc đầu tiên con lân hoàn tất cú xoay người trên các thanh trụ (thời điểm đâu tiên các chân của lân đặt trên trụ sau khi xoay).\nE3 Khoảnh khắc đầu tiên dùi chạm vào kẻng đồng múa lân.",
+      "query_text_sha256": "fabe99ad531f96d61c7bcab0354aa14e3070621a95b4d35d6d053e26b3937a1c",
+      "raw_query_id": "p1-16",
+      "reviewed_semantic_ranges_preserved": [
+        {
+          "end_frame": 11700,
+          "end_s": 390.0,
+          "start_frame": 8550,
+          "start_s": 285.0
+        },
+        {
+          "end_frame": 9960,
+          "end_s": 332.0,
+          "start_frame": 9600,
+          "start_s": 320.0
+        },
+        {
+          "end_frame": 10230,
+          "end_s": 341.0,
+          "start_frame": 10080,
+          "start_s": 336.0
+        },
+        {
+          "end_frame": 10440,
+          "end_s": 348.0,
+          "start_frame": 10140,
+          "start_s": 338.0
+        }
+      ],
+      "scoreability": {
+        "qa_answer": false,
+        "range": false,
+        "trake_event": true,
+        "video": true
+      },
+      "task_type": "trake",
+      "trake_event_truth": [
+        {
+          "event_index": 1,
+          "proxy_window": {
+            "end_frame": 9810,
+            "start_frame": 9780
+          },
+          "submitted_frame": 9785,
+          "truth_note": "Submission-derived development proxy; not organizer GT and replaceable by reviewed event truth.",
+          "truth_tier": "provisional_submission_anchor"
+        },
+        {
+          "event_index": 2,
+          "proxy_window": {
+            "end_frame": 10160,
+            "start_frame": 10130
+          },
+          "submitted_frame": 10135,
+          "truth_note": "Submission-derived development proxy; not organizer GT and replaceable by reviewed event truth.",
+          "truth_tier": "provisional_submission_anchor"
+        },
+        {
+          "event_index": 3,
+          "proxy_window": {
+            "end_frame": 10216,
+            "start_frame": 10186
+          },
+          "submitted_frame": 10191,
+          "truth_note": "Submission-derived development proxy; not organizer GT and replaceable by reviewed event truth.",
+          "truth_tier": "provisional_submission_anchor"
+        }
+      ],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-16"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 6250,
+          "end_s": 250.0,
+          "start_frame": 5500,
+          "start_s": 220.0
+        }
+      ],
+      "accepted_video_id": "L22_V008",
+      "canonical_query_id": "actual_p1_10_4::p1-17",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-17.yaml",
+        "issue63_segment_source_sha256": "d74e3b2013e31b59e5ca9ffb243cbbe8db25a608dfd773d2cce8c0e376ce1fd0",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-17-qa.csv",
+        "source_csv_sha256": "ae5ce153d6df90e525382d885cdc1ca02225f48d821d6a204fc563eff73576da",
+        "submitted_anchor_frames": [
+          5638
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Đoạn clip mô tả hậu quả của hiện tượng sạt lở đất nghiêm trọng, đất đá tràn xuống gây tắc nghẽn hoàn toàn một đoạn đường đèo. Trong một cảnh quay cận, có thể thấy một cột mốc đường bộ với phần đỉnh màu đỏ chỉ còn lộ ra phần trên, phần lớn đã bị đất đá vùi lấp. Ở cảnh quay cuối, một người đi xe máy đang vật lộn để điều khiển phương tiện vượt qua khu vực bùn lầy, trên chiếc xe máy có treo một vật màu xanh lá. Tên của con đèo là gì?\n\nTemporal Retrieval and Alignment of Key Events (TRAKE)",
+      "query_text_sha256": "a01d55e11f451a88629cd85effd51924795d58bc136097d0a87477060d3d4061",
+      "raw_query_id": "p1-17",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "qa",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-17"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 6000,
+          "end_s": 240.0,
+          "start_frame": 5625,
+          "start_s": 225.0
+        }
+      ],
+      "accepted_video_id": "L26_V389",
+      "canonical_query_id": "actual_p1_10_4::p1-18",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-18.yaml",
+        "issue63_segment_source_sha256": "17374ec64b86ae673ea49a769b714cd90647b5a81670199723eb91eeab610e0b",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-18-kis.csv",
+        "source_csv_sha256": "da80768b41418219c5846337b9c12eb615e1743dcf6b245c6b621eefbd5c1298",
+        "submitted_anchor_frames": [
+          5795
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Cảnh quay cho thấy hành động trình bày món ăn sau khi hoàn thành giai đoạn chế biến. Bún được cho đầu tiên vào một chén rỗng, sau đó đầu bếp lần lượt cho từng vá nước dùng cùng các nguyên liệu như thịt gà, cà rốt, sả, nấm mèo vào chén bún, và kết thúc bằng việc thả một cọng ngò lên trên cùng. Cảnh quay tiếp theo là cảnh zoom xa dần chén bún, ta thấy bên cạnh chén bún còn có 1 chén nước chấm nhỏ với 2 miếng ớt.",
+      "query_text_sha256": "1060001e7d9e9761ca4814f5193ce96b55d227fd49dfb6ea0ed10a4e4bc93f97",
+      "raw_query_id": "p1-18",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-18"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 18000,
+          "end_s": 600.0,
+          "start_frame": 11550,
+          "start_s": 385.0
+        }
+      ],
+      "accepted_video_id": "L24_V035",
+      "canonical_query_id": "actual_p1_10_4::p1-19",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-19.yaml",
+        "issue63_segment_source_sha256": "6863e00155e5142c4f2efeaca5a71ce27f09ca1b22ccf0da577017ef87cc74e1",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-19-kis.csv",
+        "source_csv_sha256": "823a00658e0b914b648022ff012ae79b2b2c19fbedd9fe79db0637cbcc18ed16",
+        "submitted_anchor_frames": [
+          13824
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Con lân do hai người điều khiển đang đứng thẳng và xoay vòng trên đỉnh cột. Sau vài giây nghỉ, con lân bất ngờ nhảy qua hai chiếc cột kế bên, chúi đầu xuống ngoạm lấy quả bí đỏ kèm bông hoa màu vàng. Cảnh quay kết thúc khi con lân tiếp tục nhảy sang các cột tiếp theo.",
+      "query_text_sha256": "89a6b325e40c58a4446aa46f2cb6a0ee4ee0170e18be9f2e4a36e46ef04571d8",
+      "raw_query_id": "p1-19",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-19"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 3200,
+          "end_s": 128.0,
+          "start_frame": 2625,
+          "start_s": 105.0
+        }
+      ],
+      "accepted_video_id": "L28_V018",
+      "canonical_query_id": "actual_p1_10_4::p1-2",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-2.yaml",
+        "issue63_segment_source_sha256": "b8b2539bc9a0322c713f84f861e2471eb3baca1c3a6361d0a502c8fe915aba3d",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-2-kis.csv",
+        "source_csv_sha256": "d1f4429e866856c2e300a020900f5c451384030c97704a80c3ac3c7d6bfd6862",
+        "submitted_anchor_frames": [
+          3032
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Đoạn phim bắt đầu bằng một bản đồ, trên đó một loại công trình thủy lợi lần lượt xuất hiện bốn lần. Sau đó chuyển sang cảnh một con đập được quay từ trên cao, tiếp đến là cảnh cận con đập dưới trời mưa.",
+      "query_text_sha256": "d66b15c11d2f152ba64f2d89925fa300ce40846b0774d4a852fabaf37614add0",
+      "raw_query_id": "p1-2",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-2"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 7860,
+          "end_s": 262.0,
+          "start_frame": 7350,
+          "start_s": 245.0
+        }
+      ],
+      "accepted_video_id": "L21_V026",
+      "canonical_query_id": "actual_p1_10_4::p1-20",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-20.yaml",
+        "issue63_segment_source_sha256": "626c05f18b395832f69cb737a145f596fb0cbab4369b250cdd3c830e2bbe13e0",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-20-kis.csv",
+        "source_csv_sha256": "67c372008a6ef81299c93022aa6b17c6c462b3237d79632b114ec441d8ce70de",
+        "submitted_anchor_frames": [
+          7454
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Ba người đang đi bộ xuống một con dốc trong cơn mưa, có 2 người cầm dù, trong đó người cầm dù đi sau lại mặc một chiếc áo mưa có in hình con gấu ở sau lưng. Sau đó ta thấy nhiều người đang cùng nhau bước về hướng một căn nhà thông qua một con đường đất, bên cạnh là một cái ao.",
+      "query_text_sha256": "404a7fcfd32bc98a19730998b0dd75fd575635119e9abb6b4c6ed2a591d119cd",
+      "raw_query_id": "p1-20",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-20"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 16350,
+          "end_s": 545.0,
+          "start_frame": 15000,
+          "start_s": 500.0
+        }
+      ],
+      "accepted_video_id": "L22_V011",
+      "canonical_query_id": "actual_p1_10_4::p1-21",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-21.yaml",
+        "issue63_segment_source_sha256": "6bc51b814c1510ba357b7292dc145b211cac328ceee1c5cc8092525ec8e1cc78",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-21-kis.csv",
+        "source_csv_sha256": "b55539d9ff2cf7425830828ad995b7833b6b4f3ca94adb1041dcda10cf994d75",
+        "submitted_anchor_frames": [
+          15244
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Cảnh quay bắt đầu bằng cảnh những con tôm đã được lột vỏ và nấu chín đang nằm trên dĩa, phía sau là người đầu bếp đang đặt 3 ổ bánh mì lên bàn. Sau đó là cảnh quay các đầu bếp, có người thì trang trí món ăn, có người thì chế biến món ăn. Những con tôm được cắt làm đôi và được nướng trên bếp.",
+      "query_text_sha256": "2bee64693d59d3846d265ccff3f655a809e6f0c479b099c247d6a99ab1a3c103",
+      "raw_query_id": "p1-21",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-21"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 17300,
+          "end_s": 692.0,
+          "start_frame": 16125,
+          "start_s": 645.0
+        }
+      ],
+      "accepted_video_id": "L25_V041",
+      "canonical_query_id": "actual_p1_10_4::p1-22",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-22.yaml",
+        "issue63_segment_source_sha256": "9d81d82bc7590c50cc9146a400e60a8ea70a6cc26262677c1190231ffbb3655a",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-22-kis.csv",
+        "source_csv_sha256": "24e20ffee9af96322ee85b338f847aceca2a52264c4d42ea1ca7dd52421beee5",
+        "submitted_anchor_frames": [
+          17152
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Người phụ nữ mặc áo dài màu hồng, đeo kính đang giảng giải về các trường hợp sử dụng khác nhau của động từ 'remember' dựa trên mốc thời gian của hành động được nhắc tới.",
+      "query_text_sha256": "1231aba463169a537b43e0353ac0c8ba0376e19a2f9c1e88c50d460d72198ea5",
+      "raw_query_id": "p1-22",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-22"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 29000,
+          "end_s": 1160.0,
+          "start_frame": 26250,
+          "start_s": 1050.0
+        }
+      ],
+      "accepted_video_id": "L25_V060",
+      "canonical_query_id": "actual_p1_10_4::p1-23",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-23.yaml",
+        "issue63_segment_source_sha256": "f4f10270a26d9c17dd809d38cea3322c0db92da84ab6f6cfe5c61a045f48b936",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-23-kis.csv",
+        "source_csv_sha256": "8490f28432e1ac70217302fd80f03c015f6cbecd4805568d3c8ed241ad429385",
+        "submitted_anchor_frames": [
+          26533
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Hình ảnh giáo viên nam mặc sơ mi trắng, thắt cà vạt tối màu, nổi bật trên phông nền xanh dương đậm có hoa văn mờ.\n\nSlide bài giảng Nền trắng với khung viền màu hồng tím, phía trên có thanh tiêu đề xanh dương chứa họa tiết địa cầu và mũi tên vàng/xanh ngọc. Bên dưới là sơ đồ 3 tầng được liên kết bởi các mũi tên xanh ngọc trỏ xuống:\n\nTầng 1: 2 khối hộp được bao bởi 1 khối hộp cam.\n\nTầng 2: 1 khối hộp lớn màu xanh dương đậm ở chính giữa.\n\nTầng 3: 2 khối hộp được bao bởi 1 khối hộp xanh lá cây.",
+      "query_text_sha256": "bd35cb4ce47f3a5a10c756c282b33c71c46ab696c3465dac0b7dae96241c0efe",
+      "raw_query_id": "p1-23",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-23"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 9500,
+          "end_s": 380.0,
+          "start_frame": 8750,
+          "start_s": 350.0
+        },
+        {
+          "end_frame": 10750,
+          "end_s": 430.0,
+          "start_frame": 8500,
+          "start_s": 340.0
+        }
+      ],
+      "accepted_video_id": "L29_V001",
+      "canonical_query_id": "actual_p1_10_4::p1-24",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-24.yaml",
+        "issue63_segment_source_sha256": "f6010d0ff3443cb126bc3e4461c168ab115fddc2d37533dcda7d3f2779a3a871",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-24-kis.csv",
+        "source_csv_sha256": "e2269b37dfdcfc47d7c62297e8b57627a221c31a4cb0fb8fcaea8c9bb5464e0b",
+        "submitted_anchor_frames": [
+          9100
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Đoạn clip được cắt từ một phóng sự về một nhóm các nghệ nhân làm nghề đan lát các sản phẩm thủ công từ cây lục bình. Đầu tiên là một cảnh lia cam duy nhất từ trái sang phải, theo thứ tự ta thấy 4 sản phẩm: túi xách, chậu hoa, bộ ấm tách trà và túi xách. Ngay sau cảnh này, người phụ nữ bên trái lấy một tách trà trong bộ ấm tách và nâng niu trong khi nghe người phụ nữ bên phải trò chuyện.",
+      "query_text_sha256": "5dfe200499a91493c6fb27cf41d5fe360fe883dc0fc7c1021612ebb0d9530452",
+      "raw_query_id": "p1-24",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-24"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 7500,
+          "end_s": 300.0,
+          "start_frame": 6500,
+          "start_s": 260.0
+        }
+      ],
+      "accepted_video_id": "L30_V003",
+      "canonical_query_id": "actual_p1_10_4::p1-25",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-25.yaml",
+        "issue63_segment_source_sha256": "e116012a18a7fdab6c7e7581add124cd0a8710be99c2944d4fd4fa4d0915d23f",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-25-kis.csv",
+        "source_csv_sha256": "c104c96b6f7b50e391f35a660a6d97fef0c371c016bed34f3e5ce0c992b191fd",
+        "submitted_anchor_frames": [
+          6611
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Hai bạn học sinh mặc đồng phục áo trắng, quần xanh, quàng khăn đỏ đang làm MC trên một sân khấu tại trường học, phía sau là một bộ trống cơ màu đỏ và một cây đàn piano.\n\nQuestion Answering (Q&A)",
+      "query_text_sha256": "0d733ffbc1c7c79248a843b07e6628fef425e667a0e8cc4d66f379c1b2c77bc1",
+      "raw_query_id": "p1-25",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-25"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 28200,
+          "end_s": 940.0,
+          "start_frame": 25440,
+          "start_s": 848.0
+        },
+        {
+          "end_frame": 26220,
+          "end_s": 874.0,
+          "start_frame": 25680,
+          "start_s": 856.0
+        }
+      ],
+      "accepted_video_id": "L21_V023",
+      "canonical_query_id": "actual_p1_10_4::p1-3",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-3.yaml",
+        "issue63_segment_source_sha256": "491efecadc78af89c248c838eb80444dee5ac4c816a60e275404224f758a202a",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-3-qa.csv",
+        "source_csv_sha256": "d4ac48374e61340082051b6ebcd0d7f9dad98039e4734c3078139fa1fda35b06",
+        "submitted_anchor_frames": [
+          26042
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Hình ảnh một con cá được đặt lên cân, sau đó có cảnh một con cá khác cùng loại bị một người cầm đuôi. Con số hiển thị cuối cùng trên cân là bao nhiêu?",
+      "query_text_sha256": "f237c85e350348852fd9c115657a84b355452b05524a2e4ce9f3e21e478c026a",
+      "raw_query_id": "p1-3",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "qa",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-3"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 21450,
+          "end_s": 715.0,
+          "start_frame": 19350,
+          "start_s": 645.0
+        }
+      ],
+      "accepted_video_id": "L22_V021",
+      "canonical_query_id": "actual_p1_10_4::p1-4",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-4.yaml",
+        "issue63_segment_source_sha256": "edd5b306cdc9f28e5066d233fde95a091fa1ef18acd71852dbabb06bed03df2f",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-4-kis.csv",
+        "source_csv_sha256": "d856d4c622e91e1662750a2a4bd533971e3c56db75f6c5fc1d7c05f975c2c88f",
+        "submitted_anchor_frames": [
+          19738
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Một đàn sư tử đang nghỉ ngơi và leo trèo trên các bục gỗ trong khu nuôi dưỡng, phía trước có bảng thông tin của London Zoo phục vụ công tác theo dõi và bảo tồn động vật.. Sau đó có cảnh hai nhân viên mặc áo xanh lá đang cân và ghi nhận số liệu của một con vật trong khuôn viên sở thú.",
+      "query_text_sha256": "4daf2ca0fcdd4fba3a9753e6ac49ff2ad960804bd48bc61d6803ca29384aef3f",
+      "raw_query_id": "p1-4",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-4"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 6625,
+          "end_s": 265.0,
+          "start_frame": 4625,
+          "start_s": 185.0
+        }
+      ],
+      "accepted_video_id": "L26_V035",
+      "canonical_query_id": "actual_p1_10_4::p1-5",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-5.yaml",
+        "issue63_segment_source_sha256": "52a7f58c62740aed5e94bebfd9f76fb704408ebb75d3a95208446ace46470a20",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-5-kis.csv",
+        "source_csv_sha256": "e344ae792bd8f79f472daa23f04ff540165d7ae4f6a5003c252d1317c87b3887",
+        "submitted_anchor_frames": [
+          5069
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Đoạn clip bắt đầu bằng việc đậu hà lan được bỏ vào với mực đang được xào trên chảo, bên cạnh là đĩa hành tây và ớt đỏ thái lát chuẩn bị cho vào món ăn. Đoạn clip kết thúc với khung quay chậm (slow motion) cảnh lắc chảo trên bếp lửa.",
+      "query_text_sha256": "fc49ba8d25ebcdd43d0e2389205ec8f4dab5f80ef25263fad0cd5ffb37ac2e4f",
+      "raw_query_id": "p1-5",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-5"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 19250,
+          "end_s": 770.0,
+          "start_frame": 17625,
+          "start_s": 705.0
+        }
+      ],
+      "accepted_video_id": "L22_V023",
+      "canonical_query_id": "actual_p1_10_4::p1-6",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-6.yaml",
+        "issue63_segment_source_sha256": "b36419af144eee75ad063bbb87c31643160b755ed2d1d7d6736060840f897166",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-6-kis.csv",
+        "source_csv_sha256": "0ff26dd9e286348bb859974cf9053b0cf23a7c653d22bf55dfc339ecd59c196d",
+        "submitted_anchor_frames": [
+          18180
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Mẩu tin bắt đầu với hình ảnh nột người đàn ông mặc vest xanh đậm, sơ mi trắng và cà vạt, đang ngồi trên một chiếc ghế lớn. Ông cầm bằng hai tay một khối đá quý thô khá lớn, đưa lên gần mặt để quan sát.\nBên phải là một phụ nữ mặc trang phục công sở màu đen và khăn trùm đầu màu hồng tím, đang đứng cạnh và mỉm cười. Tiếp theo có hình ảnh toàn cảnh từ trên cao của một mỏ đá quý lộ thiên quy mô lớn với hố khai thác sâu nhiều tầng và hệ thống đường vận chuyển bao quanh.",
+      "query_text_sha256": "17ae93eabbfc96cfa08a1521278ccfa5edbf5345c2fb21a3bc33d10d71cc8668",
+      "raw_query_id": "p1-6",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-6"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 5375,
+          "end_s": 215.0,
+          "start_frame": 3125,
+          "start_s": 125.0
+        }
+      ],
+      "accepted_video_id": "L26_V041",
+      "canonical_query_id": "actual_p1_10_4::p1-7",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-7.yaml",
+        "issue63_segment_source_sha256": "e3453bbe8e753caf5dc74f8f64d4c65e008830cb4f49800cd556ae3167c21354",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-7-kis.csv",
+        "source_csv_sha256": "21901f654bad051c51235d0c1d58286d877bbaa3728ce41d34bc65006fb245d2",
+        "submitted_anchor_frames": [
+          3656
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Đoạn clip bắt đầu bằng cảnh cà rốt cắt hình ngôi sao đang được luộc trong nồi nước sôi, đặt trong rổ lưới kim loại và được đảo bằng đôi đũa gỗ.\nĐoạn clip kết thúc bằng hình ảnh đĩa rau củ luộc và đồ chiên được trình bày đẹp mắt, gồm đậu bắp, súp lơ, cà rốt hình ngôi sao, bí xanh, chén nước chấm màu hồng ở giữa và đôi đũa màu hồng nhạt đặt bên phải",
+      "query_text_sha256": "c6092653384e4c97b8053d682674ce26cc96b74bd22aa0f972a97b57d98c8176",
+      "raw_query_id": "p1-7",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-7"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 6500,
+          "end_s": 260.0,
+          "start_frame": 5125,
+          "start_s": 205.0
+        }
+      ],
+      "accepted_video_id": "L26_V171",
+      "canonical_query_id": "actual_p1_10_4::p1-8",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-8.yaml",
+        "issue63_segment_source_sha256": "ec91797eaf176df8ee253ae01cf652f0db765017966bc27ea8f2912f8915d4f2",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-8-kis.csv",
+        "source_csv_sha256": "12787a6b298c8c52b6ba77c44fc9b79bfdb951920a0744676dff8973f90d1810",
+        "submitted_anchor_frames": [
+          5455
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Người đầu bếp lần lượt đặt các miếng nguyên liệu dạng thanh và những lát cắt hình hoa vào một đĩa đang được hấp trong nồi.\nCác nguyên liệu được dùng đũa sắp xếp xen kẽ xung quanh phần thức ăn đã có sẵn trên đĩa.\nSau đó, đầu bếp dùng muỗng lấy thêm một loại nguyên liệu mềm từ tô thủy tinh.\nPhần nguyên liệu này được đặt vào giữa đĩa, xung quanh là các miếng dạng thanh và hình hoa đã được sắp xếp trước đó.",
+      "query_text_sha256": "aa101b4abe8b30327a30f15a0a8a5b23daacd048ca35ca64a6ffc5297a3daa45",
+      "raw_query_id": "p1-8",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-8"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 26875,
+          "end_s": 1075.0,
+          "start_frame": 25750,
+          "start_s": 1030.0
+        }
+      ],
+      "accepted_video_id": "L21_V003",
+      "canonical_query_id": "actual_p1_10_4::p1-9",
+      "canonical_source_id": "actual_p1_10_4",
+      "operational_phase": "P1",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/final_round1_10_4of13__p1-9.yaml",
+        "issue63_segment_source_sha256": "5d88d5019e2049d60cd40dd2e9eaa13425fabaab0cde66628dc2091cd25913b2",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "2e56009d2a2fd09ead2b468a2394b3434417953e",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p1-actual-round-10.4.md",
+        "source_csv": "query-p1-9-qa.csv",
+        "source_csv_sha256": "5cab29de72bb66d70b4698900ad0dc1a081c58b4c78d02b170c57725b9a8ed70",
+        "submitted_anchor_frames": [
+          26220
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "Đoạn phim ghi lại cảnh những chiếc xe ô tô lội nước, chiếc xe màu vàng, màu đỏ và màu đen lần lượt chuẩn bị đi qua cầu. Con số được ghi trên biển báo bên trái của cây cầu là bao nhiêu?",
+      "query_text_sha256": "ae1ccb7cc9779d2c0457c216a8357bb3ccd4784c8e80f07c1d82139bb12e643a",
+      "raw_query_id": "p1-9",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "qa",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "final_round1_10_4of13::p1-9"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 27150,
+          "end_s": 905.0,
+          "start_frame": 25200,
+          "start_s": 840.0
+        }
+      ],
+      "accepted_video_id": "L21_V015",
+      "canonical_query_id": "test_round_8_8::p1-1",
+      "canonical_source_id": "test_round_8_8",
+      "operational_phase": "P0",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/testing88_submission633__p1-1.yaml",
+        "issue63_segment_source_sha256": "b186211329173d4124070c02f076f4604ff25981c951c3a5ed799749806b172e",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "7d1688f94ba6a47eee9f6e2928c1ce52fe91f181",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p0-test-round-8.8.md",
+        "source_csv": "query-p1-1-kis.csv",
+        "source_csv_sha256": "29e36cccb5ef8d18a438949730cf55020b4f031bdbb49cf4cacd00488b95f73c",
+        "submitted_anchor_frames": [
+          25283
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "KIS: spacecraft intro; 4 astronauts in black; polar-light research",
+      "query_text_sha256": "f46a7ff0937a57cee4ca2e5b7299948c8c285693982e4b02f5986b67a12e2e38",
+      "raw_query_id": "p1-1",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "testing88_submission633::p1-1"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 3125,
+          "end_s": 125.0,
+          "start_frame": 2875,
+          "start_s": 115.0
+        },
+        {
+          "end_frame": 3500,
+          "end_s": 140.0,
+          "start_frame": 2500,
+          "start_s": 100.0
+        }
+      ],
+      "accepted_video_id": "L30_V017",
+      "canonical_query_id": "test_round_8_8::p1-10",
+      "canonical_source_id": "test_round_8_8",
+      "operational_phase": "P0",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/testing88_submission633__p1-10.yaml",
+        "issue63_segment_source_sha256": "b3c6d2959862d195c775238b413719a14562d1d3b4caee01ff4448c41c2b7c48",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "7d1688f94ba6a47eee9f6e2928c1ce52fe91f181",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p0-test-round-8.8.md",
+        "source_csv": "query-p1-10-kis.csv",
+        "source_csv_sha256": "c07621fbfcab99e4b14b3bce77ad86fcde15773de2419e69e7f34045eb0ce8a7",
+        "submitted_anchor_frames": [
+          2986
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "KIS: handpan trio, white-shirt player between two in black, bookshelves",
+      "query_text_sha256": "854a308d019f04311a0b3f513f7816e5246390ffd551e521d3a0ac0b5ff305b2",
+      "raw_query_id": "p1-10",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "testing88_submission633::p1-10"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 3375,
+          "end_s": 135.0,
+          "start_frame": 2950,
+          "start_s": 118.0
+        },
+        {
+          "end_frame": 5625,
+          "end_s": 225.0,
+          "start_frame": 4750,
+          "start_s": 190.0
+        }
+      ],
+      "accepted_video_id": "L30_V057",
+      "canonical_query_id": "test_round_8_8::p1-11",
+      "canonical_source_id": "test_round_8_8",
+      "operational_phase": "P0",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/testing88_submission633__p1-11.yaml",
+        "issue63_segment_source_sha256": "86476c2c1b461044496bdefd1ab1f2b11f0e5bfe2b7b14ca8d87f26a1b00a4d5",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "7d1688f94ba6a47eee9f6e2928c1ce52fe91f181",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p0-test-round-8.8.md",
+        "source_csv": "query-p1-11-kis.csv",
+        "source_csv_sha256": "9351c2fb63e396f5afb937c4a3c30dd91cb23bdc3362fd95fb12187bd263733f",
+        "submitted_anchor_frames": [
+          3082
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "KIS: shadow-portrait art from wood pieces on a box",
+      "query_text_sha256": "4cc2979f1770c82bf9fe8f0a1e2c3e4d5bd3bca7fc00abc2fc4181be93dd999d",
+      "raw_query_id": "p1-11",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "testing88_submission633::p1-11"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 6800,
+          "end_s": 272.0,
+          "start_frame": 4300,
+          "start_s": 172.0
+        }
+      ],
+      "accepted_video_id": "L26_V200",
+      "canonical_query_id": "test_round_8_8::p1-12",
+      "canonical_source_id": "test_round_8_8",
+      "operational_phase": "P0",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/testing88_submission633__p1-12.yaml",
+        "issue63_segment_source_sha256": "f6dc49d1c24079d2ceeaa11024f9ba59757b42b44767c8ccea5e331a60aa6e75",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "7d1688f94ba6a47eee9f6e2928c1ce52fe91f181",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p0-test-round-8.8.md",
+        "source_csv": "query-p1-12-kis.csv",
+        "source_csv_sha256": "7d0495ba47b5bd15c8d7d636cb67c46b3993535c5075f2028ee4bb58e408712a",
+        "submitted_anchor_frames": [
+          4480
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "KIS: doughnut decorating; white plate on wooden tray; scale; banana; chocolate",
+      "query_text_sha256": "364177893fa151265031c2818aedd618be4905470bbdfcfd740878a92c6ebf41",
+      "raw_query_id": "p1-12",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "testing88_submission633::p1-12"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 2800,
+          "end_s": 112.0,
+          "start_frame": 2500,
+          "start_s": 100.0
+        },
+        {
+          "end_frame": 5125,
+          "end_s": 205.0,
+          "start_frame": 3750,
+          "start_s": 150.0
+        }
+      ],
+      "accepted_video_id": "L30_V095",
+      "canonical_query_id": "test_round_8_8::p1-13",
+      "canonical_source_id": "test_round_8_8",
+      "operational_phase": "P0",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/testing88_submission633__p1-13.yaml",
+        "issue63_segment_source_sha256": "0198a243ff66df23552a86b8e7721fa7da133f6c7cd25e3a84e7aec8ca724927",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "7d1688f94ba6a47eee9f6e2928c1ce52fe91f181",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p0-test-round-8.8.md",
+        "source_csv": "query-p1-13-kis.csv",
+        "source_csv_sha256": "29f7071fd51495ee9314cc2e6570dfb51b391d167ad59b75512e124cd4e2f3a6",
+        "submitted_anchor_frames": [
+          2672
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "KIS: camera cleaning; lens on pink/purple cloth; wipe with cloth",
+      "query_text_sha256": "df2a22399611c375134879e816119cdde5f1f7ab57b6b64ba78812b6303ac0aa",
+      "raw_query_id": "p1-13",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "testing88_submission633::p1-13"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 28200,
+          "end_s": 940.0,
+          "start_frame": 26700,
+          "start_s": 890.0
+        }
+      ],
+      "accepted_video_id": "L21_V027",
+      "canonical_query_id": "test_round_8_8::p1-14",
+      "canonical_source_id": "test_round_8_8",
+      "operational_phase": "P0",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/testing88_submission633__p1-14.yaml",
+        "issue63_segment_source_sha256": "79c2d8400c604023beb3160c373ac1c7a3a6936194a9dbedf953b80c6370dd6d",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "7d1688f94ba6a47eee9f6e2928c1ce52fe91f181",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p0-test-round-8.8.md",
+        "source_csv": "query-p1-14-kis.csv",
+        "source_csv_sha256": "9422f75af40e14e031cfaf8fd20f87511139ac7acc8c074442f09d67d13b8960",
+        "submitted_anchor_frames": [
+          26831
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "KIS: sand-sculpture festival; youth-sports relief; arch; 2 pink blocks",
+      "query_text_sha256": "28d8d018a61e2592d8fbbd787a8594d00a012115e3c12cb8ddce3d5a53a5b23c",
+      "raw_query_id": "p1-14",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "testing88_submission633::p1-14"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 2125,
+          "end_s": 85.0,
+          "start_frame": 1375,
+          "start_s": 55.0
+        }
+      ],
+      "accepted_video_id": "L30_V072",
+      "canonical_query_id": "test_round_8_8::p1-15",
+      "canonical_source_id": "test_round_8_8",
+      "operational_phase": "P0",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/testing88_submission633__p1-15.yaml",
+        "issue63_segment_source_sha256": "0c6d1654a7b87a6a5d26854a37159b864427dc43f388c503aa776975f372b192",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "7d1688f94ba6a47eee9f6e2928c1ce52fe91f181",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p0-test-round-8.8.md",
+        "source_csv": "query-p1-15-qa.csv",
+        "source_csv_sha256": "424f1f65bc87f44bea1ed52c86ed11cc9e289ce87c04e991441f126516bd35b7",
+        "submitted_anchor_frames": [
+          1745
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "QA: FANA charity commune in Khanh Hoa; name the commune",
+      "query_text_sha256": "c20d92595abf72729917cc87559dbb99b4b0d768b5486d8cac10a0e7da024103",
+      "raw_query_id": "p1-15",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "qa",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "testing88_submission633::p1-15"
+    },
+    {
+      "accepted_ranges": [],
+      "accepted_video_id": "L24_V033",
+      "canonical_query_id": "test_round_8_8::p1-16",
+      "canonical_source_id": "test_round_8_8",
+      "operational_phase": "P0",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/testing88_submission633__p1-16.yaml",
+        "issue63_segment_source_sha256": "2a55419a51e8ab6159cb8919767393efc6c637c9c2699bf133b9cd0feb82514e",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "7d1688f94ba6a47eee9f6e2928c1ce52fe91f181",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p0-test-round-8.8.md",
+        "source_csv": "query-p1-16-trake.csv",
+        "source_csv_sha256": "b37425d184b7be89e1b210acacaff785e12b30f99a4f2522f479e6f1dff10844",
+        "submitted_anchor_frames": [
+          15945,
+          16006,
+          16354,
+          16901
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "TRAKE: lion dance; E1 spin start; E2 4 legs down; E3 at judges; E4 dragon head",
+      "query_text_sha256": "a88f539abddab57abc78259632f8f0e20ea858ed8c0d919bf4af5c5299bd6356",
+      "raw_query_id": "p1-16",
+      "reviewed_semantic_ranges_preserved": [
+        {
+          "end_frame": 15990,
+          "end_s": 533.0,
+          "start_frame": 14850,
+          "start_s": 495.0
+        },
+        {
+          "end_frame": 16350,
+          "end_s": 545.0,
+          "start_frame": 15930,
+          "start_s": 531.0
+        },
+        {
+          "end_frame": 16860,
+          "end_s": 562.0,
+          "start_frame": 16350,
+          "start_s": 545.0
+        },
+        {
+          "end_frame": 17850,
+          "end_s": 595.0,
+          "start_frame": 16860,
+          "start_s": 562.0
+        }
+      ],
+      "scoreability": {
+        "qa_answer": false,
+        "range": false,
+        "trake_event": true,
+        "video": true
+      },
+      "task_type": "trake",
+      "trake_event_truth": [
+        {
+          "event_index": 1,
+          "proxy_window": {
+            "end_frame": 15970,
+            "start_frame": 15940
+          },
+          "submitted_frame": 15945,
+          "truth_note": "Submission-derived development proxy; not organizer GT and replaceable by reviewed event truth.",
+          "truth_tier": "provisional_submission_anchor"
+        },
+        {
+          "event_index": 2,
+          "proxy_window": {
+            "end_frame": 16031,
+            "start_frame": 16001
+          },
+          "submitted_frame": 16006,
+          "truth_note": "Submission-derived development proxy; not organizer GT and replaceable by reviewed event truth.",
+          "truth_tier": "provisional_submission_anchor"
+        },
+        {
+          "event_index": 3,
+          "proxy_window": {
+            "end_frame": 16379,
+            "start_frame": 16349
+          },
+          "submitted_frame": 16354,
+          "truth_note": "Submission-derived development proxy; not organizer GT and replaceable by reviewed event truth.",
+          "truth_tier": "provisional_submission_anchor"
+        },
+        {
+          "event_index": 4,
+          "proxy_window": {
+            "end_frame": 16926,
+            "start_frame": 16896
+          },
+          "submitted_frame": 16901,
+          "truth_note": "Submission-derived development proxy; not organizer GT and replaceable by reviewed event truth.",
+          "truth_tier": "provisional_submission_anchor"
+        }
+      ],
+      "vecna_provenance_id": "testing88_submission633::p1-16"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 2700,
+          "end_s": 108.0,
+          "start_frame": 2325,
+          "start_s": 93.0
+        }
+      ],
+      "accepted_video_id": "L30_V092",
+      "canonical_query_id": "test_round_8_8::p1-17",
+      "canonical_source_id": "test_round_8_8",
+      "operational_phase": "P0",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/testing88_submission633__p1-17.yaml",
+        "issue63_segment_source_sha256": "4cb8038fcbc7c1d27b87194521ae7d0a06323177446d31491629bece860afcf5",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "7d1688f94ba6a47eee9f6e2928c1ce52fe91f181",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p0-test-round-8.8.md",
+        "source_csv": "query-p1-17-kis.csv",
+        "source_csv_sha256": "25e314b9bf42c22e3dc3bdfb7591e0d99127d569fad8df0c5f822ec29215f4c9",
+        "submitted_anchor_frames": [
+          2491
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "KIS: spring-2024 hospital charity; 2 men + 4 children; plaques; red backdrop",
+      "query_text_sha256": "9e902a48d881156a49352582ada8a1930c09d536c8909dd7f5095bbc4a984503",
+      "raw_query_id": "p1-17",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "testing88_submission633::p1-17"
+    },
+    {
+      "accepted_ranges": [],
+      "accepted_video_id": "L26_V072",
+      "canonical_query_id": "test_round_8_8::p1-18",
+      "canonical_source_id": "test_round_8_8",
+      "operational_phase": "P0",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/testing88_submission633__p1-18.yaml",
+        "issue63_segment_source_sha256": "1785684f0ea25e2b0df6c736547a351ff28c343b3191e37cc18d7b43b476985c",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "7d1688f94ba6a47eee9f6e2928c1ce52fe91f181",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p0-test-round-8.8.md",
+        "source_csv": "query-p1-18-trake.csv",
+        "source_csv_sha256": "6501bbc7e9bb57233245f1595c914b2fda372ece1420cf131f4ee274524cee03",
+        "submitted_anchor_frames": [
+          2466,
+          3133,
+          3420,
+          3800
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "TRAKE: mushroom dish; E1 first slices; E2 shiitake; E2dup tofu; E4 sauce+flames",
+      "query_text_sha256": "762ba3d557817152f5b92b5f846525841ce6cf48f60a27b18be46909f554e255",
+      "raw_query_id": "p1-18",
+      "reviewed_semantic_ranges_preserved": [
+        {
+          "end_frame": 2575,
+          "end_s": 103.0,
+          "start_frame": 2375,
+          "start_s": 95.0
+        },
+        {
+          "end_frame": 3200,
+          "end_s": 128.0,
+          "start_frame": 3000,
+          "start_s": 120.0
+        },
+        {
+          "end_frame": 3675,
+          "end_s": 147.0,
+          "start_frame": 3475,
+          "start_s": 139.0
+        },
+        {
+          "end_frame": 4550,
+          "end_s": 182.0,
+          "start_frame": 4075,
+          "start_s": 163.0
+        }
+      ],
+      "scoreability": {
+        "qa_answer": false,
+        "range": false,
+        "trake_event": true,
+        "video": true
+      },
+      "task_type": "trake",
+      "trake_event_truth": [
+        {
+          "event_index": 1,
+          "proxy_window": {
+            "end_frame": 2491,
+            "start_frame": 2461
+          },
+          "submitted_frame": 2466,
+          "truth_note": "Submission-derived development proxy; not organizer GT and replaceable by reviewed event truth.",
+          "truth_tier": "provisional_submission_anchor"
+        },
+        {
+          "event_index": 2,
+          "proxy_window": {
+            "end_frame": 3158,
+            "start_frame": 3128
+          },
+          "submitted_frame": 3133,
+          "truth_note": "Submission-derived development proxy; not organizer GT and replaceable by reviewed event truth.",
+          "truth_tier": "provisional_submission_anchor"
+        },
+        {
+          "event_index": 3,
+          "proxy_window": {
+            "end_frame": 3445,
+            "start_frame": 3415
+          },
+          "submitted_frame": 3420,
+          "truth_note": "Submission-derived development proxy; not organizer GT and replaceable by reviewed event truth.",
+          "truth_tier": "provisional_submission_anchor"
+        },
+        {
+          "event_index": 4,
+          "proxy_window": {
+            "end_frame": 3825,
+            "start_frame": 3795
+          },
+          "submitted_frame": 3800,
+          "truth_note": "Submission-derived development proxy; not organizer GT and replaceable by reviewed event truth.",
+          "truth_tier": "provisional_submission_anchor"
+        }
+      ],
+      "vecna_provenance_id": "testing88_submission633::p1-18"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 5800,
+          "end_s": 232.0,
+          "start_frame": 5375,
+          "start_s": 215.0
+        }
+      ],
+      "accepted_video_id": "L27_V010",
+      "canonical_query_id": "test_round_8_8::p1-19",
+      "canonical_source_id": "test_round_8_8",
+      "operational_phase": "P0",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/testing88_submission633__p1-19.yaml",
+        "issue63_segment_source_sha256": "2ac50d4614f750d6931e1a08b16b9ed5745f99113f0c5398184454296ff7f1fb",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "7d1688f94ba6a47eee9f6e2928c1ce52fe91f181",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p0-test-round-8.8.md",
+        "source_csv": "query-p1-19-qa.csv",
+        "source_csv_sha256": "006ba45facbd62baef888d5a7a0169b9a668ce841df8b3c3bb8e04f9ca89e2da",
+        "submitted_anchor_frames": [
+          5535
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "QA: two couplets at Nguyen Trung Truc temple, Kien Giang",
+      "query_text_sha256": "c1f82d9aa236384fd4d5d2a9411199172439ddd5d2d11044d0cbcd515fd2da27",
+      "raw_query_id": "p1-19",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "qa",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "testing88_submission633::p1-19"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 12750,
+          "end_s": 425.0,
+          "start_frame": 11250,
+          "start_s": 375.0
+        }
+      ],
+      "accepted_video_id": "L21_V029",
+      "canonical_query_id": "test_round_8_8::p1-2",
+      "canonical_source_id": "test_round_8_8",
+      "operational_phase": "P0",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/testing88_submission633__p1-2.yaml",
+        "issue63_segment_source_sha256": "2ae35a5dc7ed004df5540309baf908f2b423e7131d0831873ce61946f23c1c12",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "7d1688f94ba6a47eee9f6e2928c1ce52fe91f181",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p0-test-round-8.8.md",
+        "source_csv": "query-p1-2-kis.csv",
+        "source_csv_sha256": "c2e284078c5ad088b312f76e9086b3ec2965c14681cbb92f69ab4aa5a0b0ef37",
+        "submitted_anchor_frames": [
+          10908
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "KIS: Southern locality intro with ~3-6 rare tiger/panther cubs",
+      "query_text_sha256": "e2537014577c816a24bd31a05bcf2074bcfdce482d95d8e79b265d5c2c700dfd",
+      "raw_query_id": "p1-2",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "testing88_submission633::p1-2"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 6950,
+          "end_s": 278.0,
+          "start_frame": 5350,
+          "start_s": 214.0
+        }
+      ],
+      "accepted_video_id": "L26_V004",
+      "canonical_query_id": "test_round_8_8::p1-20",
+      "canonical_source_id": "test_round_8_8",
+      "operational_phase": "P0",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/testing88_submission633__p1-20.yaml",
+        "issue63_segment_source_sha256": "6d837a28e379e6827471d7de5bf1baec1b5d9a56c66ef0ae4a3d1b74c3c37d7c",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "7d1688f94ba6a47eee9f6e2928c1ce52fe91f181",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p0-test-round-8.8.md",
+        "source_csv": "query-p1-20-kis.csv",
+        "source_csv_sha256": "c3090237a92c4932ff8b01b4933b51d891daff75869177c4f0d8c17f40966c02",
+        "submitted_anchor_frames": [
+          5400
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "KIS: panna cotta; 1 glass on plate; hand adds 2; grapes; mint; 2 flowers",
+      "query_text_sha256": "e8a795e33980f2806d28678c35e8f652bcc6e010e34f2e81fcdbdcb3b798d5b5",
+      "raw_query_id": "p1-20",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "testing88_submission633::p1-20"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 1950,
+          "end_s": 78.0,
+          "start_frame": 1700,
+          "start_s": 68.0
+        }
+      ],
+      "accepted_video_id": "L30_V078",
+      "canonical_query_id": "test_round_8_8::p1-22",
+      "canonical_source_id": "test_round_8_8",
+      "operational_phase": "P0",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/testing88_submission633__p1-22.yaml",
+        "issue63_segment_source_sha256": "40f5e6dcdd36412e0eb25f52d63834e73d4793782cc4d419f0cca7dabe4409f7",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "7d1688f94ba6a47eee9f6e2928c1ce52fe91f181",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p0-test-round-8.8.md",
+        "source_csv": "query-p1-22-qa.csv",
+        "source_csv_sha256": "6cc09d4ba1c96a645224b56570e7801c5f344c4dd281ef7cd2ef64aea3f5b41a",
+        "submitted_anchor_frames": [
+          1788
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "QA: recipe card with 200g ground pork; give dish title",
+      "query_text_sha256": "795c9e1d5e5e08ec3a7f8ff3961523c56972d4d63dbfd06a29bcc017e56678de",
+      "raw_query_id": "p1-22",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "qa",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "testing88_submission633::p1-22"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 19350,
+          "end_s": 645.0,
+          "start_frame": 16650,
+          "start_s": 555.0
+        }
+      ],
+      "accepted_video_id": "L22_V022",
+      "canonical_query_id": "test_round_8_8::p1-23",
+      "canonical_source_id": "test_round_8_8",
+      "operational_phase": "P0",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/testing88_submission633__p1-23.yaml",
+        "issue63_segment_source_sha256": "f217d0d9fa4d352c762c286fe423fd1eed04856fd12f00d57cf594cdd574a6ab",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "7d1688f94ba6a47eee9f6e2928c1ce52fe91f181",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p0-test-round-8.8.md",
+        "source_csv": "query-p1-23-kis.csv",
+        "source_csv_sha256": "61df229a12310f59449fb76a093c7d440f1c86923a01ae07903a5a37e18d8945",
+        "submitted_anchor_frames": [
+          16755
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "KIS: coastal town; dangerous marine animal; Spielberg 1975 (Jaws)",
+      "query_text_sha256": "155d03c4752ce9de70a1622fd95e35de47db506e877829b2cc0078c199c893e6",
+      "raw_query_id": "p1-23",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "testing88_submission633::p1-23"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 3550,
+          "end_s": 142.0,
+          "start_frame": 3150,
+          "start_s": 126.0
+        },
+        {
+          "end_frame": 4000,
+          "end_s": 160.0,
+          "start_frame": 3000,
+          "start_s": 120.0
+        }
+      ],
+      "accepted_video_id": "L23_V007",
+      "canonical_query_id": "test_round_8_8::p1-24",
+      "canonical_source_id": "test_round_8_8",
+      "operational_phase": "P0",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/testing88_submission633__p1-24.yaml",
+        "issue63_segment_source_sha256": "8cd5728832352c965f0660deb54442285b224213c7b09e9fb0037f5bc4eddb4a",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "7d1688f94ba6a47eee9f6e2928c1ce52fe91f181",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p0-test-round-8.8.md",
+        "source_csv": "query-p1-24-kis.csv",
+        "source_csv_sha256": "cd8e53ccf597bb4fb37317ab36c92a1f745bea1da802999c1079da1c762381e7",
+        "submitted_anchor_frames": [
+          3246
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "KIS: top-down drone; 3 riders in line; white/red/black jerseys",
+      "query_text_sha256": "df79203bf007d998291a7bcb6da0647dfbe6266879c145bd79a9484d414122ce",
+      "raw_query_id": "p1-24",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "testing88_submission633::p1-24"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 1500,
+          "end_s": 60.0,
+          "start_frame": 1000,
+          "start_s": 40.0
+        },
+        {
+          "end_frame": 4500,
+          "end_s": 180.0,
+          "start_frame": 1500,
+          "start_s": 60.0
+        }
+      ],
+      "accepted_video_id": "L23_V017",
+      "canonical_query_id": "test_round_8_8::p1-25",
+      "canonical_source_id": "test_round_8_8",
+      "operational_phase": "P0",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/testing88_submission633__p1-25.yaml",
+        "issue63_segment_source_sha256": "c73ea20c3134ae714c7df47fa30aa750a668ecdd9095e5a66226ef48cb63b6bf",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "7d1688f94ba6a47eee9f6e2928c1ce52fe91f181",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p0-test-round-8.8.md",
+        "source_csv": "query-p1-25-kis.csv",
+        "source_csv_sha256": "9c11f161e98ad05ddc6e370089b1ab215857522bd459b18d348f7b054bac3b60",
+        "submitted_anchor_frames": [
+          1108
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "KIS: drone; blue-white rider overtakes 3 then leads to finish",
+      "query_text_sha256": "f17898bed36e7ea5c3d5d7f57b189914f67899e1cd48f07d18e3f87b1ecfb791",
+      "raw_query_id": "p1-25",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "testing88_submission633::p1-25"
+    },
+    {
+      "accepted_ranges": [],
+      "accepted_video_id": "L26_V194",
+      "canonical_query_id": "test_round_8_8::p1-4",
+      "canonical_source_id": "test_round_8_8",
+      "operational_phase": "P0",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/testing88_submission633__p1-4.yaml",
+        "issue63_segment_source_sha256": "fad69a104284e5c38b8e53a29cad05b2d1301382c06ccec80894a8f9fc5b6511",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "7d1688f94ba6a47eee9f6e2928c1ce52fe91f181",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p0-test-round-8.8.md",
+        "source_csv": "query-p1-4-trake.csv",
+        "source_csv_sha256": "26880886b845c3b55159004ec3148770c1e6ce5a828b687509e1af62be128c4a",
+        "submitted_anchor_frames": [
+          4707,
+          5139,
+          5427,
+          5865
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "TRAKE: net-casting events E1-E4",
+      "query_text_sha256": "1646825efe1a4d7c4891be47448fb131e8d8737154c217737230e32077a435dc",
+      "raw_query_id": "p1-4",
+      "reviewed_semantic_ranges_preserved": [
+        {
+          "end_frame": 4825,
+          "end_s": 193.0,
+          "start_frame": 4700,
+          "start_s": 188.0
+        },
+        {
+          "end_frame": 5200,
+          "end_s": 208.0,
+          "start_frame": 5125,
+          "start_s": 205.0
+        },
+        {
+          "end_frame": 5500,
+          "end_s": 220.0,
+          "start_frame": 5425,
+          "start_s": 217.0
+        },
+        {
+          "end_frame": 5900,
+          "end_s": 236.0,
+          "start_frame": 5825,
+          "start_s": 233.0
+        }
+      ],
+      "scoreability": {
+        "qa_answer": false,
+        "range": false,
+        "trake_event": true,
+        "video": true
+      },
+      "task_type": "trake",
+      "trake_event_truth": [
+        {
+          "event_index": 1,
+          "proxy_window": {
+            "end_frame": 4732,
+            "start_frame": 4702
+          },
+          "submitted_frame": 4707,
+          "truth_note": "Submission-derived development proxy; not organizer GT and replaceable by reviewed event truth.",
+          "truth_tier": "provisional_submission_anchor"
+        },
+        {
+          "event_index": 2,
+          "proxy_window": {
+            "end_frame": 5164,
+            "start_frame": 5134
+          },
+          "submitted_frame": 5139,
+          "truth_note": "Submission-derived development proxy; not organizer GT and replaceable by reviewed event truth.",
+          "truth_tier": "provisional_submission_anchor"
+        },
+        {
+          "event_index": 3,
+          "proxy_window": {
+            "end_frame": 5452,
+            "start_frame": 5422
+          },
+          "submitted_frame": 5427,
+          "truth_note": "Submission-derived development proxy; not organizer GT and replaceable by reviewed event truth.",
+          "truth_tier": "provisional_submission_anchor"
+        },
+        {
+          "event_index": 4,
+          "proxy_window": {
+            "end_frame": 5890,
+            "start_frame": 5860
+          },
+          "submitted_frame": 5865,
+          "truth_note": "Submission-derived development proxy; not organizer GT and replaceable by reviewed event truth.",
+          "truth_tier": "provisional_submission_anchor"
+        }
+      ],
+      "vecna_provenance_id": "testing88_submission633::p1-4"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 8375,
+          "end_s": 335.0,
+          "start_frame": 7000,
+          "start_s": 280.0
+        }
+      ],
+      "accepted_video_id": "L27_V014",
+      "canonical_query_id": "test_round_8_8::p1-5",
+      "canonical_source_id": "test_round_8_8",
+      "operational_phase": "P0",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/testing88_submission633__p1-5.yaml",
+        "issue63_segment_source_sha256": "8b812bdc9db4362dc3d79528535b1681a0ad5f41f6b60842bd0f011eed1f0ed0",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "7d1688f94ba6a47eee9f6e2928c1ce52fe91f181",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p0-test-round-8.8.md",
+        "source_csv": "query-p1-5-kis.csv",
+        "source_csv_sha256": "213f676bb45af3f49e8900683a8dd310ee849f37834b8683ae8a399dcf8c9055",
+        "submitted_anchor_frames": [
+          7297
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "KIS: two women feeding goats; white tee + red shoulder garment; striped sleeves",
+      "query_text_sha256": "8e110b4c2e8c6b55d7a0ce6c6ace7217c776a50b15d59914dda27541e429cd23",
+      "raw_query_id": "p1-5",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "testing88_submission633::p1-5"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 7375,
+          "end_s": 295.0,
+          "start_frame": 6125,
+          "start_s": 245.0
+        }
+      ],
+      "accepted_video_id": "L26_V056",
+      "canonical_query_id": "test_round_8_8::p1-6",
+      "canonical_source_id": "test_round_8_8",
+      "operational_phase": "P0",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/testing88_submission633__p1-6.yaml",
+        "issue63_segment_source_sha256": "c350176e3f1ce91fc5d4f6a8fac6ff7b198613339d8d5e1b7a51a1ba21a07e76",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "7d1688f94ba6a47eee9f6e2928c1ce52fe91f181",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p0-test-round-8.8.md",
+        "source_csv": "query-p1-6-kis.csv",
+        "source_csv_sha256": "fa397ae7ef1dfaf85a8461ee4cce2ace8e2639bae64e9ea17050fd9dd0896c86",
+        "submitted_anchor_frames": [
+          6300
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "KIS: fresh rolls placed on flower-decorated tray (opening scene)",
+      "query_text_sha256": "6af4f922ce1ffd47c95233be98d8f5a4e24f11a233c5438af8096ffdae2cb2d0",
+      "raw_query_id": "p1-6",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "testing88_submission633::p1-6"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 11025,
+          "end_s": 441.0,
+          "start_frame": 10825,
+          "start_s": 433.0
+        },
+        {
+          "end_frame": 11375,
+          "end_s": 455.0,
+          "start_frame": 10625,
+          "start_s": 425.0
+        }
+      ],
+      "accepted_video_id": "L29_V023",
+      "canonical_query_id": "test_round_8_8::p1-7",
+      "canonical_source_id": "test_round_8_8",
+      "operational_phase": "P0",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/testing88_submission633__p1-7.yaml",
+        "issue63_segment_source_sha256": "015ea54b7ab7c3a3d4954dd3b8e99e44fcf33e8c8e6e7956d661f017c33ea615",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "7d1688f94ba6a47eee9f6e2928c1ce52fe91f181",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p0-test-round-8.8.md",
+        "source_csv": "query-p1-7-kis.csv",
+        "source_csv_sha256": "1041f21af79c211b03f42a0eda49be6d16118f66620ba514824a6b75cebd89c5",
+        "submitted_anchor_frames": [
+          10915
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "KIS: forest-floor bird, black-blue head, brown-red body, red eyes",
+      "query_text_sha256": "f05f57816db6a82d7bbb2dde5aa37b4d2c885cb8eb24395294cb33376ab23ba7",
+      "raw_query_id": "p1-7",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "testing88_submission633::p1-7"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 18425,
+          "end_s": 737.0,
+          "start_frame": 18250,
+          "start_s": 730.0
+        },
+        {
+          "end_frame": 18500,
+          "end_s": 740.0,
+          "start_frame": 17500,
+          "start_s": 700.0
+        }
+      ],
+      "accepted_video_id": "L22_V030",
+      "canonical_query_id": "test_round_8_8::p1-8",
+      "canonical_source_id": "test_round_8_8",
+      "operational_phase": "P0",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/testing88_submission633__p1-8.yaml",
+        "issue63_segment_source_sha256": "ce4b5f7d0158a914f0dcf1e823d9911711f10cd0f7386cd37e00ce8be0a44856",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "7d1688f94ba6a47eee9f6e2928c1ce52fe91f181",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p0-test-round-8.8.md",
+        "source_csv": "query-p1-8-kis.csv",
+        "source_csv_sha256": "a519e57c05f0261f3c7cd31dad8ff1b2bff0979a43fe85f322ade0bd547742a4",
+        "submitted_anchor_frames": [
+          18327
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "KIS: Japanese food festival; girl with red octopus/squid + paper bag",
+      "query_text_sha256": "7b0528903aa719f102c6497ce79c97fb7c6e81ec01e8f0dca6be6d282669c398",
+      "raw_query_id": "p1-8",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "testing88_submission633::p1-8"
+    },
+    {
+      "accepted_ranges": [
+        {
+          "end_frame": 6125,
+          "end_s": 245.0,
+          "start_frame": 4875,
+          "start_s": 195.0
+        }
+      ],
+      "accepted_video_id": "L27_V013",
+      "canonical_query_id": "test_round_8_8::p1-9",
+      "canonical_source_id": "test_round_8_8",
+      "operational_phase": "P0",
+      "provenance": {
+        "issue63_segment_source_path": "benchmark-results/issue63-round1-segments/segments/testing88_submission633__p1-9.yaml",
+        "issue63_segment_source_sha256": "acb0cc9988c0904d8e40dc2dee907a37a04c6a6e55585c58252e0c8b28204af5",
+        "issue63_truth_commit": "ec4a38d397c9a3a49a821812b37db47f52327049",
+        "issue63_truth_path": "benchmark-results/issue63-stage-b/reconstructed-truth.json",
+        "issue63_truth_sha256": "92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603",
+        "official_dataset_control_blob_sha": "7d1688f94ba6a47eee9f6e2928c1ce52fe91f181",
+        "official_dataset_control_commit": "646ec85c75141bb68078fa94ec26b9a1dbef6d04",
+        "official_dataset_control_path": "Official-Queries/current-rounds/p0-test-round-8.8.md",
+        "source_csv": "query-p1-9-kis.csv",
+        "source_csv_sha256": "e93da4ad9336bfe9254347d7c17c82eaa568e58d3a1d37c43a7ef53b72325bdd",
+        "submitted_anchor_frames": [
+          5050
+        ]
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "query_text": "KIS: Mekong harvest scene; girl in pink + checkered scarf; baskets; blue boat",
+      "query_text_sha256": "cecb80674ac0c68b8ffc3c48652491f917e8a9b33ece109b39a0aa1b6f83395b",
+      "raw_query_id": "p1-9",
+      "reviewed_semantic_ranges_preserved": null,
+      "scoreability": {
+        "qa_answer": false,
+        "range": true,
+        "trake_event": false,
+        "video": true
+      },
+      "task_type": "kis",
+      "trake_event_truth": [],
+      "vecna_provenance_id": "testing88_submission633::p1-9"
+    }
+  ],
+  "schema_version": 1,
+  "trake_proxy_contract": {
+    "organizer_ground_truth": false,
+    "truth_tier": "provisional_submission_anchor",
+    "window_offsets_frames": [
+      -5,
+      25
+    ]
+  }
+}
