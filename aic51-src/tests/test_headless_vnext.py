@@ -24,6 +24,12 @@ class ScorerTests(unittest.TestCase):
     def test_video_and_range_hit(self):
         r=score.score_row(rec(ranges=[{'start_frame':10,'end_frame':20}]),[{'rank':1,'video_id':'V1','frame_id':15}])
         self.assertEqual(r['first_correct_video_rank'],1); self.assertEqual(r['range']['first_range_valid_rank'],1)
+    def test_explicit_saved_rank_values_are_preserved(self):
+        rr=rec(ranges=[{'start_frame':10,'end_frame':20}])
+        r=score.score_row(rr,[{'rank':2,'video_id':'V2','frame_id':15},{'rank':5,'video_id':'V1','frame_id':15}])
+        self.assertEqual(r['first_correct_video_rank'],5); self.assertEqual(r['range']['first_range_valid_rank'],5)
+        self.assertEqual(r['video']['R@1'],0.0); self.assertEqual(r['video']['R@5'],1.0)
+        self.assertEqual(r['range']['nearest_correct_video_distance_to_range']['1']['status'],'no_correct_video_in_topK')
     def test_just_outside_distance(self):
         r=score.score_row(rec(ranges=[{'start_frame':10,'end_frame':20}]),[{'rank':1,'video_id':'V1','frame_id':21}])
         self.assertIsNone(r['range']['first_range_valid_rank']); self.assertEqual(r['range']['first_correct_video_distance_to_range']['frames'],1)
