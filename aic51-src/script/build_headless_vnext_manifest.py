@@ -7,7 +7,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / 'benchmark-results' / 'issue63-stage-b' / 'reconstructed-truth.json'
 OUT = ROOT / 'benchmark-results' / 'headless-vnext' / 'manifest.json'
-EXPECTED_SOURCE_SHA256 = '016e13507071b05df1a5474f125d18755fc8ce0b58ce3a71b6f217c670abc782'
+EXPECTED_SOURCE_SHA256 = '92a4c14cdb075f43a444e7e105cc7680a491188e307cfe2562fff2b51cfe6603'
 ODC_COMMIT = '646ec85c75141bb68078fa94ec26b9a1dbef6d04'
 ISSUE63_HEAD = 'ec4a38d397c9a3a49a821812b37db47f52327049'
 ISSUE75_CONTRACT = '2344023ea4e2a152d1e9dc15778d8feb436dc396'
