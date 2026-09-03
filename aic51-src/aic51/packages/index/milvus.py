@@ -147,8 +147,12 @@ class MilvusDatabase(object):
         return index_params
 
     def __del__(self):
-        self._client.release_collection(self._collection_name)
-        self._client.close()
+        if hasattr(self, "_client") and self._client is not None:
+            try:
+                self._client.release_collection(self._collection_name)
+                self._client.close()
+            except Exception:
+                pass
 
     def insert(self, data, do_update: bool = False):
         if do_update:
@@ -156,17 +160,37 @@ class MilvusDatabase(object):
         else:
             return self._client.insert(self._collection_name, data)
 
-    def get(self, id):
-        res = self._client.get(self._collection_name, ids=[id])
+    def get_scalar_output_fields(self) -> list[str]:
+        """Returns non-vector fields (e.g. frame_id, ocr, asr) to avoid transferring heavy vectors into RAM."""
+        scalar_fields = ["frame_id"]
+        features = GlobalConfig.get("features")
+        if features:
+            for feat_name, feat_cfg in features.items():
+                if isinstance(feat_cfg, dict):
+                    dt = feat_cfg.get("index", {}).get("datatype", "")
+                    if dt and ("VECTOR" not in dt.upper()):
+                        scalar_fields.append(self.process_field_name(feat_name))
+        else:
+            scalar_fields.extend(["ocr", "asr"])
+        return sorted(list(set(scalar_fields)))
+
+    def get(self, id, output_fields: list[str] | None = None):
+        """Retrieve single record by ID. Defaults to all fields so feature embeddings can be retrieved."""
+        if output_fields is None:
+            output_fields = ["*"]
+        res = self._client.get(self._collection_name, ids=[id], output_fields=output_fields)
         return res
 
-    def query(self, filter: str, offset: int = 0, limit: int = 50):
+    def query(self, filter: str, offset: int = 0, limit: int = 50, output_fields: list[str] | None = None):
         limit = min(limit, self.SEARCH_LIMIT)
+        if output_fields is None:
+            output_fields = self.get_scalar_output_fields()
         res = self._client.query(
             self._collection_name,
             filter=filter,
             offset=offset,
             limit=limit,
+            output_fields=output_fields,
         )
         return res
 
@@ -178,11 +202,15 @@ class MilvusDatabase(object):
         limit: int = 50,
         anns_field: str = "clip",
         search_params: dict = {},
+        output_fields: list[str] | None = None,
     ):
         limit = min(limit, self.SEARCH_LIMIT)
 
         if "metric_type" not in search_params:
             search_params["metric_type"] = "IP"
+
+        if output_fields is None:
+            output_fields = self.get_scalar_output_fields()
 
         logger.debug(f'"{self._collection_name}": searching')
         logger.debug(f"Search_params: {search_params}")
@@ -198,7 +226,7 @@ class MilvusDatabase(object):
                 limit=limit,
                 anns_field=self.process_field_name(anns_field),
                 search_params=search_params,
-                output_fields=["*"],
+                output_fields=output_fields,
             )
         except Exception as e:
             if "not loaded" in str(e).lower():
@@ -212,7 +240,7 @@ class MilvusDatabase(object):
                     limit=limit,
                     anns_field=self.process_field_name(anns_field),
                     search_params=search_params,
-                    output_fields=["*"],
+                    output_fields=output_fields,
                 )
             else:
                 raise e
@@ -228,8 +256,12 @@ class MilvusDatabase(object):
         ranker,
         offset: int = 0,
         limit: int = 50,
+        output_fields: list[str] | None = None,
     ):
         limit = min(limit, self.SEARCH_LIMIT)
+
+        if output_fields is None:
+            output_fields = self.get_scalar_output_fields()
 
         start_time = time.time()
 
@@ -240,7 +272,7 @@ class MilvusDatabase(object):
                 ranker=ranker,
                 offset=offset,
                 limit=limit,
-                output_fields=["*"],
+                output_fields=output_fields,
             )
         except Exception as e:
             if "not loaded" in str(e).lower():
@@ -252,7 +284,7 @@ class MilvusDatabase(object):
                     ranker=ranker,
                     offset=offset,
                     limit=limit,
-                    output_fields=["*"],
+                    output_fields=output_fields,
                 )
             else:
                 raise e

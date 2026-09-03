@@ -9,6 +9,8 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
+import requests
+
 import aic51.packages.constant as constant
 from aic51.packages.config import GlobalConfig
 from aic51.packages.logger import logger
@@ -24,35 +26,40 @@ FILE_SERVERS = GlobalConfig.get("backends", "core", "file_proxy", "servers") or 
 FILE_REQUEST_TIMEOUT = GlobalConfig.get("backends", "core", "search_proxy", "request_timeout")
 FILE_MAX_REQUESTS = int(GlobalConfig.get("backends", "core", "file_proxy", "max_concurrent_requests") or 1)
 
-TARGET_FEATURES_SYNC_INTEVAL = int(GlobalConfig.get("backends", "core", "search_proxy", "sync_interval") or 5)
+TARGET_FEATURES_SYNC_INTEVAL = int(GlobalConfig.get("backends", "core", "search_proxy", "sync_interval") or 15)
 
 internal = {}
 target_features_lock = asyncio.Lock()
 
 
 async def sync_target_features():
+    session = requests.Session()
+    adapter = requests.adapters.HTTPAdapter(pool_connections=5, pool_maxsize=10)
+    session.mount("http://", adapter)
+    session.mount("https://", adapter)
+
+    def _fetch_target_features(url: str, timeout):
+        try:
+            resp = session.get(url, timeout=timeout)
+            if resp.ok:
+                return resp.json()
+        except Exception:
+            return None
+        return None
+
     while True:
         logger.info("CORE: Syncing target_features")
         async with target_features_lock:
-            crequest = CRequestPool(SEARCH_MAX_CREQUESTS)
-            target_features_requests = [
-                GetRequest(urljoin(ss["host"], constant.TARGET_FEATURES_ENDPOINT), timeout=SEARCH_REQUEST_TIMEOUT)
-                for ss in SEARCH_SERVERS
-            ]
-            crequest.map(target_features_requests)
-
+            target_features = set()
             try:
-                target_features = set()
-                for future in crequest.as_completed():
-                    res = future.result()
-                    if res and res.ok:
-                        data = res.json()
-                        if constant.TARGET_FEATURES_KEY in data:
-                            target_features.update(data[constant.TARGET_FEATURES_KEY])
-
+                for ss in SEARCH_SERVERS:
+                    endpoint = urljoin(ss["host"], constant.TARGET_FEATURES_ENDPOINT)
+                    data = await asyncio.to_thread(_fetch_target_features, endpoint, SEARCH_REQUEST_TIMEOUT)
+                    if data and constant.TARGET_FEATURES_KEY in data:
+                        target_features.update(data[constant.TARGET_FEATURES_KEY])
             except Exception as e:
                 logger.exception(e)
-                target_features = []
+                target_features = set()
 
             internal["target_features"] = list(target_features)
 

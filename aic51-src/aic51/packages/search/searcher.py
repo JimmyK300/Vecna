@@ -1,9 +1,11 @@
 import os
+import gc
 import hashlib
 import re
 import threading
 import time
 import unicodedata
+from collections import OrderedDict
 from typing import Callable, Optional
 
 import numpy as np
@@ -167,8 +169,53 @@ def check_exact_phrases(query_str: str, target_text: str, fallback_query: str = 
     return True, len(phrases)
 
 
+class BoundedLRUCache:
+    """Thread-safe bounded LRU cache with eviction to prevent memory bloat."""
+    def __init__(self, maxsize: int = 20):
+        self.maxsize = maxsize
+        self._cache = OrderedDict()
+        self._lock = threading.Lock()
+
+    def get(self, key, default=None):
+        with self._lock:
+            if key not in self._cache:
+                return default
+            self._cache.move_to_end(key)
+            return self._cache[key]
+
+    def set(self, key, value):
+        with self._lock:
+            if key in self._cache:
+                self._cache.move_to_end(key)
+            self._cache[key] = value
+            while len(self._cache) > self.maxsize:
+                self._cache.popitem(last=False)
+
+    def __contains__(self, key):
+        with self._lock:
+            return key in self._cache
+
+    def __getitem__(self, key):
+        with self._lock:
+            if key not in self._cache:
+                raise KeyError(key)
+            self._cache.move_to_end(key)
+            return self._cache[key]
+
+    def __setitem__(self, key, value):
+        self.set(key, value)
+
+    def __len__(self):
+        with self._lock:
+            return len(self._cache)
+
+    def clear(self):
+        with self._lock:
+            self._cache.clear()
+
+
 class Searcher(object):
-    cache = {}
+    cache = BoundedLRUCache(maxsize=20)
 
     def __init__(self, collection_name: str, device: torch.device = torch.device("cpu")):
         self._database = MilvusDatabase(collection_name)
@@ -271,6 +318,12 @@ class Searcher(object):
 
         end_time = time.time()
         logger.info(f"searcher: Take {end_time - start_time:.4f} to extract and search")
+        if torch.cuda.is_available():
+            try:
+                torch.cuda.empty_cache()
+            except Exception:
+                pass
+        gc.collect()
         return res
 
     def search_image(

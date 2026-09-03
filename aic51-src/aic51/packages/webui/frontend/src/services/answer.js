@@ -110,6 +110,9 @@ export function processAnswer(answer) {
     }
   }
   if ("correct" in answer) answer.correct = parseInt(answer.correct);
+  if ("frames_per_seq" in answer && answer.frames_per_seq !== undefined && answer.frames_per_seq !== null) {
+    answer.frames_per_seq = parseInt(answer.frames_per_seq, 10) || 4;
+  }
 
   const items = extractAnswerFrameItems(answer);
   if (items.length > 0) {
@@ -187,10 +190,14 @@ export async function clearAllAnswers() {
 
 import { getVideoMaxFrame } from "./search.js";
 
-export function extractAnswerSequences(answer) {
+export function extractAnswerSequences(answer, defaultFramesPerSeq = 4) {
+  const framesPerSeq = Math.max(
+    1,
+    parseInt(answer?.frames_per_seq, 10) || parseInt(defaultFramesPerSeq, 10) || 4
+  );
   let sequences = [];
 
-  if (answer.raw_selected) {
+  if (answer?.raw_selected) {
     let rawList = [];
     if (Array.isArray(answer.raw_selected)) {
       rawList = answer.raw_selected;
@@ -198,38 +205,79 @@ export function extractAnswerSequences(answer) {
       rawList = answer.raw_selected.split(";").map((s) => s.trim()).filter(Boolean);
     }
 
-    rawList.forEach((str) => {
-      const parts = str.split("#");
-      if (parts.length >= 2) {
-        const vId = parts[0].trim();
-        const rawFramePart = parts[1].trim();
-        if (vId && vId !== "undefined" && vId !== "null") {
-          const subFrames = rawFramePart
-            .split(",")
-            .map((s) => parseInt(formatCleanInteger(s), 10))
-            .filter((n) => !isNaN(n));
-          if (subFrames.length > 0) {
-            sequences.push({ video_id: vId, frames: subFrames });
+    const hasPrepackagedSequences = rawList.some((itemStr) => {
+      const parts = String(itemStr).split("#");
+      return parts.length >= 2 && parts[1].includes(",");
+    });
+
+    if (hasPrepackagedSequences) {
+      rawList.forEach((str) => {
+        const parts = str.split("#");
+        if (parts.length >= 2) {
+          const vId = parts[0].trim();
+          const rawFramePart = parts[1].trim();
+          if (vId && vId !== "undefined" && vId !== "null") {
+            const subFrames = rawFramePart
+              .split(",")
+              .map((s) => parseInt(formatCleanInteger(s), 10))
+              .filter((n) => !isNaN(n));
+            if (subFrames.length > 0) {
+              sequences.push({ video_id: vId, frames: subFrames });
+            }
           }
         }
-      }
-    });
+      });
+    } else {
+      // Chunk individual frames (vId#fId) into sequences of framesPerSeq per video
+      let currentSeq = null;
+      rawList.forEach((str) => {
+        const parts = str.split("#");
+        if (parts.length >= 2) {
+          const vId = parts[0].trim();
+          const rawFramePart = parts[1].trim();
+          if (vId && vId !== "undefined" && vId !== "null") {
+            const subFrames = rawFramePart
+              .split(",")
+              .map((s) => parseInt(formatCleanInteger(s), 10))
+              .filter((n) => !isNaN(n));
+            subFrames.forEach((fId) => {
+              if (currentSeq && currentSeq.video_id === vId && currentSeq.frames.length < framesPerSeq) {
+                currentSeq.frames.push(fId);
+              } else {
+                currentSeq = { video_id: vId, frames: [fId] };
+                sequences.push(currentSeq);
+              }
+            });
+          }
+        }
+      });
+    }
   }
 
   if (sequences.length === 0) {
     const items = extractAnswerFrameItems(answer);
     if (items.length > 0) {
-      const map = new Map();
+      let currentSeq = null;
       items.forEach((item) => {
-        if (!map.has(item.video_id)) {
-          map.set(item.video_id, []);
+        if (currentSeq && currentSeq.video_id === item.video_id && currentSeq.frames.length < framesPerSeq) {
+          currentSeq.frames.push(item.frame_counter);
+        } else {
+          currentSeq = { video_id: item.video_id, frames: [item.frame_counter] };
+          sequences.push(currentSeq);
         }
-        map.get(item.video_id).push(item.frame_counter);
       });
-      sequences = Array.from(map.entries()).map(([vId, frames]) => ({
-        video_id: vId,
-        frames: frames,
-      }));
+    }
+  }
+
+  // Ensure every sequence has EXACTLY framesPerSeq frames
+  for (const seq of sequences) {
+    if (seq.frames.length > framesPerSeq) {
+      seq.frames = seq.frames.slice(0, framesPerSeq);
+    } else if (seq.frames.length < framesPerSeq) {
+      const lastFrame = seq.frames.length > 0 ? seq.frames[seq.frames.length - 1] : 0;
+      while (seq.frames.length < framesPerSeq) {
+        seq.frames.push(lastFrame);
+      }
     }
   }
 
@@ -274,7 +322,7 @@ export function getCSV(answer, n = 1, step = 1, maxFrameMap = {}) {
     let kMultiplier = 1;
     const maxEvents = Math.max(...sequences.map((v) => v.frames.length));
 
-    while (trakeLines.length < targetTotalRows && kMultiplier <= 50) {
+    while (trakeLines.length < targetTotalRows && kMultiplier <= 500) {
       const currentOffset = kMultiplier * parsedStep;
 
       // Phase 2a: Global Shift ALL -offset

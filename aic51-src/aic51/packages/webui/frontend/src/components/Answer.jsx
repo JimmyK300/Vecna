@@ -93,20 +93,51 @@ function getGroupedSequenceRows(rawSelectedList, defaultVideoId = "", defaultFra
     }
   };
 
-  if (Array.isArray(rawSelectedList) && rawSelectedList.length > 0) {
-    rawSelectedList.forEach((itemStr) => {
+  let rawList = [];
+  if (Array.isArray(rawSelectedList)) {
+    rawList = rawSelectedList;
+  } else if (typeof rawSelectedList === "string" && rawSelectedList.trim()) {
+    rawList = rawSelectedList.split(";").map((s) => s.trim()).filter(Boolean);
+  }
+
+  if (rawList.length > 0) {
+    const hasPrepackagedSequences = rawList.some((itemStr) => {
       const parts = String(itemStr).split("#");
-      if (parts.length >= 2) {
-        const vId = parts[0].trim();
-        const rawFramePart = parts[1].trim();
-        if (vId && rawFramePart) {
-          const subFrames = rawFramePart.split(",").map((f) => f.trim()).filter(Boolean);
-          subFrames.forEach((fId) => {
-            addFrameToSequenceList(vId, fId);
-          });
-        }
-      }
+      return parts.length >= 2 && parts[1].includes(",");
     });
+
+    if (hasPrepackagedSequences) {
+      rawList.forEach((itemStr) => {
+        const parts = String(itemStr).split("#");
+        if (parts.length >= 2) {
+          const vId = parts[0].trim();
+          const rawFramePart = parts[1].trim();
+          if (vId && rawFramePart) {
+            const subFrames = rawFramePart.split(",").map((f) => f.trim()).filter(Boolean);
+            if (subFrames.length > 0) {
+              sequenceRows.push({
+                video_id: vId,
+                framesList: subFrames,
+              });
+            }
+          }
+        }
+      });
+    } else {
+      rawList.forEach((itemStr) => {
+        const parts = String(itemStr).split("#");
+        if (parts.length >= 2) {
+          const vId = parts[0].trim();
+          const rawFramePart = parts[1].trim();
+          if (vId && rawFramePart) {
+            const subFrames = rawFramePart.split(",").map((f) => f.trim()).filter(Boolean);
+            subFrames.forEach((fId) => {
+              addFrameToSequenceList(vId, fId);
+            });
+          }
+        }
+      });
+    }
   }
 
   if (sequenceRows.length === 0) {
@@ -164,11 +195,18 @@ function AnswerHeader({ loadedAnswer }) {
       if (loadedAnswer.query_id) {
         setSelectedQueryId(loadedAnswer.query_id);
       }
+      if (loadedAnswer.frames_per_seq) {
+        setFramesPerSeq(parseInt(loadedAnswer.frames_per_seq, 10) || 4);
+      }
       if (loadedAnswer.query_id === "QA") {
         setQaAnswers(extractQAAnswers(loadedAnswer));
       }
       if (loadedAnswer.custom_filename !== undefined) {
         setCsvFilename(loadedAnswer.custom_filename || "");
+      }
+      if (loadedAnswer.query_id === "TRAKE") {
+        const fps = parseInt(loadedAnswer.frames_per_seq, 10) || framesPerSeq;
+        setVideoRows(getGroupedSequenceRows(loadedAnswer.raw_selected, loadedAnswer.video_id, loadedAnswer.frame_counter, fps));
       }
     }
   }, [loadedAnswer]);
@@ -238,14 +276,24 @@ function AnswerHeader({ loadedAnswer }) {
     setQaAnswers((prev) => prev.filter((_, i) => i !== idx));
   };
 
-  const combinedRawSelected = videoRows
-    .flatMap((row) => {
-      const vId = row.video_id.trim();
-      const fList = row.frames.split(",").map((f) => f.trim()).filter(Boolean);
-      return fList.map((fId) => `${vId}#${fId}`);
-    })
-    .filter((str) => str.includes("#") && !str.startsWith("#") && !str.endsWith("#"))
-    .join(";");
+  const combinedRawSelected = selectedQueryId === "TRAKE"
+    ? videoRows
+        .map((row) => {
+          const vId = row.video_id.trim();
+          const fList = row.frames.split(",").map((f) => formatCleanInteger(f.trim())).filter(Boolean);
+          if (!vId || fList.length === 0) return "";
+          return `${vId}#${fList.join(",")}`;
+        })
+        .filter(Boolean)
+        .join(";")
+    : videoRows
+        .flatMap((row) => {
+          const vId = row.video_id.trim();
+          const fList = row.frames.split(",").map((f) => f.trim()).filter(Boolean);
+          return fList.map((fId) => `${vId}#${fId}`);
+        })
+        .filter((str) => str.includes("#") && !str.startsWith("#") && !str.endsWith("#"))
+        .join(";");
 
   const combinedVideoId = videoRows
     .map((row) => row.video_id.trim())
@@ -270,6 +318,7 @@ function AnswerHeader({ loadedAnswer }) {
       className="w-full mb-1.5"
     >
       <input type="hidden" name="raw_selected" value={combinedRawSelected} />
+      <input type="hidden" name="frames_per_seq" value={framesPerSeq} />
       <input type="hidden" name="video_id" value={combinedVideoId} />
       <input type="hidden" name="frame_counter" value={combinedFrameCounter} />
       <input type="hidden" name="qa_answers" value={combinedQaAnswers} />
@@ -602,10 +651,12 @@ function AnswerItem({
     return list.length > 0 ? list : [""];
   });
 
-  const [editFramesPerSeq, setEditFramesPerSeq] = useState(4);
+  const [editFramesPerSeq, setEditFramesPerSeq] = useState(() => {
+    return parseInt(answer.frames_per_seq, 10) || 4;
+  });
   const [editRows, setEditRows] = useState(() =>
     answer.query_id === "TRAKE"
-      ? getGroupedSequenceRows(answer.raw_selected, answer.video_id, answer.frame_counter, 4)
+      ? getGroupedSequenceRows(answer.raw_selected, answer.video_id, answer.frame_counter, parseInt(answer.frames_per_seq, 10) || 4)
       : getGroupedVideoRows(answer.raw_selected, answer.video_id, answer.frame_counter)
   );
 
@@ -674,14 +725,24 @@ function AnswerItem({
     setEditQaAnswers((prev) => prev.filter((_, i) => i !== idx));
   };
 
-  const editRawSelected = editRows
-    .flatMap((row) => {
-      const vId = row.video_id.trim();
-      const fList = row.frames.split(",").map((f) => f.trim()).filter(Boolean);
-      return fList.map((fId) => `${vId}#${fId}`);
-    })
-    .filter((str) => str.includes("#") && !str.startsWith("#") && !str.endsWith("#"))
-    .join(";");
+  const editRawSelected = editQueryId === "TRAKE"
+    ? editRows
+        .map((row) => {
+          const vId = row.video_id.trim();
+          const fList = row.frames.split(",").map((f) => formatCleanInteger(f.trim())).filter(Boolean);
+          if (!vId || fList.length === 0) return "";
+          return `${vId}#${fList.join(",")}`;
+        })
+        .filter(Boolean)
+        .join(";")
+    : editRows
+        .flatMap((row) => {
+          const vId = row.video_id.trim();
+          const fList = row.frames.split(",").map((f) => f.trim()).filter(Boolean);
+          return fList.map((fId) => `${vId}#${fId}`);
+        })
+        .filter((str) => str.includes("#") && !str.startsWith("#") && !str.endsWith("#"))
+        .join(";");
 
   const editVideoId = editRows
     .map((row) => row.video_id.trim())
@@ -717,6 +778,7 @@ function AnswerItem({
       >
         <input type="hidden" name="custom_filename" value={editCsvFilename} />
         <input type="hidden" name="raw_selected" value={editRawSelected} />
+        <input type="hidden" name="frames_per_seq" value={editFramesPerSeq} />
         <input type="hidden" name="video_id" value={editVideoId} />
         <input type="hidden" name="frame_counter" value={editFrameCounter} />
         <input type="hidden" name="qa_answers" value={combinedEditQaAnswers} />
