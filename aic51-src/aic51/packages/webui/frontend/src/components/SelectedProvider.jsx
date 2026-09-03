@@ -5,6 +5,7 @@ export const SelectedContext = createContext({
   addSelected: () => {},
   removeSelected: () => {},
   clearSelected: () => {},
+  setSelectedFrames: () => {},
   getFirstSelected: () => null,
   getSelectedForSubmit: () => null,
 });
@@ -29,6 +30,10 @@ export default function SelectedProvider({ children }) {
     setSelected([]);
   };
 
+  const setSelectedFrames = (frames) => {
+    setSelected(Array.isArray(frames) ? frames : []);
+  };
+
   const getFirstSelected = () => {
     return selected.length > 0 ? selected[0] : null;
   };
@@ -44,6 +49,7 @@ export default function SelectedProvider({ children }) {
         addSelected,
         removeSelected,
         clearSelected,
+        setSelectedFrames,
         getFirstSelected,
         getSelectedForSubmit,
       }}

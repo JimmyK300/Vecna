@@ -1,4 +1,5 @@
 import localforage from "localforage";
+import JSZip from "jszip";
 
 // Automatically clear/reset all saved answers in localforage when app opens/reloads
 localforage.setItem("answers", []);
@@ -109,6 +110,9 @@ export function processAnswer(answer) {
     }
   }
   if ("correct" in answer) answer.correct = parseInt(answer.correct);
+  if ("frames_per_seq" in answer && answer.frames_per_seq !== undefined && answer.frames_per_seq !== null) {
+    answer.frames_per_seq = parseInt(answer.frames_per_seq, 10) || 4;
+  }
 
   const items = extractAnswerFrameItems(answer);
   if (items.length > 0) {
@@ -186,6 +190,100 @@ export async function clearAllAnswers() {
 
 import { getVideoMaxFrame } from "./search.js";
 
+export function extractAnswerSequences(answer, defaultFramesPerSeq = 4) {
+  const framesPerSeq = Math.max(
+    1,
+    parseInt(answer?.frames_per_seq, 10) || parseInt(defaultFramesPerSeq, 10) || 4
+  );
+  let sequences = [];
+
+  if (answer?.raw_selected) {
+    let rawList = [];
+    if (Array.isArray(answer.raw_selected)) {
+      rawList = answer.raw_selected;
+    } else if (typeof answer.raw_selected === "string" && answer.raw_selected.trim()) {
+      rawList = answer.raw_selected.split(";").map((s) => s.trim()).filter(Boolean);
+    }
+
+    const hasPrepackagedSequences = rawList.some((itemStr) => {
+      const parts = String(itemStr).split("#");
+      return parts.length >= 2 && parts[1].includes(",");
+    });
+
+    if (hasPrepackagedSequences) {
+      rawList.forEach((str) => {
+        const parts = str.split("#");
+        if (parts.length >= 2) {
+          const vId = parts[0].trim();
+          const rawFramePart = parts[1].trim();
+          if (vId && vId !== "undefined" && vId !== "null") {
+            const subFrames = rawFramePart
+              .split(",")
+              .map((s) => parseInt(formatCleanInteger(s), 10))
+              .filter((n) => !isNaN(n));
+            if (subFrames.length > 0) {
+              sequences.push({ video_id: vId, frames: subFrames });
+            }
+          }
+        }
+      });
+    } else {
+      // Chunk individual frames (vId#fId) into sequences of framesPerSeq per video
+      let currentSeq = null;
+      rawList.forEach((str) => {
+        const parts = str.split("#");
+        if (parts.length >= 2) {
+          const vId = parts[0].trim();
+          const rawFramePart = parts[1].trim();
+          if (vId && vId !== "undefined" && vId !== "null") {
+            const subFrames = rawFramePart
+              .split(",")
+              .map((s) => parseInt(formatCleanInteger(s), 10))
+              .filter((n) => !isNaN(n));
+            subFrames.forEach((fId) => {
+              if (currentSeq && currentSeq.video_id === vId && currentSeq.frames.length < framesPerSeq) {
+                currentSeq.frames.push(fId);
+              } else {
+                currentSeq = { video_id: vId, frames: [fId] };
+                sequences.push(currentSeq);
+              }
+            });
+          }
+        }
+      });
+    }
+  }
+
+  if (sequences.length === 0) {
+    const items = extractAnswerFrameItems(answer);
+    if (items.length > 0) {
+      let currentSeq = null;
+      items.forEach((item) => {
+        if (currentSeq && currentSeq.video_id === item.video_id && currentSeq.frames.length < framesPerSeq) {
+          currentSeq.frames.push(item.frame_counter);
+        } else {
+          currentSeq = { video_id: item.video_id, frames: [item.frame_counter] };
+          sequences.push(currentSeq);
+        }
+      });
+    }
+  }
+
+  // Ensure every sequence has EXACTLY framesPerSeq frames
+  for (const seq of sequences) {
+    if (seq.frames.length > framesPerSeq) {
+      seq.frames = seq.frames.slice(0, framesPerSeq);
+    } else if (seq.frames.length < framesPerSeq) {
+      const lastFrame = seq.frames.length > 0 ? seq.frames[seq.frames.length - 1] : 0;
+      while (seq.frames.length < framesPerSeq) {
+        seq.frames.push(lastFrame);
+      }
+    }
+  }
+
+  return sequences;
+}
+
 export function getCSV(answer, n = 1, step = 1, maxFrameMap = {}) {
   const items = extractAnswerFrameItems(answer);
   if (items.length === 0) return "";
@@ -193,29 +291,12 @@ export function getCSV(answer, n = 1, step = 1, maxFrameMap = {}) {
   const parsedN = parseInt(n, 10) || 1;
   const parsedStep = parseInt(step, 10) || 1;
 
-  const totalSelectedFrames = items.length;
-  const targetTotalRows = Math.max(parsedN, totalSelectedFrames);
-
   // Helper to get max frame for a specific video ID
   const getVideoMaxBound = (vId) => {
     if (typeof maxFrameMap === "number") return maxFrameMap;
     if (maxFrameMap && typeof maxFrameMap[vId] === "number") return maxFrameMap[vId];
     return 999999;
   };
-
-  // Group items by video_id while maintaining video ordering
-  const videoMap = new Map();
-  items.forEach((item) => {
-    if (!videoMap.has(item.video_id)) {
-      videoMap.set(item.video_id, []);
-    }
-    videoMap.get(item.video_id).push(item.frame_counter);
-  });
-
-  const videos = Array.from(videoMap.entries()).map(([vId, frames]) => ({
-    video_id: vId,
-    frames: frames,
-  }));
 
   // Extract QA answers (if any)
   const qaAnswers = answer.query_id === "QA" || answer.answer || answer.qa_answers ? extractQAAnswers(answer) : [];
@@ -226,29 +307,33 @@ export function getCSV(answer, n = 1, step = 1, maxFrameMap = {}) {
   // ==========================================
   if (answer.query_id === "TRAKE") {
     const trakeLines = [];
+    const sequences = extractAnswerSequences(answer);
+    if (sequences.length === 0) return "";
 
-    // Phase 1: Base Anchors of ALL Candidate Videos
-    for (const v of videos) {
+    const targetTotalRows = Math.max(parsedN, sequences.length);
+
+    // Phase 1: Base Anchors of ALL Candidate Sequences
+    for (const v of sequences) {
       const cleanFrames = v.frames.map((f) => formatCleanInteger(f)).join(",");
       trakeLines.push(`${v.video_id},${cleanFrames}`);
       if (trakeLines.length >= targetTotalRows) break;
     }
 
     let kMultiplier = 1;
-    const maxEvents = Math.max(...videos.map((v) => v.frames.length));
+    const maxEvents = Math.max(...sequences.map((v) => v.frames.length));
 
-    while (trakeLines.length < targetTotalRows && kMultiplier <= 50) {
+    while (trakeLines.length < targetTotalRows && kMultiplier <= 500) {
       const currentOffset = kMultiplier * parsedStep;
 
       // Phase 2a: Global Shift ALL -offset
-      for (const v of videos) {
+      for (const v of sequences) {
         if (trakeLines.length >= targetTotalRows) break;
         const shifted = v.frames.map((f) => formatCleanInteger(Math.max(0, f - currentOffset))).join(",");
         trakeLines.push(`${v.video_id},${shifted}`);
       }
 
       // Phase 2b: Global Shift ALL +offset
-      for (const v of videos) {
+      for (const v of sequences) {
         if (trakeLines.length >= targetTotalRows) break;
         const maxF = getVideoMaxBound(v.video_id);
         const shifted = v.frames.map((f) => formatCleanInteger(Math.min(maxF, f + currentOffset))).join(",");
@@ -260,7 +345,7 @@ export function getCSV(answer, n = 1, step = 1, maxFrameMap = {}) {
         if (trakeLines.length >= targetTotalRows) break;
 
         // Minus shift for Event eIdx
-        for (const v of videos) {
+        for (const v of sequences) {
           if (trakeLines.length >= targetTotalRows) break;
           if (eIdx < v.frames.length) {
             const copy = [...v.frames];
@@ -271,7 +356,7 @@ export function getCSV(answer, n = 1, step = 1, maxFrameMap = {}) {
         }
 
         // Plus shift for Event eIdx
-        for (const v of videos) {
+        for (const v of sequences) {
           if (trakeLines.length >= targetTotalRows) break;
           if (eIdx < v.frames.length) {
             const maxF = getVideoMaxBound(v.video_id);
@@ -288,6 +373,23 @@ export function getCSV(answer, n = 1, step = 1, maxFrameMap = {}) {
 
     return trakeLines.join("\n");
   }
+
+  const totalSelectedFrames = items.length;
+  const targetTotalRows = Math.max(parsedN, totalSelectedFrames);
+
+  // Group items by video_id while maintaining video ordering
+  const videoMap = new Map();
+  items.forEach((item) => {
+    if (!videoMap.has(item.video_id)) {
+      videoMap.set(item.video_id, []);
+    }
+    videoMap.get(item.video_id).push(item.frame_counter);
+  });
+
+  const videos = Array.from(videoMap.entries()).map(([vId, frames]) => ({
+    video_id: vId,
+    frames: frames,
+  }));
 
   // Build flat ordered list of all frame items for round-robin iteration
   const maxFramesPerVideo = videos.length > 0 ? Math.max(...videos.map((v) => v.frames.length)) : 0;
@@ -402,8 +504,47 @@ export async function getCSVAsync(answer, n = 1, step = 1) {
   return getCSV(answer, n, step, maxFrameMap);
 }
 
-export function exportAllAnswersCSV(answers) {
+export async function exportAllAnswersCSV(answers, n = 1, step = 1) {
   if (!answers || !answers.length) return "";
-  return answers.map(ans => getCSV(ans, 1, 1)).filter(Boolean).join("\n");
+  let csvContent = "";
+  for (const answer of answers) {
+    if (csvContent !== "") csvContent += "\n";
+    csvContent += await getCSVAsync(answer, n, step);
+  }
+  return csvContent;
+}
+
+export async function exportZipAllAnswers(answers, n = 1, step = 1) {
+  if (!answers || !answers.length) return null;
+
+  const zip = new JSZip();
+  const usedFilenames = new Map();
+
+  for (let idx = 0; idx < answers.length; idx++) {
+    const answer = answers[idx];
+    const csvContent = await getCSVAsync(answer, n, step);
+    if (!csvContent) continue;
+
+    let baseName = "";
+    if (answer.custom_filename && answer.custom_filename.trim()) {
+      baseName = answer.custom_filename.trim().replace(/\.csv$/i, "");
+    } else {
+      const vId = answer.video_id || "answer";
+      baseName = `answer_${vId}_${idx + 1}`;
+    }
+
+    let fileName = `${baseName}.csv`;
+    if (usedFilenames.has(baseName)) {
+      const count = usedFilenames.get(baseName) + 1;
+      usedFilenames.set(baseName, count);
+      fileName = `${baseName}_${count}.csv`;
+    } else {
+      usedFilenames.set(baseName, 1);
+    }
+
+    zip.file(fileName, csvContent);
+  }
+
+  return await zip.generateAsync({ type: "blob" });
 }
 

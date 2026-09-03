@@ -84,9 +84,23 @@ export function AdvanceQueryContainer({
   activePreset = "default",
   onSelectPreset,
   onResetQueryHeight,
+  translationFailed = false,
 }) {
   const [showPrefixMenu, setShowPrefixMenu] = useState(false);
   const [targetFeatures, setTargetFeatures] = useState([]);
+
+  // State thông báo lỗi dịch tự động dưới thanh query
+  const [showTranslateErrorToast, setShowTranslateErrorToast] = useState(false);
+
+  useEffect(() => {
+    if (translationFailed && autoTranslate) {
+      setShowTranslateErrorToast(true);
+      const timer = setTimeout(() => {
+        setShowTranslateErrorToast(false);
+      }, 1800);
+      return () => clearTimeout(timer);
+    }
+  }, [translationFailed, autoTranslate]);
 
   // State cho Query Expansion, Google-style Suggestion & Jina Auto-Fusion
   const [isExpanding, setIsExpanding] = useState(false);
@@ -559,6 +573,26 @@ export function AdvanceQueryContainer({
           }}
           onKeyDown={handleMainQueryKeyDown}
         />
+
+        {/* Translation Error Toast Notification (Auto-dismisses in ~1.8s) */}
+        {showTranslateErrorToast && (
+          <div className="text-[11px] bg-rose-50 text-rose-800 border border-rose-300 px-2.5 py-1 rounded shadow-xs flex items-center justify-between gap-2 animate-fadeIn transition-all">
+            <div className="flex items-center gap-1.5 font-medium">
+              <svg className="w-3.5 h-3.5 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <span>Dịch tự động thất bại (Google Translate bị sập/Rate limit). Đang tìm kiếm bằng câu gốc.</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowTranslateErrorToast(false)}
+              className="text-rose-500 hover:text-rose-700 font-bold text-xs cursor-pointer px-1"
+              title="Đóng thông báo"
+            >
+              ✕
+            </button>
+          </div>
+        )}
 
         {/* Google-Style 2-Line Spellcheck Suggestion Banner */}
         {suggestionInfo && autoFusion && (

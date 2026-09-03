@@ -527,9 +527,9 @@ export function VideoPlayer({ frameInfo, onCancel }) {
 
             {/* Saved in this video pills with remove (x) buttons */}
             {selectedFramesOfThisVideo.length > 0 && (
-              <div className="flex items-center gap-1 border-l border-gray-300 pl-2">
-                <span className="text-[10px] text-gray-500 font-sans">Saved:</span>
-                <div className="flex flex-wrap gap-1 max-w-[18rem] max-h-6 overflow-hidden">
+              <div className="flex items-center gap-1 border-l border-gray-300 pl-2 shrink min-w-0">
+                <span className="text-[10px] text-gray-500 font-sans shrink-0">Saved:</span>
+                <div className="flex items-center gap-1 max-w-[36rem] overflow-x-auto py-0.5 scrollbar-thin shrink whitespace-nowrap">
                   {selectedFramesOfThisVideo.map((frameNum) => {
                     const itemFullId = `${frameInfo.video_id}#${frameNum}`;
                     const isCurrent = frameNum === currentFrameStr;
@@ -538,7 +538,7 @@ export function VideoPlayer({ frameInfo, onCancel }) {
                         key={frameNum}
                         onClick={() => jumpToFrame(frameNum)}
                         className={classNames(
-                          "inline-flex items-center gap-1 text-[10px] pl-1.5 pr-1 py-0.5 rounded font-mono cursor-pointer border shadow-sm transition-all group",
+                          "inline-flex items-center gap-1 text-[10px] pl-1.5 pr-1 py-0.5 rounded font-mono cursor-pointer border shadow-sm transition-all group shrink-0",
                           {
                             "bg-orange-500 border-orange-600 text-white font-bold": isCurrent,
                             "bg-white border-gray-300 text-gray-700 hover:bg-orange-50": !isCurrent,

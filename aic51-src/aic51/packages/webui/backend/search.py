@@ -84,11 +84,11 @@ async def search_multimodal(
     limit: int = 50,
     target_features: str = "",
     nprobe: int = 32,
-    temporal_k: int = 2000,
-    ocr_weight: float = 0.5,
-    asr_weight: float = 0,
-    ocr_alpha: float = 0.5,
-    asr_alpha: float = 0.5,
+    temporal_k: int = 200,
+    ocr_weight: float = 0.0,
+    asr_weight: float = 0.0,
+    ocr_alpha: float = 0.0,
+    asr_alpha: float = 0.0,
     max_interval: int = 1000,
     selected: str | None = None,
     auto_translate: bool = False,
@@ -253,6 +253,18 @@ async def search_multimodal(
             support_asr=searcher.support_asr,
         )
     )
+
+    # Check if auto_translate failed
+    translation_failed = False
+    if auto_translate and q and q.strip():
+        try:
+            check_q = Query(q, auto_translate=True)
+            translation_failed = check_q.translation_failed
+        except Exception:
+            pass
+
+    response["translation_failed"] = translation_failed
+
     return JSONResponse(
         status_code=200,
         content=jsonable_encoder({constant.MESSAGE_KEY: "success", **response}),
@@ -267,9 +279,9 @@ async def search_image(
     limit: int = 50,
     target_features: str = "",
     nprobe: int = 32,
-    temporal_k: int = 2000,
-    ocr_weight: float = 0.5,
-    asr_weight: float = 0,
+    temporal_k: int = 200,
+    ocr_weight: float = 0.0,
+    asr_weight: float = 0.0,
     max_interval: int = 1000,
 ):
     if "searcher" not in internal:

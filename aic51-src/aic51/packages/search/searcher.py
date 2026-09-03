@@ -1,8 +1,11 @@
+import os
+import gc
 import hashlib
 import re
 import threading
 import time
 import unicodedata
+from collections import OrderedDict
 from typing import Callable, Optional
 
 import numpy as np
@@ -19,7 +22,62 @@ from aic51.packages.logger import logger
 from . import constants
 from .utils import Query
 from sentence_transformers import CrossEncoder
+import bisect
+import json
+from pathlib import Path
 
+
+class SegmentClustering:
+    """Gom các frame trong cùng segment (bản tin) lại, giống OpenCubee2."""
+    def __init__(self, path="segment_map.json"):
+        p = Path(path)
+        if not p.exists():
+            script_dir = Path(__file__).resolve().parent
+            repo_root = script_dir.parents[3]
+            candidates = [
+                repo_root / path,
+                repo_root / "workspace" / path,
+                Path("workspace") / path,
+            ]
+            for candidate in candidates:
+                if candidate.exists():
+                    p = candidate
+                    break
+
+        self.map = json.load(open(p, encoding="utf-8")) if p.exists() else {}
+        if not self.map:
+            logger.warning("SegmentClustering: segment_map.json not found - clustering disabled")
+
+    def seg_of(self, vid: str, fid: int) -> int:
+        m = self.map.get(vid)
+        if not m:
+            return -1
+        i = bisect.bisect_left(m["fids"], fid)
+        if i < len(m["fids"]) and m["fids"][i] == fid:
+            return m["segs"][i]
+        return -1
+
+    def diversify(self, results: list) -> list:
+        """Lấy best frame (first-seen) per segment. Input đã sort theo score."""
+        if not self.map:
+            return results
+        seen = set()
+        reps = []
+        for r in results:
+            fid_full = r["entity"]["frame_id"]
+            if "#" not in fid_full:
+                continue
+            vid, fid_s = fid_full.split("#", 1)
+            try:
+                fid = int(fid_s)
+            except ValueError:
+                continue
+            key = (vid, self.seg_of(vid, fid))
+            if key in seen:
+                continue
+            seen.add(key)
+            reps.append(r)
+        return reps
 
 class SearchCancelledException(Exception):
     """Raised when a search operation is cancelled by the client or superseded by a new search."""
@@ -111,12 +169,59 @@ def check_exact_phrases(query_str: str, target_text: str, fallback_query: str = 
     return True, len(phrases)
 
 
+class BoundedLRUCache:
+    """Thread-safe bounded LRU cache with eviction to prevent memory bloat."""
+    def __init__(self, maxsize: int = 20):
+        self.maxsize = maxsize
+        self._cache = OrderedDict()
+        self._lock = threading.Lock()
+
+    def get(self, key, default=None):
+        with self._lock:
+            if key not in self._cache:
+                return default
+            self._cache.move_to_end(key)
+            return self._cache[key]
+
+    def set(self, key, value):
+        with self._lock:
+            if key in self._cache:
+                self._cache.move_to_end(key)
+            self._cache[key] = value
+            while len(self._cache) > self.maxsize:
+                self._cache.popitem(last=False)
+
+    def __contains__(self, key):
+        with self._lock:
+            return key in self._cache
+
+    def __getitem__(self, key):
+        with self._lock:
+            if key not in self._cache:
+                raise KeyError(key)
+            self._cache.move_to_end(key)
+            return self._cache[key]
+
+    def __setitem__(self, key, value):
+        self.set(key, value)
+
+    def __len__(self):
+        with self._lock:
+            return len(self._cache)
+
+    def clear(self):
+        with self._lock:
+            self._cache.clear()
+
+
 class Searcher(object):
-    cache = {}
+    cache = BoundedLRUCache(maxsize=20)
 
     def __init__(self, collection_name: str, device: torch.device = torch.device("cpu")):
         self._database = MilvusDatabase(collection_name)
         self._prepare_feature_extractors(device)
+        segment_map_path = os.environ.get("SEGMENT_MAP_PATH", "segment_map.json")
+        self._clustering = SegmentClustering(segment_map_path)  
 
     def to(self, device):
         self._device = torch.device(device)
@@ -150,11 +255,11 @@ class Searcher(object):
         target_features: list = [],
         /,
         nprobe: int = 8,
-        temporal_k: int = 2000,
-        ocr_weight: float = 0.5,
+        temporal_k: int = 200,
+        ocr_weight: float = 0.0,
         asr_weight: float = 0.0,
-        ocr_alpha: float = 0.5,
-        asr_alpha: float = 0.5,
+        ocr_alpha: float = 0.0,
+        asr_alpha: float = 0.0,
         hybrid_alpha: float | None = None,
         max_interval: int = 1000,
         selected: str | None = None,
@@ -213,6 +318,12 @@ class Searcher(object):
 
         end_time = time.time()
         logger.info(f"searcher: Take {end_time - start_time:.4f} to extract and search")
+        if torch.cuda.is_available():
+            try:
+                torch.cuda.empty_cache()
+            except Exception:
+                pass
+        gc.collect()
         return res
 
     def search_image(
@@ -524,10 +635,10 @@ class Searcher(object):
         limit: int = 50,
         target_features: list = [],
         /,
-        ocr_weight: float = 0.5,
+        ocr_weight: float = 0.0,
         asr_weight: float = 0.0,
-        ocr_alpha: float = 0.5,
-        asr_alpha: float = 0.5,
+        ocr_alpha: float = 0.0,
+        asr_alpha: float = 0.0,
         hybrid_alpha: float | None = None,
         nprobe: int = 8,
         exclude_video_ids: list[str] = [],
@@ -688,10 +799,10 @@ class Searcher(object):
         limit: int = 50,
         target_features: list = [],
         /,
-        ocr_weight: float = 0.5,
+        ocr_weight: float = 0.0,
         asr_weight: float = 0.0,
-        ocr_alpha: float = 0.5,
-        asr_alpha: float = 0.5,
+        ocr_alpha: float = 0.0,
+        asr_alpha: float = 0.0,
         hybrid_alpha: float | None = None,
         nprobe: int = 8,
         cancel_event: threading.Event | Callable = None,
@@ -764,17 +875,23 @@ class Searcher(object):
 
             total = db_size
 
-        # ====== RERANK Ở ĐÂY ======
+       # ====== RERANK Ở ĐÂY ======
         if self._reranker is not None and raw_query:
             _check_cancelled(cancel_event)
             rerank_k = max(limit, self._reranker_top_k)
             results = self._rerank_candidates(raw_query, results, top_k=rerank_k, cancel_event=cancel_event)
-        # ===========================
+
+        # ====== CLUSTERING: Diversify trên pool gốc (ranking ổn định) ======
+        TOP_DIVERSE = min(len(results), max(200, (offset + limit) * 4))
+        results_top = results[:TOP_DIVERSE]
+        results_diverse = self._clustering.diversify(results_top)
+        results_remaining = results[TOP_DIVERSE:]
+        results = results_diverse + results_remaining
 
         results = results[offset : offset + limit]
         res = {
             "results": results,
-            "total": total,
+            "total": len(results_diverse) + len(results_remaining),
             "offset": offset,
         }
         return res
@@ -879,13 +996,13 @@ class Searcher(object):
         limit: int = 50,
         target_features: list = [],
         /,
-        ocr_weight: float = 0.5,
+        ocr_weight: float = 0.0,
         asr_weight: float = 0.0,
-        ocr_alpha: float = 0.5,
-        asr_alpha: float = 0.5,
+        ocr_alpha: float = 0.0,
+        asr_alpha: float = 0.0,
         hybrid_alpha: float | None = None,
         nprobe: int = 8,
-        temporal_k: int = 2000,
+        temporal_k: int = 200,
         max_interval: int = 1000,
         cancel_event: threading.Event | Callable = None,
     ):

@@ -127,7 +127,27 @@ export function FrameItem({
       fetchNearby();
     }
   }, [showNearbyModal, video_id]);
-
+  useEffect(() => {
+    if (showNearbyModal && !loadingNearby && nearbyKeyframes.length > 0) {
+      // Đợi grid render ảnh xong mới scroll
+      const t = setTimeout(() => {
+        const el = document.getElementById(`nearby-kf-${frame_id}`);
+        if (el) {
+          // scroll container thay vì window
+          const container = el.closest('.flex-1.overflow-y-auto') || el.parentElement.parentElement;
+          if (container && container.scrollTo) {
+            const elRect = el.getBoundingClientRect();
+            const contRect = container.getBoundingClientRect();
+            const scrollTop = container.scrollTop + elRect.top - contRect.top - contRect.height / 2 + elRect.height / 2;
+            container.scrollTo({ top: scrollTop, behavior: "auto" });
+          } else {
+            el.scrollIntoView({ block: "center", behavior: "auto" });
+          }
+        }
+      }, 150);
+      return () => clearTimeout(t);
+    }
+  }, [showNearbyModal, loadingNearby, nearbyKeyframes.length, frame_id]);
   // Escape key listener to close modals (including Keyframe Map / Add Payload modal)
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -548,6 +568,26 @@ export function FrameItem({
                   onChange={(e) => setNearbySearchFilter(e.target.value)}
                   className="bg-slate-900 border border-slate-700 text-xs px-2 py-0.5 rounded text-white font-mono focus:outline-none focus:border-blue-500 w-36"
                 />
+                 <button
+                  onClick={() => {
+                    const el = document.getElementById(`nearby-kf-${frame_id}`);
+                    if (el) {
+                      const container = el.closest('.flex-1.overflow-y-auto') || el.parentElement.parentElement;
+                      if (container && container.scrollTo) {
+                        const elRect = el.getBoundingClientRect();
+                        const contRect = container.getBoundingClientRect();
+                        const scrollTop = container.scrollTop + elRect.top - contRect.top - contRect.height / 2 + elRect.height / 2;
+                        container.scrollTo({ top: scrollTop, behavior: "smooth" });
+                      } else {
+                        el.scrollIntoView({ block: "center", behavior: "smooth" });
+                      }
+                    }
+                  }}
+                  className="px-2.5 py-0.5 bg-fuchsia-600 hover:bg-fuchsia-700 text-white rounded text-xs font-bold shadow-sm transition-colors"
+                  title="Jump back to current target frame"
+                >
+                  🎯 Target
+                </button>
                 <button
                   onClick={() => setShowNearbyModal(false)}
                   className="px-2.5 py-0.5 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-bold shadow-sm transition-colors"

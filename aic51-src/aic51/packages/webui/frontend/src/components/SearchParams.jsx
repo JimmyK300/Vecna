@@ -131,30 +131,43 @@ export default function SearchParams({
           </button>
         </div>
 
-        {/* Row 2: Default, Hybrid */}
-        <div className="grid grid-cols-2 gap-1">
+        {/* Row 2: CLIP + OCR, CLIP + ASR, Hybrid */}
+        <div className="grid grid-cols-3 gap-1">
           <button
             type="button"
             onClick={() => handleWeightsChange(0.5, 0.0)}
-            className={`px-2 py-1 text-xs border rounded font-bold truncate transition-colors ${
+            className={`px-1.5 py-1 text-xs border rounded font-bold truncate transition-colors ${
               ocrWeight === 0.5 && asrWeight === 0.0
-                ? "bg-gray-700 text-white border-gray-700"
-                : "bg-gray-100 hover:bg-gray-200 border-gray-300 text-gray-700"
+                ? "bg-teal-700 text-white border-teal-700"
+                : "bg-teal-50 hover:bg-teal-100 border-teal-200 text-teal-800"
             }`}
-            title="Default model weights (OCR: 0.5, ASR: 0.0)"
+            title="CLIP 0.5 + OCR 0.5 (OCR: 0.5, ASR: 0.0, CLIP: 0.5)"
           >
-            Default
+            CLIP + OCR
+          </button>
+
+          <button
+            type="button"
+            onClick={() => handleWeightsChange(0.0, 0.5)}
+            className={`px-1.5 py-1 text-xs border rounded font-bold truncate transition-colors ${
+              ocrWeight === 0.0 && asrWeight === 0.5
+                ? "bg-indigo-700 text-white border-indigo-700"
+                : "bg-indigo-50 hover:bg-indigo-100 border-indigo-200 text-indigo-800"
+            }`}
+            title="CLIP 0.5 + ASR 0.5 (OCR: 0.0, ASR: 0.5, CLIP: 0.5)"
+          >
+            CLIP + ASR
           </button>
 
           <button
             type="button"
             onClick={() => handleWeightsChange(0.3, 0.2)}
-            className={`px-2 py-1 text-xs border rounded font-bold truncate transition-all shadow-sm ${
+            className={`px-1.5 py-1 text-xs border rounded font-bold truncate transition-all shadow-sm ${
               ocrWeight === 0.3 && asrWeight === 0.2
-                ? "bg-purple-600 text-white border-purple-600"
-                : "bg-purple-50 hover:bg-purple-100 border-purple-200 text-purple-700"
+                ? "bg-purple-700 text-white border-purple-700"
+                : "bg-purple-50 hover:bg-purple-100 border-purple-200 text-purple-800"
             }`}
-            title="Hybrid model weights (OCR: 0.3, ASR: 0.2)"
+            title="Hybrid model weights (OCR: 0.3, ASR: 0.2, CLIP: 0.5)"
           >
             Hybrid
           </button>
