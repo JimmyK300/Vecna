@@ -2,6 +2,14 @@
 
 Multimodal video keyframe search engine built for the AI Challenge (AIC). The system integrates CLIP (PE-Core-L-14-336), SigLIP (ViT-SO400M-14-SigLIP-384), Groq LLM Query Expander, and Milvus Vector Database.
 
+## Contributors
+
+- Lê Tuấn Kiệt ([@ProfK602170](https://github.com/ProfK602170))
+- Nguyễn Lê Minh Hoàng ([@nlmhoagn](https://github.com/nlmhoagn))
+- Cao Chí Minh ([@JimmyK300](https://github.com/JimmyK300))
+- Ngô Đắc Minh ([@kinus-is-coding](https://github.com/kinus-is-coding))
+- Phan Hiếu Minh ([@PhanHieuMinh](https://github.com/PhanHieuMinh))
+
 ## Prerequisites
 
 - Python 3.11+

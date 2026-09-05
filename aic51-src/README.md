@@ -21,7 +21,7 @@
 1. Install the repository
 
 ```bash
-git clone https://github.com/nlmhoagn/Vecna.git
+git clone https://github.com/JimmyK300/Vecna.git
 cd Vecna/aic51-src
 pip install -e .
 ```
@@ -29,7 +29,7 @@ pip install -e .
 or directly via pip:
 
 ```bash
-pip install git+https://github.com/nlmhoagn/Vecna.git#subdirectory=aic51-src
+pip install git+https://github.com/JimmyK300/Vecna.git#subdirectory=aic51-src
 ```
 
 2. Initialize workspace
