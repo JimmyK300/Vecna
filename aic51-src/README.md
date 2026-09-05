@@ -1,13 +1,12 @@
-# HCMC AI Challenge 2025
+# Vecna - HCMC AI Challenge
 
-## Past Beggars
+## Contributors
 
-- Tran Nam Khanh
-- Phan Le Dac Phu
-- Duong Minh Loi
-- Nguyen Ngoc Thien An
-- Nguyen Truong Thinh
-
+- Trương Bảo Thiên Ân ([@tb-tian](https://github.com/tb-tian))
+- Chi Minh ([@JimmyK300](https://github.com/JimmyK300))
+- Stephen Trương Trung Hiếu ([@stephentth](https://github.com/stephentth))
+- Lê Tuấn Kiệt ([@ProfK602170](https://github.com/ProfK602170))
+- Nguyễn Lê Minh Hoàng ([@nlmhoagn](https://github.com/nlmhoagn))
 
 ## Dependencies
 
@@ -15,24 +14,23 @@
 
 2. Install [tesseract](https://github.com/tesseract-ocr/tesseract)
 
-3. Install [docker](https://www.docker.com/)
+3. Install [Docker](https://www.docker.com/) (running for Milvus Vector Database)
 
 ## Guideline
 
 1. Install the repository
 
 ```bash
-pip install git+https://github.com/trnKhanh/past-beggars.git
-```
-
-or
-
-```bash
-git clone https://github.com/trnKhanh/past-beggars.git
-cd past-beggars
+git clone https://github.com/nlmhoagn/Vecna.git
+cd Vecna/aic51-src
 pip install -e .
 ```
 
+or directly via pip:
+
+```bash
+pip install git+https://github.com/nlmhoagn/Vecna.git#subdirectory=aic51-src
+```
 
 2. Initialize workspace
 
@@ -49,19 +47,19 @@ aic51-cli init
 aic51-cli add <path/to/videos> -d -kc
 ```
 
-3. Analyse videos
+4. Analyse videos
 
 ```bash
 aic51-cli analyse
 ```
 
-4. Index videos
+5. Index videos
 
 ```bash
 aic51-cli index
 ```
 
-5. Run webui
+6. Run webui
 
 ```bash
 aic51-cli serve
