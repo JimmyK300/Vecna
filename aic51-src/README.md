@@ -2,11 +2,11 @@
 
 ## Contributors
 
-- Trương Bảo Thiên Ân ([@tb-tian](https://github.com/tb-tian))
-- Chi Minh ([@JimmyK300](https://github.com/JimmyK300))
-- Stephen Trương Trung Hiếu ([@stephentth](https://github.com/stephentth))
 - Lê Tuấn Kiệt ([@ProfK602170](https://github.com/ProfK602170))
 - Nguyễn Lê Minh Hoàng ([@nlmhoagn](https://github.com/nlmhoagn))
+- Cao Chí Minh ([@JimmyK300](https://github.com/JimmyK300))
+- Ngô Đắc Minh ([@kinus-is-coding](https://github.com/kinus-is-coding))
+- Phan Hiếu Minh ([@PhanHieuMinh](https://github.com/PhanHieuMinh))
 
 ## Dependencies
 
