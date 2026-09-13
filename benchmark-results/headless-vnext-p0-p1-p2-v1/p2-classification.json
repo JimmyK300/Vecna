@@ -1,0 +1,276 @@
+{
+  "canonical_round": "P2",
+  "decisions": {
+    "1": {
+      "end_frame": 2100,
+      "end_s": 70.0,
+      "start_frame": 0,
+      "start_s": 0.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L24_V035"
+    },
+    "10": {
+      "end_frame": 5750,
+      "end_s": 230.0,
+      "start_frame": 4875,
+      "start_s": 195.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L26_V120"
+    },
+    "11": {
+      "end_frame": 4075,
+      "end_s": 163.0,
+      "start_frame": 3050,
+      "start_s": 122.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L26_V392"
+    },
+    "12": {
+      "end_frame": 6125,
+      "end_s": 245.0,
+      "start_frame": 4825,
+      "start_s": 193.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L26_V192"
+    },
+    "13": {
+      "end_frame": 4900,
+      "end_s": 196.0,
+      "start_frame": 3950,
+      "start_s": 158.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L26_V422"
+    },
+    "14": {
+      "end_frame": 650,
+      "end_s": 26.0,
+      "start_frame": 600,
+      "start_s": 24.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L23_V010"
+    },
+    "15": {
+      "end_frame": 950,
+      "end_s": 38.0,
+      "note": "Independent P2 inspect of L26_V074: 18s colorful flowers, 20s shrimp, 24s fish paste, 28s lotus, 32-36s static wide ingredients. Not copied from P3.",
+      "start_frame": 450,
+      "start_s": 18.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L26_V074"
+    },
+    "16": {
+      "end_frame": 20550,
+      "end_s": 822.0,
+      "start_frame": 19700,
+      "start_s": 788.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L29_V014"
+    },
+    "17": {
+      "end_frame": 2950,
+      "end_s": 118.0,
+      "start_frame": 1950,
+      "start_s": 78.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L30_V026"
+    },
+    "18": {
+      "reason": "No OCR hit for Hồ Tùng Mậu; L23_V019@512s is finish-line ĐÍCH, not the 13s-countdown intersection. Leave unscoreable.",
+      "status": "UNRESOLVED"
+    },
+    "19": {
+      "end_frame": 3850,
+      "end_s": 154.0,
+      "start_frame": 2100,
+      "start_s": 84.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L30_V043"
+    },
+    "2": {
+      "end_frame": 24150,
+      "end_s": 805.0,
+      "start_frame": 21870,
+      "start_s": 729.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L21_V013"
+    },
+    "20": {
+      "end_frame": 34375,
+      "end_s": 1375.0,
+      "start_frame": 33250,
+      "start_s": 1330.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L25_V060"
+    },
+    "21": {
+      "status": "ACCEPTED_TRUTH",
+      "submitted_frames": [
+        2076,
+        2129,
+        2168,
+        2228
+      ],
+      "video_id": "L30_V031"
+    },
+    "22": {
+      "end_frame": 3875,
+      "end_s": 155.0,
+      "start_frame": 1700,
+      "start_s": 68.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L26_V470"
+    },
+    "23": {
+      "end_frame": 21250,
+      "end_s": 850.0,
+      "start_frame": 18000,
+      "start_s": 720.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L25_V012"
+    },
+    "24": {
+      "end_frame": 5750,
+      "end_s": 230.0,
+      "start_frame": 5375,
+      "start_s": 215.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L23_V013"
+    },
+    "25": {
+      "end_frame": 16750,
+      "end_s": 670.0,
+      "start_frame": 15625,
+      "start_s": 625.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L25_V045"
+    },
+    "26": {
+      "end_frame": 13000,
+      "end_s": 520.0,
+      "start_frame": 12375,
+      "start_s": 495.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L25_V062"
+    },
+    "27": {
+      "end_frame": 480,
+      "end_s": 16.0,
+      "start_frame": 0,
+      "start_s": 0.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L24_V031"
+    },
+    "28": {
+      "end_frame": 6825,
+      "end_s": 273.0,
+      "start_frame": 5950,
+      "start_s": 238.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L26_V450"
+    },
+    "29": {
+      "reason": "Material video conflict: L26_V034 overlay thịt bê 200g + cà ri without the specified 9-item still-life; L26_V439 overlay thịt ốc 300g (competitor answer) without curry still-life. Do not guess.",
+      "status": "NEEDS_DECISION"
+    },
+    "3": {
+      "end_frame": 364,
+      "end_s": 14.0,
+      "start_frame": 182,
+      "start_s": 7.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L24_V044"
+    },
+    "30": {
+      "end_frame": 900,
+      "end_s": 36.0,
+      "note": "QA evidence: white apron MÓN NGON, galangal, 2 clams in hand at 12s, clams on white plate at 20s, dialogue 24-36s. OCR nghêu at 63s. Place-4 not isolated; evidence clip accepted.",
+      "start_frame": 300,
+      "start_s": 12.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L26_V254"
+    },
+    "4": {
+      "end_frame": 775,
+      "end_s": 31.0,
+      "note": "Independent inspect: banner hang at 28-30s; 25s/31s+ are clothes piles.",
+      "start_frame": 700,
+      "start_s": 28.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L30_V072"
+    },
+    "5": {
+      "reason": "L21_V022 inspect 10-850s is news studio / mannequins / cycling desk, not red-shirt white-hat water-on-face with two cyclists. Do not guess.",
+      "status": "UNRESOLVED"
+    },
+    "6": {
+      "reason": "L22_V024@830s shows the news clip with one red circle, not two. Leave unscoreable.",
+      "status": "UNRESOLVED"
+    },
+    "7": {
+      "end_frame": 21625,
+      "end_s": 865.0,
+      "start_frame": 20175,
+      "start_s": 807.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L21_V009"
+    },
+    "8": {
+      "status": "ACCEPTED_TRUTH",
+      "submitted_frames": [
+        3793,
+        3870,
+        4014,
+        4098
+      ],
+      "video_id": "L27_V011"
+    },
+    "9": {
+      "end_frame": 3050,
+      "end_s": 122.0,
+      "start_frame": 2050,
+      "start_s": 82.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L26_V161"
+    }
+  },
+  "needs_decision": [
+    29
+  ],
+  "p3_text_overlap": [],
+  "query_count": 30,
+  "rule": "canonical round is dataset identity + 30-query membership, never organizer p2-* prefix",
+  "scoreable": [
+    1,
+    2,
+    3,
+    4,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    30
+  ],
+  "unscoreable": [
+    5,
+    6,
+    18,
+    29
+  ]
+}

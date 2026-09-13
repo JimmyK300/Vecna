@@ -1,0 +1,604 @@
+{
+  "arm": "qwen_only_v1",
+  "arm_parameters": {
+    "asr_alpha": 0.0,
+    "asr_weight": 0.0,
+    "auto_translate": false,
+    "en_to_vi_translate": false,
+    "exclude_videos": "",
+    "include_videos": "",
+    "kind": "vecna_searcher",
+    "llm_query_expansion": false,
+    "max_interval": 1000,
+    "nprobe": 32,
+    "ocr_alpha": 0.0,
+    "ocr_weight": 0.0,
+    "provider_paths": [
+      "qwen_visual"
+    ],
+    "reranking": false,
+    "selected": null,
+    "shot_clustering": "bypassed",
+    "target_features": [
+      "qwen_vl"
+    ],
+    "temporal_k": 2000,
+    "top_k": 20,
+    "yolo_query_rewrite": false
+  },
+  "benchmark_config": {
+    "config_path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\shot-clustering\\config.yaml",
+    "llm_query_expansion_off": true,
+    "overrides": {
+      "searcher.asr.asr_dense_field": "asr_dense",
+      "searcher.asr.asr_field": "asr_sparse",
+      "searcher.llm": {
+        "enable": false
+      },
+      "searcher.llm.enable": false,
+      "searcher.ocr.ocr_dense_field": "ocr_dense",
+      "searcher.ocr.ocr_field": "ocr_sparse",
+      "searcher.reranker.enable": false,
+      "searcher.yolo.enable": false
+    },
+    "reranker_off": true,
+    "translation_off": true,
+    "yolo_query_rewrite_off": true
+  },
+  "ended_at": "2026-08-31T13:06:41.746121+00:00",
+  "output_path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\shot-clustering\\benchmark-results\\headless-vnext-rerun-20260831\\qwen-only-v1.jsonl",
+  "output_sha256": "0adf3b70edd75778c18c6f0429fd6a430880db62a2d115fd03c83c151162b4be",
+  "post_result_tuning": false,
+  "preflight": {
+    "arm": "qwen_only_v1",
+    "arm_parameters": {
+      "asr_alpha": 0.0,
+      "asr_weight": 0.0,
+      "auto_translate": false,
+      "en_to_vi_translate": false,
+      "exclude_videos": "",
+      "include_videos": "",
+      "kind": "vecna_searcher",
+      "llm_query_expansion": false,
+      "max_interval": 1000,
+      "nprobe": 32,
+      "ocr_alpha": 0.0,
+      "ocr_weight": 0.0,
+      "provider_paths": [
+        "qwen_visual"
+      ],
+      "reranking": false,
+      "selected": null,
+      "shot_clustering": "bypassed",
+      "target_features": [
+        "qwen_vl"
+      ],
+      "temporal_k": 2000,
+      "top_k": 20,
+      "yolo_query_rewrite": false
+    },
+    "arm_registry": {
+      "arms": [
+        "all_fusion_v1",
+        "qwen_only_v1",
+        "semantic_evidence_shadow_v1",
+        "siglip_only_v1"
+      ],
+      "canonical_hash": "3466e8b3d756ccf55c0300dbd32072552f14f2eddf364415c6c7c158548efea8",
+      "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\shot-clustering\\benchmark-results\\headless-vnext-run\\ARMS.json",
+      "sha256": "27ef9b0342c1225d87a80f6a76ef93a59f72195af98f5d2e1e28b36b9a66e5b1"
+    },
+    "authority": {
+      "canonical_query_ids": [
+        "actual_p1_10_4::p1-1",
+        "actual_p1_10_4::p1-10",
+        "actual_p1_10_4::p1-11",
+        "actual_p1_10_4::p1-12",
+        "actual_p1_10_4::p1-13",
+        "actual_p1_10_4::p1-14",
+        "actual_p1_10_4::p1-15",
+        "actual_p1_10_4::p1-16",
+        "actual_p1_10_4::p1-17",
+        "actual_p1_10_4::p1-18",
+        "actual_p1_10_4::p1-19",
+        "actual_p1_10_4::p1-2",
+        "actual_p1_10_4::p1-20",
+        "actual_p1_10_4::p1-21",
+        "actual_p1_10_4::p1-22",
+        "actual_p1_10_4::p1-23",
+        "actual_p1_10_4::p1-24",
+        "actual_p1_10_4::p1-25",
+        "actual_p1_10_4::p1-3",
+        "actual_p1_10_4::p1-4",
+        "actual_p1_10_4::p1-5",
+        "actual_p1_10_4::p1-6",
+        "actual_p1_10_4::p1-7",
+        "actual_p1_10_4::p1-8",
+        "actual_p1_10_4::p1-9",
+        "test_round_8_8::p1-1",
+        "test_round_8_8::p1-10",
+        "test_round_8_8::p1-11",
+        "test_round_8_8::p1-12",
+        "test_round_8_8::p1-13",
+        "test_round_8_8::p1-14",
+        "test_round_8_8::p1-15",
+        "test_round_8_8::p1-16",
+        "test_round_8_8::p1-17",
+        "test_round_8_8::p1-18",
+        "test_round_8_8::p1-19",
+        "test_round_8_8::p1-2",
+        "test_round_8_8::p1-20",
+        "test_round_8_8::p1-22",
+        "test_round_8_8::p1-23",
+        "test_round_8_8::p1-24",
+        "test_round_8_8::p1-25",
+        "test_round_8_8::p1-4",
+        "test_round_8_8::p1-5",
+        "test_round_8_8::p1-6",
+        "test_round_8_8::p1-7",
+        "test_round_8_8::p1-8",
+        "test_round_8_8::p1-9"
+      ],
+      "counts": {
+        "execution_rows": 48,
+        "p0_rows": 23,
+        "p1_rows": 25,
+        "p2_rows": 0,
+        "range_scoreable_non_trake": 44,
+        "trake_events": 15,
+        "trake_rows": 4,
+        "video_scoreable": 48
+      },
+      "paths": {
+        "canonical_query_texts": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\shot-clustering\\benchmark-results\\headless-vnext\\canonical-query-texts.json",
+        "manifest": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\shot-clustering\\benchmark-results\\headless-vnext\\manifest.json",
+        "scorer": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\shot-clustering\\aic51-src\\script\\score_headless_vnext.py"
+      },
+      "sha256": {
+        "canonical_query_texts": "512c5a0f1dc44ef4318d2205dd76a7c80af7be797c9450764c51854e40a55c9c",
+        "manifest": "354a41330cf056df1032dbffb0caf9709c665f536d32680c2d7ad74037c9360b",
+        "scorer": "2c06e0a6d4544736f4d619001200a0e2f567b5225e9688d714559c958186a5d4"
+      }
+    },
+    "base": {
+      "branch": "shot-clustering",
+      "dirty": true,
+      "head": "9ea75434059cb006091d8070c6038d0add7cb62d",
+      "status_entries": [
+        "M aic51-src/aic51/packages/analyse/features/qwen_vl.py",
+        " M aic51-src/aic51/packages/webui/backend/file.py",
+        " M aic51-src/aic51/packages/webui/backend/utils.py",
+        " M aic51-src/aic51/packages/webui/frontend/src/components/AuthProvider.jsx",
+        " M aic51-src/aic51/packages/webui/frontend/src/components/VideoPlayer.jsx",
+        " M aic51-src/aic51/packages/webui/frontend/src/services/auth.js",
+        " M aic51-src/pyproject.toml",
+        " M config.yaml",
+        "?? aic51-src/aic51/packages/webui/backend/video_catalog.py",
+        "?? aic51-src/script/run_headless_vnext_retrieval.py",
+        "?? aic51-src/script/run_legacy_qwen21_replay.py",
+        "?? aic51-src/script/score_headless_vnext.py",
+        "?? aic51-src/tests/test_headless_vnext_retrieval.py",
+        "?? aic51-src/tests/test_qwen_vl_loader.py",
+        "?? benchmark-results/headless-vnext-run/ARMS.json",
+        "?? benchmark-results/headless-vnext-run/BTL-RETURN.md",
+        "?? benchmark-results/headless-vnext-run/FRIEND-QWEN-RUN.md",
+        "?? benchmark-results/headless-vnext-run/PROTOCOL.md",
+        "?? benchmark-results/headless-vnext-run/all-fusion-preflight.json",
+        "?? benchmark-results/headless-vnext-run/all-fusion-v1.jsonl",
+        "?? benchmark-results/headless-vnext-run/all-fusion-v1.run.json",
+        "?? benchmark-results/headless-vnext-run/cpu-preflight.json",
+        "?? benchmark-results/headless-vnext-run/dry-run.json",
+        "?? benchmark-results/headless-vnext-run/qwen-only-v1.jsonl",
+        "?? benchmark-results/headless-vnext-run/qwen-only-v1.run.json",
+        "?? benchmark-results/headless-vnext-run/scored-all-fusion-v1/scored.jsonl",
+        "?? benchmark-results/headless-vnext-run/scored-all-fusion-v1/summary.json",
+        "?? benchmark-results/headless-vnext-run/scored-qwen-only-v1/scored.jsonl",
+        "?? benchmark-results/headless-vnext-run/scored-qwen-only-v1/summary.json",
+        "?? benchmark-results/headless-vnext-run/scored-siglip-only-v1/scored.jsonl",
+        "?? benchmark-results/headless-vnext-run/scored-siglip-only-v1/summary.json",
+        "?? benchmark-results/headless-vnext-run/siglip-only-v1.jsonl",
+        "?? benchmark-results/headless-vnext-run/siglip-only-v1.run.json",
+        "?? benchmark-results/headless-vnext/PROTOCOL.md",
+        "?? benchmark-results/headless-vnext/canonical-query-texts.json",
+        "?? benchmark-results/headless-vnext/manifest.json",
+        "?? benchmark-results/legacy-qwen-21-replay/qwen-only-v1.jsonl",
+        "?? benchmark-results/legacy-qwen-21-replay/qwen-only-v1.run.json",
+        "?? benchmark-results/legacy-qwen-21-replay/qwen-only-v1.summary.json"
+      ],
+      "status_sha256": "f1070c6f137225307f1970af39cd5f33ef4f86178eae5a380c33614d4b864002"
+    },
+    "collection": {
+      "collection": "official_l21_l30_all_v2",
+      "description": {
+        "aliases": [],
+        "auto_id": false,
+        "collection_id": 468432362739861365,
+        "collection_name": "official_l21_l30_all_v2",
+        "consistency_level": 2,
+        "consistency_level_name": "Bounded",
+        "created_timestamp": 468432469486731268,
+        "description": "",
+        "enable_dynamic_field": false,
+        "enable_namespace": false,
+        "fields": [
+          {
+            "description": "",
+            "field_id": 100,
+            "is_primary": true,
+            "name": "frame_id",
+            "params": {
+              "max_length": 32
+            },
+            "type": 21
+          },
+          {
+            "description": "",
+            "field_id": 101,
+            "name": "image_clip_pe_l_14_336",
+            "params": {
+              "dim": 1024
+            },
+            "type": 101
+          },
+          {
+            "description": "",
+            "field_id": 102,
+            "name": "image_siglip_so400m_384",
+            "params": {
+              "dim": 1152
+            },
+            "type": 101
+          },
+          {
+            "description": "",
+            "field_id": 103,
+            "name": "qwen_vl",
+            "params": {
+              "dim": 2048
+            },
+            "type": 101
+          },
+          {
+            "description": "",
+            "field_id": 104,
+            "is_function_output": true,
+            "name": "ocr_sparse",
+            "params": {},
+            "type": 104
+          },
+          {
+            "description": "",
+            "field_id": 105,
+            "name": "ocr",
+            "params": {
+              "enable_analyzer": "true",
+              "max_length": 8192
+            },
+            "type": 21
+          },
+          {
+            "description": "",
+            "field_id": 106,
+            "is_function_output": true,
+            "name": "asr_sparse",
+            "params": {},
+            "type": 104
+          },
+          {
+            "description": "",
+            "field_id": 107,
+            "name": "asr",
+            "params": {
+              "enable_analyzer": "true",
+              "max_length": 8192
+            },
+            "type": 21
+          },
+          {
+            "description": "",
+            "field_id": 108,
+            "name": "ocr_dense",
+            "params": {
+              "dim": 1024
+            },
+            "type": 101
+          },
+          {
+            "description": "",
+            "field_id": 109,
+            "name": "asr_dense",
+            "params": {
+              "dim": 1024
+            },
+            "type": 101
+          }
+        ],
+        "functions": [
+          {
+            "description": "",
+            "id": 100,
+            "input_field_ids": [
+              105
+            ],
+            "input_field_names": [
+              "ocr"
+            ],
+            "name": "ocr_bm25_emb",
+            "output_field_ids": [
+              104
+            ],
+            "output_field_names": [
+              "ocr_sparse"
+            ],
+            "params": {},
+            "type": 1
+          },
+          {
+            "description": "",
+            "id": 101,
+            "input_field_ids": [
+              107
+            ],
+            "input_field_names": [
+              "asr"
+            ],
+            "name": "asr_bm25_emb",
+            "output_field_ids": [
+              106
+            ],
+            "output_field_names": [
+              "asr_sparse"
+            ],
+            "params": {},
+            "type": 1
+          }
+        ],
+        "num_partitions": 1,
+        "num_shards": 1,
+        "properties": {},
+        "update_timestamp": 468432469486731268
+      },
+      "fields": [
+        "asr",
+        "asr_dense",
+        "asr_sparse",
+        "frame_id",
+        "image_clip_pe_l_14_336",
+        "image_siglip_so400m_384",
+        "ocr",
+        "ocr_dense",
+        "ocr_sparse",
+        "qwen_vl"
+      ],
+      "index_generation": {
+        "index_generation_id": null,
+        "reason": "local index-generation registry is absent",
+        "status": "unavailable"
+      },
+      "indexes": [
+        "asr_BM25",
+        "asr_dense_SCANN",
+        "image_clip_pe_l_14_336_SCANN",
+        "image_siglip_so400m_384_SCANN",
+        "ocr_BM25",
+        "ocr_dense_SCANN",
+        "qwen_vl_SCANN"
+      ],
+      "missing_fields": [],
+      "missing_indexes": [],
+      "row_count": 322924,
+      "status": "live_verified"
+    },
+    "config": {
+      "benchmark_local_overrides": {
+        "searcher.asr.asr_dense_field": "asr_dense",
+        "searcher.asr.hybrid_alpha": null,
+        "searcher.llm.enable": false,
+        "searcher.ocr.hybrid_alpha": null,
+        "searcher.ocr.ocr_dense_field": "ocr_dense",
+        "searcher.reranker.enable": false,
+        "searcher.yolo.enable": false
+      },
+      "collection": "official_l21_l30_all_v2",
+      "config_path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\shot-clustering\\config.yaml",
+      "config_sha256": "fc438093e52954aea3ecb5e66f24852e1c60b69f89faccb2ba910eb99be1e864",
+      "models": {
+        "language_qwen_vl": {
+          "model": "qwen_vl_embedding",
+          "target": [
+            "qwen_vl"
+          ]
+        },
+        "language_siglip_so400m-384": {
+          "model": "image_siglip",
+          "target": [
+            "image_siglip_so400m-384"
+          ]
+        },
+        "text_bge_m3": {
+          "model": "text_embedding",
+          "target": [
+            "ocr_dense",
+            "asr_dense"
+          ]
+        }
+      },
+      "root_config_rewriting_enabled": {
+        "llm": true,
+        "reranker": false,
+        "yolo": true
+      },
+      "sparse_fields": {
+        "asr": "asr_sparse",
+        "ocr": "ocr_sparse"
+      }
+    },
+    "generated_at": "2026-08-31T13:03:19.790282+00:00",
+    "provider_audit": {
+      "nonzero_contribution_proof": false,
+      "required_paths": [
+        "qwen_visual"
+      ],
+      "status": "deferred_to_first_frozen_runtime_call",
+      "stop_rule": "all_fusion_v1 must pass ProviderAudit before the runner continues past its first query"
+    },
+    "runtime": {
+      "device": {
+        "cuda_available": false,
+        "requested": "cpu",
+        "torch_device_count": 0
+      },
+      "packages": {
+        "PyYAML": "6.0.3",
+        "numpy": "1.26.4",
+        "pymilvus": "3.0.0",
+        "sentence-transformers": "5.4.0",
+        "torch": "2.8.0",
+        "transformers": "4.57.6"
+      }
+    },
+    "schema_version": 1,
+    "scope": {
+      "models_loaded": false,
+      "post_result_tuning": false,
+      "real_48_query_benchmark_executed": false,
+      "retrieval_queries_executed": 0
+    },
+    "status": "preflight_pass"
+  },
+  "provider_audit": {
+    "all_requested_nonzero": true,
+    "encoder_calls": {
+      "language_qwen_vl": 1
+    },
+    "paths": {
+      "qwen_visual": {
+        "encoder_calls": 1,
+        "encoder_names": [
+          "language_qwen_vl"
+        ],
+        "fields": [
+          "qwen_vl"
+        ],
+        "nonzero": true,
+        "positive_distance_hits": 200,
+        "search_calls": 1
+      }
+    },
+    "positive_distance_hits": {
+      "qwen_vl": 200
+    },
+    "requested_paths": [
+      "qwen_visual"
+    ],
+    "search_calls": {
+      "qwen_vl": 1
+    },
+    "status": "verified_on_first_frozen_call"
+  },
+  "real_48_query_benchmark_executed": true,
+  "records_written": 48,
+  "run_metadata_sha256": "de22dcb573c187ece0199affaa2f3dbbcc090e68e3bcab2aaa7541540b6283df",
+  "scorer_validation": {
+    "query_rows": 48,
+    "rankings_path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\shot-clustering\\benchmark-results\\headless-vnext-rerun-20260831\\qwen-only-v1.jsonl",
+    "status": "scorer_compatible",
+    "summary": {
+      "input_status": "complete",
+      "manifest_counts": {
+        "execution_rows": 48,
+        "p0_rows": 23,
+        "p1_rows": 25,
+        "p2_rows": 0,
+        "range_scoreable_non_trake": 44,
+        "trake_events": 15,
+        "trake_rows": 4,
+        "video_scoreable": 48
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "range": {
+        "MRR@20": 0.5658098845598846,
+        "R@1": 0.5227272727272727,
+        "R@20": 0.75,
+        "R@5": 0.6363636363636364,
+        "first_correct_video_distance_frames": {
+          "n": 35,
+          "p50": 0,
+          "p90": 1776.0000000000007
+        },
+        "range_success_given_video@1": {
+          "denominator": 30,
+          "numerator": 23,
+          "rate": 0.7666666666666667
+        },
+        "range_success_given_video@20": {
+          "denominator": 35,
+          "numerator": 33,
+          "rate": 0.9428571428571428
+        },
+        "range_success_given_video@5": {
+          "denominator": 32,
+          "numerator": 28,
+          "rate": 0.875
+        },
+        "video_found_but_range_missed@1": 0.1590909090909091,
+        "video_found_but_range_missed@20": 0.045454545454545456,
+        "video_found_but_range_missed@5": 0.09090909090909091
+      },
+      "scored_counts": {
+        "p0_rows": 23,
+        "p1_rows": 25,
+        "queries": 48,
+        "range_scoreable_non_trake": 44,
+        "trake_events": 15,
+        "trake_rows": 4,
+        "video_scoreable": 48
+      },
+      "trake": {
+        "all_events_covered@1": {
+          "denominator": 4,
+          "numerator": 0,
+          "rate": 0.0
+        },
+        "all_events_covered@20": {
+          "denominator": 4,
+          "numerator": 0,
+          "rate": 0.0
+        },
+        "all_events_covered@5": {
+          "denominator": 4,
+          "numerator": 0,
+          "rate": 0.0
+        },
+        "event_coverage@1": {
+          "denominator": 15,
+          "numerator": 0,
+          "rate": 0.0
+        },
+        "event_coverage@20": {
+          "denominator": 15,
+          "numerator": 1,
+          "rate": 0.06666666666666667
+        },
+        "event_coverage@5": {
+          "denominator": 15,
+          "numerator": 0,
+          "rate": 0.0
+        },
+        "event_denominator": 15,
+        "query_denominator": 4,
+        "truth_tier": "provisional_submission_anchor"
+      },
+      "video": {
+        "MRR@20": 0.6546296296296296,
+        "R@1": 0.625,
+        "R@20": 0.7916666666666666,
+        "R@5": 0.6875
+      }
+    }
+  },
+  "started_at": "2026-08-31T13:03:53.896220+00:00",
+  "status": "completed"
+}

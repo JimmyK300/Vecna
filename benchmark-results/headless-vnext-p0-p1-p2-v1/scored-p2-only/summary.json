@@ -1,0 +1,517 @@
+{
+  "by_phase": {
+    "P2": {
+      "input_status": "complete",
+      "manifest_counts": {
+        "p0_rows": 0,
+        "p1_rows": 0,
+        "p2_rows": 26,
+        "queries": 26,
+        "range_scoreable_non_trake": 24,
+        "trake_events": 8,
+        "trake_rows": 2,
+        "video_scoreable": 26
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "range": {
+        "MRR@20": 0.3802884615384616,
+        "R@1": 0.2916666666666667,
+        "R@20": 0.625,
+        "R@5": 0.4583333333333333,
+        "first_correct_video_distance_frames": {
+          "n": 17,
+          "p50": 0,
+          "p90": 1555.2000000000007
+        },
+        "range_success_given_video@1": {
+          "denominator": 10,
+          "numerator": 7,
+          "rate": 0.7
+        },
+        "range_success_given_video@20": {
+          "denominator": 17,
+          "numerator": 15,
+          "rate": 0.8823529411764706
+        },
+        "range_success_given_video@5": {
+          "denominator": 15,
+          "numerator": 11,
+          "rate": 0.7333333333333333
+        },
+        "video_found_but_range_missed@1": 0.125,
+        "video_found_but_range_missed@20": 0.08333333333333333,
+        "video_found_but_range_missed@5": 0.16666666666666666
+      },
+      "scored_counts": {
+        "p0_rows": 0,
+        "p1_rows": 0,
+        "queries": 26,
+        "range_scoreable_non_trake": 24,
+        "trake_events": 8,
+        "trake_rows": 2,
+        "video_scoreable": 26
+      },
+      "trake": {
+        "all_events_covered@1": {
+          "denominator": 2,
+          "numerator": 0,
+          "rate": 0.0
+        },
+        "all_events_covered@20": {
+          "denominator": 2,
+          "numerator": 0,
+          "rate": 0.0
+        },
+        "all_events_covered@5": {
+          "denominator": 2,
+          "numerator": 0,
+          "rate": 0.0
+        },
+        "event_coverage@1": {
+          "denominator": 8,
+          "numerator": 0,
+          "rate": 0.0
+        },
+        "event_coverage@20": {
+          "denominator": 8,
+          "numerator": 1,
+          "rate": 0.125
+        },
+        "event_coverage@5": {
+          "denominator": 8,
+          "numerator": 0,
+          "rate": 0.0
+        },
+        "event_denominator": 8,
+        "query_denominator": 2,
+        "truth_tier": "provisional_submission_anchor"
+      },
+      "video": {
+        "MRR@20": 0.47989830682138374,
+        "R@1": 0.38461538461538464,
+        "R@20": 0.7307692307692307,
+        "R@5": 0.5769230769230769
+      }
+    }
+  },
+  "by_task_type": {
+    "kis": {
+      "input_status": "complete",
+      "manifest_counts": {
+        "p0_rows": 0,
+        "p1_rows": 0,
+        "p2_rows": 16,
+        "queries": 16,
+        "range_scoreable_non_trake": 16,
+        "trake_events": 0,
+        "trake_rows": 0,
+        "video_scoreable": 16
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "range": {
+        "MRR@20": 0.3173076923076923,
+        "R@1": 0.1875,
+        "R@20": 0.625,
+        "R@5": 0.4375,
+        "first_correct_video_distance_frames": {
+          "n": 10,
+          "p50": 0.0,
+          "p90": 2550.2999999999934
+        },
+        "range_success_given_video@1": {
+          "denominator": 5,
+          "numerator": 3,
+          "rate": 0.6
+        },
+        "range_success_given_video@20": {
+          "denominator": 10,
+          "numerator": 10,
+          "rate": 1.0
+        },
+        "range_success_given_video@5": {
+          "denominator": 9,
+          "numerator": 7,
+          "rate": 0.7777777777777778
+        },
+        "video_found_but_range_missed@1": 0.125,
+        "video_found_but_range_missed@20": 0.0,
+        "video_found_but_range_missed@5": 0.125
+      },
+      "scored_counts": {
+        "p0_rows": 0,
+        "p1_rows": 0,
+        "queries": 16,
+        "range_scoreable_non_trake": 16,
+        "trake_events": 0,
+        "trake_rows": 0,
+        "video_scoreable": 16
+      },
+      "trake": {
+        "all_events_covered@1": {
+          "denominator": 0,
+          "numerator": 0,
+          "rate": null
+        },
+        "all_events_covered@20": {
+          "denominator": 0,
+          "numerator": 0,
+          "rate": null
+        },
+        "all_events_covered@5": {
+          "denominator": 0,
+          "numerator": 0,
+          "rate": null
+        },
+        "event_coverage@1": {
+          "denominator": 0,
+          "numerator": 0,
+          "rate": null
+        },
+        "event_coverage@20": {
+          "denominator": 0,
+          "numerator": 0,
+          "rate": null
+        },
+        "event_coverage@5": {
+          "denominator": 0,
+          "numerator": 0,
+          "rate": null
+        },
+        "event_denominator": 0,
+        "query_denominator": 0,
+        "truth_tier": "provisional_submission_anchor"
+      },
+      "video": {
+        "MRR@20": 0.4270833333333333,
+        "R@1": 0.3125,
+        "R@20": 0.625,
+        "R@5": 0.5625
+      }
+    },
+    "qa": {
+      "input_status": "complete",
+      "manifest_counts": {
+        "p0_rows": 0,
+        "p1_rows": 0,
+        "p2_rows": 8,
+        "queries": 8,
+        "range_scoreable_non_trake": 8,
+        "trake_events": 0,
+        "trake_rows": 0,
+        "video_scoreable": 8
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "range": {
+        "MRR@20": 0.50625,
+        "R@1": 0.5,
+        "R@20": 0.625,
+        "R@5": 0.5,
+        "first_correct_video_distance_frames": {
+          "n": 7,
+          "p50": 0,
+          "p90": 1555.2000000000007
+        },
+        "range_success_given_video@1": {
+          "denominator": 5,
+          "numerator": 4,
+          "rate": 0.8
+        },
+        "range_success_given_video@20": {
+          "denominator": 7,
+          "numerator": 5,
+          "rate": 0.7142857142857143
+        },
+        "range_success_given_video@5": {
+          "denominator": 6,
+          "numerator": 4,
+          "rate": 0.6666666666666666
+        },
+        "video_found_but_range_missed@1": 0.125,
+        "video_found_but_range_missed@20": 0.25,
+        "video_found_but_range_missed@5": 0.25
+      },
+      "scored_counts": {
+        "p0_rows": 0,
+        "p1_rows": 0,
+        "queries": 8,
+        "range_scoreable_non_trake": 8,
+        "trake_events": 0,
+        "trake_rows": 0,
+        "video_scoreable": 8
+      },
+      "trake": {
+        "all_events_covered@1": {
+          "denominator": 0,
+          "numerator": 0,
+          "rate": null
+        },
+        "all_events_covered@20": {
+          "denominator": 0,
+          "numerator": 0,
+          "rate": null
+        },
+        "all_events_covered@5": {
+          "denominator": 0,
+          "numerator": 0,
+          "rate": null
+        },
+        "event_coverage@1": {
+          "denominator": 0,
+          "numerator": 0,
+          "rate": null
+        },
+        "event_coverage@20": {
+          "denominator": 0,
+          "numerator": 0,
+          "rate": null
+        },
+        "event_coverage@5": {
+          "denominator": 0,
+          "numerator": 0,
+          "rate": null
+        },
+        "event_denominator": 0,
+        "query_denominator": 0,
+        "truth_tier": "provisional_submission_anchor"
+      },
+      "video": {
+        "MRR@20": 0.6762820512820513,
+        "R@1": 0.625,
+        "R@20": 0.875,
+        "R@5": 0.75
+      }
+    },
+    "trake": {
+      "input_status": "complete",
+      "manifest_counts": {
+        "p0_rows": 0,
+        "p1_rows": 0,
+        "p2_rows": 2,
+        "queries": 2,
+        "range_scoreable_non_trake": 0,
+        "trake_events": 8,
+        "trake_rows": 2,
+        "video_scoreable": 2
+      },
+      "qa_answer": {
+        "status": "not_evaluated"
+      },
+      "range": {
+        "MRR@20": null,
+        "R@1": null,
+        "R@20": null,
+        "R@5": null,
+        "first_correct_video_distance_frames": {
+          "n": 0,
+          "p50": null,
+          "p90": null
+        },
+        "range_success_given_video@1": {
+          "denominator": 0,
+          "numerator": 0,
+          "rate": null
+        },
+        "range_success_given_video@20": {
+          "denominator": 0,
+          "numerator": 0,
+          "rate": null
+        },
+        "range_success_given_video@5": {
+          "denominator": 0,
+          "numerator": 0,
+          "rate": null
+        },
+        "video_found_but_range_missed@1": null,
+        "video_found_but_range_missed@20": null,
+        "video_found_but_range_missed@5": null
+      },
+      "scored_counts": {
+        "p0_rows": 0,
+        "p1_rows": 0,
+        "queries": 2,
+        "range_scoreable_non_trake": 0,
+        "trake_events": 8,
+        "trake_rows": 2,
+        "video_scoreable": 2
+      },
+      "trake": {
+        "all_events_covered@1": {
+          "denominator": 2,
+          "numerator": 0,
+          "rate": 0.0
+        },
+        "all_events_covered@20": {
+          "denominator": 2,
+          "numerator": 0,
+          "rate": 0.0
+        },
+        "all_events_covered@5": {
+          "denominator": 2,
+          "numerator": 0,
+          "rate": 0.0
+        },
+        "event_coverage@1": {
+          "denominator": 8,
+          "numerator": 0,
+          "rate": 0.0
+        },
+        "event_coverage@20": {
+          "denominator": 8,
+          "numerator": 1,
+          "rate": 0.125
+        },
+        "event_coverage@5": {
+          "denominator": 8,
+          "numerator": 0,
+          "rate": 0.0
+        },
+        "event_denominator": 8,
+        "query_denominator": 2,
+        "truth_tier": "provisional_submission_anchor"
+      },
+      "video": {
+        "MRR@20": 0.11688311688311688,
+        "R@1": 0.0,
+        "R@20": 1.0,
+        "R@5": 0.0
+      }
+    }
+  },
+  "input_status": "complete",
+  "manifest_counts": {
+    "p0_rows": 0,
+    "p1_rows": 0,
+    "p2_rows": 26,
+    "queries": 26,
+    "range_scoreable_non_trake": 24,
+    "trake_events": 8,
+    "trake_rows": 2,
+    "video_scoreable": 26
+  },
+  "qa_answer": {
+    "status": "not_evaluated"
+  },
+  "range": {
+    "MRR@20": 0.3802884615384616,
+    "R@1": 0.2916666666666667,
+    "R@20": 0.625,
+    "R@5": 0.4583333333333333,
+    "first_correct_video_distance_frames": {
+      "n": 17,
+      "p50": 0,
+      "p90": 1555.2000000000007
+    },
+    "range_success_given_video@1": {
+      "denominator": 10,
+      "numerator": 7,
+      "rate": 0.7
+    },
+    "range_success_given_video@20": {
+      "denominator": 17,
+      "numerator": 15,
+      "rate": 0.8823529411764706
+    },
+    "range_success_given_video@5": {
+      "denominator": 15,
+      "numerator": 11,
+      "rate": 0.7333333333333333
+    },
+    "video_found_but_range_missed@1": 0.125,
+    "video_found_but_range_missed@20": 0.08333333333333333,
+    "video_found_but_range_missed@5": 0.16666666666666666
+  },
+  "scored_counts": {
+    "execution_rows": 30,
+    "p0_rows": 0,
+    "p1_rows": 0,
+    "p2_execution_rows": 30,
+    "p2_rows": 26,
+    "p2_unscoreable": 4,
+    "queries": 26,
+    "range_scoreable_non_trake": 24,
+    "trake_events": 8,
+    "trake_rows": 2,
+    "video_scoreable": 26
+  },
+  "trake": {
+    "all_events_covered@1": {
+      "denominator": 2,
+      "numerator": 0,
+      "rate": 0.0
+    },
+    "all_events_covered@20": {
+      "denominator": 2,
+      "numerator": 0,
+      "rate": 0.0
+    },
+    "all_events_covered@5": {
+      "denominator": 2,
+      "numerator": 0,
+      "rate": 0.0
+    },
+    "event_coverage@1": {
+      "denominator": 8,
+      "numerator": 0,
+      "rate": 0.0
+    },
+    "event_coverage@20": {
+      "denominator": 8,
+      "numerator": 1,
+      "rate": 0.125
+    },
+    "event_coverage@5": {
+      "denominator": 8,
+      "numerator": 0,
+      "rate": 0.0
+    },
+    "event_denominator": 8,
+    "query_denominator": 2,
+    "truth_tier": "provisional_submission_anchor"
+  },
+  "unscoreable": [
+    {
+      "canonical_query_id": "actual_p2_official::query-p2-5-kis",
+      "classification": "UNRESOLVED",
+      "classification_note": "L21_V022 inspect 10-850s is news studio / mannequins / cycling desk, not red-shirt white-hat water-on-face with two cyclists. Do not guess.",
+      "operational_phase": "P2",
+      "task_type": "kis",
+      "vecna_provenance_id": "p2-canonical-v1::P2-q05"
+    },
+    {
+      "canonical_query_id": "actual_p2_official::query-p2-6-kis",
+      "classification": "UNRESOLVED",
+      "classification_note": "L22_V024@830s shows the news clip with one red circle, not two. Leave unscoreable.",
+      "operational_phase": "P2",
+      "task_type": "kis",
+      "vecna_provenance_id": "p2-canonical-v1::P2-q06"
+    },
+    {
+      "canonical_query_id": "actual_p2_official::query-p2-18-kis",
+      "classification": "UNRESOLVED",
+      "classification_note": "No OCR hit for Hồ Tùng Mậu; L23_V019@512s is finish-line ĐÍCH, not the 13s-countdown intersection. Leave unscoreable.",
+      "operational_phase": "P2",
+      "task_type": "kis",
+      "vecna_provenance_id": "p2-canonical-v1::P2-q18"
+    },
+    {
+      "canonical_query_id": "actual_p2_official::query-p2-29-qa",
+      "classification": "NEEDS_DECISION",
+      "classification_note": "Material video conflict: L26_V034 overlay thịt bê 200g + cà ri without the specified 9-item still-life; L26_V439 overlay thịt ốc 300g (competitor answer) without curry still-life. Do not guess.",
+      "operational_phase": "P2",
+      "task_type": "qa",
+      "vecna_provenance_id": "p2-canonical-v1::P2-q29"
+    }
+  ],
+  "video": {
+    "MRR@20": 0.47989830682138374,
+    "R@1": 0.38461538461538464,
+    "R@20": 0.7307692307692307,
+    "R@5": 0.5769230769230769
+  }
+}

@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "headless-main-vnext-p0-p1-v1",
+  "base": {
+    "repository": "JimmyK300/Vecna",
+    "branch": "shot-clustering",
+    "commit": "9ea75434059cb006091d8070c6038d0add7cb62d"
+  },
+  "issue76_authority": {
+    "commit": "74e5e2bea99fbec6a42810b6822aa521cc0942fc",
+    "contract_commit": "2344023ea4e2a152d1e9dc15778d8feb436dc396",
+    "manifest_path": "benchmark-results/headless-vnext/manifest.json",
+    "manifest_sha256": "354a41330cf056df1032dbffb0caf9709c665f536d32680c2d7ad74037c9360b",
+    "canonical_query_texts_path": "benchmark-results/headless-vnext/canonical-query-texts.json",
+    "canonical_query_texts_sha256": "512c5a0f1dc44ef4318d2205dd76a7c80af7be797c9450764c51854e40a55c9c",
+    "scorer_path": "aic51-src/script/score_headless_vnext.py",
+    "scorer_sha256": "2c06e0a6d4544736f4d619001200a0e2f567b5225e9688d714559c958186a5d4"
+  },
+  "collection_expectation": {
+    "name": "official_l21_l30_all_v2",
+    "row_count": 322924,
+    "index_generation_when_resolvable": "idx_6baede5b9bc447e099c0004d8428ca7e",
+    "index_families": [
+      "qwen_vl_SCANN",
+      "image_siglip_so400m_384_SCANN",
+      "ocr_BM25",
+      "asr_BM25",
+      "ocr_dense_SCANN",
+      "asr_dense_SCANN"
+    ]
+  },
+  "arms": {
+    "qwen_only_v1": {
+      "kind": "vecna_searcher",
+      "target_features": [
+        "qwen_vl"
+      ],
+      "ocr_weight": 0.0,
+      "asr_weight": 0.0,
+      "ocr_alpha": 0.0,
+      "asr_alpha": 0.0,
+      "top_k": 20,
+      "nprobe": 32,
+      "temporal_k": 2000,
+      "max_interval": 1000,
+      "reranking": false,
+      "llm_query_expansion": false,
+      "yolo_query_rewrite": false,
+      "auto_translate": false,
+      "en_to_vi_translate": false,
+      "include_videos": "",
+      "exclude_videos": "",
+      "selected": null,
+      "shot_clustering": "bypassed",
+      "provider_paths": [
+        "qwen_visual"
+      ]
+    },
+    "all_fusion_v1": {
+      "kind": "vecna_searcher",
+      "target_features": [
+        "qwen_vl",
+        "image_siglip_so400m-384"
+      ],
+      "ocr_weight": 0.25,
+      "asr_weight": 0.25,
+      "ocr_alpha": 0.7,
+      "asr_alpha": 0.7,
+      "top_k": 20,
+      "nprobe": 32,
+      "temporal_k": 2000,
+      "max_interval": 1000,
+      "reranking": false,
+      "llm_query_expansion": false,
+      "yolo_query_rewrite": false,
+      "auto_translate": false,
+      "en_to_vi_translate": false,
+      "include_videos": "",
+      "exclude_videos": "",
+      "selected": null,
+      "shot_clustering": "bypassed",
+      "provider_paths": [
+        "qwen_visual",
+        "siglip_visual",
+        "ocr_sparse_bm25",
+        "ocr_dense_bge_m3",
+        "asr_sparse_bm25",
+        "asr_dense_bge_m3"
+      ]
+    },
+    "siglip_only_v1": {
+      "kind": "vecna_searcher",
+      "target_features": [
+        "image_siglip_so400m-384"
+      ],
+      "ocr_weight": 0.0,
+      "asr_weight": 0.0,
+      "ocr_alpha": 0.0,
+      "asr_alpha": 0.0,
+      "top_k": 20,
+      "nprobe": 32,
+      "temporal_k": 2000,
+      "max_interval": 1000,
+      "reranking": false,
+      "llm_query_expansion": false,
+      "yolo_query_rewrite": false,
+      "auto_translate": false,
+      "en_to_vi_translate": false,
+      "include_videos": "",
+      "exclude_videos": "",
+      "selected": null,
+      "shot_clustering": "bypassed",
+      "provider_paths": [
+        "siglip_visual"
+      ]
+    },
+    "semantic_evidence_shadow_v1": {
+      "kind": "saved_rankings_only",
+      "target_features": [],
+      "source": "external_saved_evidence_rankings",
+      "scorer": "aic51-src/script/score_headless_vnext.py",
+      "retrieval_run_required": false,
+      "provider_paths": []
+    }
+  },
+  "provider_audit": {
+    "all_fusion_arm": "all_fusion_v1",
+    "required_paths": {
+      "qwen_visual": {
+        "fields": [
+          "qwen_vl"
+        ],
+        "encoder_names": [
+          "language_qwen_vl"
+        ]
+      },
+      "siglip_visual": {
+        "fields": [
+          "image_siglip_so400m_384"
+        ],
+        "encoder_names": [
+          "language_siglip_so400m-384"
+        ]
+      },
+      "ocr_sparse_bm25": {
+        "fields": [
+          "ocr_sparse"
+        ],
+        "encoder_names": []
+      },
+      "ocr_dense_bge_m3": {
+        "fields": [
+          "ocr_dense"
+        ],
+        "encoder_names": [
+          "text_bge_m3"
+        ]
+      },
+      "asr_sparse_bm25": {
+        "fields": [
+          "asr_sparse"
+        ],
+        "encoder_names": []
+      },
+      "asr_dense_bge_m3": {
+        "fields": [
+          "asr_dense"
+        ],
+        "encoder_names": [
+          "text_bge_m3"
+        ]
+      }
+    },
+    "proof_rule": "each requested field receives at least one search call and one positive-distance hit, and each requested encoder is called",
+    "failure_action": "stop before continuing the arm"
+  },
+  "output_contract": {
+    "one_row_per_manifest_query": 48,
+    "top_k": 20,
+    "ranking_order": "raw Searcher order preserved; serializer adds explicit 1-based rank only",
+    "deduplicate_results": false,
+    "renumber_after_retrieval": false,
+    "scorer_allows_partial": false
+  }
+}
