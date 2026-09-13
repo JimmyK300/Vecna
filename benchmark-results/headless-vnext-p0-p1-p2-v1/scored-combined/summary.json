@@ -195,53 +195,53 @@
       "manifest_counts": {
         "p0_rows": 0,
         "p1_rows": 0,
-        "p2_rows": 26,
-        "queries": 26,
-        "range_scoreable_non_trake": 24,
+        "p2_rows": 30,
+        "queries": 30,
+        "range_scoreable_non_trake": 28,
         "trake_events": 8,
         "trake_rows": 2,
-        "video_scoreable": 26
+        "video_scoreable": 30
       },
       "qa_answer": {
         "status": "not_evaluated"
       },
       "range": {
-        "MRR@20": 0.3802884615384616,
-        "R@1": 0.2916666666666667,
-        "R@20": 0.625,
-        "R@5": 0.4583333333333333,
+        "MRR@20": 0.38191391941391944,
+        "R@1": 0.2857142857142857,
+        "R@20": 0.6428571428571429,
+        "R@5": 0.4642857142857143,
         "first_correct_video_distance_frames": {
-          "n": 17,
-          "p50": 0,
-          "p90": 1555.2000000000007
+          "n": 20,
+          "p50": 0.0,
+          "p90": 916.800000000003
         },
         "range_success_given_video@1": {
-          "denominator": 10,
-          "numerator": 7,
-          "rate": 0.7
+          "denominator": 11,
+          "numerator": 8,
+          "rate": 0.7272727272727273
         },
         "range_success_given_video@20": {
-          "denominator": 17,
-          "numerator": 15,
-          "rate": 0.8823529411764706
+          "denominator": 20,
+          "numerator": 18,
+          "rate": 0.9
         },
         "range_success_given_video@5": {
-          "denominator": 15,
-          "numerator": 11,
-          "rate": 0.7333333333333333
+          "denominator": 17,
+          "numerator": 13,
+          "rate": 0.7647058823529411
         },
-        "video_found_but_range_missed@1": 0.125,
-        "video_found_but_range_missed@20": 0.08333333333333333,
-        "video_found_but_range_missed@5": 0.16666666666666666
+        "video_found_but_range_missed@1": 0.10714285714285714,
+        "video_found_but_range_missed@20": 0.07142857142857142,
+        "video_found_but_range_missed@5": 0.14285714285714285
       },
       "scored_counts": {
         "p0_rows": 0,
         "p1_rows": 0,
-        "queries": 26,
-        "range_scoreable_non_trake": 24,
+        "queries": 30,
+        "range_scoreable_non_trake": 28,
         "trake_events": 8,
         "trake_rows": 2,
-        "video_scoreable": 26
+        "video_scoreable": 30
       },
       "trake": {
         "all_events_covered@1": {
@@ -279,10 +279,10 @@
         "truth_tier": "provisional_submission_anchor"
       },
       "video": {
-        "MRR@20": 0.47989830682138374,
-        "R@1": 0.38461538461538464,
-        "R@20": 0.7307692307692307,
-        "R@5": 0.5769230769230769
+        "MRR@20": 0.46813408813408813,
+        "R@1": 0.36666666666666664,
+        "R@20": 0.7333333333333333,
+        "R@5": 0.5666666666666667
       }
     }
   },
@@ -292,53 +292,53 @@
       "manifest_counts": {
         "p0_rows": 17,
         "p1_rows": 20,
-        "p2_rows": 16,
-        "queries": 53,
-        "range_scoreable_non_trake": 53,
+        "p2_rows": 19,
+        "queries": 56,
+        "range_scoreable_non_trake": 56,
         "trake_events": 0,
         "trake_rows": 0,
-        "video_scoreable": 53
+        "video_scoreable": 56
       },
       "qa_answer": {
         "status": "not_evaluated"
       },
       "range": {
-        "MRR@20": 0.48627467919920747,
-        "R@1": 0.41509433962264153,
-        "R@20": 0.7169811320754716,
-        "R@5": 0.5660377358490566,
+        "MRR@20": 0.48820044043258326,
+        "R@1": 0.4107142857142857,
+        "R@20": 0.7321428571428571,
+        "R@5": 0.5714285714285714,
         "first_correct_video_distance_frames": {
-          "n": 39,
-          "p50": 0,
-          "p90": 2496.2000000000075
+          "n": 42,
+          "p50": 0.0,
+          "p90": 1921.4999999999993
         },
         "range_success_given_video@1": {
-          "denominator": 30,
-          "numerator": 22,
-          "rate": 0.7333333333333333
+          "denominator": 31,
+          "numerator": 23,
+          "rate": 0.7419354838709677
         },
         "range_success_given_video@20": {
-          "denominator": 39,
-          "numerator": 38,
-          "rate": 0.9743589743589743
+          "denominator": 42,
+          "numerator": 41,
+          "rate": 0.9761904761904762
         },
         "range_success_given_video@5": {
-          "denominator": 35,
-          "numerator": 30,
-          "rate": 0.8571428571428571
+          "denominator": 37,
+          "numerator": 32,
+          "rate": 0.8648648648648649
         },
-        "video_found_but_range_missed@1": 0.1509433962264151,
-        "video_found_but_range_missed@20": 0.018867924528301886,
-        "video_found_but_range_missed@5": 0.09433962264150944
+        "video_found_but_range_missed@1": 0.14285714285714285,
+        "video_found_but_range_missed@20": 0.017857142857142856,
+        "video_found_but_range_missed@5": 0.08928571428571429
       },
       "scored_counts": {
         "p0_rows": 17,
         "p1_rows": 20,
-        "queries": 53,
-        "range_scoreable_non_trake": 53,
+        "queries": 56,
+        "range_scoreable_non_trake": 56,
         "trake_events": 0,
         "trake_rows": 0,
-        "video_scoreable": 53
+        "video_scoreable": 56
       },
       "trake": {
         "all_events_covered@1": {
@@ -376,10 +376,10 @@
         "truth_tier": "provisional_submission_anchor"
       },
       "video": {
-        "MRR@20": 0.6108490566037735,
-        "R@1": 0.5660377358490566,
-        "R@20": 0.7358490566037735,
-        "R@5": 0.660377358490566
+        "MRR@20": 0.6061011904761905,
+        "R@1": 0.5535714285714286,
+        "R@20": 0.75,
+        "R@5": 0.6607142857142857
       }
     },
     "qa": {
@@ -387,21 +387,21 @@
       "manifest_counts": {
         "p0_rows": 3,
         "p1_rows": 4,
-        "p2_rows": 8,
-        "queries": 15,
-        "range_scoreable_non_trake": 15,
+        "p2_rows": 9,
+        "queries": 16,
+        "range_scoreable_non_trake": 16,
         "trake_events": 0,
         "trake_rows": 0,
-        "video_scoreable": 15
+        "video_scoreable": 16
       },
       "qa_answer": {
         "status": "not_evaluated"
       },
       "range": {
-        "MRR@20": 0.55,
-        "R@1": 0.5333333333333333,
-        "R@20": 0.6666666666666666,
-        "R@5": 0.6,
+        "MRR@20": 0.515625,
+        "R@1": 0.5,
+        "R@20": 0.625,
+        "R@5": 0.5625,
         "first_correct_video_distance_frames": {
           "n": 13,
           "p50": 0,
@@ -422,18 +422,18 @@
           "numerator": 9,
           "rate": 0.75
         },
-        "video_found_but_range_missed@1": 0.13333333333333333,
-        "video_found_but_range_missed@20": 0.2,
-        "video_found_but_range_missed@5": 0.2
+        "video_found_but_range_missed@1": 0.125,
+        "video_found_but_range_missed@20": 0.1875,
+        "video_found_but_range_missed@5": 0.1875
       },
       "scored_counts": {
         "p0_rows": 3,
         "p1_rows": 4,
-        "queries": 15,
-        "range_scoreable_non_trake": 15,
+        "queries": 16,
+        "range_scoreable_non_trake": 16,
         "trake_events": 0,
         "trake_rows": 0,
-        "video_scoreable": 15
+        "video_scoreable": 16
       },
       "trake": {
         "all_events_covered@1": {
@@ -471,10 +471,10 @@
         "truth_tier": "provisional_submission_anchor"
       },
       "video": {
-        "MRR@20": 0.7073504273504273,
-        "R@1": 0.6666666666666666,
-        "R@20": 0.8666666666666667,
-        "R@5": 0.8
+        "MRR@20": 0.6631410256410256,
+        "R@1": 0.625,
+        "R@20": 0.8125,
+        "R@5": 0.75
       }
     },
     "trake": {
@@ -577,57 +577,57 @@
   "manifest_counts": {
     "p0_rows": 23,
     "p1_rows": 25,
-    "p2_rows": 26,
-    "queries": 74,
-    "range_scoreable_non_trake": 68,
+    "p2_rows": 30,
+    "queries": 78,
+    "range_scoreable_non_trake": 72,
     "trake_events": 23,
     "trake_rows": 6,
-    "video_scoreable": 74
+    "video_scoreable": 78
   },
   "qa_answer": {
     "status": "not_evaluated"
   },
   "range": {
-    "MRR@20": 0.5003317352582058,
-    "R@1": 0.4411764705882353,
-    "R@20": 0.7058823529411765,
-    "R@5": 0.5735294117647058,
+    "MRR@20": 0.49429478700312035,
+    "R@1": 0.4305555555555556,
+    "R@20": 0.7083333333333334,
+    "R@5": 0.5694444444444444,
     "first_correct_video_distance_frames": {
-      "n": 52,
-      "p50": 0.0,
-      "p90": 1921.4999999999993
+      "n": 55,
+      "p50": 0,
+      "p90": 1776.0000000000007
     },
     "range_success_given_video@1": {
-      "denominator": 40,
-      "numerator": 30,
-      "rate": 0.75
+      "denominator": 41,
+      "numerator": 31,
+      "rate": 0.7560975609756098
     },
     "range_success_given_video@20": {
-      "denominator": 52,
-      "numerator": 48,
-      "rate": 0.9230769230769231
+      "denominator": 55,
+      "numerator": 51,
+      "rate": 0.9272727272727272
     },
     "range_success_given_video@5": {
-      "denominator": 47,
-      "numerator": 39,
-      "rate": 0.8297872340425532
+      "denominator": 49,
+      "numerator": 41,
+      "rate": 0.8367346938775511
     },
-    "video_found_but_range_missed@1": 0.14705882352941177,
-    "video_found_but_range_missed@20": 0.058823529411764705,
-    "video_found_but_range_missed@5": 0.11764705882352941
+    "video_found_but_range_missed@1": 0.1388888888888889,
+    "video_found_but_range_missed@20": 0.05555555555555555,
+    "video_found_but_range_missed@5": 0.1111111111111111
   },
   "scored_counts": {
     "execution_rows": 78,
     "p0_rows": 23,
     "p1_rows": 25,
     "p2_execution_rows": 30,
-    "p2_rows": 26,
-    "p2_unscoreable": 4,
-    "queries": 74,
-    "range_scoreable_non_trake": 68,
+    "p2_rows": 30,
+    "p2_unscoreable": 0,
+    "queries": 78,
+    "range_scoreable_non_trake": 72,
     "trake_events": 23,
     "trake_rows": 6,
-    "video_scoreable": 74
+    "video_scoreable": 78
   },
   "trake": {
     "all_events_covered@1": {
@@ -664,44 +664,11 @@
     "query_denominator": 6,
     "truth_tier": "provisional_submission_anchor"
   },
-  "unscoreable": [
-    {
-      "canonical_query_id": "actual_p2_official::query-p2-5-kis",
-      "classification": "UNRESOLVED",
-      "classification_note": "L21_V022 inspect 10-850s is news studio / mannequins / cycling desk, not red-shirt white-hat water-on-face with two cyclists. Do not guess.",
-      "operational_phase": "P2",
-      "task_type": "kis",
-      "vecna_provenance_id": "p2-canonical-v1::P2-q05"
-    },
-    {
-      "canonical_query_id": "actual_p2_official::query-p2-6-kis",
-      "classification": "UNRESOLVED",
-      "classification_note": "L22_V024@830s shows the news clip with one red circle, not two. Leave unscoreable.",
-      "operational_phase": "P2",
-      "task_type": "kis",
-      "vecna_provenance_id": "p2-canonical-v1::P2-q06"
-    },
-    {
-      "canonical_query_id": "actual_p2_official::query-p2-18-kis",
-      "classification": "UNRESOLVED",
-      "classification_note": "No OCR hit for Hồ Tùng Mậu; L23_V019@512s is finish-line ĐÍCH, not the 13s-countdown intersection. Leave unscoreable.",
-      "operational_phase": "P2",
-      "task_type": "kis",
-      "vecna_provenance_id": "p2-canonical-v1::P2-q18"
-    },
-    {
-      "canonical_query_id": "actual_p2_official::query-p2-29-qa",
-      "classification": "NEEDS_DECISION",
-      "classification_note": "Material video conflict: L26_V034 overlay thịt bê 200g + cà ri without the specified 9-item still-life; L26_V439 overlay thịt ốc 300g (competitor answer) without curry still-life. Do not guess.",
-      "operational_phase": "P2",
-      "task_type": "qa",
-      "vecna_provenance_id": "p2-canonical-v1::P2-q29"
-    }
-  ],
+  "unscoreable": [],
   "video": {
-    "MRR@20": 0.5932375432375433,
-    "R@1": 0.5405405405405406,
-    "R@20": 0.7702702702702703,
-    "R@5": 0.6486486486486487
+    "MRR@20": 0.5829005752082674,
+    "R@1": 0.5256410256410257,
+    "R@20": 0.7692307692307693,
+    "R@5": 0.6410256410256411
   }
 }

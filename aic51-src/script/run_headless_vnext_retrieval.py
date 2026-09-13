@@ -464,9 +464,16 @@ def validate_extended_manifest(
         if entry.get("task_type") != record.get("task_type"):
             raise PacketError(f"P2 task type mismatch: {raw}")
 
+    allowed_unscoreable = {
+        "actual_p2_official::query-p2-5-kis",
+        "actual_p2_official::query-p2-6-kis",
+        "actual_p2_official::query-p2-18-kis",
+        "actual_p2_official::query-p2-29-qa",
+    }
     unscored = [r for r in p2 if not (r.get("scoreability") or {}).get("video")]
-    if len(unscored) != 4:
-        raise PacketError(f"expected 4 unscoreable P2 rows, got {len(unscored)}")
+    unexpected = [r.get("canonical_query_id") for r in unscored if r.get("canonical_query_id") not in allowed_unscoreable]
+    if unexpected:
+        raise PacketError(f"unexpected unscoreable P2 rows: {unexpected}")
     for record in unscored:
         if record.get("accepted_video_id"):
             raise PacketError(f"unscoreable P2 row has video: {record.get('canonical_query_id')}")

@@ -46,8 +46,8 @@ class HeadlessVNextP0P1P2PacketTests(unittest.TestCase):
         self.assertEqual(combined["counts"]["p0_rows"], 23)
         self.assertEqual(combined["counts"]["p1_rows"], 25)
         self.assertEqual(combined["counts"]["p2_rows"], 30)
-        self.assertEqual(combined["counts"]["p2_video_scoreable"], 26)
-        self.assertEqual(combined["counts"]["p2_unscoreable"], 4)
+        self.assertEqual(combined["counts"]["p2_video_scoreable"], 30)
+        self.assertEqual(combined["counts"]["p2_unscoreable"], 0)
         self.assertNotEqual(p2["purpose"], runner.FROZEN_MANIFEST_PURPOSE)
         self.assertNotEqual(combined["purpose"], runner.FROZEN_MANIFEST_PURPOSE)
         runner.validate_extended_manifest(PACKET / "p2-only-manifest.json", PACKET / "canonical-query-texts.json")
@@ -107,16 +107,23 @@ class HeadlessVNextP0P1P2PacketTests(unittest.TestCase):
             with self.assertRaisesRegex(runner.PacketError, "actual_p2_official"):
                 runner.validate_extended_manifest(path, PACKET / "canonical-query-texts.json")
 
-    def test_unscoreable_p2_rows_remain_in_packet_but_are_not_video_scoreable(self):
+    def test_resolved_p2_rows_are_video_scoreable(self):
         p2 = json.loads((PACKET / "p2-only-manifest.json").read_text(encoding="utf-8"))
         unscored = [r for r in p2["records"] if not r["scoreability"]["video"]]
-        self.assertEqual(
-            {r["raw_query_id"] for r in unscored},
-            {"query-p2-5-kis", "query-p2-6-kis", "query-p2-18-kis", "query-p2-29-qa"},
-        )
-        for record in unscored:
-            self.assertEqual(record["accepted_video_id"], "")
-            self.assertEqual(record["accepted_ranges"], [])
+        self.assertEqual(unscored, [])
+        by_id = {r["raw_query_id"]: r for r in p2["records"]}
+        self.assertEqual(by_id["query-p2-5-kis"]["accepted_video_id"], "L21_V022")
+        self.assertEqual(by_id["query-p2-5-kis"]["accepted_ranges"][0]["start_frame"], 25320)
+        self.assertEqual(by_id["query-p2-5-kis"]["accepted_ranges"][0]["end_frame"], 27450)
+        self.assertEqual(by_id["query-p2-6-kis"]["accepted_video_id"], "L22_V024")
+        self.assertEqual(by_id["query-p2-6-kis"]["accepted_ranges"][0]["start_frame"], 20193)
+        self.assertEqual(by_id["query-p2-6-kis"]["accepted_ranges"][0]["end_frame"], 20856)
+        self.assertEqual(by_id["query-p2-18-kis"]["accepted_video_id"], "L23_V017")
+        self.assertEqual(by_id["query-p2-18-kis"]["accepted_ranges"][0]["start_frame"], 2402)
+        self.assertEqual(by_id["query-p2-18-kis"]["accepted_ranges"][0]["end_frame"], 2578)
+        self.assertEqual(by_id["query-p2-29-qa"]["accepted_video_id"], "L26_V439")
+        self.assertEqual(by_id["query-p2-29-qa"]["accepted_ranges"][0]["start_frame"], 1383)
+        self.assertEqual(by_id["query-p2-29-qa"]["accepted_ranges"][0]["end_frame"], 1558)
 
     def test_wrapper_excludes_unscoreable_rows_from_denominators(self):
         p2 = json.loads((PACKET / "p2-only-manifest.json").read_text(encoding="utf-8"))
@@ -128,15 +135,22 @@ class HeadlessVNextP0P1P2PacketTests(unittest.TestCase):
             ]
         all_rows, summary, scoreable = wrapper.score_packet(p2, rankings)
         self.assertEqual(len(all_rows), 30)
-        self.assertEqual(len(scoreable), 26)
-        self.assertEqual(summary["scored_counts"]["queries"], 26)
-        self.assertEqual(summary["scored_counts"]["p2_unscoreable"], 4)
+        self.assertEqual(len(scoreable), 30)
+        self.assertEqual(summary["scored_counts"]["queries"], 30)
+        self.assertEqual(summary["scored_counts"]["p2_unscoreable"], 0)
         self.assertEqual(summary["scored_counts"]["p2_execution_rows"], 30)
         self.assertEqual(summary["video"]["R@1"], 1.0)
-        self.assertEqual(len(summary["unscoreable"]), 4)
+        self.assertEqual(len(summary["unscoreable"]), 0)
         self.assertIn("kis", summary["by_task_type"])
         self.assertIn("qa", summary["by_task_type"])
         self.assertIn("trake", summary["by_task_type"])
+        flipped = copy.deepcopy(p2)
+        flipped["records"][0]["scoreability"]["video"] = False
+        flipped["records"][0]["accepted_video_id"] = ""
+        flipped["records"][0]["accepted_ranges"] = []
+        _all, flipped_summary, flipped_scoreable = wrapper.score_packet(flipped, rankings)
+        self.assertEqual(len(flipped_scoreable), 29)
+        self.assertEqual(flipped_summary["scored_counts"]["p2_unscoreable"], 1)
 
 
 if __name__ == "__main__":

@@ -81,6 +81,22 @@ def p2_decisions(conv: dict[str, Any]) -> dict[int, dict[str, Any]]:
     q30 = frames("L26_V254", 12.0, 36.0, fps["L26_V254"])
     q30["video_id"] = "L26_V254"
     q30["rounded_fps"] = fps["L26_V254"]
+    # Human inspect 2026-09-13: clock 14:04-15:15 on L21_V022 (30 fps).
+    q5 = frames("L21_V022", 844.0, 915.0, 30.0)
+    q5["video_id"] = "L21_V022"
+    q5["rounded_fps"] = 30.0
+    # Human inspect: start frame 20193 (807.701s). End kept from inspect candidate 20856.
+    q6 = frames("L22_V024", 807.701, 834.24, 25.0)
+    q6["video_id"] = "L22_V024"
+    q6["rounded_fps"] = 25.0
+    # Human accepted inspect candidate L23_V017 2402-2578 (25 fps).
+    q18 = frames("L23_V017", 2402 / 25.0, 2578 / 25.0, 25.0)
+    q18["video_id"] = "L23_V017"
+    q18["rounded_fps"] = 25.0
+    # Human accepted inspect candidate L26_V439 1383-1558 as QA evidence range.
+    q29 = frames("L26_V439", 1383 / 25.0, 1558 / 25.0, 25.0)
+    q29["video_id"] = "L26_V439"
+    q29["rounded_fps"] = 25.0
 
     accepted: dict[int, dict[str, Any]] = {}
     for n in (1, 2, 3, 7, 9, 10, 11, 12, 13, 14, 16, 17, 19, 20, 22, 23, 24, 25, 26, 27, 28):
@@ -108,30 +124,29 @@ def p2_decisions(conv: dict[str, Any]) -> dict[int, dict[str, Any]]:
     }
     for n, key in ((8, "8"), (21, "21")):
         accepted[n] = {"status": "ACCEPTED_TRUTH", "trake": trake[key]}
-
-    unscoreable = {
-        5: {
-            "status": "UNRESOLVED",
-            "reason": "L21_V022 inspect 10-850s is news studio / mannequins / cycling desk, not red-shirt white-hat water-on-face with two cyclists. Do not guess.",
-        },
-        6: {
-            "status": "UNRESOLVED",
-            "reason": "L22_V024@830s shows the news clip with one red circle, not two. Leave unscoreable.",
-        },
-        18: {
-            "status": "UNRESOLVED",
-            "reason": "No OCR hit for Hồ Tùng Mậu; L23_V019@512s is finish-line ĐÍCH, not the 13s-countdown intersection. Leave unscoreable.",
-        },
-        29: {
-            "status": "NEEDS_DECISION",
-            "reason": (
-                "Material video conflict: L26_V034 overlay thịt bê 200g + cà ri without the specified 9-item still-life; "
-                "L26_V439 overlay thịt ốc 300g (competitor answer) without curry still-life. Do not guess."
-            ),
-        },
+    accepted[5] = {
+        "status": "ACCEPTED_TRUTH",
+        "range": q5,
+        "note": "Human inspect 2026-09-13: L21_V022 is true; range 14:04-15:15 (844-915s at 30 fps, frames 25320-27450).",
     }
-    for n, rec in unscoreable.items():
-        accepted[n] = rec
+    accepted[6] = {
+        "status": "ACCEPTED_TRUTH",
+        "range": q6,
+        "note": "Human inspect 2026-09-13: L22_V024 is true; start frame 20193 (807.701s). End kept from inspect candidate 20856.",
+    }
+    accepted[18] = {
+        "status": "ACCEPTED_TRUTH",
+        "range": q18,
+        "note": "Human inspect 2026-09-13: L23_V017 is true; range kept from inspect candidate 2402-2578.",
+    }
+    accepted[29] = {
+        "status": "ACCEPTED_TRUTH",
+        "range": q29,
+        "note": (
+            "Human inspect 2026-09-13: L26_V439 is true as QA evidence range 1383-1558. "
+            "Answer text is not scored."
+        ),
+    }
     accepted["_vong2"] = vong2
     return accepted
 
@@ -341,7 +356,9 @@ def main() -> None:
         "query_count": 30,
         "scoreable": sorted(n for n, d in decisions.items() if isinstance(n, int) and d["status"] == "ACCEPTED_TRUTH"),
         "unscoreable": sorted(n for n, d in decisions.items() if isinstance(n, int) and d["status"] != "ACCEPTED_TRUTH"),
-        "needs_decision": [29],
+        "needs_decision": sorted(
+            n for n, d in decisions.items() if isinstance(n, int) and d["status"] == "NEEDS_DECISION"
+        ),
         "decisions": {str(n): {k: v for k, v in d.items() if k != "range" and k != "trake"} | (
             {"video_id": d["range"]["video_id"], "start_s": d["range"]["start_s"], "end_s": d["range"]["end_s"],
              "start_frame": d["range"]["start_frame"], "end_frame": d["range"]["end_frame"]} if "range" in d

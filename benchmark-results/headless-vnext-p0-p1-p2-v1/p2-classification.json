@@ -75,8 +75,13 @@
       "video_id": "L30_V026"
     },
     "18": {
-      "reason": "No OCR hit for Hồ Tùng Mậu; L23_V019@512s is finish-line ĐÍCH, not the 13s-countdown intersection. Leave unscoreable.",
-      "status": "UNRESOLVED"
+      "end_frame": 2578,
+      "end_s": 103.12,
+      "note": "Human inspect 2026-09-13: L23_V017 is true; range kept from inspect candidate 2402-2578.",
+      "start_frame": 2402,
+      "start_s": 96.08,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L23_V017"
     },
     "19": {
       "end_frame": 3850,
@@ -169,8 +174,13 @@
       "video_id": "L26_V450"
     },
     "29": {
-      "reason": "Material video conflict: L26_V034 overlay thịt bê 200g + cà ri without the specified 9-item still-life; L26_V439 overlay thịt ốc 300g (competitor answer) without curry still-life. Do not guess.",
-      "status": "NEEDS_DECISION"
+      "end_frame": 1558,
+      "end_s": 62.32,
+      "note": "Human inspect 2026-09-13: L26_V439 is true as QA evidence range 1383-1558. Answer text is not scored.",
+      "start_frame": 1383,
+      "start_s": 55.32,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L26_V439"
     },
     "3": {
       "end_frame": 364,
@@ -199,12 +209,22 @@
       "video_id": "L30_V072"
     },
     "5": {
-      "reason": "L21_V022 inspect 10-850s is news studio / mannequins / cycling desk, not red-shirt white-hat water-on-face with two cyclists. Do not guess.",
-      "status": "UNRESOLVED"
+      "end_frame": 27450,
+      "end_s": 915.0,
+      "note": "Human inspect 2026-09-13: L21_V022 is true; range 14:04-15:15 (844-915s at 30 fps, frames 25320-27450).",
+      "start_frame": 25320,
+      "start_s": 844.0,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L21_V022"
     },
     "6": {
-      "reason": "L22_V024@830s shows the news clip with one red circle, not two. Leave unscoreable.",
-      "status": "UNRESOLVED"
+      "end_frame": 20856,
+      "end_s": 834.24,
+      "note": "Human inspect 2026-09-13: L22_V024 is true; start frame 20193 (807.701s). End kept from inspect candidate 20856.",
+      "start_frame": 20193,
+      "start_s": 807.701,
+      "status": "ACCEPTED_TRUTH",
+      "video_id": "L22_V024"
     },
     "7": {
       "end_frame": 21625,
@@ -233,9 +253,7 @@
       "video_id": "L26_V161"
     }
   },
-  "needs_decision": [
-    29
-  ],
+  "needs_decision": [],
   "p3_text_overlap": [],
   "query_count": 30,
   "rule": "canonical round is dataset identity + 30-query membership, never organizer p2-* prefix",
@@ -244,6 +262,8 @@
     2,
     3,
     4,
+    5,
+    6,
     7,
     8,
     9,
@@ -255,6 +275,7 @@
     15,
     16,
     17,
+    18,
     19,
     20,
     21,
@@ -265,12 +286,8 @@
     26,
     27,
     28,
+    29,
     30
   ],
-  "unscoreable": [
-    5,
-    6,
-    18,
-    29
-  ]
+  "unscoreable": []
 }

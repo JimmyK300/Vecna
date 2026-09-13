@@ -6,12 +6,12 @@
     "p0_rows": 23,
     "p1_rows": 25,
     "p2_rows": 30,
-    "p2_unscoreable": 4,
-    "p2_video_scoreable": 26,
-    "range_scoreable_non_trake": 68,
+    "p2_unscoreable": 0,
+    "p2_video_scoreable": 30,
+    "range_scoreable_non_trake": 72,
     "trake_events": 23,
     "trake_rows": 6,
-    "video_scoreable": 74
+    "video_scoreable": 78
   },
   "frozen_p0_p1_manifest_path": "benchmark-results/headless-vnext/manifest.json",
   "frozen_p0_p1_manifest_sha256": "354a41330cf056df1032dbffb0caf9709c665f536d32680c2d7ad74037c9360b",
@@ -2879,16 +2879,23 @@
       "vecna_provenance_id": "p2-canonical-v1::P2-q04"
     },
     {
-      "accepted_ranges": [],
-      "accepted_video_id": "",
+      "accepted_ranges": [
+        {
+          "end_frame": 27450,
+          "end_s": 915.0,
+          "start_frame": 25320,
+          "start_s": 844.0
+        }
+      ],
+      "accepted_video_id": "L21_V022",
       "canonical_query_id": "actual_p2_official::query-p2-5-kis",
       "canonical_source_id": "actual_p2_official",
       "operational_phase": "P2",
       "provenance": {
         "canonical_query_text_projection_path": "benchmark-results/headless-vnext-p0-p1-p2-v1/canonical-query-texts.json",
         "canonical_query_text_projection_sha256": "3b2a2a6c53d89f1e94a50f1014302df3ac327fc8e45a4937da40fdd063a1350e",
-        "classification": "UNRESOLVED",
-        "classification_note": "L21_V022 inspect 10-850s is news studio / mannequins / cycling desk, not red-shirt white-hat water-on-face with two cyclists. Do not guess.",
+        "classification": "ACCEPTED_TRUTH",
+        "classification_note": "Human inspect 2026-09-13: L21_V022 is true; range 14:04-15:15 (844-915s at 30 fps, frames 25320-27450).",
         "competitor_submission_is_not_organizer_gold": true,
         "official_dataset_control_commit": "ecf97977ff09c1e8a6c7a282020699f102e79f42",
         "official_dataset_control_path": "Official-Queries/current-rounds/actual-p2-official.md",
@@ -2916,25 +2923,32 @@
       "reviewed_semantic_ranges_preserved": null,
       "scoreability": {
         "qa_answer": false,
-        "range": false,
+        "range": true,
         "trake_event": false,
-        "video": false
+        "video": true
       },
       "task_type": "kis",
       "trake_event_truth": [],
       "vecna_provenance_id": "p2-canonical-v1::P2-q05"
     },
     {
-      "accepted_ranges": [],
-      "accepted_video_id": "",
+      "accepted_ranges": [
+        {
+          "end_frame": 20856,
+          "end_s": 834.24,
+          "start_frame": 20193,
+          "start_s": 807.701
+        }
+      ],
+      "accepted_video_id": "L22_V024",
       "canonical_query_id": "actual_p2_official::query-p2-6-kis",
       "canonical_source_id": "actual_p2_official",
       "operational_phase": "P2",
       "provenance": {
         "canonical_query_text_projection_path": "benchmark-results/headless-vnext-p0-p1-p2-v1/canonical-query-texts.json",
         "canonical_query_text_projection_sha256": "3b2a2a6c53d89f1e94a50f1014302df3ac327fc8e45a4937da40fdd063a1350e",
-        "classification": "UNRESOLVED",
-        "classification_note": "L22_V024@830s shows the news clip with one red circle, not two. Leave unscoreable.",
+        "classification": "ACCEPTED_TRUTH",
+        "classification_note": "Human inspect 2026-09-13: L22_V024 is true; start frame 20193 (807.701s). End kept from inspect candidate 20856.",
         "competitor_submission_is_not_organizer_gold": true,
         "official_dataset_control_commit": "ecf97977ff09c1e8a6c7a282020699f102e79f42",
         "official_dataset_control_path": "Official-Queries/current-rounds/actual-p2-official.md",
@@ -2962,9 +2976,9 @@
       "reviewed_semantic_ranges_preserved": null,
       "scoreability": {
         "qa_answer": false,
-        "range": false,
+        "range": true,
         "trake_event": false,
-        "video": false
+        "video": true
       },
       "task_type": "kis",
       "trake_event_truth": [],
@@ -3581,16 +3595,23 @@
       "vecna_provenance_id": "p2-canonical-v1::P2-q17"
     },
     {
-      "accepted_ranges": [],
-      "accepted_video_id": "",
+      "accepted_ranges": [
+        {
+          "end_frame": 2578,
+          "end_s": 103.12,
+          "start_frame": 2402,
+          "start_s": 96.08
+        }
+      ],
+      "accepted_video_id": "L23_V017",
       "canonical_query_id": "actual_p2_official::query-p2-18-kis",
       "canonical_source_id": "actual_p2_official",
       "operational_phase": "P2",
       "provenance": {
         "canonical_query_text_projection_path": "benchmark-results/headless-vnext-p0-p1-p2-v1/canonical-query-texts.json",
         "canonical_query_text_projection_sha256": "3b2a2a6c53d89f1e94a50f1014302df3ac327fc8e45a4937da40fdd063a1350e",
-        "classification": "UNRESOLVED",
-        "classification_note": "No OCR hit for Hồ Tùng Mậu; L23_V019@512s is finish-line ĐÍCH, not the 13s-countdown intersection. Leave unscoreable.",
+        "classification": "ACCEPTED_TRUTH",
+        "classification_note": "Human inspect 2026-09-13: L23_V017 is true; range kept from inspect candidate 2402-2578.",
         "competitor_submission_is_not_organizer_gold": true,
         "official_dataset_control_commit": "ecf97977ff09c1e8a6c7a282020699f102e79f42",
         "official_dataset_control_path": "Official-Queries/current-rounds/actual-p2-official.md",
@@ -3618,9 +3639,9 @@
       "reviewed_semantic_ranges_preserved": null,
       "scoreability": {
         "qa_answer": false,
-        "range": false,
+        "range": true,
         "trake_event": false,
-        "video": false
+        "video": true
       },
       "task_type": "kis",
       "trake_event_truth": [],
@@ -4164,16 +4185,23 @@
       "vecna_provenance_id": "p2-canonical-v1::P2-q28"
     },
     {
-      "accepted_ranges": [],
-      "accepted_video_id": "",
+      "accepted_ranges": [
+        {
+          "end_frame": 1558,
+          "end_s": 62.32,
+          "start_frame": 1383,
+          "start_s": 55.32
+        }
+      ],
+      "accepted_video_id": "L26_V439",
       "canonical_query_id": "actual_p2_official::query-p2-29-qa",
       "canonical_source_id": "actual_p2_official",
       "operational_phase": "P2",
       "provenance": {
         "canonical_query_text_projection_path": "benchmark-results/headless-vnext-p0-p1-p2-v1/canonical-query-texts.json",
         "canonical_query_text_projection_sha256": "3b2a2a6c53d89f1e94a50f1014302df3ac327fc8e45a4937da40fdd063a1350e",
-        "classification": "NEEDS_DECISION",
-        "classification_note": "Material video conflict: L26_V034 overlay thịt bê 200g + cà ri without the specified 9-item still-life; L26_V439 overlay thịt ốc 300g (competitor answer) without curry still-life. Do not guess.",
+        "classification": "ACCEPTED_TRUTH",
+        "classification_note": "Human inspect 2026-09-13: L26_V439 is true as QA evidence range 1383-1558. Answer text is not scored.",
         "competitor_submission_is_not_organizer_gold": true,
         "official_dataset_control_commit": "ecf97977ff09c1e8a6c7a282020699f102e79f42",
         "official_dataset_control_path": "Official-Queries/current-rounds/actual-p2-official.md",
@@ -4201,9 +4229,9 @@
       "reviewed_semantic_ranges_preserved": null,
       "scoreability": {
         "qa_answer": false,
-        "range": false,
+        "range": true,
         "trake_event": false,
-        "video": false
+        "video": true
       },
       "task_type": "qa",
       "trake_event_truth": [],
