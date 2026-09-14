@@ -6,7 +6,9 @@ This script does not create new truth. It joins:
   * the current 115-row identity ledger in official-dataset-control, whose P3
     rows contain the newer provisional source-text truth.
 
-The join fails closed unless the validated 113/115 inventory is reproduced.
+Historical rows are joined by provenance-backed source identity, never query
+text. Query text is used only as a fail-closed consistency check. The join
+fails closed unless the validated 113/115 inventory is reproduced.
 """
 
 from __future__ import annotations
@@ -18,6 +20,7 @@ import json
 import subprocess
 import sys
 import unicodedata
+from collections import defaultdict
 from pathlib import Path
 from urllib.parse import quote
 
@@ -145,22 +148,99 @@ def parse_vecna_manifest(raw: bytes) -> tuple[dict, list[dict]]:
     return manifest, records
 
 
-def historical_index(records: list[dict]) -> dict[str, dict]:
-    index: dict[str, dict] = {}
+def historical_identity(row: dict, row_number: int) -> tuple[str, str]:
+    phase = row.get("operational_phase")
+    raw_query_id = row.get("raw_query_id")
+    task_type = row.get("task_type")
+    provenance = row.get("provenance")
+    if phase not in EXPECTED_HISTORICAL:
+        raise BuildError(f"Frozen record {row_number} has unexpected phase {phase!r}")
+    if not isinstance(raw_query_id, str) or not raw_query_id:
+        raise BuildError(f"Frozen record {row_number} is missing raw_query_id")
+    if not isinstance(task_type, str) or not task_type:
+        raise BuildError(f"Frozen record {row_number} is missing task_type")
+    if not isinstance(provenance, dict):
+        raise BuildError(f"Frozen record {row_number} is missing provenance")
+    source_csv = provenance.get("source_csv")
+    if not isinstance(source_csv, str) or not source_csv:
+        raise BuildError(f"Frozen record {row_number} is missing provenance.source_csv")
+
+    source_key = Path(source_csv).stem
+    expected_source_key = (
+        f"query-{raw_query_id}-{task_type}" if phase in {"P0", "P1"} else raw_query_id
+    )
+    if source_key != expected_source_key:
+        raise BuildError(
+            f"Frozen record {row_number} source identity mismatch: "
+            f"expected {expected_source_key}, got {source_key}"
+        )
+    if not source_key.endswith(f"-{task_type}"):
+        raise BuildError(f"Frozen record {row_number} source key/task mismatch")
+
+    # Historical P0 was stored under p1-* source filenames. Normalize only this
+    # known namespace difference to the current ledger's canonical P0 identity.
+    if phase == "P0":
+        if not source_key.startswith("query-p1-"):
+            raise BuildError(f"Frozen P0 record {row_number} has unexpected source key")
+        source_key = "query-p0-" + source_key[len("query-p1-") :]
+    elif not source_key.startswith(f"query-{phase.lower()}-"):
+        raise BuildError(f"Frozen {phase} record {row_number} has unexpected source key")
+
+    return phase, source_key
+
+
+def historical_index(
+    records: list[dict],
+) -> tuple[dict[tuple[str, str], dict], dict[str, set[tuple[str, str]]]]:
+    by_identity: dict[tuple[str, str], dict] = {}
+    by_text: dict[str, set[tuple[str, str]]] = defaultdict(set)
     phase_counts: dict[str, int] = {}
+
     for i, row in enumerate(records, start=1):
         query = row.get("query_text")
         if not isinstance(query, str) or not query.strip():
             raise BuildError(f"Frozen record {i} is missing query_text")
-        key = normalize_query(query)
-        if key in index:
-            raise BuildError("Frozen manifest contains duplicate normalized query text")
-        index[key] = row
+        identity = historical_identity(row, i)
+        if identity in by_identity:
+            raise BuildError(f"Frozen manifest contains duplicate source identity {identity}")
+        by_identity[identity] = row
+        by_text[normalize_query(query)].add(identity)
         phase = row.get("operational_phase")
         phase_counts[phase] = phase_counts.get(phase, 0) + 1
+
     if phase_counts != EXPECTED_HISTORICAL:
         raise BuildError(f"Frozen manifest phase counts changed: {phase_counts}")
-    return index
+    if len(by_identity) != 78:
+        raise BuildError(f"Expected 78 unique frozen source identities, got {len(by_identity)}")
+    return by_identity, by_text
+
+
+def current_identity(current: dict) -> tuple[str, str]:
+    phase = current.get("canonical_round")
+    qid = current.get("query_id")
+    source_key = current.get("canonical_source_key")
+    sources = current.get("sources")
+    if phase not in {"P0", "P1", "P2"}:
+        raise BuildError(f"{qid} is not a historical P0/P1/P2 row")
+    if not isinstance(source_key, str) or not source_key:
+        raise BuildError(f"{qid} is missing canonical_source_key")
+    if not isinstance(sources, list):
+        raise BuildError(f"{qid} is missing sources")
+
+    support = [
+        source
+        for source in sources
+        if isinstance(source, dict)
+        and (
+            source.get("canonical_source_key") == source_key
+            or source.get("row_id") == source_key
+        )
+    ]
+    if len(support) != 1:
+        raise BuildError(
+            f"{qid} canonical_source_key is not supported by exactly one source row"
+        )
+    return phase, source_key
 
 
 def make_historical_projection(current: dict, frozen: dict) -> dict:
@@ -235,8 +315,8 @@ def make_p3_projection(current: dict) -> dict:
 
 
 def build_projection(current_rows: list[dict], frozen_records: list[dict]) -> list[dict]:
-    frozen_by_text = historical_index(frozen_records)
-    used_keys: set[str] = set()
+    frozen_by_identity, frozen_by_text = historical_index(frozen_records)
+    used_identities: set[tuple[str, str]] = set()
     output: list[dict] = []
     historical_matches: dict[str, int] = {"P0": 0, "P1": 0, "P2": 0}
 
@@ -248,31 +328,35 @@ def build_projection(current_rows: list[dict], frozen_records: list[dict]) -> li
             output.append(make_p3_projection(current))
             continue
 
-        query = current.get("query")
-        if not isinstance(query, str):
-            raise BuildError(f"{qid} has no query text")
-        key = normalize_query(query)
-        frozen = frozen_by_text.get(key)
+        identity = current_identity(current)
+        frozen = frozen_by_identity.get(identity)
         if frozen is None:
             output.append(make_unscoreable_projection(current))
             continue
 
-        if key in used_keys:
+        if identity in used_identities:
             raise BuildError(f"Frozen truth matched more than once: {qid}")
-        used_keys.add(key)
-        if frozen.get("operational_phase") != phase:
+
+        query = current.get("query")
+        if not isinstance(query, str):
+            raise BuildError(f"{qid} has no query text")
+        text_candidates = frozen_by_text.get(normalize_query(query), set())
+        if text_candidates and identity not in text_candidates:
             raise BuildError(
-                f"Phase mismatch for {qid}: current={phase}, "
-                f"frozen={frozen.get('operational_phase')}"
+                f"Query-text consistency conflict for {qid}: identity={identity}, "
+                f"text_candidates={sorted(text_candidates)}"
             )
+
+        used_identities.add(identity)
         historical_matches[phase] += 1
         output.append(make_historical_projection(current, frozen))
 
     if historical_matches != EXPECTED_HISTORICAL:
         raise BuildError(f"Historical match counts changed: {historical_matches}")
-    if len(used_keys) != 78 or len(frozen_by_text) != 78:
+    if len(used_identities) != 78 or len(frozen_by_identity) != 78:
         raise BuildError(
-            f"Frozen join is not bijective: used={len(used_keys)}, frozen={len(frozen_by_text)}"
+            "Frozen join is not bijective: "
+            f"used={len(used_identities)}, frozen={len(frozen_by_identity)}"
         )
 
     unscoreable = {row["query_id"] for row in output if not row["scoreable"]}
@@ -302,6 +386,11 @@ def metadata(*, vecna_raw: bytes, odc_raw: bytes, output_raw: bytes) -> dict:
         "schema": "issue34-headless-current-projection-meta-v1",
         "parent_issue": "JimmyK300/Vecna#34",
         "authority_contract": AUTHORITY_REL.as_posix(),
+        "join": {
+            "historical_identity": "(canonical_round, canonical_source_key)",
+            "frozen_identity_source": "provenance.source_csv",
+            "query_text_role": "consistency_check_only",
+        },
         "counts": {
             "current_queries": 115,
             "scoreable": 113,
