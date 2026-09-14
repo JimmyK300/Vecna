@@ -1,0 +1,68 @@
+{
+  "schema": "issue34-headless-current-authority-v1",
+  "parent_issue": "JimmyK300/Vecna#34",
+  "benchmark_id": "issue34-current-p0-p1-p2-p3-115-v1",
+  "current_query_inventory": {
+    "total": 115,
+    "p0": 24,
+    "p1": 25,
+    "p2": 30,
+    "p3": 36
+  },
+  "benchmark_truth_inventory": {
+    "scoreable": 113,
+    "unscoreable": 2,
+    "historical_p0_p1_p2_scoreable": 78,
+    "p3_provisional_scoreable": 35,
+    "unscoreable_query_ids": [
+      "p0_q15",
+      "p3_q09"
+    ]
+  },
+  "sources": {
+    "p0_p1_p2_frozen_headless_truth": {
+      "repository": "JimmyK300/Vecna",
+      "ref": "benchmark/headless-p0-p1-p2-v1",
+      "commit": "e0981b9022723f0a8bb20d4ccb108f725f4f2e50",
+      "path": "benchmark-results/headless-vnext-p0-p1-p2-v1/manifest.json",
+      "blob_sha": "396fcc70df9a0af14e705720104f38bb2dd47828",
+      "rows": 78,
+      "phase_counts": {
+        "p0": 23,
+        "p1": 25,
+        "p2": 30
+      },
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "notes": "Preserves the accepted Headless vNext/Issue #63 lineage and the later P2 extension. This is the benchmark truth source for the 78 historical executable rows."
+    },
+    "current_identity_and_p3_truth": {
+      "repository": "JimmyK300/official-dataset-control",
+      "commit": "a8c15b94e576ea1c8a0acfe20d816112692b2639",
+      "path": "evaluation/headless-current-p0-p1-p2-p3-qwen-only-top100-v0/ground_truth_current_115.jsonl",
+      "blob_sha": "797fe9ef462fffa32e86af4419f0fb69e916293b",
+      "rows": 115,
+      "p3_rows": 36,
+      "p3_scoreable": 35,
+      "truth_tier": "current_identity_plus_provisional_p3_source_text_truth",
+      "notes": "P3 scoreable rows remain provisional source-text-verified truth, not organizer gold. This source also supplies the current p0/p1/p2/p3 query namespace."
+    },
+    "validated_join_evidence": {
+      "issue": "JimmyK300/Vecna#79",
+      "claim": "78/78 historical P0-P2 rows + 35/35 scoreable P3 rows = 113/115 scoreable current queries; p0_q15 and p3_q09 are unscoreable"
+    }
+  },
+  "ownership": {
+    "canonical_benchmark_lineage": "JimmyK300/Vecna#34",
+    "policy": "No source file above is rewritten by this authority packet. A generated 115-row projection may join them, but must preserve source-specific truth tier and provenance.",
+    "generated_projection_path": "benchmark-results/issue34-current-115/ground_truth_current_115.jsonl",
+    "builder": "aic51-src/script/build_issue34_current_115_truth.py"
+  },
+  "invariants": [
+    "Exactly 115 current query identities",
+    "Exactly 78 unique P0-P2 matches against the frozen Vecna manifest",
+    "Exactly 35 scoreable P3 rows",
+    "Exactly two unscoreable current rows: p0_q15 and p3_q09",
+    "P3 truth must retain its provisional/non-organizer qualifier",
+    "No candidate-generation result may be promoted to truth to fill an unmatched row"
+  ]
+}
