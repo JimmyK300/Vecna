@@ -76,3 +76,6 @@ The exact study serialization was proved on Windows Python3.12.1. Platform/libm 
 The final compressed transport bundle was independently checked for ZIP/patch hashes, compressed and decoded SHA-256, gzip CRC, each original file hash and exact UTF-8 round trip. Publication selects the verified original files. The broker's full review patch also contains temporary checkout newline differences; it is not applied wholesale.
 
 The separate PR #90 correctness implementation is tested at `fc91800b9bb1c280696fe81dbfb76e38598b798e` and published with evidence at `00f10bda20b757e0e0a85a43fd52b8d6927e495d`. It is not inserted into any frozen Packet82 capture or score.
+
+
+The [fresh published-Git verification](https://github.com/JimmyK300/ai-routing-hub/actions/runs/35114902098) consumed commit `d1dc69f980d85833541250ad50b4ddbf313434f9` without any execution-artifact download. It hydrated the actual remote XZ blob, reconstructed the exact study, verified all 49 input hashes and reproduced all four published D outputs byte for byte. Native HEAD/status and the disposable HEAD remained unchanged. The final follow-up commit adds this proof and editorial updates only.

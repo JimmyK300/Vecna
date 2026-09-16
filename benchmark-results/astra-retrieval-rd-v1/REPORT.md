@@ -49,7 +49,7 @@ The lower-level metrics show why the scoring surface matters:
 
 The original scratch/Linux offline mean fusion CPU times were 0.8113 ms current, 0.7088 RRF, 0.4040 min-max, 0.6188 robust-z and 0.4823 softmax. They exclude retrieval and model inference and are not an isolated performance benchmark. The separate Windows recovery CPU clock is quantized: zero median or p95 readings must not be interpreted as free work. Its wall-clock timings are recorded with that replay. The recovery replay preserves the original capture and all six primary metrics; its timing-dependent study hash is explicitly a new analysis identity.
 
-The complete provider union contains an accepted video for 101/113 queries; current fusion's first100 frames contain one for 92/113. All-required-target coverage is 81 in the union and 78 in current first100 frames. Three full-target opportunities remain between those surfaces: `p0_q02`, `p0_q20`, `p2_q07`; `p2_q29` has an additional fractional opportunity from 0 to 0.5.
+The complete provider union contains an accepted video for 101/113 queries; current fusion's first 100 frames contain one for 92/113. All-required-target coverage is 81 in the union and 78 in current first 100 frames. Three full-target opportunities remain between those surfaces: `p0_q02`, `p0_q20`, `p2_q07`; `p2_q29` has an additional fractional opportunity from 0 to 0.5.
 
 Selecting a single representative frame per video reduces measured all-target coverage further, but the inspected main searcher returns the full sorted frame list. That representative projection is an analysis convention; it does not establish that a production consumer discards the other frames.
 
@@ -94,8 +94,8 @@ The OCR/ASR sample is frozen at 38 query/channel pairs across 30 queries. All 20
 | Frozen visibility sample | OCR sparse | OCR dense | ASR sparse | ASR dense |
 |---|---:|---:|---:|---:|
 | Query/channel pairs | 20 | 20 | 18 | 18 |
-| Accepted video within100 hits | 7 | 9 | 13 | 14 |
-| All current targets within100 hits | 4 | 7 | 11 | 12 |
+| Accepted video within 100 hits | 7 | 9 | 13 | 14 |
+| All current targets within 100 hits | 4 | 7 | 11 | 12 |
 | Same-video/exact-text repeat excess | 344/2000 | 243/2000 | 1682/1800 | 1599/1800 |
 
 OCR target coverage has 3 pairs reached by both methods, 4 by dense only, 1 by sparse only and 12 by neither. ASR has 11 both, 1 dense only, 0 sparse only and 6 neither. Dense scoring matched 731/731 checked text projections and reproduced all four output files byte-for-byte. All six consumed BGE files and 389 active tensors / 566,705,152 elements were verified. No frozen query truncated at 1024 tokens.
@@ -137,7 +137,9 @@ The bounded candidate-admission headroom is three full-target cases and one part
 
 ## Validation and review locations
 
-The combined host run passed **40 fusion/recovery/storage tests** and **27 ledger tests**, reconstructed the complete study byte for byte and repeated all four ledger outputs byte for byte. A portable independent reviewer passed **3,611 assertions**, checking schema, source identities, every observed-pool coverage record and all final file hashes. Original A validation passed31 tests, historical C analysis12 tests, and the checkpoint repair12 tests. The separate tie fix passed9 tests over13 fixtures and three process seeds.
+The combined host run passed **40 fusion/recovery/storage tests** and **27 ledger tests**, reconstructed the complete study byte for byte and repeated all four ledger outputs byte for byte. A portable independent reviewer passed **3,611 assertions**, checking schema, source identities, every observed-pool coverage record and all final file hashes. Original A validation passed 31 tests, historical C analysis 12 tests, and the checkpoint repair 12 tests. The separate tie fix passed 9 tests over 13 fixtures and three process seeds.
+
+A fresh archive of the published Git snapshot also passed: remote binary hydration, exact study reconstruction, all 49 inputs and all four published ledger outputs. [Published-snapshot proof](outputs/synthesis/published-snapshot-verification.json).
 
 [REPRODUCE.md](REPRODUCE.md) provides the exact published-snapshot verification command. Per-query evidence, source hashes, lossless capture, timing sidecar, reconstruction proof and complete validation logs are included in the review branches.
 

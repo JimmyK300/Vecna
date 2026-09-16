@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-09-16T15:15:00Z",
+  "as_of_utc": "2026-09-16T15:24:00Z",
   "authority": {
     "dataset_main": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
     "excluded": [
@@ -47,6 +47,10 @@
     "independent_D_checks": 3611,
     "ledger_byte_repeat_files": 4,
     "ledger_tests": 27,
-    "study_byte_rebuild": true
+    "study_byte_rebuild": true,
+    "published_git_snapshot_run": 35114902098,
+    "published_input_hashes_verified": 49,
+    "published_ledger_outputs_byte_identical": true,
+    "tested_commit": "d1dc69f980d85833541250ad50b4ddbf313434f9"
   }
 }

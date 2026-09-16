@@ -1,0 +1,88 @@
+{
+  "schema": "vecna82-published-git-snapshot-proof-v1",
+  "published_commit": "d1dc69f980d85833541250ad50b4ddbf313434f9",
+  "git_archive_sha256": "0201b0dd58cdcd9d61592e6e8da80daac44a137b57cd2001443e28ba22cc1386",
+  "source": "Exact published Git object archive; no execution artifact downloads",
+  "verifier_sha256": "0c7feb3c13a9463a64be0f835d3eb2ee8afa058e4f9f8fb5011d690dcb1ccd76",
+  "child_returncode": 0,
+  "result": {
+    "schema": "vecna82-published-snapshot-verification-v1",
+    "status": "passed",
+    "python": "3.12.1 (tags/v3.12.1:2305ca5, Dec  7 2023, 22:03:25) [MSC v.1937 64 bit (AMD64)]",
+    "new_model_or_retrieval_calls": 0,
+    "published_input_files_verified": 49,
+    "study_sha256": "ba47bd96eb842d0bb57811e247cbd2ea29de8794c5dd3b289dce24a3032c10b1",
+    "sidecar_sha256": "6af4e2a4fbd7095e3bdd4461485f9a9e6f03792fb34dbfd3218e09a5c7236fcf",
+    "ledger_outputs": {
+      "failure_ledger.jsonl": {
+        "bytes": 1872464,
+        "sha256": "f344d6a572fcccaf7ee927774f0f76fd22008820514298f23a7ffeefd16abd6d"
+      },
+      "summary.json": {
+        "bytes": 216722,
+        "sha256": "2a551624bd73867eec85f5b39a9d7a5628665b0dc196e1b8bc50abc03e715b7a"
+      },
+      "provenance.json": {
+        "bytes": 6666,
+        "sha256": "415af2c149bc49b555c1f29a94b3142c6ce44370ef76060f572eff9c53e3496b"
+      },
+      "REPORT.md": {
+        "bytes": 4789,
+        "sha256": "15167552c19a96f58f9b4526bd6a6df680a489da0e786dc91a3db8679a34e162"
+      }
+    },
+    "primary_failure_counts": {
+      "candidate_generation_missing_event": 18,
+      "candidate_generation_missing_video": 6,
+      "none": 82,
+      "unresolved": 7
+    },
+    "checks": [
+      {
+        "command": [
+          "code/hydrate_fusion_capture.py",
+          "--root",
+          "."
+        ],
+        "returncode": 0
+      },
+      {
+        "command": [
+          "code/fusion_study_storage.py",
+          "rebuild",
+          "--rankings",
+          "outputs/fusion/capture-full115-v1/provider_rankings.jsonl",
+          "--config",
+          "outputs/fusion/frozen_config.json",
+          "--queries",
+          "outputs/fusion/queries.jsonl",
+          "--collection-manifest",
+          "outputs/fusion/capture-full115-v1/collection_manifest.json",
+          "--sidecar",
+          "outputs/fusion/evaluation/study_timings.json",
+          "--sidecar-sha256",
+          "6af4e2a4fbd7095e3bdd4461485f9a9e6f03792fb34dbfd3218e09a5c7236fcf",
+          "--output",
+          "outputs/fusion/evaluation/study_results.jsonl"
+        ],
+        "returncode": 0
+      },
+      {
+        "command": [
+          "code/build_failure_ledger.py",
+          "--root",
+          ".",
+          "--require-complete",
+          "--out-dir",
+          "C:\\Users\\minhc\\AppData\\Local\\Temp\\vecna82-published-ledger-replay-fjgs_46f"
+        ],
+        "returncode": 0
+      }
+    ],
+    "runtime_limit": "Exact timing restoration preserves the recorded Windows Python3.12 study. Any platform/libm difference must fail the full SHA gate, never loosen it."
+  },
+  "stderr": "",
+  "new_model_or_retrieval_calls": 0,
+  "native_head_status_unchanged": true,
+  "disposable_head_unchanged": true
+}

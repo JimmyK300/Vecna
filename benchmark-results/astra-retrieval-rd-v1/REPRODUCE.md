@@ -34,3 +34,5 @@ To deliberately create a separate timing generation, use `hydrate_fusion_capture
 The independent D reviewer is available as `code/review_failure_ledger.js`, with its saved result under `outputs/synthesis/independent_d_review.json`. It checks schema, historical/fresh separation, all observed pool records, source overlays and the 82/31 success union against separately recovered references.
 
 Packet E remains a proposal in `outputs/synthesis/PROPOSAL.md` and `outputs/synthesis/decision.json`. Reproduction commands do not construct that candidate-admission arm.
+
+The published Git snapshot was independently verified on the recorded Windows runtime: see [published-snapshot-verification.json](outputs/synthesis/published-snapshot-verification.json). The final proof/editorial commit leaves every verified scientific input and output unchanged.
