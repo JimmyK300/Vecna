@@ -11,6 +11,7 @@ import aic51.packages.constant as constant
 from aic51.packages.logger import logger
 
 from .feature_extractor import FeatureExtractor, FeatureExtractorFactory
+from .qwen_vl_checkpoint import prepare_model_kwargs, verify_loaded_checkpoint
 
 
 @FeatureExtractorFactory.register("qwen_vl_embedding")
@@ -69,6 +70,8 @@ class QwenVLEmbedding(FeatureExtractor):
         else:
             self._compute_type = str(model_kwargs.get("torch_dtype", "model_default"))
 
+        # Keep the existing None-versus-empty dtype policy above unchanged.
+        model_kwargs, verify_qwen_checkpoint = prepare_model_kwargs(pretrained_model, model_kwargs)
         processor_kwargs = kwargs.pop("processor_kwargs", None)
         self._model = SentenceTransformer(
             pretrained_model,
@@ -76,6 +79,11 @@ class QwenVLEmbedding(FeatureExtractor):
             model_kwargs=model_kwargs,
             processor_kwargs=processor_kwargs,
         )
+
+        if verify_qwen_checkpoint:
+            self._checkpoint_validation = verify_loaded_checkpoint(
+                self._model, pretrained_model, model_kwargs
+            )
 
         if not self._model.supports("image") or not self._model.supports("text"):
             raise RuntimeError(
