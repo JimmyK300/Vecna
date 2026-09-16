@@ -1,0 +1,42 @@
+{
+  "authority_contract": "benchmark-results/issue34-current-115/AUTHORITY.json",
+  "counts": {
+    "current_queries": 115,
+    "p0_p1_p2_frozen": 78,
+    "p3_provisional_scoreable": 35,
+    "scoreable": 113,
+    "unscoreable": 2
+  },
+  "join": {
+    "frozen_identity_source": "provenance.source_csv",
+    "historical_identity": "(canonical_round, canonical_source_key)",
+    "query_text_role": "consistency_check_only"
+  },
+  "parent_issue": "JimmyK300/Vecna#34",
+  "policy": "Generated join only. P0-P2 frozen truth and P3 provisional truth retain their distinct authority tiers; no missing truth is inferred.",
+  "projection": {
+    "path": "benchmark-results/issue34-current-115/ground_truth_current_115.jsonl",
+    "sha256": "63f80eb6ff54ef3c623f6ae4926eba404dac8bb5543b86e31f8fa0da842b4c9f"
+  },
+  "schema": "issue34-headless-current-projection-meta-v1",
+  "sources": [
+    {
+      "blob_sha": "396fcc70df9a0af14e705720104f38bb2dd47828",
+      "commit": "e0981b9022723f0a8bb20d4ccb108f725f4f2e50",
+      "path": "benchmark-results/headless-vnext-p0-p1-p2-v1/manifest.json",
+      "repository": "JimmyK300/Vecna",
+      "sha256": "5ef034fd275baaabab1dee04148302e99b4e24ad4a1accc6169b6c070baaf223"
+    },
+    {
+      "blob_sha": "797fe9ef462fffa32e86af4419f0fb69e916293b",
+      "commit": "a8c15b94e576ea1c8a0acfe20d816112692b2639",
+      "path": "evaluation/headless-current-p0-p1-p2-p3-qwen-only-top100-v0/ground_truth_current_115.jsonl",
+      "repository": "JimmyK300/official-dataset-control",
+      "sha256": "79393a95aae8e51b6b475e1b35f3b5ccfef278ee05a3f444eaedc0b0f4f90819"
+    }
+  ],
+  "unscoreable_query_ids": [
+    "p0_q15",
+    "p3_q09"
+  ]
+}

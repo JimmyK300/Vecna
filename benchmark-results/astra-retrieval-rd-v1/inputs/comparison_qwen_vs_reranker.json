@@ -1,0 +1,5211 @@
+{
+  "schema": "current-qwen-vs-qwen3-vl-reranker-comparison-v1",
+  "generated_at_utc": "2026-09-14T02:55:58.413745+00:00",
+  "query_count": 115,
+  "inputs": {
+    "baseline": {
+      "path": "D:\\Official-Dataset\\evaluation\\headless-current-p0-p1-p2-p3-qwen-only-top100-v0\\qwen_only_top100.jsonl",
+      "sha256": "85d5dd169bcd6934ebfa8435b6aee82ce9bc149bac3a704afbdbcb4b986568f0"
+    },
+    "reranker": {
+      "path": "D:\\Official-Dataset\\evaluation\\headless-current-p0-p1-p2-p3-qwen-only-top100-v0\\qwen3_vl_reranker_2b_top100.json",
+      "sha256": "e2b790e4530a3c33a4a1a6532d209912961180571c5038373a4d00c8f22524b0"
+    },
+    "ground_truth_ledger": {
+      "path": "D:\\Official-Dataset\\evaluation\\headless-current-p0-p1-p2-p3-qwen-only-top100-v0\\ground_truth_current_115.jsonl",
+      "sha256": "79393a95aae8e51b6b475e1b35f3b5ccfef278ee05a3f444eaedc0b0f4f90819"
+    }
+  },
+  "runtime_evidence": {
+    "baseline_device_verified_from_log": "DirectML AMD Radeon RX 6900 XT",
+    "baseline_log": {
+      "path": "D:\\Official-Dataset\\evaluation\\headless-current-p0-p1-p2-p3-qwen-only-top100-v0\\export.stdout.log",
+      "sha256": "1f4981f7414d52bfb1d1ee47c30f564957f29f59bf3d777f6929b54e057ff5f7",
+      "role": "baseline_execution_log"
+    },
+    "reranker_device_verified_from_log": "AMD GPU / DirectML",
+    "reranker_log": {
+      "path": "D:\\Official-Dataset\\evaluation\\headless-current-p0-p1-p2-p3-qwen-only-top100-v0\\reranker.stderr.log",
+      "sha256": "54b62e2bdfe2e8f8cbc43d1fa833370721babd223ee6bbf5dccfbe905f8102f0",
+      "role": "reranker_execution_log"
+    },
+    "known_runtime_warning": "DirectML CPU fallback for aten::repeat_interleave.Tensor; reranker remains GPU-backed but this operator can reduce throughput."
+  },
+  "interpretation": {
+    "baseline": "Qwen-only top-100 candidate export; no reranker",
+    "reranker": "Qwen3-VL-Reranker-2B reorder of the same top-100 candidates; top-20 evaluated",
+    "truth_policy": "Only provisional_only rows are scored; all other rows remain ranking-change-only."
+  },
+  "summary": {
+    "provisional_scored": {
+      "count": 35,
+      "baseline": {
+        "count": 35,
+        "recall_at_1": 0.22857142857142856,
+        "recall_at_5": 0.42857142857142855,
+        "recall_at_10": 0.4857142857142857,
+        "recall_at_20": 0.5142857142857142,
+        "mrr_at_20": 0.3164625850340136,
+        "no_hit_within_20": 17,
+        "mean_first_correct_rank": 3.111111111111111
+      },
+      "reranker": {
+        "count": 35,
+        "recall_at_1": 0.22857142857142856,
+        "recall_at_5": 0.45714285714285713,
+        "recall_at_10": 0.4857142857142857,
+        "recall_at_20": 0.6285714285714286,
+        "mrr_at_20": 0.3356813028241599,
+        "no_hit_within_20": 13,
+        "mean_first_correct_rank": 4.909090909090909
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.02857142857142858,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.11428571428571432,
+        "mrr_at_20": 0.019218717790146334
+      },
+      "warning": "These are P3 source-text provisional metrics, not organizer-gold metrics."
+    },
+    "ranking_change_all_115": {
+      "count": 115,
+      "top1_changed": 103,
+      "top1_unchanged": 12,
+      "mean_reranked_top1_original_baseline_rank": 31.780701754385966
+    },
+    "by_round_provisional": {
+      "P0": {
+        "count": 0,
+        "baseline": {
+          "count": 0
+        },
+        "reranker": {
+          "count": 0
+        }
+      },
+      "P1": {
+        "count": 0,
+        "baseline": {
+          "count": 0
+        },
+        "reranker": {
+          "count": 0
+        }
+      },
+      "P2": {
+        "count": 0,
+        "baseline": {
+          "count": 0
+        },
+        "reranker": {
+          "count": 0
+        }
+      },
+      "P3": {
+        "count": 35,
+        "baseline": {
+          "count": 35,
+          "recall_at_1": 0.22857142857142856,
+          "recall_at_5": 0.42857142857142855,
+          "recall_at_10": 0.4857142857142857,
+          "recall_at_20": 0.5142857142857142,
+          "mrr_at_20": 0.3164625850340136,
+          "no_hit_within_20": 17,
+          "mean_first_correct_rank": 3.111111111111111
+        },
+        "reranker": {
+          "count": 35,
+          "recall_at_1": 0.22857142857142856,
+          "recall_at_5": 0.45714285714285713,
+          "recall_at_10": 0.4857142857142857,
+          "recall_at_20": 0.6285714285714286,
+          "mrr_at_20": 0.3356813028241599,
+          "no_hit_within_20": 13,
+          "mean_first_correct_rank": 4.909090909090909
+        }
+      }
+    }
+  },
+  "per_query": [
+    {
+      "query_id": "p0_q01",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L21_V024#20750",
+        "reranked_top1": "L21_V015#25725",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 4,
+        "baseline_unique_videos_at_20": 2,
+        "reranked_unique_videos_at_20": 3
+      }
+    },
+    {
+      "query_id": "p0_q02",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L22_V007#8525",
+        "reranked_top1": "L22_V021#10871",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 44,
+        "baseline_unique_videos_at_20": 11,
+        "reranked_unique_videos_at_20": 13
+      }
+    },
+    {
+      "query_id": "p0_q03",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L27_V014#8108",
+        "reranked_top1": "L27_V014#8108",
+        "top1_changed": false,
+        "reranked_top1_original_baseline_rank": 1,
+        "baseline_unique_videos_at_20": 1,
+        "reranked_unique_videos_at_20": 2
+      }
+    },
+    {
+      "query_id": "p0_q04",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L26_V056#384",
+        "reranked_top1": "L26_V056#6628",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 50,
+        "baseline_unique_videos_at_20": 4,
+        "reranked_unique_videos_at_20": 6
+      }
+    },
+    {
+      "query_id": "p0_q05",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L29_V023#10915",
+        "reranked_top1": "L29_V023#24975",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 5,
+        "baseline_unique_videos_at_20": 7,
+        "reranked_unique_videos_at_20": 10
+      }
+    },
+    {
+      "query_id": "p0_q06",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L22_V030#18327",
+        "reranked_top1": "L22_V030#18327",
+        "top1_changed": false,
+        "reranked_top1_original_baseline_rank": 1,
+        "baseline_unique_videos_at_20": 2,
+        "reranked_unique_videos_at_20": 3
+      }
+    },
+    {
+      "query_id": "p0_q07",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L27_V013#5186",
+        "reranked_top1": "L27_V013#5293",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 28,
+        "baseline_unique_videos_at_20": 2,
+        "reranked_unique_videos_at_20": 2
+      }
+    },
+    {
+      "query_id": "p0_q08",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L30_V017#3010",
+        "reranked_top1": "L30_V017#2986",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 7,
+        "baseline_unique_videos_at_20": 1,
+        "reranked_unique_videos_at_20": 1
+      }
+    },
+    {
+      "query_id": "p0_q09",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L30_V057#3038",
+        "reranked_top1": "L30_V057#3082",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 2,
+        "baseline_unique_videos_at_20": 2,
+        "reranked_unique_videos_at_20": 1
+      }
+    },
+    {
+      "query_id": "p0_q10",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L26_V200#5730",
+        "reranked_top1": "L26_V200#7296",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 33,
+        "baseline_unique_videos_at_20": 3,
+        "reranked_unique_videos_at_20": 2
+      }
+    },
+    {
+      "query_id": "p0_q11",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L30_V095#2870",
+        "reranked_top1": "L30_V095#3376",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 20,
+        "baseline_unique_videos_at_20": 1,
+        "reranked_unique_videos_at_20": 1
+      }
+    },
+    {
+      "query_id": "p0_q12",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L21_V027#26951",
+        "reranked_top1": "L21_V027#26951",
+        "top1_changed": false,
+        "reranked_top1_original_baseline_rank": 1,
+        "baseline_unique_videos_at_20": 3,
+        "reranked_unique_videos_at_20": 2
+      }
+    },
+    {
+      "query_id": "p0_q13",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L30_V092#2491",
+        "reranked_top1": "L30_V092#2491",
+        "top1_changed": false,
+        "reranked_top1_original_baseline_rank": 1,
+        "baseline_unique_videos_at_20": 5,
+        "reranked_unique_videos_at_20": 3
+      }
+    },
+    {
+      "query_id": "p0_q14",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L26_V004#5450",
+        "reranked_top1": "L26_V004#5500",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 2,
+        "baseline_unique_videos_at_20": 3,
+        "reranked_unique_videos_at_20": 3
+      }
+    },
+    {
+      "query_id": "p0_q15",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L21_V012#16901",
+        "reranked_top1": "L21_V031#16490",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 12,
+        "baseline_unique_videos_at_20": 6,
+        "reranked_unique_videos_at_20": 10
+      }
+    },
+    {
+      "query_id": "p0_q16",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L22_V022#18396",
+        "reranked_top1": "L22_V022#17129",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 2,
+        "baseline_unique_videos_at_20": 10,
+        "reranked_unique_videos_at_20": 12
+      }
+    },
+    {
+      "query_id": "p0_q17",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L23_V025#5809",
+        "reranked_top1": "L23_V012#9185",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 2,
+        "baseline_unique_videos_at_20": 5,
+        "reranked_unique_videos_at_20": 5
+      }
+    },
+    {
+      "query_id": "p0_q18",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L23_V012#4682",
+        "reranked_top1": "L23_V015#6679",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 90,
+        "baseline_unique_videos_at_20": 4,
+        "reranked_unique_videos_at_20": 6
+      }
+    },
+    {
+      "query_id": "p0_q19",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L30_V072#1776",
+        "reranked_top1": "L30_V019#3925",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 52,
+        "baseline_unique_videos_at_20": 8,
+        "reranked_unique_videos_at_20": 9
+      }
+    },
+    {
+      "query_id": "p0_q20",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L27_V010#6345",
+        "reranked_top1": "L27_V010#4350",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 16,
+        "baseline_unique_videos_at_20": 3,
+        "reranked_unique_videos_at_20": 5
+      }
+    },
+    {
+      "query_id": "p0_q21",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L26_V465#3674",
+        "reranked_top1": "L26_V032#675",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 34,
+        "baseline_unique_videos_at_20": 13,
+        "reranked_unique_videos_at_20": 8
+      }
+    },
+    {
+      "query_id": "p0_q22",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L26_V358#5760",
+        "reranked_top1": "L26_V214#3216",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 28,
+        "baseline_unique_videos_at_20": 13,
+        "reranked_unique_videos_at_20": 13
+      }
+    },
+    {
+      "query_id": "p0_q23",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L24_V016#1340",
+        "reranked_top1": "L24_V016#1340",
+        "top1_changed": false,
+        "reranked_top1_original_baseline_rank": 1,
+        "baseline_unique_videos_at_20": 8,
+        "reranked_unique_videos_at_20": 9
+      }
+    },
+    {
+      "query_id": "p0_q24",
+      "canonical_round": "P0",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L26_V230#4208",
+        "reranked_top1": "L26_V230#4065",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 3,
+        "baseline_unique_videos_at_20": 8,
+        "reranked_unique_videos_at_20": 12
+      }
+    },
+    {
+      "query_id": "p1_q01",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L30_V046#4865",
+        "reranked_top1": "L30_V046#390",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 15,
+        "baseline_unique_videos_at_20": 3,
+        "reranked_unique_videos_at_20": 3
+      }
+    },
+    {
+      "query_id": "p1_q02",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L22_V011#9040",
+        "reranked_top1": "L22_V020#3696",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 7,
+        "baseline_unique_videos_at_20": 9,
+        "reranked_unique_videos_at_20": 8
+      }
+    },
+    {
+      "query_id": "p1_q03",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L22_V021#19665",
+        "reranked_top1": "L22_V021#10871",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 2,
+        "baseline_unique_videos_at_20": 2,
+        "reranked_unique_videos_at_20": 6
+      }
+    },
+    {
+      "query_id": "p1_q04",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L26_V308#4733",
+        "reranked_top1": "L26_V308#5198",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 26,
+        "baseline_unique_videos_at_20": 12,
+        "reranked_unique_videos_at_20": 14
+      }
+    },
+    {
+      "query_id": "p1_q05",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L22_V023#18095",
+        "reranked_top1": "L22_V023#18145",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 20,
+        "baseline_unique_videos_at_20": 1,
+        "reranked_unique_videos_at_20": 4
+      }
+    },
+    {
+      "query_id": "p1_q06",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L26_V041#3830",
+        "reranked_top1": "L26_V041#6837",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 29,
+        "baseline_unique_videos_at_20": 10,
+        "reranked_unique_videos_at_20": 5
+      }
+    },
+    {
+      "query_id": "p1_q07",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L26_V171#6066",
+        "reranked_top1": "L26_V171#5632",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 35,
+        "baseline_unique_videos_at_20": 10,
+        "reranked_unique_videos_at_20": 9
+      }
+    },
+    {
+      "query_id": "p1_q08",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L29_V013#9855",
+        "reranked_top1": "L29_V013#11326",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 14,
+        "baseline_unique_videos_at_20": 1,
+        "reranked_unique_videos_at_20": 2
+      }
+    },
+    {
+      "query_id": "p1_q09",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L23_V015#5100",
+        "reranked_top1": "L23_V015#8150",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 31,
+        "baseline_unique_videos_at_20": 9,
+        "reranked_unique_videos_at_20": 8
+      }
+    },
+    {
+      "query_id": "p1_q10",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L22_V029#5841",
+        "reranked_top1": "L22_V015#4070",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 49,
+        "baseline_unique_videos_at_20": 5,
+        "reranked_unique_videos_at_20": 5
+      }
+    },
+    {
+      "query_id": "p1_q11",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L29_V021#9095",
+        "reranked_top1": "L29_V021#7475",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 95,
+        "baseline_unique_videos_at_20": 7,
+        "reranked_unique_videos_at_20": 8
+      }
+    },
+    {
+      "query_id": "p1_q12",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L26_V171#6066",
+        "reranked_top1": "L26_V171#5632",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 35,
+        "baseline_unique_videos_at_20": 10,
+        "reranked_unique_videos_at_20": 9
+      }
+    },
+    {
+      "query_id": "p1_q13",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L26_V170#6377",
+        "reranked_top1": "L26_V320#1152",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 76,
+        "baseline_unique_videos_at_20": 18,
+        "reranked_unique_videos_at_20": 9
+      }
+    },
+    {
+      "query_id": "p1_q14",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L24_V008#12629",
+        "reranked_top1": "L24_V008#12300",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 38,
+        "baseline_unique_videos_at_20": 6,
+        "reranked_unique_videos_at_20": 6
+      }
+    },
+    {
+      "query_id": "p1_q15",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L21_V026#7435",
+        "reranked_top1": "L29_V012#4235",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 96,
+        "baseline_unique_videos_at_20": 10,
+        "reranked_unique_videos_at_20": 10
+      }
+    },
+    {
+      "query_id": "p1_q16",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L22_V011#15452",
+        "reranked_top1": "L22_V011#15215",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 2,
+        "baseline_unique_videos_at_20": 11,
+        "reranked_unique_videos_at_20": 12
+      }
+    },
+    {
+      "query_id": "p1_q17",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L25_V041#17019",
+        "reranked_top1": "L25_V041#17069",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 5,
+        "baseline_unique_videos_at_20": 1,
+        "reranked_unique_videos_at_20": 1
+      }
+    },
+    {
+      "query_id": "p1_q18",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L25_V002#300",
+        "reranked_top1": "L25_V051#13700",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 12,
+        "baseline_unique_videos_at_20": 3,
+        "reranked_unique_videos_at_20": 2
+      }
+    },
+    {
+      "query_id": "p1_q19",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L29_V001#22350",
+        "reranked_top1": "L29_V001#22400",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 7,
+        "baseline_unique_videos_at_20": 1,
+        "reranked_unique_videos_at_20": 1
+      }
+    },
+    {
+      "query_id": "p1_q20",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L24_V007#578",
+        "reranked_top1": "L30_V003#6672",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 98,
+        "baseline_unique_videos_at_20": 20,
+        "reranked_unique_videos_at_20": 17
+      }
+    },
+    {
+      "query_id": "p1_q21",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L21_V023#26056",
+        "reranked_top1": "L21_V013#8407",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 12,
+        "baseline_unique_videos_at_20": 11,
+        "reranked_unique_videos_at_20": 9
+      }
+    },
+    {
+      "query_id": "p1_q22",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L21_V003#26220",
+        "reranked_top1": "L22_V031#4211",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 83,
+        "baseline_unique_videos_at_20": 8,
+        "reranked_unique_videos_at_20": 10
+      }
+    },
+    {
+      "query_id": "p1_q23",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L21_V010#19480",
+        "reranked_top1": "L21_V010#19550",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 2,
+        "baseline_unique_videos_at_20": 4,
+        "reranked_unique_videos_at_20": 3
+      }
+    },
+    {
+      "query_id": "p1_q24",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L22_V008#6190",
+        "reranked_top1": "L22_V025#1678",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 13,
+        "baseline_unique_videos_at_20": 6,
+        "reranked_unique_videos_at_20": 8
+      }
+    },
+    {
+      "query_id": "p1_q25",
+      "canonical_round": "P1",
+      "truth_status": "unresolved_no_current_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L24_V011#13881",
+        "reranked_top1": "L24_V030#9250",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 21,
+        "baseline_unique_videos_at_20": 6,
+        "reranked_unique_videos_at_20": 5
+      }
+    },
+    {
+      "query_id": "p2_q01",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L21_V017#19840",
+        "reranked_top1": "L21_V026#17275",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 46,
+        "baseline_unique_videos_at_20": 10,
+        "reranked_unique_videos_at_20": 13
+      }
+    },
+    {
+      "query_id": "p2_q02",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L22_V011#29079",
+        "reranked_top1": "L22_V010#20420",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 41,
+        "baseline_unique_videos_at_20": 6,
+        "reranked_unique_videos_at_20": 6
+      }
+    },
+    {
+      "query_id": "p2_q03",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L24_V021#11354",
+        "reranked_top1": "L24_V032#13392",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 74,
+        "baseline_unique_videos_at_20": 5,
+        "reranked_unique_videos_at_20": 6
+      }
+    },
+    {
+      "query_id": "p2_q04",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L30_V072#750",
+        "reranked_top1": "L30_V072#750",
+        "top1_changed": false,
+        "reranked_top1_original_baseline_rank": 1,
+        "baseline_unique_videos_at_20": 8,
+        "reranked_unique_videos_at_20": 10
+      }
+    },
+    {
+      "query_id": "p2_q05",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L22_V024#29115",
+        "reranked_top1": "L22_V002#22594",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 76,
+        "baseline_unique_videos_at_20": 10,
+        "reranked_unique_videos_at_20": 11
+      }
+    },
+    {
+      "query_id": "p2_q06",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L22_V024#20810",
+        "reranked_top1": "L22_V024#20720",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 3,
+        "baseline_unique_videos_at_20": 9,
+        "reranked_unique_videos_at_20": 11
+      }
+    },
+    {
+      "query_id": "p2_q07",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L26_V314#5866",
+        "reranked_top1": "L28_V023#8705",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 86,
+        "baseline_unique_videos_at_20": 11,
+        "reranked_unique_videos_at_20": 11
+      }
+    },
+    {
+      "query_id": "p2_q08",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L26_V092#4945",
+        "reranked_top1": "L26_V392#3610",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 48,
+        "baseline_unique_videos_at_20": 6,
+        "reranked_unique_videos_at_20": 6
+      }
+    },
+    {
+      "query_id": "p2_q09",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L26_V484#3558",
+        "reranked_top1": "L26_V422#4658",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 50,
+        "baseline_unique_videos_at_20": 14,
+        "reranked_unique_videos_at_20": 14
+      }
+    },
+    {
+      "query_id": "p2_q10",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L23_V012#10081",
+        "reranked_top1": "L23_V012#199",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 34,
+        "baseline_unique_videos_at_20": 7,
+        "reranked_unique_videos_at_20": 6
+      }
+    },
+    {
+      "query_id": "p2_q11",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L26_V125#612",
+        "reranked_top1": "L26_V074#794",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 73,
+        "baseline_unique_videos_at_20": 13,
+        "reranked_unique_videos_at_20": 11
+      }
+    },
+    {
+      "query_id": "p2_q12",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L29_V014#21217",
+        "reranked_top1": "L29_V014#20018",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 40,
+        "baseline_unique_videos_at_20": 1,
+        "reranked_unique_videos_at_20": 1
+      }
+    },
+    {
+      "query_id": "p2_q13",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L30_V026#2482",
+        "reranked_top1": "L30_V026#2442",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 2,
+        "baseline_unique_videos_at_20": 6,
+        "reranked_unique_videos_at_20": 6
+      }
+    },
+    {
+      "query_id": "p2_q14",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L23_V003#1498",
+        "reranked_top1": "L23_V003#2361",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 41,
+        "baseline_unique_videos_at_20": 14,
+        "reranked_unique_videos_at_20": 9
+      }
+    },
+    {
+      "query_id": "p2_q15",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L25_V060#13750",
+        "reranked_top1": "L25_V060#33950",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 46,
+        "baseline_unique_videos_at_20": 1,
+        "reranked_unique_videos_at_20": 1
+      }
+    },
+    {
+      "query_id": "p2_q16",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L26_V470#3224",
+        "reranked_top1": "L26_V270#4787",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 6,
+        "baseline_unique_videos_at_20": 18,
+        "reranked_unique_videos_at_20": 13
+      }
+    },
+    {
+      "query_id": "p2_q17",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": null,
+        "reranked_top1": null,
+        "top1_changed": false,
+        "reranked_top1_original_baseline_rank": null,
+        "baseline_unique_videos_at_20": 0,
+        "reranked_unique_videos_at_20": 0
+      }
+    },
+    {
+      "query_id": "p2_q18",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L30_V012#484",
+        "reranked_top1": "L30_V029#1956",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 91,
+        "baseline_unique_videos_at_20": 9,
+        "reranked_unique_videos_at_20": 13
+      }
+    },
+    {
+      "query_id": "p2_q19",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L25_V062#12600",
+        "reranked_top1": "L25_V062#14000",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 8,
+        "baseline_unique_videos_at_20": 4,
+        "reranked_unique_videos_at_20": 2
+      }
+    },
+    {
+      "query_id": "p2_q20",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L21_V009#21172",
+        "reranked_top1": "L21_V009#21172",
+        "top1_changed": false,
+        "reranked_top1_original_baseline_rank": 1,
+        "baseline_unique_videos_at_20": 2,
+        "reranked_unique_videos_at_20": 7
+      }
+    },
+    {
+      "query_id": "p2_q21",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L26_V161#2712",
+        "reranked_top1": "L26_V161#3266",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 3,
+        "baseline_unique_videos_at_20": 10,
+        "reranked_unique_videos_at_20": 10
+      }
+    },
+    {
+      "query_id": "p2_q22",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L26_V192#4961",
+        "reranked_top1": "L26_V192#5732",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 51,
+        "baseline_unique_videos_at_20": 8,
+        "reranked_unique_videos_at_20": 5
+      }
+    },
+    {
+      "query_id": "p2_q23",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L30_V038#1653",
+        "reranked_top1": "L22_V005#2462",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 58,
+        "baseline_unique_videos_at_20": 6,
+        "reranked_unique_videos_at_20": 10
+      }
+    },
+    {
+      "query_id": "p2_q24",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L25_V012#15168",
+        "reranked_top1": "L25_V012#19942",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 73,
+        "baseline_unique_videos_at_20": 1,
+        "reranked_unique_videos_at_20": 1
+      }
+    },
+    {
+      "query_id": "p2_q25",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L24_V024#912",
+        "reranked_top1": "L24_V018#546",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 94,
+        "baseline_unique_videos_at_20": 10,
+        "reranked_unique_videos_at_20": 8
+      }
+    },
+    {
+      "query_id": "p2_q26",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L26_V450#6248",
+        "reranked_top1": "L26_V450#6118",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 2,
+        "baseline_unique_videos_at_20": 3,
+        "reranked_unique_videos_at_20": 7
+      }
+    },
+    {
+      "query_id": "p2_q27",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L26_V205#569",
+        "reranked_top1": "L26_V488#1664",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 33,
+        "baseline_unique_videos_at_20": 7,
+        "reranked_unique_videos_at_20": 10
+      }
+    },
+    {
+      "query_id": "p2_q28",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L26_V265#396",
+        "reranked_top1": "L26_V254#300",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 60,
+        "baseline_unique_videos_at_20": 14,
+        "reranked_unique_videos_at_20": 11
+      }
+    },
+    {
+      "query_id": "p2_q29",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L29_V009#17749",
+        "reranked_top1": "L29_V009#17749",
+        "top1_changed": false,
+        "reranked_top1_original_baseline_rank": 1,
+        "baseline_unique_videos_at_20": 9,
+        "reranked_unique_videos_at_20": 11
+      }
+    },
+    {
+      "query_id": "p2_q30",
+      "canonical_round": "P2",
+      "truth_status": "provenance_only_pending_human_acceptance",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L30_V023#5198",
+        "reranked_top1": "L30_V031#2127",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 60,
+        "baseline_unique_videos_at_20": 5,
+        "reranked_unique_videos_at_20": 8
+      }
+    },
+    {
+      "query_id": "p3_q01",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L26_V424#5504",
+        "reranked_top1": "L26_V072#5800",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 30,
+        "baseline_unique_videos_at_20": 13,
+        "reranked_unique_videos_at_20": 12
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": 1,
+        "reciprocal_rank": 1.0,
+        "recall_at_1": 1.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            1
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 1,
+        "official_target_ranks": [
+          [
+            1
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 1,
+          "video_id": "L26_V424",
+          "frame": 5504,
+          "target_kind": "interval",
+          "gold": [
+            5100,
+            5577
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": 18,
+        "reciprocal_rank": 0.05555555555555555,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            18
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 18,
+        "official_target_ranks": [
+          [
+            18
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 18,
+          "video_id": "L26_V424",
+          "frame": 5491,
+          "target_kind": "interval",
+          "gold": [
+            5100,
+            5577
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "delta": {
+        "recall_at_1": -1.0,
+        "recall_at_5": -1.0,
+        "recall_at_10": -1.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": -0.9444444444444444
+      }
+    },
+    {
+      "query_id": "p3_q02",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L22_V026#1754",
+        "reranked_top1": "L22_V026#564",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 16,
+        "baseline_unique_videos_at_20": 6,
+        "reranked_unique_videos_at_20": 6
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": 1,
+        "reciprocal_rank": 1.0,
+        "recall_at_1": 1.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            1
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 1,
+        "official_target_ranks": [
+          [
+            1
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 1,
+          "video_id": "L22_V026",
+          "frame": 1754,
+          "target_kind": "interval",
+          "gold": [
+            1572,
+            1775
+          ],
+          "fps": 30.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": 2,
+        "reciprocal_rank": 0.5,
+        "recall_at_1": 0.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            2
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 2,
+        "official_target_ranks": [
+          [
+            2
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 2,
+          "video_id": "L22_V026",
+          "frame": 1754,
+          "target_kind": "interval",
+          "gold": [
+            1572,
+            1775
+          ],
+          "fps": 30.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "delta": {
+        "recall_at_1": -1.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": -0.5
+      }
+    },
+    {
+      "query_id": "p3_q03",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L26_V483#3844",
+        "reranked_top1": "L26_V390#5491",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 55,
+        "baseline_unique_videos_at_20": 15,
+        "reranked_unique_videos_at_20": 15
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": null,
+        "nearest_gold_delta_seconds": null,
+        "nearest_gold": null,
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": 8,
+        "nearest_gold_delta_seconds": 0.32,
+        "nearest_gold": {
+          "rank": 13,
+          "video_id": "L26_V390",
+          "frame": 5504,
+          "target_kind": "interval",
+          "gold": [
+            5512,
+            6062
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 8,
+          "nearest_gold_delta_seconds": 0.32
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.0
+      }
+    },
+    {
+      "query_id": "p3_q04",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L25_V075#1000",
+        "reranked_top1": "L25_V075#1850",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 21,
+        "baseline_unique_videos_at_20": 1,
+        "reranked_unique_videos_at_20": 1
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": 2,
+        "reciprocal_rank": 0.5,
+        "recall_at_1": 0.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            2
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 2,
+        "official_target_ranks": [
+          [
+            2
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 2,
+          "video_id": "L25_V075",
+          "frame": 1100,
+          "target_kind": "interval",
+          "gold": [
+            1025,
+            2550
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": 1,
+        "reciprocal_rank": 1.0,
+        "recall_at_1": 1.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            1
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 1,
+        "official_target_ranks": [
+          [
+            1
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 1,
+          "video_id": "L25_V075",
+          "frame": 1850,
+          "target_kind": "interval",
+          "gold": [
+            1025,
+            2550
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "delta": {
+        "recall_at_1": 1.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.5
+      }
+    },
+    {
+      "query_id": "p3_q05",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L25_V016#5616",
+        "reranked_top1": "L25_V016#5416",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 6,
+        "baseline_unique_videos_at_20": 3,
+        "reranked_unique_videos_at_20": 2
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": 3,
+        "reciprocal_rank": 0.3333333333333333,
+        "recall_at_1": 0.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            3
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 3,
+        "official_target_ranks": [
+          [
+            3
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 3,
+          "video_id": "L25_V016",
+          "frame": 3797,
+          "target_kind": "interval",
+          "gold": [
+            3658,
+            4825
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true,
+        "evidence_retrieval": {
+          "evidence_recall_at_1": 0.0,
+          "evidence_recall_at_5": 1.0,
+          "evidence_recall_at_10": 1.0,
+          "evidence_recall_at_20": 1.0,
+          "first_evidence_rank": 3,
+          "evidence_no_hit_within_20": false
+        }
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": 15,
+        "reciprocal_rank": 0.06666666666666667,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            15
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 15,
+        "official_target_ranks": [
+          [
+            15
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 15,
+          "video_id": "L25_V016",
+          "frame": 3747,
+          "target_kind": "interval",
+          "gold": [
+            3658,
+            4825
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true,
+        "evidence_retrieval": {
+          "evidence_recall_at_1": 0.0,
+          "evidence_recall_at_5": 0.0,
+          "evidence_recall_at_10": 0.0,
+          "evidence_recall_at_20": 1.0,
+          "first_evidence_rank": 15,
+          "evidence_no_hit_within_20": false
+        }
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": -1.0,
+        "recall_at_10": -1.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": -0.26666666666666666
+      }
+    },
+    {
+      "query_id": "p3_q06",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L25_V027#42250",
+        "reranked_top1": "L25_V081#51950",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 64,
+        "baseline_unique_videos_at_20": 2,
+        "reranked_unique_videos_at_20": 3
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": 3500,
+        "nearest_gold_delta_seconds": 140.0,
+        "nearest_gold": {
+          "rank": 10,
+          "video_id": "L25_V027",
+          "frame": 7500,
+          "target_kind": "interval",
+          "gold": [
+            11000,
+            12350
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 3500,
+          "nearest_gold_delta_seconds": 140.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false,
+        "evidence_retrieval": {
+          "evidence_recall_at_1": 0.0,
+          "evidence_recall_at_5": 0.0,
+          "evidence_recall_at_10": 0.0,
+          "evidence_recall_at_20": 0.0,
+          "first_evidence_rank": null,
+          "evidence_no_hit_within_20": true
+        }
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": 14,
+        "reciprocal_rank": 0.07142857142857142,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            14
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 14,
+        "official_target_ranks": [
+          [
+            14
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 14,
+          "video_id": "L25_V027",
+          "frame": 11000,
+          "target_kind": "interval",
+          "gold": [
+            11000,
+            12350
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true,
+        "evidence_retrieval": {
+          "evidence_recall_at_1": 0.0,
+          "evidence_recall_at_5": 0.0,
+          "evidence_recall_at_10": 0.0,
+          "evidence_recall_at_20": 1.0,
+          "first_evidence_rank": 14,
+          "evidence_no_hit_within_20": false
+        }
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 1.0,
+        "reciprocal_rank": 0.07142857142857142
+      }
+    },
+    {
+      "query_id": "p3_q07",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L23_V021#11853",
+        "reranked_top1": "L23_V019#8150",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 6,
+        "baseline_unique_videos_at_20": 9,
+        "reranked_unique_videos_at_20": 10
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": 7,
+        "reciprocal_rank": 0.14285714285714285,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            7
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 7,
+        "official_target_ranks": [
+          [
+            7
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 7,
+          "video_id": "L21_V018",
+          "frame": 16450,
+          "target_kind": "interval",
+          "gold": [
+            15975,
+            16475
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": 11,
+        "reciprocal_rank": 0.09090909090909091,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            11
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 11,
+        "official_target_ranks": [
+          [
+            11
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 11,
+          "video_id": "L21_V018",
+          "frame": 16140,
+          "target_kind": "interval",
+          "gold": [
+            15975,
+            16475
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": -1.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": -0.05194805194805194
+      }
+    },
+    {
+      "query_id": "p3_q08",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L21_V018#21151",
+        "reranked_top1": "L21_V018#21418",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 3,
+        "baseline_unique_videos_at_20": 2,
+        "reranked_unique_videos_at_20": 7
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": 1,
+        "reciprocal_rank": 1.0,
+        "recall_at_1": 1.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            1
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 1,
+        "official_target_ranks": [
+          [
+            1
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 1,
+          "video_id": "L21_V018",
+          "frame": 21151,
+          "target_kind": "interval",
+          "gold": [
+            21140,
+            21420
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true,
+        "evidence_retrieval": {
+          "evidence_recall_at_1": 1.0,
+          "evidence_recall_at_5": 1.0,
+          "evidence_recall_at_10": 1.0,
+          "evidence_recall_at_20": 1.0,
+          "first_evidence_rank": 1,
+          "evidence_no_hit_within_20": false
+        }
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": 1,
+        "reciprocal_rank": 1.0,
+        "recall_at_1": 1.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            1
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 1,
+        "official_target_ranks": [
+          [
+            1
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 1,
+          "video_id": "L21_V018",
+          "frame": 21418,
+          "target_kind": "interval",
+          "gold": [
+            21140,
+            21420
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true,
+        "evidence_retrieval": {
+          "evidence_recall_at_1": 1.0,
+          "evidence_recall_at_5": 1.0,
+          "evidence_recall_at_10": 1.0,
+          "evidence_recall_at_20": 1.0,
+          "first_evidence_rank": 1,
+          "evidence_no_hit_within_20": false
+        }
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.0
+      }
+    },
+    {
+      "query_id": "p3_q09",
+      "canonical_round": "P3",
+      "truth_status": "source_text_verified_missing_ground_truth",
+      "evaluation_gate": "not_scoreable",
+      "metrics_status": "not_scored_truth_gate",
+      "ranking_change": {
+        "baseline_top1": "L22_V007#16818",
+        "reranked_top1": "L30_V056#1340",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 52,
+        "baseline_unique_videos_at_20": 6,
+        "reranked_unique_videos_at_20": 10
+      }
+    },
+    {
+      "query_id": "p3_q10",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L21_V003#25926",
+        "reranked_top1": "L21_V003#26200",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 5,
+        "baseline_unique_videos_at_20": 2,
+        "reranked_unique_videos_at_20": 2
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": 1,
+        "reciprocal_rank": 1.0,
+        "recall_at_1": 1.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            1
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 1,
+        "official_target_ranks": [
+          [
+            1
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 1,
+          "video_id": "L21_V003",
+          "frame": 25926,
+          "target_kind": "interval",
+          "gold": [
+            25759,
+            26584
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": 1,
+        "reciprocal_rank": 1.0,
+        "recall_at_1": 1.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            1
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 1,
+        "official_target_ranks": [
+          [
+            1
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 1,
+          "video_id": "L21_V003",
+          "frame": 26200,
+          "target_kind": "interval",
+          "gold": [
+            25759,
+            26584
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.0
+      }
+    },
+    {
+      "query_id": "p3_q11",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L26_V312#3658",
+        "reranked_top1": "L26_V339#3861",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 42,
+        "baseline_unique_videos_at_20": 15,
+        "reranked_unique_videos_at_20": 13
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": null,
+        "nearest_gold_delta_seconds": null,
+        "nearest_gold": null,
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": null,
+        "nearest_gold_delta_seconds": null,
+        "nearest_gold": null,
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.0
+      }
+    },
+    {
+      "query_id": "p3_q12",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L26_V158#4927",
+        "reranked_top1": "L26_V341#5814",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 99,
+        "baseline_unique_videos_at_20": 18,
+        "reranked_unique_videos_at_20": 19
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": 3,
+        "reciprocal_rank": 0.3333333333333333,
+        "recall_at_1": 0.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            3
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 3,
+        "official_target_ranks": [
+          [
+            3
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 3,
+          "video_id": "L26_V484",
+          "frame": 5932,
+          "target_kind": "interval",
+          "gold": [
+            5900,
+            6300
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": 2,
+        "reciprocal_rank": 0.5,
+        "recall_at_1": 0.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            2
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 2,
+        "official_target_ranks": [
+          [
+            2
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 2,
+          "video_id": "L26_V484",
+          "frame": 5960,
+          "target_kind": "interval",
+          "gold": [
+            5900,
+            6300
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.16666666666666669
+      }
+    },
+    {
+      "query_id": "p3_q13",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L29_V017#2066",
+        "reranked_top1": "L28_V005#351",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 26,
+        "baseline_unique_videos_at_20": 13,
+        "reranked_unique_videos_at_20": 15
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": null,
+        "nearest_gold_delta_seconds": null,
+        "nearest_gold": null,
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": 16994,
+        "nearest_gold_delta_seconds": 679.76,
+        "nearest_gold": {
+          "rank": 14,
+          "video_id": "L29_V014",
+          "frame": 1350,
+          "target_kind": "interval",
+          "gold": [
+            18344,
+            18669
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 16994,
+          "nearest_gold_delta_seconds": 679.76
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.0
+      }
+    },
+    {
+      "query_id": "p3_q14",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L30_V047#5407",
+        "reranked_top1": "L30_V047#5263",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 14,
+        "baseline_unique_videos_at_20": 1,
+        "reranked_unique_videos_at_20": 1
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": 1,
+        "reciprocal_rank": 1.0,
+        "recall_at_1": 1.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            1
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 1,
+        "official_target_ranks": [
+          [
+            1
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 1,
+          "video_id": "L30_V047",
+          "frame": 5407,
+          "target_kind": "interval",
+          "gold": [
+            5191,
+            5691
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true,
+        "evidence_retrieval": {
+          "evidence_recall_at_1": 1.0,
+          "evidence_recall_at_5": 1.0,
+          "evidence_recall_at_10": 1.0,
+          "evidence_recall_at_20": 1.0,
+          "first_evidence_rank": 1,
+          "evidence_no_hit_within_20": false
+        }
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": 1,
+        "reciprocal_rank": 1.0,
+        "recall_at_1": 1.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            1
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 1,
+        "official_target_ranks": [
+          [
+            1
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 1,
+          "video_id": "L30_V047",
+          "frame": 5263,
+          "target_kind": "interval",
+          "gold": [
+            5191,
+            5691
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true,
+        "evidence_retrieval": {
+          "evidence_recall_at_1": 1.0,
+          "evidence_recall_at_5": 1.0,
+          "evidence_recall_at_10": 1.0,
+          "evidence_recall_at_20": 1.0,
+          "first_evidence_rank": 1,
+          "evidence_no_hit_within_20": false
+        }
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.0
+      }
+    },
+    {
+      "query_id": "p3_q15",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L26_V461#2536",
+        "reranked_top1": "L26_V231#4992",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 59,
+        "baseline_unique_videos_at_20": 12,
+        "reranked_unique_videos_at_20": 15
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": 15,
+        "reciprocal_rank": 0.06666666666666667,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            15
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 15,
+        "official_target_ranks": [
+          [
+            15
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 15,
+          "video_id": "L26_V480",
+          "frame": 4588,
+          "target_kind": "interval",
+          "gold": [
+            2225,
+            4900
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": 14,
+        "reciprocal_rank": 0.07142857142857142,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            14
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 14,
+        "official_target_ranks": [
+          [
+            14
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 14,
+          "video_id": "L26_V480",
+          "frame": 4588,
+          "target_kind": "interval",
+          "gold": [
+            2225,
+            4900
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.004761904761904759
+      }
+    },
+    {
+      "query_id": "p3_q16",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L26_V438#4352",
+        "reranked_top1": "L26_V438#4343",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 27,
+        "baseline_unique_videos_at_20": 6,
+        "reranked_unique_videos_at_20": 8
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": null,
+        "nearest_gold_delta_seconds": null,
+        "nearest_gold": null,
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": 3,
+        "reciprocal_rank": 0.3333333333333333,
+        "recall_at_1": 0.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            3
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 3,
+        "official_target_ranks": [
+          [
+            3
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 3,
+          "video_id": "L26_V481",
+          "frame": 4943,
+          "target_kind": "interval",
+          "gold": [
+            4922,
+            5547
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "reciprocal_rank": 0.3333333333333333
+      }
+    },
+    {
+      "query_id": "p3_q17",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L26_V173#4439",
+        "reranked_top1": "L26_V488#3968",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 61,
+        "baseline_unique_videos_at_20": 14,
+        "reranked_unique_videos_at_20": 15
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": null,
+        "nearest_gold_delta_seconds": null,
+        "nearest_gold": null,
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": null,
+        "nearest_gold_delta_seconds": null,
+        "nearest_gold": null,
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.0
+      }
+    },
+    {
+      "query_id": "p3_q18",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L30_V002#2314",
+        "reranked_top1": "L30_V010#3340",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 2,
+        "baseline_unique_videos_at_20": 6,
+        "reranked_unique_videos_at_20": 11
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": 2,
+        "reciprocal_rank": 0.5,
+        "recall_at_1": 0.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            2
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 2,
+        "official_target_ranks": [
+          [
+            2
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 2,
+          "video_id": "L30_V010",
+          "frame": 3340,
+          "target_kind": "interval",
+          "gold": [
+            3042,
+            3542
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true,
+        "evidence_retrieval": {
+          "evidence_recall_at_1": 0.0,
+          "evidence_recall_at_5": 1.0,
+          "evidence_recall_at_10": 1.0,
+          "evidence_recall_at_20": 1.0,
+          "first_evidence_rank": 2,
+          "evidence_no_hit_within_20": false
+        }
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": 1,
+        "reciprocal_rank": 1.0,
+        "recall_at_1": 1.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            1
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 1,
+        "official_target_ranks": [
+          [
+            1
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 1,
+          "video_id": "L30_V010",
+          "frame": 3340,
+          "target_kind": "interval",
+          "gold": [
+            3042,
+            3542
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true,
+        "evidence_retrieval": {
+          "evidence_recall_at_1": 1.0,
+          "evidence_recall_at_5": 1.0,
+          "evidence_recall_at_10": 1.0,
+          "evidence_recall_at_20": 1.0,
+          "first_evidence_rank": 1,
+          "evidence_no_hit_within_20": false
+        }
+      },
+      "delta": {
+        "recall_at_1": 1.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.5
+      }
+    },
+    {
+      "query_id": "p3_q19",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L24_V008#744",
+        "reranked_top1": "L24_V019#13192",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 72,
+        "baseline_unique_videos_at_20": 5,
+        "reranked_unique_videos_at_20": 5
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": null,
+        "nearest_gold_delta_seconds": null,
+        "nearest_gold": null,
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": null,
+        "nearest_gold_delta_seconds": null,
+        "nearest_gold": null,
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.0
+      }
+    },
+    {
+      "query_id": "p3_q20",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L25_V021#14760",
+        "reranked_top1": "L25_V021#14370",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 4,
+        "baseline_unique_videos_at_20": 1,
+        "reranked_unique_videos_at_20": 1
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": 2,
+        "reciprocal_rank": 0.5,
+        "recall_at_1": 0.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            2
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 2,
+        "official_target_ranks": [
+          [
+            2
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 2,
+          "video_id": "L25_V021",
+          "frame": 14250,
+          "target_kind": "interval",
+          "gold": [
+            13968,
+            14746
+          ],
+          "fps": 30.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": 1,
+        "reciprocal_rank": 1.0,
+        "recall_at_1": 1.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            1
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 1,
+        "official_target_ranks": [
+          [
+            1
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 1,
+          "video_id": "L25_V021",
+          "frame": 14370,
+          "target_kind": "interval",
+          "gold": [
+            13968,
+            14746
+          ],
+          "fps": 30.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "delta": {
+        "recall_at_1": 1.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.5
+      }
+    },
+    {
+      "query_id": "p3_q21",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L26_V078#2108",
+        "reranked_top1": "L26_V375#5888",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 2,
+        "baseline_unique_videos_at_20": 15,
+        "reranked_unique_videos_at_20": 17
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "video_retrieval": {
+          "first_correct_video_rank": null,
+          "video_recall_at_1": 0.0,
+          "video_recall_at_5": 0.0,
+          "video_recall_at_10": 0.0,
+          "video_recall_at_20": 0.0,
+          "video_mrr_at_20": 0.0
+        },
+        "event_candidate_coverage": {
+          "event_candidate_recall_at_1": 0.0,
+          "event_candidate_recall_at_5": 0.0,
+          "event_candidate_recall_at_10": 0.0,
+          "event_candidate_recall_at_20": 0.0,
+          "all_events_candidate_hit_at_20": false
+        },
+        "localization_status": "not_implemented",
+        "end_to_end_trake_success": null,
+        "frame_localization_error": null,
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "nearest_gold_delta_frames": null,
+        "nearest_gold_delta_seconds": null,
+        "nearest_gold": null,
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "video_retrieval": {
+          "first_correct_video_rank": 2,
+          "video_recall_at_1": 0.0,
+          "video_recall_at_5": 1.0,
+          "video_recall_at_10": 1.0,
+          "video_recall_at_20": 1.0,
+          "video_mrr_at_20": 0.5
+        },
+        "event_candidate_coverage": {
+          "event_candidate_recall_at_1": 0.0,
+          "event_candidate_recall_at_5": 0.0,
+          "event_candidate_recall_at_10": 0.0,
+          "event_candidate_recall_at_20": 0.0,
+          "all_events_candidate_hit_at_20": false
+        },
+        "localization_status": "not_implemented",
+        "end_to_end_trake_success": null,
+        "frame_localization_error": null,
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "nearest_gold_delta_frames": 133,
+        "nearest_gold_delta_seconds": 5.32,
+        "nearest_gold": {
+          "rank": 4,
+          "video_id": "L26_V156",
+          "frame": 4921,
+          "target_kind": "point",
+          "gold": 4788,
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 133,
+          "nearest_gold_delta_seconds": 5.32
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.0
+      }
+    },
+    {
+      "query_id": "p3_q22",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L21_V012#20009",
+        "reranked_top1": "L21_V012#19949",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 6,
+        "baseline_unique_videos_at_20": 2,
+        "reranked_unique_videos_at_20": 2
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": 1,
+        "reciprocal_rank": 1.0,
+        "recall_at_1": 1.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            1
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 1,
+        "official_target_ranks": [
+          [
+            1
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 1,
+          "video_id": "L21_V012",
+          "frame": 20009,
+          "target_kind": "interval",
+          "gold": [
+            19845,
+            20235
+          ],
+          "fps": 30.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": 1,
+        "reciprocal_rank": 1.0,
+        "recall_at_1": 1.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            1
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 1,
+        "official_target_ranks": [
+          [
+            1
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 1,
+          "video_id": "L21_V012",
+          "frame": 19949,
+          "target_kind": "interval",
+          "gold": [
+            19845,
+            20235
+          ],
+          "fps": 30.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.0
+      }
+    },
+    {
+      "query_id": "p3_q23",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L21_V005#24386",
+        "reranked_top1": "L21_V005#24386",
+        "top1_changed": false,
+        "reranked_top1_original_baseline_rank": 1,
+        "baseline_unique_videos_at_20": 2,
+        "reranked_unique_videos_at_20": 5
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": 3,
+        "reciprocal_rank": 0.3333333333333333,
+        "recall_at_1": 0.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            3
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 3,
+        "official_target_ranks": [
+          [
+            3
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 3,
+          "video_id": "L21_V005",
+          "frame": 23109,
+          "target_kind": "interval",
+          "gold": [
+            23052,
+            24380
+          ],
+          "fps": 30.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": 3,
+        "reciprocal_rank": 0.3333333333333333,
+        "recall_at_1": 0.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            3
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 3,
+        "official_target_ranks": [
+          [
+            3
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 3,
+          "video_id": "L21_V005",
+          "frame": 23109,
+          "target_kind": "interval",
+          "gold": [
+            23052,
+            24380
+          ],
+          "fps": 30.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.0
+      }
+    },
+    {
+      "query_id": "p3_q24",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L26_V091#2688",
+        "reranked_top1": "L26_V487#2728",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 74,
+        "baseline_unique_videos_at_20": 19,
+        "reranked_unique_videos_at_20": 19
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": null,
+        "nearest_gold_delta_seconds": null,
+        "nearest_gold": null,
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false,
+        "evidence_retrieval": {
+          "evidence_recall_at_1": 0.0,
+          "evidence_recall_at_5": 0.0,
+          "evidence_recall_at_10": 0.0,
+          "evidence_recall_at_20": 0.0,
+          "first_evidence_rank": null,
+          "evidence_no_hit_within_20": true
+        }
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": null,
+        "nearest_gold_delta_seconds": null,
+        "nearest_gold": null,
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false,
+        "evidence_retrieval": {
+          "evidence_recall_at_1": 0.0,
+          "evidence_recall_at_5": 0.0,
+          "evidence_recall_at_10": 0.0,
+          "evidence_recall_at_20": 0.0,
+          "first_evidence_rank": null,
+          "evidence_no_hit_within_20": true
+        }
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.0
+      }
+    },
+    {
+      "query_id": "p3_q25",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L26_V155#6141",
+        "reranked_top1": "L26_V410#5248",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 26,
+        "baseline_unique_videos_at_20": 13,
+        "reranked_unique_videos_at_20": 10
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": 1,
+        "reciprocal_rank": 1.0,
+        "recall_at_1": 1.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            1
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 1,
+        "official_target_ranks": [
+          [
+            1
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 1,
+          "video_id": "L26_V155",
+          "frame": 6141,
+          "target_kind": "interval",
+          "gold": [
+            6000,
+            6225
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": 3,
+        "reciprocal_rank": 0.3333333333333333,
+        "recall_at_1": 0.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            3
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 3,
+        "official_target_ranks": [
+          [
+            3
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 3,
+          "video_id": "L26_V155",
+          "frame": 6194,
+          "target_kind": "interval",
+          "gold": [
+            6000,
+            6225
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "delta": {
+        "recall_at_1": -1.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": -0.6666666666666667
+      }
+    },
+    {
+      "query_id": "p3_q26",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L25_V043#7020",
+        "reranked_top1": "L25_V043#6600",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 12,
+        "baseline_unique_videos_at_20": 1,
+        "reranked_unique_videos_at_20": 1
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": 1480,
+        "nearest_gold_delta_seconds": 49.333333333333336,
+        "nearest_gold": {
+          "rank": 18,
+          "video_id": "L25_V043",
+          "frame": 6420,
+          "target_kind": "interval",
+          "gold": [
+            2480,
+            4940
+          ],
+          "fps": 30.0,
+          "nearest_gold_delta_frames": 1480,
+          "nearest_gold_delta_seconds": 49.333333333333336
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": 1480,
+        "nearest_gold_delta_seconds": 49.333333333333336,
+        "nearest_gold": {
+          "rank": 3,
+          "video_id": "L25_V043",
+          "frame": 6420,
+          "target_kind": "interval",
+          "gold": [
+            2480,
+            4940
+          ],
+          "fps": 30.0,
+          "nearest_gold_delta_frames": 1480,
+          "nearest_gold_delta_seconds": 49.333333333333336
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.0
+      }
+    },
+    {
+      "query_id": "p3_q27",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L26_V178#5120",
+        "reranked_top1": "L29_V020#20755",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 11,
+        "baseline_unique_videos_at_20": 7,
+        "reranked_unique_videos_at_20": 3
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": null,
+        "nearest_gold_delta_seconds": null,
+        "nearest_gold": null,
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false,
+        "evidence_retrieval": {
+          "evidence_recall_at_1": 0.0,
+          "evidence_recall_at_5": 0.0,
+          "evidence_recall_at_10": 0.0,
+          "evidence_recall_at_20": 0.0,
+          "first_evidence_rank": null,
+          "evidence_no_hit_within_20": true
+        }
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": null,
+        "nearest_gold_delta_seconds": null,
+        "nearest_gold": null,
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false,
+        "evidence_retrieval": {
+          "evidence_recall_at_1": 0.0,
+          "evidence_recall_at_5": 0.0,
+          "evidence_recall_at_10": 0.0,
+          "evidence_recall_at_20": 0.0,
+          "first_evidence_rank": null,
+          "evidence_no_hit_within_20": true
+        }
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.0
+      }
+    },
+    {
+      "query_id": "p3_q28",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L30_V091#6825",
+        "reranked_top1": "L30_V091#1478",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 12,
+        "baseline_unique_videos_at_20": 1,
+        "reranked_unique_videos_at_20": 1
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": 5,
+        "reciprocal_rank": 0.2,
+        "recall_at_1": 0.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            5
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 5,
+        "official_target_ranks": [
+          [
+            5
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 5,
+          "video_id": "L30_V091",
+          "frame": 3008,
+          "target_kind": "interval",
+          "gold": [
+            2848,
+            3048
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": 7,
+        "reciprocal_rank": 0.14285714285714285,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            7
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 7,
+        "official_target_ranks": [
+          [
+            7
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 7,
+          "video_id": "L30_V091",
+          "frame": 2958,
+          "target_kind": "interval",
+          "gold": [
+            2848,
+            3048
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": -1.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": -0.05714285714285716
+      }
+    },
+    {
+      "query_id": "p3_q29",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L26_V322#5682",
+        "reranked_top1": "L26_V152#6263",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 20,
+        "baseline_unique_videos_at_20": 17,
+        "reranked_unique_videos_at_20": 17
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": null,
+        "nearest_gold_delta_seconds": null,
+        "nearest_gold": null,
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": 4,
+        "reciprocal_rank": 0.25,
+        "recall_at_1": 0.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            4
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 4,
+        "official_target_ranks": [
+          [
+            4
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 4,
+          "video_id": "L26_V051",
+          "frame": 5768,
+          "target_kind": "interval",
+          "gold": [
+            5720,
+            5810
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "reciprocal_rank": 0.25
+      }
+    },
+    {
+      "query_id": "p3_q30",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L23_V018#1061",
+        "reranked_top1": "L23_V018#1061",
+        "top1_changed": false,
+        "reranked_top1_original_baseline_rank": 1,
+        "baseline_unique_videos_at_20": 5,
+        "reranked_unique_videos_at_20": 8
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": 31,
+        "nearest_gold_delta_seconds": 1.24,
+        "nearest_gold": {
+          "rank": 3,
+          "video_id": "L23_V005",
+          "frame": 2350,
+          "target_kind": "interval",
+          "gold": [
+            2167,
+            2319
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 31,
+          "nearest_gold_delta_seconds": 1.24
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": 367,
+        "nearest_gold_delta_seconds": 14.68,
+        "nearest_gold": {
+          "rank": 3,
+          "video_id": "L23_V005",
+          "frame": 1800,
+          "target_kind": "interval",
+          "gold": [
+            2167,
+            2319
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 367,
+          "nearest_gold_delta_seconds": 14.68
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.0
+      }
+    },
+    {
+      "query_id": "p3_q31",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L30_V023#4800",
+        "reranked_top1": "L30_V023#4800",
+        "top1_changed": false,
+        "reranked_top1_original_baseline_rank": 1,
+        "baseline_unique_videos_at_20": 4,
+        "reranked_unique_videos_at_20": 8
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": 6,
+        "reciprocal_rank": 0.16666666666666666,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            6
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 6,
+        "official_target_ranks": [
+          [
+            6
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 6,
+          "video_id": "L30_V023",
+          "frame": 3777,
+          "target_kind": "interval",
+          "gold": [
+            3740,
+            3790
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": 2,
+        "reciprocal_rank": 0.5,
+        "recall_at_1": 0.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            2
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 2,
+        "official_target_ranks": [
+          [
+            2
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 2,
+          "video_id": "L30_V023",
+          "frame": 3777,
+          "target_kind": "interval",
+          "gold": [
+            3740,
+            3790
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.33333333333333337
+      }
+    },
+    {
+      "query_id": "p3_q32",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L22_V007#27000",
+        "reranked_top1": "L22_V007#3889",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 71,
+        "baseline_unique_videos_at_20": 13,
+        "reranked_unique_videos_at_20": 15
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": null,
+        "nearest_gold_delta_seconds": null,
+        "nearest_gold": null,
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": null,
+        "nearest_gold_delta_seconds": null,
+        "nearest_gold": null,
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.0
+      }
+    },
+    {
+      "query_id": "p3_q33",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L23_V018#10478",
+        "reranked_top1": "L23_V009#6650",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 53,
+        "baseline_unique_videos_at_20": 6,
+        "reranked_unique_videos_at_20": 10
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": null,
+        "nearest_gold_delta_seconds": null,
+        "nearest_gold": null,
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": 1,
+        "reciprocal_rank": 1.0,
+        "recall_at_1": 1.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            1
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 1,
+        "official_target_ranks": [
+          [
+            1
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 1,
+          "video_id": "L23_V009",
+          "frame": 6650,
+          "target_kind": "interval",
+          "gold": [
+            6515,
+            6765
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "delta": {
+        "recall_at_1": 1.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "reciprocal_rank": 1.0
+      }
+    },
+    {
+      "query_id": "p3_q34",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L24_V011#14136",
+        "reranked_top1": "L24_V006#1538",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 94,
+        "baseline_unique_videos_at_20": 9,
+        "reranked_unique_videos_at_20": 8
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "video_retrieval": {
+          "first_correct_video_rank": 2,
+          "video_recall_at_1": 0.0,
+          "video_recall_at_5": 1.0,
+          "video_recall_at_10": 1.0,
+          "video_recall_at_20": 1.0,
+          "video_mrr_at_20": 0.5
+        },
+        "event_candidate_coverage": {
+          "event_candidate_recall_at_1": 0.0,
+          "event_candidate_recall_at_5": 0.0,
+          "event_candidate_recall_at_10": 0.0,
+          "event_candidate_recall_at_20": 0.0,
+          "all_events_candidate_hit_at_20": false
+        },
+        "localization_status": "not_implemented",
+        "end_to_end_trake_success": null,
+        "frame_localization_error": null,
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "nearest_gold_delta_frames": 1304,
+        "nearest_gold_delta_seconds": 52.16,
+        "nearest_gold": {
+          "rank": 9,
+          "video_id": "L24_V013",
+          "frame": 11880,
+          "target_kind": "point",
+          "gold": 10576,
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 1304,
+          "nearest_gold_delta_seconds": 52.16
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "video_retrieval": {
+          "first_correct_video_rank": 5,
+          "video_recall_at_1": 0.0,
+          "video_recall_at_5": 1.0,
+          "video_recall_at_10": 1.0,
+          "video_recall_at_20": 1.0,
+          "video_mrr_at_20": 0.2
+        },
+        "event_candidate_coverage": {
+          "event_candidate_recall_at_1": 0.0,
+          "event_candidate_recall_at_5": 0.0,
+          "event_candidate_recall_at_10": 0.0,
+          "event_candidate_recall_at_20": 0.0,
+          "all_events_candidate_hit_at_20": false
+        },
+        "localization_status": "not_implemented",
+        "end_to_end_trake_success": null,
+        "frame_localization_error": null,
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "nearest_gold_delta_frames": 1304,
+        "nearest_gold_delta_seconds": 52.16,
+        "nearest_gold": {
+          "rank": 10,
+          "video_id": "L24_V013",
+          "frame": 11880,
+          "target_kind": "point",
+          "gold": 10576,
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 1304,
+          "nearest_gold_delta_seconds": 52.16
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.0
+      }
+    },
+    {
+      "query_id": "p3_q35",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L25_V040#32670",
+        "reranked_top1": "L25_V077#28721",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 76,
+        "baseline_unique_videos_at_20": 1,
+        "reranked_unique_videos_at_20": 3
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": null,
+        "nearest_gold_delta_seconds": null,
+        "nearest_gold": null,
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false,
+        "evidence_retrieval": {
+          "evidence_recall_at_1": 0.0,
+          "evidence_recall_at_5": 0.0,
+          "evidence_recall_at_10": 0.0,
+          "evidence_recall_at_20": 0.0,
+          "first_evidence_rank": null,
+          "evidence_no_hit_within_20": true
+        }
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": null,
+        "reciprocal_rank": 0.0,
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "no_hit_within_20": true,
+        "all_targets_hit_at_20": false,
+        "target_ranks": [
+          [
+            null
+          ]
+        ],
+        "official_tolerance_hit": false,
+        "official_first_correct_rank": null,
+        "official_target_ranks": [
+          [
+            null
+          ]
+        ],
+        "nearest_gold_delta_frames": null,
+        "nearest_gold_delta_seconds": null,
+        "nearest_gold": null,
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": false,
+        "evidence_retrieval": {
+          "evidence_recall_at_1": 0.0,
+          "evidence_recall_at_5": 0.0,
+          "evidence_recall_at_10": 0.0,
+          "evidence_recall_at_20": 0.0,
+          "first_evidence_rank": null,
+          "evidence_no_hit_within_20": true
+        }
+      },
+      "delta": {
+        "recall_at_1": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": 0.0
+      }
+    },
+    {
+      "query_id": "p3_q36",
+      "canonical_round": "P3",
+      "truth_status": "provisional_source_text_verified_needs_corpus_validation",
+      "evaluation_gate": "provisional_only",
+      "metrics_status": "scored_provisional_not_organizer_gold",
+      "ranking_change": {
+        "baseline_top1": "L28_V010#14495",
+        "reranked_top1": "L30_V052#3088",
+        "top1_changed": true,
+        "reranked_top1_original_baseline_rank": 35,
+        "baseline_unique_videos_at_20": 4,
+        "reranked_unique_videos_at_20": 3
+      },
+      "baseline_metrics_at_20": {
+        "first_correct_rank": 1,
+        "reciprocal_rank": 1.0,
+        "recall_at_1": 1.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            1
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 1,
+        "official_target_ranks": [
+          [
+            1
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 1,
+          "video_id": "L28_V010",
+          "frame": 14763,
+          "target_kind": "interval",
+          "gold": [
+            14750,
+            14907
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "reranked_metrics_at_20": {
+        "first_correct_rank": 2,
+        "reciprocal_rank": 0.5,
+        "recall_at_1": 0.0,
+        "recall_at_5": 1.0,
+        "recall_at_10": 1.0,
+        "recall_at_20": 1.0,
+        "no_hit_within_20": false,
+        "all_targets_hit_at_20": true,
+        "target_ranks": [
+          [
+            2
+          ]
+        ],
+        "official_tolerance_hit": true,
+        "official_first_correct_rank": 2,
+        "official_target_ranks": [
+          [
+            2
+          ]
+        ],
+        "nearest_gold_delta_frames": 0,
+        "nearest_gold_delta_seconds": 0.0,
+        "nearest_gold": {
+          "rank": 2,
+          "video_id": "L28_V010",
+          "frame": 14813,
+          "target_kind": "interval",
+          "gold": [
+            14750,
+            14907
+          ],
+          "fps": 25.0,
+          "nearest_gold_delta_frames": 0,
+          "nearest_gold_delta_seconds": 0.0
+        },
+        "match_contract": {
+          "primary": "timestamp_seconds",
+          "retrieval_point_tolerance_seconds": 2.0,
+          "official_point_tolerance_frames": 12,
+          "legacy_point_tolerance_frames": null,
+          "tkis_intervals": "inclusive source-frame membership"
+        },
+        "retrieval_hit_2s": true
+      },
+      "delta": {
+        "recall_at_1": -1.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0,
+        "recall_at_20": 0.0,
+        "reciprocal_rank": -0.5
+      }
+    }
+  ]
+}

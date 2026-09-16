@@ -1,0 +1,132 @@
+[
+  {
+    "blob_sha": "7a1ea48bff3d33336ff37f3fb51da699c4e701c0",
+    "commit": "f0b0f4707ceab91ba7e266f72fa982dce3ae1c4b",
+    "local": "inputs/canonical_truth.jsonl",
+    "path": "benchmark-results/issue34-current-115/ground_truth_current_115.jsonl",
+    "repository": "JimmyK300/Vecna",
+    "sha256": "63f80eb6ff54ef3c623f6ae4926eba404dac8bb5543b86e31f8fa0da842b4c9f",
+    "bytes": 278815,
+    "git_blob_verified": true
+  },
+  {
+    "blob_sha": "797fe9ef462fffa32e86af4419f0fb69e916293b",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "inputs/original_truth_ledger.jsonl",
+    "path": "evaluation/headless-current-p0-p1-p2-p3-qwen-only-top100-v0/ground_truth_current_115.jsonl",
+    "repository": "JimmyK300/official-dataset-control",
+    "sha256": "79393a95aae8e51b6b475e1b35f3b5ccfef278ee05a3f444eaedc0b0f4f90819",
+    "bytes": 231543,
+    "git_blob_verified": true
+  },
+  {
+    "blob_sha": "396fcc70df9a0af14e705720104f38bb2dd47828",
+    "commit": "e0981b9022723f0a8bb20d4ccb108f725f4f2e50",
+    "local": "inputs/historical_manifest.json",
+    "path": "benchmark-results/headless-vnext-p0-p1-p2-v1/manifest.json",
+    "repository": "JimmyK300/Vecna",
+    "sha256": "5ef034fd275baaabab1dee04148302e99b4e24ad4a1accc6169b6c070baaf223",
+    "bytes": 212093,
+    "git_blob_verified": true
+  },
+  {
+    "blob_sha": "207476ce2f6ba6121e1a5255448138c702b47fb1",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "inputs/qwen_only_top100.jsonl",
+    "path": "evaluation/headless-current-p0-p1-p2-p3-qwen-only-top100-v0/qwen_only_top100.jsonl",
+    "repository": "JimmyK300/official-dataset-control",
+    "sha256": "85d5dd169bcd6934ebfa8435b6aee82ce9bc149bac3a704afbdbcb4b986568f0",
+    "bytes": 1306086,
+    "git_blob_verified": true
+  },
+  {
+    "blob_sha": "71b751c36cbf5cab6611b10ab5edf391ee078e0f",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "inputs/qwen3_vl_reranker_2b_top100.json",
+    "path": "evaluation/headless-current-p0-p1-p2-p3-qwen-only-top100-v0/qwen3_vl_reranker_2b_top100.json",
+    "repository": "JimmyK300/official-dataset-control",
+    "sha256": "4e949d95916c9fed7b11327ace67e207eb9238bb9f3beb4e66ff4873cb3ec8be",
+    "bytes": 498366,
+    "git_blob_verified": true
+  },
+  {
+    "blob_sha": "b9ab1328a7ee9f7339e69ba24fc5edcc59657d1a",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "inputs/comparison_qwen_vs_reranker.json",
+    "path": "evaluation/headless-current-p0-p1-p2-p3-qwen-only-top100-v0/comparison_qwen_vs_reranker.json",
+    "repository": "JimmyK300/official-dataset-control",
+    "sha256": "2837b36d8fbaf94dc0d7ee3f5e028a87367e9a81c80273381fef633250b8ff31",
+    "bytes": 162656,
+    "git_blob_verified": true
+  },
+  {
+    "blob_sha": "f8a506439d813d780e44db1288ac95efa373bf06",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "inputs/reranker.stdout.log",
+    "path": "evaluation/headless-current-p0-p1-p2-p3-qwen-only-top100-v0/reranker.stdout.log",
+    "repository": "JimmyK300/official-dataset-control",
+    "sha256": "5b0b9d94ec231d50176b5643648002b42c11bd8a6870e9da37d6f66ef9a54ed5",
+    "bytes": 58774,
+    "git_blob_verified": true
+  },
+  {
+    "blob_sha": "2e56403a52c4fc49d2aadb87196bef646ed5556e",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "inputs/capability_p0.jsonl",
+    "path": "evaluation/queries/benchmark/capability-decomposition-v0/p0.jsonl",
+    "repository": "JimmyK300/official-dataset-control",
+    "sha256": "c5ac1d260b7d5868622122aa7346ed49843c099633797e020e250e460fa79d63",
+    "bytes": 14706,
+    "git_blob_verified": true
+  },
+  {
+    "blob_sha": "a2668984dc020619989efcf6c146e0ed6300a535",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "inputs/capability_p1.jsonl",
+    "path": "evaluation/queries/benchmark/capability-decomposition-v0/p1.jsonl",
+    "repository": "JimmyK300/official-dataset-control",
+    "sha256": "bf5f9b7c58797bdcba552de6754cdf12f5e9da44c1b69674ccb66b1a5d593d86",
+    "bytes": 15235,
+    "git_blob_verified": true
+  },
+  {
+    "blob_sha": "80ecd87d9ddb8b44033c07f11193bb53593d0117",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "inputs/capability_p2.jsonl",
+    "path": "evaluation/queries/benchmark/capability-decomposition-v0/p2.jsonl",
+    "repository": "JimmyK300/official-dataset-control",
+    "sha256": "515fa14039e9f62e1751c3ffcc9aad1e03da42fbaa020429936caa539b39344c",
+    "bytes": 18230,
+    "git_blob_verified": true
+  },
+  {
+    "blob_sha": "1e28904f7f8537592e4617b8f16e55c4df81e02c",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "inputs/capability_p3.jsonl",
+    "path": "evaluation/queries/benchmark/capability-decomposition-v0/p3.jsonl",
+    "repository": "JimmyK300/official-dataset-control",
+    "sha256": "a5d6497f0efa721fc0d4666387a32b66f1066881c9f0d4d9f01192bea4187096",
+    "bytes": 26394,
+    "git_blob_verified": true
+  },
+  {
+    "repository": "JimmyK300/official-dataset-control",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "path": "experiments/temporal-sequence-retrieval-v1/control_113.jsonl",
+    "local": "inputs/legacy_temporal_control_113.jsonl",
+    "blob_sha": "12cd9b33fec74ace71c6dabd1d83b2b593ac0b8d",
+    "sha256": "91f61d16a0930222af2450da127352c25825ba9b46faf546e475b2769c5a22a8",
+    "bytes": 649393,
+    "git_blob_verified": true
+  },
+  {
+    "blob_sha": "1c47b0abe5d81730e33f10d9c33d627d50cae58c",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "reference/evaluate_reranker_fusion.py",
+    "path": "experiments/vecna-reranker-fusion-v1-20260914/code/aic51-src/script/evaluate_reranker_fusion.py",
+    "repository": "JimmyK300/official-dataset-control",
+    "sha256": "82cbc5d7f5b6309f747165f8f278d4c3b66e9db83092c1808d2f72d1f8e76316",
+    "bytes": 18734,
+    "git_blob_verified": true
+  }
+]

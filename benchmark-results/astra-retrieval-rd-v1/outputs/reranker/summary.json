@@ -1,0 +1,1239 @@
+{
+  "schema": "vecna82/packet-c-retained-reranker-audit-v1",
+  "cohort": {
+    "exported": 115,
+    "scored": 113,
+    "excluded": [
+      "p0_q15",
+      "p3_q09"
+    ]
+  },
+  "contracts": {
+    "video": "First candidate rank containing any accepted target video; candidate positions retain duplicates; not deduplicated-video ranking.",
+    "frozen": "72 historical ranges + 6 strict all-event TRAKE + 35 P3 source-text provisional targets (including 2 fractional TRAKE). QA scores retrieval location, not answer accuracy.",
+    "truth_status": "Frozen historical benchmark truth is a development control, not organizer gold; historical TRAKE windows use provisional submission anchors. effective_truth_basis slices expose these proxy tiers separately.",
+    "range_boundary": "inclusive",
+    "p3_point_tolerance": "50 frames (25 FPS * 2 seconds), frozen setting, not video-specific measured FPS",
+    "retention": "114 reranker rows retain top20, one empty row; positions beyond20 unavailable and never imputed.",
+    "uncertainty": "Paired query bootstrap describes this 113-query cohort under query-resampling assumptions; shared videos/templates can violate independence. No held-out validation, no multiplicity-adjusted slice inference.",
+    "slices": "Capability join uses canonical phase and source query number, not reordered current query ordinal. Overlapping tags are descriptive and are not a deployable selection rule."
+  },
+  "verification": {
+    "exact_113_join": true,
+    "all_115_texts_match_between_truth_baseline_reranker": true,
+    "canonical_scoring_truth_matches_historical_and_original_p3": true,
+    "every_frozen_per_query_metric_matches_pinned_control_reproduction": true,
+    "all_retained_candidates_match_original_baseline_rank": true,
+    "verified_retained_candidate_links": 2280
+  },
+  "ranking_changes": {
+    "all115_top20_order_changed": 114,
+    "all115_top1_identity_changed": 103,
+    "scored113_any_reported_metric_changed": 66,
+    "metric_changed_query_ids": [
+      "p0_q01",
+      "p0_q02",
+      "p0_q04",
+      "p0_q05",
+      "p0_q10",
+      "p0_q11",
+      "p0_q17",
+      "p0_q19",
+      "p0_q20",
+      "p0_q23",
+      "p0_q24",
+      "p1_q01",
+      "p1_q03",
+      "p1_q06",
+      "p1_q08",
+      "p1_q09",
+      "p1_q10",
+      "p1_q11",
+      "p1_q13",
+      "p1_q15",
+      "p1_q20",
+      "p1_q21",
+      "p1_q22",
+      "p1_q24",
+      "p1_q25",
+      "p2_q02",
+      "p2_q05",
+      "p2_q07",
+      "p2_q08",
+      "p2_q09",
+      "p2_q10",
+      "p2_q11",
+      "p2_q12",
+      "p2_q14",
+      "p2_q15",
+      "p2_q16",
+      "p2_q18",
+      "p2_q19",
+      "p2_q21",
+      "p2_q23",
+      "p2_q24",
+      "p2_q25",
+      "p2_q28",
+      "p2_q29",
+      "p2_q30",
+      "p3_q01",
+      "p3_q02",
+      "p3_q03",
+      "p3_q04",
+      "p3_q05",
+      "p3_q06",
+      "p3_q07",
+      "p3_q12",
+      "p3_q13",
+      "p3_q15",
+      "p3_q16",
+      "p3_q18",
+      "p3_q20",
+      "p3_q21",
+      "p3_q25",
+      "p3_q28",
+      "p3_q29",
+      "p3_q31",
+      "p3_q33",
+      "p3_q34",
+      "p3_q36"
+    ]
+  },
+  "overall": {
+    "video": {
+      "count": 113,
+      "baseline": {
+        "R@1": {
+          "mean": 0.5221238938053098,
+          "sum": 59.0
+        },
+        "R@5": {
+          "mean": 0.6106194690265486,
+          "sum": 69.0
+        },
+        "R@10": {
+          "mean": 0.672566371681416,
+          "sum": 76.0
+        },
+        "R@20": {
+          "mean": 0.7256637168141593,
+          "sum": 82.0
+        },
+        "MRR@20": {
+          "mean": 0.5706563102580803,
+          "sum": 64.48416305916307
+        }
+      },
+      "reranker": {
+        "R@1": {
+          "mean": 0.5221238938053098,
+          "sum": 59.0
+        },
+        "R@5": {
+          "mean": 0.672566371681416,
+          "sum": 76.0
+        },
+        "R@10": {
+          "mean": 0.7168141592920354,
+          "sum": 81.0
+        },
+        "R@20": {
+          "mean": 0.831858407079646,
+          "sum": 94.0
+        },
+        "MRR@20": {
+          "mean": 0.5874939405964228,
+          "sum": 66.38681528739578
+        }
+      },
+      "paired": {
+        "R@1": {
+          "mean_delta": 0.0,
+          "sum_delta": 0.0,
+          "improved_count": 10,
+          "regressed_count": 10,
+          "unchanged_count": 93,
+          "improved_query_ids": [
+            "p0_q01",
+            "p1_q20",
+            "p2_q08",
+            "p2_q09",
+            "p2_q11",
+            "p2_q28",
+            "p2_q30",
+            "p3_q03",
+            "p3_q18",
+            "p3_q33"
+          ],
+          "regressed_query_ids": [
+            "p0_q19",
+            "p1_q15",
+            "p1_q21",
+            "p1_q22",
+            "p1_q24",
+            "p2_q16",
+            "p3_q01",
+            "p3_q06",
+            "p3_q25",
+            "p3_q36"
+          ],
+          "exact_two_sided_mcnemar_p": 1.0,
+          "bootstrap": {
+            "mean_delta": 0.0,
+            "percentile_95_ci": [
+              -0.07964601769911504,
+              0.07964601769911504
+            ],
+            "resamples": 10000,
+            "seed": 82,
+            "unit": "paired query",
+            "method": "ordinary nonparametric percentile bootstrap"
+          }
+        },
+        "R@5": {
+          "mean_delta": 0.061946902654867256,
+          "sum_delta": 7.0,
+          "improved_count": 14,
+          "regressed_count": 7,
+          "unchanged_count": 92,
+          "improved_query_ids": [
+            "p0_q17",
+            "p1_q10",
+            "p1_q20",
+            "p1_q25",
+            "p2_q10",
+            "p2_q11",
+            "p2_q28",
+            "p2_q29",
+            "p2_q30",
+            "p3_q03",
+            "p3_q16",
+            "p3_q21",
+            "p3_q29",
+            "p3_q33"
+          ],
+          "regressed_query_ids": [
+            "p0_q19",
+            "p0_q23",
+            "p1_q21",
+            "p2_q14",
+            "p2_q16",
+            "p3_q01",
+            "p3_q06"
+          ],
+          "exact_two_sided_mcnemar_p": 0.18924713134765625,
+          "bootstrap": {
+            "mean_delta": 0.061946902654867256,
+            "percentile_95_ci": [
+              -0.017699115044247787,
+              0.1415929203539823
+            ],
+            "resamples": 10000,
+            "seed": 82,
+            "unit": "paired query",
+            "method": "ordinary nonparametric percentile bootstrap"
+          }
+        },
+        "R@10": {
+          "mean_delta": 0.04424778761061947,
+          "sum_delta": 5.0,
+          "improved_count": 11,
+          "regressed_count": 6,
+          "unchanged_count": 96,
+          "improved_query_ids": [
+            "p0_q17",
+            "p0_q24",
+            "p1_q20",
+            "p2_q11",
+            "p2_q25",
+            "p2_q30",
+            "p3_q03",
+            "p3_q16",
+            "p3_q21",
+            "p3_q29",
+            "p3_q33"
+          ],
+          "regressed_query_ids": [
+            "p0_q19",
+            "p1_q09",
+            "p1_q21",
+            "p2_q14",
+            "p2_q16",
+            "p3_q01"
+          ],
+          "exact_two_sided_mcnemar_p": 0.332305908203125,
+          "bootstrap": {
+            "mean_delta": 0.04424778761061947,
+            "percentile_95_ci": [
+              -0.02654867256637168,
+              0.11504424778761062
+            ],
+            "resamples": 10000,
+            "seed": 82,
+            "unit": "paired query",
+            "method": "ordinary nonparametric percentile bootstrap"
+          }
+        },
+        "R@20": {
+          "mean_delta": 0.10619469026548672,
+          "sum_delta": 12.0,
+          "improved_count": 13,
+          "regressed_count": 1,
+          "unchanged_count": 99,
+          "improved_query_ids": [
+            "p0_q02",
+            "p0_q17",
+            "p1_q20",
+            "p2_q07",
+            "p2_q11",
+            "p2_q18",
+            "p2_q23",
+            "p3_q03",
+            "p3_q13",
+            "p3_q16",
+            "p3_q21",
+            "p3_q29",
+            "p3_q33"
+          ],
+          "regressed_query_ids": [
+            "p2_q14"
+          ],
+          "exact_two_sided_mcnemar_p": 0.0018310546875,
+          "bootstrap": {
+            "mean_delta": 0.10619469026548672,
+            "percentile_95_ci": [
+              0.04424778761061947,
+              0.168141592920354
+            ],
+            "resamples": 10000,
+            "seed": 82,
+            "unit": "paired query",
+            "method": "ordinary nonparametric percentile bootstrap"
+          }
+        },
+        "MRR@20": {
+          "mean_delta": 0.016837630338342686,
+          "sum_delta": 1.9026522282327236,
+          "improved_count": 28,
+          "regressed_count": 17,
+          "unchanged_count": 68,
+          "improved_query_ids": [
+            "p0_q01",
+            "p0_q02",
+            "p0_q17",
+            "p0_q24",
+            "p1_q10",
+            "p1_q13",
+            "p1_q20",
+            "p1_q25",
+            "p2_q07",
+            "p2_q08",
+            "p2_q09",
+            "p2_q10",
+            "p2_q11",
+            "p2_q18",
+            "p2_q23",
+            "p2_q25",
+            "p2_q28",
+            "p2_q29",
+            "p2_q30",
+            "p3_q03",
+            "p3_q12",
+            "p3_q13",
+            "p3_q15",
+            "p3_q16",
+            "p3_q18",
+            "p3_q21",
+            "p3_q29",
+            "p3_q33"
+          ],
+          "regressed_query_ids": [
+            "p0_q19",
+            "p0_q23",
+            "p1_q09",
+            "p1_q15",
+            "p1_q21",
+            "p1_q22",
+            "p1_q24",
+            "p2_q02",
+            "p2_q05",
+            "p2_q14",
+            "p2_q16",
+            "p3_q01",
+            "p3_q06",
+            "p3_q07",
+            "p3_q25",
+            "p3_q34",
+            "p3_q36"
+          ],
+          "bootstrap": {
+            "mean_delta": 0.016837630338342686,
+            "percentile_95_ci": [
+              -0.04792212038838659,
+              0.08303259168055975
+            ],
+            "resamples": 10000,
+            "seed": 82,
+            "unit": "paired query",
+            "method": "ordinary nonparametric percentile bootstrap"
+          }
+        }
+      }
+    },
+    "frozen": {
+      "count": 113,
+      "baseline": {
+        "R@1": {
+          "mean": 0.36283185840707965,
+          "sum": 41.0
+        },
+        "R@5": {
+          "mean": 0.49557522123893805,
+          "sum": 56.0
+        },
+        "R@10": {
+          "mean": 0.5752212389380531,
+          "sum": 65.0
+        },
+        "R@20": {
+          "mean": 0.6017699115044248,
+          "sum": 68.0
+        },
+        "MRR@20": {
+          "mean": 0.4243397949150161,
+          "sum": 47.95039682539682
+        }
+      },
+      "reranker": {
+        "R@1": {
+          "mean": 0.35398230088495575,
+          "sum": 40.0
+        },
+        "R@5": {
+          "mean": 0.5398230088495575,
+          "sum": 61.0
+        },
+        "R@10": {
+          "mean": 0.5663716814159292,
+          "sum": 64.0
+        },
+        "R@20": {
+          "mean": 0.672566371681416,
+          "sum": 76.0
+        },
+        "MRR@20": {
+          "mean": 0.4320209888728889,
+          "sum": 48.81837174263645
+        }
+      },
+      "paired": {
+        "R@1": {
+          "mean_delta": -0.008849557522123894,
+          "sum_delta": -1.0,
+          "improved_count": 15,
+          "regressed_count": 16,
+          "unchanged_count": 82,
+          "improved_query_ids": [
+            "p0_q01",
+            "p0_q04",
+            "p1_q08",
+            "p1_q20",
+            "p2_q08",
+            "p2_q09",
+            "p2_q11",
+            "p2_q12",
+            "p2_q15",
+            "p2_q24",
+            "p2_q28",
+            "p3_q04",
+            "p3_q18",
+            "p3_q20",
+            "p3_q33"
+          ],
+          "regressed_query_ids": [
+            "p0_q05",
+            "p0_q10",
+            "p0_q19",
+            "p1_q03",
+            "p1_q06",
+            "p1_q15",
+            "p1_q21",
+            "p1_q22",
+            "p1_q24",
+            "p2_q16",
+            "p2_q19",
+            "p2_q21",
+            "p3_q01",
+            "p3_q02",
+            "p3_q25",
+            "p3_q36"
+          ],
+          "exact_two_sided_mcnemar_p": 1.0,
+          "bootstrap": {
+            "mean_delta": -0.008849557522123894,
+            "percentile_95_ci": [
+              -0.10619469026548672,
+              0.08849557522123894
+            ],
+            "resamples": 10000,
+            "seed": 82,
+            "unit": "paired query",
+            "method": "ordinary nonparametric percentile bootstrap"
+          }
+        },
+        "R@5": {
+          "mean_delta": 0.04424778761061947,
+          "sum_delta": 5.0,
+          "improved_count": 15,
+          "regressed_count": 10,
+          "unchanged_count": 88,
+          "improved_query_ids": [
+            "p0_q11",
+            "p1_q01",
+            "p1_q08",
+            "p1_q10",
+            "p1_q20",
+            "p2_q10",
+            "p2_q11",
+            "p2_q12",
+            "p2_q15",
+            "p2_q24",
+            "p2_q28",
+            "p3_q16",
+            "p3_q29",
+            "p3_q31",
+            "p3_q33"
+          ],
+          "regressed_query_ids": [
+            "p0_q19",
+            "p1_q06",
+            "p1_q11",
+            "p1_q21",
+            "p2_q14",
+            "p2_q16",
+            "p2_q19",
+            "p3_q01",
+            "p3_q05",
+            "p3_q28"
+          ],
+          "exact_two_sided_mcnemar_p": 0.42435622215270996,
+          "bootstrap": {
+            "mean_delta": 0.04424778761061947,
+            "percentile_95_ci": [
+              -0.04424778761061947,
+              0.13274336283185842
+            ],
+            "resamples": 10000,
+            "seed": 82,
+            "unit": "paired query",
+            "method": "ordinary nonparametric percentile bootstrap"
+          }
+        },
+        "R@10": {
+          "mean_delta": -0.008849557522123894,
+          "sum_delta": -1.0,
+          "improved_count": 8,
+          "regressed_count": 9,
+          "unchanged_count": 96,
+          "improved_query_ids": [
+            "p1_q20",
+            "p2_q11",
+            "p2_q12",
+            "p2_q24",
+            "p2_q28",
+            "p3_q16",
+            "p3_q29",
+            "p3_q33"
+          ],
+          "regressed_query_ids": [
+            "p0_q19",
+            "p1_q09",
+            "p1_q21",
+            "p2_q14",
+            "p2_q16",
+            "p2_q19",
+            "p3_q01",
+            "p3_q05",
+            "p3_q07"
+          ],
+          "exact_two_sided_mcnemar_p": 1.0,
+          "bootstrap": {
+            "mean_delta": -0.008849557522123894,
+            "percentile_95_ci": [
+              -0.07964601769911504,
+              0.061946902654867256
+            ],
+            "resamples": 10000,
+            "seed": 82,
+            "unit": "paired query",
+            "method": "ordinary nonparametric percentile bootstrap"
+          }
+        },
+        "R@20": {
+          "mean_delta": 0.07079646017699115,
+          "sum_delta": 8.0,
+          "improved_count": 9,
+          "regressed_count": 1,
+          "unchanged_count": 103,
+          "improved_query_ids": [
+            "p0_q20",
+            "p1_q20",
+            "p2_q11",
+            "p2_q24",
+            "p2_q28",
+            "p3_q06",
+            "p3_q16",
+            "p3_q29",
+            "p3_q33"
+          ],
+          "regressed_query_ids": [
+            "p2_q14"
+          ],
+          "exact_two_sided_mcnemar_p": 0.021484375,
+          "bootstrap": {
+            "mean_delta": 0.07079646017699115,
+            "percentile_95_ci": [
+              0.017699115044247787,
+              0.12389380530973451
+            ],
+            "resamples": 10000,
+            "seed": 82,
+            "unit": "paired query",
+            "method": "ordinary nonparametric percentile bootstrap"
+          }
+        },
+        "MRR@20": {
+          "mean_delta": 0.00768119395787277,
+          "sum_delta": 0.8679749172396231,
+          "improved_count": 26,
+          "regressed_count": 24,
+          "unchanged_count": 63,
+          "improved_query_ids": [
+            "p0_q01",
+            "p0_q04",
+            "p0_q11",
+            "p0_q20",
+            "p1_q01",
+            "p1_q08",
+            "p1_q10",
+            "p1_q20",
+            "p2_q08",
+            "p2_q09",
+            "p2_q10",
+            "p2_q11",
+            "p2_q12",
+            "p2_q15",
+            "p2_q24",
+            "p2_q28",
+            "p3_q04",
+            "p3_q06",
+            "p3_q12",
+            "p3_q15",
+            "p3_q16",
+            "p3_q18",
+            "p3_q20",
+            "p3_q29",
+            "p3_q31",
+            "p3_q33"
+          ],
+          "regressed_query_ids": [
+            "p0_q05",
+            "p0_q10",
+            "p0_q19",
+            "p1_q03",
+            "p1_q06",
+            "p1_q09",
+            "p1_q11",
+            "p1_q15",
+            "p1_q21",
+            "p1_q22",
+            "p1_q24",
+            "p2_q02",
+            "p2_q05",
+            "p2_q14",
+            "p2_q16",
+            "p2_q19",
+            "p2_q21",
+            "p3_q01",
+            "p3_q02",
+            "p3_q05",
+            "p3_q07",
+            "p3_q25",
+            "p3_q28",
+            "p3_q36"
+          ],
+          "bootstrap": {
+            "mean_delta": 0.00768119395787277,
+            "percentile_95_ci": [
+              -0.06587895999107607,
+              0.08508719581289205
+            ],
+            "resamples": 10000,
+            "seed": 82,
+            "unit": "paired query",
+            "method": "ordinary nonparametric percentile bootstrap"
+          }
+        }
+      }
+    },
+    "matched_timeline": {
+      "count": 113,
+      "baseline": {
+        "R@1": {
+          "mean": 0.36283185840707965,
+          "sum": 41.0
+        },
+        "R@5": {
+          "mean": 0.49557522123893805,
+          "sum": 56.0
+        },
+        "R@10": {
+          "mean": 0.5752212389380531,
+          "sum": 65.0
+        },
+        "R@20": {
+          "mean": 0.6017699115044248,
+          "sum": 68.0
+        },
+        "MRR@20": {
+          "mean": 0.4243397949150161,
+          "sum": 47.95039682539682
+        }
+      },
+      "reranker": {
+        "R@1": {
+          "mean": 0.35398230088495575,
+          "sum": 40.0
+        },
+        "R@5": {
+          "mean": 0.5398230088495575,
+          "sum": 61.0
+        },
+        "R@10": {
+          "mean": 0.5663716814159292,
+          "sum": 64.0
+        },
+        "R@20": {
+          "mean": 0.672566371681416,
+          "sum": 76.0
+        },
+        "MRR@20": {
+          "mean": 0.4320209888728889,
+          "sum": 48.81837174263645
+        }
+      },
+      "paired": {
+        "R@1": {
+          "mean_delta": -0.008849557522123894,
+          "sum_delta": -1.0,
+          "improved_count": 15,
+          "regressed_count": 16,
+          "unchanged_count": 82,
+          "improved_query_ids": [
+            "p0_q01",
+            "p0_q04",
+            "p1_q08",
+            "p1_q20",
+            "p2_q08",
+            "p2_q09",
+            "p2_q11",
+            "p2_q12",
+            "p2_q15",
+            "p2_q24",
+            "p2_q28",
+            "p3_q04",
+            "p3_q18",
+            "p3_q20",
+            "p3_q33"
+          ],
+          "regressed_query_ids": [
+            "p0_q05",
+            "p0_q10",
+            "p0_q19",
+            "p1_q03",
+            "p1_q06",
+            "p1_q15",
+            "p1_q21",
+            "p1_q22",
+            "p1_q24",
+            "p2_q16",
+            "p2_q19",
+            "p2_q21",
+            "p3_q01",
+            "p3_q02",
+            "p3_q25",
+            "p3_q36"
+          ],
+          "exact_two_sided_mcnemar_p": 1.0
+        },
+        "R@5": {
+          "mean_delta": 0.04424778761061947,
+          "sum_delta": 5.0,
+          "improved_count": 15,
+          "regressed_count": 10,
+          "unchanged_count": 88,
+          "improved_query_ids": [
+            "p0_q11",
+            "p1_q01",
+            "p1_q08",
+            "p1_q10",
+            "p1_q20",
+            "p2_q10",
+            "p2_q11",
+            "p2_q12",
+            "p2_q15",
+            "p2_q24",
+            "p2_q28",
+            "p3_q16",
+            "p3_q29",
+            "p3_q31",
+            "p3_q33"
+          ],
+          "regressed_query_ids": [
+            "p0_q19",
+            "p1_q06",
+            "p1_q11",
+            "p1_q21",
+            "p2_q14",
+            "p2_q16",
+            "p2_q19",
+            "p3_q01",
+            "p3_q05",
+            "p3_q28"
+          ],
+          "exact_two_sided_mcnemar_p": 0.42435622215270996
+        },
+        "R@10": {
+          "mean_delta": -0.008849557522123894,
+          "sum_delta": -1.0,
+          "improved_count": 8,
+          "regressed_count": 9,
+          "unchanged_count": 96,
+          "improved_query_ids": [
+            "p1_q20",
+            "p2_q11",
+            "p2_q12",
+            "p2_q24",
+            "p2_q28",
+            "p3_q16",
+            "p3_q29",
+            "p3_q33"
+          ],
+          "regressed_query_ids": [
+            "p0_q19",
+            "p1_q09",
+            "p1_q21",
+            "p2_q14",
+            "p2_q16",
+            "p2_q19",
+            "p3_q01",
+            "p3_q05",
+            "p3_q07"
+          ],
+          "exact_two_sided_mcnemar_p": 1.0
+        },
+        "R@20": {
+          "mean_delta": 0.07079646017699115,
+          "sum_delta": 8.0,
+          "improved_count": 9,
+          "regressed_count": 1,
+          "unchanged_count": 103,
+          "improved_query_ids": [
+            "p0_q20",
+            "p1_q20",
+            "p2_q11",
+            "p2_q24",
+            "p2_q28",
+            "p3_q06",
+            "p3_q16",
+            "p3_q29",
+            "p3_q33"
+          ],
+          "regressed_query_ids": [
+            "p2_q14"
+          ],
+          "exact_two_sided_mcnemar_p": 0.021484375
+        },
+        "MRR@20": {
+          "mean_delta": 0.00768119395787277,
+          "sum_delta": 0.8679749172396231,
+          "improved_count": 26,
+          "regressed_count": 24,
+          "unchanged_count": 63,
+          "improved_query_ids": [
+            "p0_q01",
+            "p0_q04",
+            "p0_q11",
+            "p0_q20",
+            "p1_q01",
+            "p1_q08",
+            "p1_q10",
+            "p1_q20",
+            "p2_q08",
+            "p2_q09",
+            "p2_q10",
+            "p2_q11",
+            "p2_q12",
+            "p2_q15",
+            "p2_q24",
+            "p2_q28",
+            "p3_q04",
+            "p3_q06",
+            "p3_q12",
+            "p3_q15",
+            "p3_q16",
+            "p3_q18",
+            "p3_q20",
+            "p3_q29",
+            "p3_q31",
+            "p3_q33"
+          ],
+          "regressed_query_ids": [
+            "p0_q05",
+            "p0_q10",
+            "p0_q19",
+            "p1_q03",
+            "p1_q06",
+            "p1_q09",
+            "p1_q11",
+            "p1_q15",
+            "p1_q21",
+            "p1_q22",
+            "p1_q24",
+            "p2_q02",
+            "p2_q05",
+            "p2_q14",
+            "p2_q16",
+            "p2_q19",
+            "p2_q21",
+            "p3_q01",
+            "p3_q02",
+            "p3_q05",
+            "p3_q07",
+            "p3_q25",
+            "p3_q28",
+            "p3_q36"
+          ]
+        }
+      }
+    },
+    "frame_only": {
+      "count": 113,
+      "baseline": {
+        "R@1": {
+          "mean": 0.35398230088495575,
+          "sum": 40.0
+        },
+        "R@5": {
+          "mean": 0.48672566371681414,
+          "sum": 55.0
+        },
+        "R@10": {
+          "mean": 0.5663716814159292,
+          "sum": 64.0
+        },
+        "R@20": {
+          "mean": 0.6017699115044248,
+          "sum": 68.0
+        },
+        "MRR@20": {
+          "mean": 0.41612234864447256,
+          "sum": 47.0218253968254
+        }
+      },
+      "reranker": {
+        "R@1": {
+          "mean": 0.35398230088495575,
+          "sum": 40.0
+        },
+        "R@5": {
+          "mean": 0.5398230088495575,
+          "sum": 61.0
+        },
+        "R@10": {
+          "mean": 0.5663716814159292,
+          "sum": 64.0
+        },
+        "R@20": {
+          "mean": 0.672566371681416,
+          "sum": 76.0
+        },
+        "MRR@20": {
+          "mean": 0.4320209888728889,
+          "sum": 48.81837174263645
+        }
+      },
+      "paired": {
+        "R@1": {
+          "mean_delta": 0.0,
+          "sum_delta": 0.0,
+          "improved_count": 15,
+          "regressed_count": 15,
+          "unchanged_count": 83,
+          "improved_query_ids": [
+            "p0_q01",
+            "p0_q04",
+            "p1_q08",
+            "p1_q20",
+            "p2_q08",
+            "p2_q09",
+            "p2_q11",
+            "p2_q12",
+            "p2_q15",
+            "p2_q24",
+            "p2_q28",
+            "p3_q04",
+            "p3_q18",
+            "p3_q20",
+            "p3_q33"
+          ],
+          "regressed_query_ids": [
+            "p0_q05",
+            "p0_q10",
+            "p0_q19",
+            "p1_q03",
+            "p1_q06",
+            "p1_q15",
+            "p1_q21",
+            "p1_q22",
+            "p1_q24",
+            "p2_q16",
+            "p2_q19",
+            "p2_q21",
+            "p3_q01",
+            "p3_q02",
+            "p3_q25"
+          ],
+          "exact_two_sided_mcnemar_p": 1.0
+        },
+        "R@5": {
+          "mean_delta": 0.05309734513274336,
+          "sum_delta": 6.0,
+          "improved_count": 16,
+          "regressed_count": 10,
+          "unchanged_count": 87,
+          "improved_query_ids": [
+            "p0_q11",
+            "p1_q01",
+            "p1_q08",
+            "p1_q10",
+            "p1_q20",
+            "p2_q10",
+            "p2_q11",
+            "p2_q12",
+            "p2_q15",
+            "p2_q24",
+            "p2_q28",
+            "p3_q16",
+            "p3_q29",
+            "p3_q31",
+            "p3_q33",
+            "p3_q36"
+          ],
+          "regressed_query_ids": [
+            "p0_q19",
+            "p1_q06",
+            "p1_q11",
+            "p1_q21",
+            "p2_q14",
+            "p2_q16",
+            "p2_q19",
+            "p3_q01",
+            "p3_q05",
+            "p3_q28"
+          ],
+          "exact_two_sided_mcnemar_p": 0.32693958282470703
+        },
+        "R@10": {
+          "mean_delta": 0.0,
+          "sum_delta": 0.0,
+          "improved_count": 9,
+          "regressed_count": 9,
+          "unchanged_count": 95,
+          "improved_query_ids": [
+            "p1_q20",
+            "p2_q11",
+            "p2_q12",
+            "p2_q24",
+            "p2_q28",
+            "p3_q16",
+            "p3_q29",
+            "p3_q33",
+            "p3_q36"
+          ],
+          "regressed_query_ids": [
+            "p0_q19",
+            "p1_q09",
+            "p1_q21",
+            "p2_q14",
+            "p2_q16",
+            "p2_q19",
+            "p3_q01",
+            "p3_q05",
+            "p3_q07"
+          ],
+          "exact_two_sided_mcnemar_p": 1.0
+        },
+        "R@20": {
+          "mean_delta": 0.07079646017699115,
+          "sum_delta": 8.0,
+          "improved_count": 9,
+          "regressed_count": 1,
+          "unchanged_count": 103,
+          "improved_query_ids": [
+            "p0_q20",
+            "p1_q20",
+            "p2_q11",
+            "p2_q24",
+            "p2_q28",
+            "p3_q06",
+            "p3_q16",
+            "p3_q29",
+            "p3_q33"
+          ],
+          "regressed_query_ids": [
+            "p2_q14"
+          ],
+          "exact_two_sided_mcnemar_p": 0.021484375
+        },
+        "MRR@20": {
+          "mean_delta": 0.01589864022841639,
+          "sum_delta": 1.7965463458110518,
+          "improved_count": 27,
+          "regressed_count": 23,
+          "unchanged_count": 63,
+          "improved_query_ids": [
+            "p0_q01",
+            "p0_q04",
+            "p0_q11",
+            "p0_q20",
+            "p1_q01",
+            "p1_q08",
+            "p1_q10",
+            "p1_q20",
+            "p2_q08",
+            "p2_q09",
+            "p2_q10",
+            "p2_q11",
+            "p2_q12",
+            "p2_q15",
+            "p2_q24",
+            "p2_q28",
+            "p3_q04",
+            "p3_q06",
+            "p3_q12",
+            "p3_q15",
+            "p3_q16",
+            "p3_q18",
+            "p3_q20",
+            "p3_q29",
+            "p3_q31",
+            "p3_q33",
+            "p3_q36"
+          ],
+          "regressed_query_ids": [
+            "p0_q05",
+            "p0_q10",
+            "p0_q19",
+            "p1_q03",
+            "p1_q06",
+            "p1_q09",
+            "p1_q11",
+            "p1_q15",
+            "p1_q21",
+            "p1_q22",
+            "p1_q24",
+            "p2_q02",
+            "p2_q05",
+            "p2_q14",
+            "p2_q16",
+            "p2_q19",
+            "p2_q21",
+            "p3_q01",
+            "p3_q02",
+            "p3_q05",
+            "p3_q07",
+            "p3_q25",
+            "p3_q28"
+          ]
+        }
+      }
+    }
+  },
+  "classifications": {
+    "all_required_targets_available_in_top100": 86,
+    "required_range_or_events_missing_from_top100": 16,
+    "unresolved_truth_gate": 2,
+    "accepted_video_absent_from_top100": 10,
+    "empty_candidate_pool": 1
+  },
+  "legacy_video_control_audit": {
+    "explanation": "Legacy #79 control candidates are 78 frozen_headless_vnext_scored_combined + 35 p3_qwen_only_v1. They differ from this packet's current Qwen-only export. Same canonical video targets and scoring definition reproduce both sets; do not pair the legacy baseline with this reranker.",
+    "counts_by_legacy_source": {
+      "frozen_headless_vnext_scored_combined": 78,
+      "p3_qwen_only_v1": 35
+    },
+    "top20_candidate_order_or_identity_changed_queries": 105,
+    "identical_video_truth_and_metric_definition": true,
+    "legacy_baseline": {
+      "R@1": {
+        "mean": 0.504424778761062,
+        "sum": 57.0
+      },
+      "R@5": {
+        "mean": 0.6194690265486725,
+        "sum": 70.0
+      },
+      "R@10": {
+        "mean": 0.672566371681416,
+        "sum": 76.0
+      },
+      "R@20": {
+        "mean": 0.7345132743362832,
+        "sum": 83.0
+      },
+      "MRR@20": {
+        "mean": 0.5587826136498703,
+        "sum": 63.14243534243534
+      }
+    },
+    "current_baseline": {
+      "R@1": {
+        "mean": 0.5221238938053098,
+        "sum": 59.0
+      },
+      "R@5": {
+        "mean": 0.6106194690265486,
+        "sum": 69.0
+      },
+      "R@10": {
+        "mean": 0.672566371681416,
+        "sum": 76.0
+      },
+      "R@20": {
+        "mean": 0.7256637168141593,
+        "sum": 82.0
+      },
+      "MRR@20": {
+        "mean": 0.5706563102580803,
+        "sum": 64.48416305916307
+      }
+    }
+  },
+  "candidate_ceiling": {
+    "video_present_in_top100_queries": 102,
+    "all_required_targets_present_in_top100_queries": 86,
+    "frozen_coverage_sum_at100": 86.0,
+    "empty_pool_query_ids": [
+      "p2_q17"
+    ]
+  },
+  "recommendation": {
+    "policy": "operator_opt_in_experimental",
+    "always_on": false,
+    "reason": "R@20 gains coexist with R@1/R@10 regressions and small aggregate MRR change; roughly 28 seconds per nonempty rerank is a material interactive cost. Candidate and timeline evidence is incomplete beyond retained20.",
+    "conditional_automatic_policy": "Not justified by post-hoc capability slices; no truth-independent gate has held-out evidence.",
+    "next_bounded_work": "Preserve full candidate metadata and all100 scores in a future experiment; evaluate a preregistered latency budget and truth-independent trigger on held-out queries before enabling automatic reranking.",
+    "production_changes_in_this_packet": "none"
+  }
+}
