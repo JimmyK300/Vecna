@@ -1,0 +1,28 @@
+{
+  "encoding_driver_source": {
+    "bytes": 31578,
+    "path": "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-full-matched-temporal-eight-20260916-t7awou6o\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\code\\temporal_matched.py",
+    "sha256": "e5bed517b9c1efcb788d8b5ccd3aff21ec15b4d8a6d5674b3c45fd34b67eb6dd"
+  },
+  "raw_artifacts": [
+    {
+      "exact_match": true,
+      "expected_sha256": "ed680417417b7df200685711efba1b1d4d38d265a27393d9880bd4d34936890f",
+      "name": "query_embeddings.jsonl",
+      "observed_sha256": "ed680417417b7df200685711efba1b1d4d38d265a27393d9880bd4d34936890f"
+    },
+    {
+      "exact_match": true,
+      "expected_sha256": "597ff44e4949dddcbdba8a971c8d423829349fdc593962d63d952b45bfc1ba6d",
+      "name": "image_embeddings.jsonl",
+      "observed_sha256": "597ff44e4949dddcbdba8a971c8d423829349fdc593962d63d952b45bfc1ba6d"
+    }
+  ],
+  "raw_vector_line_endings_changed_by_this_audit": false,
+  "scorer_portability_fix": "Normalize Windows path separators when checking recovered artifact basenames on Linux; no inference change.",
+  "scoring_driver_source": {
+    "bytes": 33043,
+    "path": "/workspace/scratch/8d5b0c75504a/vecna82/code/temporal_matched.py",
+    "sha256": "0061b40c86ff164f0d536f51eb5ecf45d030cd82a82f7a2b1437d0ab15e7adc5"
+  }
+}

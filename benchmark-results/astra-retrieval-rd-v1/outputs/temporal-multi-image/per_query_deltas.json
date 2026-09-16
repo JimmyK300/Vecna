@@ -1,0 +1,111 @@
+{
+  "paired_query_count": 8,
+  "rows": [
+    {
+      "comparisons": {
+        "contact_sheet": {
+          "pool_video_mrr": 0,
+          "pool_video_r1": 0.0
+        },
+        "native3": {
+          "pool_video_mrr": 0,
+          "pool_video_r1": 0.0
+        }
+      },
+      "query_id": "p0_q22"
+    },
+    {
+      "comparisons": {
+        "contact_sheet": {
+          "pool_video_mrr": 0.0,
+          "pool_video_r1": 0.0
+        },
+        "native3": {
+          "pool_video_mrr": 0.5,
+          "pool_video_r1": 1.0
+        }
+      },
+      "query_id": "p0_q23"
+    },
+    {
+      "comparisons": {
+        "contact_sheet": {
+          "pool_video_mrr": 0,
+          "pool_video_r1": 0.0
+        },
+        "native3": {
+          "pool_video_mrr": 0,
+          "pool_video_r1": 0.0
+        }
+      },
+      "query_id": "p0_q24"
+    },
+    {
+      "comparisons": {
+        "contact_sheet": {
+          "pool_video_mrr": 0,
+          "pool_video_r1": 0.0
+        },
+        "native3": {
+          "pool_video_mrr": 0,
+          "pool_video_r1": 0.0
+        }
+      },
+      "query_id": "p1_q25"
+    },
+    {
+      "comparisons": {
+        "contact_sheet": {
+          "pool_video_mrr": 0,
+          "pool_video_r1": 0.0
+        },
+        "native3": {
+          "pool_video_mrr": 0,
+          "pool_video_r1": 0.0
+        }
+      },
+      "query_id": "p2_q29"
+    },
+    {
+      "comparisons": {
+        "contact_sheet": {
+          "pool_video_mrr": 0,
+          "pool_video_r1": 0.0
+        },
+        "native3": {
+          "pool_video_mrr": 0,
+          "pool_video_r1": 0.0
+        }
+      },
+      "query_id": "p2_q30"
+    },
+    {
+      "comparisons": {
+        "contact_sheet": {
+          "pool_video_mrr": 0,
+          "pool_video_r1": 0.0
+        },
+        "native3": {
+          "pool_video_mrr": 0,
+          "pool_video_r1": 0.0
+        }
+      },
+      "query_id": "p3_q21"
+    },
+    {
+      "comparisons": {
+        "contact_sheet": {
+          "pool_video_mrr": -0.16666666666666669,
+          "pool_video_r1": 0.0
+        },
+        "native3": {
+          "pool_video_mrr": 0.5,
+          "pool_video_r1": 1.0
+        }
+      },
+      "query_id": "p3_q34"
+    }
+  ],
+  "source": "outputs/temporal-multi-image/matched-v1/scores.json",
+  "status": "COMPLETE_BOUNDED_PROBE"
+}

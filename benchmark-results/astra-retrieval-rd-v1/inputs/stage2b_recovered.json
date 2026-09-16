@@ -1,0 +1,156 @@
+{
+  "source_url": "https://github.com/JimmyK300/ai-routing-hub/issues/1#issuecomment-5696716646",
+  "files": [
+    {
+      "path": "/mnt/c/Users/minhc/Code/Vecna/.worktrees/issue81-temporal-representation/benchmark-results/temporal-representation-v1/REPORT.md",
+      "sha256": "6b762ec02603b6cc8b4404f97d66801ae034329b0df9f59973bfdf02e67d0071",
+      "content": "# Temporal representation v1 (Vecna issue #81)\r\n\r\nStage 1 tests deterministic temporal windows over retained per-frame qwen_vl embeddings. It does not modify production retrieval, re-embed the corpus, or use ground truth to construct candidates/windows.\r\n\r\n- Exact control: 113 rows; excluded p0_q15, p3_q09; control SHA256 91f61d16a0930222af2450da127352c25825ba9b46faf546e475b2769c5a22a8.\r\n- Metadata-selected temporal subset: 61 rows; selection used ground truth: False.\r\n- Candidate pool: frozen baseline top 100 per query; result limit 100.\r\n- Windows: {\"w3_d60\": {\"offsets\": [-60, 0, 60], \"weights\": [0.25, 0.5, 0.25]}, \"w5_d60\": {\"offsets\": [-120, -60, 0, 60, 120], \"weights\": [0.1, 0.2, 0.4, 0.2, 0.1]}}.\r\n- Existing feature root: D:\\Official-Dataset\\features_L21-L30_branch-feats-siglip\\features; loaded feature files: 592.\r\n- Frozen-surface parity: top1_and_top20_overlap; top-20 overlap 0.9.\r\n\r\n## Stage 1 arm summary\r\n\r\n| arm | n | video R@1 | video R@5 | video R@20 | range R@20 |\r\n|---|---:|---:|---:|---:|---:|\r\n| baseline | 8 | 0.000 | 0.250 | 0.750 | 0.000 |\r\n| window_max | 8 | 0.000 | 0.250 | 0.500 | 0.000 |\r\n| window_top2_mean | 8 | 0.125 | 0.250 | 0.500 | 0.000 |\r\n| ordered_weighted | 8 | 0.125 | 0.250 | 0.500 | 0.000 |\r\n\r\n## TRAKE event proxy\r\n\r\nThese are submission-derived development proxies, not reviewed organizer ground truth.\r\n\r\n| arm | queries | all-events hit | event hits / events |\r\n|---|---:|---:|---:|\r\n| window_max | 6 | 0 | 2 / 23 |\r\n| window_top2_mean | 6 | 0 | 2 / 23 |\r\n| ordered_weighted | 6 | 0 | 2 / 23 |\r\n\r\n## Interpretation\r\n\r\nA temporal arm is a candidate for Stage 2 only if its held-out/control comparison shows a material, reproducible rescue of temporal failures without an unacceptable regression. Per-query deltas are in per_query_deltas.json; full ranked outputs and window provenance are in scored_variants.jsonl and window_results.jsonl.\r\n\r\n## Reproduction\r\n\r\npy -3.12 aic51-src/script/temporal_representation_v1.py --stage build --out-dir C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\r\npy -3.12 aic51-src/script/temporal_representation_v1.py --stage encode --out-dir C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\r\npy -3.12 aic51-src/script/temporal_representation_v1.py --stage run --out-dir C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\r\npy -3.12 aic51-src/script/temporal_representation_v1.py --stage score --out-dir C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\r\n"
+    },
+    {
+      "path": "/mnt/c/Users/minhc/Code/Vecna/.worktrees/issue81-temporal-representation/benchmark-results/temporal-representation-v1/STAGE2_REPORT.md",
+      "sha256": "fc7e040aef1871a03f54bc7111c975ff6e0d147f73229a267fecbcd58d285231",
+      "content": "# Stage 2 ordered contact-sheet Qwen probe (Vecna issue #81)\r\n\r\nBounded candidate pool: frozen baseline top 3 per selected query; exact decoded source frames; no ground truth used in construction.\r\n\r\n| arm | n | baseline video R@20 | Stage 2 video R@20 | Stage 2 video R@1 |\r\n|---|---:|---:|---:|---:|\r\n| w3_d60 | 1 | 1.000 | 1.000 | 0.000 |\r\n| w5_d60 | 1 | 1.000 | 1.000 | 0.000 |\r\n\r\nThe probe is evidence about ordered contact-sheet Qwen inputs over this bounded candidate pool only; Qwen receives one image tiled left-to-right, not native multiple image tokens, and this is not a full-corpus video-encoder result.\r\n"
+    },
+    {
+      "path": "/mnt/c/Users/minhc/Code/Vecna/.worktrees/issue81-temporal-representation/benchmark-results/temporal-representation-v1/stage2_surface_manifest.json",
+      "sha256": "0db01ba9bdcd660d100c902a13fd8aa26e7f1bd4313747ce74bef9142c28abfa",
+      "content": "{\r\n  \"candidate_count\": 6,\r\n  \"device\": \"cpu\",\r\n  \"elapsed_s\": 2401.215,\r\n  \"full_corpus_run\": false,\r\n  \"ground_truth_used\": false,\r\n  \"input\": \"one ordered contact-sheet image tiled left-to-right from exact decoded frames\",\n  \"instruction\": \"Represent the user's input.\",\r\n  \"model_snapshot\": \"C:\\\\Users\\\\minhc\\\\.cache\\\\huggingface\\\\hub\\\\models--Qwen--Qwen3-VL-Embedding-2B\\\\snapshots\\\\9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda\",\r\n  \"torch\": \"2.4.1+cpu\",\r\n  \"transformers\": \"4.57.1\"\r\n}\r\n"
+    },
+    {
+      "path": "/mnt/c/Users/minhc/Code/Vecna/.worktrees/issue81-temporal-representation/benchmark-results/temporal-representation-v1/stage2_prepare_manifest.json",
+      "sha256": "4e78183dc5f1300d1a1bfa9c011aa8dee13825414237c6e50104fb62f54b32a3",
+      "content": "{\r\n  \"candidate_count\": 6,\r\n  \"candidate_limit_per_query\": 3,\r\n  \"candidate_query_ids\": [\r\n    \"p3_q34\"\r\n  ],\r\n  \"contact_sheet\": \"left-to-right ordered tiles, each 384x216\",\r\n  \"frame_decode_method\": \"FFmpeg select=eq(n\\\\,FRAME), exact decoded frame\",\r\n  \"ground_truth_used\": false,\r\n  \"ready_count\": 6,\r\n  \"source_video_root\": \"D:\\\\Official-Dataset\\\\videos\",\r\n  \"window_specs\": {\r\n    \"w3_d60\": {\r\n      \"offsets\": [\r\n        -60,\r\n        0,\r\n        60\r\n      ],\r\n      \"weights\": [\r\n        0.25,\r\n        0.5,\r\n        0.25\r\n      ]\r\n    },\r\n    \"w5_d60\": {\r\n      \"offsets\": [\r\n        -120,\r\n        -60,\r\n        0,\r\n        60,\r\n        120\r\n      ],\r\n      \"weights\": [\r\n        0.1,\r\n        0.2,\r\n        0.4,\r\n        0.2,\r\n        0.1\r\n      ]\r\n    }\r\n  }\r\n}\r\n"
+    },
+    {
+      "path": "/mnt/c/Users/minhc/Code/Vecna/.worktrees/issue81-temporal-representation/benchmark-results/temporal-representation-v1/stage2b_prepare_manifest.json",
+      "sha256": "8388277b1536349040e1c478ba233521998064cf45c6243cabe4b9bbb585882e",
+      "content": "{\r\n  \"candidate_count\": 48,\r\n  \"candidate_limit_per_query\": 3,\r\n  \"candidate_pool\": \"frozen baseline_results top N per selected query\",\r\n  \"contact_sheet\": \"left-to-right ordered tiles, each 384x216\",\r\n  \"control_sha256\": \"91f61d16a0930222af2450da127352c25825ba9b46faf546e475b2769c5a22a8\",\r\n  \"experiment\": \"temporal-representation-v1-stage2b\",\r\n  \"frame_decode_method\": \"FFmpeg select=eq(n\\\\,FRAME), exact decoded frame\",\r\n  \"full_corpus_run\": false,\r\n  \"ground_truth_used\": false,\r\n  \"issue\": 81,\r\n  \"production_mutation\": false,\r\n  \"query_ids\": [\r\n    \"p0_q22\",\r\n    \"p0_q23\",\r\n    \"p0_q24\",\r\n    \"p1_q25\",\r\n    \"p2_q29\",\r\n    \"p2_q30\",\r\n    \"p3_q21\",\r\n    \"p3_q34\"\r\n  ],\r\n  \"ready_count\": 48,\r\n  \"source_video_root\": \"D:\\\\Official-Dataset\\\\videos\",\r\n  \"windows\": {\r\n    \"w3_d60\": {\r\n      \"offsets\": [\r\n        -60,\r\n        0,\r\n        60\r\n      ],\r\n      \"weights\": [\r\n        0.25,\r\n        0.5,\r\n        0.25\r\n      ]\r\n    },\r\n    \"w5_d60\": {\r\n      \"offsets\": [\r\n        -120,\r\n        -60,\r\n        0,\r\n        60,\r\n        120\r\n      ],\r\n      \"weights\": [\r\n        0.1,\r\n        0.2,\r\n        0.4,\r\n        0.2,\r\n        0.1\r\n      ]\r\n    }\r\n  }\r\n}\r\n"
+    },
+    {
+      "path": "/mnt/c/Users/minhc/Code/Vecna/.worktrees/issue81-temporal-representation/benchmark-results/temporal-representation-v1/stage2b_surface_manifest.json",
+      "sha256": "14a15715b2af6366e9dde2d9a85e819d7721dc271f72cbae70eb1b28a3aa53b5",
+      "content": "{\r\n  \"candidate_manifest_sha256\": \"50784b4d23fa68ec2c73cfc25d92f686aee4e436afd091912e9ef1b95fa88890\",\r\n  \"completed_count\": 11,\r\n  \"control_sha256\": \"91f61d16a0930222af2450da127352c25825ba9b46faf546e475b2769c5a22a8\",\r\n  \"cumulative_inference_s\": 7514.408,\r\n  \"device\": \"cpu\",\r\n  \"embedding_manifest_sha256\": \"d076a746f4c346278331ca63a67051562097517092567837bf1590c3da84ef22\",\r\n  \"experiment\": \"temporal-representation-v1-stage2b\",\r\n  \"full_corpus_run\": false,\r\n  \"ground_truth_used\": false,\r\n  \"input_modes\": {\r\n    \"contact_sheet\": \"one ordered contact-sheet image tiled left-to-right from exact decoded w3_d60 frames\",\r\n    \"native3\": \"native Qwen image list of exact decoded w3_d60 frames in offset order\",\r\n    \"native5\": \"native Qwen image list of exact decoded w5_d60 frames in offset order\"\r\n  },\r\n  \"instruction\": \"Represent the user's input.\",\r\n  \"issue\": 81,\r\n  \"last_candidate_id\": \"p3_q34:w3_d60:r001\",\r\n  \"mode_counts\": {\r\n    \"contact_sheet\": 10,\r\n    \"native3\": 1\r\n  },\r\n  \"model_snapshot\": \"C:\\\\Users\\\\minhc\\\\.cache\\\\huggingface\\\\hub\\\\models--Qwen--Qwen3-VL-Embedding-2B\\\\snapshots\\\\9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda\",\r\n  \"native_multi_image_supported\": true,\r\n  \"production_mutation\": false,\r\n  \"query_ids\": [\r\n    \"p0_q22\",\r\n    \"p0_q23\",\r\n    \"p0_q24\",\r\n    \"p3_q34\"\r\n  ],\r\n  \"requested_count\": 1,\r\n  \"run_elapsed_s\": 5433.101,\r\n  \"status\": \"complete\"\r\n}\r\n"
+    },
+    {
+      "path": "/mnt/c/Users/minhc/Code/Vecna/.worktrees/issue81-temporal-representation/benchmark-results/temporal-representation-v1/stage2b_native3_pilot_manifest.json",
+      "sha256": "797554661e31eef8ba795a3dc7e9900414933fbde7b6162af450c7914891aaf5",
+      "content": "{\n  \"issue\": 81,\n  \"experiment\": \"temporal-representation-v1-stage2b\",\n  \"pilot\": true,\n  \"status\": \"interrupted_runtime_cap\",\n  \"requested_count\": 1,\n  \"completed_count\": 0,\n  \"candidate_id\": \"p3_q34:w3_d60:r001\",\n  \"query_ids\": [\n    \"p3_q34\"\n  ],\n  \"input_mode\": \"native3\",\n  \"input_definition\": \"native Qwen image list of exact decoded w3_d60 frames in offset order\",\n  \"runtime_cap_s\": 600,\n  \"measured_wall_time_s\": 600,\n  \"measured_cpu_time_s\": 602.5,\n  \"native_support_result\": \"not_determined_before_completion\",\n  \"runtime_assessment\": \"not_reasonable_for_the_bounded_eight-query_top-three_sweep_on_this_cpu\",\n  \"control_sha256\": \"91f61d16a0930222af2450da127352c25825ba9b46faf546e475b2769c5a22a8\",\n  \"candidate_manifest_sha256\": \"50784b4d23fa68ec2c73cfc25d92f686aee4e436afd091912e9ef1b95fa88890\",\n  \"model_snapshot\": \"C:\\\\Users\\\\minhc\\\\.cache\\\\huggingface\\\\hub\\\\models--Qwen--Qwen3-VL-Embedding-2B\\\\snapshots\\\\9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda\",\n  \"instruction\": \"Represent the user's input.\",\n  \"device\": \"cpu\",\n  \"ground_truth_used\": false,\n  \"production_mutation\": false,\n  \"full_corpus_run\": false,\n  \"note\": \"The native path did not raise an unsupported-input exception; the forward pass was stopped at the explicit runtime cap before an embedding completed.\"\n}\n"
+    },
+    {
+      "path": "/mnt/c/Users/minhc/Code/Vecna/.worktrees/issue81-temporal-representation/benchmark-results/temporal-representation-v1/stage2b_native3_uncapped_retry_manifest.json",
+      "sha256": "e308c6a648ff95692c1f81be550b4dfff82c3ad1fe940a767e84747b2bbf298e",
+      "content": "{\n  \"experiment\": \"temporal-representation-v1-stage2b\",\n  \"issue\": 81,\n  \"attempt\": \"native3_uncapped_retry_2026-09-15\",\n  \"status\": \"in_progress\",\n  \"runtime_cap_s\": null,\n  \"requested_count\": 1,\n  \"completed_count\": 0,\n  \"candidate_ids\": [\n    \"p3_q34:w3_d60:r001\"\n  ],\n  \"native_multi_image_supported\": null,\n  \"device\": \"cpu\",\n  \"model_snapshot\": \"C:\\\\Users\\\\minhc\\\\.cache\\\\huggingface\\\\hub\\\\models--Qwen--Qwen3-VL-Embedding-2B\\\\snapshots\\\\9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda\",\n  \"started_at\": \"2026-09-15T09:29:43.2835062+07:00\",\n  \"process_id\": 10812,\n  \"input_definition\": \"native Qwen image list of exact decoded w3_d60 frames in offset order\",\n  \"prior_capped_attempt\": \"stage2b_native3_pilot_manifest.json\",\n  \"notes\": \"Uncapped retry after the prior 600-second pilot was interrupted before its first embedding. Bounded to one candidate; no full-corpus inference and no Stage 3/video encoder.\"\n}\n"
+    }
+  ],
+  "inventory": [
+    {
+      "name": "arm_summaries.json",
+      "bytes": 2625
+    },
+    {
+      "name": "control_113.jsonl",
+      "bytes": 649393
+    },
+    {
+      "name": "per_query_deltas.json",
+      "bytes": 6989
+    },
+    {
+      "name": "query_vectors.jsonl",
+      "bytes": 288188
+    },
+    {
+      "name": "query_vector_manifest.json",
+      "bytes": 534
+    },
+    {
+      "name": "REPORT.md",
+      "bytes": 2696
+    },
+    {
+      "name": "scored_variants.jsonl",
+      "bytes": 479923
+    },
+    {
+      "name": "stage0_manifest.json",
+      "bytes": 1604
+    },
+    {
+      "name": "stage2b_candidates.jsonl",
+      "bytes": 74066
+    },
+    {
+      "name": "stage2b_embeddings.jsonl",
+      "bytes": 410675
+    },
+    {
+      "name": "stage2b_native3_pilot_manifest.json",
+      "bytes": 1284
+    },
+    {
+      "name": "stage2b_native3_uncapped_retry.err.log",
+      "bytes": 0
+    },
+    {
+      "name": "stage2b_native3_uncapped_retry.log",
+      "bytes": 73
+    },
+    {
+      "name": "stage2b_native3_uncapped_retry_manifest.json",
+      "bytes": 911
+    },
+    {
+      "name": "stage2b_prepare_manifest.json",
+      "bytes": 1162
+    },
+    {
+      "name": "stage2b_surface_manifest.json",
+      "bytes": 1382
+    },
+    {
+      "name": "stage2_candidates.jsonl",
+      "bytes": 9232
+    },
+    {
+      "name": "stage2_embeddings.jsonl",
+      "bytes": 222464
+    },
+    {
+      "name": "stage2_prepare_manifest.json",
+      "bytes": 775
+    },
+    {
+      "name": "STAGE2_REPORT.md",
+      "bytes": 618
+    },
+    {
+      "name": "stage2_scored.jsonl",
+      "bytes": 5500
+    },
+    {
+      "name": "stage2_summaries.json",
+      "bytes": 1651
+    },
+    {
+      "name": "stage2_surface_manifest.json",
+      "bytes": 488
+    },
+    {
+      "name": "surface_parity.json",
+      "bytes": 1431
+    },
+    {
+      "name": "temporal_target_subset.json",
+      "bytes": 21079
+    },
+    {
+      "name": "window_results.jsonl",
+      "bytes": 885992
+    },
+    {
+      "name": "window_surface_manifest.json",
+      "bytes": 1008
+    }
+  ],
+  "script_omitted_bytes": 34389
+}

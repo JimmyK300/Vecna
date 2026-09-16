@@ -1,0 +1,13 @@
+{
+  "full_matched_run_latency_context": "Observed host timings with possible concurrent load from Packet B; not an isolated microbenchmark.",
+  "evidence": "Parent execution lead observed A and B Actions jobs start one second apart on pooled Windows listeners.",
+  "actions_runs": [
+    "https://github.com/JimmyK300/ai-routing-hub/actions/runs/35093162705",
+    "https://github.com/JimmyK300/ai-routing-hub/actions/runs/35093163961"
+  ],
+  "a_start_utc_time": "11:58:04",
+  "b_start_utc_time": "11:58:05",
+  "actual_resource_overlap_measured": false,
+  "earlier_one_candidate_smoke_is_a_separate_run": true,
+  "quality_comparison_note": "The possible overlap does not change candidate, model, or paired input definitions; any resource failure must still fail the completion gate."
+}

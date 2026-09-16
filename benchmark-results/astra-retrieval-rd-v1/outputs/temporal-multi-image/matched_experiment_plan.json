@@ -1,0 +1,515 @@
+{
+  "budget_gate": "Parent-owned bounded one-candidate float32 timing smoke before any sweep; completed in 19.672 seconds under supervision. Full sweep uses an explicit between-forward budget plus external supervision.",
+  "cache_policy": "Never resume by rank-coded ID alone. Match source video/frame and processing fingerprint; preserve old evidence separately.",
+  "candidate_limit_per_query": 3,
+  "candidate_selection_uses_ground_truth": false,
+  "candidate_source_sha256": "85d5dd169bcd6934ebfa8435b6aee82ce9bc149bac3a704afbdbcb4b986568f0",
+  "candidates": [
+    {
+      "center_frame_id": 5760,
+      "current_baseline_rank": 1,
+      "ground_truth_used_for_selection": false,
+      "identity": "L26_V358#005760",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        5700,
+        5760,
+        5820
+      ],
+      "query_id": "p0_q22",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L26_V358"
+    },
+    {
+      "center_frame_id": 4836,
+      "current_baseline_rank": 2,
+      "ground_truth_used_for_selection": false,
+      "identity": "L26_V072#004836",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        4776,
+        4836,
+        4896
+      ],
+      "query_id": "p0_q22",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L26_V072"
+    },
+    {
+      "center_frame_id": 4592,
+      "current_baseline_rank": 3,
+      "ground_truth_used_for_selection": false,
+      "identity": "L26_V278#004592",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        4532,
+        4592,
+        4652
+      ],
+      "query_id": "p0_q22",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L26_V278"
+    },
+    {
+      "center_frame_id": 1340,
+      "current_baseline_rank": 1,
+      "ground_truth_used_for_selection": false,
+      "identity": "L24_V016#001340",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        1280,
+        1340,
+        1400
+      ],
+      "query_id": "p0_q23",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L24_V016"
+    },
+    {
+      "center_frame_id": 15928,
+      "current_baseline_rank": 2,
+      "ground_truth_used_for_selection": false,
+      "identity": "L24_V033#015928",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        15868,
+        15928,
+        15988
+      ],
+      "query_id": "p0_q23",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L24_V033"
+    },
+    {
+      "center_frame_id": 1336,
+      "current_baseline_rank": 3,
+      "ground_truth_used_for_selection": false,
+      "identity": "L24_V033#001336",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        1276,
+        1336,
+        1396
+      ],
+      "query_id": "p0_q23",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L24_V033"
+    },
+    {
+      "center_frame_id": 4208,
+      "current_baseline_rank": 1,
+      "ground_truth_used_for_selection": false,
+      "identity": "L26_V230#004208",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        4148,
+        4208,
+        4268
+      ],
+      "query_id": "p0_q24",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L26_V230"
+    },
+    {
+      "center_frame_id": 4348,
+      "current_baseline_rank": 2,
+      "ground_truth_used_for_selection": false,
+      "identity": "L26_V230#004348",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        4288,
+        4348,
+        4408
+      ],
+      "query_id": "p0_q24",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L26_V230"
+    },
+    {
+      "center_frame_id": 4065,
+      "current_baseline_rank": 3,
+      "ground_truth_used_for_selection": false,
+      "identity": "L26_V230#004065",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        4005,
+        4065,
+        4125
+      ],
+      "query_id": "p0_q24",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L26_V230"
+    },
+    {
+      "center_frame_id": 13881,
+      "current_baseline_rank": 1,
+      "ground_truth_used_for_selection": false,
+      "identity": "L24_V011#013881",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        13821,
+        13881,
+        13941
+      ],
+      "query_id": "p1_q25",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L24_V011"
+    },
+    {
+      "center_frame_id": 2432,
+      "current_baseline_rank": 2,
+      "ground_truth_used_for_selection": false,
+      "identity": "L24_V030#002432",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        2372,
+        2432,
+        2492
+      ],
+      "query_id": "p1_q25",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L24_V030"
+    },
+    {
+      "center_frame_id": 868,
+      "current_baseline_rank": 3,
+      "ground_truth_used_for_selection": false,
+      "identity": "L24_V014#000868",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        808,
+        868,
+        928
+      ],
+      "query_id": "p1_q25",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L24_V014"
+    },
+    {
+      "center_frame_id": 17749,
+      "current_baseline_rank": 1,
+      "ground_truth_used_for_selection": false,
+      "identity": "L29_V009#017749",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        17689,
+        17749,
+        17809
+      ],
+      "query_id": "p2_q29",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L29_V009"
+    },
+    {
+      "center_frame_id": 17699,
+      "current_baseline_rank": 2,
+      "ground_truth_used_for_selection": false,
+      "identity": "L29_V009#017699",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        17639,
+        17699,
+        17759
+      ],
+      "query_id": "p2_q29",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L29_V009"
+    },
+    {
+      "center_frame_id": 9774,
+      "current_baseline_rank": 3,
+      "ground_truth_used_for_selection": false,
+      "identity": "L27_V004#009774",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        9714,
+        9774,
+        9834
+      ],
+      "query_id": "p2_q29",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L27_V004"
+    },
+    {
+      "center_frame_id": 5198,
+      "current_baseline_rank": 1,
+      "ground_truth_used_for_selection": false,
+      "identity": "L30_V023#005198",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        5138,
+        5198,
+        5258
+      ],
+      "query_id": "p2_q30",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L30_V023"
+    },
+    {
+      "center_frame_id": 5378,
+      "current_baseline_rank": 2,
+      "ground_truth_used_for_selection": false,
+      "identity": "L30_V023#005378",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        5318,
+        5378,
+        5438
+      ],
+      "query_id": "p2_q30",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L30_V023"
+    },
+    {
+      "center_frame_id": 25937,
+      "current_baseline_rank": 3,
+      "ground_truth_used_for_selection": false,
+      "identity": "L29_V015#025937",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        25877,
+        25937,
+        25997
+      ],
+      "query_id": "p2_q30",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L29_V015"
+    },
+    {
+      "center_frame_id": 2108,
+      "current_baseline_rank": 1,
+      "ground_truth_used_for_selection": false,
+      "identity": "L26_V078#002108",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        2048,
+        2108,
+        2168
+      ],
+      "query_id": "p3_q21",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L26_V078"
+    },
+    {
+      "center_frame_id": 5888,
+      "current_baseline_rank": 2,
+      "ground_truth_used_for_selection": false,
+      "identity": "L26_V375#005888",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        5828,
+        5888,
+        5948
+      ],
+      "query_id": "p3_q21",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L26_V375"
+    },
+    {
+      "center_frame_id": 5248,
+      "current_baseline_rank": 3,
+      "ground_truth_used_for_selection": false,
+      "identity": "L26_V239#005248",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        5188,
+        5248,
+        5308
+      ],
+      "query_id": "p3_q21",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L26_V239"
+    },
+    {
+      "center_frame_id": 14136,
+      "current_baseline_rank": 1,
+      "ground_truth_used_for_selection": false,
+      "identity": "L24_V011#014136",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        14076,
+        14136,
+        14196
+      ],
+      "query_id": "p3_q34",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L24_V011"
+    },
+    {
+      "center_frame_id": 224,
+      "current_baseline_rank": 2,
+      "ground_truth_used_for_selection": false,
+      "identity": "L24_V013#000224",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        164,
+        224,
+        284
+      ],
+      "query_id": "p3_q34",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L24_V013"
+    },
+    {
+      "center_frame_id": 13988,
+      "current_baseline_rank": 3,
+      "ground_truth_used_for_selection": false,
+      "identity": "L24_V011#013988",
+      "offsets": [
+        -60,
+        0,
+        60
+      ],
+      "ordered_frame_ids": [
+        13928,
+        13988,
+        14048
+      ],
+      "query_id": "p3_q34",
+      "source": "current frozen Qwen candidates_top100; first three candidates",
+      "video_id": "L24_V011"
+    }
+  ],
+  "completion_gate": "Every query has the same three complete candidate identities in every primary arm; no missing-candidate filtering after observing scores.",
+  "dtype_policy": "CPU float32 only if explicit timing smoke is feasible; every compared arm and query vector uses the same declared dtype in a new cache.",
+  "execution_source": "outputs/temporal-multi-image/matched-v1/scores.json",
+  "image_instruction": "Represent the user's input.",
+  "image_processing": "Exact FFmpeg frame IDs at center + [-60,0,60]; PIL RGB resize LANCZOS 384x216 for each frame. Sheet concatenates those same pixels in order.",
+  "metric_limits": [
+    "R@5/R@20 with N=3 cannot change through reordering and must not be presented as retrieval recall gains.",
+    "Submission-derived TRAKE event metrics are proxies, not organizer-reviewed ground truth.",
+    "Center-only localization must be reported separately: window coverage can improve merely by exposing three frames rather than one.",
+    "Baseline retained-frame retrieval scores are separately labeled; new matched single-center encodings isolate representation effects.",
+    "Eight-query dev probe cannot establish generalization or full-corpus superiority."
+  ],
+  "model_config_sha256": "9172f55b0b9cce70b7f67b10c58a408ccf3ec15c587e6efd4d5f41631237fded",
+  "model_snapshot": "9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda",
+  "native5": "deferred until primary native3 evidence warrants it",
+  "primary_arms": [
+    "single_center_384x216",
+    "ordered_contact_sheet_3x384x216",
+    "native3_each_384x216"
+  ],
+  "primary_metrics": [
+    "paired pool video R@1",
+    "paired within-pool first relevant rank/MRR",
+    "paired accepted-range or event hits where scoreable"
+  ],
+  "query_ids": [
+    "p0_q22",
+    "p0_q23",
+    "p0_q24",
+    "p1_q25",
+    "p2_q29",
+    "p2_q30",
+    "p3_q21",
+    "p3_q34"
+  ],
+  "query_instruction": "Retrieve images or text relevant to the user's query.",
+  "required_metadata": [
+    "model revision/config hash",
+    "implementation hash",
+    "actual parameter device/dtype",
+    "processor config/hash/version",
+    "frame identity and file/pixel hashes",
+    "ordered image_grid_thw",
+    "token counts and truncation check",
+    "pool identity",
+    "per-arm timing",
+    "seed if any",
+    "all candidate statuses"
+  ],
+  "status": "EXECUTED_COMPLETE_MATCHED_V1"
+}

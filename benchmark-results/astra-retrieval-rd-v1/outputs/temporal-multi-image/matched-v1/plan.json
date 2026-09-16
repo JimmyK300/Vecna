@@ -1,0 +1,985 @@
+{
+  "arms": [
+    "single_center",
+    "contact_sheet",
+    "native3"
+  ],
+  "candidates": [
+    {
+      "candidate_key": "p0_q22|L26_V358#005760",
+      "center_frame_id": 5760,
+      "current_baseline_rank": 1,
+      "frame_file_sha256": [
+        "60091399d32790a93b0d9da874e735d36f547e077fec016cd8af7689e1e89202",
+        "98ffac51acf170e62ffc5f80c58cfc7fff0d3a357f42ddbe9ab237fe79cbee06",
+        "35f13e58603e4fbfafba0734334b2a1dbc5504d815a5b1562192aebfad71f135"
+      ],
+      "frames": [
+        {
+          "frame_id": 5700,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V358_00005700.png",
+          "source_frame_id": "L26_V358#005700",
+          "video_id": "L26_V358"
+        },
+        {
+          "frame_id": 5760,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V358_00005760.png",
+          "source_frame_id": "L26_V358#005760",
+          "video_id": "L26_V358"
+        },
+        {
+          "frame_id": 5820,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V358_00005820.png",
+          "source_frame_id": "L26_V358#005820",
+          "video_id": "L26_V358"
+        }
+      ],
+      "legacy_candidate_id": "p0_q22:w3_d60:r001",
+      "query_id": "p0_q22",
+      "source_frame_id": "L26_V358#005760",
+      "video_id": "L26_V358"
+    },
+    {
+      "candidate_key": "p0_q22|L26_V072#004836",
+      "center_frame_id": 4836,
+      "current_baseline_rank": 2,
+      "frame_file_sha256": [
+        "2079d53c29df6e4a9174691d07d26dd4b8739c015bf67e088248b151f97db5cc",
+        "de3b09bca3a17d49b3639c62159440cf171ad77a102aaeb9b89d0296eedf2e17",
+        "a01748f400eb67dea654265a8765bdd2868f3f7fa89a73615225f3c4eb0710e5"
+      ],
+      "frames": [
+        {
+          "frame_id": 4776,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V072_00004776.png",
+          "source_frame_id": "L26_V072#004776",
+          "video_id": "L26_V072"
+        },
+        {
+          "frame_id": 4836,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V072_00004836.png",
+          "source_frame_id": "L26_V072#004836",
+          "video_id": "L26_V072"
+        },
+        {
+          "frame_id": 4896,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V072_00004896.png",
+          "source_frame_id": "L26_V072#004896",
+          "video_id": "L26_V072"
+        }
+      ],
+      "legacy_candidate_id": "p0_q22:w3_d60:r002",
+      "query_id": "p0_q22",
+      "source_frame_id": "L26_V072#004836",
+      "video_id": "L26_V072"
+    },
+    {
+      "candidate_key": "p0_q22|L26_V278#004592",
+      "center_frame_id": 4592,
+      "current_baseline_rank": 3,
+      "frame_file_sha256": [
+        "35abe194d4af04b51c8a75a59a2139e9ce8470e32955d4f2c3cdfb3af2ab045f",
+        "e472712c95659dd0a182dc35cc41cc5e3d4b3d0f23ef59335e3927e196958947",
+        "1ade581eb0661b5ee9b71894e2896e6f4a4804b1f060c86d0a61b2d27f11a049"
+      ],
+      "frames": [
+        {
+          "frame_id": 4532,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V278_00004532.png",
+          "source_frame_id": "L26_V278#004532",
+          "video_id": "L26_V278"
+        },
+        {
+          "frame_id": 4592,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V278_00004592.png",
+          "source_frame_id": "L26_V278#004592",
+          "video_id": "L26_V278"
+        },
+        {
+          "frame_id": 4652,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V278_00004652.png",
+          "source_frame_id": "L26_V278#004652",
+          "video_id": "L26_V278"
+        }
+      ],
+      "legacy_candidate_id": "p0_q22:w3_d60:r003",
+      "query_id": "p0_q22",
+      "source_frame_id": "L26_V278#004592",
+      "video_id": "L26_V278"
+    },
+    {
+      "candidate_key": "p0_q23|L24_V016#001340",
+      "center_frame_id": 1340,
+      "current_baseline_rank": 1,
+      "frame_file_sha256": [
+        "85748fea2de13f0208b5ae6e4240ff927490a291c6e3e0c6b9643f50f33089d2",
+        "5210317320909c5dba8899e67ce706cefdc372eb5910ef8b3bda49b657d6af63",
+        "4e5ea8efb31b73de2007ffcf36f11d492992d5f2d71e82b4065e9c913a496716"
+      ],
+      "frames": [
+        {
+          "frame_id": 1280,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V016_00001280.png",
+          "source_frame_id": "L24_V016#001280",
+          "video_id": "L24_V016"
+        },
+        {
+          "frame_id": 1340,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V016_00001340.png",
+          "source_frame_id": "L24_V016#001340",
+          "video_id": "L24_V016"
+        },
+        {
+          "frame_id": 1400,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V016_00001400.png",
+          "source_frame_id": "L24_V016#001400",
+          "video_id": "L24_V016"
+        }
+      ],
+      "legacy_candidate_id": "p0_q23:w3_d60:r001",
+      "query_id": "p0_q23",
+      "source_frame_id": "L24_V016#001340",
+      "video_id": "L24_V016"
+    },
+    {
+      "candidate_key": "p0_q23|L24_V033#015928",
+      "center_frame_id": 15928,
+      "current_baseline_rank": 2,
+      "frame_file_sha256": [
+        "a928f5b50dd2d4b761df4aef9f9cbeb99032b51e05617a8c9f59d634abff628b",
+        "482b8bccccd5510e1871e31a61484c3a7803423b441c7350a9758d531a59cc09",
+        "57eb42f5e4b746e6a074f5b2ce5253b2d50782f9dfeaacd69a6888a8355f6189"
+      ],
+      "frames": [
+        {
+          "frame_id": 15868,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V033_00015868.png",
+          "source_frame_id": "L24_V033#015868",
+          "video_id": "L24_V033"
+        },
+        {
+          "frame_id": 15928,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V033_00015928.png",
+          "source_frame_id": "L24_V033#015928",
+          "video_id": "L24_V033"
+        },
+        {
+          "frame_id": 15988,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V033_00015988.png",
+          "source_frame_id": "L24_V033#015988",
+          "video_id": "L24_V033"
+        }
+      ],
+      "legacy_candidate_id": "p0_q23:w3_d60:r002",
+      "query_id": "p0_q23",
+      "source_frame_id": "L24_V033#015928",
+      "video_id": "L24_V033"
+    },
+    {
+      "candidate_key": "p0_q23|L24_V033#001336",
+      "center_frame_id": 1336,
+      "current_baseline_rank": 3,
+      "frame_file_sha256": [
+        "eebc930369394686f713ac40af808007099dc6ea2d7be75adaf10a9d17550953",
+        "8e346941ebbcbda43395edd4ef4903002723e66cc04c828c2da4e083731de70e",
+        "324a5ffe930fd280f6c3934c1ca996d7241d63948557be9d9a85b4e239c7cb9c"
+      ],
+      "frames": [
+        {
+          "frame_id": 1276,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V033_00001276.png",
+          "source_frame_id": "L24_V033#001276",
+          "video_id": "L24_V033"
+        },
+        {
+          "frame_id": 1336,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V033_00001336.png",
+          "source_frame_id": "L24_V033#001336",
+          "video_id": "L24_V033"
+        },
+        {
+          "frame_id": 1396,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V033_00001396.png",
+          "source_frame_id": "L24_V033#001396",
+          "video_id": "L24_V033"
+        }
+      ],
+      "legacy_candidate_id": "p0_q23:w3_d60:r003",
+      "query_id": "p0_q23",
+      "source_frame_id": "L24_V033#001336",
+      "video_id": "L24_V033"
+    },
+    {
+      "candidate_key": "p0_q24|L26_V230#004208",
+      "center_frame_id": 4208,
+      "current_baseline_rank": 1,
+      "frame_file_sha256": [
+        "c01e8854e3f8ae2eeb1c16ed96c17ced0a9c3ba5df8b7e81f3b377f1770fdf5c",
+        "029549d1394daf9eff5ee3d79e1147f73682c774bdcbeb12c395506283da3445",
+        "4f3b9f3c7e1400e9c65579a92a644e3d4895acac3b4324b4d7fde8a76e4446fc"
+      ],
+      "frames": [
+        {
+          "frame_id": 4148,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V230_00004148.png",
+          "source_frame_id": "L26_V230#004148",
+          "video_id": "L26_V230"
+        },
+        {
+          "frame_id": 4208,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V230_00004208.png",
+          "source_frame_id": "L26_V230#004208",
+          "video_id": "L26_V230"
+        },
+        {
+          "frame_id": 4268,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V230_00004268.png",
+          "source_frame_id": "L26_V230#004268",
+          "video_id": "L26_V230"
+        }
+      ],
+      "legacy_candidate_id": "p0_q24:w3_d60:r001",
+      "query_id": "p0_q24",
+      "source_frame_id": "L26_V230#004208",
+      "video_id": "L26_V230"
+    },
+    {
+      "candidate_key": "p0_q24|L26_V230#004348",
+      "center_frame_id": 4348,
+      "current_baseline_rank": 2,
+      "frame_file_sha256": [
+        "573eabb1e752ecf9f7d497e55b91674e992bfe6efbaccf3bbbdecb2e0ce45c57",
+        "197fc28cf9d844c504be27636a19f6ddbc585ab3af2382ac6a165adb9b4e9e58",
+        "43745080aca8435dba87d675206a92fa50e76028ba6d5820aa020dfa62a1a2fb"
+      ],
+      "frames": [
+        {
+          "frame_id": 4288,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V230_00004288.png",
+          "source_frame_id": "L26_V230#004288",
+          "video_id": "L26_V230"
+        },
+        {
+          "frame_id": 4348,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V230_00004348.png",
+          "source_frame_id": "L26_V230#004348",
+          "video_id": "L26_V230"
+        },
+        {
+          "frame_id": 4408,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V230_00004408.png",
+          "source_frame_id": "L26_V230#004408",
+          "video_id": "L26_V230"
+        }
+      ],
+      "legacy_candidate_id": "p0_q24:w3_d60:r002",
+      "query_id": "p0_q24",
+      "source_frame_id": "L26_V230#004348",
+      "video_id": "L26_V230"
+    },
+    {
+      "candidate_key": "p0_q24|L26_V230#004065",
+      "center_frame_id": 4065,
+      "current_baseline_rank": 3,
+      "frame_file_sha256": [
+        "8ac2bfbc6163abefbc48a6a9a9afbb1b534f509e6f89178f59a27cef95300028",
+        "371ff4f672f480752d54d930652264c2e6e78c3f85daaf69cd0e224200d0db77",
+        "bb578fa7b09de80d7c9b7576d2aeaa072de70a6d781a87544c4ec85628821582"
+      ],
+      "frames": [
+        {
+          "frame_id": 4005,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V230_00004005.png",
+          "source_frame_id": "L26_V230#004005",
+          "video_id": "L26_V230"
+        },
+        {
+          "frame_id": 4065,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V230_00004065.png",
+          "source_frame_id": "L26_V230#004065",
+          "video_id": "L26_V230"
+        },
+        {
+          "frame_id": 4125,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V230_00004125.png",
+          "source_frame_id": "L26_V230#004125",
+          "video_id": "L26_V230"
+        }
+      ],
+      "legacy_candidate_id": "p0_q24:w3_d60:r003",
+      "query_id": "p0_q24",
+      "source_frame_id": "L26_V230#004065",
+      "video_id": "L26_V230"
+    },
+    {
+      "candidate_key": "p1_q25|L24_V011#013881",
+      "center_frame_id": 13881,
+      "current_baseline_rank": 1,
+      "frame_file_sha256": [
+        "71b95edced4b939cd94c0bce2fd8e320a399d0591327bc0251898fa1c3625d45",
+        "0ac32a43be36fc921e78ac6d852345fd16d6ad7eae350cccbc92bb7213cdcb9d",
+        "bcf69b5dfae33172a64d963e2062dd7a79d66932586770141b318d80d23918e1"
+      ],
+      "frames": [
+        {
+          "frame_id": 13821,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V011_00013821.png",
+          "source_frame_id": "L24_V011#013821",
+          "video_id": "L24_V011"
+        },
+        {
+          "frame_id": 13881,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V011_00013881.png",
+          "source_frame_id": "L24_V011#013881",
+          "video_id": "L24_V011"
+        },
+        {
+          "frame_id": 13941,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V011_00013941.png",
+          "source_frame_id": "L24_V011#013941",
+          "video_id": "L24_V011"
+        }
+      ],
+      "legacy_candidate_id": "p1_q25:w3_d60:r001",
+      "query_id": "p1_q25",
+      "source_frame_id": "L24_V011#013881",
+      "video_id": "L24_V011"
+    },
+    {
+      "candidate_key": "p1_q25|L24_V030#002432",
+      "center_frame_id": 2432,
+      "current_baseline_rank": 2,
+      "frame_file_sha256": [
+        "a5fa3f00efa995e8aa98e016a2339e95e963a8f35d4da9d2e0fd4b1ba9850f1e",
+        "d7c2f67a9c8bdc1cb1d5e94c305417851367edf2e55a1648273d482e95bbbf54",
+        "1f410aa61a225306778691ec8c5dc3628b49e499e3ffc38e5ae7110b2fd5f600"
+      ],
+      "frames": [
+        {
+          "frame_id": 2372,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V030_00002372.png",
+          "source_frame_id": "L24_V030#002372",
+          "video_id": "L24_V030"
+        },
+        {
+          "frame_id": 2432,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V030_00002432.png",
+          "source_frame_id": "L24_V030#002432",
+          "video_id": "L24_V030"
+        },
+        {
+          "frame_id": 2492,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V030_00002492.png",
+          "source_frame_id": "L24_V030#002492",
+          "video_id": "L24_V030"
+        }
+      ],
+      "legacy_candidate_id": "p1_q25:w3_d60:r002",
+      "query_id": "p1_q25",
+      "source_frame_id": "L24_V030#002432",
+      "video_id": "L24_V030"
+    },
+    {
+      "candidate_key": "p1_q25|L24_V014#000868",
+      "center_frame_id": 868,
+      "current_baseline_rank": 3,
+      "frame_file_sha256": [
+        "e2048a7e1048980ab39fc858deeeee51c80f98fa1261e1922e550456fcead733",
+        "0e448130c59ad90f42f3e6232bb189cfae53de3c1db3f366b3b3e55eea6719a0",
+        "051dcd6b723ca719c772310b0c2dfdd1b0f8ff3c57e8e68bc869400dc3ea3a6e"
+      ],
+      "frames": [
+        {
+          "frame_id": 808,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V014_00000808.png",
+          "source_frame_id": "L24_V014#000808",
+          "video_id": "L24_V014"
+        },
+        {
+          "frame_id": 868,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V014_00000868.png",
+          "source_frame_id": "L24_V014#000868",
+          "video_id": "L24_V014"
+        },
+        {
+          "frame_id": 928,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V014_00000928.png",
+          "source_frame_id": "L24_V014#000928",
+          "video_id": "L24_V014"
+        }
+      ],
+      "legacy_candidate_id": "p1_q25:w3_d60:r003",
+      "query_id": "p1_q25",
+      "source_frame_id": "L24_V014#000868",
+      "video_id": "L24_V014"
+    },
+    {
+      "candidate_key": "p2_q29|L29_V009#017749",
+      "center_frame_id": 17749,
+      "current_baseline_rank": 1,
+      "frame_file_sha256": [
+        "6ae820c979946b0ea888b1bb7eb9b5488ba44b789cf7e91b085444c8a8284c76",
+        "1a5c56f4d31f45538a32c23d5e57786a980c15be9efec18c5abcbf2cef80e1e9",
+        "a87699efb4f7ef55f94e33fbd4a8e5367535be7e1e879e9e466401939bdb8b34"
+      ],
+      "frames": [
+        {
+          "frame_id": 17689,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L29_V009_00017689.png",
+          "source_frame_id": "L29_V009#017689",
+          "video_id": "L29_V009"
+        },
+        {
+          "frame_id": 17749,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L29_V009_00017749.png",
+          "source_frame_id": "L29_V009#017749",
+          "video_id": "L29_V009"
+        },
+        {
+          "frame_id": 17809,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L29_V009_00017809.png",
+          "source_frame_id": "L29_V009#017809",
+          "video_id": "L29_V009"
+        }
+      ],
+      "legacy_candidate_id": "p2_q29:w3_d60:r001",
+      "query_id": "p2_q29",
+      "source_frame_id": "L29_V009#017749",
+      "video_id": "L29_V009"
+    },
+    {
+      "candidate_key": "p2_q29|L29_V009#017699",
+      "center_frame_id": 17699,
+      "current_baseline_rank": 2,
+      "frame_file_sha256": [
+        "469f8f3f4ee5b62fb1c370fa6a80a11b184f43afdc87cd90288384331361c813",
+        "2fa844a050566e960c15585790bea06ef84fe3e98eb1c54235e3294fc670e240",
+        "d08c518c3eeb5e23148ad03c0386797b36c99baded9c469232a47fc030a6fbb5"
+      ],
+      "frames": [
+        {
+          "frame_id": 17639,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L29_V009_00017639.png",
+          "source_frame_id": "L29_V009#017639",
+          "video_id": "L29_V009"
+        },
+        {
+          "frame_id": 17699,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L29_V009_00017699.png",
+          "source_frame_id": "L29_V009#017699",
+          "video_id": "L29_V009"
+        },
+        {
+          "frame_id": 17759,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L29_V009_00017759.png",
+          "source_frame_id": "L29_V009#017759",
+          "video_id": "L29_V009"
+        }
+      ],
+      "legacy_candidate_id": "p2_q29:w3_d60:r002",
+      "query_id": "p2_q29",
+      "source_frame_id": "L29_V009#017699",
+      "video_id": "L29_V009"
+    },
+    {
+      "candidate_key": "p2_q29|L27_V004#009774",
+      "center_frame_id": 9774,
+      "current_baseline_rank": 3,
+      "frame_file_sha256": [
+        "37fce4e5c181349852098453e745fed673a4ad903e6cce2b92a0854e0bc1ea40",
+        "0e42af053a39022a7db61e9a2633f91989438323f2aed53192fa4c55fc873884",
+        "4c3776691ef3772dc12a314a3332082702b19e8b8b531db5d5f83d0728d171ca"
+      ],
+      "frames": [
+        {
+          "frame_id": 9714,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L27_V004_00009714.png",
+          "source_frame_id": "L27_V004#009714",
+          "video_id": "L27_V004"
+        },
+        {
+          "frame_id": 9774,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L27_V004_00009774.png",
+          "source_frame_id": "L27_V004#009774",
+          "video_id": "L27_V004"
+        },
+        {
+          "frame_id": 9834,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L27_V004_00009834.png",
+          "source_frame_id": "L27_V004#009834",
+          "video_id": "L27_V004"
+        }
+      ],
+      "legacy_candidate_id": "p2_q29:w3_d60:r003",
+      "query_id": "p2_q29",
+      "source_frame_id": "L27_V004#009774",
+      "video_id": "L27_V004"
+    },
+    {
+      "candidate_key": "p2_q30|L30_V023#005198",
+      "center_frame_id": 5198,
+      "current_baseline_rank": 1,
+      "frame_file_sha256": [
+        "fa11c9c5b51eca173c2149d9c34a9af0f272ebf8249837d7be894e572d95248c",
+        "d7c0d870b3afa5389ffe02cb58383beae5ba9860613469dd67c3f29f6e48fba4",
+        "982b0db0f277473ad6224b2ab533509770ea1bd425ee369740d763caa8508ea7"
+      ],
+      "frames": [
+        {
+          "frame_id": 5138,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L30_V023_00005138.png",
+          "source_frame_id": "L30_V023#005138",
+          "video_id": "L30_V023"
+        },
+        {
+          "frame_id": 5198,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L30_V023_00005198.png",
+          "source_frame_id": "L30_V023#005198",
+          "video_id": "L30_V023"
+        },
+        {
+          "frame_id": 5258,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L30_V023_00005258.png",
+          "source_frame_id": "L30_V023#005258",
+          "video_id": "L30_V023"
+        }
+      ],
+      "legacy_candidate_id": "p2_q30:w3_d60:r001",
+      "query_id": "p2_q30",
+      "source_frame_id": "L30_V023#005198",
+      "video_id": "L30_V023"
+    },
+    {
+      "candidate_key": "p2_q30|L30_V023#005378",
+      "center_frame_id": 5378,
+      "current_baseline_rank": 2,
+      "frame_file_sha256": [
+        "5af42cc3167dfbdc5da0ea07035c4315d2a6765f0546927990e1c0d98008c63e",
+        "0f7f5dbccf148f6b13026dea74d648cd55bd840f2e6827b50337355449504406",
+        "8a416bfd571f6dd79c8e9d8600a612c3c704f1acc2c613dea6c7647a03253273"
+      ],
+      "frames": [
+        {
+          "frame_id": 5318,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L30_V023_00005318.png",
+          "source_frame_id": "L30_V023#005318",
+          "video_id": "L30_V023"
+        },
+        {
+          "frame_id": 5378,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L30_V023_00005378.png",
+          "source_frame_id": "L30_V023#005378",
+          "video_id": "L30_V023"
+        },
+        {
+          "frame_id": 5438,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L30_V023_00005438.png",
+          "source_frame_id": "L30_V023#005438",
+          "video_id": "L30_V023"
+        }
+      ],
+      "legacy_candidate_id": "p2_q30:w3_d60:r002",
+      "query_id": "p2_q30",
+      "source_frame_id": "L30_V023#005378",
+      "video_id": "L30_V023"
+    },
+    {
+      "candidate_key": "p2_q30|L29_V015#025937",
+      "center_frame_id": 25937,
+      "current_baseline_rank": 3,
+      "frame_file_sha256": [
+        "4e54c4c2b471b8712aa6618d7ebb4238175eb487bd8f6bc6ab1c0da8d68f0855",
+        "c5ea4ab704eea32c7d228b31c17b715e302c2fd5a4ae4f0efc663fd0c2d7df9d",
+        "4da6b5737b2d85d1fdd5a5a1039df12bd73f5725f47660797e0c0d8d2b717e0e"
+      ],
+      "frames": [
+        {
+          "frame_id": 25877,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L29_V015_00025877.png",
+          "source_frame_id": "L29_V015#025877",
+          "video_id": "L29_V015"
+        },
+        {
+          "frame_id": 25937,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L29_V015_00025937.png",
+          "source_frame_id": "L29_V015#025937",
+          "video_id": "L29_V015"
+        },
+        {
+          "frame_id": 25997,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L29_V015_00025997.png",
+          "source_frame_id": "L29_V015#025997",
+          "video_id": "L29_V015"
+        }
+      ],
+      "legacy_candidate_id": "p2_q30:w3_d60:r003",
+      "query_id": "p2_q30",
+      "source_frame_id": "L29_V015#025937",
+      "video_id": "L29_V015"
+    },
+    {
+      "candidate_key": "p3_q21|L26_V078#002108",
+      "center_frame_id": 2108,
+      "current_baseline_rank": 1,
+      "frame_file_sha256": [
+        "51dd0b8a1ee2ffbf6d89aadb81070ab250b370b651ea7f69b1e73a6b2163c10d",
+        "b93b16156b064f8014f1fe33d4cac8e157b29453febe33a34d44964fbb1c4a07",
+        "d444bdf69163e7939ffe9925761ad19ea419a0cafbcba7525a4895ed1e200949"
+      ],
+      "frames": [
+        {
+          "frame_id": 2048,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V078_00002048.png",
+          "source_frame_id": "L26_V078#002048",
+          "video_id": "L26_V078"
+        },
+        {
+          "frame_id": 2108,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V078_00002108.png",
+          "source_frame_id": "L26_V078#002108",
+          "video_id": "L26_V078"
+        },
+        {
+          "frame_id": 2168,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V078_00002168.png",
+          "source_frame_id": "L26_V078#002168",
+          "video_id": "L26_V078"
+        }
+      ],
+      "legacy_candidate_id": "p3_q21:w3_d60:r001",
+      "query_id": "p3_q21",
+      "source_frame_id": "L26_V078#002108",
+      "video_id": "L26_V078"
+    },
+    {
+      "candidate_key": "p3_q21|L26_V375#005888",
+      "center_frame_id": 5888,
+      "current_baseline_rank": 2,
+      "frame_file_sha256": [
+        "952ebb89a137d2c8d4f01a2f8256f96fc41f7bdc2012194686b129f3fa5e39d6",
+        "94394c8507b0f7344f75de64a34580c9f7a141518aea5847796cb9850097c0ee",
+        "28e9429a1dd195213d53ca3f14e76c82545f8ab8ed67ab05bf45a482baaecf40"
+      ],
+      "frames": [
+        {
+          "frame_id": 5828,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V375_00005828.png",
+          "source_frame_id": "L26_V375#005828",
+          "video_id": "L26_V375"
+        },
+        {
+          "frame_id": 5888,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V375_00005888.png",
+          "source_frame_id": "L26_V375#005888",
+          "video_id": "L26_V375"
+        },
+        {
+          "frame_id": 5948,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V375_00005948.png",
+          "source_frame_id": "L26_V375#005948",
+          "video_id": "L26_V375"
+        }
+      ],
+      "legacy_candidate_id": "p3_q21:w3_d60:r002",
+      "query_id": "p3_q21",
+      "source_frame_id": "L26_V375#005888",
+      "video_id": "L26_V375"
+    },
+    {
+      "candidate_key": "p3_q21|L26_V239#005248",
+      "center_frame_id": 5248,
+      "current_baseline_rank": 3,
+      "frame_file_sha256": [
+        "b0d801371d76fcb0ea575c39145e564a2561b6e471f70de79afa0a06954f679c",
+        "6bf245f2d68393935daa6bbffe789707ab0c5ab2e9f15809ad28679ba5dfe485",
+        "36f52c48c37fc6123348a2b43f0c239a1831f47aaab8c606f5a348a2629df8fe"
+      ],
+      "frames": [
+        {
+          "frame_id": 5188,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V239_00005188.png",
+          "source_frame_id": "L26_V239#005188",
+          "video_id": "L26_V239"
+        },
+        {
+          "frame_id": 5248,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V239_00005248.png",
+          "source_frame_id": "L26_V239#005248",
+          "video_id": "L26_V239"
+        },
+        {
+          "frame_id": 5308,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L26_V239_00005308.png",
+          "source_frame_id": "L26_V239#005308",
+          "video_id": "L26_V239"
+        }
+      ],
+      "legacy_candidate_id": "p3_q21:w3_d60:r003",
+      "query_id": "p3_q21",
+      "source_frame_id": "L26_V239#005248",
+      "video_id": "L26_V239"
+    },
+    {
+      "candidate_key": "p3_q34|L24_V011#014136",
+      "center_frame_id": 14136,
+      "current_baseline_rank": 1,
+      "frame_file_sha256": [
+        "fcf18ea311b97683d7c8b51656b8548fe6d9b6bbd421199b6a20073b87b8bde5",
+        "5fd8df4c8c0543682033ea9553f8539c45d3040e509c08f5f3c8ef39b015242e",
+        "9511627756a194f5e623f741676f8e9a9cf49e93b85ca368f992b5a83d494d5c"
+      ],
+      "frames": [
+        {
+          "frame_id": 14076,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V011_00014076.png",
+          "source_frame_id": "L24_V011#014076",
+          "video_id": "L24_V011"
+        },
+        {
+          "frame_id": 14136,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V011_00014136.png",
+          "source_frame_id": "L24_V011#014136",
+          "video_id": "L24_V011"
+        },
+        {
+          "frame_id": 14196,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V011_00014196.png",
+          "source_frame_id": "L24_V011#014196",
+          "video_id": "L24_V011"
+        }
+      ],
+      "legacy_candidate_id": "p3_q34:w3_d60:r001",
+      "query_id": "p3_q34",
+      "source_frame_id": "L24_V011#014136",
+      "video_id": "L24_V011"
+    },
+    {
+      "candidate_key": "p3_q34|L24_V013#000224",
+      "center_frame_id": 224,
+      "current_baseline_rank": 2,
+      "frame_file_sha256": [
+        "497177e5640dbdbf4e6dccf1622d4b305fa0b75a9c6a74d19e76f4f2da4eebcd",
+        "bdb89e3d7b9c41d0b058015390f35726cd8abd65bcd38d4e1fac47bae12c48ba",
+        "1f6ca963d45f1fd25ed5437e811976fb313c0f70578d1e169d06c42a661bce91"
+      ],
+      "frames": [
+        {
+          "frame_id": 164,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V013_00000164.png",
+          "source_frame_id": "L24_V013#000164",
+          "video_id": "L24_V013"
+        },
+        {
+          "frame_id": 224,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V013_00000224.png",
+          "source_frame_id": "L24_V013#000224",
+          "video_id": "L24_V013"
+        },
+        {
+          "frame_id": 284,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V013_00000284.png",
+          "source_frame_id": "L24_V013#000284",
+          "video_id": "L24_V013"
+        }
+      ],
+      "legacy_candidate_id": "p3_q34:w3_d60:r003",
+      "query_id": "p3_q34",
+      "source_frame_id": "L24_V013#000224",
+      "video_id": "L24_V013"
+    },
+    {
+      "candidate_key": "p3_q34|L24_V011#013988",
+      "center_frame_id": 13988,
+      "current_baseline_rank": 3,
+      "frame_file_sha256": [
+        "5e2a476e66966ec846087277e1ecfc1060a3d1e9db84e4f3e60fb08cc85b7e3f",
+        "2a7b088d4a673f1bb647ea2866c363ff7ee3cf3a773b6d3877df1f3c39954cb7",
+        "57be833adf9290decd20ba8dd0273656068ab30207a5575ae229e477d765f6f7"
+      ],
+      "frames": [
+        {
+          "frame_id": 13928,
+          "offset": -60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V011_00013928.png",
+          "source_frame_id": "L24_V011#013928",
+          "video_id": "L24_V011"
+        },
+        {
+          "frame_id": 13988,
+          "offset": 0,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V011_00013988.png",
+          "source_frame_id": "L24_V011#013988",
+          "video_id": "L24_V011"
+        },
+        {
+          "frame_id": 14048,
+          "offset": 60,
+          "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_frames\\_cache\\L24_V011_00014048.png",
+          "source_frame_id": "L24_V011#014048",
+          "video_id": "L24_V011"
+        }
+      ],
+      "legacy_candidate_id": "p3_q34:w3_d60:r002",
+      "query_id": "p3_q34",
+      "source_frame_id": "L24_V011#013988",
+      "video_id": "L24_V011"
+    }
+  ],
+  "expected_image_embeddings": 72,
+  "expected_query_embeddings": 8,
+  "experiment": "vecna82-temporal-matched-v1",
+  "ground_truth_used_for_selection": false,
+  "historical_embeddings_reused": false,
+  "image_instruction": "Represent the user's input.",
+  "model_config_sha256": "9172f55b0b9cce70b7f67b10c58a408ccf3ec15c587e6efd4d5f41631237fded",
+  "model_revision": "9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda",
+  "preprocessing": {
+    "device": "cpu",
+    "dtype": "torch.float32",
+    "max_length": 8192,
+    "mode": "RGB",
+    "resize": "PIL.Image.Resampling.LANCZOS",
+    "sheet_layout": "three tiles left-to-right",
+    "threads": 6,
+    "tile_size": [
+      384,
+      216
+    ]
+  },
+  "queries": [
+    {
+      "query_id": "p0_q22",
+      "text": "E1: Khoảnh khắc đầu tiên bột được bỏ vào tô măng tây.\nE2: Khoảnh khắc đầu tiên thấy miến măng tây đầu tiên tiếp xúc với dầu trong chảo.\nE3: Khoảnh khắc miếng măng tây đầu tiên rời khỏi chảo dầu.\nE4: Khoảng khắc miếng măng tây cuối cùng rời chảo dầu và nằm hoàn toàn trên dĩa.",
+      "text_sha256": "12483e925dc0f1d3ca944fd8a715056a52febcd37534f5b69cdbbd9e53bb4e2f"
+    },
+    {
+      "query_id": "p0_q23",
+      "text": "Đoạn video múa lân một con lân màu vàng đen trắng, tìm các sự kiện sau:\nE1: Lân quay vòng trên cột số 4 bằng 2 chân trước rồi tiếp đất. Khoảnh khắc đầu tiên mà lân bắt đầu xoay vòng.\nE2: Khoảnh khắc 4 chân hoàn toàn chạm đất đầu tiên.\nE3: Khoảnh khắc đầu tiên 2 người biểu diễn lân cuối chào ban giám khảo.\nE4: Sau đó lân tiến lại chào một con rồng. Khoảnh khắc đầu tiên con rồng cử động đầu.",
+      "text_sha256": "bcbd4b58239666929025f2b7d42b37936c9a30049dc2891a2615337188b775cb"
+    },
+    {
+      "query_id": "p0_q24",
+      "text": "Trong đoạn video nấu ăn một món ăn về nấm, gồm các khoảnh khắc sơ chế:\nE1: Khoảnh khắc đầu tiên thấy cắt nấm.\nE2: Khoảnh khắc đầu tiên cắt củ năng.\nE2: Khoảnh khắc đầu tiên cắt đậu hủ.\nE4: Khoảnh khắc chảo đặt lên bếp, đầu bếp mở lửa và thấy lửa bắt đầu xuất hiện",
+      "text_sha256": "abe95262c85e82a968cc00869eac34f9f3a952ec727a312b9f8eceb7003b786e"
+    },
+    {
+      "query_id": "p1_q25",
+      "text": "Đoạn video bắt đầu bằng ảnh cận đầu một con lân trắng, mũi đỏ, bên cạnh lá cờ trắng viền đỏ.\nE1 Khoảnh khắc đầu tiên xuất hiện đầy đủ hai con rồng vàng đang xoay vòng.\nE2 Khoảnh khắc đầu tiên con lân hoàn tất cú xoay người trên các thanh trụ (thời điểm đâu tiên các chân của lân đặt trên trụ sau khi xoay).\nE3 Khoảnh khắc đầu tiên dùi chạm vào kẻng đồng múa lân.",
+      "text_sha256": "fabe99ad531f96d61c7bcab0354aa14e3070621a95b4d35d6d053e26b3937a1c"
+    },
+    {
+      "query_id": "p2_q29",
+      "text": "Video về một khu vườn cây ăn trái ở miền Tây Nam Bộ. Đây là chuỗi liên tiếp các cảnh quay về 4 loại trái cây trong vườn.\nE1: Cảnh đầu tiên có trái sầu riêng.\nE2: Cảnh đầu tiên có trái măng cụt.\nE3: Cảnh đầu tiên có trái bưởi.\nE4: Cảnh đầu tiên có trái dâu bòn bon.",
+      "text_sha256": "32ac6d640f065af07aea8a6986bf9e5b50afebe3ba60d560fafc3c801268f343"
+    },
+    {
+      "query_id": "p2_q30",
+      "text": "4 cảnh này xảy ra liên tiếp nhau.\nCảnh 1: Hai người phụ nữ cùng nhau dán niêm phong một thùng carton.\nCảnh 2: Các thùng mì tôm và bọc bánh mì được sắp xếp ngay ngắn.\nCảnh 3: Một người đàn ông nhấc thùng mì tôm lên và xếp lên trên chồng thùng mì.\nCảnh 4: Cảnh quay cận cảnh các thùng mì được xếp chồng trên xe tải.",
+      "text_sha256": "d3efa8c87a7071960fd2f705118dcab190268558fc89b97cc0835e65b913d4d3"
+    },
+    {
+      "query_id": "p3_q21",
+      "text": "Một món ăn làm từ tôm và các loại gia vị.\nE1: Khoảnh khắc người đầu bếp bắt đầu trộn hỗn hợp nước xốt, trong nước xốt này có 2 thành phần là nước cam và vỏ cam.\nE2: Khoảnh khắc người đầu bếp bắt đầu cắt bỏ đầu tôm.\nE3: Người đầu bếp cho tôm ra dĩa. Hãy chọn khoảnh khắc con tôm đầu tiên chạm vào dĩa.\nE4: Khoảnh khắc tép cam thứ 4 được xếp lên dĩa khi trang trí món ăn.",
+      "text_sha256": "d81345b4383476336dbd2abcf1843488ca9f65d4af828122231f164890a31331"
+    },
+    {
+      "query_id": "p3_q34",
+      "text": "Con lân màu đỏ đang biểu diễn trên các cột trụ.\n\nE1: Con lân treo hai chân trước vào phần dưới thân của hai trụ gần cuối (gần trụ cuối cùng cao nhất).\nE2: Con lân đứng thẳng sau khi di chuyển từ cuối dãy trụ về, hai chân đứng trên hai trụ khác nhau và một chân trước co lên.\nE3: Khoảnh khắc con lân hoàn tất động tác ngoảnh mặt theo hướng ngược lại.\nE4: Khoảnh khắc đầu tiên con lân ngậm một thanh trụ.",
+      "text_sha256": "b8db0149b8fdfdc16879dfaf28e980f55177d022a67052f747833ad8288c5949"
+    }
+  ],
+  "query_ids": [
+    "p0_q22",
+    "p0_q23",
+    "p0_q24",
+    "p1_q25",
+    "p2_q29",
+    "p2_q30",
+    "p3_q21",
+    "p3_q34"
+  ],
+  "query_instruction": "Retrieve images or text relevant to the user's query.",
+  "schema_version": 1,
+  "selection": "frozen current top-three candidate identities for eight prespecified queries",
+  "sources": [
+    {
+      "bytes": 1306086,
+      "path": "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-full-matched-temporal-eight-20260916-t7awou6o\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\inputs\\qwen_only_top100.jsonl",
+      "sha256": "85d5dd169bcd6934ebfa8435b6aee82ce9bc149bac3a704afbdbcb4b986568f0"
+    },
+    {
+      "bytes": 74066,
+      "path": "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\issue81-temporal-representation\\benchmark-results\\temporal-representation-v1\\stage2b_candidates.jsonl",
+      "sha256": "50784b4d23fa68ec2c73cfc25d92f686aee4e436afd091912e9ef1b95fa88890"
+    }
+  ]
+}

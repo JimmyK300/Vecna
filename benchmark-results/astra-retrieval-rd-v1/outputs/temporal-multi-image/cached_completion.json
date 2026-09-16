@@ -1,0 +1,288 @@
+{
+  "completed_embedding_count": 11,
+  "matched_eight_query_experiment_complete": false,
+  "mode_counts": {
+    "contact_sheet": 10,
+    "native3": 1
+  },
+  "paired_complete_query_ids": [],
+  "per_query": [
+    {
+      "complete_contact_sheet_and_native3_pair": false,
+      "modes": {
+        "contact_sheet": {
+          "complete_top3": true,
+          "completed_candidate_count": 3,
+          "missing_candidate_ids": [],
+          "requested_candidate_count": 3
+        },
+        "native3": {
+          "complete_top3": false,
+          "completed_candidate_count": 0,
+          "missing_candidate_ids": [
+            "p0_q22:w3_d60:r001",
+            "p0_q22:w3_d60:r002",
+            "p0_q22:w3_d60:r003"
+          ],
+          "requested_candidate_count": 3
+        },
+        "native5": {
+          "complete_top3": false,
+          "completed_candidate_count": 0,
+          "missing_candidate_ids": [
+            "p0_q22:w5_d60:r001",
+            "p0_q22:w5_d60:r002",
+            "p0_q22:w5_d60:r003"
+          ],
+          "requested_candidate_count": 3
+        }
+      },
+      "query_id": "p0_q22"
+    },
+    {
+      "complete_contact_sheet_and_native3_pair": false,
+      "modes": {
+        "contact_sheet": {
+          "complete_top3": true,
+          "completed_candidate_count": 3,
+          "missing_candidate_ids": [],
+          "requested_candidate_count": 3
+        },
+        "native3": {
+          "complete_top3": false,
+          "completed_candidate_count": 0,
+          "missing_candidate_ids": [
+            "p0_q23:w3_d60:r001",
+            "p0_q23:w3_d60:r002",
+            "p0_q23:w3_d60:r003"
+          ],
+          "requested_candidate_count": 3
+        },
+        "native5": {
+          "complete_top3": false,
+          "completed_candidate_count": 0,
+          "missing_candidate_ids": [
+            "p0_q23:w5_d60:r001",
+            "p0_q23:w5_d60:r002",
+            "p0_q23:w5_d60:r003"
+          ],
+          "requested_candidate_count": 3
+        }
+      },
+      "query_id": "p0_q23"
+    },
+    {
+      "complete_contact_sheet_and_native3_pair": false,
+      "modes": {
+        "contact_sheet": {
+          "complete_top3": false,
+          "completed_candidate_count": 1,
+          "missing_candidate_ids": [
+            "p0_q24:w3_d60:r002",
+            "p0_q24:w3_d60:r003"
+          ],
+          "requested_candidate_count": 3
+        },
+        "native3": {
+          "complete_top3": false,
+          "completed_candidate_count": 0,
+          "missing_candidate_ids": [
+            "p0_q24:w3_d60:r001",
+            "p0_q24:w3_d60:r002",
+            "p0_q24:w3_d60:r003"
+          ],
+          "requested_candidate_count": 3
+        },
+        "native5": {
+          "complete_top3": false,
+          "completed_candidate_count": 0,
+          "missing_candidate_ids": [
+            "p0_q24:w5_d60:r001",
+            "p0_q24:w5_d60:r002",
+            "p0_q24:w5_d60:r003"
+          ],
+          "requested_candidate_count": 3
+        }
+      },
+      "query_id": "p0_q24"
+    },
+    {
+      "complete_contact_sheet_and_native3_pair": false,
+      "modes": {
+        "contact_sheet": {
+          "complete_top3": false,
+          "completed_candidate_count": 0,
+          "missing_candidate_ids": [
+            "p1_q25:w3_d60:r001",
+            "p1_q25:w3_d60:r002",
+            "p1_q25:w3_d60:r003"
+          ],
+          "requested_candidate_count": 3
+        },
+        "native3": {
+          "complete_top3": false,
+          "completed_candidate_count": 0,
+          "missing_candidate_ids": [
+            "p1_q25:w3_d60:r001",
+            "p1_q25:w3_d60:r002",
+            "p1_q25:w3_d60:r003"
+          ],
+          "requested_candidate_count": 3
+        },
+        "native5": {
+          "complete_top3": false,
+          "completed_candidate_count": 0,
+          "missing_candidate_ids": [
+            "p1_q25:w5_d60:r001",
+            "p1_q25:w5_d60:r002",
+            "p1_q25:w5_d60:r003"
+          ],
+          "requested_candidate_count": 3
+        }
+      },
+      "query_id": "p1_q25"
+    },
+    {
+      "complete_contact_sheet_and_native3_pair": false,
+      "modes": {
+        "contact_sheet": {
+          "complete_top3": false,
+          "completed_candidate_count": 0,
+          "missing_candidate_ids": [
+            "p2_q29:w3_d60:r001",
+            "p2_q29:w3_d60:r002",
+            "p2_q29:w3_d60:r003"
+          ],
+          "requested_candidate_count": 3
+        },
+        "native3": {
+          "complete_top3": false,
+          "completed_candidate_count": 0,
+          "missing_candidate_ids": [
+            "p2_q29:w3_d60:r001",
+            "p2_q29:w3_d60:r002",
+            "p2_q29:w3_d60:r003"
+          ],
+          "requested_candidate_count": 3
+        },
+        "native5": {
+          "complete_top3": false,
+          "completed_candidate_count": 0,
+          "missing_candidate_ids": [
+            "p2_q29:w5_d60:r001",
+            "p2_q29:w5_d60:r002",
+            "p2_q29:w5_d60:r003"
+          ],
+          "requested_candidate_count": 3
+        }
+      },
+      "query_id": "p2_q29"
+    },
+    {
+      "complete_contact_sheet_and_native3_pair": false,
+      "modes": {
+        "contact_sheet": {
+          "complete_top3": false,
+          "completed_candidate_count": 0,
+          "missing_candidate_ids": [
+            "p2_q30:w3_d60:r001",
+            "p2_q30:w3_d60:r002",
+            "p2_q30:w3_d60:r003"
+          ],
+          "requested_candidate_count": 3
+        },
+        "native3": {
+          "complete_top3": false,
+          "completed_candidate_count": 0,
+          "missing_candidate_ids": [
+            "p2_q30:w3_d60:r001",
+            "p2_q30:w3_d60:r002",
+            "p2_q30:w3_d60:r003"
+          ],
+          "requested_candidate_count": 3
+        },
+        "native5": {
+          "complete_top3": false,
+          "completed_candidate_count": 0,
+          "missing_candidate_ids": [
+            "p2_q30:w5_d60:r001",
+            "p2_q30:w5_d60:r002",
+            "p2_q30:w5_d60:r003"
+          ],
+          "requested_candidate_count": 3
+        }
+      },
+      "query_id": "p2_q30"
+    },
+    {
+      "complete_contact_sheet_and_native3_pair": false,
+      "modes": {
+        "contact_sheet": {
+          "complete_top3": false,
+          "completed_candidate_count": 0,
+          "missing_candidate_ids": [
+            "p3_q21:w3_d60:r001",
+            "p3_q21:w3_d60:r002",
+            "p3_q21:w3_d60:r003"
+          ],
+          "requested_candidate_count": 3
+        },
+        "native3": {
+          "complete_top3": false,
+          "completed_candidate_count": 0,
+          "missing_candidate_ids": [
+            "p3_q21:w3_d60:r001",
+            "p3_q21:w3_d60:r002",
+            "p3_q21:w3_d60:r003"
+          ],
+          "requested_candidate_count": 3
+        },
+        "native5": {
+          "complete_top3": false,
+          "completed_candidate_count": 0,
+          "missing_candidate_ids": [
+            "p3_q21:w5_d60:r001",
+            "p3_q21:w5_d60:r002",
+            "p3_q21:w5_d60:r003"
+          ],
+          "requested_candidate_count": 3
+        }
+      },
+      "query_id": "p3_q21"
+    },
+    {
+      "complete_contact_sheet_and_native3_pair": false,
+      "modes": {
+        "contact_sheet": {
+          "complete_top3": true,
+          "completed_candidate_count": 3,
+          "missing_candidate_ids": [],
+          "requested_candidate_count": 3
+        },
+        "native3": {
+          "complete_top3": false,
+          "completed_candidate_count": 1,
+          "missing_candidate_ids": [
+            "p3_q34:w3_d60:r002",
+            "p3_q34:w3_d60:r003"
+          ],
+          "requested_candidate_count": 3
+        },
+        "native5": {
+          "complete_top3": false,
+          "completed_candidate_count": 0,
+          "missing_candidate_ids": [
+            "p3_q34:w5_d60:r001",
+            "p3_q34:w5_d60:r002",
+            "p3_q34:w5_d60:r003"
+          ],
+          "requested_candidate_count": 3
+        }
+      },
+      "query_id": "p3_q34"
+    }
+  ],
+  "prepared_candidate_window_count": 48,
+  "required_per_primary_mode": 24,
+  "scope": "historical_stage2b_cache_only; completed new experiment is in new_matched_run"
+}

@@ -1,0 +1,1503 @@
+{
+  "schema_version": 1,
+  "purpose": "vecna82-matched-frame-timestamps",
+  "ffmpeg_version": "ffmpeg version 8.1.2-full_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers",
+  "script_sha256": "5890c117d1dbdde876d801078dc4fda58aca8fe783204700aa3ce9e5ecec9dde",
+  "request": {
+    "videos": {
+      "L24_V011": [
+        13821,
+        13881,
+        13928,
+        13941,
+        13988,
+        14048,
+        14076,
+        14136,
+        14196
+      ],
+      "L24_V013": [
+        164,
+        224,
+        284
+      ],
+      "L24_V014": [
+        808,
+        868,
+        928
+      ],
+      "L24_V016": [
+        1280,
+        1340,
+        1400
+      ],
+      "L24_V030": [
+        2372,
+        2432,
+        2492
+      ],
+      "L24_V033": [
+        1276,
+        1336,
+        1396,
+        15868,
+        15928,
+        15988
+      ],
+      "L26_V072": [
+        4776,
+        4836,
+        4896
+      ],
+      "L26_V078": [
+        2048,
+        2108,
+        2168
+      ],
+      "L26_V230": [
+        4005,
+        4065,
+        4125,
+        4148,
+        4208,
+        4268,
+        4288,
+        4348,
+        4408
+      ],
+      "L26_V239": [
+        5188,
+        5248,
+        5308
+      ],
+      "L26_V278": [
+        4532,
+        4592,
+        4652
+      ],
+      "L26_V358": [
+        5700,
+        5760,
+        5820
+      ],
+      "L26_V375": [
+        5828,
+        5888,
+        5948
+      ],
+      "L27_V004": [
+        9714,
+        9774,
+        9834
+      ],
+      "L29_V009": [
+        17639,
+        17689,
+        17699,
+        17749,
+        17759,
+        17809
+      ],
+      "L29_V015": [
+        25877,
+        25937,
+        25997
+      ],
+      "L30_V023": [
+        5138,
+        5198,
+        5258,
+        5318,
+        5378,
+        5438
+      ]
+    }
+  },
+  "overall_elapsed_s": 143.56648209999548,
+  "videos": [
+    {
+      "video_id": "L24_V011",
+      "requested_frame_ids": [
+        13821,
+        13881,
+        13928,
+        13941,
+        13988,
+        14048,
+        14076,
+        14136,
+        14196
+      ],
+      "frames": [
+        {
+          "frame_id": 13821,
+          "nominal_frame_over_avg_fps_s": 552.84,
+          "nominal_time_is_exact_pts": false,
+          "pts": 7076352,
+          "pts_time_s": 552.84
+        },
+        {
+          "frame_id": 13881,
+          "nominal_frame_over_avg_fps_s": 555.24,
+          "nominal_time_is_exact_pts": false,
+          "pts": 7107072,
+          "pts_time_s": 555.24
+        },
+        {
+          "frame_id": 13928,
+          "nominal_frame_over_avg_fps_s": 557.12,
+          "nominal_time_is_exact_pts": false,
+          "pts": 7131136,
+          "pts_time_s": 557.12
+        },
+        {
+          "frame_id": 13941,
+          "nominal_frame_over_avg_fps_s": 557.64,
+          "nominal_time_is_exact_pts": false,
+          "pts": 7137792,
+          "pts_time_s": 557.64
+        },
+        {
+          "frame_id": 13988,
+          "nominal_frame_over_avg_fps_s": 559.52,
+          "nominal_time_is_exact_pts": false,
+          "pts": 7161856,
+          "pts_time_s": 559.52
+        },
+        {
+          "frame_id": 14048,
+          "nominal_frame_over_avg_fps_s": 561.92,
+          "nominal_time_is_exact_pts": false,
+          "pts": 7192576,
+          "pts_time_s": 561.92
+        },
+        {
+          "frame_id": 14076,
+          "nominal_frame_over_avg_fps_s": 563.04,
+          "nominal_time_is_exact_pts": false,
+          "pts": 7206912,
+          "pts_time_s": 563.04
+        },
+        {
+          "frame_id": 14136,
+          "nominal_frame_over_avg_fps_s": 565.44,
+          "nominal_time_is_exact_pts": false,
+          "pts": 7237632,
+          "pts_time_s": 565.44
+        },
+        {
+          "frame_id": 14196,
+          "nominal_frame_over_avg_fps_s": 567.84,
+          "nominal_time_is_exact_pts": false,
+          "pts": 7268352,
+          "pts_time_s": 567.84
+        }
+      ],
+      "status": "exact_pts_complete",
+      "source_path": "D:\\Official-Dataset\\videos\\L24\\L24_V011.mp4",
+      "source_bytes": 183047541,
+      "source_mtime_ns": 1786620945271581400,
+      "stream": {
+        "index": 0,
+        "codec_name": "h264",
+        "width": 1280,
+        "height": 720,
+        "r_frame_rate": "25/1",
+        "avg_frame_rate": "25/1",
+        "time_base": "1/12800",
+        "start_time": "0.000000",
+        "duration": "649.440000",
+        "nb_frames": "16236"
+      },
+      "decode_elapsed_s": 17.854941199999303,
+      "selected_frame_pts_log": [
+        {
+          "selected_index": 0,
+          "pts": 7076352,
+          "pts_time_s": 552.84
+        },
+        {
+          "selected_index": 1,
+          "pts": 7107072,
+          "pts_time_s": 555.24
+        },
+        {
+          "selected_index": 2,
+          "pts": 7131136,
+          "pts_time_s": 557.12
+        },
+        {
+          "selected_index": 3,
+          "pts": 7137792,
+          "pts_time_s": 557.64
+        },
+        {
+          "selected_index": 4,
+          "pts": 7161856,
+          "pts_time_s": 559.52
+        },
+        {
+          "selected_index": 5,
+          "pts": 7192576,
+          "pts_time_s": 561.92
+        },
+        {
+          "selected_index": 6,
+          "pts": 7206912,
+          "pts_time_s": 563.04
+        },
+        {
+          "selected_index": 7,
+          "pts": 7237632,
+          "pts_time_s": 565.44
+        },
+        {
+          "selected_index": 8,
+          "pts": 7268352,
+          "pts_time_s": 567.84
+        }
+      ]
+    },
+    {
+      "video_id": "L24_V013",
+      "requested_frame_ids": [
+        164,
+        224,
+        284
+      ],
+      "frames": [
+        {
+          "frame_id": 164,
+          "nominal_frame_over_avg_fps_s": 6.56,
+          "nominal_time_is_exact_pts": false,
+          "pts": 83968,
+          "pts_time_s": 6.56
+        },
+        {
+          "frame_id": 224,
+          "nominal_frame_over_avg_fps_s": 8.96,
+          "nominal_time_is_exact_pts": false,
+          "pts": 114688,
+          "pts_time_s": 8.96
+        },
+        {
+          "frame_id": 284,
+          "nominal_frame_over_avg_fps_s": 11.36,
+          "nominal_time_is_exact_pts": false,
+          "pts": 145408,
+          "pts_time_s": 11.36
+        }
+      ],
+      "status": "exact_pts_complete",
+      "source_path": "D:\\Official-Dataset\\videos\\L24\\L24_V013.mp4",
+      "source_bytes": 145059324,
+      "source_mtime_ns": 1786620946587634900,
+      "stream": {
+        "index": 0,
+        "codec_name": "h264",
+        "width": 1280,
+        "height": 720,
+        "r_frame_rate": "25/1",
+        "avg_frame_rate": "25/1",
+        "time_base": "1/12800",
+        "start_time": "0.000000",
+        "duration": "522.120000",
+        "nb_frames": "13053"
+      },
+      "decode_elapsed_s": 0.3287440999993123,
+      "selected_frame_pts_log": [
+        {
+          "selected_index": 0,
+          "pts": 83968,
+          "pts_time_s": 6.56
+        },
+        {
+          "selected_index": 1,
+          "pts": 114688,
+          "pts_time_s": 8.96
+        },
+        {
+          "selected_index": 2,
+          "pts": 145408,
+          "pts_time_s": 11.36
+        }
+      ]
+    },
+    {
+      "video_id": "L24_V014",
+      "requested_frame_ids": [
+        808,
+        868,
+        928
+      ],
+      "frames": [
+        {
+          "frame_id": 808,
+          "nominal_frame_over_avg_fps_s": 32.32,
+          "nominal_time_is_exact_pts": false,
+          "pts": 413696,
+          "pts_time_s": 32.32
+        },
+        {
+          "frame_id": 868,
+          "nominal_frame_over_avg_fps_s": 34.72,
+          "nominal_time_is_exact_pts": false,
+          "pts": 444416,
+          "pts_time_s": 34.72
+        },
+        {
+          "frame_id": 928,
+          "nominal_frame_over_avg_fps_s": 37.12,
+          "nominal_time_is_exact_pts": false,
+          "pts": 475136,
+          "pts_time_s": 37.12
+        }
+      ],
+      "status": "exact_pts_complete",
+      "source_path": "D:\\Official-Dataset\\videos\\L24\\L24_V014.mp4",
+      "source_bytes": 143377635,
+      "source_mtime_ns": 1786620947376548300,
+      "stream": {
+        "index": 0,
+        "codec_name": "h264",
+        "width": 1280,
+        "height": 720,
+        "r_frame_rate": "25/1",
+        "avg_frame_rate": "25/1",
+        "time_base": "1/12800",
+        "start_time": "0.000000",
+        "duration": "525.640000",
+        "nb_frames": "13141"
+      },
+      "decode_elapsed_s": 0.8426490999991074,
+      "selected_frame_pts_log": [
+        {
+          "selected_index": 0,
+          "pts": 413696,
+          "pts_time_s": 32.32
+        },
+        {
+          "selected_index": 1,
+          "pts": 444416,
+          "pts_time_s": 34.72
+        },
+        {
+          "selected_index": 2,
+          "pts": 475136,
+          "pts_time_s": 37.12
+        }
+      ]
+    },
+    {
+      "video_id": "L24_V016",
+      "requested_frame_ids": [
+        1280,
+        1340,
+        1400
+      ],
+      "frames": [
+        {
+          "frame_id": 1280,
+          "nominal_frame_over_avg_fps_s": 51.2,
+          "nominal_time_is_exact_pts": false,
+          "pts": 655360,
+          "pts_time_s": 51.2
+        },
+        {
+          "frame_id": 1340,
+          "nominal_frame_over_avg_fps_s": 53.6,
+          "nominal_time_is_exact_pts": false,
+          "pts": 686080,
+          "pts_time_s": 53.6
+        },
+        {
+          "frame_id": 1400,
+          "nominal_frame_over_avg_fps_s": 56.0,
+          "nominal_time_is_exact_pts": false,
+          "pts": 716800,
+          "pts_time_s": 56.0
+        }
+      ],
+      "status": "exact_pts_complete",
+      "source_path": "D:\\Official-Dataset\\videos\\L24\\L24_V016.mp4",
+      "source_bytes": 149212107,
+      "source_mtime_ns": 1786620949312739000,
+      "stream": {
+        "index": 0,
+        "codec_name": "h264",
+        "width": 1280,
+        "height": 720,
+        "r_frame_rate": "25/1",
+        "avg_frame_rate": "25/1",
+        "time_base": "1/12800",
+        "start_time": "0.000000",
+        "duration": "563.440000",
+        "nb_frames": "14086"
+      },
+      "decode_elapsed_s": 1.3177470000009635,
+      "selected_frame_pts_log": [
+        {
+          "selected_index": 0,
+          "pts": 655360,
+          "pts_time_s": 51.2
+        },
+        {
+          "selected_index": 1,
+          "pts": 686080,
+          "pts_time_s": 53.6
+        },
+        {
+          "selected_index": 2,
+          "pts": 716800,
+          "pts_time_s": 56.0
+        }
+      ]
+    },
+    {
+      "video_id": "L24_V030",
+      "requested_frame_ids": [
+        2372,
+        2432,
+        2492
+      ],
+      "frames": [
+        {
+          "frame_id": 2372,
+          "nominal_frame_over_avg_fps_s": 79.06666666666666,
+          "nominal_time_is_exact_pts": false,
+          "pts": 1214464,
+          "pts_time_s": 79.066667
+        },
+        {
+          "frame_id": 2432,
+          "nominal_frame_over_avg_fps_s": 81.06666666666666,
+          "nominal_time_is_exact_pts": false,
+          "pts": 1245184,
+          "pts_time_s": 81.066667
+        },
+        {
+          "frame_id": 2492,
+          "nominal_frame_over_avg_fps_s": 83.06666666666666,
+          "nominal_time_is_exact_pts": false,
+          "pts": 1275904,
+          "pts_time_s": 83.066667
+        }
+      ],
+      "status": "exact_pts_complete",
+      "source_path": "D:\\Official-Dataset\\videos\\L24\\L24_V030.mp4",
+      "source_bytes": 150199224,
+      "source_mtime_ns": 1786620960271782900,
+      "stream": {
+        "index": 0,
+        "codec_name": "h264",
+        "width": 1280,
+        "height": 720,
+        "r_frame_rate": "30/1",
+        "avg_frame_rate": "30/1",
+        "time_base": "1/15360",
+        "start_time": "0.000000",
+        "duration": "645.066667",
+        "nb_frames": "19352"
+      },
+      "decode_elapsed_s": 2.082164200000989,
+      "selected_frame_pts_log": [
+        {
+          "selected_index": 0,
+          "pts": 1214464,
+          "pts_time_s": 79.066667
+        },
+        {
+          "selected_index": 1,
+          "pts": 1245184,
+          "pts_time_s": 81.066667
+        },
+        {
+          "selected_index": 2,
+          "pts": 1275904,
+          "pts_time_s": 83.066667
+        }
+      ]
+    },
+    {
+      "video_id": "L24_V033",
+      "requested_frame_ids": [
+        1276,
+        1336,
+        1396,
+        15868,
+        15928,
+        15988
+      ],
+      "frames": [
+        {
+          "frame_id": 1276,
+          "nominal_frame_over_avg_fps_s": 42.53333333333333,
+          "nominal_time_is_exact_pts": false,
+          "pts": 653312,
+          "pts_time_s": 42.533333
+        },
+        {
+          "frame_id": 1336,
+          "nominal_frame_over_avg_fps_s": 44.53333333333333,
+          "nominal_time_is_exact_pts": false,
+          "pts": 684032,
+          "pts_time_s": 44.533333
+        },
+        {
+          "frame_id": 1396,
+          "nominal_frame_over_avg_fps_s": 46.53333333333333,
+          "nominal_time_is_exact_pts": false,
+          "pts": 714752,
+          "pts_time_s": 46.533333
+        },
+        {
+          "frame_id": 15868,
+          "nominal_frame_over_avg_fps_s": 528.9333333333333,
+          "nominal_time_is_exact_pts": false,
+          "pts": 8124416,
+          "pts_time_s": 528.933333
+        },
+        {
+          "frame_id": 15928,
+          "nominal_frame_over_avg_fps_s": 530.9333333333333,
+          "nominal_time_is_exact_pts": false,
+          "pts": 8155136,
+          "pts_time_s": 530.933333
+        },
+        {
+          "frame_id": 15988,
+          "nominal_frame_over_avg_fps_s": 532.9333333333333,
+          "nominal_time_is_exact_pts": false,
+          "pts": 8185856,
+          "pts_time_s": 532.933333
+        }
+      ],
+      "status": "exact_pts_complete",
+      "source_path": "D:\\Official-Dataset\\videos\\L24\\L24_V033.mp4",
+      "source_bytes": 135800469,
+      "source_mtime_ns": 1786620962708435900,
+      "stream": {
+        "index": 0,
+        "codec_name": "h264",
+        "width": 1280,
+        "height": 720,
+        "r_frame_rate": "30/1",
+        "avg_frame_rate": "30/1",
+        "time_base": "1/15360",
+        "start_time": "0.000000",
+        "duration": "586.533333",
+        "nb_frames": "17596"
+      },
+      "decode_elapsed_s": 15.478530199994566,
+      "selected_frame_pts_log": [
+        {
+          "selected_index": 0,
+          "pts": 653312,
+          "pts_time_s": 42.533333
+        },
+        {
+          "selected_index": 1,
+          "pts": 684032,
+          "pts_time_s": 44.533333
+        },
+        {
+          "selected_index": 2,
+          "pts": 714752,
+          "pts_time_s": 46.533333
+        },
+        {
+          "selected_index": 3,
+          "pts": 8124416,
+          "pts_time_s": 528.933333
+        },
+        {
+          "selected_index": 4,
+          "pts": 8155136,
+          "pts_time_s": 530.933333
+        },
+        {
+          "selected_index": 5,
+          "pts": 8185856,
+          "pts_time_s": 532.933333
+        }
+      ]
+    },
+    {
+      "video_id": "L26_V072",
+      "requested_frame_ids": [
+        4776,
+        4836,
+        4896
+      ],
+      "frames": [
+        {
+          "frame_id": 4776,
+          "nominal_frame_over_avg_fps_s": 191.04,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2445312,
+          "pts_time_s": 191.04
+        },
+        {
+          "frame_id": 4836,
+          "nominal_frame_over_avg_fps_s": 193.44,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2476032,
+          "pts_time_s": 193.44
+        },
+        {
+          "frame_id": 4896,
+          "nominal_frame_over_avg_fps_s": 195.84,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2506752,
+          "pts_time_s": 195.84
+        }
+      ],
+      "status": "exact_pts_complete",
+      "source_path": "D:\\Official-Dataset\\videos\\L26A\\L26_V072.mp4",
+      "source_bytes": 76079799,
+      "source_mtime_ns": 1786625235027562000,
+      "stream": {
+        "index": 0,
+        "codec_name": "h264",
+        "width": 1280,
+        "height": 720,
+        "r_frame_rate": "25/1",
+        "avg_frame_rate": "25/1",
+        "time_base": "1/12800",
+        "start_time": "0.000000",
+        "duration": "326.960000",
+        "nb_frames": "8174"
+      },
+      "decode_elapsed_s": 4.159555799997179,
+      "selected_frame_pts_log": [
+        {
+          "selected_index": 0,
+          "pts": 2445312,
+          "pts_time_s": 191.04
+        },
+        {
+          "selected_index": 1,
+          "pts": 2476032,
+          "pts_time_s": 193.44
+        },
+        {
+          "selected_index": 2,
+          "pts": 2506752,
+          "pts_time_s": 195.84
+        }
+      ]
+    },
+    {
+      "video_id": "L26_V078",
+      "requested_frame_ids": [
+        2048,
+        2108,
+        2168
+      ],
+      "frames": [
+        {
+          "frame_id": 2048,
+          "nominal_frame_over_avg_fps_s": 81.92,
+          "nominal_time_is_exact_pts": false,
+          "pts": 1048576,
+          "pts_time_s": 81.92
+        },
+        {
+          "frame_id": 2108,
+          "nominal_frame_over_avg_fps_s": 84.32,
+          "nominal_time_is_exact_pts": false,
+          "pts": 1079296,
+          "pts_time_s": 84.32
+        },
+        {
+          "frame_id": 2168,
+          "nominal_frame_over_avg_fps_s": 86.72,
+          "nominal_time_is_exact_pts": false,
+          "pts": 1110016,
+          "pts_time_s": 86.72
+        }
+      ],
+      "status": "exact_pts_complete",
+      "source_path": "D:\\Official-Dataset\\videos\\L26A\\L26_V078.mp4",
+      "source_bytes": 72692816,
+      "source_mtime_ns": 1786625238372120600,
+      "stream": {
+        "index": 0,
+        "codec_name": "h264",
+        "width": 1280,
+        "height": 720,
+        "r_frame_rate": "25/1",
+        "avg_frame_rate": "25/1",
+        "time_base": "1/12800",
+        "start_time": "0.000000",
+        "duration": "322.640000",
+        "nb_frames": "8066"
+      },
+      "decode_elapsed_s": 1.7479870000024675,
+      "selected_frame_pts_log": [
+        {
+          "selected_index": 0,
+          "pts": 1048576,
+          "pts_time_s": 81.92
+        },
+        {
+          "selected_index": 1,
+          "pts": 1079296,
+          "pts_time_s": 84.32
+        },
+        {
+          "selected_index": 2,
+          "pts": 1110016,
+          "pts_time_s": 86.72
+        }
+      ]
+    },
+    {
+      "video_id": "L26_V230",
+      "requested_frame_ids": [
+        4005,
+        4065,
+        4125,
+        4148,
+        4208,
+        4268,
+        4288,
+        4348,
+        4408
+      ],
+      "frames": [
+        {
+          "frame_id": 4005,
+          "nominal_frame_over_avg_fps_s": 160.2,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2050560,
+          "pts_time_s": 160.2
+        },
+        {
+          "frame_id": 4065,
+          "nominal_frame_over_avg_fps_s": 162.6,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2081280,
+          "pts_time_s": 162.6
+        },
+        {
+          "frame_id": 4125,
+          "nominal_frame_over_avg_fps_s": 165.0,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2112000,
+          "pts_time_s": 165.0
+        },
+        {
+          "frame_id": 4148,
+          "nominal_frame_over_avg_fps_s": 165.92,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2123776,
+          "pts_time_s": 165.92
+        },
+        {
+          "frame_id": 4208,
+          "nominal_frame_over_avg_fps_s": 168.32,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2154496,
+          "pts_time_s": 168.32
+        },
+        {
+          "frame_id": 4268,
+          "nominal_frame_over_avg_fps_s": 170.72,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2185216,
+          "pts_time_s": 170.72
+        },
+        {
+          "frame_id": 4288,
+          "nominal_frame_over_avg_fps_s": 171.52,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2195456,
+          "pts_time_s": 171.52
+        },
+        {
+          "frame_id": 4348,
+          "nominal_frame_over_avg_fps_s": 173.92,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2226176,
+          "pts_time_s": 173.92
+        },
+        {
+          "frame_id": 4408,
+          "nominal_frame_over_avg_fps_s": 176.32,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2256896,
+          "pts_time_s": 176.32
+        }
+      ],
+      "status": "exact_pts_complete",
+      "source_path": "D:\\Official-Dataset\\videos\\L26C\\L26_V230.mp4",
+      "source_bytes": 71998026,
+      "source_mtime_ns": 1786621059186611700,
+      "stream": {
+        "index": 0,
+        "codec_name": "h264",
+        "width": 1280,
+        "height": 720,
+        "r_frame_rate": "25/1",
+        "avg_frame_rate": "25/1",
+        "time_base": "1/12800",
+        "start_time": "0.000000",
+        "duration": "317.200000",
+        "nb_frames": "7930"
+      },
+      "decode_elapsed_s": 3.3381946999943466,
+      "selected_frame_pts_log": [
+        {
+          "selected_index": 0,
+          "pts": 2050560,
+          "pts_time_s": 160.2
+        },
+        {
+          "selected_index": 1,
+          "pts": 2081280,
+          "pts_time_s": 162.6
+        },
+        {
+          "selected_index": 2,
+          "pts": 2112000,
+          "pts_time_s": 165.0
+        },
+        {
+          "selected_index": 3,
+          "pts": 2123776,
+          "pts_time_s": 165.92
+        },
+        {
+          "selected_index": 4,
+          "pts": 2154496,
+          "pts_time_s": 168.32
+        },
+        {
+          "selected_index": 5,
+          "pts": 2185216,
+          "pts_time_s": 170.72
+        },
+        {
+          "selected_index": 6,
+          "pts": 2195456,
+          "pts_time_s": 171.52
+        },
+        {
+          "selected_index": 7,
+          "pts": 2226176,
+          "pts_time_s": 173.92
+        },
+        {
+          "selected_index": 8,
+          "pts": 2256896,
+          "pts_time_s": 176.32
+        }
+      ]
+    },
+    {
+      "video_id": "L26_V239",
+      "requested_frame_ids": [
+        5188,
+        5248,
+        5308
+      ],
+      "frames": [
+        {
+          "frame_id": 5188,
+          "nominal_frame_over_avg_fps_s": 207.52,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2656256,
+          "pts_time_s": 207.52
+        },
+        {
+          "frame_id": 5248,
+          "nominal_frame_over_avg_fps_s": 209.92,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2686976,
+          "pts_time_s": 209.92
+        },
+        {
+          "frame_id": 5308,
+          "nominal_frame_over_avg_fps_s": 212.32,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2717696,
+          "pts_time_s": 212.32
+        }
+      ],
+      "status": "exact_pts_complete",
+      "source_path": "D:\\Official-Dataset\\videos\\L26C\\L26_V239.mp4",
+      "source_bytes": 71237566,
+      "source_mtime_ns": 1786621062709708800,
+      "stream": {
+        "index": 0,
+        "codec_name": "h264",
+        "width": 1280,
+        "height": 720,
+        "r_frame_rate": "25/1",
+        "avg_frame_rate": "25/1",
+        "time_base": "1/12800",
+        "start_time": "0.000000",
+        "duration": "319.240000",
+        "nb_frames": "7981"
+      },
+      "decode_elapsed_s": 5.014182600003551,
+      "selected_frame_pts_log": [
+        {
+          "selected_index": 0,
+          "pts": 2656256,
+          "pts_time_s": 207.52
+        },
+        {
+          "selected_index": 1,
+          "pts": 2686976,
+          "pts_time_s": 209.92
+        },
+        {
+          "selected_index": 2,
+          "pts": 2717696,
+          "pts_time_s": 212.32
+        }
+      ]
+    },
+    {
+      "video_id": "L26_V278",
+      "requested_frame_ids": [
+        4532,
+        4592,
+        4652
+      ],
+      "frames": [
+        {
+          "frame_id": 4532,
+          "nominal_frame_over_avg_fps_s": 181.28,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2320384,
+          "pts_time_s": 181.28
+        },
+        {
+          "frame_id": 4592,
+          "nominal_frame_over_avg_fps_s": 183.68,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2351104,
+          "pts_time_s": 183.68
+        },
+        {
+          "frame_id": 4652,
+          "nominal_frame_over_avg_fps_s": 186.08,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2381824,
+          "pts_time_s": 186.08
+        }
+      ],
+      "status": "exact_pts_complete",
+      "source_path": "D:\\Official-Dataset\\videos\\L26C\\L26_V278.mp4",
+      "source_bytes": 66747678,
+      "source_mtime_ns": 1786621080547600500,
+      "stream": {
+        "index": 0,
+        "codec_name": "h264",
+        "width": 1280,
+        "height": 720,
+        "r_frame_rate": "25/1",
+        "avg_frame_rate": "25/1",
+        "time_base": "1/12800",
+        "start_time": "0.000000",
+        "duration": "326.920000",
+        "nb_frames": "8173"
+      },
+      "decode_elapsed_s": 3.2866263999967487,
+      "selected_frame_pts_log": [
+        {
+          "selected_index": 0,
+          "pts": 2320384,
+          "pts_time_s": 181.28
+        },
+        {
+          "selected_index": 1,
+          "pts": 2351104,
+          "pts_time_s": 183.68
+        },
+        {
+          "selected_index": 2,
+          "pts": 2381824,
+          "pts_time_s": 186.08
+        }
+      ]
+    },
+    {
+      "video_id": "L26_V358",
+      "requested_frame_ids": [
+        5700,
+        5760,
+        5820
+      ],
+      "frames": [
+        {
+          "frame_id": 5700,
+          "nominal_frame_over_avg_fps_s": 228.0,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2918400,
+          "pts_time_s": 228.0
+        },
+        {
+          "frame_id": 5760,
+          "nominal_frame_over_avg_fps_s": 230.4,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2949120,
+          "pts_time_s": 230.4
+        },
+        {
+          "frame_id": 5820,
+          "nominal_frame_over_avg_fps_s": 232.8,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2979840,
+          "pts_time_s": 232.8
+        }
+      ],
+      "status": "exact_pts_complete",
+      "source_path": "D:\\Official-Dataset\\videos\\L26D\\L26_V358.mp4",
+      "source_bytes": 66298260,
+      "source_mtime_ns": 1786625245481025800,
+      "stream": {
+        "index": 0,
+        "codec_name": "h264",
+        "width": 1280,
+        "height": 720,
+        "r_frame_rate": "25/1",
+        "avg_frame_rate": "25/1",
+        "time_base": "1/12800",
+        "start_time": "0.000000",
+        "duration": "307.480000",
+        "nb_frames": "7687"
+      },
+      "decode_elapsed_s": 4.98005739999644,
+      "selected_frame_pts_log": [
+        {
+          "selected_index": 0,
+          "pts": 2918400,
+          "pts_time_s": 228.0
+        },
+        {
+          "selected_index": 1,
+          "pts": 2949120,
+          "pts_time_s": 230.4
+        },
+        {
+          "selected_index": 2,
+          "pts": 2979840,
+          "pts_time_s": 232.8
+        }
+      ]
+    },
+    {
+      "video_id": "L26_V375",
+      "requested_frame_ids": [
+        5828,
+        5888,
+        5948
+      ],
+      "frames": [
+        {
+          "frame_id": 5828,
+          "nominal_frame_over_avg_fps_s": 233.12,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2983936,
+          "pts_time_s": 233.12
+        },
+        {
+          "frame_id": 5888,
+          "nominal_frame_over_avg_fps_s": 235.52,
+          "nominal_time_is_exact_pts": false,
+          "pts": 3014656,
+          "pts_time_s": 235.52
+        },
+        {
+          "frame_id": 5948,
+          "nominal_frame_over_avg_fps_s": 237.92,
+          "nominal_time_is_exact_pts": false,
+          "pts": 3045376,
+          "pts_time_s": 237.92
+        }
+      ],
+      "status": "exact_pts_complete",
+      "source_path": "D:\\Official-Dataset\\videos\\L26D\\L26_V375.mp4",
+      "source_bytes": 64539956,
+      "source_mtime_ns": 1786626522571559500,
+      "stream": {
+        "index": 0,
+        "codec_name": "h264",
+        "width": 1280,
+        "height": 720,
+        "r_frame_rate": "25/1",
+        "avg_frame_rate": "25/1",
+        "time_base": "1/12800",
+        "start_time": "0.000000",
+        "duration": "307.080000",
+        "nb_frames": "7677"
+      },
+      "decode_elapsed_s": 5.133284800002002,
+      "selected_frame_pts_log": [
+        {
+          "selected_index": 0,
+          "pts": 2983936,
+          "pts_time_s": 233.12
+        },
+        {
+          "selected_index": 1,
+          "pts": 3014656,
+          "pts_time_s": 235.52
+        },
+        {
+          "selected_index": 2,
+          "pts": 3045376,
+          "pts_time_s": 237.92
+        }
+      ]
+    },
+    {
+      "video_id": "L27_V004",
+      "requested_frame_ids": [
+        9714,
+        9774,
+        9834
+      ],
+      "frames": [
+        {
+          "frame_id": 9714,
+          "nominal_frame_over_avg_fps_s": 388.56,
+          "nominal_time_is_exact_pts": false,
+          "pts": 4973568,
+          "pts_time_s": 388.56
+        },
+        {
+          "frame_id": 9774,
+          "nominal_frame_over_avg_fps_s": 390.96,
+          "nominal_time_is_exact_pts": false,
+          "pts": 5004288,
+          "pts_time_s": 390.96
+        },
+        {
+          "frame_id": 9834,
+          "nominal_frame_over_avg_fps_s": 393.36,
+          "nominal_time_is_exact_pts": false,
+          "pts": 5035008,
+          "pts_time_s": 393.36
+        }
+      ],
+      "status": "exact_pts_complete",
+      "source_path": "D:\\Official-Dataset\\videos\\L27\\L27_V004.mp4",
+      "source_bytes": 162655696,
+      "source_mtime_ns": 1786621102128539500,
+      "stream": {
+        "index": 0,
+        "codec_name": "h264",
+        "width": 1280,
+        "height": 720,
+        "r_frame_rate": "25/1",
+        "avg_frame_rate": "25/1",
+        "time_base": "1/12800",
+        "start_time": "0.000000",
+        "duration": "600.560000",
+        "nb_frames": "15014"
+      },
+      "decode_elapsed_s": 11.973444200004451,
+      "selected_frame_pts_log": [
+        {
+          "selected_index": 0,
+          "pts": 4973568,
+          "pts_time_s": 388.56
+        },
+        {
+          "selected_index": 1,
+          "pts": 5004288,
+          "pts_time_s": 390.96
+        },
+        {
+          "selected_index": 2,
+          "pts": 5035008,
+          "pts_time_s": 393.36
+        }
+      ]
+    },
+    {
+      "video_id": "L29_V009",
+      "requested_frame_ids": [
+        17639,
+        17689,
+        17699,
+        17749,
+        17759,
+        17809
+      ],
+      "frames": [
+        {
+          "frame_id": 17639,
+          "nominal_frame_over_avg_fps_s": 705.56,
+          "nominal_time_is_exact_pts": false,
+          "pts": 9031168,
+          "pts_time_s": 705.56
+        },
+        {
+          "frame_id": 17689,
+          "nominal_frame_over_avg_fps_s": 707.56,
+          "nominal_time_is_exact_pts": false,
+          "pts": 9056768,
+          "pts_time_s": 707.56
+        },
+        {
+          "frame_id": 17699,
+          "nominal_frame_over_avg_fps_s": 707.96,
+          "nominal_time_is_exact_pts": false,
+          "pts": 9061888,
+          "pts_time_s": 707.96
+        },
+        {
+          "frame_id": 17749,
+          "nominal_frame_over_avg_fps_s": 709.96,
+          "nominal_time_is_exact_pts": false,
+          "pts": 9087488,
+          "pts_time_s": 709.96
+        },
+        {
+          "frame_id": 17759,
+          "nominal_frame_over_avg_fps_s": 710.36,
+          "nominal_time_is_exact_pts": false,
+          "pts": 9092608,
+          "pts_time_s": 710.36
+        },
+        {
+          "frame_id": 17809,
+          "nominal_frame_over_avg_fps_s": 712.36,
+          "nominal_time_is_exact_pts": false,
+          "pts": 9118208,
+          "pts_time_s": 712.36
+        }
+      ],
+      "status": "exact_pts_complete",
+      "source_path": "D:\\Official-Dataset\\videos\\L29\\L29_V009.mp4",
+      "source_bytes": 319423385,
+      "source_mtime_ns": 1786621147247848600,
+      "stream": {
+        "index": 0,
+        "codec_name": "h264",
+        "width": 1280,
+        "height": 720,
+        "r_frame_rate": "25/1",
+        "avg_frame_rate": "25/1",
+        "time_base": "1/12800",
+        "start_time": "0.000000",
+        "duration": "1077.240000",
+        "nb_frames": "26931"
+      },
+      "decode_elapsed_s": 26.25963369999954,
+      "selected_frame_pts_log": [
+        {
+          "selected_index": 0,
+          "pts": 9031168,
+          "pts_time_s": 705.56
+        },
+        {
+          "selected_index": 1,
+          "pts": 9056768,
+          "pts_time_s": 707.56
+        },
+        {
+          "selected_index": 2,
+          "pts": 9061888,
+          "pts_time_s": 707.96
+        },
+        {
+          "selected_index": 3,
+          "pts": 9087488,
+          "pts_time_s": 709.96
+        },
+        {
+          "selected_index": 4,
+          "pts": 9092608,
+          "pts_time_s": 710.36
+        },
+        {
+          "selected_index": 5,
+          "pts": 9118208,
+          "pts_time_s": 712.36
+        }
+      ]
+    },
+    {
+      "video_id": "L29_V015",
+      "requested_frame_ids": [
+        25877,
+        25937,
+        25997
+      ],
+      "frames": [
+        {
+          "frame_id": 25877,
+          "nominal_frame_over_avg_fps_s": 1035.08,
+          "nominal_time_is_exact_pts": false,
+          "pts": 13249024,
+          "pts_time_s": 1035.08
+        },
+        {
+          "frame_id": 25937,
+          "nominal_frame_over_avg_fps_s": 1037.48,
+          "nominal_time_is_exact_pts": false,
+          "pts": 13279744,
+          "pts_time_s": 1037.48
+        },
+        {
+          "frame_id": 25997,
+          "nominal_frame_over_avg_fps_s": 1039.88,
+          "nominal_time_is_exact_pts": false,
+          "pts": 13310464,
+          "pts_time_s": 1039.88
+        }
+      ],
+      "status": "exact_pts_complete",
+      "source_path": "D:\\Official-Dataset\\videos\\L29\\L29_V015.mp4",
+      "source_bytes": 268854533,
+      "source_mtime_ns": 1786621161178571400,
+      "stream": {
+        "index": 0,
+        "codec_name": "h264",
+        "width": 1280,
+        "height": 720,
+        "r_frame_rate": "25/1",
+        "avg_frame_rate": "25/1",
+        "time_base": "1/12800",
+        "start_time": "0.000000",
+        "duration": "1081.280000",
+        "nb_frames": "27032"
+      },
+      "decode_elapsed_s": 32.94315869999991,
+      "selected_frame_pts_log": [
+        {
+          "selected_index": 0,
+          "pts": 13249024,
+          "pts_time_s": 1035.08
+        },
+        {
+          "selected_index": 1,
+          "pts": 13279744,
+          "pts_time_s": 1037.48
+        },
+        {
+          "selected_index": 2,
+          "pts": 13310464,
+          "pts_time_s": 1039.88
+        }
+      ]
+    },
+    {
+      "video_id": "L30_V023",
+      "requested_frame_ids": [
+        5138,
+        5198,
+        5258,
+        5318,
+        5378,
+        5438
+      ],
+      "frames": [
+        {
+          "frame_id": 5138,
+          "nominal_frame_over_avg_fps_s": 205.52,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2630656,
+          "pts_time_s": 205.52
+        },
+        {
+          "frame_id": 5198,
+          "nominal_frame_over_avg_fps_s": 207.92,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2661376,
+          "pts_time_s": 207.92
+        },
+        {
+          "frame_id": 5258,
+          "nominal_frame_over_avg_fps_s": 210.32,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2692096,
+          "pts_time_s": 210.32
+        },
+        {
+          "frame_id": 5318,
+          "nominal_frame_over_avg_fps_s": 212.72,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2722816,
+          "pts_time_s": 212.72
+        },
+        {
+          "frame_id": 5378,
+          "nominal_frame_over_avg_fps_s": 215.12,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2753536,
+          "pts_time_s": 215.12
+        },
+        {
+          "frame_id": 5438,
+          "nominal_frame_over_avg_fps_s": 217.52,
+          "nominal_time_is_exact_pts": false,
+          "pts": 2784256,
+          "pts_time_s": 217.52
+        }
+      ],
+      "status": "exact_pts_complete",
+      "source_path": "D:\\Official-Dataset\\videos\\L30\\L30_V023.mp4",
+      "source_bytes": 61951037,
+      "source_mtime_ns": 1786613732153617100,
+      "stream": {
+        "index": 0,
+        "codec_name": "h264",
+        "width": 1280,
+        "height": 720,
+        "r_frame_rate": "25/1",
+        "avg_frame_rate": "25/1",
+        "time_base": "1/12800",
+        "start_time": "0.000000",
+        "duration": "235.280000",
+        "nb_frames": "5882"
+      },
+      "decode_elapsed_s": 5.746056700001645,
+      "selected_frame_pts_log": [
+        {
+          "selected_index": 0,
+          "pts": 2630656,
+          "pts_time_s": 205.52
+        },
+        {
+          "selected_index": 1,
+          "pts": 2661376,
+          "pts_time_s": 207.92
+        },
+        {
+          "selected_index": 2,
+          "pts": 2692096,
+          "pts_time_s": 210.32
+        },
+        {
+          "selected_index": 3,
+          "pts": 2722816,
+          "pts_time_s": 212.72
+        },
+        {
+          "selected_index": 4,
+          "pts": 2753536,
+          "pts_time_s": 215.12
+        },
+        {
+          "selected_index": 5,
+          "pts": 2784256,
+          "pts_time_s": 217.52
+        }
+      ]
+    }
+  ],
+  "exact_pts_video_count": 17,
+  "method": "Decode original stream from start, select exact zero-based n values, showinfo PTS; map selected chronological output to sorted requested frame IDs.",
+  "metadata_fallback": "frame_id / averageFPS is nominal derived time only and never labeled exactPTS",
+  "model_loaded": false,
+  "output_media_written": false,
+  "broker_source_url": "https://github.com/JimmyK300/ai-routing-hub/issues/1#issuecomment-5697338359"
+}
