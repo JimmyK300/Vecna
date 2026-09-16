@@ -481,7 +481,8 @@ def score(args):
     if manifest["status"] != "complete_unscored":
         raise ValueError("Only a complete unscored encoding run may be scored")
     for record in manifest["artifact_sources"]:
-        if hash_file(out / Path(record["path"]).name) != record["sha256"]:
+        artifact_name = record["path"].replace("\\", "/").rsplit("/", 1)[-1]
+        if hash_file(out / artifact_name) != record["sha256"]:
             raise ValueError("Completed vector artifact checksum mismatch")
     if hash_file(args.truth) != TRUTH_SHA:
         raise ValueError("Frozen canonical truth checksum mismatch")
@@ -522,8 +523,26 @@ def score(args):
         arm: {"pool_video_r1": row["arms"][arm]["pool_video_r1"] - row["arms"]["single_center"]["pool_video_r1"],
               "pool_video_mrr": row["arms"][arm]["pool_video_mrr"] - row["arms"]["single_center"]["pool_video_mrr"]}
         for arm in ("contact_sheet", "native3")}} for row in rows]
+    pool_present = [row["query_id"] for row in rows if row["arms"]["single_center"]["pool_video_first_rank"] is not None]
+    target_counts = {}
+    for view in ("center_only", "equal_three_frame_window"):
+        ranks = []
+        for row in rows:
+            raw = row["arms"]["single_center"][view]["raw"]
+            ranks.extend(raw.get("event_first_ranks", raw.get("target_ranks", [raw.get("first_correct_rank")])) )
+        target_counts[view] = {"observed_target_count": len(ranks), "targets_present_in_sampled_pool": sum(rank is not None for rank in ranks)}
+    summary["candidate_pool_ceiling"] = {"accepted_video_present_query_count": len(pool_present),
+        "accepted_video_present_query_ids": pool_present, "accepted_video_absent_query_ids": [qid for qid in QUERY_IDS if qid not in pool_present],
+        "target_coverage": target_counts,
+        "scoring_unit": "Exact sampled frame IDs, not all intervening frames in the temporal interval."}
+    summary["paired_native3_vs_contact_sheet"] = {
+        key: statistics.mean(row["arms"]["native3"][key] - row["arms"]["contact_sheet"][key] for row in rows)
+        for key in ("pool_video_r1", "pool_video_mrr")}
     write_json(out / "scores.json", {"summary": summary, "per_query": rows, "per_query_deltas": deltas,
-        "truth_source": file_record(args.truth), "scorer_source": file_record(args.scorer)})
+        "truth_source": file_record(args.truth), "scorer_source": file_record(args.scorer),
+        "scoring_driver_source": file_record(Path(__file__)),
+        "encoding_driver_source": manifest["code"],
+        "similarity": "dot product accumulated as Python float64 over normalized float32 embedding values"})
     return summary
 
 

@@ -28,9 +28,54 @@
       "bytes": 136995,
       "path": "/workspace/scratch/8d5b0c75504a/vecna82/inputs/temporal_processor_probe.json",
       "sha256": "f75f8e32f1ef683953428a8a4a138f56b57898933170089d6cc557d9a5198d14"
+    },
+    {
+      "bytes": 300446,
+      "path": "/workspace/scratch/8d5b0c75504a/vecna82/inputs/temporal_timing_smoke.json",
+      "sha256": "5615a26ad29f17bca1dfacc33c6f470a1578728b75f621e86a4ef023e104778f"
+    },
+    {
+      "bytes": 73874,
+      "path": "/workspace/scratch/8d5b0c75504a/vecna82/outputs/temporal-multi-image/matched-v1/scores.json",
+      "sha256": "eb87fccd1d8398b60535136d0d67eed9d091bd274ced556c4a4b698a708337ab"
+    },
+    {
+      "bytes": 53251,
+      "path": "/workspace/scratch/8d5b0c75504a/vecna82/outputs/temporal-multi-image/matched-v1/run_manifest.json",
+      "sha256": "b16ec3aeb73168586edf367e6164339a8b45bc42687dc50d62ca73e5b5d7de77"
+    },
+    {
+      "bytes": 44932,
+      "path": "/workspace/scratch/8d5b0c75504a/vecna82/outputs/temporal-multi-image/matched-v1/plan.json",
+      "sha256": "bf9317dd0b96a956bc51bdcead589b28b0f9fc32a0968dd3d9b24dadd0bb0378"
+    },
+    {
+      "bytes": 368698,
+      "path": "/workspace/scratch/8d5b0c75504a/vecna82/outputs/temporal-multi-image/matched-v1/query_embeddings.jsonl",
+      "sha256": "ed680417417b7df200685711efba1b1d4d38d265a27393d9880bd4d34936890f"
+    },
+    {
+      "bytes": 3344708,
+      "path": "/workspace/scratch/8d5b0c75504a/vecna82/outputs/temporal-multi-image/matched-v1/image_embeddings.jsonl",
+      "sha256": "597ff44e4949dddcbdba8a971c8d423829349fdc593962d63d952b45bfc1ba6d"
+    },
+    {
+      "bytes": 12928,
+      "path": "/workspace/scratch/8d5b0c75504a/vecna82/inputs/temporal_full_broker.json",
+      "sha256": "189393c2d65303c75b6d7993c677474d44349347555a5157e32ec81b1d5e2054"
+    },
+    {
+      "bytes": 37763,
+      "path": "/workspace/scratch/8d5b0c75504a/vecna82/inputs/temporal_frame_times.json",
+      "sha256": "b6c3ab3bba8cd9c747cc740be1c87cc51d3a5018e7a4a131af30788dbae0797c"
+    },
+    {
+      "bytes": 22047,
+      "path": "/workspace/scratch/8d5b0c75504a/vecna82/reference/issue82.md",
+      "sha256": "f32d00e5a35f3d61c0522a9b2ad5bfbf786562983d9a7529ecc9eef4b305912a"
     }
   ],
   "native_processor_proof": "PASS",
   "production_mutation": false,
-  "status": "INCONCLUSIVE"
+  "status": "COMPLETE_BOUNDED_PROBE"
 }

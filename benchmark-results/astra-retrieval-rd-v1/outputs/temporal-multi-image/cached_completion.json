@@ -283,5 +283,6 @@
     }
   ],
   "prepared_candidate_window_count": 48,
-  "required_per_primary_mode": 24
+  "required_per_primary_mode": 24,
+  "scope": "historical_stage2b_cache_only; completed new experiment is in new_matched_run"
 }

@@ -1,0 +1,474 @@
+[
+  {
+    "accepted_video_present_in_top3": false,
+    "arms": {
+      "contact_sheet": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": false,
+        "correct_video_rank": null,
+        "event_target_count": 4,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": false,
+        "top1_rescue_vs_single_center": false,
+        "video_hit_at_k": {
+          "1": 0,
+          "10": 0,
+          "3": 0,
+          "5": 0
+        }
+      },
+      "native3": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": false,
+        "correct_video_rank": null,
+        "event_target_count": 4,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": false,
+        "top1_rescue_vs_single_center": false,
+        "video_hit_at_k": {
+          "1": 0,
+          "10": 0,
+          "3": 0,
+          "5": 0
+        }
+      },
+      "single_center": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": false,
+        "correct_video_rank": null,
+        "event_target_count": 4,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": false,
+        "top1_rescue_vs_single_center": false,
+        "video_hit_at_k": {
+          "1": 0,
+          "10": 0,
+          "3": 0,
+          "5": 0
+        }
+      }
+    },
+    "original_baseline_video_rank_in_top3": null,
+    "query_id": "p0_q22",
+    "query_text_sha256": "12483e925dc0f1d3ca944fd8a715056a52febcd37534f5b69cdbbd9e53bb4e2f"
+  },
+  {
+    "accepted_video_present_in_top3": true,
+    "arms": {
+      "contact_sheet": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": true,
+        "correct_video_rank": 2,
+        "event_target_count": 4,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": false,
+        "top1_rescue_vs_single_center": false,
+        "video_hit_at_k": {
+          "1": 0,
+          "10": 1,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "native3": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": true,
+        "correct_video_rank": 1,
+        "event_target_count": 4,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": true,
+        "top1_rescue_vs_single_center": true,
+        "video_hit_at_k": {
+          "1": 1,
+          "10": 1,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "single_center": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": true,
+        "correct_video_rank": 2,
+        "event_target_count": 4,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": false,
+        "top1_rescue_vs_single_center": false,
+        "video_hit_at_k": {
+          "1": 0,
+          "10": 1,
+          "3": 1,
+          "5": 1
+        }
+      }
+    },
+    "original_baseline_video_rank_in_top3": 2,
+    "query_id": "p0_q23",
+    "query_text_sha256": "bcbd4b58239666929025f2b7d42b37936c9a30049dc2891a2615337188b775cb"
+  },
+  {
+    "accepted_video_present_in_top3": false,
+    "arms": {
+      "contact_sheet": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": false,
+        "correct_video_rank": null,
+        "event_target_count": 4,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": false,
+        "top1_rescue_vs_single_center": false,
+        "video_hit_at_k": {
+          "1": 0,
+          "10": 0,
+          "3": 0,
+          "5": 0
+        }
+      },
+      "native3": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": false,
+        "correct_video_rank": null,
+        "event_target_count": 4,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": false,
+        "top1_rescue_vs_single_center": false,
+        "video_hit_at_k": {
+          "1": 0,
+          "10": 0,
+          "3": 0,
+          "5": 0
+        }
+      },
+      "single_center": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": false,
+        "correct_video_rank": null,
+        "event_target_count": 4,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": false,
+        "top1_rescue_vs_single_center": false,
+        "video_hit_at_k": {
+          "1": 0,
+          "10": 0,
+          "3": 0,
+          "5": 0
+        }
+      }
+    },
+    "original_baseline_video_rank_in_top3": null,
+    "query_id": "p0_q24",
+    "query_text_sha256": "abe95262c85e82a968cc00869eac34f9f3a952ec727a312b9f8eceb7003b786e"
+  },
+  {
+    "accepted_video_present_in_top3": false,
+    "arms": {
+      "contact_sheet": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": false,
+        "correct_video_rank": null,
+        "event_target_count": 3,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": false,
+        "top1_rescue_vs_single_center": false,
+        "video_hit_at_k": {
+          "1": 0,
+          "10": 0,
+          "3": 0,
+          "5": 0
+        }
+      },
+      "native3": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": false,
+        "correct_video_rank": null,
+        "event_target_count": 3,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": false,
+        "top1_rescue_vs_single_center": false,
+        "video_hit_at_k": {
+          "1": 0,
+          "10": 0,
+          "3": 0,
+          "5": 0
+        }
+      },
+      "single_center": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": false,
+        "correct_video_rank": null,
+        "event_target_count": 3,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": false,
+        "top1_rescue_vs_single_center": false,
+        "video_hit_at_k": {
+          "1": 0,
+          "10": 0,
+          "3": 0,
+          "5": 0
+        }
+      }
+    },
+    "original_baseline_video_rank_in_top3": null,
+    "query_id": "p1_q25",
+    "query_text_sha256": "fabe99ad531f96d61c7bcab0354aa14e3070621a95b4d35d6d053e26b3937a1c"
+  },
+  {
+    "accepted_video_present_in_top3": false,
+    "arms": {
+      "contact_sheet": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": false,
+        "correct_video_rank": null,
+        "event_target_count": 4,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": false,
+        "top1_rescue_vs_single_center": false,
+        "video_hit_at_k": {
+          "1": 0,
+          "10": 0,
+          "3": 0,
+          "5": 0
+        }
+      },
+      "native3": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": false,
+        "correct_video_rank": null,
+        "event_target_count": 4,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": false,
+        "top1_rescue_vs_single_center": false,
+        "video_hit_at_k": {
+          "1": 0,
+          "10": 0,
+          "3": 0,
+          "5": 0
+        }
+      },
+      "single_center": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": false,
+        "correct_video_rank": null,
+        "event_target_count": 4,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": false,
+        "top1_rescue_vs_single_center": false,
+        "video_hit_at_k": {
+          "1": 0,
+          "10": 0,
+          "3": 0,
+          "5": 0
+        }
+      }
+    },
+    "original_baseline_video_rank_in_top3": null,
+    "query_id": "p2_q29",
+    "query_text_sha256": "32ac6d640f065af07aea8a6986bf9e5b50afebe3ba60d560fafc3c801268f343"
+  },
+  {
+    "accepted_video_present_in_top3": false,
+    "arms": {
+      "contact_sheet": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": false,
+        "correct_video_rank": null,
+        "event_target_count": 4,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": false,
+        "top1_rescue_vs_single_center": false,
+        "video_hit_at_k": {
+          "1": 0,
+          "10": 0,
+          "3": 0,
+          "5": 0
+        }
+      },
+      "native3": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": false,
+        "correct_video_rank": null,
+        "event_target_count": 4,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": false,
+        "top1_rescue_vs_single_center": false,
+        "video_hit_at_k": {
+          "1": 0,
+          "10": 0,
+          "3": 0,
+          "5": 0
+        }
+      },
+      "single_center": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": false,
+        "correct_video_rank": null,
+        "event_target_count": 4,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": false,
+        "top1_rescue_vs_single_center": false,
+        "video_hit_at_k": {
+          "1": 0,
+          "10": 0,
+          "3": 0,
+          "5": 0
+        }
+      }
+    },
+    "original_baseline_video_rank_in_top3": null,
+    "query_id": "p2_q30",
+    "query_text_sha256": "d3efa8c87a7071960fd2f705118dcab190268558fc89b97cc0835e65b913d4d3"
+  },
+  {
+    "accepted_video_present_in_top3": false,
+    "arms": {
+      "contact_sheet": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": false,
+        "correct_video_rank": null,
+        "event_target_count": 4,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": false,
+        "top1_rescue_vs_single_center": false,
+        "video_hit_at_k": {
+          "1": 0,
+          "10": 0,
+          "3": 0,
+          "5": 0
+        }
+      },
+      "native3": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": false,
+        "correct_video_rank": null,
+        "event_target_count": 4,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": false,
+        "top1_rescue_vs_single_center": false,
+        "video_hit_at_k": {
+          "1": 0,
+          "10": 0,
+          "3": 0,
+          "5": 0
+        }
+      },
+      "single_center": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": false,
+        "correct_video_rank": null,
+        "event_target_count": 4,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": false,
+        "top1_rescue_vs_single_center": false,
+        "video_hit_at_k": {
+          "1": 0,
+          "10": 0,
+          "3": 0,
+          "5": 0
+        }
+      }
+    },
+    "original_baseline_video_rank_in_top3": null,
+    "query_id": "p3_q21",
+    "query_text_sha256": "d81345b4383476336dbd2abcf1843488ca9f65d4af828122231f164890a31331"
+  },
+  {
+    "accepted_video_present_in_top3": true,
+    "arms": {
+      "contact_sheet": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": true,
+        "correct_video_rank": 3,
+        "event_target_count": 4,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": false,
+        "top1_rescue_vs_single_center": false,
+        "video_hit_at_k": {
+          "1": 0,
+          "10": 1,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "native3": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": true,
+        "correct_video_rank": 1,
+        "event_target_count": 4,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": true,
+        "top1_rescue_vs_single_center": true,
+        "video_hit_at_k": {
+          "1": 1,
+          "10": 1,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "single_center": {
+        "all_event_targets_exposed": false,
+        "correct_video_found_but_event_missed": true,
+        "correct_video_rank": 2,
+        "event_target_count": 4,
+        "event_targets_exposed": 0,
+        "top1_regression_vs_original_baseline": false,
+        "top1_regression_vs_single_center": false,
+        "top1_rescue_vs_original_baseline": false,
+        "top1_rescue_vs_single_center": false,
+        "video_hit_at_k": {
+          "1": 0,
+          "10": 1,
+          "3": 1,
+          "5": 1
+        }
+      }
+    },
+    "original_baseline_video_rank_in_top3": 2,
+    "query_id": "p3_q34",
+    "query_text_sha256": "b8db0149b8fdfdc16879dfaf28e980f55177d022a67052f747833ad8288c5949"
+  }
+]

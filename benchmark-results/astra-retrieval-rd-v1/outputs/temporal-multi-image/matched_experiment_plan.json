@@ -1,5 +1,5 @@
 {
-  "budget_gate": "Parent-owned one-candidate float32 timing smoke with <=120s supervised cap before any sweep; no uncapped retry.",
+  "budget_gate": "Parent-owned bounded one-candidate float32 timing smoke before any sweep; completed in 19.672 seconds under supervision. Full sweep uses an explicit between-forward budget plus external supervision.",
   "cache_policy": "Never resume by rank-coded ID alone. Match source video/frame and processing fingerprint; preserve old evidence separately.",
   "candidate_limit_per_query": 3,
   "candidate_selection_uses_ground_truth": false,
@@ -464,6 +464,7 @@
   ],
   "completion_gate": "Every query has the same three complete candidate identities in every primary arm; no missing-candidate filtering after observing scores.",
   "dtype_policy": "CPU float32 only if explicit timing smoke is feasible; every compared arm and query vector uses the same declared dtype in a new cache.",
+  "execution_source": "outputs/temporal-multi-image/matched-v1/scores.json",
   "image_instruction": "Represent the user's input.",
   "image_processing": "Exact FFmpeg frame IDs at center + [-60,0,60]; PIL RGB resize LANCZOS 384x216 for each frame. Sheet concatenates those same pixels in order.",
   "metric_limits": [
@@ -510,5 +511,5 @@
     "seed if any",
     "all candidate statuses"
   ],
-  "status": "PREPARED_NOT_RUN"
+  "status": "EXECUTED_COMPLETE_MATCHED_V1"
 }

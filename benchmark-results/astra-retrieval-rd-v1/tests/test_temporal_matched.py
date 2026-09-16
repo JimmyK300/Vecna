@@ -6,6 +6,8 @@ import importlib.util
 import json
 import math
 from pathlib import Path
+import tempfile
+from types import SimpleNamespace
 import unittest
 from unittest import mock
 
@@ -198,6 +200,113 @@ class MatchedTemporalTests(unittest.TestCase):
         rows = [row for row in self.embeddings if row["arm"] != missing_arm]
         with self.assertRaises(ValueError):
             matched.rank_candidates(self.plan, self.queries, rows, matched.ARMS[0], RUN_FINGERPRINT)
+
+    def test_score_rejects_incomplete_artifacts_before_truth_or_scorer_read(self):
+        with tempfile.TemporaryDirectory() as directory:
+            out = Path(directory)
+            manifest = {"plan": self.plan, "run_fingerprint": RUN_FINGERPRINT,
+                        "status": "complete_unscored", "artifact_sources": []}
+            (out / "run_manifest.json").write_text(json.dumps(manifest))
+            (out / "query_embeddings.jsonl").write_text("\n".join(map(json.dumps, self.queries)) + "\n")
+            (out / "image_embeddings.jsonl").write_text("\n".join(map(json.dumps, self.embeddings[:-1])) + "\n")
+            args = SimpleNamespace(output_dir=out, truth=out / "truth_must_not_be_opened.jsonl",
+                                   scorer=out / "scorer_must_not_be_opened.py")
+            original_open = Path.open
+
+            def guarded_open(path, *args_open, **kwargs):
+                if path in (args.truth, args.scorer):
+                    raise AssertionError("Incomplete experiment must not read truth or scorer")
+                return original_open(path, *args_open, **kwargs)
+
+            with mock.patch.object(Path, "open", new=guarded_open), \
+                 mock.patch.object(matched, "hash_file", side_effect=AssertionError("No hash reads before completion")):
+                with self.assertRaisesRegex(ValueError, "Incomplete paired experiment"):
+                    matched.score(args)
+
+
+class FrozenLocationRoutingTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        path = ROOT / "reference" / "evaluate_reranker_fusion.py"
+        if hashlib.sha256(path.read_bytes()).hexdigest() != matched.SCORER_SHA:
+            raise AssertionError("Location tests require the pinned frozen scorer")
+        cls.scorer = matched.load_scorer(path)
+
+    def test_historical_trake_preserves_strict_all_events_rule(self):
+        truth = {"query_id": "historical-trake", "truth_tier": "frozen_headless_benchmark_truth",
+                 "_source": "p3", "task_type": "trake", "accepted_video_id": "V",
+                 "trake_event_truth": [{"proxy_window": {"start_frame": 10, "end_frame": 10}},
+                                       {"proxy_window": {"start_frame": 100, "end_frame": 100}}]}
+        partial = [{"rank": 1, "video_id": "V", "frame_id": 10}]
+        result = matched.score_location(partial, truth, self.scorer)
+        self.assertEqual(result["raw"]["family"], "historical_trake")
+        self.assertEqual(result["recall_at_1"], 0)
+        self.assertEqual(result["mrr_at_20"], 0)
+        complete = partial + [{"rank": 3, "video_id": "V", "frame_id": 100}]
+        result = matched.score_location(complete, truth, self.scorer)
+        self.assertEqual(result["recall_at_1"], 0)
+        self.assertAlmostEqual(result["mrr_at_20"], 1 / 3)
+        self.assertEqual(result["raw"]["event_first_ranks"], [1, 3])
+
+    def test_p3_localization_preserves_fractional_targets_and_tolerance(self):
+        truth = {"query_id": "p3-example", "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+                 "_source": "historical", "task_type": "trake", "accepted_groups": [[
+                     {"kind": "point", "video_id": "V", "frame": 10},
+                     {"kind": "point", "video_id": "V", "frame": 500}]]}
+        items = [{"rank": 1, "video_id": "V", "frame_id": 60}]
+        result = matched.score_location(items, truth, self.scorer)
+        self.assertEqual(result["raw"]["family"], "p3")
+        self.assertEqual(result["recall_at_1"], .5)  # Inclusive pinned tolerance: 50 frames.
+        self.assertEqual(result["mrr_at_20"], 1)
+        self.assertEqual(result["raw"]["target_ranks"], [1, None])
+        outside = [{"rank": 1, "video_id": "V", "frame_id": 61}]
+        result = matched.score_location(outside, truth, self.scorer)
+        self.assertEqual(result["recall_at_1"], 0)
+
+    def test_center_only_and_equal_window_localization_remain_distinct(self):
+        truth = {"query_id": "historical-range", "truth_tier": "frozen_headless_benchmark_truth",
+                 "task_type": "kis", "accepted_video_id": "V",
+                 "accepted_ranges": [{"start_frame": 160, "end_frame": 160}]}
+        center = [{"rank": 1, "video_id": "V", "frame_id": 100, "time_line": []}]
+        window = [{**center[0], "time_line": [40, 100, 160]}]
+        self.assertEqual(matched.score_location(center, truth, self.scorer)["recall_at_1"], 0)
+        self.assertEqual(matched.score_location(window, truth, self.scorer)["recall_at_1"], 1)
+
+
+class RecoveredWindowsScoreTests(unittest.TestCase):
+    def test_windows_manifest_scores_byte_identical_artifacts_on_this_host(self):
+        recovered = ROOT / "outputs" / "temporal-multi-image" / "matched-v1"
+        manifest_bytes = (recovered / "run_manifest.json").read_bytes()
+        manifest = json.loads(manifest_bytes)
+        self.assertEqual(manifest["status"], "complete_unscored")
+        self.assertEqual((manifest["query_embeddings_completed"], manifest["image_embeddings_completed"]), (8, 72))
+        with tempfile.TemporaryDirectory() as directory:
+            out = Path(directory)
+            (out / "run_manifest.json").write_bytes(manifest_bytes)
+            for record in manifest["artifact_sources"]:
+                self.assertIn("\\", record["path"])
+                filename = record["path"].replace("\\", "/").rsplit("/", 1)[-1]
+                data = (recovered / filename).read_bytes()
+                self.assertEqual(hashlib.sha256(data).hexdigest(), record["sha256"])
+                self.assertEqual(len(data), record["bytes"])
+                (out / filename).write_bytes(data)
+            args = SimpleNamespace(output_dir=out, truth=ROOT / "inputs" / "canonical_truth.jsonl",
+                                   scorer=ROOT / "reference" / "evaluate_reranker_fusion.py")
+            summary = matched.score(args)
+            self.assertEqual(summary["paired_queries"], 8)
+            self.assertEqual(summary["arms"]["native3"]["pool_video_r1"], .25)
+            self.assertEqual(summary["arms"]["single_center"]["pool_video_r1"], 0)
+            self.assertEqual(summary["arms"]["contact_sheet"]["pool_video_r1"], 0)
+            scored = json.loads((out / "scores.json").read_text())
+            movements = {row["query_id"]: tuple(row["arms"][arm]["pool_video_first_rank"]
+                        for arm in ("single_center", "contact_sheet", "native3")) for row in scored["per_query"]}
+            self.assertEqual(movements["p0_q23"], (2, 2, 1))
+            self.assertEqual(movements["p3_q34"], (2, 3, 1))
+            self.assertEqual(sum(rank[2] is not None for rank in movements.values()), 2)
+            for row in scored["per_query"]:
+                for arm in matched.ARMS:
+                    self.assertEqual(row["arms"][arm]["center_only"]["mrr_at_20"], 0)
+                    self.assertEqual(row["arms"][arm]["equal_three_frame_window"]["mrr_at_20"], 0)
 
 
 if __name__ == "__main__":

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
+from fractions import Fraction
 import hashlib
 import json
 from pathlib import Path
@@ -192,6 +193,112 @@ def load_probe(path):
     return value.get("processor_probe_before_timing", value)
 
 
+def summarize_matched_evidence(root, matched_dir, matched):
+    manifest = json.loads((matched_dir / "run_manifest.json").read_text(encoding="utf-8"))
+    plan = manifest["plan"]
+    candidates = {row["candidate_key"]: row for row in plan["candidates"]}
+    query_hashes = {row["query_id"]: row["text_sha256"] for row in plan["queries"]}
+    image_rows = {(row["candidate_key"], row["arm"]): row for row in read_rows(matched_dir / "image_embeddings.jsonl")}
+    weights = [row for row in manifest["model_sources"] if row["path"].endswith(".safetensors")]
+    timestamps, timestamp_provenance = {}, {"status": "PENDING", "exact_frame_count": 0, "requested_frame_count": 72}
+    time_path = root / "inputs" / "temporal_frame_times.json"
+    if time_path.exists():
+        timing_data = json.loads(time_path.read_text(encoding="utf-8"))
+        if "result" in timing_data and "worker_stdout" in timing_data["result"]:
+            timing_data = json.loads(timing_data["result"]["worker_stdout"].strip().splitlines()[-1])
+        expected_times = {(candidate["video_id"], frame["frame_id"]) for candidate in plan["candidates"] for frame in candidate["frames"]}
+        requested_times = {(video, frame) for video, frames in timing_data["request"]["videos"].items() for frame in frames}
+        if expected_times != requested_times:
+            raise ValueError("Source timestamp request differs from the frozen matched frame set")
+        for video in timing_data["videos"]:
+            for frame in video["frames"]:
+                status = "exact_selected_frame_pts" if frame.get("pts_time_s") is not None else "nominal_frame_over_avg_fps_only"
+                timestamp = frame.get("pts_time_s")
+                value = {"timestamp_s": timestamp, "status": status, "source_pts": frame.get("pts"),
+                    "nominal_frame_over_avg_fps_s": frame.get("nominal_frame_over_avg_fps_s"),
+                    "source_time_base": video.get("stream", {}).get("time_base"),
+                    "source_avg_frame_rate": video.get("stream", {}).get("avg_frame_rate"),
+                    "source_start_time": video.get("stream", {}).get("start_time"),
+                    "source_path": video["source_path"]}
+                if timestamp is not None and value["source_time_base"]:
+                    rational = Fraction(frame["pts"]) * Fraction(value["source_time_base"])
+                    if abs(float(rational) - timestamp) <= 0.001:
+                        value["pts_time_fraction"] = str(rational)
+                        value["timestamp_s"] = float(rational)
+                timestamps[(video["video_id"], frame["frame_id"])] = value
+        exact_count = sum(value["status"] == "exact_selected_frame_pts" for value in timestamps.values())
+        timestamp_provenance = {"status": "COMPLETE_EXACT_PTS" if exact_count == len(expected_times) else "PARTIAL_PTS",
+            "exact_frame_count": exact_count, "requested_frame_count": len(expected_times),
+            "source": source(time_path), "method": timing_data["method"], "ffmpeg_version": timing_data["ffmpeg_version"],
+            "scoring_timestamps_used": False, "note": "Source timestamps are display/provenance only; frozen P3 scoring retains its original 50-frame tolerance."}
+    per_candidate, per_query = [], []
+    for row in matched["per_query"]:
+        qid = row["query_id"]
+        native = row["arms"]["native3"]
+        first_success = native["pool_video_first_rank"]
+        accepted_video = next((item["video_id"] for item in native["ranking"] if item["rank"] == first_success), None)
+        original_rank = min((item["current_baseline_rank"] for item in native["ranking"] if item["video_id"] == accepted_video), default=None)
+        query = {"query_id": qid, "query_text_sha256": query_hashes[qid], "original_baseline_video_rank_in_top3": original_rank,
+            "accepted_video_present_in_top3": first_success is not None, "arms": {}}
+        for arm, value in row["arms"].items():
+            raw = value["equal_three_frame_window"]["raw"]
+            event_ranks = raw.get("event_first_ranks", raw.get("target_ranks", []))
+            rank = value["pool_video_first_rank"]
+            query["arms"][arm] = {
+                "correct_video_rank": rank, "video_hit_at_k": {str(k): int(rank is not None and rank <= k) for k in (1, 3, 5, 10)},
+                "event_target_count": len(event_ranks), "event_targets_exposed": sum(value is not None for value in event_ranks),
+                "all_event_targets_exposed": bool(event_ranks) and all(value is not None for value in event_ranks),
+                "correct_video_found_but_event_missed": rank is not None and not any(value is not None for value in event_ranks),
+                "top1_rescue_vs_original_baseline": rank == 1 and original_rank != 1,
+                "top1_regression_vs_original_baseline": original_rank == 1 and rank != 1,
+                "top1_rescue_vs_single_center": rank == 1 and row["arms"]["single_center"]["pool_video_first_rank"] != 1,
+                "top1_regression_vs_single_center": row["arms"]["single_center"]["pool_video_first_rank"] == 1 and rank != 1,
+            }
+            for item in value["ranking"]:
+                candidate = candidates[item["candidate_key"]]
+                embedding = image_rows[(candidate["candidate_key"], arm)]
+                center_time = timestamps.get((candidate["video_id"], candidate["center_frame_id"]), {})
+                per_candidate.append({
+                    "query_id": qid, "query_text_sha256": query_hashes[qid], "candidate_key": item["candidate_key"],
+                    "original_baseline_rank": candidate["current_baseline_rank"], "video_id": candidate["video_id"],
+                    "center_frame_id": candidate["center_frame_id"], "center_timestamp_s": center_time.get("timestamp_s"),
+                    "timestamp_status": center_time.get("status", "not_recorded; exact source-frame IDs are authoritative; no FPS is guessed"),
+                    "sampled_frames_role": "frozen candidate window; actual model input frames listed separately",
+                    "model_input_frame_source_ids": [frame["source_frame_id"] for frame in candidate["frames"]
+                        if arm != "single_center" or frame["offset"] == 0],
+                    "sampled_frames": [{"frame_id": frame["frame_id"], "source_frame_id": frame["source_frame_id"],
+                        "offset": frame["offset"], "timestamp_s": None, "frame_file_sha256": frame_hash,
+                        **timestamps.get((candidate["video_id"], frame["frame_id"]), {})}
+                        for frame, frame_hash in zip(candidate["frames"], candidate["frame_file_sha256"])],
+                    "representation_arm": arm, "model_output_source": "image_embeddings.jsonl",
+                    "model_output_key": {"candidate_key": item["candidate_key"], "arm": arm},
+                    "model_output_definition": "last unmasked hidden vector, L2 normalized in float32; complete 2048-vector retained",
+                    "ranking_score": item["score"], "ranking_score_transformation": matched["similarity"], "final_rank": item["rank"],
+                    "model_revision": REVISION, "model_config_sha256": CONFIG_SHA256,
+                    "weight_sha256": [value["sha256"] for value in weights], "run_fingerprint": manifest["run_fingerprint"],
+                    "input_fingerprint": embedding["input_fingerprint"], "image_grid_thw": embedding["image_grid_thw"],
+                    "forward_pool_s": embedding["forward_pool_s"],
+                })
+        per_query.append(query)
+    (matched_dir / "candidate_results.jsonl").write_text("".join(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n" for row in per_candidate), encoding="utf-8")
+    write_json(matched_dir / "query_exposure.json", per_query)
+    raw_integrity = []
+    for record in manifest["artifact_sources"]:
+        name = record["path"].replace("\\", "/").rsplit("/", 1)[-1]
+        observed = source(matched_dir / name)
+        if observed["sha256"] != record["sha256"]:
+            raise ValueError("Recovered matched raw artifact checksum mismatch")
+        raw_integrity.append({"name": name, "expected_sha256": record["sha256"], "observed_sha256": observed["sha256"], "exact_match": True})
+    write_json(matched_dir / "recovery_integrity.json", {"raw_artifacts": raw_integrity,
+        "raw_vector_line_endings_changed_by_this_audit": False, "encoding_driver_source": manifest["code"],
+        "scoring_driver_source": matched["scoring_driver_source"],
+        "scorer_portability_fix": "Normalize Windows path separators when checking recovered artifact basenames on Linux; no inference change."})
+    return {"per_query_exposure": per_query, "candidate_results_path": str((matched_dir / "candidate_results.jsonl").relative_to(root)),
+            "timestamp_provenance": timestamp_provenance,
+            "runtime": {key: manifest[key] for key in ("model_load_s", "run_wall_s", "query_forward_pool_s", "image_forward_pool_s", "actual_parameter_device", "actual_parameter_dtype")},
+            "model_weights": weights, "environment": manifest["environment"], "encoding_driver_source": manifest["code"]}
+
+
 def audit(root):
     inputs, out = root / "inputs", root / "outputs" / "temporal-multi-image"
     out.mkdir(parents=True, exist_ok=True)
@@ -231,6 +338,17 @@ def audit(root):
                     "paired_complete_query_ids": [], "per_query": []}
         processor = {"status": "PENDING_HOST_PROCESSOR_PROBE", "model_weights_loaded": False}
         timing = timing_estimates([], surface)
+    timing_path = inputs / "temporal_timing_smoke.json"
+    timing_smoke = None
+    if timing_path.exists():
+        timing_evidence = json.loads(timing_path.read_text(encoding="utf-8"))
+        evidence_sources.append(source(timing_path))
+        if timing_evidence.get("status") == "completed" and timing_evidence.get("returncode") == 0:
+            timing_smoke = dict(timing_evidence["checkpoints"][-1]["float32_timing_smoke"])
+            timing_smoke["supervised_child_wall_s"] = timing_evidence["elapsed_s"]
+            timing_smoke["source_url"] = timing_evidence["source_url"]
+            timing_smoke["causal_limit"] = "Dtype and input resolution changed jointly; runtime cannot be attributed to either alone."
+            timing["current_float32_matched_smoke"] = timing_smoke
     result = {
         "packet": "A", "issue": "JimmyK300/Vecna#82", "status": "INCONCLUSIVE",
         "decision": "No temporal-quality promotion; structural native support and runtime feasibility are distinct claims.",
@@ -258,6 +376,38 @@ def audit(root):
         "input_sources": evidence_sources, "recovered_source_url": bundle["source_url"],
         "current_processor_source_url": probe.get("source_url"),
     }
+    runtime_context_path = out / "runtime_context.json"
+    if runtime_context_path.exists():
+        result["full_matched_runtime_context"] = json.loads(runtime_context_path.read_text(encoding="utf-8"))
+    matched_scores_path = out / "matched-v1" / "scores.json"
+    if matched_scores_path.exists():
+        matched = json.loads(matched_scores_path.read_text(encoding="utf-8"))
+        if matched["summary"]["status"] != "COMPLETE_BOUNDED_PROBE" or matched["summary"]["paired_queries"] != 8:
+            raise ValueError("Unexpected matched experiment completion state")
+        result["status"] = "COMPLETE_BOUNDED_PROBE"
+        result["quality_metrics"] = matched["summary"]
+        result["quality_metrics_omitted_reason"] = None
+        result["decision"] = "Complete matched development probe; assess native3 against matched sheet/center without generalization or full-corpus claims."
+        result["new_matched_run"] = {"status": matched["summary"]["status"], "scores_path": str(matched_scores_path.relative_to(root)),
+            "per_query": matched["per_query"], "per_query_deltas": matched["per_query_deltas"]}
+        result["new_matched_run"].update(summarize_matched_evidence(root, matched_scores_path.parent, matched))
+        result["coverage"]["scope"] = "historical_stage2b_cache_only; completed new experiment is in new_matched_run"
+        result["model"]["matched_run_weight_bytes_hashed"] = True
+        result["model"]["matched_run_weights"] = result["new_matched_run"]["model_weights"]
+        result["decision_status"] = "POSITIVE_TEMPORAL_SIGNAL"
+        result["decision"] = "Positive bounded video-ranking signal: native3 cleanly promotes p0_q23 and p3_q34 versus both controls and original baseline, with no observed video regression. Localization and temporal-order causality remain unestablished."
+        result["decision_gate"] = {"source": "reference/issue82.md A5", "qualification": "Meaningful ranking gains satisfy A5; this label is restricted to video ranking. It does not assert learned temporal-order use or event localization.",
+            "candidate_limitations": "Six of eight accepted videos are absent from top3; zero of 31 target events occur in the exact sampled frames. Native3 reaches the 2/8 video ceiling.",
+            "next_step_limit": "Do not expand N after observing these outcomes. Packet E may propose a separately frozen candidate-pool experiment; no automatic video encoder or native5 run."}
+        evidence_sources.append(source(matched_scores_path))
+        for name in ("run_manifest.json", "plan.json", "query_embeddings.jsonl", "image_embeddings.jsonl"):
+            evidence_sources.append(source(matched_scores_path.parent / name))
+        for name in ("temporal_full_broker.json", "temporal_frame_times.json"):
+            if (inputs / name).exists():
+                evidence_sources.append(source(inputs / name))
+        issue_path = root / "reference" / "issue82.md"
+        if issue_path.exists():
+            evidence_sources.append(source(issue_path))
     plan = {
         "status": "PREPARED_NOT_RUN", "query_ids": list(QUERY_IDS), "candidate_limit_per_query": 3,
         "candidate_source_sha256": PINS["qwen_only_top100.jsonl"], "candidates": plan_candidates,
@@ -273,14 +423,21 @@ def audit(root):
         "completion_gate": "Every query has the same three complete candidate identities in every primary arm; no missing-candidate filtering after observing scores.",
         "primary_metrics": ["paired pool video R@1", "paired within-pool first relevant rank/MRR", "paired accepted-range or event hits where scoreable"],
         "metric_limits": ["R@5/R@20 with N=3 cannot change through reordering and must not be presented as retrieval recall gains.", "Submission-derived TRAKE event metrics are proxies, not organizer-reviewed ground truth.", "Center-only localization must be reported separately: window coverage can improve merely by exposing three frames rather than one.", "Baseline retained-frame retrieval scores are separately labeled; new matched single-center encodings isolate representation effects.", "Eight-query dev probe cannot establish generalization or full-corpus superiority."],
-        "budget_gate": "Parent-owned one-candidate float32 timing smoke with <=120s supervised cap before any sweep; no uncapped retry.",
+        "budget_gate": "Parent-owned bounded one-candidate float32 timing smoke before any sweep; completed in 19.672 seconds under supervision. Full sweep uses an explicit between-forward budget plus external supervision.",
         "candidate_selection_uses_ground_truth": False,
     }
+    if "new_matched_run" in result:
+        plan["status"] = "EXECUTED_COMPLETE_MATCHED_V1"
+        plan["execution_source"] = result["new_matched_run"]["scores_path"]
     write_json(out / "summary.json", result)
     write_json(out / "processor_proof.json", processor)
     write_json(out / "matched_experiment_plan.json", plan)
     write_json(out / "cached_completion.json", coverage)
-    write_json(out / "per_query_deltas.json", {"status": "NOT_COMPUTED", "paired_query_count": len(coverage["paired_complete_query_ids"]), "rows": [], "reason": result["quality_metrics_omitted_reason"]})
+    if "new_matched_run" in result:
+        write_json(out / "per_query_deltas.json", {"status": "COMPLETE_BOUNDED_PROBE", "paired_query_count": 8,
+            "rows": result["new_matched_run"]["per_query_deltas"], "source": result["new_matched_run"]["scores_path"]})
+    else:
+        write_json(out / "per_query_deltas.json", {"status": "NOT_COMPUTED", "paired_query_count": len(coverage["paired_complete_query_ids"]), "rows": [], "reason": result["quality_metrics_omitted_reason"]})
     report = ["# Packet A — native multi-image Qwen audit", "", "**INCONCLUSIVE for retrieval quality.** One native3 candidate completed; the eight-query matched experiment did not.", "",
         f"Native input support on the cached pilot: `{surface['native_multi_image_supported']}`. Current processor proof: `{processor['status']}`.", "",
         f"The historical cache has {surface['mode_counts'].get('contact_sheet', 0)} contact-sheet embeddings and {surface['mode_counts'].get('native3', 0)} native3 embedding. The prepared manifest has 48 candidate/window rows: eight queries × three baseline candidates × two window specifications. Each primary arm requires 24 embeddings. `status=complete` applies to the one-candidate retry; `completed_count=11` counts the whole cache. The retry launcher still says `in_progress` and is stale.", "",
@@ -295,6 +452,8 @@ def audit(root):
     if "native3" in timing:
         estimate = timing["native3"]
         report += ["", f"A **linear estimate**, based on only {estimate['measured_candidate_count']} observed native3 candidate, is {estimate['estimated_24_candidate_s']/3600:.1f} hours for 24 native3 encodings ({estimate['estimated_remaining_candidate_s']/3600:.1f} hours remaining). This is not a measured sweep and excludes new single-center/sheet/query work and extraction overhead."]
+    if timing_smoke:
+        report += ["", f"The new supervised CPU float32 / six-thread smoke on the same snapshot and matched 384×216 frames completed: model load **{timing_smoke['model_load_s']:.3f}s**, forward/pooling **{timing_smoke['forward_and_pool_s']:.3f}s**, complete child process **{timing_smoke['supervised_child_wall_s']:.3f}s**. It produced a finite, normalized 2048-dimensional vector. Dtype and input resolution changed jointly; neither change alone has a measured causal speedup. This timing supports running the complete matched development probe in a new cache."]
     if processor["status"] == "PASS":
         report += ["", "Processor inspection verified three distinct image patch groups in the supplied temporal order, with three image grids and all image tokens retained. Each batched patch chunk exactly equals processing that corresponding image alone. The contact sheet equals the three resized frames pasted left-to-right.", "", "| Input | Image grids | Image tokens | Sequence tokens |", "|---|---:|---:|---:|"]
         for mode, row in processor["proofs"].items():
@@ -304,17 +463,40 @@ def audit(root):
     report += ["", "## Surface and metric limits", "",
         "All eight selected queries retain the same top-three candidate sets between the historical control and the current Qwen export. For `p3_q34`, ranks 2 and 3 swap. Reuse decoded frames by source video/frame identity; rank-coded candidate IDs and scores are not current-surface evidence.", "",
         "The legacy scorer permits different available-query denominators for each mode and scores incomplete candidate pools. It also leaves baseline `video_rank_in_pool` at zero. Its output must not be used for a paired conclusion. This audit requires all three candidates per compared mode before a query can count as paired.", "",
-        "With only three candidates, R@5 and R@20 are invariant to reranking. Use paired pool R@1/rank and scoreable range/event evidence. Event hits remain submission-derived development proxies. No retrieval-quality metrics are emitted for this incomplete run.", "",
-        "## Next executable step", "",
-        "The matched plan pins the current eight-query top-three pool and keeps the same model revision. Run a parent-supervised, one-candidate CPU float32 timing smoke using matched 384×216 frames with a 120-second cap. It is timing-only and cannot update the old embedding cache. If feasible, run every primary arm with the same dtype/processor in a new cache and enforce complete paired coverage. If infeasible, keep Packet A inconclusive and defer further temporal inference on this host.", "",
+        "With only three candidates, video R@5 and R@20 are invariant to reranking. Use paired pool R@1/rank and scoreable range/event evidence. Event hits remain submission-derived development proxies. No retrieval-quality metrics are emitted for the incomplete historical cache.", "",
+        "## Reproduction", "",
+        "The runnable `code/temporal_matched.py` defaults to planning with no inference. Its explicit encode stage pins the current eight-query top-three pool, hashes actual weights and all input frames, uses CPU float32/six threads for all 8 query vectors and 72 image vectors, and writes a new cache only. Its separate score stage refuses incomplete or stale caches before opening truth and uses the pinned frozen scorer. The supervised timing smoke passed, and the complete matched execution finished successfully with all 8 query vectors and 72 image vectors. Reproduction commands remain in `RUNBOOK.md`.", "",
+        "Full matched-run latency is observed with possible concurrent Packet B load on the host; it is not an isolated microbenchmark. The earlier one-candidate smoke is a separate run. See `runtime_context.json`.", "",
         "No production retrieval code, existing cache, model family, or corpus index is changed.", ""]
+    if "new_matched_run" in result:
+        report[2] = "**POSITIVE_TEMPORAL_SIGNAL — exploratory correct-video ranking only.** Native3 promoted the accepted video to rank 1 in 2/8 queries, versus 0/8 for both matched controls. Event localization and causal use of chronological order remain unestablished. The original cached Stage2b run remains incomplete and is documented separately below."
+        metrics = result["quality_metrics"]
+        matched_section = ["", "## New matched result", "", "All eight queries have the same three candidate identities in every arm; all eight query vectors and 72 image vectors were newly encoded with the same float32 model/runtime. The truth file was read only after complete coverage passed. Candidate construction ignored truth/status/metric fields in the current export.", "", "| Arm | Pool video R@1 | Pool video MRR | Center event-proxy R@1 | Equal sampled-window event-proxy R@1 |", "|---|---:|---:|---:|---:|"]
+        for arm, values in metrics["arms"].items():
+            matched_section.append(f"| {arm} | {values['pool_video_r1']:.3f} | {values['pool_video_mrr']:.3f} | {values['center_only']['recall_at_1']:.3f} | {values['equal_three_frame_window']['recall_at_1']:.3f} |")
+        matched_section += ["", "`p0_q23` improved from original baseline/center/sheet rank 2 to native3 rank 1. `p3_q34` improved from original baseline/center rank 2 and sheet rank 3 to native3 rank 1. There were two clean top-1 promotions and no observed accepted-video rank regression. Six other queries lack their accepted video in top3, so those rows cannot establish robustness to ranking regressions.", "",
+            "Native3 reaches the fixed pool's video ceiling: 2/8. Pool video R@3/R@5/R@10 are 2/8 for every arm and are coverage checks, not improvements. None of the 31 provisional event targets occur among the center frames or the three exact sampled frames. Localization is therefore uninformative in this pool; the zero score is not evidence that native3 cannot localize events. Both native3 video successes still miss the requested event frames.", "",
+            "The A5 gate in `reference/issue82.md` explicitly accepts meaningful ranking gains without broad regressions. These two clean promotions support the positive label for this bounded video-ranking comparison. The sample has only two informative accepted-video cases; there is no shuffled/reversed-image control, so chronological-order causality and generalization remain untested.", "",
+            "Global N=3 was fixed before scoring, using the existing 72 decoded frames after the earlier 90.6-minute native pilot made a larger run impractical. The new float32/resolution smoke made this bounded run feasible. Top-10 feasibility was not measured under the optimized runtime; N was not enlarged after observing outcomes. Native5 and a new video model were not started.", "",
+            "| Arm | Measured forward/pooling total, 24 candidates | Mean per candidate |", "|---|---:|---:|"]
+        for arm, values in metrics["arms"].items():
+            matched_section.append(f"| {arm} | {values['latency']['total_s']:.3f}s | {values['latency']['mean_s']:.3f}s |")
+        runtime = result["new_matched_run"]["runtime"]
+        matched_section += ["", f"The measured model-load/encoding interval was {runtime['run_wall_s']:.3f}s, including {runtime['query_forward_pool_s']:.3f}s for all eight query vectors and {runtime['image_forward_pool_s']:.3f}s for 72 image forward/pooling operations. Pre-run source/weight hashing and parent-broker overhead are outside that interval. Full-run timing may include concurrent Packet B load and fixed arm-order effects; the similar native/sheet means are observations, not an isolated speed comparison.", "",
+            "Model weights were hashed and loaded with no missing/unexpected keys: `Qwen/Qwen3-VL-Embedding-2B`, revision `9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda`, weight SHA256 `c73fa9caeddeb3ff831d46c085a7a5708343248ca777e90f2d486964464509c1`. Config and processor hashes, actual CPU/float32 parameters, environment, and execution code hash are in `matched-v1/run_manifest.json`. The subsequent scoring-only Windows-path portability fix is distinguished from the executed encoder in `matched-v1/recovery_integrity.json`.", "",
+            "Every candidate's original/final ranks, query hash, exact frame identities, model-output reference, score and input/model hashes are joined in `matched-v1/candidate_results.jsonl`; event exposure is in `matched-v1/query_exposure.json`. Raw vectors exactly match the Windows manifest hashes, with no newline restoration needed. Source timestamps are recorded only when independently recovered; no FPS is guessed.", "",
+            "**Next decision:** retain native3 as a viable representation candidate and propose a separately frozen, query-blind candidate-pool experiment in Packet E. Further reranking of these same sampled frames cannot repair absent event targets. Do not expand this completed sample or promote a production model from this result."]
+        time_provenance = result["new_matched_run"]["timestamp_provenance"]
+        if time_provenance["status"] != "PENDING":
+            matched_section += ["", f"Timestamp provenance: **{time_provenance['exact_frame_count']}/{time_provenance['requested_frame_count']} sampled frames** have exact selected-frame presentation timestamps from the original video streams. They are attached to every candidate/arm record. Any nominal frame/FPS value is separately labeled and is not used as exactPTS. These timestamps do not change the frozen frame-based scorer or its P3 tolerance."]
+        report[3:3] = matched_section
     (out / "REPORT.md").write_text("\n".join(report), encoding="utf-8")
     write_json(out / "run_manifest.json", {"experiment": "vecna82-packet-a-audit-v1", "status": result["status"],
         "command": "python code/temporal_audit.py --root .", "input_sources": evidence_sources,
         "native_processor_proof": processor["status"], "historical_embedding_cache_written": False,
         "inference_run_by_this_audit": False, "production_mutation": False})
-    generated = sorted(path for path in out.iterdir() if path.is_file() and path.name != "SHA256SUMS.txt")
-    (out / "SHA256SUMS.txt").write_text("".join(f"{source(path)['sha256']}  {path.name}\n" for path in generated), encoding="utf-8")
+    generated = sorted(path for path in out.rglob("*") if path.is_file() and path.name != "SHA256SUMS.txt")
+    (out / "SHA256SUMS.txt").write_text("".join(f"{source(path)['sha256']}  {path.relative_to(out).as_posix()}\n" for path in generated), encoding="utf-8")
     return result
 
 
@@ -322,8 +504,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
     result = audit(parser.parse_args().root)
-    print(json.dumps({"status": result["status"], "processor_proof": result["native_input_support"]["current_processor_proof"],
-                      "paired_query_count": len(result["coverage"]["paired_complete_query_ids"])}))
+    print(json.dumps({"status": result["status"], "decision_status": result.get("decision_status"),
+                      "processor_proof": result["native_input_support"]["current_processor_proof"],
+                      "paired_query_count": result["quality_metrics"]["paired_queries"] if result["quality_metrics"] else len(result["coverage"]["paired_complete_query_ids"])}))
 
 
 if __name__ == "__main__":

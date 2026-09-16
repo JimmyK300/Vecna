@@ -86,6 +86,22 @@ class TemporalEvidenceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "hash mismatch"):
             audit.recover_manifests(bundle)
 
+    def test_exact_source_timestamps_cover_every_frozen_frame(self):
+        summary = json.loads((ROOT / "outputs" / "temporal-multi-image" / "summary.json").read_text())
+        provenance = summary["new_matched_run"]["timestamp_provenance"]
+        self.assertEqual(provenance["status"], "COMPLETE_EXACT_PTS")
+        self.assertEqual(provenance["exact_frame_count"], 72)
+        rows = audit.read_rows(ROOT / summary["new_matched_run"]["candidate_results_path"])
+        self.assertEqual(len(rows), 72)
+        for row in rows:
+            self.assertEqual(row["timestamp_status"], "exact_selected_frame_pts")
+            self.assertTrue(all(frame["source_pts"] is not None for frame in row["sampled_frames"]))
+            times = [frame["timestamp_s"] for frame in row["sampled_frames"]]
+            self.assertEqual(times, sorted(times))
+            self.assertEqual(row["center_timestamp_s"], times[1])
+            expected_count = 1 if row["representation_arm"] == "single_center" else 3
+            self.assertEqual(len(row["model_input_frame_source_ids"]), expected_count)
+
 
 if __name__ == "__main__":
     unittest.main()
