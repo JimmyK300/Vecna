@@ -37,6 +37,122 @@ TRANSFORMATIONS = {"query_expansion": False, "translation": False, "reranking": 
                    "yolo": False, "temporal_parser": False, "segment_clustering": False}
 
 
+def source_identity(path):
+    path = Path(path).resolve()
+    return {"path": str(path), "sha256": digest_bytes(path.read_bytes()),
+            "lf_sha256": digest_bytes(path.read_text(encoding="utf-8-sig").encode("utf-8"))}
+
+
+def checkpoint_file_sha256(path):
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as handle:
+        while chunk := handle.read(4 * 1024 * 1024):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def validate_qwen_audit(report, gate):
+    """A completed constructor or finite vectors cannot establish loaded weights."""
+    if (report.get("schema") != "vecna82-qwen-repair-verification-v1"
+            or report.get("status") != "verified"
+            or report.get("checkpoint_tensor_equality_verified") is not True):
+        raise ContractError("Qwen repair audit is not verified")
+    calls = report.get("load_calls", [])
+    if not isinstance(calls, list) or len(calls) != 1:
+        raise ContractError("Qwen audit must establish one ordinary AutoModel load")
+    info = calls[0].get("loading_info", {})
+    if any(key not in info or not isinstance(info[key], list) or info[key]
+           for key in ("missing_keys", "unexpected_keys", "mismatched_keys", "error_msgs")):
+        raise ContractError("Qwen audit has incomplete or nonzero loading discrepancies")
+    expected = gate["expected_tensor_count"]
+    if (expected != 625 or report.get("expected_tensor_count") != expected
+            or calls[0].get("expected_state_schema", {}).get("tensor_count") != expected
+            or report.get("checkpoint", {}).get("tensor_count") != expected):
+        raise ContractError("Qwen audit does not bind the complete625-tensor state")
+    proof = report.get("checkpoint_validation", {})
+    if (proof.get("status") != "VERIFIED_ALL_CHECKPOINT_TENSORS"
+            or proof.get("tensor_count") != expected or proof.get("second_model_loaded") is not False):
+        raise ContractError("Qwen audit lacks exhaustive one-model checkpoint equality")
+    if (proof.get("checkpoint_revision") != gate["checkpoint_revision"]
+            or calls[0].get("resolved_commit_hash") != gate["checkpoint_revision"]
+            or report["checkpoint"].get("sha256") != gate["checkpoint_sha256"]
+            or report["checkpoint"].get("bytes") != gate["checkpoint_bytes"]):
+        raise ContractError("Qwen audit checkpoint identity differs from the frozen model")
+    if report.get("declared_source_lf_sha256") != gate["source_lf_sha256"]:
+        raise ContractError("Qwen audit source differs from the reviewed loader repair")
+    return report
+
+
+def qwen_preflight(args, config):
+    """Bind the verified repair before imports, model allocation or DB access."""
+    gate = config.get("qwen_loader_validity")
+    if not isinstance(gate, dict) or gate.get("status") != "FROZEN_VERIFIED_REPAIR_REQUIRED":
+        raise ContractError("A frozen verified Qwen loader repair is required before collection")
+    if args.device != gate["device"] or args.cpu_threads != gate["cpu_threads"]:
+        raise ContractError("Device/thread policy differs from the verified Qwen capture contract")
+    audit_path = (args.config.parent / gate["verification_artifact"]).resolve()
+    if not audit_path.is_relative_to(args.config.parent.resolve()):
+        raise ContractError("Qwen verification artifact must be in the frozen fusion evidence directory")
+    payload = audit_path.read_bytes()
+    if digest_bytes(payload) != gate["verification_sha256"]:
+        raise ContractError("Qwen verification artifact hash differs from the frozen proof")
+    report = validate_qwen_audit(json.loads(payload), gate)
+    if digest_bytes(args.runtime_config.read_bytes()) != report["runtime_config_sha256"]:
+        raise ContractError("Runtime config differs from the verified Qwen declaration")
+    directory = args.runtime_root.resolve() / "aic51-src/aic51/packages/analyse/features"
+    sources = {name: source_identity(directory / name) for name in gate["source_lf_sha256"]}
+    if any(sources[name]["lf_sha256"] != expected
+           for name, expected in gate["source_lf_sha256"].items()):
+        raise ContractError("Runtime Qwen source/helper differs from the reviewed repair")
+    checkpoint = Path(report["checkpoint"]["path"]).resolve()
+    stat = checkpoint.stat()
+    if (stat.st_size != gate["checkpoint_bytes"]
+            or checkpoint_file_sha256(checkpoint) != gate["checkpoint_sha256"]):
+        raise ContractError("Current checkpoint bytes differ from the verified frozen checkpoint")
+    return {"audit_sha256": gate["verification_sha256"], "audit": report,
+            "sources": sources, "checkpoint_path": str(checkpoint),
+            "checkpoint_bytes": stat.st_size, "checkpoint_mtime_ns": stat.st_mtime_ns,
+            "checkpoint_sha256": gate["checkpoint_sha256"]}
+
+
+def validate_qwen_runtime(extractor, preflight):
+    """Recheck this constructor's full proof before the first query is encoded."""
+    report = preflight["audit"]
+    expected = report["checkpoint_validation"]
+    proof = metadata_json(getattr(extractor, "_checkpoint_validation", {}))
+    for key in ("status", "tensor_count", "element_count", "checkpoint_revision",
+                "mapping_sha256", "second_model_loaded"):
+        if proof.get(key) != expected[key]:
+            raise ContractError("Current Qwen constructor checkpoint proof differs: " + key)
+    sources = preflight["sources"]
+    if proof.get("helper_source_sha256") != sources["qwen_vl_checkpoint.py"]["sha256"]:
+        raise ContractError("Current Qwen proof came from a different helper source")
+    files = proof.get("checkpoint_files", [])
+    if (files != ["model.safetensors"]
+            or (Path(proof.get("checkpoint_directory", "")) / files[0]).resolve()
+            != Path(preflight["checkpoint_path"])):
+        raise ContractError("Current Qwen proof used a different checkpoint file")
+    stat = Path(preflight["checkpoint_path"]).stat()
+    if (stat.st_size != preflight["checkpoint_bytes"] or stat.st_mtime_ns != preflight["checkpoint_mtime_ns"]):
+        raise ContractError("Checkpoint file changed after the frozen byte hash")
+    if Path(inspect.getfile(type(extractor))).resolve() != Path(sources["qwen_vl.py"]["path"]):
+        raise ContractError("Qwen extractor import resolved outside the reviewed checkout")
+    for before in sources.values():
+        if source_identity(before["path"]) != before:
+            raise ContractError("Reviewed Qwen source changed during preparation")
+    model = extractor._model[0].auto_model
+    model_source = source_identity(inspect.getfile(type(model)))
+    if model_source["lf_sha256"] != report["load_calls"][0]["model_source"]["lf_sha256"]:
+        raise ContractError("Current Qwen AutoModel source differs from the verified audit")
+    return {"status": "VERIFIED_REPAIR_AND_CURRENT_EXHAUSTIVE_CHECKPOINT_EQUALITY",
+            "audit_sha256": preflight["audit_sha256"], "sources": sources,
+            "checkpoint_sha256": preflight["checkpoint_sha256"],
+            "checkpoint_bytes": preflight["checkpoint_bytes"],
+            "current_constructor_proof": proof, "model_source": model_source,
+            "loading_info_authority": "Pinned prior audit: all four lists empty; this constructor repeats exhaustive tensor equality",
+            "validity_scope": "Corrected query loader only; corpus feature/index lineage and historical C loader are unresolved"}
+
+
 def metadata_json(value):
     """Normalize SDK metadata without unstable repr/string fallbacks.
 
@@ -347,6 +463,7 @@ def prepare_searcher(args, config):
     source = runtime_root / "aic51-src/aic51/packages/search/searcher.py"
     if digest_bytes(source.read_text(encoding="utf-8").encode("utf-8")) != SEARCHER_SHA256:
         raise ContractError("runtime Searcher differs from the exact inspected Vecna main")
+    qwen_verified = qwen_preflight(args, config)
     runtime_config = yaml.safe_load(args.runtime_config.read_text(encoding="utf-8"))
     effective = copy.deepcopy(runtime_config)
     search_config = effective.setdefault("searcher", {})
@@ -373,6 +490,13 @@ def prepare_searcher(args, config):
     sys.path.insert(0, str(runtime_root / "aic51-src"))
     import torch
     cpu_threading = configure_cpu_threads(torch, args.cpu_threads)
+    for package, version in qwen_verified["audit"]["versions"].items():
+        if importlib.metadata.version(package) != version:
+            raise ContractError("Qwen runtime package differs from the verified audit: " + package)
+    from sentence_transformers.base.modules.transformer import Transformer
+    if (source_identity(inspect.getfile(Transformer))["lf_sha256"]
+            != qwen_verified["audit"]["st_transformer_source"]["lf_sha256"]):
+        raise ContractError("SentenceTransformer loader source differs from the verified audit")
     from pymilvus import MilvusClient
     from aic51.packages.config import GlobalConfig
     GlobalConfig._GlobalConfig__config = effective
@@ -400,8 +524,15 @@ def prepare_searcher(args, config):
     searcher = Searcher.__new__(Searcher)
     searcher._database = SearchOnlyDatabase(client, collection, fields)
     searcher._prepare_feature_extractors(torch.device(args.device))
+    qwen_name = searcher._features.get("qwen_vl")
+    if qwen_name not in searcher._extractors:
+        raise ContractError("The verified Qwen provider was not prepared")
+    qwen_validity = validate_qwen_runtime(searcher._extractors[qwen_name]["feature_extractor"], qwen_verified)
     identities = {name: loaded_model_identity(desc["feature_extractor"])
                   for name, desc in searcher._extractors.items()}
+    if identities[qwen_name]["tensor_count"] != 625:
+        raise ContractError("Qwen loaded-state fingerprint differs from the verified625 tensors")
+    identities[qwen_name]["checkpoint_validity"] = qwen_validity
     try:
         head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=runtime_root,
                               check=True, capture_output=True, text=True).stdout.strip()
@@ -413,6 +544,7 @@ def prepare_searcher(args, config):
                 "runtime_head": head, "runtime_config_sha256": digest_bytes(args.runtime_config.read_bytes()),
                 "effective_config_sha256": digest_json(effective),
                 "collection": collection_identity, "models": identities,
+                "provider_loader_authority": "Reviewed Qwen checkpoint repair; exact main fusion transform unchanged",
                 "model_declarations_sha256": digest_json(selected_models),
                 "device": args.device, "cpu_threading": cpu_threading,
                 "python": platform.python_version(),

@@ -19,9 +19,12 @@ sys.path.insert(0, str(ROOT / "code"))
 from fusion_study import (ContractError, ARMS, current_scores, digest_bytes, digest_json,
                           nominal_weights, run, run_identity_digest, study_query, transform, validate_config)
 from collect_fusion_providers import (capture_query, configure_cpu_threads, metadata_json,
-                                      preprocessing_identity, SearchOnlyDatabase)
+                                      preprocessing_identity, qwen_preflight, SearchOnlyDatabase,
+                                      validate_qwen_audit, validate_qwen_runtime)
 from evaluate_fusion_study import contribution_ablations, matched_qwen_items, paired, score_arm, select_global_arm
 from analyze_reranker import load_scorer
+from audit_qwen_loading import AuditError, safe_loading_metadata
+from verify_qwen_loading import require_complete_proof
 
 
 class Array:
@@ -278,6 +281,110 @@ class FusionTests(unittest.TestCase):
             with self.subTest(invalid=invalid), self.assertRaises(ContractError):
                 configure_cpu_threads(runtime, invalid)
         self.assertEqual(runtime.requests, [6])
+
+    def test_loading_info_metadata_accepts_label_ids_without_losing_keys(self):
+        data = {"id2label": {0: "first", 1: "second"}, "missing_keys": ["language_model.embed_tokens.weight"]}
+        result = safe_loading_metadata(data)
+        self.assertEqual(result["id2label"], {"0": "first", "1": "second"})
+        self.assertEqual(result["missing_keys"], data["missing_keys"])
+        self.assertEqual(data["id2label"], {0: "first", 1: "second"})
+        with self.assertRaisesRegex(AuditError, "collision"):
+            safe_loading_metadata({"id2label": {0: "int", "0": "string"}})
+
+    def test_constructor_completion_cannot_pass_repair_verification(self):
+        call = {"loading_info": {key: [] for key in ("missing_keys", "unexpected_keys", "mismatched_keys", "error_msgs")},
+                "expected_state_schema": {"tensor_count": 625}}
+        proof = {"status": "VERIFIED_ALL_CHECKPOINT_TENSORS", "tensor_count": 625, "second_model_loaded": False}
+        require_complete_proof(call, proof)
+        call["loading_info"]["missing_keys"] = ["language_model.embed_tokens.weight"]
+        with self.assertRaisesRegex(AuditError, "discrepancies"):
+            require_complete_proof(call, proof)
+        call["loading_info"]["missing_keys"] = []
+        call["loading_info"].pop("error_msgs")
+        with self.assertRaisesRegex(AuditError, "incomplete"):
+            require_complete_proof(call, proof)
+
+    def test_repair_verification_requires_complete_one_model_equality(self):
+        call = {"loading_info": {key: [] for key in ("missing_keys", "unexpected_keys", "mismatched_keys", "error_msgs")},
+                "expected_state_schema": {"tensor_count": 625}}
+        for proof in ({}, {"status": "VERIFIED_ALL_CHECKPOINT_TENSORS", "tensor_count": 624, "second_model_loaded": False},
+                      {"status": "VERIFIED_ALL_CHECKPOINT_TENSORS", "tensor_count": 625, "second_model_loaded": True}):
+            with self.subTest(proof=proof), self.assertRaises(AuditError):
+                require_complete_proof(call, proof)
+
+    def test_capture_gate_accepts_only_final_verified_qwen_audit(self):
+        report = json.loads((ROOT / "outputs/fusion/qwen-repair-verification-v1/verification.json").read_text())
+        gate = config()["qwen_loader_validity"]
+        self.assertEqual(validate_qwen_audit(report, gate), report)
+        for status in ("checkpoint_loaded", "constructor_complete", "failed"):
+            invalid = copy.deepcopy(report)
+            invalid["status"] = status
+            with self.subTest(status=status), self.assertRaisesRegex(ContractError, "not verified"):
+                validate_qwen_audit(invalid, gate)
+        for field in ("missing_keys", "unexpected_keys", "mismatched_keys", "error_msgs"):
+            for value in (None, ["unresolved"]):
+                invalid = copy.deepcopy(report)
+                invalid["load_calls"][0]["loading_info"][field] = value
+                with self.subTest(field=field, value=value), self.assertRaisesRegex(ContractError, "discrepancies"):
+                    validate_qwen_audit(invalid, gate)
+        for key, value in (("tensor_count", 624), ("second_model_loaded", True),
+                           ("checkpoint_revision", "different")):
+            invalid = copy.deepcopy(report)
+            invalid["checkpoint_validation"][key] = value
+            with self.subTest(key=key), self.assertRaises(ContractError):
+                validate_qwen_audit(invalid, gate)
+
+    def test_capture_preflight_checks_fresh_checkpoint_bytes_and_both_sources(self):
+        report = json.loads((ROOT / "outputs/fusion/qwen-repair-verification-v1/verification.json").read_text())
+        cfg = config()
+        gate = cfg["qwen_loader_validity"]
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            sources = base / "aic51-src/aic51/packages/analyse/features"
+            sources.mkdir(parents=True)
+            for name in gate["source_lf_sha256"]:
+                (sources / name).write_bytes((ROOT / "code/loader-fix" / name).read_bytes())
+            runtime_config = base / "runtime.yaml"
+            runtime_config.write_bytes(b"synthetic: true\n")
+            report["runtime_config_sha256"] = digest_bytes(runtime_config.read_bytes())
+            checkpoint = base / "model.safetensors"
+            checkpoint.write_bytes(b"synthetic checkpoint fixture")
+            report["checkpoint"].update(path=str(checkpoint), bytes=checkpoint.stat().st_size,
+                                         sha256=digest_bytes(checkpoint.read_bytes()))
+            gate.update(checkpoint_bytes=report["checkpoint"]["bytes"],
+                        checkpoint_sha256=report["checkpoint"]["sha256"])
+            audit_path = base / gate["verification_artifact"]
+            audit_path.parent.mkdir()
+            audit_path.write_text(json.dumps(report))
+            gate["verification_sha256"] = digest_bytes(audit_path.read_bytes())
+            args = SimpleNamespace(runtime_root=base, runtime_config=runtime_config,
+                                   config=base / "config.json", device="cpu", cpu_threads=6)
+            result = qwen_preflight(args, cfg)
+            self.assertEqual(result["checkpoint_sha256"], gate["checkpoint_sha256"])
+            self.assertEqual(set(result["sources"]), {"qwen_vl.py", "qwen_vl_checkpoint.py"})
+            checkpoint.write_bytes(b"synthetic checkpoint fixturE")
+            with self.assertRaisesRegex(ContractError, "checkpoint bytes"):
+                qwen_preflight(args, cfg)
+            checkpoint.write_bytes(b"synthetic checkpoint fixture")
+            helper = sources / "qwen_vl_checkpoint.py"
+            helper.write_bytes(helper.read_bytes() + b"\n")
+            with self.assertRaisesRegex(ContractError, "source/helper"):
+                qwen_preflight(args, cfg)
+            helper.write_bytes((ROOT / "code/loader-fix/qwen_vl_checkpoint.py").read_bytes())
+            audit_path.write_text(json.dumps(report) + "\n")
+            with self.assertRaisesRegex(ContractError, "artifact hash"):
+                qwen_preflight(args, cfg)
+
+    def test_current_constructor_cannot_reuse_audit_in_place_of_live_proof(self):
+        report = json.loads((ROOT / "outputs/fusion/qwen-repair-verification-v1/verification.json").read_text())
+        preflight = {"audit": report, "sources": {"qwen_vl_checkpoint.py": {"sha256": "current helper"}}}
+        for key, value in (("status", "constructor_complete"), ("tensor_count", 624),
+                           ("second_model_loaded", True), ("checkpoint_revision", "other"),
+                           ("mapping_sha256", "other"), ("helper_source_sha256", "other")):
+            proof = copy.deepcopy(report["checkpoint_validation"])
+            proof[key] = value
+            with self.subTest(key=key), self.assertRaises(ContractError):
+                validate_qwen_runtime(SimpleNamespace(_checkpoint_validation=proof), preflight)
 
     def test_tokenizer_identity_includes_vocab_and_template(self):
         class Tokenizer:

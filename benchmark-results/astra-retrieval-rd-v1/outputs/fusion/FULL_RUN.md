@@ -9,6 +9,19 @@ intra-op CPU threads, matching the stable A run; actual intra-op and inter-op
 thread counts are recorded in the run identity. The collection is
 `official_l21_l30_all_v2`, with an asserted count of 322,924 rows.
 
+The execution branch must combine the B research commit with exactly the two
+reviewed production Qwen loader files from the separate repair PR. Its commit
+is recorded in the collection manifest; record the actual branch/commit with the
+completed run. Plain main or an earlier research checkout with the old loader
+fails the source gate. The frozen verification artifact is
+`outputs/fusion/qwen-repair-verification-v1/verification.json`, SHA256
+`8f459c0f25c62a712acea1ef59e4855e0d8d7428dc8623407ec6db9300790eb8`.
+The gate requires final `status=verified`, all four loading lists empty, all625
+tensors equal, the current checkpoint's full byte hash, and the new constructor's
+own complete equality proof. Config, model/package source and both repaired
+production file identities are also checked before retrieval. Previous failed
+zero-row runs remain separate evidence and must not be reused or overwritten.
+
 ```text
 C:/Users/minhc/Code/Vecna/.venv/Scripts/python.exe -B -u benchmark-results/astra-retrieval-rd-v1/code/collect_fusion_providers.py --runtime-root . --runtime-config C:/Users/minhc/Code/Vecna/config.yaml --config benchmark-results/astra-retrieval-rd-v1/outputs/fusion/frozen_config.json --queries benchmark-results/astra-retrieval-rd-v1/outputs/fusion/queries.jsonl --output-dir benchmark-results/astra-retrieval-rd-v1/outputs/fusion/capture-full115-v1 --milvus-uri http://localhost:19530 --device cpu --cpu-threads 6
 ```

@@ -166,6 +166,7 @@ def evaluate(root: Path, rankings: Path, manifest: Path, config_path: Path, quer
     # complete collection identity, hashes, exact canonical IDs, and main replay.
     study_path = outdir / "study_results.jsonl"
     transform_proof = transform_run(rankings, config_path, queries_path, study_path, manifest)
+    capture_manifest = read_json(manifest)
     provenance = verify_sources(root, ["inputs/canonical_truth.jsonl", "reference/evaluate_reranker_fusion.py"]
                                 + [f"inputs/capability_p{i}.jsonl" for i in range(4)])
     truth = unique_index(read_jsonl(root / "inputs/canonical_truth.jsonl"))
@@ -292,6 +293,9 @@ def evaluate(root: Path, rankings: Path, manifest: Path, config_path: Path, quer
                                          "p95_ms": percentile([row["arms"][arm][clock] for row in rows], .95) / 1e6}
                                   for clock in ("cpu_ns", "wall_ns")} for arm in ARMS},
                "contracts": {
+                   "query_loader": "B uses the separately verified Qwen loader repair, current exhaustive625-tensor proof and one matched provider capture; exact main fusion transform remains unchanged.",
+                   "historical_boundary": "B qwen_only_matched comes from the same corrected-loader capture. C uses a historical saved candidate surface; cross-packet rank differences are descriptive, not an isolated same-run fusion effect.",
+                   "corpus_lineage": "The existing collection is unchanged. Corpus feature/index loader lineage is unresolved; the query-loader repair does not establish or invalidate historical corpus/C correctness.",
                    "distinct_video": "Fuse frame hits, retain100 frames, then first unique video; primary Packet B layer.",
                    "frame_position_video": "Correct video at original frame-candidate positions, with duplicates; comparable unit to Packet C.",
                    "frozen_frame_range_event": "Pinned mixed historical range/provisional TRAKE/P3 target scorer, frame-only input; no timeline manufacture.",
@@ -300,6 +304,12 @@ def evaluate(root: Path, rankings: Path, manifest: Path, config_path: Path, quer
                    "simple_visual_slice": "Explicit proxy: visual tags without OCR/ASR or temporal tags. Existing annotations do not prove causal mechanisms.",
                    "uncertainty": "Ordinary paired-query bootstrap, seed82, 10000resamples. Shared videos/templates may violate independent-query assumptions; no held-out confirmation.",
                    "diagnoses": "Only candidate absence, rank changes and contribution effects are established. Outlier/semantic/extraction causes remain hypotheses without content inspection.",
+               }, "capture_provenance": {
+                   "manifest_sha256": digest_bytes(manifest.read_bytes()),
+                   "run_identity_sha256": capture_manifest["run_identity_sha256"],
+                   "runtime_head": capture_manifest["identity"].get("runtime_head"),
+                   "provider_loader_authority": capture_manifest["identity"].get("provider_loader_authority"),
+                   "qwen_loader_validity": config.get("qwen_loader_validity"),
                }, "transform_proof": transform_proof, "source_provenance": provenance,
                "evaluator_sha256": digest_bytes(Path(__file__).read_bytes())}
     for name, payload in (("summary.json", summary), ("slices.json", slices), ("policy.json", POLICY)):
@@ -313,6 +323,7 @@ def render_report(summary):
     best = summary["descriptive_best_global_arm"]
     lines = ["# Packet B fusion study", "", f"Descriptive global winner: `{best}`. Production integration remains off.", "",
              "115 queries were collected with exact main-transform replay; the pinned mapping scores113 and excludes p0_q15/p3_q09. The primary experiment assigns nonzero weights to four providers; actual availability remains explicit. Its top100 raw-provider surface is distinct from the historical UI pool and preserves native quote eligibility.", "",
+             "B uses the separately verified Qwen loader repair and the current constructor's exhaustive625-tensor checkpoint proof. Its matched Qwen-only control comes from this same capture. Historical C candidates and corpus feature/index loader lineage are separate, unresolved provenance questions; this query-loader repair does not establish or invalidate their correctness. Cross-packet differences are descriptive, while B's paired fusion comparisons hold its corrected provider lists fixed.", "",
              "| Arm | Video R@1 | R@5 | R@10 | R@20 | MRR@20 | Median observed retained rank |", "|---|---:|---:|---:|---:|---:|---:|"]
     for arm, value in summary["overall"]["distinct_video"].items():
         metrics = value["metrics"]

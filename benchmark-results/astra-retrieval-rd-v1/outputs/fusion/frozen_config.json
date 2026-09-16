@@ -52,5 +52,23 @@
   "collection_count_authority": "P3 all_fusion_v1.run.json; collector fails if the live count differs",
   "control_surface": "Main fusion semantics on same frozen raw provider top100, native quote filtering/boost retained. Public UI minimum200 and segment clustering are not replayed.",
   "design_freeze": "All transform constants fixed before any fusion scoring; no truth used to select them. Alternative arms transform providers individually. Current control retains its nested normalization, so its data-dependent effective coefficients differ from nominal provider shares.",
-  "canonical_query_projection_sha256": "b2aa8de3bce8d24c5969fcf5a00757a7246a5182e4041cc2774559dbf49c6208"
+  "canonical_query_projection_sha256": "b2aa8de3bce8d24c5969fcf5a00757a7246a5182e4041cc2774559dbf49c6208",
+  "qwen_loader_validity": {
+    "status": "FROZEN_VERIFIED_REPAIR_REQUIRED",
+    "source_authority": "Separate reviewed Qwen loader repair in PR88; execute B on an isolated branch combining the B research commit and only its exact two production source files. Main remains unchanged.",
+    "source_lf_sha256": {
+      "qwen_vl.py": "18900a46da79c9738c7225f2993955f3c9e02030487b7cedffab0ddcf9f7d177",
+      "qwen_vl_checkpoint.py": "c1b0335ee855c5aaf8d33f688c28a351a2e8f93f3778e78316cf1ef0087b8169"
+    },
+    "verification_artifact": "qwen-repair-verification-v1/verification.json",
+    "verification_sha256": "8f459c0f25c62a712acea1ef59e4855e0d8d7428dc8623407ec6db9300790eb8",
+    "checkpoint_revision": "9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda",
+    "checkpoint_sha256": "c73fa9caeddeb3ff831d46c085a7a5708343248ca777e90f2d486964464509c1",
+    "checkpoint_bytes": 4255140312,
+    "expected_tensor_count": 625,
+    "device": "cpu",
+    "cpu_threads": 6,
+    "capture_gate": "Require the pinned verified audit, zero four audit loading lists, fresh checkpoint-byte hash, exact source/package contract, and current constructor exhaustive625-tensor equality before any provider query.",
+    "scope": "Corrected query loader only. Same main fusion math and frozen retrieval surface; no historical C or corpus feature/index lineage assertion."
+  }
 }

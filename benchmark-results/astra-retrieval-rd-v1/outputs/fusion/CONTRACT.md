@@ -4,6 +4,39 @@ Implementation is ready; no full-surface fusion result is asserted until the
 115-row provider export passes its source replay and identity checks. The
 parent scorer supplies the unchanged 113-scoreable mapping after transforms.
 
+## Verified query-loader authority
+
+The first capture attempts exposed an independent main-loader defect: the
+inspected SentenceTransformer/Transformers runtime left all 625 Qwen tensors
+newly initialized, including all 310 language-model tensors. The structured
+original-loader audit reports 625 missing, 625 unexpected, zero mismatched and
+zero error entries. Those attempts produced no provider rows and remain
+diagnostic artifacts; they cannot supply benchmark results.
+
+The separately reviewed loader repair preserves the ordinary SentenceTransformer
+encode/tokenizer/pooling pipeline and maps the checkpoint's backbone prefix to
+the expected AutoModel names. Its repaired audit reached final `status=verified`,
+with all four discrepancy lists empty and exact equality for all 625 tensors
+(2,127,532,032 elements) after the requested CPU float32 cast. The actual
+4,255,140,312-byte checkpoint has SHA256
+`c73fa9caeddeb3ff831d46c085a7a5708343248ca777e90f2d486964464509c1`,
+revision `9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda`.
+
+`frozen_config.json` binds both reviewed production source files and the exact
+verified audit. B must execute on an isolated branch combining its research
+commit with those two files from the separate loader-repair PR. Plain main and
+the old loader fail before model allocation. Before every new capture, the
+collector rehashes current checkpoint bytes, verifies audited source/package
+and config identities, and requires the current constructor's complete tensor
+equality proof before the first query is encoded. Run identity records the
+execution commit, actual source bytes and canonical LF hashes, loaded model
+state and current proof. This is a **corrected query-loader capture with exact
+main fusion math**. Corpus feature/index lineage and C's historical loader
+remain unresolved; no backward validity claim follows from this repair.
+
+Evidence: [original defect](qwen-loader-defect.json),
+[verified repaired audit](qwen-repair-verification-v1/verification.json).
+
 ## Exact current control
 
 Source: `JimmyK300/Vecna@95d63a6abf10c598e0e54af7d2071bedbe542d1e`,
