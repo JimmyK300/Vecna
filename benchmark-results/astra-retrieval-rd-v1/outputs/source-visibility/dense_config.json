@@ -1,0 +1,150 @@
+{
+  "cache_probe_sha256": "b9d98ea428c5bac8958cbe03aefe15bc1aa0f91e6e1bbb404f7c5de6bd85fed2",
+  "cache_probe_transport": {
+    "accepted_paths": [
+      "benchmark-results/astra-retrieval-rd-v1/code/probe_dense_visibility_identity.py",
+      "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense-identity-v1.json"
+    ],
+    "artifact_id": 10448337271,
+    "host_bytes": 18463,
+    "host_sha256": "5e09c550159654ec485be698201cdb9afce2b81ca9a012f517bace11334b47fd",
+    "newline_transform": "CRLF to LF through Git patch",
+    "patch_download_bytes": 27148,
+    "patch_download_sha256": "98995ac461d5f36074414fa207d461b39648ff5b5aed0b4db9dd53b994d36903",
+    "patch_normalized_bytes": 26598,
+    "patch_normalized_sha256": "64f376d9e8118a5dcab545fa815c1383a50ccf6c84fa163cb1c1eb1b0ebf6812",
+    "recovered_bytes": 18057,
+    "recovered_sha256": "b9d98ea428c5bac8958cbe03aefe15bc1aa0f91e6e1bbb404f7c5de6bd85fed2",
+    "source_url": "https://github.com/JimmyK300/ai-routing-hub/issues/1#issuecomment-5698142781",
+    "workflow_run_id": 35101233807,
+    "zip_sha256": "09a28bfc7dd66b88f0ce7515f296a63ad9089c9227a7781a5b9d059b2c37e218"
+  },
+  "collection": {
+    "description_sha256": "1e3da787fcadab0b6251e00f6b05fee9abe3888c17a36d0babad843d652bded6",
+    "fields": [
+      "asr",
+      "asr_dense",
+      "asr_sparse",
+      "frame_id",
+      "image_clip_pe_l_14_336",
+      "image_siglip_so400m_384",
+      "ocr",
+      "ocr_dense",
+      "ocr_sparse",
+      "qwen_vl"
+    ],
+    "index_descriptions_sha256": "99b4a5d374b036b1373c77ddbf9e5fe3253edaa3a35fd2374067b002f01e9860",
+    "index_names": [
+      "asr_BM25",
+      "asr_dense_SCANN",
+      "image_clip_pe_l_14_336_SCANN",
+      "image_siglip_so400m_384_SCANN",
+      "ocr_BM25",
+      "ocr_dense_SCANN",
+      "qwen_vl_SCANN"
+    ],
+    "name": "official_l21_l30_all_v2",
+    "row_count": 322924
+  },
+  "effective_semantics": "Execute exact pinned main dense-only text path alpha1, CLS/L2 PyTorch float32 CPU query encoder,1024 tokens,one canonical formulation; native quote/filter/1.5boost/max normalization; raw top100 cap with requested native200/500 recorded.",
+  "forbidden_capture_inputs": [
+    "truth",
+    "accepted_video",
+    "accepted_frame",
+    "answer",
+    "query_rewrite",
+    "retrieval_outcome"
+  ],
+  "frozen_sample_sha256": "b4fd944228a033c37ea4d69ad757ceeae9635bfb026cf018e0d60f5b3c661be9",
+  "index_generation_identity": {
+    "interpretation": "Collection schema/index metadata are pinned; historical stored-vector encoder/index generation remains unresolved unless the existing index registry provides an actual generation chain. Target absence is only absence from this dense field's retained100 under the declared current encoder.",
+    "state": "not_established_by_available_probe"
+  },
+  "index_registry_paths": [
+    "D:/Official-Dataset/provenance/indexes/official_l21_l30_all_v2.json",
+    "D:/Official-Dataset/features_L21-L30_branch-feats-siglip/provenance/indexes/official_l21_l30_all_v2.json"
+  ],
+  "main_commit": "95d63a6abf10c598e0e54af7d2071bedbe542d1e",
+  "metric": "COSINE",
+  "model": {
+    "backend": "pytorch",
+    "checkpoint_choice": "Use the complete snapshot referenced by cached refs/main; do not mix the separate safetensors-only snapshot or perform automatic conversion/download.",
+    "checkpoint_file": "pytorch_model.bin",
+    "device": "cpu",
+    "dtype": "float32",
+    "files": [
+      {
+        "bytes": 687,
+        "digest_pin_scope": "checksum_verified_against_identity_probe",
+        "mtime_ns": 1786942632082347900,
+        "relative_path": "config.json",
+        "sha256": "26159e7ad065073448460117eb24b7a4572f6f4e78eadff65dc0a11c052449fa"
+      },
+      {
+        "bytes": 2271145830,
+        "digest_pin_scope": "metadata_frozen_before_run_sha256_frozen_before_model_loading",
+        "mtime_ns": 1786942764448578200,
+        "relative_path": "pytorch_model.bin"
+      },
+      {
+        "bytes": 5069051,
+        "digest_pin_scope": "metadata_frozen_before_run_sha256_frozen_before_model_loading",
+        "mtime_ns": 1786942628748800600,
+        "relative_path": "sentencepiece.bpe.model"
+      },
+      {
+        "bytes": 964,
+        "digest_pin_scope": "checksum_verified_against_identity_probe",
+        "mtime_ns": 1786942630677487300,
+        "relative_path": "special_tokens_map.json",
+        "sha256": "8c785abebea9ae3257b61681b4e6fd8365ceafde980c21970d001e834cf10835"
+      },
+      {
+        "bytes": 17098108,
+        "digest_pin_scope": "metadata_frozen_before_run_sha256_frozen_before_model_loading",
+        "mtime_ns": 1786942630131946700,
+        "relative_path": "tokenizer.json"
+      },
+      {
+        "bytes": 444,
+        "digest_pin_scope": "checksum_verified_against_identity_probe",
+        "mtime_ns": 1786942625458021300,
+        "relative_path": "tokenizer_config.json",
+        "sha256": "a62b2b6784f990259fddef5f16388693a8043be4f69179e6a5257eeb3f9abac4"
+      }
+    ],
+    "max_length": 1024,
+    "pin_limit": "Small config/tokenizer metadata files have pre-run SHA256 pins. The Windows cache's regular weight/vocabulary files have revision/size/mtime pins; their full SHA256 is frozen before any model loading or retrieval and their stats rechecked after loading. This is current cached identity, not historical corpus extraction identity.",
+    "repository": "BAAI/bge-m3",
+    "snapshot_path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181",
+    "snapshot_revision": "5617a9f61b028005a4858fdac845db406aefb181",
+    "snapshot_top_level_files": [
+      ".gitattributes",
+      "README.md",
+      "colbert_linear.pt",
+      "config.json",
+      "config_sentence_transformers.json",
+      "long.jpg",
+      "modules.json",
+      "pytorch_model.bin",
+      "sentence_bert_config.json",
+      "sentencepiece.bpe.model",
+      "sparse_linear.pt",
+      "special_tokens_map.json",
+      "tokenizer.json",
+      "tokenizer_config.json"
+    ],
+    "use_safetensors": false
+  },
+  "nprobe": 32,
+  "offset": 0,
+  "provider_depth": 100,
+  "query_file_sha256": "68b315a98313fe8609b4fff460d65c0daebe79f4aff35d7dd75d17b5afd461b7",
+  "query_projection_sha256": "e55864e0c918937da06c5fd1a40d80f4501c92c62e259389ae7a1fcca36ce17b",
+  "schema": "vecna82-dense-visibility-config-v1",
+  "scope": "Dataset #17 dense visibility diagnostic only. No fusion weights changed, production promotion, model downloads, visual models, collection writes or source repairs.",
+  "searcher_lf_sha256": "6f94bdd147c4b2b29b522a1f4bbbf004fb726fdfdf68a7cb316a4aec9e869e51",
+  "server_filter": "",
+  "status": "identity_pinned_ready",
+  "text_embedding_lf_sha256": "ec26570cf87a9d3e6a4e2d481531a46f470e0a7f70f220c1c5cb15da126d3f01"
+}

@@ -1,0 +1,72 @@
+{
+  "branch": "btl/issue-82-source-review",
+  "command_from_packet_root": [
+    "python",
+    "code/collect_dense_visibility.py",
+    "--queries",
+    "outputs/source-visibility/sparse_queries.jsonl",
+    "--config",
+    "outputs/source-visibility/dense_config.json",
+    "--searcher-source",
+    "outputs/fusion/source/searcher_main.py",
+    "--text-embedding-source",
+    "outputs/source-visibility/source/text_embedding_main.py",
+    "--output-dir",
+    "outputs/source-visibility/dense-v1",
+    "--milvus-uri",
+    "http://localhost:19530"
+  ],
+  "cpu_threads": 4,
+  "files": [
+    {
+      "bytes": 23670,
+      "git_blob_sha1": "cd4372103b4f5ea317347c6dcbfab51f94976a25",
+      "local_path": "code/collect_dense_visibility.py",
+      "repository_path": "benchmark-results/astra-retrieval-rd-v1/code/collect_dense_visibility.py",
+      "sha256": "f4daac0debe0e33c043bd0a38e1dc722fe6d51283c0d370c0b171a03bda3938b"
+    },
+    {
+      "bytes": 14450,
+      "git_blob_sha1": "8ef100dac067630f6304b56eb774952478f664f4",
+      "local_path": "code/collect_sparse_visibility.py",
+      "repository_path": "benchmark-results/astra-retrieval-rd-v1/code/collect_sparse_visibility.py",
+      "sha256": "aaddcc1b1b2c65e5d01b6a637c85b4b1294725bd7b5d7ed316c45d334ac93e8f"
+    },
+    {
+      "bytes": 20159,
+      "git_blob_sha1": "150c7f1f090bc8db8dc0969473502f582c7aea48",
+      "local_path": "outputs/source-visibility/sparse_queries.jsonl",
+      "repository_path": "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/sparse_queries.jsonl",
+      "sha256": "68b315a98313fe8609b4fff460d65c0daebe79f4aff35d7dd75d17b5afd461b7"
+    },
+    {
+      "bytes": 6742,
+      "git_blob_sha1": "5ff2649cae5a18af5bb4f33c1e8b9433843adeac",
+      "local_path": "outputs/source-visibility/dense_config.json",
+      "repository_path": "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense_config.json",
+      "sha256": "c50d1cc64cc0b5e62913343c9bb2329780314d1480d6e422603ba22a1dd33071"
+    },
+    {
+      "bytes": 9341,
+      "git_blob_sha1": "357c85b6fffc0977bc9eac9869f4faa4c615a73e",
+      "local_path": "outputs/source-visibility/source/text_embedding_main.py",
+      "repository_path": "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/source/text_embedding_main.py",
+      "sha256": "ec26570cf87a9d3e6a4e2d481531a46f470e0a7f70f220c1c5cb15da126d3f01"
+    },
+    {
+      "bytes": 51642,
+      "git_blob_sha1": "10b4e62ea7a9ea7762a44dbe4a5602ae1a15cffd",
+      "local_path": "outputs/fusion/source/searcher_main.py",
+      "repository_path": "benchmark-results/astra-retrieval-rd-v1/outputs/fusion/source/searcher_main.py",
+      "sha256": "6f94bdd147c4b2b29b522a1f4bbbf004fb726fdfdf68a7cb316a4aec9e869e51"
+    }
+  ],
+  "host_scheduling": "Root coordinates after the separate visual study releases its model; no concurrent model allocation.",
+  "path_prefix": "benchmark-results/astra-retrieval-rd-v1",
+  "repository": "JimmyK300/Vecna",
+  "restore_policy": "Use git show from the caller-pinned commit; restore exact LF bytes and verify all hashes before launch. No model call is implied by preparing this file.",
+  "schema": "vecna82-dense-host-files-v1",
+  "source_parent_commit": "7ad84e23beca1f6096b82138cb440de281200b33",
+  "status": "prepared_not_executed",
+  "suggested_child_timeout_seconds": 600
+}

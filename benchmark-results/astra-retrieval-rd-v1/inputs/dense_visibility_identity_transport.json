@@ -1,0 +1,19 @@
+{
+  "accepted_paths": [
+    "benchmark-results/astra-retrieval-rd-v1/code/probe_dense_visibility_identity.py",
+    "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense-identity-v1.json"
+  ],
+  "artifact_id": 10448337271,
+  "host_bytes": 18463,
+  "host_sha256": "5e09c550159654ec485be698201cdb9afce2b81ca9a012f517bace11334b47fd",
+  "newline_transform": "CRLF to LF through Git patch",
+  "patch_download_bytes": 27148,
+  "patch_download_sha256": "98995ac461d5f36074414fa207d461b39648ff5b5aed0b4db9dd53b994d36903",
+  "patch_normalized_bytes": 26598,
+  "patch_normalized_sha256": "64f376d9e8118a5dcab545fa815c1383a50ccf6c84fa163cb1c1eb1b0ebf6812",
+  "recovered_bytes": 18057,
+  "recovered_sha256": "b9d98ea428c5bac8958cbe03aefe15bc1aa0f91e6e1bbb404f7c5de6bd85fed2",
+  "source_url": "https://github.com/JimmyK300/ai-routing-hub/issues/1#issuecomment-5698142781",
+  "workflow_run_id": 35101233807,
+  "zip_sha256": "09a28bfc7dd66b88f0ce7515f296a63ad9089c9227a7781a5b9d059b2c37e218"
+}
