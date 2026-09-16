@@ -65,7 +65,7 @@ The saved historical reranker comparison reproduces the frozen scorer:
 | Frozen R@20 | 68/113 | 76/113 |
 | Frozen MRR@20 | 0.424340 | 0.432021 |
 
-There are nine frozen R@20 rescues and one regression, `p2_q14`. The paired 10,000-resample bootstrap, seed82, gives a +1.77 to +12.39 percentage-point interval for R@20 and -0.0659 to +0.0851 for MRR. R@1 and R@10 do not improve.
+There are nine frozen R@20 rescues and one regression, `p2_q14`. The paired 10,000-resample bootstrap, seed 82, gives a +1.77 to +12.39 percentage-point interval for R@20 and -0.0659 to +0.0851 for MRR. R@1 and R@10 do not improve.
 
 The artifact retains 20 candidates for each of 114 active reranks despite its top100 filename. All 2,280 retained occurrences are traceable to original baseline candidates. Observed active-call latency averages 28.219 seconds, with p50 28.049 and p95 30.742 seconds. Cold load/warmup cannot be separately recovered.
 
@@ -83,13 +83,13 @@ The candidate budget was frozen globally at N=3 for the eight established tempor
 
 `p0_q23` moves from rank2 to rank1. `p3_q34` moves from rank2 in the center-frame control and rank3 in the stitched control to rank1. No observed ranking regression occurs. Only these two queries have a correct video in the frozen pool, and no required event anchor among the 31 is exposed. The decision is therefore a narrow `POSITIVE_TEMPORAL_SIGNAL` for video ranking, with no demonstrated event localization or causal order sensitivity.
 
-The model/encoding stage takes 193.635 seconds; query encoding 10.698 seconds, image encoding 174.051 and load 4.976. Per24-image-arm image times are 29.114 seconds single frame, 72.001 stitched and 72.936 native. Processor evidence proves three distinct ordered image groups; it does not prove that the gain is caused by order. No N expansion, prompt grid, five-image extension or new video model was launched.
+The model/encoding stage takes 193.635 seconds; query encoding 10.698 seconds, image encoding 174.051 and load 4.976. Per 24-image arm image times are 29.114 seconds single frame, 72.001 stitched and 72.936 native. Processor evidence proves three distinct ordered image groups; it does not prove that the gain is caused by order. No N expansion, prompt grid, five-image extension or new video model was launched.
 
 ## Supporting #16/#17 review
 
-Temporal review preserves the existing weak truth. It provides source clips, stills and filmstrips for 31 event records: 16 supported representative points and 15 unknown. Event boundaries remain null. The reviewed sources expose, among other limitations, the bread-bag/noodle-carton contradiction in `p2_q30`, shrimp contact preceding the prior `p3_q21` point, and already-visible flame before the `p0_q24` anchor. These are review overlays, not certified ordinary ranges or changes to the benchmark.
+Temporal review preserves the existing weak truth. It provides source clips, stills and filmstrips for 31 event records: 16 supported representative points and 15 unknown. Event boundaries remain null. The reviewed sources expose, among other limitations, the bread-versus-bottles mismatch alongside noodle cartons in `p2_q30`, shrimp contact preceding the prior `p3_q21` point, and already-visible flame before the `p0_q24` anchor. These are review overlays, not certified ordinary ranges or changes to the benchmark.
 
-The OCR/ASR sample is frozen at 38 query/channel pairs across 30 queries. All20 OCR images were inspected. Five sampled source gaps are recorded at `p0_q13`, `p0_q19`, `p0_q20`, `p0_q21`, `p1_q24`; the last has answer text elsewhere in the window. These observations are not automatically retrieval-stage failures. All18 ASR clips are captured and hash-verified but remain unheard; no transcript-fidelity claim or WER/CER is made.
+The OCR/ASR sample is frozen at 38 query/channel pairs across 30 queries. All 20 OCR images were inspected. Five sampled source gaps are recorded at `p0_q13`, `p0_q19`, `p0_q20`, `p0_q21`, `p1_q24`; the last has answer text elsewhere in the window. These observations are not automatically retrieval-stage failures. All 18 ASR clips are captured and hash-verified but remain unheard; no transcript-fidelity claim or WER/CER is made.
 
 | Frozen visibility sample | OCR sparse | OCR dense | ASR sparse | ASR dense |
 |---|---:|---:|---:|---:|
@@ -98,23 +98,23 @@ The OCR/ASR sample is frozen at 38 query/channel pairs across 30 queries. All20 
 | Any required target within100 hits | 4 | 7 | 11 | 12 |
 | Same-video/exact-text repeat excess | 344/2000 | 243/2000 | 1682/1800 | 1599/1800 |
 
-OCR target coverage has 3 pairs reached by both methods, 4 by dense only, 1 by sparse only and 12 by neither. ASR has 11 both, 1 dense only, 0 sparse only and 6 neither. Dense scoring matched 731/731 checked text projections and reproduced all four output files byte-for-byte. All six consumed BGE files and 389 active tensors / 566,705,152 elements were verified. No frozen query truncated at1024 tokens.
+OCR target coverage has 3 pairs reached by both methods, 4 by dense only, 1 by sparse only and 12 by neither. ASR has 11 both, 1 dense only, 0 sparse only and 6 neither. Dense scoring matched 731/731 checked text projections and reproduced all four output files byte-for-byte. All six consumed BGE files and 389 active tensors / 566,705,152 elements were verified. No frozen query truncated at 1024 tokens.
 
-Sparse equal-score frame order varies with process hash seed. ASR main-eligible target R@1 is 4/18 on the captured host order and 4/18, 7/18, 5/18 for seeds0,1,82; R@20 remains9/18. All152 host/seed score objects were independently reproduced and no favorable seed was selected. Issue #89 tracks the correctness defect separately.
+Sparse equal-score frame order varies with process hash seed. ASR main-eligible target R@1 is 4/18 on the captured host order and 4/18, 7/18, 5/18 for seeds 0, 1, 82; R@20 remains9/18. All 152 host/seed score objects were independently reproduced and no favorable seed was selected. Issue #89 tracks the correctness defect separately.
 
 ## D: unified failure ledger
 
 PENDING_FINAL_D_CLASSIFICATION
 
-An independent join of current C per-query evidence and recovered B scores gives 82/113 observed frozen-R@20 successes and31 remaining misses. B supplies five successes absent from historical baseline and reranker: `p1_q04`, `p2_q23`, `p3_q13`, `p3_q26`, `p3_q27`. Current fusion retains the historical reranker's regression `p2_q14`. The reranker rescues five historical-baseline misses not reached by current fusion: `p0_q20`, `p2_q11`, `p2_q28`, `p3_q16`, `p3_q29`.
+An independent join of current C per-query evidence and recovered B scores gives 82/113 observed frozen-R@20 successes and 31 remaining misses. B supplies five successes absent from historical baseline and reranker: `p1_q04`, `p2_q23`, `p3_q13`, `p3_q26`, `p3_q27`. Current fusion retains the historical reranker's regression `p2_q14`. The reranker rescues five historical-baseline misses not reached by current fusion: `p0_q20`, `p2_q11`, `p2_q28`, `p3_q16`, `p3_q29`.
 
-This is a diagnostic union across differently captured experiments. It is not a claim that one deployed method achieves82/113. Source observations, sparse/dense visibility and tie behavior remain evidence overlays; they do not force confident extraction or calibration diagnoses.
+This is a diagnostic union across differently captured experiments. It is not a claim that one deployed method achieves 82/113. Source observations, sparse/dense visibility and tie behavior remain evidence overlays; they do not force confident extraction or calibration diagnoses.
 
 ## E: one next experiment, not implemented
 
 PENDING_FINAL_E_PROPOSAL
 
-The bounded candidate-admission headroom is three full-target cases and one partial case. The proposal will test one fixed provider-balanced admission rule on saved lists at the same100-frame budget, preserving fusion scores and query text. It will not add a model, retrain, re-embed, change production retrieval or perform a quota/weight grid.
+The bounded candidate-admission headroom is three full-target cases and one partial case. The proposal will test one fixed provider-balanced admission rule on saved lists at the same 100-frame budget, preserving fusion scores and query text. It will not add a model, retrain, re-embed, change production retrieval or perform a quota/weight grid.
 
 ## Validation and review locations
 
