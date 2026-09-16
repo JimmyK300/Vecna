@@ -15,6 +15,7 @@ import hashlib
 import importlib.metadata
 import inspect
 import json
+import math
 import os
 import platform
 import re
@@ -22,6 +23,7 @@ import subprocess
 import sys
 import time
 import uuid
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -33,6 +35,48 @@ MAIN_SHA = "95d63a6abf10c598e0e54af7d2071bedbe542d1e"
 SEARCHER_SHA256 = "6f94bdd147c4b2b29b522a1f4bbbf004fb726fdfdf68a7cb316a4aec9e869e51"
 TRANSFORMATIONS = {"query_expansion": False, "translation": False, "reranking": False,
                    "yolo": False, "temporal_parser": False, "segment_clustering": False}
+
+
+def metadata_json(value):
+    """Normalize SDK metadata without unstable repr/string fallbacks.
+
+    Milvus describe calls can contain protobuf repeated containers inside an
+    otherwise ordinary dictionary. Preserve sequence order and scalar types;
+    messages use the explicit ProtoJSON representation with numeric enums.
+    Unsupported values, non-string keys, and non-finite numbers fail closed.
+    """
+    if value is None or isinstance(value, (str, bool)):
+        return value
+    if isinstance(value, int):
+        return int(value)
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            raise ContractError("non-finite collection/index metadata")
+        return float(value)
+    if isinstance(value, Mapping):
+        if any(not isinstance(key, str) for key in value):
+            raise ContractError("collection/index metadata keys must be strings")
+        return {key: metadata_json(item) for key, item in value.items()}
+    if isinstance(value, Sequence) and not isinstance(value, (bytes, bytearray, memoryview)):
+        return [metadata_json(item) for item in value]
+    # Some protobuf C-extension versions do not register repeated containers
+    # with collections.abc.Sequence. These exact container types are ordered.
+    value_type = type(value)
+    if (value_type.__module__ in {"google._upb._message", "google.protobuf.pyext._message",
+                                  "google.protobuf.internal.containers"}
+            and value_type.__name__ in {"RepeatedScalarContainer", "RepeatedCompositeContainer",
+                                         "RepeatedScalarFieldContainer", "RepeatedCompositeFieldContainer"}):
+        return [metadata_json(item) for item in value]
+    try:
+        from google.protobuf.json_format import MessageToDict
+        from google.protobuf.message import Message
+    except ImportError:
+        Message = ()
+    if isinstance(value, Message):
+        return metadata_json(MessageToDict(value, preserving_proto_field_name=True,
+                                            use_integers_for_enums=True))
+    raise ContractError("unsupported collection/index metadata type: "
+                        f"{value_type.__module__}.{value_type.__qualname__}")
 
 
 class SearchOnlyDatabase:
@@ -331,13 +375,13 @@ def prepare_searcher(args, config):
     collection = config["collection_name"]
     if not client.has_collection(collection):
         raise ContractError("declared collection does not exist; collection creation is prohibited")
-    description = client.describe_collection(collection)
+    description = metadata_json(client.describe_collection(collection))
     fields = {field["name"] for field in description["fields"]}
     count = int(client.query(collection, output_fields=["count(*)"])[0]["count(*)"])
     if count != config["collection_row_count"]:
         raise ContractError("collection row count differs from frozen authority")
     index_names = sorted(client.list_indexes(collection))
-    indexes = [client.describe_index(collection, index_name) for index_name in index_names]
+    indexes = metadata_json([client.describe_index(collection, index_name) for index_name in index_names])
     collection_identity = {"name": collection, "row_count": count,
                            "description_sha256": digest_json(description),
                            "index_descriptions_sha256": digest_json(indexes),

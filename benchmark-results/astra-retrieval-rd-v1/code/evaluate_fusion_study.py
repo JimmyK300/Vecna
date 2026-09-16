@@ -128,7 +128,11 @@ def contribution_ablations(raw, config, truth, scorer):
         for provider in PROVIDERS:
             if weights[provider] == 0:
                 continue
-            removed = {fid: scores[fid] - contributions[fid][provider] for fid in order}
+            # Subtraction from an already-rounded total can erase a surviving
+            # tiny softmax contribution. Sum the frozen survivors directly;
+            # keep the original normalizers and candidate union unchanged.
+            removed = {fid: sum(value for other, value in contributions[fid].items()
+                                if other != provider) for fid in order}
             _, videos = _rank(removed, contributions, order, config)
             result[arm][provider] = score_video(videos, truth, scorer)
     return result

@@ -10,6 +10,7 @@ import sys
 import tempfile
 import unittest
 import unicodedata
+from collections import UserList, UserDict
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -17,8 +18,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "code"))
 from fusion_study import (ContractError, ARMS, current_scores, digest_bytes, digest_json,
                           nominal_weights, run, run_identity_digest, study_query, transform, validate_config)
-from collect_fusion_providers import capture_query, preprocessing_identity, SearchOnlyDatabase
-from evaluate_fusion_study import matched_qwen_items, paired, score_arm, select_global_arm
+from collect_fusion_providers import capture_query, metadata_json, preprocessing_identity, SearchOnlyDatabase
+from evaluate_fusion_study import contribution_ablations, matched_qwen_items, paired, score_arm, select_global_arm
 from analyze_reranker import load_scorer
 
 
@@ -227,6 +228,37 @@ class FusionTests(unittest.TestCase):
         with self.assertRaises(ContractError):
             adapter.search(data=[[0.1]], anns_field="missing", search_params={"metric_type": "COSINE"})
 
+    def test_metadata_json_preserves_types_and_rejects_unstable_values(self):
+        metadata = UserDict({"fields": UserList([{"name": "vector", "dim": 768}]),
+                             "enabled": True, "score": 0.5, "aliases": ("a", "b"), "empty": None})
+        expected = {"fields": [{"name": "vector", "dim": 768}], "enabled": True,
+                    "score": 0.5, "aliases": ["a", "b"], "empty": None}
+        normalized = metadata_json(metadata)
+        self.assertEqual(normalized, expected)
+        self.assertIs(type(normalized["fields"][0]["dim"]), int)
+        self.assertIs(type(normalized["enabled"]), bool)
+        self.assertEqual(digest_json(normalized), digest_json(expected))
+        for unsupported in ({1: "non-string key"}, {"unordered"}, object(), float("nan"), b"bytes"):
+            with self.subTest(value_type=type(unsupported)), self.assertRaises(ContractError):
+                metadata_json(unsupported)
+
+    def test_metadata_json_real_protobuf_repeated_containers_and_message(self):
+        try:
+            from google.protobuf.descriptor_pb2 import FileDescriptorProto
+        except ImportError:
+            self.skipTest("protobuf is not installed in this analysis runtime")
+        proto = FileDescriptorProto(name="metadata.proto", dependency=["a.proto", "b.proto"],
+                                    public_dependency=[0, 1])
+        proto.message_type.add(name="Example")
+        normalized = metadata_json({"strings": proto.dependency, "integers": proto.public_dependency,
+                                    "messages": proto.message_type, "message": proto})
+        self.assertEqual(normalized["strings"], ["a.proto", "b.proto"])
+        self.assertEqual(normalized["integers"], [0, 1])
+        self.assertEqual(normalized["messages"], [{"name": "Example"}])
+        self.assertEqual(normalized["message"]["name"], "metadata.proto")
+        self.assertEqual(normalized["message"]["public_dependency"], [0, 1])
+        self.assertEqual(json.loads(json.dumps(normalized)), normalized)
+
     def test_tokenizer_identity_includes_vocab_and_template(self):
         class Tokenizer:
             chat_template = "template A"
@@ -313,6 +345,20 @@ class FusionTests(unittest.TestCase):
         self.assertEqual(result["distinct_video"]["first_success_rank"], 2)
         self.assertEqual(result["frame_position_video"]["first_success_rank"], 3)
         self.assertEqual(result["frozen_frame_range_event"]["first_success_rank"], 3)
+
+    def test_ablation_preserves_tiny_surviving_softmax_contribution(self):
+        cfg, raw, _, _ = fixture({"qwen_vl": [hit("A#1", .9), hit("B#2", .8)],
+                                  "ocr_sparse": [hit("C#3", 100), hit("A#1", 60)]})
+        raw["candidate_tie_order"] = ["B#2", "A#1", "C#3"]
+        tiny = .25 * transform({"C#3": 100, "A#1": 60}, "fusion_softmax_sum")[0]["A#1"]
+        large = .25 * transform({"A#1": .9, "B#2": .8}, "fusion_softmax_sum")[0]["A#1"]
+        self.assertGreater(tiny, 0)
+        self.assertEqual((large + tiny) - large, 0)
+        target = {"truth_tier": "frozen_headless_benchmark_truth", "task_type": "kis",
+                  "accepted_video_id": "A", "accepted_ranges": [{"start_frame": 1, "end_frame": 1}]}
+        scorer = load_scorer(ROOT / "reference/evaluate_reranker_fusion.py")
+        result = contribution_ablations(raw, cfg, target, scorer)
+        self.assertEqual(result["fusion_softmax_sum"]["qwen"]["first_success_rank"], 2)
 
 
 if __name__ == "__main__":
