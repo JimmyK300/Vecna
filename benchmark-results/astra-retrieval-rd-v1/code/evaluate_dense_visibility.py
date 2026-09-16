@@ -6,11 +6,12 @@ No retrieval, new model, query selection or rewriting, repair, or truth edit.
 """
 import argparse
 import json
+import math
 from pathlib import Path
 
 from analyze_reranker import load_scorer, read_json, read_jsonl, unique_index
 from collect_dense_visibility import TEXT_EMBEDDING_SHA256
-from collect_sparse_visibility import digest, dump
+from collect_sparse_visibility import digest, digest_json, dump
 from evaluate_sparse_visibility import SOURCE_REVIEW_SHA256, index_projection_parity, order_effect, require, score_order, verify_capture, write_jsonl
 from preflight import TRUTH_SHA256
 
@@ -42,12 +43,32 @@ def verify_dense(root, capture):
     require(manifest["config_sha256"] == digest(config_path.read_bytes()) and manifest["queries_sha256"] == config["query_file_sha256"] == sample_pins["queries_sha256"], "Dense query/config checksum mismatch")
     require(manifest["collection"] == config["collection"], "Dense collection metadata identity mismatch")
     require(manifest["ground_truth_read"] is False and manifest["collection_mutations"] is False and manifest["visual_models_loaded"] is False, "Dense capture isolation differs")
+    require(manifest["collector_sha256"] == digest((root / "code/collect_dense_visibility.py").read_bytes()), "Dense collector bytes differ from the locally frozen executable")
     require(manifest["code_identity"]["main_commit"] == config["main_commit"] and manifest["code_identity"]["source_lf_sha256"] == config["searcher_lf_sha256"], "Main search source mismatch")
     model = manifest["model_identity"]
     require(model["snapshot_revision"] == config["model"]["snapshot_revision"] and model["repository"] == "BAAI/bge-m3" and model["source_lf_sha256"] == TEXT_EMBEDDING_SHA256, "Dense model/source identity mismatch")
     require(model["checkpoint_parameter_audit"]["all_active_encoder_parameters_equal_cached_checkpoint"] is True and not model["core_encoder_missing_keys"] and not model["core_encoder_unexpected_keys"], "Dense active encoder loading was not verified")
     require(model["runtime_semantics"]["device"] == "cpu" and model["runtime_semantics"]["compute_type"] == "float32" and model["runtime_semantics"]["max_length"] == 1024, "Unexpected dense compute semantics")
-    require({f["relative_path"] for f in model["files"]} == {f["relative_path"] for f in config["model"]["files"]} and all(f["size_and_mtime_stable_after_loading"] for f in model["files"]), "Dense consumed-input inventory was not verified")
+    configured_files = {f["relative_path"]: f for f in config["model"]["files"]}
+    measured_files = {f["relative_path"]: f for f in model["files"]}
+    require(len(configured_files) == len(config["model"]["files"]) == len(measured_files) == len(model["files"]) and set(configured_files) == set(measured_files), "Dense consumed-input inventory is duplicate or incomplete")
+    for name, expected in configured_files.items():
+        observed = measured_files[name]
+        require(observed["bytes"] == expected["bytes"] and observed["mtime_ns"] == expected["mtime_ns"] and observed["size_and_mtime_stable_after_loading"] is True, "Dense consumed-file metadata changed")
+        require(len(observed["sha256"]) == 64 and all(c in "0123456789abcdef" for c in observed["sha256"]), "Dense consumed file lacks measured SHA256")
+        require(not expected.get("sha256") or observed["sha256"] == expected["sha256"], "Dense consumed file differs from its pre-run SHA256 pin")
+        require(not expected.get("content_addressed_sha256") or observed["sha256"] == expected["content_addressed_sha256"], "Dense consumed file differs from content address")
+        require(observed["digest_pin_scope"] == expected["digest_pin_scope"], "Dense checksum provenance scope changed")
+    loading = model["loading_info"]
+    require(not loading.get("mismatched_keys") and not loading.get("error_msgs"), "Dense loading diagnostic contains mismatches or errors")
+    require(not [k for k in loading.get("missing_keys", []) if not k.startswith("pooler.")], "Dense loading diagnostic contains a missing active encoder weight")
+    require(not [k for k in loading.get("unexpected_keys", []) if not k.startswith(("pooler.", "lm_head.", "cls."))], "Dense loading diagnostic contains an unexpected active encoder weight")
+    parameter_audit = model["checkpoint_parameter_audit"]
+    parameters = parameter_audit["parameters"]
+    require(bool(parameters) and len(parameters) == parameter_audit["active_parameter_tensor_count"] == len({p["parameter"] for p in parameters}), "Dense checkpoint parameter audit is empty or inconsistent")
+    require(digest_json(parameters) == parameter_audit["parameter_mapping_sha256"], "Dense checkpoint parameter-audit checksum mismatch")
+    require(sum(p["elements"] for p in parameters) == parameter_audit["active_parameter_elements"] <= model["trainable_parameter_elements"], "Dense active-parameter element count mismatch")
+    require(all(p["equal_after_declared_dtype_cast"] is True and p["elements"] == math.prod(p["shape"]) and p["checkpoint_file"] in measured_files for p in parameters), "Dense parameter audit lacks exact equality or file/shape consistency")
     for registry in manifest["index_registry_records"]:
         if registry["exists"]:
             require(digest((capture / registry["artifact_relative_path"]).read_bytes()) == registry["sha256"], "Recovered dense index registry bytes mismatch")
@@ -58,12 +79,18 @@ def verify_dense(root, capture):
         hits = row["raw_hits"]
         require(len(hits) == row["raw_hit_count"] <= 100 and [h["raw_rank"] for h in hits] == list(range(1, len(hits) + 1)), "Dense raw ranks/depth mismatch")
         require(len({h["frame_id"] for h in hits}) == len(hits), "Duplicate dense frame IDs")
-        require(row["raw_call"]["effective_raw_limit"] == 100 and row["raw_call"]["filter"] == "" and row["raw_call"]["offset"] == 0 and row["raw_call"]["search_params"] == {"nprobe": 32, "metric_type": "COSINE"}, "Undeclared dense request state")
+        # The frozen collector checks the exact two-key request before calling
+        # MilvusClient. The SDK may add its empty nested params mapping in place;
+        # the collector records that same dictionary after the call returns.
+        allowed_params = ({"nprobe": 32, "metric_type": "COSINE"}, {"nprobe": 32, "metric_type": "COSINE", "params": {}})
+        require(row["raw_call"]["effective_raw_limit"] == 100 and row["raw_call"]["filter"] == "" and row["raw_call"]["offset"] == 0 and row["raw_call"]["anns_field"] == row["channel"] + "_dense" and row["raw_call"]["search_params"] in allowed_params, "Undeclared dense request state")
         eligible = sorted([h for h in hits if h["eligible_after_main_phrase_filter"]], key=lambda h: h["eligible_rank"])
         require(len(eligible) == row["eligible_hit_count"] and [h["eligible_rank"] for h in eligible] == list(range(1, len(eligible) + 1)) and [h["frame_id"] for h in eligible] == row["effective_frame_order"], "Dense effective rank order mismatch")
         require(row["query_embedding"]["dimension"] == 1024 and abs(row["query_embedding"]["l2_norm"] - 1) <= 0.00001, "Invalid dense query embedding")
         for hit in hits:
             require(hit["indexed_text_sha256"] == digest(hit["indexed_text"].encode("utf-8")), "Indexed dense candidate text checksum mismatch")
+            require(math.isfinite(hit["cosine_score"]), "Non-finite dense provider score")
+            require(hit["frame_id"] == f"{hit['video_id']}#{str(hit['frame_idx']).zfill(len(hit['frame_id'].rsplit('#', 1)[1]))}", "Dense frame identity mismatch")
     return manifest, config, rows, {"capture_manifest_sha256": digest(manifest_path.read_bytes()), "captured_rankings_sha256": digest(rankings_path.read_bytes()),
                                    "configuration_sha256": digest(config_path.read_bytes()), "queries_sha256": sample_pins["queries_sha256"], "frozen_sample_sha256": sample_pins["frozen_sample_sha256"]}
 
@@ -83,8 +110,21 @@ def main():
     truth = unique_index(read_jsonl(truth_path))
     reviewed = {(r["channel"], r["query_id"]): r for r in read_jsonl(review_path)}
     sparse_path = root / "outputs/source-visibility/evaluation-v1/sparse_visibility.jsonl"
-    sparse = {(r["channel"], r["query_id"]): r for r in read_jsonl(sparse_path)}
     scorer = load_scorer(root / "reference/evaluate_reranker_fusion.py")
+    sparse_manifest_path = root / "outputs/source-visibility/evaluation-v1/evaluation_manifest.json"
+    sparse_manifest = read_json(sparse_manifest_path)
+    sparse_rows = read_jsonl(sparse_path)
+    sparse = {(r["channel"], r["query_id"]): r for r in sparse_rows}
+    _, _, _, sparse_captured, sparse_pins = verify_capture(root, root / "outputs/source-visibility/sparse-v1")
+    require(sparse_manifest["status"] == "complete" and sparse_manifest["outputs"]["sparse_visibility.jsonl"] == digest(sparse_path.read_bytes()), "Sparse comparison output is not bound to its completed evaluation manifest")
+    require(sparse_manifest["captured_rankings_sha256"] == sparse_pins["captured_rankings_sha256"] and sparse_manifest["canonical_truth_sha256"] == TRUTH_SHA256 and sparse_manifest["source_review_sha256"] == SOURCE_REVIEW_SHA256, "Sparse comparison capture/truth/source identity differs")
+    require(len(sparse) == len(sparse_rows) == 38 and set(sparse) == {(r["channel"], r["query_id"]) for r in captured}, "Sparse comparison query/channel set differs")
+    for original in sparse_captured:
+        previous = sparse[(original["channel"], original["query_id"])]
+        target = truth[original["query_id"]]
+        require(previous["canonical_query"] == original["query_text"] == target["query"] and previous["query_text_sha256"] == original["query_text_sha256"], "Sparse comparison canonical query changed")
+        for order in ("raw", "main_eligible"):
+            require(previous[order] == score_order(original["raw_hits"], order, target, scorer), "Sparse comparison does not reproduce its frozen capture scores")
     rows = []
     for row in captured:
         key = (row["channel"], row["query_id"])
@@ -106,9 +146,11 @@ def main():
         adapted = {**row, "raw_hits": [{**h, "bm25_score": h["cosine_score"]} for h in row["raw_hits"]]}
         rows.append({"schema": "vecna82-dense-visibility-scored-row-v1", "query_id": row["query_id"], "channel": row["channel"],
                      "canonical_query": row["query_text"], "query_text_sha256": row["query_text_sha256"],
+                     "capture_state": row["state"],
                      "truth_tier": target["truth_tier"], "truth_provisional": target["truth_tier"] != "frozen_headless_benchmark_truth",
                      "raw": raw, "main_eligible": effective, "retrieval_visibility": state,
                      "native_query_state": row["raw_call"], "query_embedding": row["query_embedding"],
+                     "sdk_search_params_note": "Frozen collector enforces COSINE/nprobe32 before the SDK call; the recorded dictionary is observed after the SDK may add an empty params mapping in place. This proves the main-call arguments, not independently verified effective server nprobe.",
                      "ascii_double_quote_filter_active": row["ascii_double_quote_filter_active"],
                      "ranking_order_effect": cosine_keys(order_effect(adapted)),
                      "indexed_projection_parity": index_projection_parity(root, row["raw_hits"], review),
@@ -156,6 +198,7 @@ def main():
     (out / "DENSE_VISIBILITY.md").write_text("\n".join(lines), encoding="utf-8")
     dump(out / "evaluation_manifest.json", {"schema": "vecna82-dense-visibility-evaluation-v1", "status": "complete", **pins,
          "canonical_truth_sha256": TRUTH_SHA256, "source_review_sha256": SOURCE_REVIEW_SHA256, "sparse_scored_rows_sha256": digest(sparse_path.read_bytes()),
+         "sparse_evaluation_manifest_sha256": digest(sparse_manifest_path.read_bytes()), "sparse_comparison_rescored_from_verified_capture": True,
          "evaluator_sha256": digest(Path(__file__).read_bytes()), "capture_manifest": manifest, "retrieval_complete_before_truth_join": True, "truth_changed": False,
          "outputs": {name: digest((out / name).read_bytes()) for name in ("dense_visibility.jsonl", "summary.json", "DENSE_VISIBILITY.md")}})
     print(json.dumps({"output": str(out), "summary": summary}, indent=2))
