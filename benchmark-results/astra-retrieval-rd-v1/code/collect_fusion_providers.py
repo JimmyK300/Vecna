@@ -79,6 +79,16 @@ def metadata_json(value):
                         f"{value_type.__module__}.{value_type.__qualname__}")
 
 
+def configure_cpu_threads(torch, requested):
+    """Bound intra-op CPU parallelism; report actual runtime thread settings."""
+    if type(requested) is not int or requested < 1:
+        raise ContractError("cpu_threads must be a positive integer")
+    torch.set_num_threads(requested)
+    return {"requested_intraop_threads": requested,
+            "actual_intraop_threads": torch.get_num_threads(),
+            "actual_interop_threads": torch.get_num_interop_threads()}
+
+
 class SearchOnlyDatabase:
     """Deliberately has no mutation, auto-load, release, or destructor methods."""
     def __init__(self, client, collection: str, fields: set[str]):
@@ -362,6 +372,7 @@ def prepare_searcher(args, config):
     sys.dont_write_bytecode = True
     sys.path.insert(0, str(runtime_root / "aic51-src"))
     import torch
+    cpu_threading = configure_cpu_threads(torch, args.cpu_threads)
     from pymilvus import MilvusClient
     from aic51.packages.config import GlobalConfig
     GlobalConfig._GlobalConfig__config = effective
@@ -403,7 +414,8 @@ def prepare_searcher(args, config):
                 "effective_config_sha256": digest_json(effective),
                 "collection": collection_identity, "models": identities,
                 "model_declarations_sha256": digest_json(selected_models),
-                "device": args.device, "python": platform.python_version(),
+                "device": args.device, "cpu_threading": cpu_threading,
+                "python": platform.python_version(),
                 "packages": {name: importlib.metadata.version(name)
                              for name in ("torch", "numpy", "transformers", "sentence-transformers", "pymilvus", "open-clip-torch")},
                 "transformations": TRANSFORMATIONS,
@@ -421,8 +433,12 @@ def main() -> int:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--milvus-uri", default="http://localhost:19530")
     parser.add_argument("--device", default="cpu")
+    parser.add_argument("--cpu-threads", type=int, default=6,
+                        help="intra-op CPU thread count, fixed before model preparation")
     parser.add_argument("--smoke-count", type=int, help="GT-blind first N rows; never a full benchmark")
     args = parser.parse_args()
+    if args.cpu_threads < 1:
+        parser.error("--cpu-threads must be positive")
     config = validate_config(json.loads(args.config.read_text(encoding="utf-8")))
     queries = load_jsonl(args.queries)
     allowed = {"query_id", "query_text", "query_text_sha256", "phase", "task_type", "capabilities"}

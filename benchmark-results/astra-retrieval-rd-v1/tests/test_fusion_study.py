@@ -18,7 +18,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "code"))
 from fusion_study import (ContractError, ARMS, current_scores, digest_bytes, digest_json,
                           nominal_weights, run, run_identity_digest, study_query, transform, validate_config)
-from collect_fusion_providers import capture_query, metadata_json, preprocessing_identity, SearchOnlyDatabase
+from collect_fusion_providers import (capture_query, configure_cpu_threads, metadata_json,
+                                      preprocessing_identity, SearchOnlyDatabase)
 from evaluate_fusion_study import contribution_ablations, matched_qwen_items, paired, score_arm, select_global_arm
 from analyze_reranker import load_scorer
 
@@ -258,6 +259,25 @@ class FusionTests(unittest.TestCase):
         self.assertEqual(normalized["message"]["name"], "metadata.proto")
         self.assertEqual(normalized["message"]["public_dependency"], [0, 1])
         self.assertEqual(json.loads(json.dumps(normalized)), normalized)
+
+    def test_cpu_parallelism_is_bounded_and_actual_settings_are_recorded(self):
+        class Runtime:
+            def __init__(self):
+                self.requests = []
+            def set_num_threads(self, count):
+                self.requests.append(count)
+            def get_num_threads(self):
+                return self.requests[-1]
+            def get_num_interop_threads(self):
+                return 4
+        runtime = Runtime()
+        identity = configure_cpu_threads(runtime, 6)
+        self.assertEqual(identity, {"requested_intraop_threads": 6,
+                                    "actual_intraop_threads": 6, "actual_interop_threads": 4})
+        for invalid in (0, -1, True, 1.5):
+            with self.subTest(invalid=invalid), self.assertRaises(ContractError):
+                configure_cpu_threads(runtime, invalid)
+        self.assertEqual(runtime.requests, [6])
 
     def test_tokenizer_identity_includes_vocab_and_template(self):
         class Tokenizer:

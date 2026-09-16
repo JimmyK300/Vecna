@@ -1,22 +1,22 @@
 {
   "schema": "vecna82-fusion-implementation-v1",
-  "validation": "22 focused unittest cases: 21 passed; 1 real-protobuf test skipped because protobuf is absent in analysis runtime",
+  "validation": "23 focused unittest cases: 22 passed; 1 real-protobuf test skipped because protobuf is absent in analysis runtime",
   "files": {
     "code/fusion_study.py": {
       "bytes": 21020,
       "sha256": "57ded10b78c0a6649008d15e61882e3b52d2eb0b5cf63b57a7133a6a9da2a292"
     },
     "code/collect_fusion_providers.py": {
-      "bytes": 25787,
-      "sha256": "209c4a8aac9cf6b5acdccb1e2b54c5b0b7ffa365c4733d572430c09ffc41b852"
+      "bytes": 26611,
+      "sha256": "17d29c388e46126e6ac646ef751625205a8c93d50e1f0f772956d418b834c278"
     },
     "code/evaluate_fusion_study.py": {
       "bytes": 24277,
       "sha256": "f9db35575f2fe5d788e1a820f216f2858029af979694feb011764f60da5c7fab"
     },
     "tests/test_fusion_study.py": {
-      "bytes": 20178,
-      "sha256": "58312dc3cf364953f5ade4f9b9e0a0f97378bb918c9f4e55d0ee0c62d8795533"
+      "bytes": 21127,
+      "sha256": "5c15a5a9a4147a927ce995c0e226f6d4633c70005622d150145c2d6f6ddc160f"
     },
     "outputs/fusion/frozen_config.json": {
       "bytes": 2917,
