@@ -1,0 +1,18 @@
+{
+  "dense_fetch_dispatch_comment": 5698608393,
+  "dense_model_dispatched": true,
+  "prior_child_elapsed_seconds": 322.797,
+  "prior_child_returncode": 0,
+  "prior_model_result_comment": 5698573112,
+  "prior_model_task": "vecna82-fusion-corrected-loader-full115-20260916",
+  "prior_rows_complete": 115,
+  "prior_workflow_run": 35103784571,
+  "release_confirmation": "fusion_contract explicitly confirmed child termination and allocation release before dense fetch dispatch",
+  "dense_dispatch_comment": 5698657845,
+  "dense_result_comment": 5698675439,
+  "dense_workflow_run": 35105076396,
+  "dense_child_returncode": 0,
+  "dense_child_elapsed_seconds": 32.625,
+  "dense_rows_complete": 38,
+  "dense_model_child_terminated": true
+}
