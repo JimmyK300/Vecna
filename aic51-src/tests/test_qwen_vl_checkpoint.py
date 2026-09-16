@@ -25,31 +25,34 @@ spec.loader.exec_module(loader)
 
 
 class RoutingTests(unittest.TestCase):
-    def test_complete_observed_625_model_names_accept_only_the_backbone_mapping(self):
+    def test_complete_observed_625_shapes_accept_only_the_backbone_mapping(self):
         observation = json.loads(FIXTURE.read_text())
-        keys = [row["name"] for row in observation["expected_tensors"]]
+        expected = {row["name"]: row["shape"] for row in observation["expected_tensors"]}
+        saved = {row["name"]: row["shape"] for row in observation["full_checkpoint_shapes"]}
+        keys = list(expected)
         self.assertEqual(len(keys), 625)
+        self.assertEqual(len(saved), 625)
         self.assertEqual(sum(k.startswith("language_model.") for k in keys), 310)
         self.assertEqual(sum(k.startswith("visual.") for k in keys), 315)
-        # Shapes are synthetic in this name-only fixture; the host acceptance
-        # test uses both actual complete schemas and every actual tensor value.
-        expected = {key: (1,) for key in keys}
-        saved = {key: (1,) for key in observation["checkpoint_keys"]}
+        self.assertEqual(set(saved), set(observation["checkpoint_keys"]))
+        # Both complete schemas are captured from the real checkpoint/runtime.
+        # The separate supervised audit also compares every actual tensor value.
         routes = loader.checkpoint_routes(saved, expected, loader.DEFAULT_KEY_MAPPING)
         self.assertEqual(set(routes.values()), set(expected))
         with self.assertRaises(loader.CheckpointLoadError):
             loader.checkpoint_routes(saved, expected, None)
 
-    def test_observed_header_shapes_match_expected_model_shapes(self):
+    def test_complete_header_retains_observed_samples_and_dtype_cast_contract(self):
         observation = json.loads(FIXTURE.read_text())
-        expected = {row["name"]: tuple(row["shape"]) for row in observation["expected_tensors"]}
-        header = observation["full_checkpoint_shapes"] or observation["checkpoint_shape_samples"]
-        if observation["full_checkpoint_shapes"] is not None:
-            self.assertEqual(len(header), 625)
-        for row in header:
-            target = row["name"].removeprefix("model.")
-            loader.checkpoint_routes({row["name"]: row["shape"]}, {target: expected[target]}, loader.DEFAULT_KEY_MAPPING)
-            self.assertEqual(tuple(row["shape"]), expected[target])
+        header = {row["name"]: row for row in observation["full_checkpoint_shapes"]}
+        self.assertEqual(len(header), 625)
+        self.assertTrue(all(row["dtype"] == "BF16" for row in header.values()))
+        self.assertTrue(all(row["dtype"] == "torch.float32" and row["device"] == "cpu"
+                            for row in observation["expected_tensors"]))
+        for sample in observation["checkpoint_shape_samples"]:
+            self.assertEqual(sample["shape"], header[sample["name"]]["shape"])
+        self.assertEqual(sum(int(np.prod(row["shape"], dtype=np.int64)) for row in header.values()),
+                         observation["verified_runtime"]["element_count"])
 
     def test_partial_mapping_missing_shape_and_collision_fail(self):
         expected = {"visual.weight": (2, 3), "language_model.weight": (4,)}
