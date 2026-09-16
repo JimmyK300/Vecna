@@ -1,11 +1,19 @@
 # Packet B evidence recovery
 
-The original 115-query provider capture is the input authority. The committed compact per-query file contains every scored query and all six surfaces, and the committed summary contains the complete aggregate and paired comparisons. The large transformed study, detailed per-query diagnostics and slices are regenerated together from the original capture. No model, database or new query is needed for that replay.
+The original 115-query provider capture is the input authority. The committed compact per-query file contains every scored query and all six surfaces, and the committed summary contains the complete aggregate and paired comparisons. The detailed per-query diagnostics and slices are committed in the same final timing generation as the summary. The large transformed study reconstructs exactly from the original capture and its small saved timing sidecar. No model, database or new query is needed.
 
-Use a research checkout that preserves committed LF bytes. From `benchmark-results/astra-retrieval-rd-v1`:
+The scoped repository attributes preserve exact committed bytes, including LF source files and CRLF artifacts from the Windows producer. Do not apply a global newline conversion to this research directory. From `benchmark-results/astra-retrieval-rd-v1`:
 
 ```sh
 python code/hydrate_fusion_capture.py --root .
+python code/fusion_study_storage.py rebuild --rankings outputs/fusion/capture-full115-v1/provider_rankings.jsonl --config outputs/fusion/frozen_config.json --queries outputs/fusion/queries.jsonl --collection-manifest outputs/fusion/capture-full115-v1/collection_manifest.json --sidecar outputs/fusion/evaluation/study_timings.json --sidecar-sha256 6af4e2a4fbd7095e3bdd4461485f9a9e6f03792fb34dbfd3218e09a5c7236fcf --output outputs/fusion/evaluation/study_results.jsonl
+```
+
+This restores the exact study consumed by the committed evaluation and Packet D. The timing sidecar changes only `fusion_wall_ns` and `fusion_cpu_ns`; the reconstructed file must match its original byte count and full SHA256. `study_reconstruction_proof.json` records the verified round trip and sidecar hash. The optional `--sidecar-sha256` argument accepts that hash for an additional direct sidecar-byte check. If platform math or serialization differs, exact restoration fails; use the recorded reconstruction runtime instead of relaxing the gate.
+
+For a new independent timing generation, use a fresh output directory and keep all of its derived files together:
+
+```sh
 python code/hydrate_fusion_capture.py --root . --replay-outdir outputs/fusion/replay-local-v1
 python code/analyze_fusion_headroom.py --root . --rankings outputs/fusion/capture-full115-v1/provider_rankings.jsonl --collection-manifest outputs/fusion/capture-full115-v1/collection_manifest.json --study outputs/fusion/replay-local-v1/study_results.jsonl --summary outputs/fusion/replay-local-v1/summary.json --output outputs/fusion/replay-local-v1/coverage_headroom.json
 ```
@@ -23,9 +31,11 @@ The headroom helper checks the exact original raw file and manifest, all 115 can
 To check the recovery helpers:
 
 ```sh
-python -m unittest discover -s tests -p test_fusion_recovery.py
+python -m unittest discover -s tests -p 'test_fusion*.py'
 ```
 
 Capture provenance remains separate from offline replay. The actual captured query providers used execution commit `0ee966b8ddfe367fbf5a9bb4ba8301c2d43b5e54` on `btl/issue-82-fusion-verified-loader`, with the two verified Qwen loader repairs from the separate PR88. The research branch does not overlay production files. Ordinary main with the old loader cannot pass the capture gate. No main merge was performed.
 
 The current control preserves main's nested max normalization and established outer weights. The four alternative transforms use fixed nominal equal shares across the four active providers. Those effective coefficients differ: this is a comparison of frozen configurations, not an isolated flat-weight calibration. Both dense providers were explicitly disabled for all 115 capture rows. Historical C candidates and the corpus/index producer loading lineage remain separate, unresolved provenance questions.
+
+The final consistent generation is study SHA256 `ba47bd96eb842d0bb57811e247cbd2ea29de8794c5dd3b289dce24a3032c10b1` (18,063,504 bytes). Its 9,301-byte sidecar is SHA256 `6af4e2a4fbd7095e3bdd4461485f9a9e6f03792fb34dbfd3218e09a5c7236fcf`; the reconstruction proof is SHA256 `b8bf1a3a337bd42ff4bdd212e6969b6f26bb4f634166a780f63a3c229365a4d2`. The final model-free job passed 40 fusion/recovery/storage tests and 27 ledger tests, reconstructed the full study byte for byte, and reproduced all four ledger output files byte for byte. The exact final summary/per-query/slices hashes are listed in `raw_archive_manifest.json`.
