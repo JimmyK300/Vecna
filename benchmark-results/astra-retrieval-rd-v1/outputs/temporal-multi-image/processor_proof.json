@@ -1,0 +1,310 @@
+{
+  "image_token_count_ratio_to_sheet": {
+    "contact_sheet_original": 1.0,
+    "native3_matched_384x216": 1.0,
+    "native3_original": 10.476190476190476,
+    "single_center_matched_384x216": 0.3333333333333333
+  },
+  "model_weights_loaded": false,
+  "proofs": {
+    "contact_sheet_original": {
+      "all_image_tokens_present": true,
+      "chat_template_image_placeholders": 1,
+      "chat_template_sha256": "da3999ae42f07ce1ef190e329497ba76cffeba572043c6ac2b692cb4f7fd48ba",
+      "each_patch_chunk_equals_individual_image_processing": [
+        true
+      ],
+      "expected_image_tokens": [
+        252
+      ],
+      "image_count": 1,
+      "image_grid_thw": [
+        [
+          1,
+          14,
+          72
+        ]
+      ],
+      "image_sizes": [
+        [
+          1152,
+          216
+        ]
+      ],
+      "image_token_counts": [
+        252
+      ],
+      "image_token_id": 151655,
+      "image_token_spans": [
+        [
+          15,
+          267
+        ]
+      ],
+      "input_ids_shape": [
+        1,
+        274
+      ],
+      "input_pixel_hashes": [
+        "12cbba68a93a312da572dd7cf3150e74c624f02cec11a2b670b2d8618bb35159"
+      ],
+      "max_length": 8192,
+      "merge_size": 2,
+      "model_weights_loaded": false,
+      "native_order_and_distinctness_proven": false,
+      "ordered_patch_chunk_hashes": [
+        "e39f5c3bd0ea509e1b76f2543f6c9f93d9cf21e3878eea6b9da4e10e87698d52"
+      ],
+      "pixel_values_dtype": "torch.float32",
+      "pixel_values_shape": [
+        1008,
+        1536
+      ],
+      "sequence_length": 274
+    },
+    "native3_matched_384x216": {
+      "all_image_tokens_present": true,
+      "chat_template_image_placeholders": 3,
+      "chat_template_sha256": "5bb730e70aced4be6efda3535d9d588244b57e94ac80d337d2f8c6fcea91d5d4",
+      "each_patch_chunk_equals_individual_image_processing": [
+        true,
+        true,
+        true
+      ],
+      "expected_image_tokens": [
+        84,
+        84,
+        84
+      ],
+      "image_count": 3,
+      "image_grid_thw": [
+        [
+          1,
+          14,
+          24
+        ],
+        [
+          1,
+          14,
+          24
+        ],
+        [
+          1,
+          14,
+          24
+        ]
+      ],
+      "image_sizes": [
+        [
+          384,
+          216
+        ],
+        [
+          384,
+          216
+        ],
+        [
+          384,
+          216
+        ]
+      ],
+      "image_token_counts": [
+        84,
+        84,
+        84
+      ],
+      "image_token_id": 151655,
+      "image_token_spans": [
+        [
+          15,
+          99
+        ],
+        [
+          101,
+          185
+        ],
+        [
+          187,
+          271
+        ]
+      ],
+      "input_ids_shape": [
+        1,
+        278
+      ],
+      "input_pixel_hashes": [
+        "0cfe408716a57aeb31e094b5604f7677e90b385982cccecd14f7ce444aa666fe",
+        "5e320074422a58181639001b5987130f3372e960d2e48787d8f4af1bb658463b",
+        "d86ceaf1a4f2030938c4256f6efe382cdbe475a4d184ec4ea653f2a8ab911bcb"
+      ],
+      "max_length": 8192,
+      "merge_size": 2,
+      "model_weights_loaded": false,
+      "native_order_and_distinctness_proven": true,
+      "ordered_patch_chunk_hashes": [
+        "9687d71c8f1995c160b9cca2852bc9ccee1f2a9587896fa8c4da07db82e9fc29",
+        "571708facb17ca51504fb52acd5f5a130ba5bdc5a614a0b69e09b003297a3172",
+        "c861c081034cf510f6b8e2cdc563941b1bef3a410532a6c8e0bb8f243630ba92"
+      ],
+      "pixel_values_dtype": "torch.float32",
+      "pixel_values_shape": [
+        1008,
+        1536
+      ],
+      "sequence_length": 278
+    },
+    "native3_original": {
+      "all_image_tokens_present": true,
+      "chat_template_image_placeholders": 3,
+      "chat_template_sha256": "5bb730e70aced4be6efda3535d9d588244b57e94ac80d337d2f8c6fcea91d5d4",
+      "each_patch_chunk_equals_individual_image_processing": [
+        true,
+        true,
+        true
+      ],
+      "expected_image_tokens": [
+        880,
+        880,
+        880
+      ],
+      "image_count": 3,
+      "image_grid_thw": [
+        [
+          1,
+          44,
+          80
+        ],
+        [
+          1,
+          44,
+          80
+        ],
+        [
+          1,
+          44,
+          80
+        ]
+      ],
+      "image_sizes": [
+        [
+          1280,
+          720
+        ],
+        [
+          1280,
+          720
+        ],
+        [
+          1280,
+          720
+        ]
+      ],
+      "image_token_counts": [
+        880,
+        880,
+        880
+      ],
+      "image_token_id": 151655,
+      "image_token_spans": [
+        [
+          15,
+          895
+        ],
+        [
+          897,
+          1777
+        ],
+        [
+          1779,
+          2659
+        ]
+      ],
+      "input_ids_shape": [
+        1,
+        2666
+      ],
+      "input_pixel_hashes": [
+        "52520c0295c37285f153b21a23448762e564be7f7c544a78a44b37814a2ffc33",
+        "8e0047616a2c0253a010b626175645eb1aaa2c7c2810a4fccad7ae30fa1bcb09",
+        "c31423613e532a2b4b3c939fd8bfce689746d7dcbcefd0f93089b0db9bf978bd"
+      ],
+      "max_length": 8192,
+      "merge_size": 2,
+      "model_weights_loaded": false,
+      "native_order_and_distinctness_proven": true,
+      "ordered_patch_chunk_hashes": [
+        "26d8ee4b064861cc38a7700b2e96841dd3ac7d3af03e2c8add08d424c5c957b8",
+        "a02e84aba6e2441f361ed48518ebecc10ab0d5995e55a97e29cfef1c28df09b0",
+        "5641b7098715d8e6d2dd2d9e298582db0dc1b066314cb532f270208ecc547c79"
+      ],
+      "pixel_values_dtype": "torch.float32",
+      "pixel_values_shape": [
+        10560,
+        1536
+      ],
+      "sequence_length": 2666
+    },
+    "single_center_matched_384x216": {
+      "all_image_tokens_present": true,
+      "chat_template_image_placeholders": 1,
+      "chat_template_sha256": "da3999ae42f07ce1ef190e329497ba76cffeba572043c6ac2b692cb4f7fd48ba",
+      "each_patch_chunk_equals_individual_image_processing": [
+        true
+      ],
+      "expected_image_tokens": [
+        84
+      ],
+      "image_count": 1,
+      "image_grid_thw": [
+        [
+          1,
+          14,
+          24
+        ]
+      ],
+      "image_sizes": [
+        [
+          384,
+          216
+        ]
+      ],
+      "image_token_counts": [
+        84
+      ],
+      "image_token_id": 151655,
+      "image_token_spans": [
+        [
+          15,
+          99
+        ]
+      ],
+      "input_ids_shape": [
+        1,
+        106
+      ],
+      "input_pixel_hashes": [
+        "5e320074422a58181639001b5987130f3372e960d2e48787d8f4af1bb658463b"
+      ],
+      "max_length": 8192,
+      "merge_size": 2,
+      "model_weights_loaded": false,
+      "native_order_and_distinctness_proven": false,
+      "ordered_patch_chunk_hashes": [
+        "571708facb17ca51504fb52acd5f5a130ba5bdc5a614a0b69e09b003297a3172"
+      ],
+      "pixel_values_dtype": "torch.float32",
+      "pixel_values_shape": [
+        336,
+        1536
+      ],
+      "sequence_length": 106
+    }
+  },
+  "requirements": {
+    "native3_matched_384x216": true,
+    "native3_original": true,
+    "same_ordered_resized_pixels": true,
+    "sheet_is_one_image": true
+  },
+  "status": "PASS"
+}

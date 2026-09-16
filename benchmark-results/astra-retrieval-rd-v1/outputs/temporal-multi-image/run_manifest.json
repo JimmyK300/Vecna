@@ -1,0 +1,36 @@
+{
+  "command": "python code/temporal_audit.py --root .",
+  "experiment": "vecna82-packet-a-audit-v1",
+  "historical_embedding_cache_written": false,
+  "inference_run_by_this_audit": false,
+  "input_sources": [
+    {
+      "bytes": 649393,
+      "path": "/workspace/scratch/8d5b0c75504a/vecna82/inputs/legacy_temporal_control_113.jsonl",
+      "sha256": "91f61d16a0930222af2450da127352c25825ba9b46faf546e475b2769c5a22a8"
+    },
+    {
+      "bytes": 1306086,
+      "path": "/workspace/scratch/8d5b0c75504a/vecna82/inputs/qwen_only_top100.jsonl",
+      "sha256": "85d5dd169bcd6934ebfa8435b6aee82ce9bc149bac3a704afbdbcb4b986568f0"
+    },
+    {
+      "bytes": 70844,
+      "path": "/workspace/scratch/8d5b0c75504a/vecna82/reference/temporal_representation_v1.py",
+      "sha256": "d916890162e22ac389549f0c685c9c432cb6868a453e34b4b3dcd01884438242"
+    },
+    {
+      "bytes": 14679,
+      "path": "/workspace/scratch/8d5b0c75504a/vecna82/inputs/stage2b_recovered.json",
+      "sha256": "98ed283aba24671671e002a48c2e809b1a0495bc5ad474b09f9c4cbbb0b16b71"
+    },
+    {
+      "bytes": 136995,
+      "path": "/workspace/scratch/8d5b0c75504a/vecna82/inputs/temporal_processor_probe.json",
+      "sha256": "f75f8e32f1ef683953428a8a4a138f56b57898933170089d6cc557d9a5198d14"
+    }
+  ],
+  "native_processor_proof": "PASS",
+  "production_mutation": false,
+  "status": "INCONCLUSIVE"
+}
