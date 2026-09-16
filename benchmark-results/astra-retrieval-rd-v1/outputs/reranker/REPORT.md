@@ -2,6 +2,8 @@
 
 Recommendation: keep reranking experimental and operator opt-in. The retained result improves R@20 while regressing R@1/R@10; the MRR difference is small and latency is about 28 seconds per query. No automatic conditional gate has been validated.
 
+Runtime qualification: these are historical saved-rank measurements. C's exact package versions, loaded tensor state and corpus extraction/index lineage remain unverified. The separate current Qwen defect and its verified repair do not establish historical contamination or retroactively certify C. See [the loader provenance followup](LOADER_PROVENANCE_LIMIT.md) for immutable historical evidence and the pinned current repair proof.
+
 The exact 113-query join and every frozen per-query score reproduce. P0–P2 contain 72 accepted-range and 6 strict all-event TRAKE cases; P3 contains 35 provisional source-text cases, including 2 fractional TRAKE cases. Historical TRAKE windows are submission-anchor proxies; frozen benchmark truth is a development control, not organizer gold. Excluded: p0_q15 and p3_q09. QA measures retrieval location, not answer correctness.
 
 | Metric | Frozen baseline | Frozen reranker | Paired gain/loss queries | Delta, percentage points (95% bootstrap CI) |

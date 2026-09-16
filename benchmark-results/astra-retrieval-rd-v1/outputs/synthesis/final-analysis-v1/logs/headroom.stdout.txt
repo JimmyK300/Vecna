@@ -1,0 +1,40 @@
+{
+  "status": "complete",
+  "cohort": {
+    "collected": 115,
+    "scored": 113,
+    "excluded": [
+      "p0_q15",
+      "p3_q09"
+    ]
+  },
+  "run_identity_sha256": "f0d32893564111064d47f6f2f72f7b03dbb14ebbfbb3d05c48e49e30ef165755",
+  "overall": {
+    "active_provider_union": {
+      "queries": 113,
+      "video_queries": 101,
+      "complete_target_queries": 81,
+      "mean_target_coverage": 0.7300884955752213
+    },
+    "current_pre_collapse100": {
+      "queries": 113,
+      "video_queries": 92,
+      "complete_target_queries": 78,
+      "mean_target_coverage": 0.6991150442477876
+    },
+    "first_video_analysis_representatives": {
+      "queries": 113,
+      "video_queries": 92,
+      "complete_target_queries": 50,
+      "mean_target_coverage": 0.4446902654867257
+    }
+  },
+  "complete_target_admission_headroom_query_ids": [
+    "p0_q02",
+    "p0_q20",
+    "p2_q07"
+  ],
+  "additional_partial_target_admission_headroom_query_ids": [
+    "p2_q29"
+  ]
+}

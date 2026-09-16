@@ -1,0 +1,199 @@
+{
+  "schema": "vecna82-independent-compact-readback-v1",
+  "status": "PASS",
+  "method": "Independent JavaScript sums and rank thresholds over the exact recovered complete compact scoring projection; no import of Python fusion evaluator or scorer. This verifies transport, cohort and aggregate consistency; raw candidate rescoring is separately recorded in D.",
+  "cohort_count": 113,
+  "canonical_query_ids_match": true,
+  "compact_bytes": 189118,
+  "compact_sha256": "ef360ed383421baa8c6dfb7e280db6f01139888714e65737f318517beac260b9",
+  "run_identity_sha256": "f0d32893564111064d47f6f2f72f7b03dbb14ebbfbb3d05c48e49e30ef165755",
+  "metrics": {
+    "fusion_current_control": {
+      "frame_video": {
+        "R@1": 49,
+        "R@10": 74,
+        "R@20": 81,
+        "R@5": 66
+      },
+      "frozen": {
+        "R@1": 32,
+        "R@10": 63,
+        "R@20": 67,
+        "R@5": 52
+      },
+      "frozen_MRR20": 0.3559632353880142,
+      "video": {
+        "R@1": 49,
+        "R@10": 82,
+        "R@20": 87,
+        "R@5": 77
+      },
+      "video_MRR20": 0.529989016565019
+    },
+    "fusion_minmax_sum": {
+      "frame_video": {
+        "R@1": 36,
+        "R@10": 50,
+        "R@20": 61,
+        "R@5": 43
+      },
+      "frozen": {
+        "R@1": 22,
+        "R@10": 34,
+        "R@20": 46,
+        "R@5": 28
+      },
+      "frozen_MRR20": 0.22773193244952744,
+      "video": {
+        "R@1": 36,
+        "R@10": 79,
+        "R@20": 84,
+        "R@5": 67
+      },
+      "video_MRR20": 0.42960058118178907
+    },
+    "fusion_robust_z_sum": {
+      "frame_video": {
+        "R@1": 36,
+        "R@10": 54,
+        "R@20": 60,
+        "R@5": 47
+      },
+      "frozen": {
+        "R@1": 21,
+        "R@10": 39,
+        "R@20": 50,
+        "R@5": 31
+      },
+      "frozen_MRR20": 0.2333491306785096,
+      "video": {
+        "R@1": 36,
+        "R@10": 69,
+        "R@20": 81,
+        "R@5": 61
+      },
+      "video_MRR20": 0.41147510215566874
+    },
+    "fusion_rrf": {
+      "frame_video": {
+        "R@1": 36,
+        "R@10": 65,
+        "R@20": 75,
+        "R@5": 56
+      },
+      "frozen": {
+        "R@1": 23,
+        "R@10": 51,
+        "R@20": 61,
+        "R@5": 39
+      },
+      "frozen_MRR20": 0.2679554607819766,
+      "video": {
+        "R@1": 36,
+        "R@10": 76,
+        "R@20": 85,
+        "R@5": 68
+      },
+      "video_MRR20": 0.43359078469286977
+    },
+    "fusion_softmax_sum": {
+      "frame_video": {
+        "R@1": 16,
+        "R@10": 37,
+        "R@20": 39,
+        "R@5": 34
+      },
+      "frozen": {
+        "R@1": 4,
+        "R@10": 21,
+        "R@20": 26,
+        "R@5": 19
+      },
+      "frozen_MRR20": 0.08464976426838396,
+      "video": {
+        "R@1": 16,
+        "R@10": 80,
+        "R@20": 86,
+        "R@5": 62
+      },
+      "video_MRR20": 0.30435300427491996
+    },
+    "qwen_only_matched": {
+      "frame_video": {
+        "R@1": 47,
+        "R@10": 71,
+        "R@20": 78,
+        "R@5": 65
+      },
+      "frozen": {
+        "R@1": 31,
+        "R@10": 58,
+        "R@20": 61,
+        "R@5": 52
+      },
+      "frozen_MRR20": 0.3525392994419544,
+      "video": {
+        "R@1": 47,
+        "R@10": 79,
+        "R@20": 84,
+        "R@5": 71
+      },
+      "video_MRR20": 0.5074948563496199
+    }
+  },
+  "diagnostic_union": {
+    "diagnostic_observed_success_union": 82,
+    "fusion_rescued_baseline_but_reranker_hurt": [
+      "p2_q14"
+    ],
+    "fusion_rescued_vs_historical_baseline_reranker_misses": [
+      "p1_q04",
+      "p2_q23",
+      "p3_q13",
+      "p3_q26",
+      "p3_q27"
+    ],
+    "n": 113,
+    "remaining_misses": [
+      "p0_q02",
+      "p0_q17",
+      "p0_q18",
+      "p0_q21",
+      "p0_q22",
+      "p0_q23",
+      "p0_q24",
+      "p1_q02",
+      "p1_q13",
+      "p1_q14",
+      "p1_q18",
+      "p1_q25",
+      "p2_q01",
+      "p2_q03",
+      "p2_q07",
+      "p2_q17",
+      "p2_q18",
+      "p2_q25",
+      "p2_q27",
+      "p2_q29",
+      "p2_q30",
+      "p3_q03",
+      "p3_q11",
+      "p3_q17",
+      "p3_q19",
+      "p3_q21",
+      "p3_q24",
+      "p3_q30",
+      "p3_q32",
+      "p3_q34",
+      "p3_q35"
+    ],
+    "reranker_rescued_vs_historical_baseline_but_fusion_missed": [
+      "p0_q20",
+      "p2_q11",
+      "p2_q28",
+      "p3_q16",
+      "p3_q29"
+    ]
+  },
+  "tolerance": 1e-12
+}

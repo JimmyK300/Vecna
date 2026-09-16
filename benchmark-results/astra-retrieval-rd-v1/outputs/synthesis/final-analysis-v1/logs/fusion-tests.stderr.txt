@@ -1,0 +1,58 @@
+test_corrupt_archive_creates_no_raw (test_fusion_recovery.RecoveryTests.test_corrupt_archive_creates_no_raw) ... ok
+test_foreign_existing_raw_is_preserved (test_fusion_recovery.RecoveryTests.test_foreign_existing_raw_is_preserved) ... ok
+test_set_coverage_ignores_inherited_provider_ranks (test_fusion_recovery.RecoveryTests.test_set_coverage_ignores_inherited_provider_ranks) ... ok
+test_verified_hydration_is_idempotent (test_fusion_recovery.RecoveryTests.test_verified_hydration_is_idempotent) ... ok
+test_wrong_decompressed_identity_creates_no_raw (test_fusion_recovery.RecoveryTests.test_wrong_decompressed_identity_creates_no_raw) ... ok
+test_ablation_preserves_tiny_surviving_softmax_contribution (test_fusion_study.FusionTests.test_ablation_preserves_tiny_surviving_softmax_contribution) ... <unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+ok
+test_all_arms_use_same_exported_tie_order (test_fusion_study.FusionTests.test_all_arms_use_same_exported_tie_order) ... <unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+ok
+test_capture_gate_accepts_only_final_verified_qwen_audit (test_fusion_study.FusionTests.test_capture_gate_accepts_only_final_verified_qwen_audit) ... ok
+test_capture_preflight_checks_fresh_checkpoint_bytes_and_both_sources (test_fusion_study.FusionTests.test_capture_preflight_checks_fresh_checkpoint_bytes_and_both_sources) ... ok
+test_completed_manifest_and_one_run_identity_required (test_fusion_study.FusionTests.test_completed_manifest_and_one_run_identity_required) ... <unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+ok
+test_config_never_invents_project_weights_or_parameters (test_fusion_study.FusionTests.test_config_never_invents_project_weights_or_parameters) ... ok
+test_constructor_completion_cannot_pass_repair_verification (test_fusion_study.FusionTests.test_constructor_completion_cannot_pass_repair_verification) ... ok
+test_cpu_parallelism_is_bounded_and_actual_settings_are_recorded (test_fusion_study.FusionTests.test_cpu_parallelism_is_bounded_and_actual_settings_are_recorded) ... ok
+test_current_constructor_cannot_reuse_audit_in_place_of_live_proof (test_fusion_study.FusionTests.test_current_constructor_cannot_reuse_audit_in_place_of_live_proof) ... ok
+test_equal_lists_and_zero_mad_policy (test_fusion_study.FusionTests.test_equal_lists_and_zero_mad_policy) ... ok
+test_frame_truncation_precedes_video_collapse (test_fusion_study.FusionTests.test_frame_truncation_precedes_video_collapse) ... <unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+ok
+test_global_selection_is_one_arm_with_paired_rescues_regressions (test_fusion_study.FusionTests.test_global_selection_is_one_arm_with_paired_rescues_regressions) ... ok
+test_input_contract_rejects_ambiguity_and_corruption (test_fusion_study.FusionTests.test_input_contract_rejects_ambiguity_and_corruption) ... <unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+ok
+test_input_objects_are_unchanged (test_fusion_study.FusionTests.test_input_objects_are_unchanged) ... <unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+ok
+test_loading_info_metadata_accepts_label_ids_without_losing_keys (test_fusion_study.FusionTests.test_loading_info_metadata_accepts_label_ids_without_losing_keys) ... ok
+test_metadata_json_preserves_types_and_rejects_unstable_values (test_fusion_study.FusionTests.test_metadata_json_preserves_types_and_rejects_unstable_values) ... ok
+test_metadata_json_real_protobuf_repeated_containers_and_message (test_fusion_study.FusionTests.test_metadata_json_real_protobuf_repeated_containers_and_message) ... ok
+test_no_provider_weight_renormalization_on_missing (test_fusion_study.FusionTests.test_no_provider_weight_renormalization_on_missing) ... <unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+ok
+test_pretrained_config_loader_is_never_called_as_getter (test_fusion_study.FusionTests.test_pretrained_config_loader_is_never_called_as_getter) ... ok
+test_quote_filter_and_boost_use_exact_main_source (test_fusion_study.FusionTests.test_quote_filter_and_boost_use_exact_main_source) ... <unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+ok
+test_repair_verification_requires_complete_one_model_equality (test_fusion_study.FusionTests.test_repair_verification_requires_complete_one_model_equality) ... ok
+test_search_only_adapter_never_auto_loads_or_mutates (test_fusion_study.FusionTests.test_search_only_adapter_never_auto_loads_or_mutates) ... ok
+test_signed_cosine_exact_main_maxscale (test_fusion_study.FusionTests.test_signed_cosine_exact_main_maxscale) ... <unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+ok
+test_softmax_numerically_stable_and_not_calibrated_probability (test_fusion_study.FusionTests.test_softmax_numerically_stable_and_not_calibrated_probability) ... ok
+test_source_control_mismatch_is_hard_stop (test_fusion_study.FusionTests.test_source_control_mismatch_is_hard_stop) ... <unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+ok
+test_source_parity_four_active_providers_and_exact_weights (test_fusion_study.FusionTests.test_source_parity_four_active_providers_and_exact_weights) ... <unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+ok
+test_source_parity_six_active_with_nested_text_normalization (test_fusion_study.FusionTests.test_source_parity_six_active_with_nested_text_normalization) ... <unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+ok
+test_tokenizer_identity_includes_vocab_and_template (test_fusion_study.FusionTests.test_tokenizer_identity_includes_vocab_and_template) ... ok
+test_video_collapse_and_frame_position_scoring_stay_distinct (test_fusion_study.FusionTests.test_video_collapse_and_frame_position_scoring_stay_distinct) ... <unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+ok
+test_changed_timing_fails_exact_sha_gate (test_fusion_study_storage.StudyStorageTests.test_changed_timing_fails_exact_sha_gate) ... ok
+test_missing_or_misidentified_query_fails (test_fusion_study_storage.StudyStorageTests.test_missing_or_misidentified_query_fails) ... ok
+test_negative_bool_or_noninteger_timings_fail (test_fusion_study_storage.StudyStorageTests.test_negative_bool_or_noninteger_timings_fail) ... ok
+test_nontiming_score_change_cannot_be_hidden (test_fusion_study_storage.StudyStorageTests.test_nontiming_score_change_cannot_be_hidden) ... ok
+test_restore_only_timings_reconstructs_exact_bytes (test_fusion_study_storage.StudyStorageTests.test_restore_only_timings_reconstructs_exact_bytes) ... ok
+test_wrong_arm_count_and_missing_field_fail (test_fusion_study_storage.StudyStorageTests.test_wrong_arm_count_and_missing_field_fail) ... ok
+
+----------------------------------------------------------------------
+Ran 40 tests in 0.400s
+
+OK

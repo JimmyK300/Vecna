@@ -1,0 +1,47 @@
+[
+  {
+    "path": "outputs/reranker/loader-provenance-evidence/export.stdout.log",
+    "repository": "JimmyK300/official-dataset-control",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "source_url": "https://github.com/JimmyK300/official-dataset-control/blob/1f1ad1baef1e1d31817f6c5a12d4d94133611038/evaluation/headless-current-p0-p1-p2-p3-qwen-only-top100-v0/export.stdout.log",
+    "git_blob_sha": "38955ff7ef1effa0a761cb4894f5f51370ebf284",
+    "sha256": "1f4981f7414d52bfb1d1ee47c30f564957f29f59bf3d777f6929b54e057ff5f7",
+    "bytes": 187459
+  },
+  {
+    "path": "outputs/reranker/loader-provenance-evidence/reranker.stderr.log",
+    "repository": "JimmyK300/official-dataset-control",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "source_url": "https://github.com/JimmyK300/official-dataset-control/blob/1f1ad1baef1e1d31817f6c5a12d4d94133611038/evaluation/headless-current-p0-p1-p2-p3-qwen-only-top100-v0/reranker.stderr.log",
+    "git_blob_sha": "00f505cd3f8fa60bd8e1617aedd530ab1a00c54f",
+    "sha256": "54b62e2bdfe2e8f8cbc43d1fa833370721babd223ee6bbf5dccfbe905f8102f0",
+    "bytes": 189324
+  },
+  {
+    "path": "outputs/reranker/loader-provenance-evidence/export.stderr.log",
+    "repository": "JimmyK300/official-dataset-control",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "source_url": "https://github.com/JimmyK300/official-dataset-control/blob/1f1ad1baef1e1d31817f6c5a12d4d94133611038/evaluation/headless-current-p0-p1-p2-p3-qwen-only-top100-v0/export.stderr.log",
+    "git_blob_sha": "87a9673bafb9dd64c17c8e7489f901ecf24eb65d",
+    "sha256": "a3293171d6471f3abb3280b459e63f12f072b14ee459090b6b7810966f0b61e5",
+    "bytes": 184614
+  },
+  {
+    "path": "outputs/reranker/loader-provenance-evidence/qwen_only_top100.jsonl.run.json",
+    "repository": "JimmyK300/official-dataset-control",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "source_url": "https://github.com/JimmyK300/official-dataset-control/blob/1f1ad1baef1e1d31817f6c5a12d4d94133611038/evaluation/headless-current-p0-p1-p2-p3-qwen-only-top100-v0/qwen_only_top100.jsonl.run.json",
+    "git_blob_sha": "6ee63ac0a5f8aea2641fc422af3525df0a831d60",
+    "sha256": "83aa8052b95ed78a211c67eb222b2a58147b684e44b9a0ee571ca4e956899d60",
+    "bytes": 1561
+  },
+  {
+    "path": "outputs/reranker/loader-provenance-evidence/README.md",
+    "repository": "JimmyK300/official-dataset-control",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "source_url": "https://github.com/JimmyK300/official-dataset-control/blob/1f1ad1baef1e1d31817f6c5a12d4d94133611038/evaluation/headless-current-p0-p1-p2-p3-qwen-only-top100-v0/README.md",
+    "git_blob_sha": "a7c995b99f703bcec856eb05051c7edade0c72cd",
+    "sha256": "0ba41d2f6f68c95be76f6f94313ad730f8f562141f03f6f418c32c19951a7eca",
+    "bytes": 2529
+  }
+]

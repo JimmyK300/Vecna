@@ -1,0 +1,41 @@
+{
+  "schema": "vecna82-study-exact-reconstruction-proof-v1",
+  "status": "verified",
+  "queries": 115,
+  "arms": 5,
+  "new_model_or_retrieval_calls": false,
+  "ground_truth_read": false,
+  "restored_fields_only": [
+    "fusion_wall_ns",
+    "fusion_cpu_ns"
+  ],
+  "source_study": {
+    "bytes": 18063504,
+    "sha256": "ba47bd96eb842d0bb57811e247cbd2ea29de8794c5dd3b289dce24a3032c10b1"
+  },
+  "sidecar": {
+    "bytes": 9301,
+    "sha256": "6af4e2a4fbd7095e3bdd4461485f9a9e6f03792fb34dbfd3218e09a5c7236fcf"
+  },
+  "reconstructed_bytes_equal_original": true,
+  "input_proof": {
+    "queries": 115,
+    "arms": [
+      "fusion_current_control",
+      "fusion_rrf",
+      "fusion_minmax_sum",
+      "fusion_robust_z_sum",
+      "fusion_softmax_sum"
+    ],
+    "ground_truth_read": false,
+    "harness_sha256": "57ded10b78c0a6649008d15e61882e3b52d2eb0b5cf63b57a7133a6a9da2a292",
+    "collection_manifest_sha256": "01333a2ce910605b537a90aa6897938103aaf1728048d216af350d26bde756d8",
+    "run_identity_sha256": "f0d32893564111064d47f6f2f72f7b03dbb14ebbfbb3d05c48e49e30ef165755",
+    "rankings_sha256": "d6223381ea8cbf4b4efcb0cc295f60dccfcae36afe0d9fac004438410c152a82",
+    "queries_sha256": "3b91dfe26a893192a497a964d3a9ea5f50c595fdaabad000cbc60fc602be0d1a",
+    "config_sha256": "966683614e4a6f67799c4b6432e8294980bffa8d8cef6b8391e63e43b3ab20df",
+    "config_file_sha256": "ff7a6f817579a2ba65572734016d51164f454a9d5012177841a458bbdca34b1a"
+  },
+  "helper_sha256": "ce8732e3e2d6eae1431bb162d6c8a9710f46bb3f67b6ac66ac0c7e7fc9a9d34f",
+  "runtime_qualification": "Exact byte proof was run on the recorded runtime. Platform/libm differences must fail the full SHA gate; use the recorded runtime for exact reconstruction."
+}

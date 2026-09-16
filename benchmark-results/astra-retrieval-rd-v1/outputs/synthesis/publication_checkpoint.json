@@ -1,0 +1,56 @@
+{
+  "as_of_utc": "2026-09-16T15:24:00Z",
+  "authority": {
+    "dataset_main": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "excluded": [
+      "p0_q15",
+      "p3_q09"
+    ],
+    "query_total": 115,
+    "scoreable": 113,
+    "vecna_main": "95d63a6abf10c598e0e54af7d2071bedbe542d1e"
+  },
+  "completed": [
+    "Packet0 frozen authority and exact113 scoreable control",
+    "PacketA bounded native multi-image result",
+    "PacketB five matched fusion transforms plus Qwen control and lossless raw/study reconstruction",
+    "PacketC historical reranker metrics, slices, candidate proof and latency",
+    "PacketD complete113-query ledger with49 input hashes and independent3611-check review",
+    "PacketE exactlyone proposal, unimplemented",
+    "Native dataset16/17 source and sparse/dense visibility reviews",
+    "Separate verifiedQwen checkpoint repair PR88",
+    "Separate deterministic exact text-score tie repair PR90"
+  ],
+  "constraints": {
+    "merge_main": false,
+    "model_rerun_for_recovery": false,
+    "packet_e_implementation": false,
+    "production_integration": false
+  },
+  "limitations": [
+    "41queries retain provisional/proxy truth qualifications",
+    "18ASR clips captured butunheard",
+    "Historical corpus encoder/index lineage unresolved",
+    "A has only2correct videos and0of31eventanchors in its fixedpool",
+    "B/C cross-run union isdiagnostic,notone deployablepolicy"
+  ],
+  "review_branches": {
+    "fusion": "btl/issue-82-fusion-study",
+    "native_dataset": "astra/dataset-review-16-17-20260916",
+    "synthesis": "btl/issue-82-failure-ledger-and-proposal"
+  },
+  "schema": "vecna82-synthesis-publication-checkpoint-v1",
+  "status": "READY_FOR_PARENT_REVIEW",
+  "verification": {
+    "combined_host_run": 35112926368,
+    "fusion_tests": 40,
+    "independent_D_checks": 3611,
+    "ledger_byte_repeat_files": 4,
+    "ledger_tests": 27,
+    "study_byte_rebuild": true,
+    "published_git_snapshot_run": 35114902098,
+    "published_input_hashes_verified": 49,
+    "published_ledger_outputs_byte_identical": true,
+    "tested_commit": "d1dc69f980d85833541250ad50b4ddbf313434f9"
+  }
+}

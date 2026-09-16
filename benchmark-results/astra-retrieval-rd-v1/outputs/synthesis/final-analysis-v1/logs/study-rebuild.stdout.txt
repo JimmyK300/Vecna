@@ -1,0 +1,9 @@
+{
+  "status": "verified",
+  "study": {
+    "bytes": 18063504,
+    "sha256": "ba47bd96eb842d0bb57811e247cbd2ea29de8794c5dd3b289dce24a3032c10b1"
+  },
+  "queries": 115,
+  "new_model_or_retrieval_calls": false
+}

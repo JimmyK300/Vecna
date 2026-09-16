@@ -1,0 +1,10 @@
+{
+  "status": "COMPLETE_WITH_QUALIFIED_SOURCE_DIAGNOSES",
+  "primary_failure_counts": {
+    "none": 82,
+    "unresolved": 7,
+    "candidate_generation_missing_event": 18,
+    "candidate_generation_missing_video": 6
+  },
+  "remaining_misses": 31
+}
