@@ -1,0 +1,1176 @@
+{
+  "appended_registry_source": {
+    "blob_sha": "12cd9b33fec74ace71c6dabd1d83b2b593ac0b8d",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "inputs/legacy_temporal_control_113.jsonl",
+    "path": "experiments/temporal-sequence-retrieval-v1/control_113.jsonl",
+    "repository": "JimmyK300/official-dataset-control"
+  },
+  "canonical_truth_unchanged": true,
+  "capture_sample_sha256": "d3727ab99ce98b708c835c8e8b0f8d5688af47e9d25e65ce55a8e5ca839e7714",
+  "current_registry_sha256": "7488129146304b8ef626dfa2459e159d05efcca958bcece40a7d6d6ff6dafdc1",
+  "current_sample_sha256": "b4fd944228a033c37ea4d69ad757ceeae9635bfb026cf018e0d60f5b3c661be9",
+  "interpretation": "Full manifest hash changed only because an unused supporting source entry was appended. Matching the reconstructed original full SHA proves selection, query metadata, seed, method, and all other manifest inputs unchanged. Saved statuses are verified against the preparation's pinned score bytes; they do not participate in selection.",
+  "only_changed_field": "input_sha256.inputs/sources.json",
+  "ordered_identity_rows": [
+    {
+      "channel": "ocr",
+      "query_id": "p0_q13",
+      "query_text_sha256": "b68daf83a1d4b9cf1e558327910f9c866cd8e6b3430c8e0a59679a1596ef2973",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "truth_identity_sha256": "666f991e8a205df379e81a25cf40ce95c173c0c2ea309a0ac6f8b7862b3a377a"
+    },
+    {
+      "channel": "ocr",
+      "query_id": "p0_q19",
+      "query_text_sha256": "7e4f86afd84fa3bd2adc9fbba55765effec23fc4a6a2c5f4a4a584ac12920e67",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": 17,
+        "recall": {
+          "R@1": false,
+          "R@10": false,
+          "R@20": true,
+          "R@5": false
+        },
+        "reciprocal_rank": 0.058823529411764705
+      },
+      "truth_identity_sha256": "0477fd4d02a5f8328834a3f50ac5e5b309164a01ecb985cb28182a45fce01265"
+    },
+    {
+      "channel": "ocr",
+      "query_id": "p0_q21",
+      "query_text_sha256": "9580d05299b23b598d470fabbc788f819f16495007317177e58a9fc114085012",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": null,
+        "recall": {
+          "R@1": false,
+          "R@10": false,
+          "R@20": false,
+          "R@5": false
+        },
+        "reciprocal_rank": 0.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": null,
+        "recall": {
+          "R@1": false,
+          "R@10": false,
+          "R@20": false,
+          "R@5": false
+        },
+        "reciprocal_rank": 0.0
+      },
+      "truth_identity_sha256": "6e6f8b5581677ab48f17c84fa7d0c6d622e4d365cbfecf43baf4d6478187681f"
+    },
+    {
+      "channel": "ocr",
+      "query_id": "p1_q17",
+      "query_text_sha256": "9997ebd435eadfaeb3b99c83c559633cca7c152656b45faac2ade69a67eadb64",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "truth_identity_sha256": "fc6271308890a090babcc0c677b805e82a76de21f65d7caf44314ad1588d6fdd"
+    },
+    {
+      "channel": "ocr",
+      "query_id": "p1_q18",
+      "query_text_sha256": "3ee3f46543cab18737592a52b365079702a591c849d162ff9ec0ec7a022571f9",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": null,
+        "recall": {
+          "R@1": false,
+          "R@10": false,
+          "R@20": false,
+          "R@5": false
+        },
+        "reciprocal_rank": 0.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": null,
+        "recall": {
+          "R@1": false,
+          "R@10": false,
+          "R@20": false,
+          "R@5": false
+        },
+        "reciprocal_rank": 0.0
+      },
+      "truth_identity_sha256": "160483c79335b9ccaef9042365cb0ed77da4ee0f0147483b4f66a60259ed1765"
+    },
+    {
+      "channel": "ocr",
+      "query_id": "p1_q24",
+      "query_text_sha256": "2b1ee9d6daba2ad058022b56b37fc40495f6fbb771e2db74dd5281bf553af9d6",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": 3,
+        "recall": {
+          "R@1": false,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "truth_identity_sha256": "20497a856585dfdad8c4944f74cbb4387913dcc6650829897548969f4c616b33"
+    },
+    {
+      "channel": "ocr",
+      "query_id": "p1_q21",
+      "query_text_sha256": "e8b1783938406241c0ebb47940167f0306810486b769cefbc42ed68257d4765f",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": 16,
+        "recall": {
+          "R@1": false,
+          "R@10": false,
+          "R@20": true,
+          "R@5": false
+        },
+        "reciprocal_rank": 0.0625
+      },
+      "truth_identity_sha256": "9492f96ddd65b3ef0fc4b60182a42f2f94384011bb699ce8d15151d48bde3a40"
+    },
+    {
+      "channel": "ocr",
+      "query_id": "p2_q15",
+      "query_text_sha256": "a2b7e075b33f45a2e7d7dada01b795a21706ccbe60a3d0dc814ed03d54642788",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": 6,
+        "recall": {
+          "R@1": false,
+          "R@10": true,
+          "R@20": true,
+          "R@5": false
+        },
+        "reciprocal_rank": 0.16666666666666666
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "truth_identity_sha256": "e5438887900627186931ecc9a0853c3013097689d88b175bc08ebc92272d10e1"
+    },
+    {
+      "channel": "ocr",
+      "query_id": "p2_q26",
+      "query_text_sha256": "c730ec9905f770976ba8c3c540d123c539c9a1ce2e0fe5de64171166d24ba9ac",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "truth_identity_sha256": "085e49ee05e1813ef64475b369b233c4c2f5ca6c720d14335c328ee79d71363f"
+    },
+    {
+      "channel": "ocr",
+      "query_id": "p2_q25",
+      "query_text_sha256": "95cbd19b83960afaf5e32e6d9644fa4fb190ceba0a58e3bef0b5bb7a4c9acef1",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": null,
+        "recall": {
+          "R@1": false,
+          "R@10": false,
+          "R@20": false,
+          "R@5": false
+        },
+        "reciprocal_rank": 0.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": null,
+        "recall": {
+          "R@1": false,
+          "R@10": false,
+          "R@20": false,
+          "R@5": false
+        },
+        "reciprocal_rank": 0.0
+      },
+      "truth_identity_sha256": "8f517b37146c1908509971fd1b42a8588e228931b711cd6aa880e2987e1ef2f9"
+    },
+    {
+      "channel": "ocr",
+      "query_id": "p3_q04",
+      "query_text_sha256": "fb4305bd76357170010db02bd4c2b829360f1c4858345cf99231bf5e50c68191",
+      "saved_baseline": {
+        "all_targets_hit_at_20": true,
+        "family": "p3",
+        "first_correct_rank": 2,
+        "recall": {
+          "R@1": 0.0,
+          "R@10": 1.0,
+          "R@20": 1.0,
+          "R@5": 1.0
+        },
+        "reciprocal_rank": 0.5,
+        "target_ranks": [
+          2
+        ]
+      },
+      "saved_reranker": {
+        "all_targets_hit_at_20": true,
+        "family": "p3",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": 1.0,
+          "R@10": 1.0,
+          "R@20": 1.0,
+          "R@5": 1.0
+        },
+        "reciprocal_rank": 1.0,
+        "target_ranks": [
+          1
+        ]
+      },
+      "truth_identity_sha256": "269aba5f7dbf78d045af2062e709e6f42ded92d629439891e25558616fd3461f"
+    },
+    {
+      "channel": "ocr",
+      "query_id": "p3_q02",
+      "query_text_sha256": "f328b56c3e9b8eafd37eb051c39f05885ab732c46a03c5061cddb21c487f6ed7",
+      "saved_baseline": {
+        "all_targets_hit_at_20": true,
+        "family": "p3",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": 1.0,
+          "R@10": 1.0,
+          "R@20": 1.0,
+          "R@5": 1.0
+        },
+        "reciprocal_rank": 1.0,
+        "target_ranks": [
+          1
+        ]
+      },
+      "saved_reranker": {
+        "all_targets_hit_at_20": true,
+        "family": "p3",
+        "first_correct_rank": 2,
+        "recall": {
+          "R@1": 0.0,
+          "R@10": 1.0,
+          "R@20": 1.0,
+          "R@5": 1.0
+        },
+        "reciprocal_rank": 0.5,
+        "target_ranks": [
+          2
+        ]
+      },
+      "truth_identity_sha256": "15d9837e4528fa116d053608b626b702e604d355deab64f80a9a9b22ad1d1f13"
+    },
+    {
+      "channel": "ocr",
+      "query_id": "p3_q05",
+      "query_text_sha256": "adad85190cbd7059e0822520c8180913547f2dada74386ec8214eb474a910449",
+      "saved_baseline": {
+        "all_targets_hit_at_20": true,
+        "family": "p3",
+        "first_correct_rank": 3,
+        "recall": {
+          "R@1": 0.0,
+          "R@10": 1.0,
+          "R@20": 1.0,
+          "R@5": 1.0
+        },
+        "reciprocal_rank": 0.3333333333333333,
+        "target_ranks": [
+          3
+        ]
+      },
+      "saved_reranker": {
+        "all_targets_hit_at_20": true,
+        "family": "p3",
+        "first_correct_rank": 15,
+        "recall": {
+          "R@1": 0.0,
+          "R@10": 0.0,
+          "R@20": 1.0,
+          "R@5": 0.0
+        },
+        "reciprocal_rank": 0.06666666666666667,
+        "target_ranks": [
+          15
+        ]
+      },
+      "truth_identity_sha256": "659a9db9a484bec6d76a94806cce0befae2a6e7147821adcadaf565a8f12d03a"
+    },
+    {
+      "channel": "ocr",
+      "query_id": "p3_q35",
+      "query_text_sha256": "32d7a5ad2c8328c1a7f15648da822fd259e9a8d9cffaeed87b64835bff3990cc",
+      "saved_baseline": {
+        "all_targets_hit_at_20": false,
+        "family": "p3",
+        "first_correct_rank": null,
+        "recall": {
+          "R@1": 0.0,
+          "R@10": 0.0,
+          "R@20": 0.0,
+          "R@5": 0.0
+        },
+        "reciprocal_rank": 0.0,
+        "target_ranks": [
+          null
+        ]
+      },
+      "saved_reranker": {
+        "all_targets_hit_at_20": false,
+        "family": "p3",
+        "first_correct_rank": null,
+        "recall": {
+          "R@1": 0.0,
+          "R@10": 0.0,
+          "R@20": 0.0,
+          "R@5": 0.0
+        },
+        "reciprocal_rank": 0.0,
+        "target_ranks": [
+          null
+        ]
+      },
+      "truth_identity_sha256": "5dc9da8af3c8dd0cbde8d8c2b6268355ad3944e80dffda1c206f22bbbaa004c4"
+    },
+    {
+      "channel": "ocr",
+      "query_id": "p0_q20",
+      "query_text_sha256": "19f9a8ca21046251d9102a1f261612423dfb99b11103272a0bd4ce7919ca6500",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": 51,
+        "recall": {
+          "R@1": false,
+          "R@10": false,
+          "R@20": false,
+          "R@5": false
+        },
+        "reciprocal_rank": 0.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": 17,
+        "recall": {
+          "R@1": false,
+          "R@10": false,
+          "R@20": true,
+          "R@5": false
+        },
+        "reciprocal_rank": 0.058823529411764705
+      },
+      "truth_identity_sha256": "fdb904b9d2af39759b10594fd020372e8cbf11e05c0213dda2f148490000c53a"
+    },
+    {
+      "channel": "ocr",
+      "query_id": "p1_q03",
+      "query_text_sha256": "ac9399c96307f366487abb45649232d2ca68df61407c3a4acc0a7557f31172e7",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": 2,
+        "recall": {
+          "R@1": false,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 0.5
+      },
+      "truth_identity_sha256": "5ce0e05744760c571ba6c05a788bf28b5f5fc005a097aa3103edc4f91af669ca"
+    },
+    {
+      "channel": "ocr",
+      "query_id": "p1_q23",
+      "query_text_sha256": "3700e77a2ea96e473419dfa223eeacf5df6a970d96abb2bc6272f16b0e5746b6",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "truth_identity_sha256": "d43a15d9be94dfa63a4d960c721958b04bc9252b64ae78dfc441887630eb65c8"
+    },
+    {
+      "channel": "ocr",
+      "query_id": "p2_q13",
+      "query_text_sha256": "364b3385759c5efea35225ec79b50eba7bbaf4cf17d299936b9e396be0555f91",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "truth_identity_sha256": "4e001951804f8dca97ddc306da0dea35fda83c84c0f501792c1d82d7082dff62"
+    },
+    {
+      "channel": "ocr",
+      "query_id": "p2_q23",
+      "query_text_sha256": "a96966435714de75eec5f61c55db63c053e4d8ff7df0457228d660b63577ae9b",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": 21,
+        "recall": {
+          "R@1": false,
+          "R@10": false,
+          "R@20": false,
+          "R@5": false
+        },
+        "reciprocal_rank": 0.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": null,
+        "recall": {
+          "R@1": false,
+          "R@10": false,
+          "R@20": false,
+          "R@5": false
+        },
+        "reciprocal_rank": 0.0
+      },
+      "truth_identity_sha256": "0c7279d84fca40b182576a1b1f56fdb1fa33d6cc1fbf6b26f6b114fce1f13ce1"
+    },
+    {
+      "channel": "ocr",
+      "query_id": "p2_q24",
+      "query_text_sha256": "e17546d89c064186304e027d6828e30172fc47f056477bff7e02db8a2dd48ed6",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": 24,
+        "recall": {
+          "R@1": false,
+          "R@10": false,
+          "R@20": false,
+          "R@5": false
+        },
+        "reciprocal_rank": 0.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "truth_identity_sha256": "9e6e0528e074f2a6f908bd9ebb54696df0341125e3f0ff7fdb665bfd3675ab8d"
+    },
+    {
+      "channel": "asr",
+      "query_id": "p0_q02",
+      "query_text_sha256": "674bd6364fce799ba6cc9f81a074fa3dae29dd73434ed45806add3bf025f55f4",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": null,
+        "recall": {
+          "R@1": false,
+          "R@10": false,
+          "R@20": false,
+          "R@5": false
+        },
+        "reciprocal_rank": 0.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": null,
+        "recall": {
+          "R@1": false,
+          "R@10": false,
+          "R@20": false,
+          "R@5": false
+        },
+        "reciprocal_rank": 0.0
+      },
+      "truth_identity_sha256": "82cc590143c5d92c1fef4cb9e1c83628d6f02e752fa4a894298a7af577f7d6f5"
+    },
+    {
+      "channel": "asr",
+      "query_id": "p0_q19",
+      "query_text_sha256": "7e4f86afd84fa3bd2adc9fbba55765effec23fc4a6a2c5f4a4a584ac12920e67",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": 17,
+        "recall": {
+          "R@1": false,
+          "R@10": false,
+          "R@20": true,
+          "R@5": false
+        },
+        "reciprocal_rank": 0.058823529411764705
+      },
+      "truth_identity_sha256": "0477fd4d02a5f8328834a3f50ac5e5b309164a01ecb985cb28182a45fce01265"
+    },
+    {
+      "channel": "asr",
+      "query_id": "p1_q17",
+      "query_text_sha256": "9997ebd435eadfaeb3b99c83c559633cca7c152656b45faac2ade69a67eadb64",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "truth_identity_sha256": "fc6271308890a090babcc0c677b805e82a76de21f65d7caf44314ad1588d6fdd"
+    },
+    {
+      "channel": "asr",
+      "query_id": "p1_q24",
+      "query_text_sha256": "2b1ee9d6daba2ad058022b56b37fc40495f6fbb771e2db74dd5281bf553af9d6",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": 3,
+        "recall": {
+          "R@1": false,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 0.3333333333333333
+      },
+      "truth_identity_sha256": "20497a856585dfdad8c4944f74cbb4387913dcc6650829897548969f4c616b33"
+    },
+    {
+      "channel": "asr",
+      "query_id": "p2_q26",
+      "query_text_sha256": "c730ec9905f770976ba8c3c540d123c539c9a1ce2e0fe5de64171166d24ba9ac",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "truth_identity_sha256": "085e49ee05e1813ef64475b369b233c4c2f5ca6c720d14335c328ee79d71363f"
+    },
+    {
+      "channel": "asr",
+      "query_id": "p2_q28",
+      "query_text_sha256": "c8c0b4faa62f83ca0e89885e20e2e6a1cda62eb329da49db7e4f59797c0a8649",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": 24,
+        "recall": {
+          "R@1": false,
+          "R@10": false,
+          "R@20": false,
+          "R@5": false
+        },
+        "reciprocal_rank": 0.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "truth_identity_sha256": "0617fc5d176644a38317370220edd4a7dd479e3bd351aad63419885d010df256"
+    },
+    {
+      "channel": "asr",
+      "query_id": "p3_q04",
+      "query_text_sha256": "fb4305bd76357170010db02bd4c2b829360f1c4858345cf99231bf5e50c68191",
+      "saved_baseline": {
+        "all_targets_hit_at_20": true,
+        "family": "p3",
+        "first_correct_rank": 2,
+        "recall": {
+          "R@1": 0.0,
+          "R@10": 1.0,
+          "R@20": 1.0,
+          "R@5": 1.0
+        },
+        "reciprocal_rank": 0.5,
+        "target_ranks": [
+          2
+        ]
+      },
+      "saved_reranker": {
+        "all_targets_hit_at_20": true,
+        "family": "p3",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": 1.0,
+          "R@10": 1.0,
+          "R@20": 1.0,
+          "R@5": 1.0
+        },
+        "reciprocal_rank": 1.0,
+        "target_ranks": [
+          1
+        ]
+      },
+      "truth_identity_sha256": "269aba5f7dbf78d045af2062e709e6f42ded92d629439891e25558616fd3461f"
+    },
+    {
+      "channel": "asr",
+      "query_id": "p3_q08",
+      "query_text_sha256": "821c30b3bc271c01f92c4b7c009dca80277434ed5945c13dff520f8d2459a9d8",
+      "saved_baseline": {
+        "all_targets_hit_at_20": true,
+        "family": "p3",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": 1.0,
+          "R@10": 1.0,
+          "R@20": 1.0,
+          "R@5": 1.0
+        },
+        "reciprocal_rank": 1.0,
+        "target_ranks": [
+          1
+        ]
+      },
+      "saved_reranker": {
+        "all_targets_hit_at_20": true,
+        "family": "p3",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": 1.0,
+          "R@10": 1.0,
+          "R@20": 1.0,
+          "R@5": 1.0
+        },
+        "reciprocal_rank": 1.0,
+        "target_ranks": [
+          1
+        ]
+      },
+      "truth_identity_sha256": "937d76a437210f0aa45c80a84a5233c273e46761171535a4e16fedeefc37e769"
+    },
+    {
+      "channel": "asr",
+      "query_id": "p3_q18",
+      "query_text_sha256": "81acfb4239842578b0e50c1dadad604793cf2c5641c73b3deae27e3ec0713bc6",
+      "saved_baseline": {
+        "all_targets_hit_at_20": true,
+        "family": "p3",
+        "first_correct_rank": 2,
+        "recall": {
+          "R@1": 0.0,
+          "R@10": 1.0,
+          "R@20": 1.0,
+          "R@5": 1.0
+        },
+        "reciprocal_rank": 0.5,
+        "target_ranks": [
+          2
+        ]
+      },
+      "saved_reranker": {
+        "all_targets_hit_at_20": true,
+        "family": "p3",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": 1.0,
+          "R@10": 1.0,
+          "R@20": 1.0,
+          "R@5": 1.0
+        },
+        "reciprocal_rank": 1.0,
+        "target_ranks": [
+          1
+        ]
+      },
+      "truth_identity_sha256": "904dbc7c9db1386008b0ae84bbbe6a6536b7240f623240d8369f9d99b524cff8"
+    },
+    {
+      "channel": "asr",
+      "query_id": "p0_q16",
+      "query_text_sha256": "82420454977277e5d9e53e3705ade004c58795c6b41fc92050ddb877fea0038d",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "truth_identity_sha256": "047fcfb2e40b9326426b1a85a421d7d9b3d325ea43438dc8ca7e74d914b4e3c0"
+    },
+    {
+      "channel": "asr",
+      "query_id": "p0_q20",
+      "query_text_sha256": "19f9a8ca21046251d9102a1f261612423dfb99b11103272a0bd4ce7919ca6500",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": 51,
+        "recall": {
+          "R@1": false,
+          "R@10": false,
+          "R@20": false,
+          "R@5": false
+        },
+        "reciprocal_rank": 0.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": 17,
+        "recall": {
+          "R@1": false,
+          "R@10": false,
+          "R@20": true,
+          "R@5": false
+        },
+        "reciprocal_rank": 0.058823529411764705
+      },
+      "truth_identity_sha256": "fdb904b9d2af39759b10594fd020372e8cbf11e05c0213dda2f148490000c53a"
+    },
+    {
+      "channel": "asr",
+      "query_id": "p2_q23",
+      "query_text_sha256": "a96966435714de75eec5f61c55db63c053e4d8ff7df0457228d660b63577ae9b",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": 21,
+        "recall": {
+          "R@1": false,
+          "R@10": false,
+          "R@20": false,
+          "R@5": false
+        },
+        "reciprocal_rank": 0.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": null,
+        "recall": {
+          "R@1": false,
+          "R@10": false,
+          "R@20": false,
+          "R@5": false
+        },
+        "reciprocal_rank": 0.0
+      },
+      "truth_identity_sha256": "0c7279d84fca40b182576a1b1f56fdb1fa33d6cc1fbf6b26f6b114fce1f13ce1"
+    },
+    {
+      "channel": "asr",
+      "query_id": "p2_q21",
+      "query_text_sha256": "2abe6f8baf04a43f717e741614c8fe61f876abf3ba853a35a5c9c76cf06496af",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": 4,
+        "recall": {
+          "R@1": false,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 0.25
+      },
+      "truth_identity_sha256": "4a2c8d9b5f17fe6f6b5d5d4234e049374745c9225bd1135adf246d753e6fb87d"
+    },
+    {
+      "channel": "asr",
+      "query_id": "p3_q06",
+      "query_text_sha256": "89ff4eb2595b16b22c5cd32f9a073d545b550992228b04d3ef76df4015b70bdb",
+      "saved_baseline": {
+        "all_targets_hit_at_20": false,
+        "family": "p3",
+        "first_correct_rank": null,
+        "recall": {
+          "R@1": 0.0,
+          "R@10": 0.0,
+          "R@20": 0.0,
+          "R@5": 0.0
+        },
+        "reciprocal_rank": 0.0,
+        "target_ranks": [
+          null
+        ]
+      },
+      "saved_reranker": {
+        "all_targets_hit_at_20": true,
+        "family": "p3",
+        "first_correct_rank": 14,
+        "recall": {
+          "R@1": 0.0,
+          "R@10": 0.0,
+          "R@20": 1.0,
+          "R@5": 0.0
+        },
+        "reciprocal_rank": 0.07142857142857142,
+        "target_ranks": [
+          14
+        ]
+      },
+      "truth_identity_sha256": "63e3941da6766cfaf5f66b97432792641242d5f60963c17a0b228c50bb75d23b"
+    },
+    {
+      "channel": "asr",
+      "query_id": "p3_q14",
+      "query_text_sha256": "f552a5ef1a29c26e8cc0f9b96058fff830ff58e79b0a0c8dd6b445508a2bc3fb",
+      "saved_baseline": {
+        "all_targets_hit_at_20": true,
+        "family": "p3",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": 1.0,
+          "R@10": 1.0,
+          "R@20": 1.0,
+          "R@5": 1.0
+        },
+        "reciprocal_rank": 1.0,
+        "target_ranks": [
+          1
+        ]
+      },
+      "saved_reranker": {
+        "all_targets_hit_at_20": true,
+        "family": "p3",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": 1.0,
+          "R@10": 1.0,
+          "R@20": 1.0,
+          "R@5": 1.0
+        },
+        "reciprocal_rank": 1.0,
+        "target_ranks": [
+          1
+        ]
+      },
+      "truth_identity_sha256": "9ef7523e709ea67499abdadfedb90873b37556a241fb16e03d2644c67e02204f"
+    },
+    {
+      "channel": "asr",
+      "query_id": "p0_q01",
+      "query_text_sha256": "00ebe722eab1d16de0a1707b2d368a5b2294c7e766287ed860b7f7031775f20e",
+      "saved_baseline": {
+        "family": "historical_range",
+        "first_correct_rank": 4,
+        "recall": {
+          "R@1": false,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 0.25
+      },
+      "saved_reranker": {
+        "family": "historical_range",
+        "first_correct_rank": 1,
+        "recall": {
+          "R@1": true,
+          "R@10": true,
+          "R@20": true,
+          "R@5": true
+        },
+        "reciprocal_rank": 1.0
+      },
+      "truth_identity_sha256": "e495b4337b8ad4afc0bb57af23794c08630faddf900a815fcefd55b6f4a23382"
+    },
+    {
+      "channel": "asr",
+      "query_id": "p3_q24",
+      "query_text_sha256": "772e037a95deec3819914bd15d2049dea9584604e9f74acebc25c4c2ee83962d",
+      "saved_baseline": {
+        "all_targets_hit_at_20": false,
+        "family": "p3",
+        "first_correct_rank": null,
+        "recall": {
+          "R@1": 0.0,
+          "R@10": 0.0,
+          "R@20": 0.0,
+          "R@5": 0.0
+        },
+        "reciprocal_rank": 0.0,
+        "target_ranks": [
+          null
+        ]
+      },
+      "saved_reranker": {
+        "all_targets_hit_at_20": false,
+        "family": "p3",
+        "first_correct_rank": null,
+        "recall": {
+          "R@1": 0.0,
+          "R@10": 0.0,
+          "R@20": 0.0,
+          "R@5": 0.0
+        },
+        "reciprocal_rank": 0.0,
+        "target_ranks": [
+          null
+        ]
+      },
+      "truth_identity_sha256": "97df70af230bab0252b3c5e987a24d906c036282bef3d4a7a4b8774b9ff886b4"
+    },
+    {
+      "channel": "asr",
+      "query_id": "p3_q05",
+      "query_text_sha256": "adad85190cbd7059e0822520c8180913547f2dada74386ec8214eb474a910449",
+      "saved_baseline": {
+        "all_targets_hit_at_20": true,
+        "family": "p3",
+        "first_correct_rank": 3,
+        "recall": {
+          "R@1": 0.0,
+          "R@10": 1.0,
+          "R@20": 1.0,
+          "R@5": 1.0
+        },
+        "reciprocal_rank": 0.3333333333333333,
+        "target_ranks": [
+          3
+        ]
+      },
+      "saved_reranker": {
+        "all_targets_hit_at_20": true,
+        "family": "p3",
+        "first_correct_rank": 15,
+        "recall": {
+          "R@1": 0.0,
+          "R@10": 0.0,
+          "R@20": 1.0,
+          "R@5": 0.0
+        },
+        "reciprocal_rank": 0.06666666666666667,
+        "target_ranks": [
+          15
+        ]
+      },
+      "truth_identity_sha256": "659a9db9a484bec6d76a94806cce0befae2a6e7147821adcadaf565a8f12d03a"
+    }
+  ],
+  "ordered_selection_and_query_metadata_unchanged": true,
+  "prior_registry_sha256": "4d8852c55b8d289ee5b1ae34b8ef57e650b63195933e1f58c5235593a3ccfc99",
+  "reconstructed_capture_sample_sha256": "d3727ab99ce98b708c835c8e8b0f8d5688af47e9d25e65ce55a8e5ca839e7714",
+  "saved_score_bytes_sha256": "ed214782964e85e235eadea5c86bf907d6ad7c6ff650b2085c802aa7745269ed",
+  "saved_statuses_verified_against_unchanged_pinned_control_inputs": true,
+  "selection_method": "Round robin over sorted (phase, capability task type, combined OCR+ASR status) strata; SHA-256 seed|channel|current query ID order within each stratum.",
+  "selection_seed": "vecna-source-audit-v1"
+}

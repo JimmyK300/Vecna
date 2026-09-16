@@ -1,0 +1,497 @@
+{
+  "channel": "ocr",
+  "existing_capture_manifest_sha256": "ba3a8539621fd159a4331ff4ea0d71eb6d9753ebe25d976b2c665cbc7014be67",
+  "frozen_sample_sha256": "b4fd944228a033c37ea4d69ad757ceeae9635bfb026cf018e0d60f5b3c661be9",
+  "requests": [
+    {
+      "canonical_query": "Đoạn video trong buổi trao quà từ thiện diễn ra tại 1 bệnh viện trong dịp Xuân 2024. Trong cảnh có hai người đàn ông (mặc áo sơ mi hồng và sơ mi trắng) đứng hai bên, đại diện ban tổ chức. Ở giữa là bốn em nhỏ và thiếu niên, trong đó có em mặc áo đỏ, em mặc áo trắng, em mặc váy hồng và em mặc áo xanh. Các em được trao bảng tượng trưng với nội dung “Chương trình: Trao kinh phí hỗ trợ cho trẻ em mồ côi do dịch COVID-19”. Trước mặt mỗi em là túi quà lớn mang logo y tế. Phía sau là phông nền màu đỏ với khẩu hiệu đón xuân và thông tin sự kiện.",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 2700,
+          "original": {
+            "end_frame": 2700,
+            "end_s": 108.0,
+            "start_frame": 2325,
+            "start_s": 93.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 2325,
+          "video_id": "L30_V092"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 2491,
+      "kind": "image",
+      "query_id": "p0_q13",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 2491,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L30/L30_V092.mp4"
+    },
+    {
+      "canonical_query": "Hình ảnh giáo viên nam mặc sơ mi trắng, thắt cà vạt tối màu, nổi bật trên phông nền xanh dương đậm có hoa văn mờ.\n\nSlide bài giảng Nền trắng với khung viền màu hồng tím, phía trên có thanh tiêu đề xanh dương chứa họa tiết địa cầu và mũi tên vàng/xanh ngọc. Bên dưới là sơ đồ 3 tầng được liên kết bởi các mũi tên xanh ngọc trỏ xuống:\n\nTầng 1: 2 khối hộp được bao bởi 1 khối hộp cam.\n\nTầng 2: 1 khối hộp lớn màu xanh dương đậm ở chính giữa.\n\nTầng 3: 2 khối hộp được bao bởi 1 khối hộp xanh lá cây.",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 29000,
+          "original": {
+            "end_frame": 29000,
+            "end_s": 1160.0,
+            "start_frame": 26250,
+            "start_s": 1050.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 26250,
+          "video_id": "L25_V060"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 26533,
+      "kind": "image",
+      "query_id": "p1_q18",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 26533,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L25/L25_V060.mp4"
+    },
+    {
+      "canonical_query": "Đoạn clip mô tả hậu quả của hiện tượng sạt lở đất nghiêm trọng, đất đá tràn xuống gây tắc nghẽn hoàn toàn một đoạn đường đèo. Trong một cảnh quay cận, có thể thấy một cột mốc đường bộ với phần đỉnh màu đỏ chỉ còn lộ ra phần trên, phần lớn đã bị đất đá vùi lấp. Ở cảnh quay cuối, một người đi xe máy đang vật lộn để điều khiển phương tiện vượt qua khu vực bùn lầy, trên chiếc xe máy có treo một vật màu xanh lá. Tên của con đèo là gì?\n\n## Temporal Retrieval and Alignment of Key Events (TRAKE)",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 6250,
+          "original": {
+            "end_frame": 6250,
+            "end_s": 250.0,
+            "start_frame": 5500,
+            "start_s": 220.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 5500,
+          "video_id": "L22_V008"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 5638,
+      "kind": "image",
+      "query_id": "p1_q24",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 5638,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L22/L22_V008.mp4"
+    },
+    {
+      "canonical_query": "Hình ảnh một con cá được đặt lên cân, sau đó có cảnh một con cá khác cùng loại bị một người cầm đuôi. Con số hiển thị cuối cùng trên cân là bao nhiêu?",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 28200,
+          "original": {
+            "end_frame": 28200,
+            "end_s": 940.0,
+            "start_frame": 25440,
+            "start_s": 848.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 25440,
+          "video_id": "L21_V023"
+        },
+        {
+          "end_frame": 26220,
+          "original": {
+            "end_frame": 26220,
+            "end_s": 874.0,
+            "start_frame": 25680,
+            "start_s": 856.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 25680,
+          "video_id": "L21_V023"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 30.0,
+      "frame": 26042,
+      "kind": "image",
+      "query_id": "p1_q21",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 26042,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L21/L21_V023.mp4"
+    },
+    {
+      "canonical_query": "Clip bài giảng môn Địa lí, có 1 bảng số liệu về mạng lưới đô thị ở Việt Nam. Bảng này thể hiện sự khác nhau về phân bố đô thị giữa các vùng bằng màu sắc: 3 vùng có nhiều đô thị nhất thì con số thể hiện số lượng đô thị được in màu đỏ, còn 2 vùng có ít đô thị nhất thì con số này được in màu xanh. Từ bảng số liệu ta còn có thể thấy rằng vùng có ít đô thị nhất lại là vùng có dân số đô thi cao nhất.",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 34375,
+          "original": {
+            "end_frame": 34375,
+            "end_s": 1375.0,
+            "start_frame": 33250,
+            "start_s": 1330.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 33250,
+          "video_id": "L25_V060"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 33299,
+      "kind": "image",
+      "query_id": "p2_q15",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 33299,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L25/L25_V060.mp4"
+    },
+    {
+      "canonical_query": "Cảnh quay một tô cháo đã được nấu và trang trí hoàn chỉnh (đã xong các giai đoạn trang trí). Kế bên tô cháo có 1 chén nhỏ màu đen, để chứa 1 loại topping màu cam kết cấu hơi giống những sợi nhỏ. Loại topping này trước đó đã được rắc lên tô cháo. Xung quanh topping là các loại rau, hành,... Hỏi topping trong video là thịt của con gì?",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 6825,
+          "original": {
+            "end_frame": 6825,
+            "end_s": 273.0,
+            "start_frame": 5950,
+            "start_s": 238.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 5950,
+          "video_id": "L26_V450"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 6300,
+      "kind": "image",
+      "query_id": "p2_q26",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 6300,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L26E/L26_V450.mp4"
+    },
+    {
+      "canonical_query": "Cảnh quay một chú lân đang biểu diễn từ đầu video, các cột để chú lân biểu diễn được dán những con số. Phía sau có 1 mô hình con rồng uốn lượn hình xoắn ốc. Trong các số từ 16 giây đầu tiên của video, số nào không được nhìn thấy từ góc nhìn của camera trong các số từ 1-8.",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 480,
+          "original": {
+            "end_frame": 480,
+            "end_s": 16.0,
+            "start_frame": 0,
+            "start_s": 0.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 0,
+          "video_id": "L24_V031"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 30.0,
+      "frame": 240,
+      "kind": "image",
+      "query_id": "p2_q25",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 240,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L24/L24_V031.mp4"
+    },
+    {
+      "canonical_query": "Một giáo viên nữ ngồi bên phải màn hình và giảng bài Tiếng Anh.\nTrên bảng xanh lần lượt xuất hiện hai câu ví dụ, một câu nói về việc đi bảo tàng vào tuần trước, câu còn lại nói về thói quen chơi bóng đá khi còn trẻ.\nSau đó, nội dung trên bảng bổ sung phần giải thích chức năng của hai ví dụ và cuối cùng xuất hiện công thức ngữ pháp tương ứng.",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 2550,
+          "group_index": 0,
+          "original": {
+            "end": 2550,
+            "kind": "interval",
+            "start": 1025,
+            "video_id": "L25_V075"
+          },
+          "source": "accepted_groups",
+          "start_frame": 1025,
+          "video_id": "L25_V075"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 1787,
+      "kind": "image",
+      "query_id": "p3_q04",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 1787,
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+      "video": "videos/L25/L25_V075.mp4"
+    },
+    {
+      "canonical_query": "Một nhóm đông học sinh mặc đồng phục tập trung thành nhiều hàng trước khu vực trường học.\nPhía trước mỗi hàng có người cầm bảng ghi số lớp để phân chia các nhóm học sinh.\nSau đó, các hàng học sinh lần lượt di chuyển vào bên trong khuôn viên trường dưới sự hướng dẫn của giáo viên.\nCuối đoạn, học sinh nối thành hàng dài, đi qua hành lang và lên cầu thang của tòa nhà.",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 1775,
+          "group_index": 0,
+          "original": {
+            "end": 1775,
+            "kind": "interval",
+            "start": 1572,
+            "video_id": "L22_V026"
+          },
+          "source": "accepted_groups",
+          "start_frame": 1572,
+          "video_id": "L22_V026"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 30.0,
+      "frame": 1673,
+      "kind": "image",
+      "query_id": "p3_q02",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 1673,
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+      "video": "videos/L22/L22_V026.mp4"
+    },
+    {
+      "canonical_query": "Một giáo viên nam đứng bên trái màn hình giảng bài ôn tập môn Địa lí. Nội dung trình chiếu giới thiệu khái quát một vùng kinh tế, sau đó chuyển sang vị trí địa lí, phạm vi lãnh thổ và ý nghĩa phát triển. Ở phần sau, một bản đồ khí hậu Việt Nam được đưa lên để minh họa cho bài giảng.\nTheo nội dung bài giảng, vùng được nhắc đến gồm bao nhiêu tỉnh, thành?",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 4825,
+          "group_index": 0,
+          "original": {
+            "end": 4825,
+            "kind": "interval",
+            "start": 3658,
+            "video_id": "L25_V016"
+          },
+          "source": "accepted_groups",
+          "start_frame": 3658,
+          "video_id": "L25_V016"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 4241,
+      "kind": "image",
+      "query_id": "p3_q05",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 4241,
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+      "video": "videos/L25/L25_V016.mp4"
+    },
+    {
+      "canonical_query": "Giải đề THPTQG 2018 tại nhóm X. Nhóm này gồm 4 câu hỏi trắc nghiệm 4 đáp án A, B, C, D, trong đó đáp án 4 câu không trùng nhau và đều chứa chữ số 0. Hỏi X là số mấy?",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 41124,
+          "group_index": 0,
+          "original": {
+            "end": 41124,
+            "kind": "interval",
+            "start": 40416,
+            "video_id": "L25_V014"
+          },
+          "source": "accepted_groups",
+          "start_frame": 40416,
+          "video_id": "L25_V014"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 29.97002997002997,
+      "frame": 40770,
+      "kind": "image",
+      "query_id": "p3_q35",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 40770,
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+      "video": "videos/L25/L25_V014.mp4"
+    },
+    {
+      "canonical_query": "Trong đoạn video có 2 câu thơ của một nhà thơ ca ngợi anh hùng Nguyễn Trung Trực trong đình thần Nguyễn Trung Trực tại Kiên Giang. Hai câu thơ đó là gì?",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 5800,
+          "original": {
+            "end_frame": 5800,
+            "end_s": 232.0,
+            "start_frame": 5375,
+            "start_s": 215.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 5375,
+          "video_id": "L27_V010"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 5535,
+      "kind": "image",
+      "query_id": "p0_q20",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 5535,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L27/L27_V010.mp4"
+    },
+    {
+      "canonical_query": "Một đàn sư tử đang nghỉ ngơi và leo trèo trên các bục gỗ trong khu nuôi dưỡng, phía trước có bảng thông tin của London Zoo phục vụ công tác theo dõi và bảo tồn động vật.. Sau đó có cảnh hai nhân viên mặc áo xanh lá đang cân và ghi nhận số liệu của một con vật trong khuôn viên sở thú.",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 21450,
+          "original": {
+            "end_frame": 21450,
+            "end_s": 715.0,
+            "start_frame": 19350,
+            "start_s": 645.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 19350,
+          "video_id": "L22_V021"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 30.0,
+      "frame": 19738,
+      "kind": "image",
+      "query_id": "p1_q03",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 19738,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L22/L22_V021.mp4"
+    },
+    {
+      "canonical_query": "Bản đồ phân bố động đất tại một vùng trên thế giới, với một bảng chú giải phía bên trái gồm các kí hiệu nhiều màu sắc tương ứng với các vị trí tâm chấn có cấp độ động đất khác nhau. Không tính bảng chú giải, có bao nhiêu vị trí ghi nhận động đất cấp độ 4?",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 20000,
+          "original": {
+            "end_frame": 20000,
+            "end_s": 800.0,
+            "start_frame": 19250,
+            "start_s": 770.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 19250,
+          "video_id": "L21_V010"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 19430,
+      "kind": "image",
+      "query_id": "p1_q23",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 19430,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L21/L21_V010.mp4"
+    },
+    {
+      "canonical_query": "Sân khấu với dòng chữ nổi 3D to, ánh kim phủ kim tuyến có nội dung: “SẮC CỔ ...” đặt ở mép trước sân khấu.",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 2950,
+          "original": {
+            "end_frame": 2950,
+            "end_s": 118.0,
+            "start_frame": 1950,
+            "start_s": 78.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 1950,
+          "video_id": "L30_V026"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 2400,
+      "kind": "image",
+      "query_id": "p2_q13",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 2400,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L30/L30_V026.mp4"
+    },
+    {
+      "canonical_query": "Đoạn phim ghi lại cảnh mạnh thường quân hỗ trợ một quán trọ dành cho người cao tuổi, sau đó chuyển sang cảnh một cụ ông trò chuyện với nhóm người nước ngoài. Hỏi quán trọ được nhắc đến trong đoạn phim nằm trên đường nào?",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 3850,
+          "original": {
+            "end_frame": 3850,
+            "end_s": 154.0,
+            "start_frame": 2100,
+            "start_s": 84.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 2100,
+          "video_id": "L30_V043"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 3529,
+      "kind": "image",
+      "query_id": "p2_q23",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 3529,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L30/L30_V043.mp4"
+    },
+    {
+      "canonical_query": "Câu hỏi môn Sinh học nằm ở số thứ tự 11 trong đề thi THPTQG 2022. Trong câu hỏi có một biểu đồ đưa ra sự so sánh tốc độ sinh trưởng của các loài thực vật trong các hệ sinh thái ven biển. Hãy cho biết loài cây (II) đạt được tốc độ sinh trưởng tốt nhất khi môi trường sống có độ mặn là bao nhiêu phần nghìn?",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 21250,
+          "original": {
+            "end_frame": 21250,
+            "end_s": 850.0,
+            "start_frame": 18000,
+            "start_s": 720.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 18000,
+          "video_id": "L25_V012"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 20500,
+      "kind": "image",
+      "query_id": "p2_q24",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 20500,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L25/L25_V012.mp4"
+    }
+  ],
+  "schema": "vecna82-remaining-source-capture-v1",
+  "scope": "Only the remaining 17 OCR query/channel rows of the unchanged 20-OCR/18-ASR sample; no dataset writes or model runs.",
+  "selection_rule": "First previously declared probe anchor: first preserved submitted anchor within a canonical window, otherwise canonical window midpoint. ASR uses 28 seconds around that anchor fitted inside the containing window; windows <=28 seconds receive two seconds of surrounding context. No baseline/reranker outcome or extracted-text quality participates.",
+  "source_probe_requests_sha256": "59b31754a34394a06eda8feeb70d8c2c031ea2e6142c297599e9d8102710e742",
+  "text_source": {
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "path_pattern": "derived/metadata/asr-ocr-text-v1/{channel}/by-video/{video_id}.json",
+    "repository": "JimmyK300/official-dataset-control"
+  },
+  "truth_source": {
+    "commit": "f0b0f4707ceab91ba7e266f72fa982dce3ae1c4b",
+    "path": "benchmark-results/issue34-current-115/ground_truth_current_115.jsonl",
+    "repository": "JimmyK300/Vecna",
+    "sha256": "63f80eb6ff54ef3c623f6ae4926eba404dac8bb5543b86e31f8fa0da842b4c9f"
+  }
+}

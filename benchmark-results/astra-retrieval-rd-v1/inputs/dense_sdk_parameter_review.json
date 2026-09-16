@@ -1,0 +1,48 @@
+{
+  "schema": "vecna82-dense-sdk-parameter-review-v1",
+  "capture_runtime_package": {
+    "name": "pymilvus",
+    "version": "3.0.0"
+  },
+  "release_tag": "v3.0.0",
+  "release_commit": "f63a1aa2816205c165f04d33e658b06e9b1cee11",
+  "observed_before_sdk_call": {
+    "metric_type": "COSINE",
+    "nprobe": 32
+  },
+  "observed_recorded_after_sdk_call": {
+    "metric_type": "COSINE",
+    "nprobe": 32,
+    "params": {}
+  },
+  "finding": "Matching release code forwards the same parameter object, adds an empty params dictionary in place when absent, then merges top-level parameters into the serialized wire map. The empty recorded params object does not establish that nprobe was omitted.",
+  "sources": [
+    {
+      "path": "pymilvus/milvus_client/milvus_client.py",
+      "url": "https://github.com/milvus-io/pymilvus/blob/f63a1aa2816205c165f04d33e658b06e9b1cee11/pymilvus/milvus_client/milvus_client.py#L469",
+      "role": "Passes same nonempty search_params object as param"
+    },
+    {
+      "path": "pymilvus/client/grpc_handler.py",
+      "url": "https://github.com/milvus-io/pymilvus/blob/f63a1aa2816205c165f04d33e658b06e9b1cee11/pymilvus/client/grpc_handler.py#L1282",
+      "role": "Passes parameter dictionary to request preparation"
+    },
+    {
+      "path": "pymilvus/client/prepare.py",
+      "url": "https://github.com/milvus-io/pymilvus/blob/f63a1aa2816205c165f04d33e658b06e9b1cee11/pymilvus/client/prepare.py#L1571",
+      "role": "Adds empty nested params in place; line1701 serializes get_params(param)"
+    },
+    {
+      "path": "pymilvus/client/utils.py",
+      "url": "https://github.com/milvus-io/pymilvus/blob/f63a1aa2816205c165f04d33e658b06e9b1cee11/pymilvus/client/utils.py#L278",
+      "role": "Merges top-level search parameters into nested wire map"
+    }
+  ],
+  "independent_review": "corpus_loader_audit",
+  "limits": [
+    "Installed package version was captured; installed SDK source bytes were not independently hashed.",
+    "Matching release-source semantics do not measure the server-effective SCANN nprobe.",
+    "The collector, captured rankings, scoring semantics and accepted sample are unchanged."
+  ],
+  "evaluator_source_commit": "50984d58a8aa580ebde561718d4ef5504991a3a5"
+}

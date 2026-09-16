@@ -1,0 +1,60 @@
+{
+  "schema": "vecna82-dense-capture-transport-v1",
+  "run_id": 35105076396,
+  "artifact_id": 10449174206,
+  "result_comment": 5698675439,
+  "zip_bytes": 430632,
+  "zip_sha256": "bcf142605856e2a23e33b6dc47e05fb94f8119d902cbd234b7c7a3cde939dffa",
+  "normalized_patch_bytes": 3640437,
+  "normalized_patch_sha256": "186b8bdcf04e2faa80b6743937ef9c81a627cbfa21598ca4cae991c253ff8d00",
+  "patch_path_count": 6,
+  "broker_status_changed_path_count": 13,
+  "status_only_paths_explanation": "Seven frozen runtime files were restored byte-for-byte to Git LF objects before execution. Windows worktree status reported those paths, but their normalized Git content has no patch delta. Only six new capture/supervision files occur in the patch. All patch paths were checked against an exact six-path whitelist and applied only in a disposable repository.",
+  "status_only_paths": [
+    "benchmark-results/astra-retrieval-rd-v1/code/collect_dense_visibility.py",
+    "benchmark-results/astra-retrieval-rd-v1/code/collect_sparse_visibility.py",
+    "benchmark-results/astra-retrieval-rd-v1/outputs/fusion/source/searcher_main.py",
+    "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense-host-files.json",
+    "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense_config.json",
+    "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/source/text_embedding_main.py",
+    "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/sparse_queries.jsonl"
+  ],
+  "files": [
+    {
+      "relative_path": "outputs/source-visibility/dense-supervision-v1/stderr.txt",
+      "bytes": 2059,
+      "sha256": "511b9bb553c9af644a84216240ba7fa99aff03c51124969f3df04b9b7c2b9a24",
+      "newline_note": "Exact host CRLF bytes reconstructed and verified against supervisor hash"
+    },
+    {
+      "relative_path": "outputs/source-visibility/dense-supervision-v1/stdout.txt",
+      "bytes": 3078,
+      "sha256": "25e7d112612e504234a9daebe4b52f9218bd996643b6643bdc1ff2fd20eb8f97",
+      "newline_note": "Exact host CRLF bytes reconstructed and verified against supervisor hash"
+    },
+    {
+      "relative_path": "outputs/source-visibility/dense-supervision-v1/supervision.json",
+      "bytes": 668,
+      "sha256": "14ceea7fb82b5e265c4987a03ff6d0f3b515cc699fa759197c2be5701af2cf8a",
+      "newline_note": "Git patch LF bytes"
+    },
+    {
+      "relative_path": "outputs/source-visibility/dense-v1/collection_manifest.json",
+      "bytes": 148873,
+      "sha256": "80aae4cd4f77465df4c0f7b6eee27b10d365200dd06f3da0b4ca3980eb8e1695",
+      "newline_note": "Git patch LF bytes"
+    },
+    {
+      "relative_path": "outputs/source-visibility/dense-v1/dense_rankings.jsonl",
+      "bytes": 3342474,
+      "sha256": "097bc5f7680457d068fe075372f67dd03b17d2fac745d7e5a68a85f7195bcfc2",
+      "newline_note": "Git patch LF bytes"
+    },
+    {
+      "relative_path": "outputs/source-visibility/dense-v1/model_initialization.json",
+      "bytes": 132243,
+      "sha256": "3ea62eed2e66f40ae16a0048c1427dedc3ab50dcc6e78ce926063ef46be8d9bf",
+      "newline_note": "Git patch LF bytes"
+    }
+  ]
+}

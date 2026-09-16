@@ -1,0 +1,321 @@
+{
+  "schema": "vecna82-dense-publication-transport-v1",
+  "capture_source_commit": "759782480ad4da4927be1e1a383a9323e16906a0",
+  "evaluator_source_commit": "50984d58a8aa580ebde561718d4ef5504991a3a5",
+  "recovery_wrapper_commit": "5f2492c3ef8a93a09595d2f13dbc36041b7a5954",
+  "recovery_artifact": {
+    "repository": "JimmyK300/ai-routing-hub",
+    "run_id": 35108390246,
+    "artifact_id": 10451267529,
+    "zip_bytes": 1458461,
+    "zip_sha256": "c9d99506b13fe51da172709271f2d538614aed80039195be7a150f58d5a8d457",
+    "normalized_patch_bytes": 6929477,
+    "normalized_patch_sha256": "d4039bcda8bb6d4cce9a8fd5828dc766bb34c9853e3f829cc261fa2c074b3e84"
+  },
+  "method": "Each bounded read-only export verified the archive, patch and eight whitelisted gzip members before slicing their deterministic concatenation. Compressed bytes were exported in 25 chunks, recombined and checked, then decoded with gzip CRC32 and original-byte SHA256 verification. Published Git blobs preserve the original UTF-8 bytes, including original newline conventions.",
+  "transport_model_or_retrieval_calls": 0,
+  "bundle": {
+    "bytes": 694281,
+    "sha256": "e5efa49ad9cd281241618c74ee6000f92b4b2dfc4746d05899633bc742130204"
+  },
+  "chunks": [
+    {
+      "offset": 0,
+      "bytes": 28500,
+      "sha256": "52aaafd63c3dfc5f9fc73b8b1b28fd197f33fa36286fc3a205423c44c60ee2bc",
+      "dispatch_comment": 5699175100,
+      "result_comment": 5699190546
+    },
+    {
+      "offset": 28500,
+      "bytes": 28500,
+      "sha256": "07914bd9b375275f74d7252587edaaa13b0ac19d4ea8658442df8a0f35d2f7f5",
+      "dispatch_comment": 5699201296,
+      "result_comment": 5699215860
+    },
+    {
+      "offset": 57000,
+      "bytes": 28500,
+      "sha256": "f5cb54189b116fa8cf6058496b293b8780f500e97e0d332bbcf201d72e2582e7",
+      "dispatch_comment": 5699201523,
+      "result_comment": 5699215383
+    },
+    {
+      "offset": 85500,
+      "bytes": 28500,
+      "sha256": "27636087216a8f21018642750c97affa26e10694f68cf4e39de0cc88db9494ce",
+      "dispatch_comment": 5699201751,
+      "result_comment": 5699214732
+    },
+    {
+      "offset": 114000,
+      "bytes": 28500,
+      "sha256": "e53a3e0f0c27491af57729912c1204de214a1a4a3e64bad2201008ce18faeaa0",
+      "dispatch_comment": 5699222100,
+      "result_comment": 5699234276
+    },
+    {
+      "offset": 142500,
+      "bytes": 28500,
+      "sha256": "02e152edb3ed0b2f2fcdc240ff34c968dc7f42b7253094887309d05ccd99a8bd",
+      "dispatch_comment": 5699222374,
+      "result_comment": 5699234236
+    },
+    {
+      "offset": 171000,
+      "bytes": 28500,
+      "sha256": "19a9b5d108237f08e235c041484491a9fc48eddf9bdee08d3eb64806781f8507",
+      "dispatch_comment": 5699222607,
+      "result_comment": 5699234493
+    },
+    {
+      "offset": 199500,
+      "bytes": 28500,
+      "sha256": "b23bcd174d8b6ca4027c74f75d0cb8017ec612af2c4707216b53419bd0b31650",
+      "dispatch_comment": 5699256324,
+      "result_comment": 5699270292
+    },
+    {
+      "offset": 228000,
+      "bytes": 28500,
+      "sha256": "80eb57bd000d8fb2e3c6d725bb94b2e024a351410b8ff5b2a9b8857ee3fb8543",
+      "dispatch_comment": 5699256575,
+      "result_comment": 5699268138
+    },
+    {
+      "offset": 256500,
+      "bytes": 28500,
+      "sha256": "675c0f8bf3daf83c3340248adcba3b05f69f08323f5e3649b8b3bd695ab52fb6",
+      "dispatch_comment": 5699256855,
+      "result_comment": 5699268179
+    },
+    {
+      "offset": 285000,
+      "bytes": 28500,
+      "sha256": "be777893e90b6dbf5c6a5c176fea2ff315dc3a1badb4a2f1b98b8f505e820967",
+      "dispatch_comment": 5699292054,
+      "result_comment": 5699317566
+    },
+    {
+      "offset": 313500,
+      "bytes": 28500,
+      "sha256": "33a0e6ca19eb658b591bf60032ff2f43f3d1e80dde72c98f1f6f65c9747b394a",
+      "dispatch_comment": 5699292271,
+      "result_comment": 5699315007
+    },
+    {
+      "offset": 342000,
+      "bytes": 28500,
+      "sha256": "15bf7ebf6a77b6d550516365b798ac5f102e070ba5124010329d5157c220611b",
+      "dispatch_comment": 5699292494,
+      "result_comment": 5699315175
+    },
+    {
+      "offset": 370500,
+      "bytes": 28500,
+      "sha256": "f54fc4491b38ffaacd307addd7ced6372756c5cf780960a9e0819d6b5e8a82bb",
+      "dispatch_comment": 5699337768,
+      "result_comment": 5699348127
+    },
+    {
+      "offset": 399000,
+      "bytes": 28500,
+      "sha256": "3ebcc916843b3850ab268078e59e865b96a6eff13ce2ef3576ce96d8f6690b8d",
+      "dispatch_comment": 5699338004,
+      "result_comment": 5699348131
+    },
+    {
+      "offset": 427500,
+      "bytes": 28500,
+      "sha256": "75d7b91b996ebd5971e701ec3d2090c50158ba3b4e80c2d9ece8df78ff601403",
+      "dispatch_comment": 5699338204,
+      "result_comment": 5699348363
+    },
+    {
+      "offset": 456000,
+      "bytes": 28500,
+      "sha256": "14c9fec2010183890abd7a05bfd54761f2aaea2c6723504566d272ae33f3e558",
+      "dispatch_comment": 5699365598,
+      "result_comment": 5699379720
+    },
+    {
+      "offset": 484500,
+      "bytes": 28500,
+      "sha256": "ed95373059f0fd8b81f41fc6bacadc9d10b18f2caf89211f8b5cd771cb383f26",
+      "dispatch_comment": 5699365915,
+      "result_comment": 5699379015
+    },
+    {
+      "offset": 513000,
+      "bytes": 28500,
+      "sha256": "9caeda20105b8928be74e5d0194b8513b604e7d2cae53b8f0a0dbd002f83a561",
+      "dispatch_comment": 5699366204,
+      "result_comment": 5699378724
+    },
+    {
+      "offset": 541500,
+      "bytes": 28500,
+      "sha256": "744017c9621cbee9639180098f8ed11cf7a1e8fddebff7b2d3926cfcc6bb2a71",
+      "dispatch_comment": 5699396913,
+      "result_comment": 5699421552
+    },
+    {
+      "offset": 570000,
+      "bytes": 28500,
+      "sha256": "ef42af3235548d0da56ced7df2b2c710c4919d9c6ef196802193583c54daeb5c",
+      "dispatch_comment": 5699397149,
+      "result_comment": 5699425044
+    },
+    {
+      "offset": 598500,
+      "bytes": 28500,
+      "sha256": "468d4f1b462d8b6f8848d9e9cc77bd913cc6ddcd965375b660ee7f47274f519f",
+      "dispatch_comment": 5699397364,
+      "result_comment": 5699426354
+    },
+    {
+      "offset": 627000,
+      "bytes": 28500,
+      "sha256": "11ae42545182e9bee09aaf7bf4ea2c845aab72b62e2db3786cd6bb9e1c56f352",
+      "dispatch_comment": 5699443222,
+      "result_comment": 5699454678
+    },
+    {
+      "offset": 655500,
+      "bytes": 28500,
+      "sha256": "8a8cd32cfdb0363871f822207823353f5bbe1e2f5411ac891f9f28858a12eef2",
+      "dispatch_comment": 5699443511,
+      "result_comment": 5699454828
+    },
+    {
+      "offset": 684000,
+      "bytes": 10281,
+      "sha256": "5873f37ad64ffbc04771e8e0bb51687766d376e426979d6cb7ab86838d06e0ff",
+      "dispatch_comment": 5699443751,
+      "result_comment": 5699454710
+    }
+  ],
+  "files": [
+    {
+      "bytes": 3953,
+      "git_blob": "33be9312fb74446cfeb8c6e317307a1be77415fb",
+      "gzip_bytes": 1560,
+      "gzip_file": "publication-00.gz",
+      "gzip_sha256": "163881dba95dfcd6e6cf0572a778104b7e167e84140943821dd652405608d7af",
+      "path": "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense-evaluation-v1/DENSE_VISIBILITY.md",
+      "sha256": "aa34f6b30d1297d7ec4530e7cd636d90eb456c01c6b9f34d5fe93cefc49b5717",
+      "publication_encoding": "ordinary UTF-8 Git blob; compact original bytes transported",
+      "byte_verification": "Compact original base64 bytes/SHA256 and exact UTF-8 Git blob readback verified; gzip metadata retained from the host manifest but these two gzip copies were not exported."
+    },
+    {
+      "bytes": 2183343,
+      "git_blob": "542c94f2049a1762254bc439db53413e195f71f3",
+      "gzip_bytes": 268709,
+      "gzip_file": "publication-01.gz",
+      "gzip_sha256": "819e42eca34992824c974602fbbccb50d9a6d2875d795dd2e421d14d969bf6c5",
+      "path": "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense-evaluation-v1/dense_visibility.jsonl",
+      "sha256": "21d95a932facfa8a150b9350f5b14004ed9205f0aa99da56bb25221472abaf8c",
+      "publication_encoding": "ordinary UTF-8 Git blob; gzip transport only",
+      "byte_verification": "compressed SHA256, gzip CRC32, exact original bytes/SHA256, UTF-8 roundtrip, and Git blob SHA verified"
+    },
+    {
+      "bytes": 163774,
+      "git_blob": "80a1f32cda76b71ac59b3c5211dd17882e1ed7f9",
+      "gzip_bytes": 7418,
+      "gzip_file": "publication-02.gz",
+      "gzip_sha256": "4776bf75a4f9bf33badd5acf611455356ad92e7654be08baab3a58256a2f18e1",
+      "path": "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense-evaluation-v1/evaluation_manifest.json",
+      "sha256": "6a9f3c55ace1c4fd91ae8b211e08c638ec22a00f6289561e35f74011eab7c51a",
+      "publication_encoding": "ordinary UTF-8 Git blob; gzip transport only",
+      "byte_verification": "compressed SHA256, gzip CRC32, exact original bytes/SHA256, UTF-8 roundtrip, and Git blob SHA verified"
+    },
+    {
+      "bytes": 2626,
+      "git_blob": "6fc0b84c3e3ad7d17def453cd1e68a59595494c4",
+      "gzip_bytes": 459,
+      "gzip_file": "publication-03.gz",
+      "gzip_sha256": "756efeca662c2f55bb6580e82abea67ec9ff41b8bd28361d3e530a72a56f1d9d",
+      "path": "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense-evaluation-v1/summary.json",
+      "sha256": "ead0d1418c046a8379097990841545768700b679fd80fff7a2ad1bda4c1ec724",
+      "publication_encoding": "ordinary UTF-8 Git blob; compact original bytes transported",
+      "byte_verification": "Compact original base64 bytes/SHA256 and exact UTF-8 Git blob readback verified; gzip metadata retained from the host manifest but these two gzip copies were not exported."
+    },
+    {
+      "bytes": 2059,
+      "git_blob": "292d97cf5170aa7d7184fe219028b22d8a62756b",
+      "gzip_bytes": 354,
+      "gzip_file": "publication-04.gz",
+      "gzip_sha256": "bd53dd6bc2c8197f67792d1dbd591294b8196afa0d602439ef0b625a0e41e86a",
+      "path": "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense-supervision-v1/stderr.txt",
+      "sha256": "511b9bb553c9af644a84216240ba7fa99aff03c51124969f3df04b9b7c2b9a24",
+      "publication_encoding": "ordinary UTF-8 Git blob; gzip transport only",
+      "byte_verification": "compressed SHA256, gzip CRC32, exact original bytes/SHA256, UTF-8 roundtrip, and Git blob SHA verified"
+    },
+    {
+      "bytes": 3078,
+      "git_blob": "fe225a7b57488c87b96ab7dc5931b661a0aa4bae",
+      "gzip_bytes": 227,
+      "gzip_file": "publication-05.gz",
+      "gzip_sha256": "fb1821599aa2343b2cadc041cfddfdfe2f9b7f62e3b0634510c11f55d6e025e2",
+      "path": "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense-supervision-v1/stdout.txt",
+      "sha256": "25e7d112612e504234a9daebe4b52f9218bd996643b6643bdc1ff2fd20eb8f97",
+      "publication_encoding": "ordinary UTF-8 Git blob; gzip transport only",
+      "byte_verification": "compressed SHA256, gzip CRC32, exact original bytes/SHA256, UTF-8 roundtrip, and Git blob SHA verified"
+    },
+    {
+      "bytes": 668,
+      "git_blob": "433dd57eeeebb820f4e4f59b64c2564c93298c18",
+      "gzip_bytes": 400,
+      "gzip_file": "publication-06.gz",
+      "gzip_sha256": "895200164b767a5ba91b7dd937d9f18a114c809c910d33300e66c83b7dca8974",
+      "path": "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense-supervision-v1/supervision.json",
+      "sha256": "14ceea7fb82b5e265c4987a03ff6d0f3b515cc699fa759197c2be5701af2cf8a",
+      "publication_encoding": "ordinary UTF-8 Git blob; gzip transport only",
+      "byte_verification": "compressed SHA256, gzip CRC32, exact original bytes/SHA256, UTF-8 roundtrip, and Git blob SHA verified"
+    },
+    {
+      "bytes": 148873,
+      "git_blob": "a7311ca66153abf6c90c19b1354852f71e901a53",
+      "gzip_bytes": 6659,
+      "gzip_file": "publication-07.gz",
+      "gzip_sha256": "d9011b4c7763842ccf92809defd9e175ba4ad80e6814e4da2651bc44908d1e95",
+      "path": "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense-v1/collection_manifest.json",
+      "sha256": "80aae4cd4f77465df4c0f7b6eee27b10d365200dd06f3da0b4ca3980eb8e1695",
+      "publication_encoding": "ordinary UTF-8 Git blob; gzip transport only",
+      "byte_verification": "compressed SHA256, gzip CRC32, exact original bytes/SHA256, UTF-8 roundtrip, and Git blob SHA verified"
+    },
+    {
+      "bytes": 3342474,
+      "git_blob": "1983bc4db8aeb9074778af5573df9b8be4e4fc57",
+      "gzip_bytes": 406028,
+      "gzip_file": "publication-08.gz",
+      "gzip_sha256": "917f5c4c0b87126e781d56311994de413d60308a73c69c87908a12a4ce7dcc93",
+      "path": "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense-v1/dense_rankings.jsonl",
+      "sha256": "097bc5f7680457d068fe075372f67dd03b17d2fac745d7e5a68a85f7195bcfc2",
+      "publication_encoding": "ordinary UTF-8 Git blob; gzip transport only",
+      "byte_verification": "compressed SHA256, gzip CRC32, exact original bytes/SHA256, UTF-8 roundtrip, and Git blob SHA verified"
+    },
+    {
+      "bytes": 132243,
+      "git_blob": "5bc221b53de9201982c38619514a112dac4e0f99",
+      "gzip_bytes": 4486,
+      "gzip_file": "publication-09.gz",
+      "gzip_sha256": "7af0e5da039ed573702219e8695c72cc8963644b4caee33f8fe5e5caaa1e0b02",
+      "path": "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense-v1/model_initialization.json",
+      "sha256": "3ea62eed2e66f40ae16a0048c1427dedc3ab50dcc6e78ce926063ef46be8d9bf",
+      "publication_encoding": "ordinary UTF-8 Git blob; gzip transport only",
+      "byte_verification": "compressed SHA256, gzip CRC32, exact original bytes/SHA256, UTF-8 roundtrip, and Git blob SHA verified"
+    }
+  ],
+  "evaluation_replay_byte_identical_files": 4,
+  "verified_at_publication": {
+    "raw_rows": 38,
+    "query_channel_counts": {
+      "ocr": 20,
+      "asr": 18
+    },
+    "source_audio_clips_heard": 0,
+    "primary_source_review_ledger_changed": false,
+    "signed_urls_retained": false
+  }
+}

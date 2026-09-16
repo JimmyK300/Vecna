@@ -1,0 +1,30 @@
+{
+  "authority": "high-host",
+  "base_commit": "bd0beee87f961384c2fd938c6591ed7efc036145",
+  "changed_paths": [
+    "benchmark-results/astra-retrieval-rd-v1/code/probe_dense_visibility_identity.py",
+    "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense-identity-v1.json"
+  ],
+  "dry_run": false,
+  "duration_seconds": 13.892,
+  "exit_code": 0,
+  "final_head": "bd0beee87f961384c2fd938c6591ed7efc036145",
+  "patch_artifact": "changes.patch",
+  "patch_bytes": 26598,
+  "patch_sha256": "64f376d9e8118a5dcab545fa815c1383a50ccf6c84fa163cb1c1eb1b0ebf6812",
+  "repository": "JimmyK300/Vecna",
+  "resolved_executable": "C:\\WINDOWS\\system32\\wsl.exe",
+  "runner": "wsl-shell",
+  "schema_version": 1,
+  "scope": [
+    "benchmark-results/astra-retrieval-rd-v1"
+  ],
+  "scope_violations": [],
+  "source_url": "https://github.com/JimmyK300/ai-routing-hub/issues/1#issuecomment-5698142781",
+  "status": "success",
+  "task_id": "vecna82-dense-text-identity-probe-20260916",
+  "worker_stderr": "",
+  "worker_stdout": "{\"returncode\": 0, \"stdout\": \"{\\r\\n  \\\"output\\\": \\\"C:\\\\\\\\Users\\\\\\\\minhc\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp\\\\\\\\ai-broker-vecna82-dense-text-identity-probe-20260916-qeh6oq5s\\\\\\\\worktree\\\\\\\\benchmark-results\\\\\\\\astra-retrieval-rd-v1\\\\\\\\outputs\\\\\\\\source-visibility\\\\\\\\dense-identity-v1.json\\\",\\r\\n  \\\"sha256\\\": \\\"5e09c550159654ec485be698201cdb9afce2b81ca9a012f517bace11334b47fd\\\",\\r\\n  \\\"bytes\\\": 18463,\\r\\n  \\\"cache_exists\\\": true,\\r\\n  \\\"snapshot_count\\\": 2\\r\\n}\\r\\n\", \"stderr\": \"\"}\n",
+  "workspace_kind": "clone",
+  "wsl_distribution": "Ubuntu"
+}

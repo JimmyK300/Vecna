@@ -1,0 +1,472 @@
+{
+  "files": [
+    {
+      "blob_sha": "413f1ea0e8969330f86daeb77ca03248d026836f",
+      "channel": "asr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/asr/L21_V015.json",
+      "path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L21_V015.json",
+      "query_ids": [
+        "p0_q01"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L21_V015"
+    },
+    {
+      "blob_sha": "a2f726c2f77326e4b4f3edf429e39df8f9658f93",
+      "channel": "asr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/asr/L21_V018.json",
+      "path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L21_V018.json",
+      "query_ids": [
+        "p3_q08"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L21_V018"
+    },
+    {
+      "blob_sha": "94424bd1d2c4029bf89a32512c5f9d5f5babbc41",
+      "channel": "asr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/asr/L21_V029.json",
+      "path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L21_V029.json",
+      "query_ids": [
+        "p0_q02"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L21_V029"
+    },
+    {
+      "blob_sha": "0136a3655f8dac4a954756ca11984606d931f115",
+      "channel": "asr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/asr/L22_V008.json",
+      "path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L22_V008.json",
+      "query_ids": [
+        "p1_q24"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L22_V008"
+    },
+    {
+      "blob_sha": "87cbc08363aa7f971af9282e12be79e176a1a8a3",
+      "channel": "asr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/asr/L22_V022.json",
+      "path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L22_V022.json",
+      "query_ids": [
+        "p0_q16"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L22_V022"
+    },
+    {
+      "blob_sha": "30f60914dc0a97425d90aa9e1b3c9590ba53e7d5",
+      "channel": "asr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/asr/L25_V016.json",
+      "path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L25_V016.json",
+      "query_ids": [
+        "p3_q05"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L25_V016"
+    },
+    {
+      "blob_sha": "d1ecfc33bd684c5badd83802ec3e4ef644795f4e",
+      "channel": "asr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/asr/L25_V027.json",
+      "path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L25_V027.json",
+      "query_ids": [
+        "p3_q06"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L25_V027"
+    },
+    {
+      "blob_sha": "25b358688615d0e2d383f8e6a3b01711179244f5",
+      "channel": "asr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/asr/L25_V041.json",
+      "path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L25_V041.json",
+      "query_ids": [
+        "p1_q17"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L25_V041"
+    },
+    {
+      "blob_sha": "3b249d17410189b87ab38dd60d352e32b12228d0",
+      "channel": "asr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/asr/L25_V075.json",
+      "path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L25_V075.json",
+      "query_ids": [
+        "p3_q04"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L25_V075"
+    },
+    {
+      "blob_sha": "8accf250a686c02a69216b73eaf31464f4ff0c7a",
+      "channel": "asr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/asr/L26_V161.json",
+      "path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L26_V161.json",
+      "query_ids": [
+        "p2_q21"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L26_V161"
+    },
+    {
+      "blob_sha": "182e1abeb1d8688843a28b0447070d9e88d7d7bc",
+      "channel": "asr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/asr/L26_V254.json",
+      "path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L26_V254.json",
+      "query_ids": [
+        "p2_q28"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L26_V254"
+    },
+    {
+      "blob_sha": "e8c39c6a421f982a6b0fff57c47b058cba41d889",
+      "channel": "asr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/asr/L26_V448.json",
+      "path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L26_V448.json",
+      "query_ids": [
+        "p3_q24"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L26_V448"
+    },
+    {
+      "blob_sha": "9d0a51fd4eda9d082d9f36c2b5c02211fb047b03",
+      "channel": "asr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/asr/L26_V450.json",
+      "path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L26_V450.json",
+      "query_ids": [
+        "p2_q26"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L26_V450"
+    },
+    {
+      "blob_sha": "885d70dbc15324dca9d9145fb5d6e4332e299974",
+      "channel": "asr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/asr/L27_V010.json",
+      "path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L27_V010.json",
+      "query_ids": [
+        "p0_q20"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L27_V010"
+    },
+    {
+      "blob_sha": "86bf05c2cecbc1ab0681a9e183d2d143a12e544d",
+      "channel": "asr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/asr/L30_V010.json",
+      "path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L30_V010.json",
+      "query_ids": [
+        "p3_q18"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L30_V010"
+    },
+    {
+      "blob_sha": "57a3b4cdcf6f6fadf7466c628692f1d91a3f79a6",
+      "channel": "asr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/asr/L30_V043.json",
+      "path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L30_V043.json",
+      "query_ids": [
+        "p2_q23"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L30_V043"
+    },
+    {
+      "blob_sha": "a9c653517aa9ff30759b983c512e32ccf63adfa0",
+      "channel": "asr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/asr/L30_V047.json",
+      "path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L30_V047.json",
+      "query_ids": [
+        "p3_q14"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L30_V047"
+    },
+    {
+      "blob_sha": "744797599b2254050b3c3588fadfba6e69937aa5",
+      "channel": "asr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/asr/L30_V072.json",
+      "path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L30_V072.json",
+      "query_ids": [
+        "p0_q19"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L30_V072"
+    },
+    {
+      "blob_sha": "ccc34f2274306abb13ba7ed7c4d22483d7f99452",
+      "channel": "ocr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/ocr/L21_V010.json",
+      "path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L21_V010.json",
+      "query_ids": [
+        "p1_q23"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L21_V010"
+    },
+    {
+      "blob_sha": "b54454b7ada8ad00b95e017ade7595a9abfbf1da",
+      "channel": "ocr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/ocr/L21_V023.json",
+      "path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L21_V023.json",
+      "query_ids": [
+        "p1_q21"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L21_V023"
+    },
+    {
+      "blob_sha": "87148e91077cddd00fea8f57b7c4017016d5939f",
+      "channel": "ocr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/ocr/L22_V008.json",
+      "path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L22_V008.json",
+      "query_ids": [
+        "p1_q24"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L22_V008"
+    },
+    {
+      "blob_sha": "7b955615e7037ec7cea29f3885975af529527466",
+      "channel": "ocr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/ocr/L22_V021.json",
+      "path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L22_V021.json",
+      "query_ids": [
+        "p1_q03"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L22_V021"
+    },
+    {
+      "blob_sha": "972681440661b21b37ab93b2d519928aa7a5b267",
+      "channel": "ocr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/ocr/L22_V026.json",
+      "path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L22_V026.json",
+      "query_ids": [
+        "p3_q02"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L22_V026"
+    },
+    {
+      "blob_sha": "869025d7edbb9f83be68b58c17131a6d52a8e6bf",
+      "channel": "ocr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/ocr/L24_V031.json",
+      "path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L24_V031.json",
+      "query_ids": [
+        "p2_q25"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L24_V031"
+    },
+    {
+      "channel": "ocr",
+      "video_id": "L25_V012",
+      "query_ids": [
+        "p2_q24"
+      ],
+      "blob_sha": "c48df5ba7ce0c115c08bea05688d261cc24cc7c1",
+      "repository": "JimmyK300/official-dataset-control",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L25_V012.json",
+      "local": "outputs/dataset-audit/source-artifacts/ocr/L25_V012.json"
+    },
+    {
+      "channel": "ocr",
+      "video_id": "L25_V014",
+      "query_ids": [
+        "p3_q35"
+      ],
+      "blob_sha": "1ca1a626d0fe4a44252eb6fcd6d15b5ff8b76fd1",
+      "repository": "JimmyK300/official-dataset-control",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L25_V014.json",
+      "local": "outputs/dataset-audit/source-artifacts/ocr/L25_V014.json"
+    },
+    {
+      "channel": "ocr",
+      "video_id": "L25_V016",
+      "query_ids": [
+        "p3_q05"
+      ],
+      "blob_sha": "fecf93fff18645b3e5396f93dfe2811920631b7d",
+      "repository": "JimmyK300/official-dataset-control",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L25_V016.json",
+      "local": "outputs/dataset-audit/source-artifacts/ocr/L25_V016.json"
+    },
+    {
+      "blob_sha": "21a49b0b11e14323615e8f60acbdd9d47aa02d13",
+      "channel": "ocr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/ocr/L25_V041.json",
+      "path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L25_V041.json",
+      "query_ids": [
+        "p1_q17"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L25_V041"
+    },
+    {
+      "channel": "ocr",
+      "video_id": "L25_V060",
+      "query_ids": [
+        "p1_q18",
+        "p2_q15"
+      ],
+      "blob_sha": "f4dbdf310c5338a162e44c97bad147e710328575",
+      "repository": "JimmyK300/official-dataset-control",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L25_V060.json",
+      "local": "outputs/dataset-audit/source-artifacts/ocr/L25_V060.json"
+    },
+    {
+      "blob_sha": "ea0dbb7bc0d6c7c4704f8cf7ef88955f4a3d3048",
+      "channel": "ocr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/ocr/L25_V075.json",
+      "path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L25_V075.json",
+      "query_ids": [
+        "p3_q04"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L25_V075"
+    },
+    {
+      "blob_sha": "a90e0c9b98afa63478c85d748a9ab9b9a734bc7a",
+      "channel": "ocr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/ocr/L26_V450.json",
+      "path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L26_V450.json",
+      "query_ids": [
+        "p2_q26"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L26_V450"
+    },
+    {
+      "blob_sha": "d8a38dcfbb5e49f30525fe73eff15ffee09ce84a",
+      "channel": "ocr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/ocr/L27_V010.json",
+      "path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L27_V010.json",
+      "query_ids": [
+        "p0_q20"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L27_V010"
+    },
+    {
+      "blob_sha": "d8cfe6972416a321f1f8c1dd10fcd0a7e98a33d3",
+      "channel": "ocr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/ocr/L30_V026.json",
+      "path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L30_V026.json",
+      "query_ids": [
+        "p2_q13"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L30_V026"
+    },
+    {
+      "blob_sha": "0a455875f7d4491478f1bdd0626580907675c351",
+      "channel": "ocr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/ocr/L30_V043.json",
+      "path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L30_V043.json",
+      "query_ids": [
+        "p2_q23"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L30_V043"
+    },
+    {
+      "blob_sha": "b2a74e26db206bb97f1042872108e5d304453485",
+      "channel": "ocr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/ocr/L30_V072.json",
+      "path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L30_V072.json",
+      "query_ids": [
+        "p0_q19"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L30_V072"
+    },
+    {
+      "blob_sha": "4ded32c6903ef5e0fe1758f09aa763dd2cb21a27",
+      "channel": "ocr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/ocr/L30_V078.json",
+      "path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L30_V078.json",
+      "query_ids": [
+        "p0_q21"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L30_V078"
+    },
+    {
+      "blob_sha": "f6a57400271c03f018ce4cc4862e4f3ae0dc19a3",
+      "channel": "ocr",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "local": "outputs/dataset-audit/source-artifacts/ocr/L30_V092.json",
+      "path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L30_V092.json",
+      "query_ids": [
+        "p0_q13"
+      ],
+      "repository": "JimmyK300/official-dataset-control",
+      "video_id": "L30_V092"
+    }
+  ],
+  "documentation": [
+    {
+      "repository": "JimmyK300/official-dataset-control",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "path": "derived/metadata/asr-ocr-text-v1/README.md",
+      "blob_sha": "6ac2a64d3d069e54a9b971c8c6036f81f047c603",
+      "local": "outputs/dataset-audit/source-artifacts/README.md"
+    },
+    {
+      "repository": "JimmyK300/official-dataset-control",
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "path": "derived/metadata/asr-ocr-text-v1/manifest.json",
+      "blob_sha": "3243f05ba952aa2698abffe6d409ad9e507b9761",
+      "local": "outputs/dataset-audit/source-artifacts/manifest.json"
+    },
+    {
+      "repository": "JimmyK300/Vecna",
+      "commit": "95d63a6abf10c598e0e54af7d2071bedbe542d1e",
+      "path": "docs/provenance-v1.md",
+      "blob_sha": "8abff037b30ec50f37dc539d283ebd0adaa787e8",
+      "local": "outputs/dataset-audit/source-artifacts/vecna-provenance-v1.md"
+    }
+  ]
+}

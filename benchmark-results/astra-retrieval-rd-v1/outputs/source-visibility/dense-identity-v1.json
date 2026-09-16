@@ -1,0 +1,406 @@
+{
+  "cache": {
+    "exists": true,
+    "path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3",
+    "refs": [
+      {
+        "bytes": 40,
+        "exists": true,
+        "mtime_ns": 1787136020776205700,
+        "path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\refs\\main",
+        "resolved_path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\refs\\main",
+        "revision": "5617a9f61b028005a4858fdac845db406aefb181",
+        "sha256": "1c872317cdcebed80d210377247bc1c88a4465bad572c465155cbd6a2275aa1d"
+      }
+    ],
+    "snapshot_count": 2,
+    "snapshots": [
+      {
+        "files": [
+          {
+            "bytes": 1627,
+            "exists": true,
+            "mtime_ns": 1787134320195981000,
+            "path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\.gitattributes",
+            "resolved_path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\.gitattributes"
+          },
+          {
+            "bytes": 2100674,
+            "exists": true,
+            "mtime_ns": 1787134322524530100,
+            "path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\colbert_linear.pt",
+            "resolved_path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\colbert_linear.pt"
+          },
+          {
+            "bytes": 687,
+            "exists": true,
+            "json": {
+              "_name_or_path": "",
+              "architectures": [
+                "XLMRobertaModel"
+              ],
+              "attention_probs_dropout_prob": 0.1,
+              "bos_token_id": 0,
+              "classifier_dropout": null,
+              "eos_token_id": 2,
+              "hidden_act": "gelu",
+              "hidden_dropout_prob": 0.1,
+              "hidden_size": 1024,
+              "initializer_range": 0.02,
+              "intermediate_size": 4096,
+              "layer_norm_eps": 1e-05,
+              "max_position_embeddings": 8194,
+              "model_type": "xlm-roberta",
+              "num_attention_heads": 16,
+              "num_hidden_layers": 24,
+              "output_past": true,
+              "pad_token_id": 1,
+              "position_embedding_type": "absolute",
+              "torch_dtype": "float32",
+              "transformers_version": "4.33.0",
+              "type_vocab_size": 1,
+              "use_cache": true,
+              "vocab_size": 250002
+            },
+            "mtime_ns": 1786942632082347900,
+            "path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\config.json",
+            "resolved_path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\config.json",
+            "sha256": "26159e7ad065073448460117eb24b7a4572f6f4e78eadff65dc0a11c052449fa"
+          },
+          {
+            "bytes": 123,
+            "exists": true,
+            "json": {
+              "__version__": {
+                "pytorch": "2.1.2+cu121",
+                "sentence_transformers": "2.2.2",
+                "transformers": "4.33.0"
+              }
+            },
+            "mtime_ns": 1787134320573566200,
+            "path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\config_sentence_transformers.json",
+            "resolved_path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\config_sentence_transformers.json",
+            "sha256": "1eef72430e7194a1e59680e635aed81ffa083f05668dbc5bb1c56c04c0999c38"
+          },
+          {
+            "bytes": 126894,
+            "exists": true,
+            "mtime_ns": 1787134321745665300,
+            "path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\long.jpg",
+            "resolved_path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\long.jpg"
+          },
+          {
+            "bytes": 349,
+            "exists": true,
+            "json": [
+              {
+                "idx": 0,
+                "name": "0",
+                "path": "",
+                "type": "sentence_transformers.models.Transformer"
+              },
+              {
+                "idx": 1,
+                "name": "1",
+                "path": "1_Pooling",
+                "type": "sentence_transformers.models.Pooling"
+              },
+              {
+                "idx": 2,
+                "name": "2",
+                "path": "2_Normalize",
+                "type": "sentence_transformers.models.Normalize"
+              }
+            ],
+            "mtime_ns": 1787134321742663200,
+            "path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\modules.json",
+            "resolved_path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\modules.json",
+            "sha256": "84e40c8e006c9b1d6c122e02cba9b02458120b5fb0c87b746c41e0207cf642cf"
+          },
+          {
+            "bytes": 2271145830,
+            "exists": true,
+            "mtime_ns": 1786942764448578200,
+            "path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\pytorch_model.bin",
+            "resolved_path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\pytorch_model.bin"
+          },
+          {
+            "bytes": 15822,
+            "exists": true,
+            "mtime_ns": 1787134320595349500,
+            "path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\README.md",
+            "resolved_path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\README.md"
+          },
+          {
+            "bytes": 54,
+            "exists": true,
+            "json": {
+              "do_lower_case": false,
+              "max_seq_length": 8192
+            },
+            "mtime_ns": 1787134323054502500,
+            "path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\sentence_bert_config.json",
+            "resolved_path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\sentence_bert_config.json",
+            "sha256": "eb9b44b13c0f52a3b3685c3b1cbdea1ba8b04bea123b98f61610048940776eb1"
+          },
+          {
+            "bytes": 5069051,
+            "exists": true,
+            "mtime_ns": 1786942628748800600,
+            "path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\sentencepiece.bpe.model",
+            "resolved_path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\sentencepiece.bpe.model"
+          },
+          {
+            "bytes": 3516,
+            "exists": true,
+            "mtime_ns": 1787134334742350700,
+            "path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\sparse_linear.pt",
+            "resolved_path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\sparse_linear.pt"
+          },
+          {
+            "bytes": 964,
+            "exists": true,
+            "json": {
+              "bos_token": {
+                "content": "<s>",
+                "lstrip": false,
+                "normalized": false,
+                "rstrip": false,
+                "single_word": false
+              },
+              "cls_token": {
+                "content": "<s>",
+                "lstrip": false,
+                "normalized": false,
+                "rstrip": false,
+                "single_word": false
+              },
+              "eos_token": {
+                "content": "</s>",
+                "lstrip": false,
+                "normalized": false,
+                "rstrip": false,
+                "single_word": false
+              },
+              "mask_token": {
+                "content": "<mask>",
+                "lstrip": true,
+                "normalized": false,
+                "rstrip": false,
+                "single_word": false
+              },
+              "pad_token": {
+                "content": "<pad>",
+                "lstrip": false,
+                "normalized": false,
+                "rstrip": false,
+                "single_word": false
+              },
+              "sep_token": {
+                "content": "</s>",
+                "lstrip": false,
+                "normalized": false,
+                "rstrip": false,
+                "single_word": false
+              },
+              "unk_token": {
+                "content": "<unk>",
+                "lstrip": false,
+                "normalized": false,
+                "rstrip": false,
+                "single_word": false
+              }
+            },
+            "mtime_ns": 1786942630677487300,
+            "path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\special_tokens_map.json",
+            "resolved_path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\special_tokens_map.json",
+            "sha256": "8c785abebea9ae3257b61681b4e6fd8365ceafde980c21970d001e834cf10835"
+          },
+          {
+            "bytes": 17098108,
+            "exists": true,
+            "mtime_ns": 1786942630131946700,
+            "path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\tokenizer.json",
+            "resolved_path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\tokenizer.json"
+          },
+          {
+            "bytes": 444,
+            "exists": true,
+            "json": {
+              "bos_token": "<s>",
+              "clean_up_tokenization_spaces": true,
+              "cls_token": "<s>",
+              "eos_token": "</s>",
+              "mask_token": {
+                "__type": "AddedToken",
+                "content": "<mask>",
+                "lstrip": true,
+                "normalized": true,
+                "rstrip": false,
+                "single_word": false
+              },
+              "model_max_length": 8192,
+              "pad_token": "<pad>",
+              "sep_token": "</s>",
+              "sp_model_kwargs": {},
+              "tokenizer_class": "XLMRobertaTokenizer",
+              "unk_token": "<unk>"
+            },
+            "mtime_ns": 1786942625458021300,
+            "path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\tokenizer_config.json",
+            "resolved_path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\tokenizer_config.json",
+            "sha256": "a62b2b6784f990259fddef5f16388693a8043be4f69179e6a5257eeb3f9abac4"
+          }
+        ],
+        "path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181",
+        "pooling": {
+          "bytes": 191,
+          "exists": true,
+          "json": {
+            "pooling_mode_cls_token": true,
+            "pooling_mode_max_tokens": false,
+            "pooling_mode_mean_sqrt_len_tokens": false,
+            "pooling_mode_mean_tokens": false,
+            "word_embedding_dimension": 1024
+          },
+          "mtime_ns": 1787134320590908200,
+          "path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\1_Pooling\\config.json",
+          "resolved_path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181\\1_Pooling\\config.json",
+          "sha256": "e54c164a07274f2eb45bb724f54a79d1efcc90c41573887cd9a29aeee0597352"
+        },
+        "revision": "5617a9f61b028005a4858fdac845db406aefb181",
+        "top_level_file_count": 14
+      },
+      {
+        "files": [
+          {
+            "bytes": 2271064456,
+            "exists": true,
+            "mtime_ns": 1786942934226426900,
+            "path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\9a0624b896d81da7492a910ffa53731274b6cf3d\\model.safetensors",
+            "resolved_path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\9a0624b896d81da7492a910ffa53731274b6cf3d\\model.safetensors"
+          }
+        ],
+        "path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\9a0624b896d81da7492a910ffa53731274b6cf3d",
+        "revision": "9a0624b896d81da7492a910ffa53731274b6cf3d",
+        "top_level_file_count": 1
+      }
+    ]
+  },
+  "configuration": [
+    {
+      "bytes": 5119,
+      "exists": true,
+      "mtime_ns": 1789564835748279700,
+      "path": "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-dense-text-identity-probe-20260916-qeh6oq5s\\worktree\\config.yaml",
+      "projection": {
+        "features": {
+          "asr_dense": {},
+          "ocr_dense": {}
+        },
+        "search_backend": {
+          "collection": "milvus",
+          "gpu": true
+        },
+        "text_bge_m3": {
+          "backend": "pytorch",
+          "model": "text_embedding",
+          "onnx_provider": "auto",
+          "pretrained_model": "BAAI/bge-m3",
+          "source": "hf",
+          "target": [
+            "ocr_dense",
+            "asr_dense"
+          ]
+        },
+        "text_fields": {
+          "asr": {
+            "asr_field": "asr_sparse",
+            "enable": true
+          },
+          "ocr": {
+            "enable": true,
+            "ocr_field": "ocr_sparse"
+          }
+        }
+      },
+      "projection_status": "explicit text-model/field allowlist; no unrelated configuration exported",
+      "resolved_path": "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-dense-text-identity-probe-20260916-qeh6oq5s\\worktree\\config.yaml",
+      "sha256": "53e9f5a5975be532dd3c311db1c2845fcefc727b770433e1c961cc19cd240a84"
+    },
+    {
+      "exists": false,
+      "path": "D:\\Official-Dataset\\config.yaml"
+    }
+  ],
+  "database_access": false,
+  "dataset_or_cache_writes": false,
+  "dense_provenance": [
+    {
+      "exists": false,
+      "path": "D:\\Official-Dataset\\provenance\\analysis\\L30_V092\\ocr_dense",
+      "records": []
+    },
+    {
+      "exists": false,
+      "path": "D:\\Official-Dataset\\provenance\\analysis\\L30_V092\\asr_dense",
+      "records": []
+    },
+    {
+      "exists": false,
+      "path": "D:\\Official-Dataset\\features_L21-L30_branch-feats-siglip\\provenance\\analysis\\L30_V092\\ocr_dense",
+      "records": []
+    },
+    {
+      "exists": false,
+      "path": "D:\\Official-Dataset\\features_L21-L30_branch-feats-siglip\\provenance\\analysis\\L30_V092\\asr_dense",
+      "records": []
+    },
+    {
+      "exists": false,
+      "path": "D:\\Official-Dataset\\provenance\\analysis\\L30_V072\\ocr_dense",
+      "records": []
+    },
+    {
+      "exists": false,
+      "path": "D:\\Official-Dataset\\provenance\\analysis\\L30_V072\\asr_dense",
+      "records": []
+    },
+    {
+      "exists": false,
+      "path": "D:\\Official-Dataset\\features_L21-L30_branch-feats-siglip\\provenance\\analysis\\L30_V072\\ocr_dense",
+      "records": []
+    },
+    {
+      "exists": false,
+      "path": "D:\\Official-Dataset\\features_L21-L30_branch-feats-siglip\\provenance\\analysis\\L30_V072\\asr_dense",
+      "records": []
+    }
+  ],
+  "models_loaded": false,
+  "schema": "vecna82-dense-identity-probe-v1",
+  "script_sha256": "7f811536328902c5fbd287f2f5365dd110874b2b40e62ea759eba4f761a93c94",
+  "tensor_allocations": false,
+  "vecna_sources": [
+    {
+      "bytes": 9591,
+      "exists": true,
+      "lf_sha256": "ec26570cf87a9d3e6a4e2d481531a46f470e0a7f70f220c1c5cb15da126d3f01",
+      "mtime_ns": 1789564835659102700,
+      "path": "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-dense-text-identity-probe-20260916-qeh6oq5s\\worktree\\aic51-src\\aic51\\packages\\analyse\\features\\text_embedding.py",
+      "repository_path": "aic51-src/aic51/packages/analyse/features/text_embedding.py",
+      "resolved_path": "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-dense-text-identity-probe-20260916-qeh6oq5s\\worktree\\aic51-src\\aic51\\packages\\analyse\\features\\text_embedding.py",
+      "sha256": "2f9a9fc2f602215ef10fe9bf1d6100d437348ac35ca07c17b660df20b3f75c07"
+    },
+    {
+      "bytes": 52969,
+      "exists": true,
+      "lf_sha256": "6f94bdd147c4b2b29b522a1f4bbbf004fb726fdfdf68a7cb316a4aec9e869e51",
+      "mtime_ns": 1789564835667722300,
+      "path": "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-dense-text-identity-probe-20260916-qeh6oq5s\\worktree\\aic51-src\\aic51\\packages\\search\\searcher.py",
+      "repository_path": "aic51-src/aic51/packages/search/searcher.py",
+      "resolved_path": "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-dense-text-identity-probe-20260916-qeh6oq5s\\worktree\\aic51-src\\aic51\\packages\\search\\searcher.py",
+      "sha256": "7b4fd62dc50d687f907cde29bba80a5157e3601bb61ee6fa072441c217757b12"
+    }
+  ]
+}

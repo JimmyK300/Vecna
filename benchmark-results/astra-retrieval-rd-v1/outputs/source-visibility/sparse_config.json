@@ -1,0 +1,60 @@
+{
+  "collection": {
+    "description_sha256": "1e3da787fcadab0b6251e00f6b05fee9abe3888c17a36d0babad843d652bded6",
+    "fields": [
+      "asr",
+      "asr_dense",
+      "asr_sparse",
+      "frame_id",
+      "image_clip_pe_l_14_336",
+      "image_siglip_so400m_384",
+      "ocr",
+      "ocr_dense",
+      "ocr_sparse",
+      "qwen_vl"
+    ],
+    "index_descriptions_sha256": "99b4a5d374b036b1373c77ddbf9e5fe3253edaa3a35fd2374067b002f01e9860",
+    "index_names": [
+      "asr_BM25",
+      "asr_dense_SCANN",
+      "image_clip_pe_l_14_336_SCANN",
+      "image_siglip_so400m_384_SCANN",
+      "ocr_BM25",
+      "ocr_dense_SCANN",
+      "qwen_vl_SCANN"
+    ],
+    "name": "official_l21_l30_all_v2",
+    "row_count": 322924
+  },
+  "collection_identity_evidence_sha256": "990a003d90c6f56c00e2ab3e3c5cd60c0ac8533a1916cc732048071f4a5a8ffa",
+  "collection_identity_source": "Verified metadata preflight of the recorded fusion smoke; the subsequent visual query failed independently.",
+  "effective_semantics": "Execute main's exact text component with alpha=0, no dense extractor, one canonical text formulation, native ASCII-quote cleaning/eligibility/1.5 boost/max normalization. Cap the single raw request at100 and retain the native requested200/500 limit as evidence.",
+  "expected_query_channel_count": 38,
+  "forbidden_capture_inputs": [
+    "truth",
+    "accepted_video",
+    "accepted_frame",
+    "answer",
+    "query_rewrite",
+    "retrieval_outcome"
+  ],
+  "frozen_sample_sha256": "b4fd944228a033c37ea4d69ad757ceeae9635bfb026cf018e0d60f5b3c661be9",
+  "main_commit": "95d63a6abf10c598e0e54af7d2071bedbe542d1e",
+  "metric": "BM25",
+  "offset": 0,
+  "per_channel_counts": {
+    "asr": 18,
+    "ocr": 20
+  },
+  "provider_depth": 100,
+  "provider_fields": {
+    "asr": "asr_sparse",
+    "ocr": "ocr_sparse"
+  },
+  "query_file_sha256": "68b315a98313fe8609b4fff460d65c0daebe79f4aff35d7dd75d17b5afd461b7",
+  "query_projection_sha256": "e55864e0c918937da06c5fd1a40d80f4501c92c62e259389ae7a1fcca36ce17b",
+  "schema": "vecna82-sparse-visibility-config-v1",
+  "scope": "Dataset #17 diagnostic only; independent of the blocked visual-fusion collector and its frozen weights. No index writes, collection load/release, or models.",
+  "searcher_lf_sha256": "6f94bdd147c4b2b29b522a1f4bbbf004fb726fdfdf68a7cb316a4aec9e869e51",
+  "server_filter": ""
+}

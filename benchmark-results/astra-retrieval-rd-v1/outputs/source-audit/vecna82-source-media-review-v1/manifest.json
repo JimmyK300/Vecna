@@ -1,0 +1,421 @@
+{
+  "schema": "vecna82-bounded-source-media-v1",
+  "started_utc": "2026-09-16T12:12:41.771912+00:00",
+  "frozen_sample_sha256": "d3727ab99ce98b708c835c8e8b0f8d5688af47e9d25e65ce55a8e5ca839e7714",
+  "truth_source": {
+    "repository": "JimmyK300/Vecna",
+    "commit": "f0b0f4707ceab91ba7e266f72fa982dce3ae1c4b",
+    "path": "benchmark-results/issue34-current-115/ground_truth_current_115.jsonl",
+    "sha256": "63f80eb6ff54ef3c623f6ae4926eba404dac8bb5543b86e31f8fa0da842b4c9f"
+  },
+  "text_source": {
+    "repository": "JimmyK300/official-dataset-control",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "path_pattern": "derived/metadata/asr-ocr-text-v1/{channel}/by-video/{video_id}.json"
+  },
+  "code_sha256": "0a4334c45d40ef60b12e73851893caf02b3a1f1393a7753ab1ec287b74e53252",
+  "source_full_video_hashes": "not_computed_bounded_read_cost",
+  "writes": "new disposable output directory only",
+  "source_semantics_reviewed": false,
+  "assets": [
+    {
+      "query_id": "p0_q21",
+      "kind": "image",
+      "video": "videos/L30/L30_V078.mp4",
+      "frame": 1788,
+      "channel": "ocr",
+      "reason": "Check whether the requested recipe title/200g ingredient text is visible where the stored OCR window is empty.",
+      "source_path": "D:\\Official-Dataset\\videos\\L30\\L30_V078.mp4",
+      "source_file": {
+        "bytes": 35495690,
+        "mtime_ns": 1786613748561563800
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "197.880000",
+            "nb_frames": "4947"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "197.880454",
+            "nb_frames": "8522"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "197.880454"
+        }
+      },
+      "frame_identity_method": "zero-based decoded frame index via ffmpeg select(n); no source timestamp rounding",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-threads",
+        "4",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L30\\L30_V078.mp4",
+        "-map",
+        "0:v:0",
+        "-vf",
+        "select=eq(n\\,1788)",
+        "-frames:v",
+        "1",
+        "-fps_mode",
+        "vfr",
+        "-q:v",
+        "2",
+        "-an",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-dataset-source-five-assets-v3-20260916-s_myi3ej\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-review-v1\\p0_q21_L30_V078_frame1788.jpg"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p0_q21_L30_V078_frame1788.jpg",
+      "artifact_sha256": "9528ac6fba3652b7c169b8229fe568a459af70d46bbc97db83f0e83a0c32cedc",
+      "artifact_bytes": 81406,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "query_id": "p0_q19",
+      "kind": "image",
+      "video": "videos/L30/L30_V072.mp4",
+      "frame": 1745,
+      "channel": "ocr",
+      "reason": "Check whether location/club writing is visible at the preserved anchor despite no OCR text in the accepted window.",
+      "source_path": "D:\\Official-Dataset\\videos\\L30\\L30_V072.mp4",
+      "source_file": {
+        "bytes": 22847131,
+        "mtime_ns": 1786613745549097600
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "86.760000",
+            "nb_frames": "2169"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "86.772971",
+            "nb_frames": "3737"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "86.772971"
+        }
+      },
+      "frame_identity_method": "zero-based decoded frame index via ffmpeg select(n); no source timestamp rounding",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-threads",
+        "4",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L30\\L30_V072.mp4",
+        "-map",
+        "0:v:0",
+        "-vf",
+        "select=eq(n\\,1745)",
+        "-frames:v",
+        "1",
+        "-fps_mode",
+        "vfr",
+        "-q:v",
+        "2",
+        "-an",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-dataset-source-five-assets-v3-20260916-s_myi3ej\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-review-v1\\p0_q19_L30_V072_frame1745.jpg"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p0_q19_L30_V072_frame1745.jpg",
+      "artifact_sha256": "19cc56fef73a66606c768b3a23d1d30b1b5e1496d415b197f410114cf5b088e0",
+      "artifact_bytes": 201907,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "query_id": "p1_q17",
+      "kind": "image",
+      "video": "videos/L25/L25_V041.mp4",
+      "frame": 17152,
+      "channel": "ocr",
+      "reason": "Positive artifact control: compare source remember-lesson text with stored OCR.",
+      "source_path": "D:\\Official-Dataset\\videos\\L25\\L25_V041.mp4",
+      "source_file": {
+        "bytes": 108597266,
+        "mtime_ns": 1786613743635004600
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "1428.280000",
+            "nb_frames": "35707"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "1428.329070",
+            "nb_frames": "61513"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "1428.329070"
+        }
+      },
+      "frame_identity_method": "zero-based decoded frame index via ffmpeg select(n); no source timestamp rounding",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-threads",
+        "4",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L25\\L25_V041.mp4",
+        "-map",
+        "0:v:0",
+        "-vf",
+        "select=eq(n\\,17152)",
+        "-frames:v",
+        "1",
+        "-fps_mode",
+        "vfr",
+        "-q:v",
+        "2",
+        "-an",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-dataset-source-five-assets-v3-20260916-s_myi3ej\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-review-v1\\p1_q17_L25_V041_frame17152.jpg"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p1_q17_L25_V041_frame17152.jpg",
+      "artifact_sha256": "0acc462af6b8fd07124429ea400cef15de49bf0106f32bb5d5400b4813e23bf3",
+      "artifact_bytes": 146229,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "query_id": "p0_q20",
+      "kind": "audio",
+      "video": "videos/L27/L27_V010.mp4",
+      "start_s": 215,
+      "end_s": 233,
+      "channel": "asr",
+      "reason": "Judge the query-critical two-line poem against the projected ASR wording; no wider transcription requested.",
+      "source_path": "D:\\Official-Dataset\\videos\\L27\\L27_V010.mp4",
+      "source_file": {
+        "bytes": 164425095,
+        "mtime_ns": 1786621109435552100
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "584.480000",
+            "nb_frames": "14612"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "584.492698",
+            "nb_frames": "25172"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "584.492698"
+        }
+      },
+      "audio_rendition": "bounded source interval, mono 16kHz PCM WAV; no ASR model",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-ss",
+        "215",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L27\\L27_V010.mp4",
+        "-map",
+        "0:a:0",
+        "-t",
+        "18",
+        "-vn",
+        "-ac",
+        "1",
+        "-ar",
+        "16000",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-dataset-source-five-assets-v3-20260916-s_myi3ej\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-review-v1\\p0_q20_L27_V010_215-233s.wav"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p0_q20_L27_V010_215-233s.wav",
+      "artifact_sha256": "0360218142ae4b7e2d678d88f2b557e2f83f1ab14fee5d7ca6528f335dee4684",
+      "artifact_bytes": 576078,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "query_id": "p3_q24",
+      "kind": "audio",
+      "video": "videos/L26E/L26_V448.mp4",
+      "start_s": 98,
+      "end_s": 126,
+      "channel": "asr",
+      "reason": "Confirm the query-critical soy-sauce quantity already present in stored ASR; current truth remains provisional.",
+      "source_path": "D:\\Official-Dataset\\videos\\L26E\\L26_V448.mp4",
+      "source_file": {
+        "bytes": 76526248,
+        "mtime_ns": 1786621088574351700
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "323.240000",
+            "nb_frames": "8081"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "323.291429",
+            "nb_frames": "13923"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "323.291429"
+        }
+      },
+      "audio_rendition": "bounded source interval, mono 16kHz PCM WAV; no ASR model",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-ss",
+        "98",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L26E\\L26_V448.mp4",
+        "-map",
+        "0:a:0",
+        "-t",
+        "28",
+        "-vn",
+        "-ac",
+        "1",
+        "-ar",
+        "16000",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-dataset-source-five-assets-v3-20260916-s_myi3ej\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-review-v1\\p3_q24_L26_V448_98-126s.wav"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p3_q24_L26_V448_98-126s.wav",
+      "artifact_sha256": "5d6582ca61cc9b5751e5ae26cfa68a39449a505ea68c2431893dacb969eaf529",
+      "artifact_bytes": 896078,
+      "source_size_mtime_unchanged": true
+    }
+  ],
+  "elapsed_seconds": 6.484,
+  "captured": 5
+}

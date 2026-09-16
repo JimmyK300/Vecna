@@ -1,0 +1,1023 @@
+{
+  "archives": [
+    {
+      "bytes": 6298976,
+      "extract_into": "outputs/temporal-truth-review",
+      "members": [
+        {
+          "bytes": 241936,
+          "member": "vecna82-temporal-truth-source/evidence-index.json",
+          "sha256": "4bb01f83f3f133b3d94e17703f993c62aec479aeebfd0e54447188c4c856f213",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/evidence-index.json"
+        },
+        {
+          "bytes": 224413,
+          "member": "vecna82-temporal-truth-source/p0_q22_e1_clip.mp4",
+          "sha256": "8ea7ebd45599d9fb10f63f99ec139cb94e605a665130d05bc724d17087fbbb23",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q22_e1_clip.mp4"
+        },
+        {
+          "bytes": 15290,
+          "member": "vecna82-temporal-truth-source/p0_q22_e1_f4706.jpg",
+          "sha256": "dea3b4f536257e2568ed1e201f8941d28a537a81cf4dd4085520ce453f9d416a",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q22_e1_f4706.jpg"
+        },
+        {
+          "bytes": 16522,
+          "member": "vecna82-temporal-truth-source/p0_q22_e1_f4707.jpg",
+          "sha256": "b3cf6a480e584fc3c054d1483c0614b861e2ac3c76c6bd7c7f1036768f12f4de",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q22_e1_f4707.jpg"
+        },
+        {
+          "bytes": 16587,
+          "member": "vecna82-temporal-truth-source/p0_q22_e1_f4708.jpg",
+          "sha256": "4fb99f42ef2f8a3451ee3cdac121f7e0bb0d9b21578d412920be51c9c9dadb4b",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q22_e1_f4708.jpg"
+        },
+        {
+          "bytes": 205606,
+          "member": "vecna82-temporal-truth-source/p0_q22_e2_clip.mp4",
+          "sha256": "f02b577273eacd94b19c2e75f58b72c663d5df2d14801c23411c3861af62104b",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q22_e2_clip.mp4"
+        },
+        {
+          "bytes": 19466,
+          "member": "vecna82-temporal-truth-source/p0_q22_e2_f5138.jpg",
+          "sha256": "9422284b9d76acd00b75e5def09b21b31609734213b1f812028848d9d03f48ee",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q22_e2_f5138.jpg"
+        },
+        {
+          "bytes": 14206,
+          "member": "vecna82-temporal-truth-source/p0_q22_e2_f5139.jpg",
+          "sha256": "d5772d87931cd02d4c333ca89ab29446a088855fa322996085d9b18c12c8a5aa",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q22_e2_f5139.jpg"
+        },
+        {
+          "bytes": 13706,
+          "member": "vecna82-temporal-truth-source/p0_q22_e2_f5140.jpg",
+          "sha256": "ee674938a5c5e53930aaee18b3b990d6f1653eb182839d3c2734c1009b8f2b2c",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q22_e2_f5140.jpg"
+        },
+        {
+          "bytes": 193916,
+          "member": "vecna82-temporal-truth-source/p0_q22_e3_clip.mp4",
+          "sha256": "3bbb860363f11141d5920b245166b67367a52b4fb8f03ecf559c7497694b17ab",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q22_e3_clip.mp4"
+        },
+        {
+          "bytes": 20467,
+          "member": "vecna82-temporal-truth-source/p0_q22_e3_f5426.jpg",
+          "sha256": "38a8645efeba1e116678995c155501ae04ee935d9f743ce8f82f03fff72b2041",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q22_e3_f5426.jpg"
+        },
+        {
+          "bytes": 21767,
+          "member": "vecna82-temporal-truth-source/p0_q22_e3_f5427.jpg",
+          "sha256": "948735714573c1eb70be9e6f7c6064618fadb396d070de7c633efa1daefbd974",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q22_e3_f5427.jpg"
+        },
+        {
+          "bytes": 20457,
+          "member": "vecna82-temporal-truth-source/p0_q22_e3_f5428.jpg",
+          "sha256": "90c904c713d4cf6b595f0ca50fd172ce8c17a3a29d05f362cf58ff278a5072f0",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q22_e3_f5428.jpg"
+        },
+        {
+          "bytes": 182684,
+          "member": "vecna82-temporal-truth-source/p0_q22_e4_clip.mp4",
+          "sha256": "ee7019d45ba29d8bdbbed5d75246d451d9dc4149e19511ab508f502d736cc16b",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q22_e4_clip.mp4"
+        },
+        {
+          "bytes": 22179,
+          "member": "vecna82-temporal-truth-source/p0_q22_e4_f5864.jpg",
+          "sha256": "aa7dc451eed0c073d7d606b3b5c3449f364fca05df16b5ac7075002b1e837fc9",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q22_e4_f5864.jpg"
+        },
+        {
+          "bytes": 22553,
+          "member": "vecna82-temporal-truth-source/p0_q22_e4_f5865.jpg",
+          "sha256": "88c0197b9a44432da7305bdbdcf660d9a4ab9243dc119eefedfd2dda16bdb8a2",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q22_e4_f5865.jpg"
+        },
+        {
+          "bytes": 22970,
+          "member": "vecna82-temporal-truth-source/p0_q22_e4_f5866.jpg",
+          "sha256": "90cf6e4d2bacad5d72aef7e3e5893755ad5ba93940dbf833e4a6134348a37dc6",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q22_e4_f5866.jpg"
+        },
+        {
+          "bytes": 372289,
+          "member": "vecna82-temporal-truth-source/p0_q22_filmstrip.jpg",
+          "sha256": "88249129c850c4a986d1b44ea50234de5565dfe33acbc37cea89581def2723dc",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q22_filmstrip.jpg"
+        },
+        {
+          "bytes": 200838,
+          "member": "vecna82-temporal-truth-source/p0_q23_e1_clip.mp4",
+          "sha256": "924bce405f5edffb8c09146258c58e959c9d7f30cc41bca02c9278d4bc748746",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q23_e1_clip.mp4"
+        },
+        {
+          "bytes": 43076,
+          "member": "vecna82-temporal-truth-source/p0_q23_e1_f15944.jpg",
+          "sha256": "13d4fdf1be70a8306793fdf324ced668cc8628f662312bc32e7553662e484df4",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q23_e1_f15944.jpg"
+        },
+        {
+          "bytes": 42876,
+          "member": "vecna82-temporal-truth-source/p0_q23_e1_f15945.jpg",
+          "sha256": "c210df667d30422fa63519a20811af2616dd9fed8b51f9b1ae26697604fdee3a",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q23_e1_f15945.jpg"
+        },
+        {
+          "bytes": 42716,
+          "member": "vecna82-temporal-truth-source/p0_q23_e1_f15946.jpg",
+          "sha256": "c268a68d1ff5842c04d151a05457e8b868e39ba091d83a34a817f87ee0c5fe8a",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q23_e1_f15946.jpg"
+        },
+        {
+          "bytes": 201608,
+          "member": "vecna82-temporal-truth-source/p0_q23_e2_clip.mp4",
+          "sha256": "b58bf4b36c65d48e697883b0787bfbafec628f1ba37ebf98f545bd10e40fdcdb",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q23_e2_clip.mp4"
+        },
+        {
+          "bytes": 37963,
+          "member": "vecna82-temporal-truth-source/p0_q23_e2_f16005.jpg",
+          "sha256": "016c64bdeb264cf77804d250e89d7d66e40ff822b5c26e44a15be7892d9495bf",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q23_e2_f16005.jpg"
+        },
+        {
+          "bytes": 37657,
+          "member": "vecna82-temporal-truth-source/p0_q23_e2_f16006.jpg",
+          "sha256": "a69c4a57286e2282d2a8be35dc7b6a0ca296def5d8c480a58ccedeea122ef4f2",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q23_e2_f16006.jpg"
+        },
+        {
+          "bytes": 37361,
+          "member": "vecna82-temporal-truth-source/p0_q23_e2_f16007.jpg",
+          "sha256": "0dbc7442c5e88ffd1cde4ae740d11ffd44bfe6b02c00a9ce5158d82fcf82cd75",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q23_e2_f16007.jpg"
+        },
+        {
+          "bytes": 203437,
+          "member": "vecna82-temporal-truth-source/p0_q23_e3_clip.mp4",
+          "sha256": "fa8e36fa89b9b638be9a94c1561c4f5f35e085246328f02d20e9bed33da7e8c6",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q23_e3_clip.mp4"
+        },
+        {
+          "bytes": 42122,
+          "member": "vecna82-temporal-truth-source/p0_q23_e3_f16353.jpg",
+          "sha256": "5dddb4298fce7d07de2018f081d42a346e11d2353c873acd6e428e28f37f8a0e",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q23_e3_f16353.jpg"
+        },
+        {
+          "bytes": 42192,
+          "member": "vecna82-temporal-truth-source/p0_q23_e3_f16354.jpg",
+          "sha256": "1697224c4b1513f78bca0e467434d9c6e30c137c7bb1857acde56621a0dc9aae",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q23_e3_f16354.jpg"
+        },
+        {
+          "bytes": 42176,
+          "member": "vecna82-temporal-truth-source/p0_q23_e3_f16355.jpg",
+          "sha256": "7d5308171a5ee61996a8672d5e697e30277754841b7041024bbbd0dc2741ad93",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q23_e3_f16355.jpg"
+        },
+        {
+          "bytes": 207015,
+          "member": "vecna82-temporal-truth-source/p0_q23_e4_clip.mp4",
+          "sha256": "cb72b627b24bee1c45dc57b463cf7731e48dbfad71356fcf4b3d517bccf119ab",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q23_e4_clip.mp4"
+        },
+        {
+          "bytes": 48425,
+          "member": "vecna82-temporal-truth-source/p0_q23_e4_f16900.jpg",
+          "sha256": "a404c2c51417da9d46ec98f86c2bb7eefcf44560dfb77670341274249f600bb7",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q23_e4_f16900.jpg"
+        },
+        {
+          "bytes": 48595,
+          "member": "vecna82-temporal-truth-source/p0_q23_e4_f16901.jpg",
+          "sha256": "c682da8e6dfae2716e34ccea8f5e26462ceabc263c233face5f1a5dd8a3bddb3",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q23_e4_f16901.jpg"
+        },
+        {
+          "bytes": 48863,
+          "member": "vecna82-temporal-truth-source/p0_q23_e4_f16902.jpg",
+          "sha256": "905b0587a7f8fb4ec67793c6e48dd17f2c2622dfb5d4b53c4757eac4a0b12b27",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q23_e4_f16902.jpg"
+        },
+        {
+          "bytes": 539942,
+          "member": "vecna82-temporal-truth-source/p0_q23_filmstrip.jpg",
+          "sha256": "82c557471adfc86666d8f421859aa1a7bb5ad0a142c70be4ebed05f447862cb9",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q23_filmstrip.jpg"
+        },
+        {
+          "bytes": 209527,
+          "member": "vecna82-temporal-truth-source/p0_q24_e1_clip.mp4",
+          "sha256": "f55bdb38151bb7ef4156d4c0dc26276cb24eeac2a1f2b282a16e72dfcafe4ffd",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q24_e1_clip.mp4"
+        },
+        {
+          "bytes": 34723,
+          "member": "vecna82-temporal-truth-source/p0_q24_e1_f2465.jpg",
+          "sha256": "9d337fd9fee6f126a10bc72efda17b9e71de82b1590bff2c33f5c139330bbe9e",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q24_e1_f2465.jpg"
+        },
+        {
+          "bytes": 13557,
+          "member": "vecna82-temporal-truth-source/p0_q24_e1_f2466.jpg",
+          "sha256": "b1644b0b6b827e23b9c4e4370cfad81112e1019b3dee99763c4fa107b6ed05c9",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q24_e1_f2466.jpg"
+        },
+        {
+          "bytes": 13625,
+          "member": "vecna82-temporal-truth-source/p0_q24_e1_f2467.jpg",
+          "sha256": "9e08f41224206e56977306fdb7e97b65d33a58644472a97055dbba3b5b829d6e",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q24_e1_f2467.jpg"
+        },
+        {
+          "bytes": 201819,
+          "member": "vecna82-temporal-truth-source/p0_q24_e2_clip.mp4",
+          "sha256": "8d23a1154ee6a06c243376762442db8044090d50f6c5fb828795253b9cc26f8f",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q24_e2_clip.mp4"
+        },
+        {
+          "bytes": 28603,
+          "member": "vecna82-temporal-truth-source/p0_q24_e2_f3132.jpg",
+          "sha256": "597058b593e41549dfeed5b9e61200e7896a29fe0c7fdc2392890d8bb056b61f",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q24_e2_f3132.jpg"
+        },
+        {
+          "bytes": 14966,
+          "member": "vecna82-temporal-truth-source/p0_q24_e2_f3133.jpg",
+          "sha256": "ab2889504ced1d440684c2d025d279b07cba06eeb10d17ae0bebf92a7fc7bc13",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q24_e2_f3133.jpg"
+        },
+        {
+          "bytes": 15379,
+          "member": "vecna82-temporal-truth-source/p0_q24_e2_f3134.jpg",
+          "sha256": "292a4955896b97f95a0751b3a11828aa1d7a14373db083ff9f7bac728607d357",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q24_e2_f3134.jpg"
+        },
+        {
+          "bytes": 183982,
+          "member": "vecna82-temporal-truth-source/p0_q24_e3_clip.mp4",
+          "sha256": "b6411de1d5238d9c87efbce37631ecf2b10c64d99439801c0fa426ab540bb8b3",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q24_e3_clip.mp4"
+        },
+        {
+          "bytes": 37957,
+          "member": "vecna82-temporal-truth-source/p0_q24_e3_f3419.jpg",
+          "sha256": "54606e2c74c603f2dfada442d8cf9d3f14bdbae975c7325ee8407d88706af53a",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q24_e3_f3419.jpg"
+        },
+        {
+          "bytes": 24508,
+          "member": "vecna82-temporal-truth-source/p0_q24_e3_f3420.jpg",
+          "sha256": "f6adaf82a109de2ebc2265e7f9c076a8061f40318fa51aef4b657c825e6a207e",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q24_e3_f3420.jpg"
+        },
+        {
+          "bytes": 24448,
+          "member": "vecna82-temporal-truth-source/p0_q24_e3_f3421.jpg",
+          "sha256": "2d5ed24fbf9fc51b868c902341bf30d0e95a1ddf825cadf102508a60105c980f",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q24_e3_f3421.jpg"
+        },
+        {
+          "bytes": 201117,
+          "member": "vecna82-temporal-truth-source/p0_q24_e4_clip.mp4",
+          "sha256": "744957f4bd03712114e5dba6665dcea8fdf2a9b461dcc739806c9a41127279c2",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q24_e4_clip.mp4"
+        },
+        {
+          "bytes": 34705,
+          "member": "vecna82-temporal-truth-source/p0_q24_e4_f3799.jpg",
+          "sha256": "21d42fafb0dc1c316495b6ee8643730db4d01114641876a21c67554b6c6c646d",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q24_e4_f3799.jpg"
+        },
+        {
+          "bytes": 34642,
+          "member": "vecna82-temporal-truth-source/p0_q24_e4_f3800.jpg",
+          "sha256": "e5662de8b757f8581e36404a49a5b92eda527d86f7230fcb03652f2f6be7dc9d",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q24_e4_f3800.jpg"
+        },
+        {
+          "bytes": 34587,
+          "member": "vecna82-temporal-truth-source/p0_q24_e4_f3801.jpg",
+          "sha256": "92d3b4cfa5b3db321336001e44bf66830ea1fb18d3c9f777644cc9a719184861",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q24_e4_f3801.jpg"
+        },
+        {
+          "bytes": 385858,
+          "member": "vecna82-temporal-truth-source/p0_q24_filmstrip.jpg",
+          "sha256": "7eb9ca3994936e02dfbbf1e3318d138b13ab0108eef2ec33cd9357d5e3892fdf",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q24_filmstrip.jpg"
+        },
+        {
+          "bytes": 180429,
+          "member": "vecna82-temporal-truth-source/p1_q25_e1_clip.mp4",
+          "sha256": "3d3fa9c11d34ee03b347f25832135a3d50750fe6cd38b5c03ad39cf021872b78",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p1_q25_e1_clip.mp4"
+        },
+        {
+          "bytes": 43494,
+          "member": "vecna82-temporal-truth-source/p1_q25_e1_f9784.jpg",
+          "sha256": "10e47efbabdafb028792e901471de1e1463b5feee2e29b9c036b21ab14a5fdeb",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p1_q25_e1_f9784.jpg"
+        },
+        {
+          "bytes": 43458,
+          "member": "vecna82-temporal-truth-source/p1_q25_e1_f9785.jpg",
+          "sha256": "7dc0b9e2c5c82b3e8d75f23b8de63f37a22534dca9f7474849ccee650b54e9f6",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p1_q25_e1_f9785.jpg"
+        },
+        {
+          "bytes": 43463,
+          "member": "vecna82-temporal-truth-source/p1_q25_e1_f9786.jpg",
+          "sha256": "15f3346068f6c64aa1a88d6c868be53686b7c058028eb9ce7fdacc6aa072faaf",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p1_q25_e1_f9786.jpg"
+        },
+        {
+          "bytes": 213411,
+          "member": "vecna82-temporal-truth-source/p1_q25_e2_clip.mp4",
+          "sha256": "80acdfbc49d9930a73df15409ac3133e43fb4b401ae4ee50b1068c668af998aa",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p1_q25_e2_clip.mp4"
+        },
+        {
+          "bytes": 49042,
+          "member": "vecna82-temporal-truth-source/p1_q25_e2_f10134.jpg",
+          "sha256": "ac81cc6c0af032146d6dc35686e2110c3ef12de030c5909e8a331397a1afcc4c",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p1_q25_e2_f10134.jpg"
+        },
+        {
+          "bytes": 48972,
+          "member": "vecna82-temporal-truth-source/p1_q25_e2_f10135.jpg",
+          "sha256": "9200f9a11c2a0265b71446b96564b57c4f0cb331113b2170523ce2bbaa66cb8f",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p1_q25_e2_f10135.jpg"
+        },
+        {
+          "bytes": 48928,
+          "member": "vecna82-temporal-truth-source/p1_q25_e2_f10136.jpg",
+          "sha256": "250b9470f6752f488c74d0de97fd5b6764eff27afd9e0b7adfb753f50a15cd3c",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p1_q25_e2_f10136.jpg"
+        },
+        {
+          "bytes": 216524,
+          "member": "vecna82-temporal-truth-source/p1_q25_e3_clip.mp4",
+          "sha256": "7e0569ee184b140bd21948168e7a9de79c4843cb7274cfef3078831c6ba15778",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p1_q25_e3_clip.mp4"
+        },
+        {
+          "bytes": 33679,
+          "member": "vecna82-temporal-truth-source/p1_q25_e3_f10190.jpg",
+          "sha256": "69f9b71df9c87d6df5bd0c01de548ad39a6560015c5fac8a6e6bc4fcbaf6dd5d",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p1_q25_e3_f10190.jpg"
+        },
+        {
+          "bytes": 35076,
+          "member": "vecna82-temporal-truth-source/p1_q25_e3_f10191.jpg",
+          "sha256": "ac93da811fc7ca3a4d6ce6058781709d1aea86edcea308dd4aa3c4d6bc9467e1",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p1_q25_e3_f10191.jpg"
+        },
+        {
+          "bytes": 34872,
+          "member": "vecna82-temporal-truth-source/p1_q25_e3_f10192.jpg",
+          "sha256": "9cfb37511861ee874e1666d9d00908f289d36322fe4a084a737fb2d6eff94072",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p1_q25_e3_f10192.jpg"
+        },
+        {
+          "bytes": 400904,
+          "member": "vecna82-temporal-truth-source/p1_q25_filmstrip.jpg",
+          "sha256": "a3cb11cc974c0d2544bf7198ab94315b10e47d285f04e824d5aa3162804f071f",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p1_q25_filmstrip.jpg"
+        },
+        {
+          "bytes": 192129,
+          "member": "vecna82-temporal-truth-source/p2_q29_e1_clip.mp4",
+          "sha256": "70a4325893e587af5a43e3bf30db7124ffc5fb3d9223c5065c41721b8af66826",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q29_e1_clip.mp4"
+        },
+        {
+          "bytes": 49643,
+          "member": "vecna82-temporal-truth-source/p2_q29_e1_f3792.jpg",
+          "sha256": "2354bef8ef9281307107cd8c4109d98363d336cf0229e958460206a01049b689",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q29_e1_f3792.jpg"
+        }
+      ],
+      "path": "outputs/temporal-truth-review/source-evidence-1.zip",
+      "sha256": "4644b948ed1dfd7b4074fb43081f1a8dd7d923114527a8cb4f2066f94e872c3d"
+    },
+    {
+      "bytes": 6758090,
+      "extract_into": "outputs/temporal-truth-review",
+      "members": [
+        {
+          "bytes": 53531,
+          "member": "vecna82-temporal-truth-source/p2_q29_e1_f3793.jpg",
+          "sha256": "d468828bf7a7521d28b8865a990b4943ae4fe548c53904f11cdb05e52ae6703c",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q29_e1_f3793.jpg"
+        },
+        {
+          "bytes": 57027,
+          "member": "vecna82-temporal-truth-source/p2_q29_e1_f3794.jpg",
+          "sha256": "f3f618f5679bfbf02244ef44386513072ecd43b66eb9d367ec5d06518cf70161",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q29_e1_f3794.jpg"
+        },
+        {
+          "bytes": 207352,
+          "member": "vecna82-temporal-truth-source/p2_q29_e2_clip.mp4",
+          "sha256": "472479006e786ab3e8f897816ac1e24d19a094a2e34d781da88b127ea8406c19",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q29_e2_clip.mp4"
+        },
+        {
+          "bytes": 32884,
+          "member": "vecna82-temporal-truth-source/p2_q29_e2_f3869.jpg",
+          "sha256": "61d403ccb080c6a72d6b3304c3ffffceae1349e3751ec385b7eaf2919d338e4a",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q29_e2_f3869.jpg"
+        },
+        {
+          "bytes": 32933,
+          "member": "vecna82-temporal-truth-source/p2_q29_e2_f3870.jpg",
+          "sha256": "2f254ed3c167fba46f0e387038fc9a197d9226a67090d84e75690926b3e44d58",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q29_e2_f3870.jpg"
+        },
+        {
+          "bytes": 32979,
+          "member": "vecna82-temporal-truth-source/p2_q29_e2_f3871.jpg",
+          "sha256": "97c04f16094680e07b7ead88c8544478d207d16657661942ee3c197b547fff8a",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q29_e2_f3871.jpg"
+        },
+        {
+          "bytes": 181024,
+          "member": "vecna82-temporal-truth-source/p2_q29_e3_clip.mp4",
+          "sha256": "83a51c58017fcd3d1faff265ef53d48111dea7667ce583126f8dd3b70cc2b188",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q29_e3_clip.mp4"
+        },
+        {
+          "bytes": 36002,
+          "member": "vecna82-temporal-truth-source/p2_q29_e3_f4013.jpg",
+          "sha256": "3496592b03cd62e638fc91a7e8e5c25b70268b91a959af64a68fc09c971a6196",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q29_e3_f4013.jpg"
+        },
+        {
+          "bytes": 35845,
+          "member": "vecna82-temporal-truth-source/p2_q29_e3_f4014.jpg",
+          "sha256": "324decf92493a33a46d6b4caa3923494d0208a2efc43e5ab0ba704c3e1f47d26",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q29_e3_f4014.jpg"
+        },
+        {
+          "bytes": 35647,
+          "member": "vecna82-temporal-truth-source/p2_q29_e3_f4015.jpg",
+          "sha256": "034e77de7d2b2c90e756cf5abe3526f1a57433a36caf2d0fac95a60d1740799d",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q29_e3_f4015.jpg"
+        },
+        {
+          "bytes": 197881,
+          "member": "vecna82-temporal-truth-source/p2_q29_e4_clip.mp4",
+          "sha256": "627eca634276a2e92be8c7446dd488239bd003942fa93426deee3a4f822f008b",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q29_e4_clip.mp4"
+        },
+        {
+          "bytes": 52409,
+          "member": "vecna82-temporal-truth-source/p2_q29_e4_f4097.jpg",
+          "sha256": "bb3ccef34f5375da4f384872ee3fb17ccbf3e235c580e69ca2ddd06d2967cf60",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q29_e4_f4097.jpg"
+        },
+        {
+          "bytes": 52587,
+          "member": "vecna82-temporal-truth-source/p2_q29_e4_f4098.jpg",
+          "sha256": "2becb072acd2cfc6cef9e66b8b693c7974b8a77687016f867c37d96edb6b0b70",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q29_e4_f4098.jpg"
+        },
+        {
+          "bytes": 51752,
+          "member": "vecna82-temporal-truth-source/p2_q29_e4_f4099.jpg",
+          "sha256": "5ed27ee23e222b255ef70de82dd7c8df489fe1fdf4782fb8147ef0afcab89bb2",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q29_e4_f4099.jpg"
+        },
+        {
+          "bytes": 553453,
+          "member": "vecna82-temporal-truth-source/p2_q29_filmstrip.jpg",
+          "sha256": "e5dd7559e8ff1793a8542a7a58a448048c4735744be34cfcf3f23dc84d5eb038",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q29_filmstrip.jpg"
+        },
+        {
+          "bytes": 195426,
+          "member": "vecna82-temporal-truth-source/p2_q30_e1_clip.mp4",
+          "sha256": "8a5fef74d5e879334e80ebd16671b961a2ae752e626142d88b5bc7cc729a0d38",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q30_e1_clip.mp4"
+        },
+        {
+          "bytes": 39988,
+          "member": "vecna82-temporal-truth-source/p2_q30_e1_f2075.jpg",
+          "sha256": "f0bc578a1d0b0ed6d81fa09c633682cefb9147f261f20ca103bd7e0c23272fac",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q30_e1_f2075.jpg"
+        },
+        {
+          "bytes": 40200,
+          "member": "vecna82-temporal-truth-source/p2_q30_e1_f2076.jpg",
+          "sha256": "267aa1a15142a8a9e86c6925fc3f6c80eeb07d636fd7a6024d99e114ed8ab4b0",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q30_e1_f2076.jpg"
+        },
+        {
+          "bytes": 40051,
+          "member": "vecna82-temporal-truth-source/p2_q30_e1_f2077.jpg",
+          "sha256": "3ce90f70c0fc4acc9b15533e9638caf5921a1475eaccf1d9138570d9b36550ea",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q30_e1_f2077.jpg"
+        },
+        {
+          "bytes": 177725,
+          "member": "vecna82-temporal-truth-source/p2_q30_e2_clip.mp4",
+          "sha256": "0a020f00e89ef56928d678a48c55f8616d80a8b07bf86e7bb951a472eca9f466",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q30_e2_clip.mp4"
+        },
+        {
+          "bytes": 46348,
+          "member": "vecna82-temporal-truth-source/p2_q30_e2_f2128.jpg",
+          "sha256": "6dba175c17885d1954e1c740c138e41af1ae5ee5bdacb79b5725083c8d67a943",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q30_e2_f2128.jpg"
+        },
+        {
+          "bytes": 46069,
+          "member": "vecna82-temporal-truth-source/p2_q30_e2_f2129.jpg",
+          "sha256": "cbcbcf96fba39a4031aedc827b82340b1b5ea016b2ee4b038c5bb08450160498",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q30_e2_f2129.jpg"
+        },
+        {
+          "bytes": 45558,
+          "member": "vecna82-temporal-truth-source/p2_q30_e2_f2130.jpg",
+          "sha256": "2566ed274f4006630b55f8e4077459eb55311039ee018ceb59dc4597cb116134",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q30_e2_f2130.jpg"
+        },
+        {
+          "bytes": 194260,
+          "member": "vecna82-temporal-truth-source/p2_q30_e3_clip.mp4",
+          "sha256": "21f7449f62d4228d7e7069c38e439cb470a8f06105100a799fb59f9308aa0eff",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q30_e3_clip.mp4"
+        },
+        {
+          "bytes": 38823,
+          "member": "vecna82-temporal-truth-source/p2_q30_e3_f2167.jpg",
+          "sha256": "3617c9207bf29f863e211bc610be9543791327b4aed830c5a734d4ee5d45a685",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q30_e3_f2167.jpg"
+        },
+        {
+          "bytes": 38837,
+          "member": "vecna82-temporal-truth-source/p2_q30_e3_f2168.jpg",
+          "sha256": "aa373a1a74a89c3e7f9685f1e199afb4f78dc3aa748c52d8a35cf1d09c2a7ad7",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q30_e3_f2168.jpg"
+        },
+        {
+          "bytes": 38746,
+          "member": "vecna82-temporal-truth-source/p2_q30_e3_f2169.jpg",
+          "sha256": "ed3703ff0e318092375b6b9b58f86ad70b443ef78b19b87c5ff89d59cd5ca472",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q30_e3_f2169.jpg"
+        },
+        {
+          "bytes": 201981,
+          "member": "vecna82-temporal-truth-source/p2_q30_e4_clip.mp4",
+          "sha256": "97e6986f812784c3377ae7fddeeba741fd09d9c7e73b3811727146a0d0eeb528",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q30_e4_clip.mp4"
+        },
+        {
+          "bytes": 45252,
+          "member": "vecna82-temporal-truth-source/p2_q30_e4_f2227.jpg",
+          "sha256": "6c14ed79d2ce083d613b5efc938052ac33f523fdf50d31a0a349a973beb9ff81",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q30_e4_f2227.jpg"
+        },
+        {
+          "bytes": 45059,
+          "member": "vecna82-temporal-truth-source/p2_q30_e4_f2228.jpg",
+          "sha256": "71d837d65b56bf862bb6fc06f9ca9c51dec60b17ae2900c2256e10b31eef06c6",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q30_e4_f2228.jpg"
+        },
+        {
+          "bytes": 45144,
+          "member": "vecna82-temporal-truth-source/p2_q30_e4_f2229.jpg",
+          "sha256": "edac325c9c0f19d546007148e6d4face6725f9c5805886e45619b04c9016c62e",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q30_e4_f2229.jpg"
+        },
+        {
+          "bytes": 526333,
+          "member": "vecna82-temporal-truth-source/p2_q30_filmstrip.jpg",
+          "sha256": "895df736b07c5c9febbc5dd06bd30ff11dc4ce43f841e6342454b4a6f789458b",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q30_filmstrip.jpg"
+        },
+        {
+          "bytes": 165618,
+          "member": "vecna82-temporal-truth-source/p3_q21_e1_clip.mp4",
+          "sha256": "48461ffd71b328a5cad300bc871113eb5b05fb3b51bd3a9b49370a418e9dd80c",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q21_e1_clip.mp4"
+        },
+        {
+          "bytes": 14369,
+          "member": "vecna82-temporal-truth-source/p3_q21_e1_f3259.jpg",
+          "sha256": "cc760312217bb7cc65ac0e61996aca7b25323f7560d102f4296e5054c04a5e3d",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q21_e1_f3259.jpg"
+        },
+        {
+          "bytes": 28654,
+          "member": "vecna82-temporal-truth-source/p3_q21_e1_f3260.jpg",
+          "sha256": "c65f49784ed63c2027dc28df49c389075794ad6b656e269e7b891be2704263f2",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q21_e1_f3260.jpg"
+        },
+        {
+          "bytes": 28597,
+          "member": "vecna82-temporal-truth-source/p3_q21_e1_f3261.jpg",
+          "sha256": "7fe15ffd58ca045fec9bc13d6fa344e720ac8e7d3404c324a596ca2640ed5c53",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q21_e1_f3261.jpg"
+        },
+        {
+          "bytes": 190596,
+          "member": "vecna82-temporal-truth-source/p3_q21_e2_clip.mp4",
+          "sha256": "b95e524b0ab19bba0ece6b3708b1713fe33d54b0ed249223d89ce82f68c1aee6",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q21_e2_clip.mp4"
+        },
+        {
+          "bytes": 29493,
+          "member": "vecna82-temporal-truth-source/p3_q21_e2_f3765.jpg",
+          "sha256": "3121dc25b3ae22c0e12077b4fc52c5cd3cb5353c660b2f0e737d9a1a1308731c",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q21_e2_f3765.jpg"
+        },
+        {
+          "bytes": 20269,
+          "member": "vecna82-temporal-truth-source/p3_q21_e2_f3766.jpg",
+          "sha256": "9ebeebfaff4f36a850b7e33d07fe0a38e4cf885ffcb742174cba5b71e7c9c43e",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q21_e2_f3766.jpg"
+        },
+        {
+          "bytes": 19568,
+          "member": "vecna82-temporal-truth-source/p3_q21_e2_f3767.jpg",
+          "sha256": "a51d8e6da7cbee92070fb34e6d383dca05679c880adb418503f7d32c738eac05",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q21_e2_f3767.jpg"
+        },
+        {
+          "bytes": 201729,
+          "member": "vecna82-temporal-truth-source/p3_q21_e3_clip.mp4",
+          "sha256": "43482af1f2282a5da5ec6944619ba7f309abb552a75f4001b1e9c4fc4e4823a9",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q21_e3_clip.mp4"
+        },
+        {
+          "bytes": 27150,
+          "member": "vecna82-temporal-truth-source/p3_q21_e3_f4787.jpg",
+          "sha256": "a80a3886bbda8f3c13f91585dec0933c54e82df888f2728b575b05f82051f51b",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q21_e3_f4787.jpg"
+        },
+        {
+          "bytes": 27161,
+          "member": "vecna82-temporal-truth-source/p3_q21_e3_f4788.jpg",
+          "sha256": "b43ca3ac53148c79c5dcb2862cd27e6270fa6c461695a0213b3ecb666145aa42",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q21_e3_f4788.jpg"
+        },
+        {
+          "bytes": 26942,
+          "member": "vecna82-temporal-truth-source/p3_q21_e3_f4789.jpg",
+          "sha256": "94cd350d28c1c01f9b9bf576b18842e870d5cc8448cd2c3b36736e6a38c17935",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q21_e3_f4789.jpg"
+        },
+        {
+          "bytes": 170001,
+          "member": "vecna82-temporal-truth-source/p3_q21_e4_clip.mp4",
+          "sha256": "649b70d72f9056210747a49cc90c429a82f27103fceea5f9c062d07d84ac1b7d",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q21_e4_clip.mp4"
+        },
+        {
+          "bytes": 39644,
+          "member": "vecna82-temporal-truth-source/p3_q21_e4_f6729.jpg",
+          "sha256": "b7fd5430717cd60e43aefd6f8f8f63454f241315edeaad2d67cdab9b9b672813",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q21_e4_f6729.jpg"
+        },
+        {
+          "bytes": 39691,
+          "member": "vecna82-temporal-truth-source/p3_q21_e4_f6730.jpg",
+          "sha256": "b9ae1d98789dced182bdbec5ab8aec55be14beddc0c926db518e13907d767009",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q21_e4_f6730.jpg"
+        },
+        {
+          "bytes": 40090,
+          "member": "vecna82-temporal-truth-source/p3_q21_e4_f6731.jpg",
+          "sha256": "b9b5188ed3f9da691625d8c1bfcd8a5179d990bc442100a1cc4f835a6d6ece8b",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q21_e4_f6731.jpg"
+        },
+        {
+          "bytes": 423150,
+          "member": "vecna82-temporal-truth-source/p3_q21_filmstrip.jpg",
+          "sha256": "4d712390287a963c27ce60782924966177a724c832139ce2009026b039b46e99",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q21_filmstrip.jpg"
+        },
+        {
+          "bytes": 191813,
+          "member": "vecna82-temporal-truth-source/p3_q34_e1_clip.mp4",
+          "sha256": "092feef59258026262b00cf5a8972aab5930a81b40291495e27261d26dfbd8c9",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q34_e1_clip.mp4"
+        },
+        {
+          "bytes": 50894,
+          "member": "vecna82-temporal-truth-source/p3_q34_e1_f9899.jpg",
+          "sha256": "8818f035c06d8caa9ab5f591fa59ed1b931dd124b8a680f807970271d7abf223",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q34_e1_f9899.jpg"
+        },
+        {
+          "bytes": 50524,
+          "member": "vecna82-temporal-truth-source/p3_q34_e1_f9900.jpg",
+          "sha256": "a9df65aeb093c69f127cdb2a3609b5475b0e2a03820054d517d49d4959462577",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q34_e1_f9900.jpg"
+        },
+        {
+          "bytes": 50995,
+          "member": "vecna82-temporal-truth-source/p3_q34_e1_f9901.jpg",
+          "sha256": "4c5ec86178fa4d0e2ea8faf485d2f7f1e7db3a380ce2cb5ce9cde6d2af168c5b",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q34_e1_f9901.jpg"
+        },
+        {
+          "bytes": 205367,
+          "member": "vecna82-temporal-truth-source/p3_q34_e2_clip.mp4",
+          "sha256": "5e2e5d6a0aa7af39a4773f1bad44408050028819340f50a11ec9d8629d0bc42f",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q34_e2_clip.mp4"
+        },
+        {
+          "bytes": 51993,
+          "member": "vecna82-temporal-truth-source/p3_q34_e2_f10217.jpg",
+          "sha256": "97bdfcbcc02bc60dfd7062f5cc0dac38fd5342e857bcd3fa69e87d7e9b702787",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q34_e2_f10217.jpg"
+        },
+        {
+          "bytes": 52083,
+          "member": "vecna82-temporal-truth-source/p3_q34_e2_f10218.jpg",
+          "sha256": "16ad2cd432c7bc80967d97ebc577ccab3319c0926ff907489f04550234bdfd47",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q34_e2_f10218.jpg"
+        },
+        {
+          "bytes": 52459,
+          "member": "vecna82-temporal-truth-source/p3_q34_e2_f10219.jpg",
+          "sha256": "85f9209d27a3489eb50cac4343edb9742c20fe717eb2cdf0ea0dedcaae7dcf05",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q34_e2_f10219.jpg"
+        },
+        {
+          "bytes": 203098,
+          "member": "vecna82-temporal-truth-source/p3_q34_e3_clip.mp4",
+          "sha256": "d3d7eb14f333456c310f2b0512ab787616fa9bb3f91e2e8ade54cf64248f30ec",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q34_e3_clip.mp4"
+        },
+        {
+          "bytes": 53655,
+          "member": "vecna82-temporal-truth-source/p3_q34_e3_f10329.jpg",
+          "sha256": "3fc9f0bc52f741653511f5e8e7eb0c4459d5bb9f2f4e54b16d80b0c8533b6a11",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q34_e3_f10329.jpg"
+        },
+        {
+          "bytes": 53084,
+          "member": "vecna82-temporal-truth-source/p3_q34_e3_f10330.jpg",
+          "sha256": "ca41dc76d3e5b6a631aabf193a2d42b8059532ca53b2740d46851e32b0b4fbaa",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q34_e3_f10330.jpg"
+        },
+        {
+          "bytes": 53473,
+          "member": "vecna82-temporal-truth-source/p3_q34_e3_f10331.jpg",
+          "sha256": "70ba2c11014b594391c752ab5793247663c93d08bcc800a15a23e6b2ba942efc",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q34_e3_f10331.jpg"
+        },
+        {
+          "bytes": 177198,
+          "member": "vecna82-temporal-truth-source/p3_q34_e4_clip.mp4",
+          "sha256": "61d3016e24529341970398e29194f9ed4ced6c4688b1cec56ca8cf133ff6563b",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q34_e4_clip.mp4"
+        },
+        {
+          "bytes": 52164,
+          "member": "vecna82-temporal-truth-source/p3_q34_e4_f10575.jpg",
+          "sha256": "e6768f8a4ced77b38ad9a3be3e2987d44f3dd67aee66190a0abcce7b6a08cd95",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q34_e4_f10575.jpg"
+        },
+        {
+          "bytes": 52295,
+          "member": "vecna82-temporal-truth-source/p3_q34_e4_f10576.jpg",
+          "sha256": "59b64cc1571e8f23bb3eca194a8c81c6c9b0f94a8f0fb306462bd7b39e9122ff",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q34_e4_f10576.jpg"
+        },
+        {
+          "bytes": 52623,
+          "member": "vecna82-temporal-truth-source/p3_q34_e4_f10577.jpg",
+          "sha256": "a2e3264cc93465a39c6a33c7bfd55b8b88beb095f697af25c1f567d931bf9b82",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q34_e4_f10577.jpg"
+        },
+        {
+          "bytes": 557517,
+          "member": "vecna82-temporal-truth-source/p3_q34_filmstrip.jpg",
+          "sha256": "c03e51c59558549a11694300023d8405dd41480a7c6bd34c810cbd45540dad51",
+          "unpacked_path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q34_filmstrip.jpg"
+        }
+      ],
+      "path": "outputs/temporal-truth-review/source-evidence-2.zip",
+      "sha256": "fea5ef485bec67cdd160823b65e133fc6b51e9b2f701a9e221828932aa514a6e"
+    }
+  ],
+  "canonical_truth_sha256": "63f80eb6ff54ef3c623f6ae4926eba404dac8bb5543b86e31f8fa0da842b4c9f",
+  "capture_files_including_index": 133,
+  "excluded_local_intermediates": [
+    "outputs/temporal-truth-review/source-evidence.zip"
+  ],
+  "extraction_commands_from_package_root": [
+    "python -m zipfile -e outputs/temporal-truth-review/source-evidence-1.zip outputs/temporal-truth-review",
+    "python -m zipfile -e outputs/temporal-truth-review/source-evidence-2.zip outputs/temporal-truth-review"
+  ],
+  "files": [
+    {
+      "bytes": 29291,
+      "path": "code/capture_temporal_truth_media.py",
+      "role": "executed_source_capture_code",
+      "sha256": "00308affda543c5c6a64b3c556271325ff56abebeaedb5425b824475b4340ad7"
+    },
+    {
+      "bytes": 24386,
+      "path": "code/consolidate_temporal_truth_review.py",
+      "role": "review_consolidation_and_validation_code",
+      "sha256": "db1cebdfce678d72dbd5245d42a3bec586ddc19483852af5f6d4dabe2230ac2b"
+    },
+    {
+      "bytes": 23188,
+      "path": "code/dataset_audit.py",
+      "role": "mechanical_inventory_producer",
+      "sha256": "d60edf5830debc7fe0c414e5423b15afe774de97aff812775160ebf8d812a12c"
+    },
+    {
+      "bytes": 278815,
+      "path": "inputs/canonical_truth.jsonl",
+      "role": "frozen_canonical_truth_reference_not_modified",
+      "sha256": "63f80eb6ff54ef3c623f6ae4926eba404dac8bb5543b86e31f8fa0da842b4c9f"
+    },
+    {
+      "bytes": 19633,
+      "path": "inputs/temporal_truth_media_broker.json",
+      "role": "verified_capture_transport_receipt",
+      "sha256": "d6c5e0ef774a5839ed4a829db8d366fcbe18711edd89aac1231d661638f18a5e"
+    },
+    {
+      "bytes": 32939,
+      "path": "outputs/dataset-audit/temporal_evidence_requests.jsonl",
+      "role": "frozen_evidence_requests",
+      "sha256": "ec91b83fda3754f0eb0d1780eaa2f12c0aa438162488b2c35d316bf87ad40be1"
+    },
+    {
+      "bytes": 50057,
+      "path": "outputs/dataset-audit/temporal_inventory.jsonl",
+      "role": "frozen_mechanical_inventory",
+      "sha256": "f5e0de1bfea8953f5cdc232d99a2aab6e2220e421633ce687c9ee27eb9d96d6a"
+    },
+    {
+      "bytes": 9265,
+      "path": "outputs/temporal-truth-review/REVIEW_P0.md",
+      "role": "source_review_codebook_ledger_or_report",
+      "sha256": "45a6c3fdb9ea2c0711af301674e262058672975c1cf6e7e478b33079464e77f5"
+    },
+    {
+      "bytes": 6887,
+      "path": "outputs/temporal-truth-review/REVIEW_P1_P2.md",
+      "role": "source_review_codebook_ledger_or_report",
+      "sha256": "57b3e78288e07417416ca69ec5b9343bedeff6886a054d71d27c990615415481"
+    },
+    {
+      "bytes": 6427,
+      "path": "outputs/temporal-truth-review/REVIEW_P3.md",
+      "role": "source_review_codebook_ledger_or_report",
+      "sha256": "971e3fbcc2e46b3e0f61ded0d4aa992f3c8feee71f33b4784f0028a721ffd954"
+    },
+    {
+      "bytes": 10985,
+      "path": "outputs/temporal-truth-review/SOURCE_REVIEW.md",
+      "role": "source_review_codebook_ledger_or_report",
+      "sha256": "6f44e031430ce79be64b5818cb1f24227deba7bab4c533c5d48231f9ceea6305"
+    },
+    {
+      "bytes": 14018,
+      "path": "outputs/temporal-truth-review/capture_plan.json",
+      "role": "source_review_codebook_ledger_or_report",
+      "sha256": "55e2797ffe9cb1a6069849acf5378cc78f552540040a4c4c554e1fd6e8f75fc6"
+    },
+    {
+      "bytes": 477455,
+      "path": "outputs/temporal-truth-review/proposed_truth.reviewed.jsonl",
+      "role": "source_review_codebook_ledger_or_report",
+      "sha256": "0ab32900e7389cc58e981d6e415000755a76c68b110389952fcc8e76657324f4"
+    },
+    {
+      "bytes": 388522,
+      "path": "outputs/temporal-truth-review/proposed_truth.schema.json",
+      "role": "source_review_codebook_ledger_or_report",
+      "sha256": "1081a213df2672cec7ae092bfffc25a1fa3201d6ae87f3fd677378308d5a2e22"
+    },
+    {
+      "bytes": 297577,
+      "path": "outputs/temporal-truth-review/proposed_truth.template.jsonl",
+      "role": "source_review_codebook_ledger_or_report",
+      "sha256": "d048510cb76526f87a1fb3aca07840e3bb8e2561464bec025d1f31921f7382c0"
+    },
+    {
+      "bytes": 178950,
+      "path": "outputs/temporal-truth-review/review_p0.jsonl",
+      "role": "source_review_codebook_ledger_or_report",
+      "sha256": "8f0f55d74cc4aac8b37c935d37f9388d8ea8e05305ddb0831c0687bb639a6585"
+    },
+    {
+      "bytes": 190475,
+      "path": "outputs/temporal-truth-review/review_p1_p2.jsonl",
+      "role": "source_review_codebook_ledger_or_report",
+      "sha256": "cb1ed92cab8919914707f2bc4e2be71c9d972415955d29b319c3f0d66e82892f"
+    },
+    {
+      "bytes": 108030,
+      "path": "outputs/temporal-truth-review/review_p3.jsonl",
+      "role": "source_review_codebook_ledger_or_report",
+      "sha256": "4f0669acf7fe85f04f6eae6bd148341ecdb3503dab1af1889e1edea5cfeb723f"
+    },
+    {
+      "bytes": 6298976,
+      "path": "outputs/temporal-truth-review/source-evidence-1.zip",
+      "role": "lossless_source_media_and_index_archive_part",
+      "sha256": "4644b948ed1dfd7b4074fb43081f1a8dd7d923114527a8cb4f2066f94e872c3d"
+    },
+    {
+      "bytes": 6758090,
+      "path": "outputs/temporal-truth-review/source-evidence-2.zip",
+      "role": "lossless_source_media_and_index_archive_part",
+      "sha256": "fea5ef485bec67cdd160823b65e133fc6b51e9b2f701a9e221828932aa514a6e"
+    },
+    {
+      "bytes": 4918,
+      "path": "outputs/temporal-truth-review/source_metadata_capture_inputs.json",
+      "role": "source_review_codebook_ledger_or_report",
+      "sha256": "fc16ea88ec93465406b07063e906798b85b8d69297ff8fc3be03f94987939e28"
+    },
+    {
+      "bytes": 7087,
+      "path": "outputs/temporal-truth-review/source_review_validation.json",
+      "role": "source_review_codebook_ledger_or_report",
+      "sha256": "fbb893076b8a45cb9bbfcdf0720523e7ac8fe80533fa6a79dc303b585af14826"
+    },
+    {
+      "bytes": 372289,
+      "path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q22_filmstrip.jpg",
+      "role": "direct_query_filmstrip_preview",
+      "sha256": "88249129c850c4a986d1b44ea50234de5565dfe33acbc37cea89581def2723dc"
+    },
+    {
+      "bytes": 539942,
+      "path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q23_filmstrip.jpg",
+      "role": "direct_query_filmstrip_preview",
+      "sha256": "82c557471adfc86666d8f421859aa1a7bb5ad0a142c70be4ebed05f447862cb9"
+    },
+    {
+      "bytes": 385858,
+      "path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q24_filmstrip.jpg",
+      "role": "direct_query_filmstrip_preview",
+      "sha256": "7eb9ca3994936e02dfbbf1e3318d138b13ab0108eef2ec33cd9357d5e3892fdf"
+    },
+    {
+      "bytes": 400904,
+      "path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p1_q25_filmstrip.jpg",
+      "role": "direct_query_filmstrip_preview",
+      "sha256": "a3cb11cc974c0d2544bf7198ab94315b10e47d285f04e824d5aa3162804f071f"
+    },
+    {
+      "bytes": 553453,
+      "path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q29_filmstrip.jpg",
+      "role": "direct_query_filmstrip_preview",
+      "sha256": "e5dd7559e8ff1793a8542a7a58a448048c4735744be34cfcf3f23dc84d5eb038"
+    },
+    {
+      "bytes": 526333,
+      "path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q30_filmstrip.jpg",
+      "role": "direct_query_filmstrip_preview",
+      "sha256": "895df736b07c5c9febbc5dd06bd30ff11dc4ce43f841e6342454b4a6f789458b"
+    },
+    {
+      "bytes": 423150,
+      "path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q21_filmstrip.jpg",
+      "role": "direct_query_filmstrip_preview",
+      "sha256": "4d712390287a963c27ce60782924966177a724c832139ce2009026b039b46e99"
+    },
+    {
+      "bytes": 557517,
+      "path": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q34_filmstrip.jpg",
+      "role": "direct_query_filmstrip_preview",
+      "sha256": "c03e51c59558549a11694300023d8405dd41480a7c6bd34c810cbd45540dad51"
+    }
+  ],
+  "gitignore_note": "Keep this exact manifest list when staging. The repository data*/ rule can ignore outputs/dataset-audit/; the two frozen inventory/request references are intentional publication inputs and must be force-added if ignored. outputs/temporal-truth-review/ is the source-media prefix.",
+  "media_files": 132,
+  "no_canonical_replacement": true,
+  "no_full_source_video_copies": true,
+  "no_retrieval_outputs_required_for_review": true,
+  "path_base": "benchmark-results/astra-retrieval-rd-v1 in the Vecna working branch, or this package root",
+  "publish_manifest_itself": "outputs/temporal-truth-review/source_publication_manifest.json",
+  "purpose": "Durable source review supporting JimmyK300/official-dataset-control#16 and JimmyK300/Vecna#82; review only, no canonical repair.",
+  "schema": "temporal-source-review-publication-manifest-v2",
+  "selected_bytes_excluding_this_manifest": 18975417,
+  "selected_file_count_excluding_this_manifest": 30,
+  "self_hash_policy": "This manifest is included in publication but does not recursively hash itself. The final Git tree/commit identifies it.",
+  "source_media_bytes": 13273030,
+  "transport": "Two independent lossless ZIP archives, each under 8,000,000 binary bytes, whose nonoverlapping union contains all 133 capture files. Extract both into the same directory. Eight filmstrips are also published directly at their original paths."
+}

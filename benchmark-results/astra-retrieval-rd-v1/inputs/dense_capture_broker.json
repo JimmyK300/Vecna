@@ -1,0 +1,68 @@
+{
+  "child": {
+    "elapsed_s": 32.625,
+    "logs": {
+      "stderr.txt": {
+        "bytes": 2059,
+        "sha256": "511b9bb553c9af644a84216240ba7fa99aff03c51124969f3df04b9b7c2b9a24"
+      },
+      "stdout.txt": {
+        "bytes": 3078,
+        "sha256": "25e7d112612e504234a9daebe4b52f9218bd996643b6643bdc1ff2fd20eb8f97"
+      }
+    },
+    "manifest_summary": {
+      "error_type": null,
+      "ground_truth_read": false,
+      "planned_query_count": null,
+      "rankings_sha256": "097bc5f7680457d068fe075372f67dd03b17d2fac745d7e5a68a85f7195bcfc2",
+      "rows_written": 38,
+      "status": "complete"
+    },
+    "returncode": 0,
+    "runtime_head": "759782480ad4da4927be1e1a383a9323e16906a0",
+    "status": "completed"
+  },
+  "comment_id": 5698675439,
+  "result": {
+    "authority": "high-host",
+    "base_commit": "759782480ad4da4927be1e1a383a9323e16906a0",
+    "changed_paths": [
+      "benchmark-results/astra-retrieval-rd-v1/code/collect_dense_visibility.py",
+      "benchmark-results/astra-retrieval-rd-v1/code/collect_sparse_visibility.py",
+      "benchmark-results/astra-retrieval-rd-v1/outputs/fusion/source/searcher_main.py",
+      "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense-host-files.json",
+      "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense-supervision-v1/stderr.txt",
+      "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense-supervision-v1/stdout.txt",
+      "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense-supervision-v1/supervision.json",
+      "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense-v1/collection_manifest.json",
+      "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense-v1/dense_rankings.jsonl",
+      "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense-v1/model_initialization.json",
+      "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/dense_config.json",
+      "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/source/text_embedding_main.py",
+      "benchmark-results/astra-retrieval-rd-v1/outputs/source-visibility/sparse_queries.jsonl"
+    ],
+    "dry_run": false,
+    "duration_seconds": 41.098,
+    "exit_code": 0,
+    "final_head": "759782480ad4da4927be1e1a383a9323e16906a0",
+    "patch_artifact": "changes.patch",
+    "patch_bytes": 3640437,
+    "patch_sha256": "186b8bdcf04e2faa80b6743937ef9c81a627cbfa21598ca4cae991c253ff8d00",
+    "repository": "JimmyK300/Vecna",
+    "resolved_executable": "C:\\WINDOWS\\system32\\wsl.exe",
+    "runner": "wsl-shell",
+    "schema_version": 1,
+    "scope": [
+      "benchmark-results/astra-retrieval-rd-v1"
+    ],
+    "scope_violations": [],
+    "status": "success",
+    "task_id": "vecna82-dense-visibility-frozen38-20260916",
+    "worker_stderr": "",
+    "worker_stdout": "{\"status\": \"completed\", \"returncode\": 0, \"elapsed_s\": 32.625, \"runtime_head\": \"759782480ad4da4927be1e1a383a9323e16906a0\", \"logs\": {\"stderr.txt\": {\"bytes\": 2059, \"sha256\": \"511b9bb553c9af644a84216240ba7fa99aff03c51124969f3df04b9b7c2b9a24\"}, \"stdout.txt\": {\"bytes\": 3078, \"sha256\": \"25e7d112612e504234a9daebe4b52f9218bd996643b6643bdc1ff2fd20eb8f97\"}}, \"manifest_summary\": {\"status\": \"complete\", \"rows_written\": 38, \"planned_query_count\": null, \"rankings_sha256\": \"097bc5f7680457d068fe075372f67dd03b17d2fac745d7e5a68a85f7195bcfc2\", \"ground_truth_read\": false, \"error_type\": null}}\n",
+    "workspace_kind": "clone",
+    "wsl_distribution": "Ubuntu"
+  },
+  "source_url": "https://github.com/JimmyK300/ai-routing-hub/issues/1#issuecomment-5698675439"
+}

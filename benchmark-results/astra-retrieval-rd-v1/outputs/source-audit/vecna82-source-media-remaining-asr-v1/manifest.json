@@ -1,0 +1,1617 @@
+{
+  "schema": "vecna82-bounded-source-media-v1",
+  "started_utc": "2026-09-16T12:36:44.250261+00:00",
+  "frozen_sample_sha256": "b4fd944228a033c37ea4d69ad757ceeae9635bfb026cf018e0d60f5b3c661be9",
+  "truth_source": {
+    "commit": "f0b0f4707ceab91ba7e266f72fa982dce3ae1c4b",
+    "path": "benchmark-results/issue34-current-115/ground_truth_current_115.jsonl",
+    "repository": "JimmyK300/Vecna",
+    "sha256": "63f80eb6ff54ef3c623f6ae4926eba404dac8bb5543b86e31f8fa0da842b4c9f"
+  },
+  "text_source": {
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "path_pattern": "derived/metadata/asr-ocr-text-v1/{channel}/by-video/{video_id}.json",
+    "repository": "JimmyK300/official-dataset-control"
+  },
+  "code_sha256": "5dfa2b81708a38914cf422dd02492215bd09d11111a44ad2ac15a2ba1f4c1153",
+  "source_full_video_hashes": "not_computed_bounded_read_cost",
+  "writes": "new disposable output directory only",
+  "source_semantics_reviewed": false,
+  "assets": [
+    {
+      "canonical_query": "Mẩu tin giới thiệu về đàn hổ tại một địa phương ở miền Nam vừa có thêm khoảng 3-6 con hổ con. Đây là một giống hổ quý hiếm",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 12750,
+          "original": {
+            "end_frame": 12750,
+            "end_s": 425.0,
+            "start_frame": 11250,
+            "start_s": 375.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 11250,
+          "video_id": "L21_V029"
+        }
+      ],
+      "channel": "asr",
+      "coverage_limit": "Representative 28-second excerpt, or a shorter full canonical window with two seconds of surrounding context. This prepares listening only; it does not establish complete speech coverage or a heard reference.",
+      "end_s": 414.0,
+      "expected_fps": 30.0,
+      "kind": "audio",
+      "query_id": "p0_q02",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 12000,
+      "start_s": 386.0,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L21/L21_V029.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L21\\L21_V029.mp4",
+      "source_file": {
+        "bytes": 122836138,
+        "mtime_ns": 1785580163100559900
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "30/1",
+            "avg_frame_rate": "30/1",
+            "time_base": "1/15360",
+            "start_time": "0.000000",
+            "duration": "1156.300000",
+            "nb_frames": "34689"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "1156.376961",
+            "nb_frames": "49801"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "1156.376961"
+        }
+      },
+      "audio_rendition": "bounded source interval, mono 16kHz PCM WAV; no ASR model",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-ss",
+        "386.0",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L21\\L21_V029.mp4",
+        "-map",
+        "0:a:0",
+        "-t",
+        "28.0",
+        "-vn",
+        "-ac",
+        "1",
+        "-ar",
+        "16000",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-asr-source-capture-20260916-1q47k790\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-asr-v1\\p0_q02_L21_V029_386.0-414.0s.wav"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p0_q02_L21_V029_386.0-414.0s.wav",
+      "artifact_sha256": "342e26f97e124f9c4e60166aa74de3cf4748a3bc0497daaffcdaefaec65c6404",
+      "artifact_bytes": 896078,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Đoạn video về một chương trình từ thiện của một câu lạc bộ tên là FANA. Trong đoạn video có thể thấy câu lạc bộ này đang đi trao quà tại một xã thuộc tỉnh Khánh Hòa. Hỏi xã này có tên là gì? (tại thời điểm đó)",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 2125,
+          "original": {
+            "end_frame": 2125,
+            "end_s": 85.0,
+            "start_frame": 1375,
+            "start_s": 55.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 1375,
+          "video_id": "L30_V072"
+        }
+      ],
+      "channel": "asr",
+      "coverage_limit": "Representative 28-second excerpt, or a shorter full canonical window with two seconds of surrounding context. This prepares listening only; it does not establish complete speech coverage or a heard reference.",
+      "end_s": 83.8,
+      "expected_fps": 25.0,
+      "kind": "audio",
+      "query_id": "p0_q19",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 1745,
+      "start_s": 55.8,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L30/L30_V072.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L30\\L30_V072.mp4",
+      "source_file": {
+        "bytes": 22847131,
+        "mtime_ns": 1786613745549097600
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "86.760000",
+            "nb_frames": "2169"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "86.772971",
+            "nb_frames": "3737"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "86.772971"
+        }
+      },
+      "audio_rendition": "bounded source interval, mono 16kHz PCM WAV; no ASR model",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-ss",
+        "55.8",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L30\\L30_V072.mp4",
+        "-map",
+        "0:a:0",
+        "-t",
+        "28.0",
+        "-vn",
+        "-ac",
+        "1",
+        "-ar",
+        "16000",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-asr-source-capture-20260916-1q47k790\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-asr-v1\\p0_q19_L30_V072_55.8-83.8s.wav"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p0_q19_L30_V072_55.8-83.8s.wav",
+      "artifact_sha256": "eadc16c6788b0e703d89cdccfe7607551f033d5f9473617adfa67210f641fd20",
+      "artifact_bytes": 896078,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Người phụ nữ mặc áo dài màu hồng, đeo kính đang giảng giải về các trường hợp sử dụng khác nhau của động từ 'remember' dựa trên mốc thời gian của hành động được nhắc tới.",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 17300,
+          "original": {
+            "end_frame": 17300,
+            "end_s": 692.0,
+            "start_frame": 16125,
+            "start_s": 645.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 16125,
+          "video_id": "L25_V041"
+        }
+      ],
+      "channel": "asr",
+      "coverage_limit": "Representative 28-second excerpt, or a shorter full canonical window with two seconds of surrounding context. This prepares listening only; it does not establish complete speech coverage or a heard reference.",
+      "end_s": 692.0,
+      "expected_fps": 25.0,
+      "kind": "audio",
+      "query_id": "p1_q17",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 17152,
+      "start_s": 664.0,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L25/L25_V041.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L25\\L25_V041.mp4",
+      "source_file": {
+        "bytes": 108597266,
+        "mtime_ns": 1786613743635004600
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "1428.280000",
+            "nb_frames": "35707"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "1428.329070",
+            "nb_frames": "61513"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "1428.329070"
+        }
+      },
+      "audio_rendition": "bounded source interval, mono 16kHz PCM WAV; no ASR model",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-ss",
+        "664.0",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L25\\L25_V041.mp4",
+        "-map",
+        "0:a:0",
+        "-t",
+        "28.0",
+        "-vn",
+        "-ac",
+        "1",
+        "-ar",
+        "16000",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-asr-source-capture-20260916-1q47k790\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-asr-v1\\p1_q17_L25_V041_664.0-692.0s.wav"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p1_q17_L25_V041_664.0-692.0s.wav",
+      "artifact_sha256": "0eda80bfec969d2884f5b7293416c3c2722e0fa560da7cb9e796195477fecc89",
+      "artifact_bytes": 896078,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Đoạn clip mô tả hậu quả của hiện tượng sạt lở đất nghiêm trọng, đất đá tràn xuống gây tắc nghẽn hoàn toàn một đoạn đường đèo. Trong một cảnh quay cận, có thể thấy một cột mốc đường bộ với phần đỉnh màu đỏ chỉ còn lộ ra phần trên, phần lớn đã bị đất đá vùi lấp. Ở cảnh quay cuối, một người đi xe máy đang vật lộn để điều khiển phương tiện vượt qua khu vực bùn lầy, trên chiếc xe máy có treo một vật màu xanh lá. Tên của con đèo là gì?\n\n## Temporal Retrieval and Alignment of Key Events (TRAKE)",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 6250,
+          "original": {
+            "end_frame": 6250,
+            "end_s": 250.0,
+            "start_frame": 5500,
+            "start_s": 220.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 5500,
+          "video_id": "L22_V008"
+        }
+      ],
+      "channel": "asr",
+      "coverage_limit": "Representative 28-second excerpt, or a shorter full canonical window with two seconds of surrounding context. This prepares listening only; it does not establish complete speech coverage or a heard reference.",
+      "end_s": 248.0,
+      "expected_fps": 25.0,
+      "kind": "audio",
+      "query_id": "p1_q24",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 5638,
+      "start_s": 220.0,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L22/L22_V008.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L22\\L22_V008.mp4",
+      "source_file": {
+        "bytes": 126829790,
+        "mtime_ns": 1786611663119413700
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "1095.720000",
+            "nb_frames": "27393"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "1095.772880",
+            "nb_frames": "47191"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "1095.772880"
+        }
+      },
+      "audio_rendition": "bounded source interval, mono 16kHz PCM WAV; no ASR model",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-ss",
+        "220.0",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L22\\L22_V008.mp4",
+        "-map",
+        "0:a:0",
+        "-t",
+        "28.0",
+        "-vn",
+        "-ac",
+        "1",
+        "-ar",
+        "16000",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-asr-source-capture-20260916-1q47k790\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-asr-v1\\p1_q24_L22_V008_220.0-248.0s.wav"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p1_q24_L22_V008_220.0-248.0s.wav",
+      "artifact_sha256": "15e31f4d880140fb3765a0d47e41102687250bc4ef1bb362766f3675ceabae82",
+      "artifact_bytes": 896078,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Cảnh quay một tô cháo đã được nấu và trang trí hoàn chỉnh (đã xong các giai đoạn trang trí). Kế bên tô cháo có 1 chén nhỏ màu đen, để chứa 1 loại topping màu cam kết cấu hơi giống những sợi nhỏ. Loại topping này trước đó đã được rắc lên tô cháo. Xung quanh topping là các loại rau, hành,... Hỏi topping trong video là thịt của con gì?",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 6825,
+          "original": {
+            "end_frame": 6825,
+            "end_s": 273.0,
+            "start_frame": 5950,
+            "start_s": 238.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 5950,
+          "video_id": "L26_V450"
+        }
+      ],
+      "channel": "asr",
+      "coverage_limit": "Representative 28-second excerpt, or a shorter full canonical window with two seconds of surrounding context. This prepares listening only; it does not establish complete speech coverage or a heard reference.",
+      "end_s": 266.0,
+      "expected_fps": 25.0,
+      "kind": "audio",
+      "query_id": "p2_q26",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 6300,
+      "start_s": 238.0,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L26E/L26_V450.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L26E\\L26_V450.mp4",
+      "source_file": {
+        "bytes": 75897670,
+        "mtime_ns": 1786621089328409300
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "337.840000",
+            "nb_frames": "8446"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "337.896780",
+            "nb_frames": "14552"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "337.896780"
+        }
+      },
+      "audio_rendition": "bounded source interval, mono 16kHz PCM WAV; no ASR model",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-ss",
+        "238.0",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L26E\\L26_V450.mp4",
+        "-map",
+        "0:a:0",
+        "-t",
+        "28.0",
+        "-vn",
+        "-ac",
+        "1",
+        "-ar",
+        "16000",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-asr-source-capture-20260916-1q47k790\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-asr-v1\\p2_q26_L26_V450_238.0-266.0s.wav"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p2_q26_L26_V450_238.0-266.0s.wav",
+      "artifact_sha256": "44d93112bbece9ebf4ddcf1b9df4bfdc8d6a93a0b1352bd7a2b2c89866c1335f",
+      "artifact_bytes": 896078,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Một cô gái đeo tạp dề màu trắng, bên cạnh là một lọ hoa riềng tía. Sau đó cô gái này đặt lên 1 dĩa trắng 4 con X, được biết X là nguyên liệu cho món ăn trong tập này. Sau đó người này lại cầm lên 2 con X. Sau đó người này đối thoại với một người đối diện để xem hôm nay nấu món gì. Hỏi X là con gì?\n\n## Temporal Retrieval and Alignment of Key Events (TRAKE)",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 900,
+          "original": {
+            "end_frame": 900,
+            "end_s": 36.0,
+            "start_frame": 300,
+            "start_s": 12.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 300,
+          "video_id": "L26_V254"
+        }
+      ],
+      "channel": "asr",
+      "coverage_limit": "Representative 28-second excerpt, or a shorter full canonical window with two seconds of surrounding context. This prepares listening only; it does not establish complete speech coverage or a heard reference.",
+      "end_s": 38.0,
+      "expected_fps": 25.0,
+      "kind": "audio",
+      "query_id": "p2_q28",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 543,
+      "start_s": 10.0,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L26C/L26_V254.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L26C\\L26_V254.mp4",
+      "source_file": {
+        "bytes": 66215584,
+        "mtime_ns": 1786621068300506700
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "312.360000",
+            "nb_frames": "7809"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "312.424490",
+            "nb_frames": "13455"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "312.424490"
+        }
+      },
+      "audio_rendition": "bounded source interval, mono 16kHz PCM WAV; no ASR model",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-ss",
+        "10.0",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L26C\\L26_V254.mp4",
+        "-map",
+        "0:a:0",
+        "-t",
+        "28.0",
+        "-vn",
+        "-ac",
+        "1",
+        "-ar",
+        "16000",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-asr-source-capture-20260916-1q47k790\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-asr-v1\\p2_q28_L26_V254_10.0-38.0s.wav"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p2_q28_L26_V254_10.0-38.0s.wav",
+      "artifact_sha256": "f625a9b9cf6eaccfe0888974c2202d92ec45f6c78fc0e1fac597071a5cb95907",
+      "artifact_bytes": 896078,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Một giáo viên nữ ngồi bên phải màn hình và giảng bài Tiếng Anh.\nTrên bảng xanh lần lượt xuất hiện hai câu ví dụ, một câu nói về việc đi bảo tàng vào tuần trước, câu còn lại nói về thói quen chơi bóng đá khi còn trẻ.\nSau đó, nội dung trên bảng bổ sung phần giải thích chức năng của hai ví dụ và cuối cùng xuất hiện công thức ngữ pháp tương ứng.",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 2550,
+          "group_index": 0,
+          "original": {
+            "end": 2550,
+            "kind": "interval",
+            "start": 1025,
+            "video_id": "L25_V075"
+          },
+          "source": "accepted_groups",
+          "start_frame": 1025,
+          "video_id": "L25_V075"
+        }
+      ],
+      "channel": "asr",
+      "coverage_limit": "Representative 28-second excerpt, or a shorter full canonical window with two seconds of surrounding context. This prepares listening only; it does not establish complete speech coverage or a heard reference.",
+      "end_s": 85.48,
+      "expected_fps": 25.0,
+      "kind": "audio",
+      "query_id": "p3_q04",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 1787,
+      "start_s": 57.48,
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+      "video": "videos/L25/L25_V075.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L25\\L25_V075.mp4",
+      "source_file": {
+        "bytes": 123869771,
+        "mtime_ns": 1786613774834571900
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "1736.120000",
+            "nb_frames": "43403"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "1736.179229",
+            "nb_frames": "74771"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "1736.179229"
+        }
+      },
+      "audio_rendition": "bounded source interval, mono 16kHz PCM WAV; no ASR model",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-ss",
+        "57.48",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L25\\L25_V075.mp4",
+        "-map",
+        "0:a:0",
+        "-t",
+        "28.000000000000007",
+        "-vn",
+        "-ac",
+        "1",
+        "-ar",
+        "16000",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-asr-source-capture-20260916-1q47k790\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-asr-v1\\p3_q04_L25_V075_57.48-85.48s.wav"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p3_q04_L25_V075_57.48-85.48s.wav",
+      "artifact_sha256": "2559f829b5dbc87072cc5b8948c5585e9ebc31b32ccda5b0107cb5ad324278a7",
+      "artifact_bytes": 896078,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Đoạn phim ghi lại cuộc phỏng vấn một người đàn ông đam mê sưu tầm game, chia sẻ rằng niềm đam mê của anh được truyền cảm hứng từ món đồ chơi của bà mình. Trong đoạn phỏng vấn xuất hiện một dòng chữ neon phát sáng. Dòng chữ đó là gì?",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 21420,
+          "group_index": 0,
+          "original": {
+            "end": 21420,
+            "kind": "interval",
+            "start": 21140,
+            "video_id": "L21_V018"
+          },
+          "source": "accepted_groups",
+          "start_frame": 21140,
+          "video_id": "L21_V018"
+        }
+      ],
+      "channel": "asr",
+      "coverage_limit": "Representative 28-second excerpt, or a shorter full canonical window with two seconds of surrounding context. This prepares listening only; it does not establish complete speech coverage or a heard reference.",
+      "end_s": 858.8,
+      "expected_fps": 25.0,
+      "kind": "audio",
+      "query_id": "p3_q08",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 21280,
+      "start_s": 843.6,
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+      "video": "videos/L21/L21_V018.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L21\\L21_V018.mp4",
+      "source_file": {
+        "bytes": 140069835,
+        "mtime_ns": 1785580156710274100
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "1143.960000",
+            "nb_frames": "28599"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "1144.023946",
+            "nb_frames": "49269"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "1144.023946"
+        }
+      },
+      "audio_rendition": "bounded source interval, mono 16kHz PCM WAV; no ASR model",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-ss",
+        "843.6",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L21\\L21_V018.mp4",
+        "-map",
+        "0:a:0",
+        "-t",
+        "15.199999999999932",
+        "-vn",
+        "-ac",
+        "1",
+        "-ar",
+        "16000",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-asr-source-capture-20260916-1q47k790\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-asr-v1\\p3_q08_L21_V018_843.6-858.8s.wav"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p3_q08_L21_V018_843.6-858.8s.wav",
+      "artifact_sha256": "45c32b4d0adf61d9eb97bf9ef7aee135c30a3a0bac53d765b5b175caa579cc4a",
+      "artifact_bytes": 486478,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Các cảnh quay nối tiếp nhau từ nhiều góc máy trong một lớp học tại một thời điểm. Cảnh đầu tiên là cảnh một sư cô ân cần quan sát một cậu bé áo xanh lá ngồi học bài. Sau đó là cảnh quay cận trang vở môn Toán, ghi lại các nét chữ mà học sinh đang ghi chép. Trong lớp học này, giáo viên nữ trong trang phục màu hồng đứng lớp chính, còn sư cô di chuyển xung quanh lớp học để hỗ trợ các em. Các giáo viên tham gia giảng dạy tại lớp học này là giáo viên dạy chính ở trường tiểu học nào?",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 3542,
+          "group_index": 0,
+          "original": {
+            "end": 3542,
+            "kind": "interval",
+            "start": 3042,
+            "video_id": "L30_V010"
+          },
+          "source": "accepted_groups",
+          "start_frame": 3042,
+          "video_id": "L30_V010"
+        }
+      ],
+      "channel": "asr",
+      "coverage_limit": "Representative 28-second excerpt, or a shorter full canonical window with two seconds of surrounding context. This prepares listening only; it does not establish complete speech coverage or a heard reference.",
+      "end_s": 143.68,
+      "expected_fps": 25.0,
+      "kind": "audio",
+      "query_id": "p3_q18",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 3292,
+      "start_s": 119.68,
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+      "video": "videos/L30/L30_V010.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L30\\L30_V010.mp4",
+      "source_file": {
+        "bytes": 28200708,
+        "mtime_ns": 1786613729032461600
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "165.720000",
+            "nb_frames": "4143"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "165.790476",
+            "nb_frames": "7140"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "165.790476"
+        }
+      },
+      "audio_rendition": "bounded source interval, mono 16kHz PCM WAV; no ASR model",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-ss",
+        "119.68",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L30\\L30_V010.mp4",
+        "-map",
+        "0:a:0",
+        "-t",
+        "24.0",
+        "-vn",
+        "-ac",
+        "1",
+        "-ar",
+        "16000",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-asr-source-capture-20260916-1q47k790\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-asr-v1\\p3_q18_L30_V010_119.68-143.68s.wav"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p3_q18_L30_V010_119.68-143.68s.wav",
+      "artifact_sha256": "bec95b4d6718753756f258003d2b2cd73279f3c7316ec05b305090fa1c603e26",
+      "artifact_bytes": 768078,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Đoạn clip về 1 thị trấn ven biển thu hút du khách hiếu kỳ nhờ 1 loài động vật biển nguy hiểm. Loài động vật này nổi tiếng trong 1 bộ phim của đạo diễn Steven Spielberg được sản xuất vào năm 1975",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 19350,
+          "original": {
+            "end_frame": 19350,
+            "end_s": 645.0,
+            "start_frame": 16650,
+            "start_s": 555.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 16650,
+          "video_id": "L22_V022"
+        }
+      ],
+      "channel": "asr",
+      "coverage_limit": "Representative 28-second excerpt, or a shorter full canonical window with two seconds of surrounding context. This prepares listening only; it does not establish complete speech coverage or a heard reference.",
+      "end_s": 583.0,
+      "expected_fps": 30.0,
+      "kind": "audio",
+      "query_id": "p0_q16",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 16755,
+      "start_s": 555.0,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L22/L22_V022.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L22\\L22_V022.mp4",
+      "source_file": {
+        "bytes": 118833198,
+        "mtime_ns": 1786611672062076600
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "30/1",
+            "avg_frame_rate": "30/1",
+            "time_base": "1/15360",
+            "start_time": "0.000000",
+            "duration": "1138.300000",
+            "nb_frames": "34149"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "1138.381497",
+            "nb_frames": "49026"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "1138.381497"
+        }
+      },
+      "audio_rendition": "bounded source interval, mono 16kHz PCM WAV; no ASR model",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-ss",
+        "555.0",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L22\\L22_V022.mp4",
+        "-map",
+        "0:a:0",
+        "-t",
+        "28.0",
+        "-vn",
+        "-ac",
+        "1",
+        "-ar",
+        "16000",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-asr-source-capture-20260916-1q47k790\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-asr-v1\\p0_q16_L22_V022_555.0-583.0s.wav"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p0_q16_L22_V022_555.0-583.0s.wav",
+      "artifact_sha256": "55755df998ed6418f725ccfbad3f9c26bb05e89aa9a9388ccfddad21d511008e",
+      "artifact_bytes": 896078,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Đoạn phim ghi lại cảnh mạnh thường quân hỗ trợ một quán trọ dành cho người cao tuổi, sau đó chuyển sang cảnh một cụ ông trò chuyện với nhóm người nước ngoài. Hỏi quán trọ được nhắc đến trong đoạn phim nằm trên đường nào?",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 3850,
+          "original": {
+            "end_frame": 3850,
+            "end_s": 154.0,
+            "start_frame": 2100,
+            "start_s": 84.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 2100,
+          "video_id": "L30_V043"
+        }
+      ],
+      "channel": "asr",
+      "coverage_limit": "Representative 28-second excerpt, or a shorter full canonical window with two seconds of surrounding context. This prepares listening only; it does not establish complete speech coverage or a heard reference.",
+      "end_s": 154.0,
+      "expected_fps": 25.0,
+      "kind": "audio",
+      "query_id": "p2_q23",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 3529,
+      "start_s": 126.0,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L30/L30_V043.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L30\\L30_V043.mp4",
+      "source_file": {
+        "bytes": 40712348,
+        "mtime_ns": 1786613737687365500
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "184.680000",
+            "nb_frames": "4617"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "184.737959",
+            "nb_frames": "7956"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "184.737959"
+        }
+      },
+      "audio_rendition": "bounded source interval, mono 16kHz PCM WAV; no ASR model",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-ss",
+        "126.0",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L30\\L30_V043.mp4",
+        "-map",
+        "0:a:0",
+        "-t",
+        "28.0",
+        "-vn",
+        "-ac",
+        "1",
+        "-ar",
+        "16000",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-asr-source-capture-20260916-1q47k790\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-asr-v1\\p2_q23_L30_V043_126.0-154.0s.wav"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p2_q23_L30_V043_126.0-154.0s.wav",
+      "artifact_sha256": "dfd049cb9d4e9d559537d0ff04d111fb9f8697099b8785f43ae785ad86f2b004",
+      "artifact_bytes": 896078,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Trong video hướng dẫn nấu ăn, người đầu bếp lần lượt cho các loại hương liệu gồm tiêu xanh, lá chanh và sả vào bên trong bụng của tổng cộng 4 con cá. Đây là loài cá gì?",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 3050,
+          "original": {
+            "end_frame": 3050,
+            "end_s": 122.0,
+            "start_frame": 2050,
+            "start_s": 82.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 2050,
+          "video_id": "L26_V161"
+        }
+      ],
+      "channel": "asr",
+      "coverage_limit": "Representative 28-second excerpt, or a shorter full canonical window with two seconds of surrounding context. This prepares listening only; it does not establish complete speech coverage or a heard reference.",
+      "end_s": 122.0,
+      "expected_fps": 25.0,
+      "kind": "audio",
+      "query_id": "p2_q21",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 2743,
+      "start_s": 94.0,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L26B/L26_V161.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L26B\\L26_V161.mp4",
+      "source_file": {
+        "bytes": 71413658,
+        "mtime_ns": 1786625243426058900
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "323.800000",
+            "nb_frames": "8095"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "323.871927",
+            "nb_frames": "13948"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "323.871927"
+        }
+      },
+      "audio_rendition": "bounded source interval, mono 16kHz PCM WAV; no ASR model",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-ss",
+        "94.0",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L26B\\L26_V161.mp4",
+        "-map",
+        "0:a:0",
+        "-t",
+        "28.0",
+        "-vn",
+        "-ac",
+        "1",
+        "-ar",
+        "16000",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-asr-source-capture-20260916-1q47k790\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-asr-v1\\p2_q21_L26_V161_94.0-122.0s.wav"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p2_q21_L26_V161_94.0-122.0s.wav",
+      "artifact_sha256": "fc4167b66c5547df63d9486be1d5c8e42bf22941a5955fd8a89512d6342e68c3",
+      "artifact_bytes": 896078,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Một giáo viên nam đứng bên trái màn hình và giảng bài trước một máy tính.\nTrên màn hình lớn hiển thị hướng dẫn chấm điểm, trong đó phần a đề cập đến cấu trúc của bài nghị luận văn học gồm mở bài, thân bài và kết bài.\nNội dung bài giảng liên quan đến một tác phẩm văn học và yêu cầu phân tích nhân vật.\nPhía dưới màn hình xuất hiện dòng chữ giới thiệu chương trình ôn thi môn Ngữ văn.\nTác giả được giới thiệu là người có duyên nợ gắn bó với đề tài miền núi nào?",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 12350,
+          "group_index": 0,
+          "original": {
+            "end": 12350,
+            "kind": "interval",
+            "start": 11000,
+            "video_id": "L25_V027"
+          },
+          "source": "accepted_groups",
+          "start_frame": 11000,
+          "video_id": "L25_V027"
+        }
+      ],
+      "channel": "asr",
+      "coverage_limit": "Representative 28-second excerpt, or a shorter full canonical window with two seconds of surrounding context. This prepares listening only; it does not establish complete speech coverage or a heard reference.",
+      "end_s": 481.0,
+      "expected_fps": 25.0,
+      "kind": "audio",
+      "query_id": "p3_q06",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 11675,
+      "start_s": 453.0,
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+      "video": "videos/L25/L25_V027.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L25\\L25_V027.mp4",
+      "source_file": {
+        "bytes": 184906652,
+        "mtime_ns": 1786613732027541000
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "1779.080000",
+            "nb_frames": "44477"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "1779.136145",
+            "nb_frames": "76621"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "1779.136145"
+        }
+      },
+      "audio_rendition": "bounded source interval, mono 16kHz PCM WAV; no ASR model",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-ss",
+        "453.0",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L25\\L25_V027.mp4",
+        "-map",
+        "0:a:0",
+        "-t",
+        "28.0",
+        "-vn",
+        "-ac",
+        "1",
+        "-ar",
+        "16000",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-asr-source-capture-20260916-1q47k790\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-asr-v1\\p3_q06_L25_V027_453.0-481.0s.wav"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p3_q06_L25_V027_453.0-481.0s.wav",
+      "artifact_sha256": "82eb33cf9c87aa615f5ce530186ea590d2e0b3981e1a0dc225de77680741a978",
+      "artifact_bytes": 896078,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Một bé gái mặc áo bơi họa tiết hoa lá đang trả lời phỏng vấn bên cạnh một hồ bơi. Tiếp theo là hình ảnh cháu bé bơi trong hồ nước, đội mũ bơi màu tím. Hãy cho biết bé gái này sắp lên học lớp mấy (đáp án chỉ ghi 1 chữ số)",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 5691,
+          "group_index": 0,
+          "original": {
+            "end": 5691,
+            "kind": "interval",
+            "start": 5191,
+            "video_id": "L30_V047"
+          },
+          "source": "accepted_groups",
+          "start_frame": 5191,
+          "video_id": "L30_V047"
+        }
+      ],
+      "channel": "asr",
+      "coverage_limit": "Representative 28-second excerpt, or a shorter full canonical window with two seconds of surrounding context. This prepares listening only; it does not establish complete speech coverage or a heard reference.",
+      "end_s": 229.64,
+      "expected_fps": 25.0,
+      "kind": "audio",
+      "query_id": "p3_q14",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 5441,
+      "start_s": 205.64,
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+      "video": "videos/L30/L30_V047.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L30\\L30_V047.mp4",
+      "source_file": {
+        "bytes": 78600361,
+        "mtime_ns": 1786613739015416100
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "287.560000",
+            "nb_frames": "7189"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "287.579138",
+            "nb_frames": "12385"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "287.579138"
+        }
+      },
+      "audio_rendition": "bounded source interval, mono 16kHz PCM WAV; no ASR model",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-ss",
+        "205.64",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L30\\L30_V047.mp4",
+        "-map",
+        "0:a:0",
+        "-t",
+        "24.0",
+        "-vn",
+        "-ac",
+        "1",
+        "-ar",
+        "16000",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-asr-source-capture-20260916-1q47k790\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-asr-v1\\p3_q14_L30_V047_205.64-229.64s.wav"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p3_q14_L30_V047_205.64-229.64s.wav",
+      "artifact_sha256": "523e94fea8e9bf2ebe4ef3cc3ffe80175c9d701f856a16363632913148d438b4",
+      "artifact_bytes": 768078,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Đây là phần giới thiệu việc phóng tàu vũ trụ tư nhân. Đoạn clip bắt đầu với hình ảnh 4 phi hành gia mặc áo đen. Một trong những nhiệm vụ dự kiến của tàu vũ trụ là nghiên cứu ánh sáng cực quang ở vùng cực",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 27150,
+          "original": {
+            "end_frame": 27150,
+            "end_s": 905.0,
+            "start_frame": 25200,
+            "start_s": 840.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 25200,
+          "video_id": "L21_V015"
+        }
+      ],
+      "channel": "asr",
+      "coverage_limit": "Representative 28-second excerpt, or a shorter full canonical window with two seconds of surrounding context. This prepares listening only; it does not establish complete speech coverage or a heard reference.",
+      "end_s": 868.0,
+      "expected_fps": 30.0,
+      "kind": "audio",
+      "query_id": "p0_q01",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 25283,
+      "start_s": 840.0,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L21/L21_V015.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L21\\L21_V015.mp4",
+      "source_file": {
+        "bytes": 141186250,
+        "mtime_ns": 1785580155108283800
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "30/1",
+            "avg_frame_rate": "30/1",
+            "time_base": "1/15360",
+            "start_time": "0.000000",
+            "duration": "1303.900000",
+            "nb_frames": "39117"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "1303.986213",
+            "nb_frames": "56158"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "1303.986213"
+        }
+      },
+      "audio_rendition": "bounded source interval, mono 16kHz PCM WAV; no ASR model",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-ss",
+        "840.0",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L21\\L21_V015.mp4",
+        "-map",
+        "0:a:0",
+        "-t",
+        "28.0",
+        "-vn",
+        "-ac",
+        "1",
+        "-ar",
+        "16000",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-asr-source-capture-20260916-1q47k790\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-asr-v1\\p0_q01_L21_V015_840.0-868.0s.wav"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p0_q01_L21_V015_840.0-868.0s.wav",
+      "artifact_sha256": "18be33a8acab40241f5232559c158d31a8059d359760f9aaa5a81330dcd3f74f",
+      "artifact_bytes": 896078,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Một giáo viên nam đứng bên trái màn hình giảng bài ôn tập môn Địa lí. Nội dung trình chiếu giới thiệu khái quát một vùng kinh tế, sau đó chuyển sang vị trí địa lí, phạm vi lãnh thổ và ý nghĩa phát triển. Ở phần sau, một bản đồ khí hậu Việt Nam được đưa lên để minh họa cho bài giảng.\nTheo nội dung bài giảng, vùng được nhắc đến gồm bao nhiêu tỉnh, thành?",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 4825,
+          "group_index": 0,
+          "original": {
+            "end": 4825,
+            "kind": "interval",
+            "start": 3658,
+            "video_id": "L25_V016"
+          },
+          "source": "accepted_groups",
+          "start_frame": 3658,
+          "video_id": "L25_V016"
+        }
+      ],
+      "channel": "asr",
+      "coverage_limit": "Representative 28-second excerpt, or a shorter full canonical window with two seconds of surrounding context. This prepares listening only; it does not establish complete speech coverage or a heard reference.",
+      "end_s": 183.64,
+      "expected_fps": 25.0,
+      "kind": "audio",
+      "query_id": "p3_q05",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 4241,
+      "start_s": 155.64,
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+      "video": "videos/L25/L25_V016.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L25\\L25_V016.mp4",
+      "source_file": {
+        "bytes": 216377830,
+        "mtime_ns": 1786613723428543000
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "1592.360000",
+            "nb_frames": "39809"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "1592.401270",
+            "nb_frames": "68579"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "1592.401270"
+        }
+      },
+      "audio_rendition": "bounded source interval, mono 16kHz PCM WAV; no ASR model",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-ss",
+        "155.64",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L25\\L25_V016.mp4",
+        "-map",
+        "0:a:0",
+        "-t",
+        "28.0",
+        "-vn",
+        "-ac",
+        "1",
+        "-ar",
+        "16000",
+        "-c:a",
+        "pcm_s16le",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-asr-source-capture-20260916-1q47k790\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-asr-v1\\p3_q05_L25_V016_155.64-183.64s.wav"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p3_q05_L25_V016_155.64-183.64s.wav",
+      "artifact_sha256": "aa7c27a308669b156d438bbcae5721ceabeb8f7b54109d4fbaf914ca9595c376",
+      "artifact_bytes": 896078,
+      "source_size_mtime_unchanged": true
+    }
+  ],
+  "request_manifest_sha256": "405ca280ce6f4fd3eb9fb249cf8a7761f6fabe75cf441c6abece27ba40d92cb5",
+  "selection_rule": "First previously declared probe anchor: first preserved submitted anchor within a canonical window, otherwise canonical window midpoint. ASR uses 28 seconds around that anchor fitted inside the containing window; windows <=28 seconds receive two seconds of surrounding context. No baseline/reranker outcome or extracted-text quality participates.",
+  "request_scope": "Only the remaining 16 ASR query/channel rows of the unchanged 20-OCR/18-ASR sample; no dataset writes or model runs.",
+  "elapsed_seconds": 4.562,
+  "captured": 16
+}

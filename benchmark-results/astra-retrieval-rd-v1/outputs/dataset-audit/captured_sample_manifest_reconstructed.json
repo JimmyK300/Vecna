@@ -1,0 +1,888 @@
+{
+  "eligibility": "Current scoreable row with exact OCR or ASR capability tag, mapped by canonical source ordinal.",
+  "eligible_counts": {
+    "asr": 18,
+    "ocr": 33
+  },
+  "eligible_query_ids": {
+    "asr": [
+      "p0_q01",
+      "p0_q02",
+      "p0_q16",
+      "p0_q19",
+      "p0_q20",
+      "p1_q17",
+      "p1_q24",
+      "p2_q21",
+      "p2_q23",
+      "p2_q26",
+      "p2_q28",
+      "p3_q04",
+      "p3_q05",
+      "p3_q06",
+      "p3_q08",
+      "p3_q14",
+      "p3_q18",
+      "p3_q24"
+    ],
+    "ocr": [
+      "p0_q13",
+      "p0_q19",
+      "p0_q20",
+      "p0_q21",
+      "p1_q03",
+      "p1_q10",
+      "p1_q17",
+      "p1_q18",
+      "p1_q21",
+      "p1_q22",
+      "p1_q23",
+      "p1_q24",
+      "p2_q04",
+      "p2_q13",
+      "p2_q14",
+      "p2_q15",
+      "p2_q20",
+      "p2_q23",
+      "p2_q24",
+      "p2_q25",
+      "p2_q26",
+      "p2_q27",
+      "p3_q02",
+      "p3_q04",
+      "p3_q05",
+      "p3_q06",
+      "p3_q08",
+      "p3_q16",
+      "p3_q20",
+      "p3_q24",
+      "p3_q26",
+      "p3_q28",
+      "p3_q35"
+    ]
+  },
+  "frozen_before_source_inspection": true,
+  "ignored_capability_fields": [
+    "target_video",
+    "ground_truth_status",
+    "headless_video_rank",
+    "headless_localization_rank",
+    "headless_result",
+    "failure_axis_if_wrong",
+    "notes",
+    "likely_corpus",
+    "trake_event_coverage_at20"
+  ],
+  "input_sha256": {
+    "inputs/canonical_truth.jsonl": "63f80eb6ff54ef3c623f6ae4926eba404dac8bb5543b86e31f8fa0da842b4c9f",
+    "inputs/canonical_truth.meta.json": "813db77fef4da90a218716cc8c4807589820b52ceafa03462f6d1e1c97d755f6",
+    "inputs/capability_p0.jsonl": "c5ac1d260b7d5868622122aa7346ed49843c099633797e020e250e460fa79d63",
+    "inputs/capability_p1.jsonl": "bf5f9b7c58797bdcba552de6754cdf12f5e9da44c1b69674ccb66b1a5d593d86",
+    "inputs/capability_p2.jsonl": "515fa14039e9f62e1751c3ffcc9aad1e03da42fbaa020429936caa539b39344c",
+    "inputs/capability_p3.jsonl": "a5d6497f0efa721fc0d4666387a32b66f1066881c9f0d4d9f01192bea4187096",
+    "inputs/historical_manifest.json": "5ef034fd275baaabab1dee04148302e99b4e24ad4a1accc6169b6c070baaf223",
+    "inputs/original_truth_ledger.jsonl": "79393a95aae8e51b6b475e1b35f3b5ccfef278ee05a3f444eaedc0b0f4f90819",
+    "inputs/sources.json": "4d8852c55b8d289ee5b1ae34b8ef57e650b63195933e1f58c5235593a3ccfc99"
+  },
+  "limit_per_channel": 20,
+  "metadata_fields_used": [
+    "phase",
+    "query_id",
+    "task_type",
+    "summary",
+    "primary_challenge",
+    "capability_tags",
+    "evidence_needed"
+  ],
+  "schema": "vecna82-dataset-audit-sample-v1",
+  "selected": {
+    "asr": [
+      {
+        "canonical_source_key": "query-p0-2-kis",
+        "query": "Mẩu tin giới thiệu về đàn hổ tại một địa phương ở miền Nam vừa có thêm khoảng 3-6 con hổ con. Đây là một giống hổ quý hiếm",
+        "query_id": "p0_q02",
+        "query_side_metadata": {
+          "capability_tags": [
+            "SEM",
+            "ENTITY",
+            "ASR",
+            "FINE",
+            "COUNT",
+            "VIS_OBJ"
+          ],
+          "evidence_needed": "ASR+visual",
+          "phase": "p0",
+          "primary_challenge": "counting_and_exact_multiplicity",
+          "query_id": "p0-q2",
+          "summary": "rare tiger population in southern locality gains ~3–6 cubs",
+          "task_type": "KIS"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p0-15-qa",
+        "query": "Đoạn video về một chương trình từ thiện của một câu lạc bộ tên là FANA. Trong đoạn video có thể thấy câu lạc bộ này đang đi trao quà tại một xã thuộc tỉnh Khánh Hòa. Hỏi xã này có tên là gì? (tại thời điểm đó)",
+        "query_id": "p0_q19",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "ASR",
+            "OCR",
+            "ENTITY"
+          ],
+          "evidence_needed": "ASR/OCR",
+          "phase": "p0",
+          "primary_challenge": "OCR/readout_QA",
+          "query_id": "p0-q15",
+          "summary": "FANA charity trip: identify commune in Khánh Hòa",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p1-22-kis",
+        "query": "Người phụ nữ mặc áo dài màu hồng, đeo kính đang giảng giải về các trường hợp sử dụng khác nhau của động từ 'remember' dựa trên mốc thời gian của hành động được nhắc tới.",
+        "query_id": "p1_q17",
+        "query_side_metadata": {
+          "capability_tags": [
+            "SLIDE",
+            "OCR",
+            "ASR",
+            "VIS_OBJ",
+            "SEM"
+          ],
+          "evidence_needed": "OCR/ASR+visual",
+          "phase": "p1",
+          "primary_challenge": "structured_slide_understanding",
+          "query_id": "p1-q22",
+          "summary": "woman in pink áo dài teaches different uses of 'remember' by time relation",
+          "task_type": "KIS"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p1-17-qa",
+        "query": "Đoạn clip mô tả hậu quả của hiện tượng sạt lở đất nghiêm trọng, đất đá tràn xuống gây tắc nghẽn hoàn toàn một đoạn đường đèo. Trong một cảnh quay cận, có thể thấy một cột mốc đường bộ với phần đỉnh màu đỏ chỉ còn lộ ra phần trên, phần lớn đã bị đất đá vùi lấp. Ở cảnh quay cuối, một người đi xe máy đang vật lộn để điều khiển phương tiện vượt qua khu vực bùn lầy, trên chiếc xe máy có treo một vật màu xanh lá. Tên của con đèo là gì?\n\n## Temporal Retrieval and Alignment of Key Events (TRAKE)",
+        "query_id": "p1_q24",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "OCR",
+            "ASR",
+            "SCENE",
+            "ENTITY"
+          ],
+          "evidence_needed": "ASR/OCR+visual",
+          "phase": "p1",
+          "primary_challenge": "OCR/readout_QA",
+          "query_id": "p1-q17",
+          "summary": "landslide blocks mountain pass; buried red-topped road marker; identify pass",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p2-28-qa",
+        "query": "Cảnh quay một tô cháo đã được nấu và trang trí hoàn chỉnh (đã xong các giai đoạn trang trí). Kế bên tô cháo có 1 chén nhỏ màu đen, để chứa 1 loại topping màu cam kết cấu hơi giống những sợi nhỏ. Loại topping này trước đó đã được rắc lên tô cháo. Xung quanh topping là các loại rau, hành,... Hỏi topping trong video là thịt của con gì?",
+        "query_id": "p2_q26",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "FINE",
+            "ASR",
+            "OCR"
+          ],
+          "evidence_needed": "visual+ASR",
+          "phase": "p2",
+          "primary_challenge": "OCR/readout_QA",
+          "query_id": "p2-q28",
+          "summary": "finished porridge with orange shredded topping in black bowl; identify animal meat",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p2-30-qa",
+        "query": "Một cô gái đeo tạp dề màu trắng, bên cạnh là một lọ hoa riềng tía. Sau đó cô gái này đặt lên 1 dĩa trắng 4 con X, được biết X là nguyên liệu cho món ăn trong tập này. Sau đó người này lại cầm lên 2 con X. Sau đó người này đối thoại với một người đối diện để xem hôm nay nấu món gì. Hỏi X là con gì?\n\n## Temporal Retrieval and Alignment of Key Events (TRAKE)",
+        "query_id": "p2_q28",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "FINE",
+            "ASR",
+            "VIS_OBJ"
+          ],
+          "evidence_needed": "visual+ASR/OCR",
+          "phase": "p2",
+          "primary_challenge": "fine_grained_visual_QA",
+          "query_id": "p2-q30",
+          "summary": "white-apron woman with galangal flower; places/holds X shellfish and discusses dish; identify X",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "p3_q04",
+        "query": "Một giáo viên nữ ngồi bên phải màn hình và giảng bài Tiếng Anh.\nTrên bảng xanh lần lượt xuất hiện hai câu ví dụ, một câu nói về việc đi bảo tàng vào tuần trước, câu còn lại nói về thói quen chơi bóng đá khi còn trẻ.\nSau đó, nội dung trên bảng bổ sung phần giải thích chức năng của hai ví dụ và cuối cùng xuất hiện công thức ngữ pháp tương ứng.",
+        "query_id": "p3_q04",
+        "query_side_metadata": {
+          "capability_tags": [
+            "SLIDE",
+            "OCR",
+            "ASR",
+            "SEQ",
+            "SEM"
+          ],
+          "evidence_needed": "visual+ASR/OCR",
+          "phase": "p3",
+          "primary_challenge": "structured_slide_understanding",
+          "query_id": "p3-q4",
+          "summary": "female English teacher; two examples then explanations and grammar formula",
+          "task_type": "KIS"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "p3_q08",
+        "query": "Đoạn phim ghi lại cuộc phỏng vấn một người đàn ông đam mê sưu tầm game, chia sẻ rằng niềm đam mê của anh được truyền cảm hứng từ món đồ chơi của bà mình. Trong đoạn phỏng vấn xuất hiện một dòng chữ neon phát sáng. Dòng chữ đó là gì?",
+        "query_id": "p3_q08",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "OCR",
+            "ASR",
+            "ENTITY"
+          ],
+          "evidence_needed": "visual+ASR/OCR",
+          "phase": "p3",
+          "primary_challenge": "OCR/readout_QA",
+          "query_id": "p3-q8",
+          "summary": "game collector inspired by grandmother's toy; read glowing neon text",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "p3_q18",
+        "query": "Các cảnh quay nối tiếp nhau từ nhiều góc máy trong một lớp học tại một thời điểm. Cảnh đầu tiên là cảnh một sư cô ân cần quan sát một cậu bé áo xanh lá ngồi học bài. Sau đó là cảnh quay cận trang vở môn Toán, ghi lại các nét chữ mà học sinh đang ghi chép. Trong lớp học này, giáo viên nữ trong trang phục màu hồng đứng lớp chính, còn sư cô di chuyển xung quanh lớp học để hỗ trợ các em. Các giáo viên tham gia giảng dạy tại lớp học này là giáo viên dạy chính ở trường tiểu học nào?",
+        "query_id": "p3_q18",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "ASR",
+            "ENTITY",
+            "SCENE"
+          ],
+          "evidence_needed": "visual+ASR/OCR",
+          "phase": "p3",
+          "primary_challenge": "semantic/ASR_QA",
+          "query_id": "p3-q18",
+          "summary": "class with nun assisting and pink-clad main teacher; identify primary school of teachers",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p0-23-kis",
+        "query": "Đoạn clip về 1 thị trấn ven biển thu hút du khách hiếu kỳ nhờ 1 loài động vật biển nguy hiểm. Loài động vật này nổi tiếng trong 1 bộ phim của đạo diễn Steven Spielberg được sản xuất vào năm 1975",
+        "query_id": "p0_q16",
+        "query_side_metadata": {
+          "capability_tags": [
+            "ENTITY",
+            "ASR",
+            "SEM",
+            "VIS_OBJ"
+          ],
+          "evidence_needed": "ASR/entity+visual",
+          "phase": "p0",
+          "primary_challenge": "semantic_entity_retrieval",
+          "query_id": "p0-q23",
+          "summary": "coastal town attracts visitors because of dangerous sea animal associated with Spielberg 1975",
+          "task_type": "KIS"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p0-19-qa",
+        "query": "Trong đoạn video có 2 câu thơ của một nhà thơ ca ngợi anh hùng Nguyễn Trung Trực trong đình thần Nguyễn Trung Trực tại Kiên Giang. Hai câu thơ đó là gì?",
+        "query_id": "p0_q20",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "OCR",
+            "ASR",
+            "ENTITY"
+          ],
+          "evidence_needed": "OCR/ASR",
+          "phase": "p0",
+          "primary_challenge": "OCR/readout_QA",
+          "query_id": "p0-q19",
+          "summary": "Nguyễn Trung Trực temple: recover two quoted poetic lines",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p2-19-qa",
+        "query": "Đoạn phim ghi lại cảnh mạnh thường quân hỗ trợ một quán trọ dành cho người cao tuổi, sau đó chuyển sang cảnh một cụ ông trò chuyện với nhóm người nước ngoài. Hỏi quán trọ được nhắc đến trong đoạn phim nằm trên đường nào?",
+        "query_id": "p2_q23",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "ASR",
+            "OCR",
+            "ENTITY"
+          ],
+          "evidence_needed": "ASR/OCR",
+          "phase": "p2",
+          "primary_challenge": "OCR/readout_QA",
+          "query_id": "p2-q19",
+          "summary": "donors support elderly lodging; foreign visitors talk to old man; identify street",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p2-9-qa",
+        "query": "Trong video hướng dẫn nấu ăn, người đầu bếp lần lượt cho các loại hương liệu gồm tiêu xanh, lá chanh và sả vào bên trong bụng của tổng cộng 4 con cá. Đây là loài cá gì?",
+        "query_id": "p2_q21",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "FINE",
+            "ASR",
+            "VIS_OBJ"
+          ],
+          "evidence_needed": "visual+ASR",
+          "phase": "p2",
+          "primary_challenge": "fine_grained_visual_QA",
+          "query_id": "p2-q9",
+          "summary": "four fish stuffed with green pepper, lime leaves, lemongrass; identify species",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "p3_q06",
+        "query": "Một giáo viên nam đứng bên trái màn hình và giảng bài trước một máy tính.\nTrên màn hình lớn hiển thị hướng dẫn chấm điểm, trong đó phần a đề cập đến cấu trúc của bài nghị luận văn học gồm mở bài, thân bài và kết bài.\nNội dung bài giảng liên quan đến một tác phẩm văn học và yêu cầu phân tích nhân vật.\nPhía dưới màn hình xuất hiện dòng chữ giới thiệu chương trình ôn thi môn Ngữ văn.\nTác giả được giới thiệu là người có duyên nợ gắn bó với đề tài miền núi nào?",
+        "query_id": "p3_q06",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "ASR",
+            "OCR",
+            "ENTITY"
+          ],
+          "evidence_needed": "visual+ASR/OCR",
+          "phase": "p3",
+          "primary_challenge": "OCR/readout_QA",
+          "query_id": "p3-q6",
+          "summary": "literature exam review: identify mountain region tied to author/topic",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "p3_q14",
+        "query": "Một bé gái mặc áo bơi họa tiết hoa lá đang trả lời phỏng vấn bên cạnh một hồ bơi. Tiếp theo là hình ảnh cháu bé bơi trong hồ nước, đội mũ bơi màu tím. Hãy cho biết bé gái này sắp lên học lớp mấy (đáp án chỉ ghi 1 chữ số)",
+        "query_id": "p3_q14",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "ASR",
+            "VIS_OBJ"
+          ],
+          "evidence_needed": "visual+ASR/OCR",
+          "phase": "p3",
+          "primary_challenge": "semantic/ASR_QA",
+          "query_id": "p3-q14",
+          "summary": "girl in floral swimsuit interviewed, then swims with purple cap; ask next school grade",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p0-1-kis",
+        "query": "Đây là phần giới thiệu việc phóng tàu vũ trụ tư nhân. Đoạn clip bắt đầu với hình ảnh 4 phi hành gia mặc áo đen. Một trong những nhiệm vụ dự kiến của tàu vũ trụ là nghiên cứu ánh sáng cực quang ở vùng cực",
+        "query_id": "p0_q01",
+        "query_side_metadata": {
+          "capability_tags": [
+            "SEM",
+            "ENTITY",
+            "ASR",
+            "VIS_OBJ",
+            "VIS_ATTR"
+          ],
+          "evidence_needed": "visual+ASR",
+          "phase": "p0",
+          "primary_challenge": "fine_visual_grounding",
+          "query_id": "p0-q1",
+          "summary": "private spacecraft launch; 4 astronauts in black; polar aurora mission",
+          "task_type": "KIS"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "p3_q24",
+        "query": "Một đầu bếp đang chuẩn bị một món ăn từ một miếng thực phẩm màu cam. Người này băm nhỏ một số nguyên liệu, tách các hạt nhỏ khỏi cành rồi trộn chúng thành hỗn hợp gia vị. Sau đó, nhiều loại gia vị được lần lượt thêm vào và hỗn hợp được phủ lên cả hai mặt của nguyên liệu chính trước khi thêm một chất lỏng.\nTrong quá trình nêm gia vị, lượng nước tương được sử dụng là bao nhiêu?",
+        "query_id": "p3_q24",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "ASR",
+            "OCR",
+            "FINE"
+          ],
+          "evidence_needed": "visual+ASR/OCR",
+          "phase": "p3",
+          "primary_challenge": "OCR/readout_QA",
+          "query_id": "p3-q24",
+          "summary": "orange main food seasoned on both sides; ask amount of soy sauce used",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "p3_q05",
+        "query": "Một giáo viên nam đứng bên trái màn hình giảng bài ôn tập môn Địa lí. Nội dung trình chiếu giới thiệu khái quát một vùng kinh tế, sau đó chuyển sang vị trí địa lí, phạm vi lãnh thổ và ý nghĩa phát triển. Ở phần sau, một bản đồ khí hậu Việt Nam được đưa lên để minh họa cho bài giảng.\nTheo nội dung bài giảng, vùng được nhắc đến gồm bao nhiêu tỉnh, thành?",
+        "query_id": "p3_q05",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "SLIDE",
+            "ASR",
+            "OCR",
+            "ENTITY"
+          ],
+          "evidence_needed": "visual+ASR/OCR",
+          "phase": "p3",
+          "primary_challenge": "structured_visual_QA",
+          "query_id": "p3-q5",
+          "summary": "geography review: identify number of provinces/cities in described economic region",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      }
+    ],
+    "ocr": [
+      {
+        "canonical_source_key": "query-p0-17-kis",
+        "query": "Đoạn video trong buổi trao quà từ thiện diễn ra tại 1 bệnh viện trong dịp Xuân 2024. Trong cảnh có hai người đàn ông (mặc áo sơ mi hồng và sơ mi trắng) đứng hai bên, đại diện ban tổ chức. Ở giữa là bốn em nhỏ và thiếu niên, trong đó có em mặc áo đỏ, em mặc áo trắng, em mặc váy hồng và em mặc áo xanh. Các em được trao bảng tượng trưng với nội dung “Chương trình: Trao kinh phí hỗ trợ cho trẻ em mồ côi do dịch COVID-19”. Trước mặt mỗi em là túi quà lớn mang logo y tế. Phía sau là phông nền màu đỏ với khẩu hiệu đón xuân và thông tin sự kiện.",
+        "query_id": "p0_q13",
+        "query_side_metadata": {
+          "capability_tags": [
+            "OCR",
+            "VIS_OBJ",
+            "COUNT",
+            "VIS_ATTR",
+            "SCENE",
+            "ENTITY"
+          ],
+          "evidence_needed": "visual+OCR",
+          "phase": "p0",
+          "primary_challenge": "counting_and_exact_multiplicity",
+          "query_id": "p0-q17",
+          "summary": "hospital Spring-2024 charity: four children, organizers, symbolic support boards",
+          "task_type": "KIS"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p0-15-qa",
+        "query": "Đoạn video về một chương trình từ thiện của một câu lạc bộ tên là FANA. Trong đoạn video có thể thấy câu lạc bộ này đang đi trao quà tại một xã thuộc tỉnh Khánh Hòa. Hỏi xã này có tên là gì? (tại thời điểm đó)",
+        "query_id": "p0_q19",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "ASR",
+            "OCR",
+            "ENTITY"
+          ],
+          "evidence_needed": "ASR/OCR",
+          "phase": "p0",
+          "primary_challenge": "OCR/readout_QA",
+          "query_id": "p0-q15",
+          "summary": "FANA charity trip: identify commune in Khánh Hòa",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p0-22-qa",
+        "query": "Đoạn video về một người phụ nữ dạy nấu ăn cho những người khác. Trong đoạn video có thể thấy một người đang cầm công thức món ăn với nguyên liệu chính là 200g thịt nạc xay. Hỏi tiêu đề của công thức nấu ăn (tên món ăn) này là gì?\n\n## Temporal Retrieval and Alignment of Key Events (TRAKE)",
+        "query_id": "p0_q21",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "OCR",
+            "FINE"
+          ],
+          "evidence_needed": "OCR_required",
+          "phase": "p0",
+          "primary_challenge": "OCR/readout_QA",
+          "query_id": "p0-q22",
+          "summary": "cooking class: recipe whose main ingredient is 200g minced lean meat; identify title",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p1-22-kis",
+        "query": "Người phụ nữ mặc áo dài màu hồng, đeo kính đang giảng giải về các trường hợp sử dụng khác nhau của động từ 'remember' dựa trên mốc thời gian của hành động được nhắc tới.",
+        "query_id": "p1_q17",
+        "query_side_metadata": {
+          "capability_tags": [
+            "SLIDE",
+            "OCR",
+            "ASR",
+            "VIS_OBJ",
+            "SEM"
+          ],
+          "evidence_needed": "OCR/ASR+visual",
+          "phase": "p1",
+          "primary_challenge": "structured_slide_understanding",
+          "query_id": "p1-q22",
+          "summary": "woman in pink áo dài teaches different uses of 'remember' by time relation",
+          "task_type": "KIS"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p1-23-kis",
+        "query": "Hình ảnh giáo viên nam mặc sơ mi trắng, thắt cà vạt tối màu, nổi bật trên phông nền xanh dương đậm có hoa văn mờ.\n\nSlide bài giảng Nền trắng với khung viền màu hồng tím, phía trên có thanh tiêu đề xanh dương chứa họa tiết địa cầu và mũi tên vàng/xanh ngọc. Bên dưới là sơ đồ 3 tầng được liên kết bởi các mũi tên xanh ngọc trỏ xuống:\n\nTầng 1: 2 khối hộp được bao bởi 1 khối hộp cam.\n\nTầng 2: 1 khối hộp lớn màu xanh dương đậm ở chính giữa.\n\nTầng 3: 2 khối hộp được bao bởi 1 khối hộp xanh lá cây.",
+        "query_id": "p1_q18",
+        "query_side_metadata": {
+          "capability_tags": [
+            "SLIDE",
+            "OCR",
+            "SPATIAL",
+            "VIS_ATTR"
+          ],
+          "evidence_needed": "visual_slide",
+          "phase": "p1",
+          "primary_challenge": "structured_slide_understanding",
+          "query_id": "p1-q23",
+          "summary": "male teacher + distinctive 3-tier block diagram on styled slide",
+          "task_type": "KIS"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p1-17-qa",
+        "query": "Đoạn clip mô tả hậu quả của hiện tượng sạt lở đất nghiêm trọng, đất đá tràn xuống gây tắc nghẽn hoàn toàn một đoạn đường đèo. Trong một cảnh quay cận, có thể thấy một cột mốc đường bộ với phần đỉnh màu đỏ chỉ còn lộ ra phần trên, phần lớn đã bị đất đá vùi lấp. Ở cảnh quay cuối, một người đi xe máy đang vật lộn để điều khiển phương tiện vượt qua khu vực bùn lầy, trên chiếc xe máy có treo một vật màu xanh lá. Tên của con đèo là gì?\n\n## Temporal Retrieval and Alignment of Key Events (TRAKE)",
+        "query_id": "p1_q24",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "OCR",
+            "ASR",
+            "SCENE",
+            "ENTITY"
+          ],
+          "evidence_needed": "ASR/OCR+visual",
+          "phase": "p1",
+          "primary_challenge": "OCR/readout_QA",
+          "query_id": "p1-q17",
+          "summary": "landslide blocks mountain pass; buried red-topped road marker; identify pass",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p1-3-qa",
+        "query": "Hình ảnh một con cá được đặt lên cân, sau đó có cảnh một con cá khác cùng loại bị một người cầm đuôi. Con số hiển thị cuối cùng trên cân là bao nhiêu?",
+        "query_id": "p1_q21",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "OCR",
+            "FINE",
+            "VIS_OBJ"
+          ],
+          "evidence_needed": "visual_numeric_readout",
+          "phase": "p1",
+          "primary_challenge": "OCR/readout_QA",
+          "query_id": "p1-q3",
+          "summary": "fish on scale then same species held by tail; read final scale value",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p2-20-kis",
+        "query": "Clip bài giảng môn Địa lí, có 1 bảng số liệu về mạng lưới đô thị ở Việt Nam. Bảng này thể hiện sự khác nhau về phân bố đô thị giữa các vùng bằng màu sắc: 3 vùng có nhiều đô thị nhất thì con số thể hiện số lượng đô thị được in màu đỏ, còn 2 vùng có ít đô thị nhất thì con số này được in màu xanh. Từ bảng số liệu ta còn có thể thấy rằng vùng có ít đô thị nhất lại là vùng có dân số đô thi cao nhất.",
+        "query_id": "p2_q15",
+        "query_side_metadata": {
+          "capability_tags": [
+            "SLIDE",
+            "OCR",
+            "COUNT",
+            "SPATIAL",
+            "SEM"
+          ],
+          "evidence_needed": "visual_slide",
+          "phase": "p2",
+          "primary_challenge": "structured_slide_understanding",
+          "query_id": "p2-q20",
+          "summary": "geography lecture urban-network table; red top-3 counts, blue bottom-2; lowest count has highest urban population",
+          "task_type": "KIS"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p2-28-qa",
+        "query": "Cảnh quay một tô cháo đã được nấu và trang trí hoàn chỉnh (đã xong các giai đoạn trang trí). Kế bên tô cháo có 1 chén nhỏ màu đen, để chứa 1 loại topping màu cam kết cấu hơi giống những sợi nhỏ. Loại topping này trước đó đã được rắc lên tô cháo. Xung quanh topping là các loại rau, hành,... Hỏi topping trong video là thịt của con gì?",
+        "query_id": "p2_q26",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "FINE",
+            "ASR",
+            "OCR"
+          ],
+          "evidence_needed": "visual+ASR",
+          "phase": "p2",
+          "primary_challenge": "OCR/readout_QA",
+          "query_id": "p2-q28",
+          "summary": "finished porridge with orange shredded topping in black bowl; identify animal meat",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p2-27-qa",
+        "query": "Cảnh quay một chú lân đang biểu diễn từ đầu video, các cột để chú lân biểu diễn được dán những con số. Phía sau có 1 mô hình con rồng uốn lượn hình xoắn ốc. Trong các số từ 16 giây đầu tiên của video, số nào không được nhìn thấy từ góc nhìn của camera trong các số từ 1-8.",
+        "query_id": "p2_q25",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "OCR",
+            "TRACK",
+            "NEG",
+            "SEQ"
+          ],
+          "evidence_needed": "visual+OCR",
+          "phase": "p2",
+          "primary_challenge": "OCR/readout_QA",
+          "query_id": "p2-q27",
+          "summary": "lion poles numbered 1–8; in first 16s identify number never visible",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "p3_q04",
+        "query": "Một giáo viên nữ ngồi bên phải màn hình và giảng bài Tiếng Anh.\nTrên bảng xanh lần lượt xuất hiện hai câu ví dụ, một câu nói về việc đi bảo tàng vào tuần trước, câu còn lại nói về thói quen chơi bóng đá khi còn trẻ.\nSau đó, nội dung trên bảng bổ sung phần giải thích chức năng của hai ví dụ và cuối cùng xuất hiện công thức ngữ pháp tương ứng.",
+        "query_id": "p3_q04",
+        "query_side_metadata": {
+          "capability_tags": [
+            "SLIDE",
+            "OCR",
+            "ASR",
+            "SEQ",
+            "SEM"
+          ],
+          "evidence_needed": "visual+ASR/OCR",
+          "phase": "p3",
+          "primary_challenge": "structured_slide_understanding",
+          "query_id": "p3-q4",
+          "summary": "female English teacher; two examples then explanations and grammar formula",
+          "task_type": "KIS"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "p3_q02",
+        "query": "Một nhóm đông học sinh mặc đồng phục tập trung thành nhiều hàng trước khu vực trường học.\nPhía trước mỗi hàng có người cầm bảng ghi số lớp để phân chia các nhóm học sinh.\nSau đó, các hàng học sinh lần lượt di chuyển vào bên trong khuôn viên trường dưới sự hướng dẫn của giáo viên.\nCuối đoạn, học sinh nối thành hàng dài, đi qua hành lang và lên cầu thang của tòa nhà.",
+        "query_id": "p3_q02",
+        "query_side_metadata": {
+          "capability_tags": [
+            "COUNT",
+            "OCR",
+            "ACT",
+            "SEQ",
+            "SCENE"
+          ],
+          "evidence_needed": "visual+ASR/OCR",
+          "phase": "p3",
+          "primary_challenge": "counting_and_exact_multiplicity",
+          "query_id": "p3-q2",
+          "summary": "large school assembly in class-number rows, then students enter, hallway and stairs",
+          "task_type": "KIS"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "p3_q05",
+        "query": "Một giáo viên nam đứng bên trái màn hình giảng bài ôn tập môn Địa lí. Nội dung trình chiếu giới thiệu khái quát một vùng kinh tế, sau đó chuyển sang vị trí địa lí, phạm vi lãnh thổ và ý nghĩa phát triển. Ở phần sau, một bản đồ khí hậu Việt Nam được đưa lên để minh họa cho bài giảng.\nTheo nội dung bài giảng, vùng được nhắc đến gồm bao nhiêu tỉnh, thành?",
+        "query_id": "p3_q05",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "SLIDE",
+            "ASR",
+            "OCR",
+            "ENTITY"
+          ],
+          "evidence_needed": "visual+ASR/OCR",
+          "phase": "p3",
+          "primary_challenge": "structured_visual_QA",
+          "query_id": "p3-q5",
+          "summary": "geography review: identify number of provinces/cities in described economic region",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "p3_q35",
+        "query": "Giải đề THPTQG 2018 tại nhóm X. Nhóm này gồm 4 câu hỏi trắc nghiệm 4 đáp án A, B, C, D, trong đó đáp án 4 câu không trùng nhau và đều chứa chữ số 0. Hỏi X là số mấy?",
+        "query_id": "p3_q35",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "OCR",
+            "SLIDE",
+            "SEM"
+          ],
+          "evidence_needed": "visual+ASR/OCR",
+          "phase": "p3",
+          "primary_challenge": "structured_visual_QA",
+          "query_id": "p3-q35",
+          "summary": "2018 THPTQG solution: identify group X from four MCQs whose answers are distinct and all contain digit 0",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p0-19-qa",
+        "query": "Trong đoạn video có 2 câu thơ của một nhà thơ ca ngợi anh hùng Nguyễn Trung Trực trong đình thần Nguyễn Trung Trực tại Kiên Giang. Hai câu thơ đó là gì?",
+        "query_id": "p0_q20",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "OCR",
+            "ASR",
+            "ENTITY"
+          ],
+          "evidence_needed": "OCR/ASR",
+          "phase": "p0",
+          "primary_challenge": "OCR/readout_QA",
+          "query_id": "p0-q19",
+          "summary": "Nguyễn Trung Trực temple: recover two quoted poetic lines",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p1-4-kis",
+        "query": "Một đàn sư tử đang nghỉ ngơi và leo trèo trên các bục gỗ trong khu nuôi dưỡng, phía trước có bảng thông tin của London Zoo phục vụ công tác theo dõi và bảo tồn động vật.. Sau đó có cảnh hai nhân viên mặc áo xanh lá đang cân và ghi nhận số liệu của một con vật trong khuôn viên sở thú.",
+        "query_id": "p1_q03",
+        "query_side_metadata": {
+          "capability_tags": [
+            "VIS_OBJ",
+            "FINE",
+            "ACT",
+            "SEQ",
+            "OCR"
+          ],
+          "evidence_needed": "visual+OCR",
+          "phase": "p1",
+          "primary_challenge": "fine_grained_visual_classification",
+          "query_id": "p1-q4",
+          "summary": "London Zoo lions on wooden platforms then staff weigh/record animal",
+          "task_type": "KIS"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p1-15-qa",
+        "query": "Bản đồ phân bố động đất tại một vùng trên thế giới, với một bảng chú giải phía bên trái gồm các kí hiệu nhiều màu sắc tương ứng với các vị trí tâm chấn có cấp độ động đất khác nhau. Không tính bảng chú giải, có bao nhiêu vị trí ghi nhận động đất cấp độ 4?",
+        "query_id": "p1_q23",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "SLIDE",
+            "COUNT",
+            "OCR",
+            "SPATIAL"
+          ],
+          "evidence_needed": "visual_chart",
+          "phase": "p1",
+          "primary_challenge": "structured_visual_QA",
+          "query_id": "p1-q15",
+          "summary": "earthquake map: count magnitude-4 markers excluding legend",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p2-17-kis",
+        "query": "Sân khấu với dòng chữ nổi 3D to, ánh kim phủ kim tuyến có nội dung: “SẮC CỔ ...” đặt ở mép trước sân khấu.",
+        "query_id": "p2_q13",
+        "query_side_metadata": {
+          "capability_tags": [
+            "OCR",
+            "SCENE",
+            "VIS_ATTR"
+          ],
+          "evidence_needed": "visual+OCR",
+          "phase": "p2",
+          "primary_challenge": "fine_visual_grounding",
+          "query_id": "p2-q17",
+          "summary": "stage with glittering raised 3D text 'SẮC CỔ ...'",
+          "task_type": "KIS"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p2-19-qa",
+        "query": "Đoạn phim ghi lại cảnh mạnh thường quân hỗ trợ một quán trọ dành cho người cao tuổi, sau đó chuyển sang cảnh một cụ ông trò chuyện với nhóm người nước ngoài. Hỏi quán trọ được nhắc đến trong đoạn phim nằm trên đường nào?",
+        "query_id": "p2_q23",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "ASR",
+            "OCR",
+            "ENTITY"
+          ],
+          "evidence_needed": "ASR/OCR",
+          "phase": "p2",
+          "primary_challenge": "OCR/readout_QA",
+          "query_id": "p2-q19",
+          "summary": "donors support elderly lodging; foreign visitors talk to old man; identify street",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      },
+      {
+        "canonical_source_key": "query-p2-23-qa",
+        "query": "Câu hỏi môn Sinh học nằm ở số thứ tự 11 trong đề thi THPTQG 2022. Trong câu hỏi có một biểu đồ đưa ra sự so sánh tốc độ sinh trưởng của các loài thực vật trong các hệ sinh thái ven biển. Hãy cho biết loài cây (II) đạt được tốc độ sinh trưởng tốt nhất khi môi trường sống có độ mặn là bao nhiêu phần nghìn?",
+        "query_id": "p2_q24",
+        "query_side_metadata": {
+          "capability_tags": [
+            "QA",
+            "SLIDE",
+            "OCR",
+            "SPATIAL",
+            "SEM"
+          ],
+          "evidence_needed": "visual_chart",
+          "phase": "p2",
+          "primary_challenge": "structured_visual_QA",
+          "query_id": "p2-q23",
+          "summary": "2022 biology exam Q11 growth-vs-salinity graph; determine optimum salinity for species II",
+          "task_type": "QA"
+        },
+        "scoreable": true
+      }
+    ]
+  },
+  "selected_counts": {
+    "asr": 18,
+    "ocr": 20
+  },
+  "selection_method": "Round robin over sorted (phase, capability task type, combined OCR+ASR status) strata; SHA-256 seed|channel|current query ID order within each stratum.",
+  "selection_seed": "vecna-source-audit-v1",
+  "selection_uses_baseline_outcomes": false,
+  "selection_uses_source_media_or_extraction_quality": false
+}
