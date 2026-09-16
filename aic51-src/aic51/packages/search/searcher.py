@@ -560,7 +560,9 @@ class Searcher(object):
         sparse_norm = self._normalize_scores(sparse_raw_scores) if hybrid_alpha < 1.0 else {}
         dense_norm = self._normalize_scores(dense_raw_scores) if hybrid_alpha > 0.0 else {}
         results = []
-        for fid in all_frame_ids:
+        # Canonical frame ID order breaks exact score ties independently of hash seed.
+        # The stable descending score sort below preserves this order only for ties.
+        for fid in sorted(all_frame_ids):
             if hybrid_alpha <= 0.0:
                 final_score = sparse_norm.get(fid, 0.0)
             elif hybrid_alpha >= 1.0:
