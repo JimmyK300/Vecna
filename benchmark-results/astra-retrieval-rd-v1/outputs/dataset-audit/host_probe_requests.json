@@ -1,0 +1,600 @@
+{
+  "frozen_sample_sha256": "b4fd944228a033c37ea4d69ad757ceeae9635bfb026cf018e0d60f5b3c661be9",
+  "requests": [
+    {
+      "channel": "ocr",
+      "expected_metadata_sha256": "769a9b79fbbf47df19029b86d7d1672b6429898ba7bf771e835f1c1ed402eb9e",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L30_V092",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L30_V092.json",
+      "native_analysis_relative_dir": "provenance/analysis/L30_V092/ocr",
+      "native_evidence_relative_dir": "provenance/evidence/L30_V092/ocr",
+      "probe_anchor_frames": [
+        2491,
+        2512
+      ],
+      "query_id": "p0_q13",
+      "video_id": "L30_V092",
+      "video_relative_path": "videos/L30/L30_V092.mp4"
+    },
+    {
+      "channel": "ocr",
+      "expected_metadata_sha256": "fa7d890cd47d593b30876d7c0e6b1068093553d1996ab1930bbcc48de9e950d0",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L30_V072",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L30_V072.json",
+      "native_analysis_relative_dir": "provenance/analysis/L30_V072/ocr",
+      "native_evidence_relative_dir": "provenance/evidence/L30_V072/ocr",
+      "probe_anchor_frames": [
+        1745,
+        1750
+      ],
+      "query_id": "p0_q19",
+      "video_id": "L30_V072",
+      "video_relative_path": "videos/L30/L30_V072.mp4"
+    },
+    {
+      "channel": "ocr",
+      "expected_metadata_sha256": "58b372d8f3f9ccce191188b9d0309d62160feebd05d6a79d1878624d7d3497c6",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L30_V078",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L30_V078.json",
+      "native_analysis_relative_dir": "provenance/analysis/L30_V078/ocr",
+      "native_evidence_relative_dir": "provenance/evidence/L30_V078/ocr",
+      "probe_anchor_frames": [
+        1788,
+        1825
+      ],
+      "query_id": "p0_q21",
+      "video_id": "L30_V078",
+      "video_relative_path": "videos/L30/L30_V078.mp4"
+    },
+    {
+      "channel": "ocr",
+      "expected_metadata_sha256": "bb4621550fe3e8824cfb4ecab2e14b312d2f537d80f4965aed6ad8e5ac084df2",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L25_V041",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L25_V041.json",
+      "native_analysis_relative_dir": "provenance/analysis/L25_V041/ocr",
+      "native_evidence_relative_dir": "provenance/evidence/L25_V041/ocr",
+      "probe_anchor_frames": [
+        17152,
+        16712
+      ],
+      "query_id": "p1_q17",
+      "video_id": "L25_V041",
+      "video_relative_path": "videos/L25/L25_V041.mp4"
+    },
+    {
+      "channel": "ocr",
+      "expected_metadata_sha256": "faced51264a5ee5f3bf581d1fd0e9b676aac345b3bf8e95da69ba8683125a95c",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L25_V060",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L25_V060.json",
+      "native_analysis_relative_dir": "provenance/analysis/L25_V060/ocr",
+      "native_evidence_relative_dir": "provenance/evidence/L25_V060/ocr",
+      "probe_anchor_frames": [
+        26533,
+        27625
+      ],
+      "query_id": "p1_q18",
+      "video_id": "L25_V060",
+      "video_relative_path": "videos/L25/L25_V060.mp4"
+    },
+    {
+      "channel": "ocr",
+      "expected_metadata_sha256": "9a8b1ad166e631f4effe65e32fd171b701444f7fe1a0f5036aaffd80a8baa21d",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L22_V008",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L22_V008.json",
+      "native_analysis_relative_dir": "provenance/analysis/L22_V008/ocr",
+      "native_evidence_relative_dir": "provenance/evidence/L22_V008/ocr",
+      "probe_anchor_frames": [
+        5638,
+        5875
+      ],
+      "query_id": "p1_q24",
+      "video_id": "L22_V008",
+      "video_relative_path": "videos/L22/L22_V008.mp4"
+    },
+    {
+      "channel": "ocr",
+      "expected_metadata_sha256": "0cac80843641f3a2da5364876e5e75a6bdda50d6f1a61a8f5c464376484810f7",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L21_V023",
+      "known_fps": 30.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L21_V023.json",
+      "native_analysis_relative_dir": "provenance/analysis/L21_V023/ocr",
+      "native_evidence_relative_dir": "provenance/evidence/L21_V023/ocr",
+      "probe_anchor_frames": [
+        26042,
+        25950
+      ],
+      "query_id": "p1_q21",
+      "video_id": "L21_V023",
+      "video_relative_path": "videos/L21/L21_V023.mp4"
+    },
+    {
+      "channel": "ocr",
+      "expected_metadata_sha256": "faced51264a5ee5f3bf581d1fd0e9b676aac345b3bf8e95da69ba8683125a95c",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L25_V060",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L25_V060.json",
+      "native_analysis_relative_dir": "provenance/analysis/L25_V060/ocr",
+      "native_evidence_relative_dir": "provenance/evidence/L25_V060/ocr",
+      "probe_anchor_frames": [
+        33299,
+        33812
+      ],
+      "query_id": "p2_q15",
+      "video_id": "L25_V060",
+      "video_relative_path": "videos/L25/L25_V060.mp4"
+    },
+    {
+      "channel": "ocr",
+      "expected_metadata_sha256": "61fe91f80717a4475dba013efb6dba37069d416c0c7b5c489b7cd23dd3c89972",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L26_V450",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L26_V450.json",
+      "native_analysis_relative_dir": "provenance/analysis/L26_V450/ocr",
+      "native_evidence_relative_dir": "provenance/evidence/L26_V450/ocr",
+      "probe_anchor_frames": [
+        6300,
+        6387
+      ],
+      "query_id": "p2_q26",
+      "video_id": "L26_V450",
+      "video_relative_path": "videos/L26E/L26_V450.mp4"
+    },
+    {
+      "channel": "ocr",
+      "expected_metadata_sha256": "69261cdfd6c527e4700835eac316365a62d58751c65af0672d1039996ab9953d",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L24_V031",
+      "known_fps": 30.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L24_V031.json",
+      "native_analysis_relative_dir": "provenance/analysis/L24_V031/ocr",
+      "native_evidence_relative_dir": "provenance/evidence/L24_V031/ocr",
+      "probe_anchor_frames": [
+        240
+      ],
+      "query_id": "p2_q25",
+      "video_id": "L24_V031",
+      "video_relative_path": "videos/L24/L24_V031.mp4"
+    },
+    {
+      "channel": "ocr",
+      "expected_metadata_sha256": "6a23d04106c5ccc28b8346c94fca11369222ab4baed4468f3a9567f14723abf3",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L25_V075",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L25_V075.json",
+      "native_analysis_relative_dir": "provenance/analysis/L25_V075/ocr",
+      "native_evidence_relative_dir": "provenance/evidence/L25_V075/ocr",
+      "probe_anchor_frames": [
+        1787
+      ],
+      "query_id": "p3_q04",
+      "video_id": "L25_V075",
+      "video_relative_path": "videos/L25/L25_V075.mp4"
+    },
+    {
+      "channel": "ocr",
+      "expected_metadata_sha256": "94fe17fc85c876473cac803157f8cd11cafc78a1536907a18fddf13dc2deae10",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L22_V026",
+      "known_fps": 30.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L22_V026.json",
+      "native_analysis_relative_dir": "provenance/analysis/L22_V026/ocr",
+      "native_evidence_relative_dir": "provenance/evidence/L22_V026/ocr",
+      "probe_anchor_frames": [
+        1673
+      ],
+      "query_id": "p3_q02",
+      "video_id": "L22_V026",
+      "video_relative_path": "videos/L22/L22_V026.mp4"
+    },
+    {
+      "channel": "ocr",
+      "expected_metadata_sha256": "6320a3370da10973a5e5228d4517aa4ece6e5ef5ccaccab64261918230d17e60",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L25_V016",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L25_V016.json",
+      "native_analysis_relative_dir": "provenance/analysis/L25_V016/ocr",
+      "native_evidence_relative_dir": "provenance/evidence/L25_V016/ocr",
+      "probe_anchor_frames": [
+        4241
+      ],
+      "query_id": "p3_q05",
+      "video_id": "L25_V016",
+      "video_relative_path": "videos/L25/L25_V016.mp4"
+    },
+    {
+      "channel": "ocr",
+      "expected_metadata_sha256": "c7c47d4357e4671601b2c700870bbab2752d32f5009607db6f4b227e0456679f",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L25_V014",
+      "known_fps": 29.97002997002997,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L25_V014.json",
+      "native_analysis_relative_dir": "provenance/analysis/L25_V014/ocr",
+      "native_evidence_relative_dir": "provenance/evidence/L25_V014/ocr",
+      "probe_anchor_frames": [
+        40770
+      ],
+      "query_id": "p3_q35",
+      "video_id": "L25_V014",
+      "video_relative_path": "videos/L25/L25_V014.mp4"
+    },
+    {
+      "channel": "ocr",
+      "expected_metadata_sha256": "7cc68e80be361d7b36233f38b0fcaf8d706d6a59d3e1b1afbaf6b228101cdb8d",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L27_V010",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L27_V010.json",
+      "native_analysis_relative_dir": "provenance/analysis/L27_V010/ocr",
+      "native_evidence_relative_dir": "provenance/evidence/L27_V010/ocr",
+      "probe_anchor_frames": [
+        5535,
+        5587
+      ],
+      "query_id": "p0_q20",
+      "video_id": "L27_V010",
+      "video_relative_path": "videos/L27/L27_V010.mp4"
+    },
+    {
+      "channel": "ocr",
+      "expected_metadata_sha256": "77a65171315280e949cc1049d383fa5b108a16ca04d6680a1edd39877ea535fe",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L22_V021",
+      "known_fps": 30.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L22_V021.json",
+      "native_analysis_relative_dir": "provenance/analysis/L22_V021/ocr",
+      "native_evidence_relative_dir": "provenance/evidence/L22_V021/ocr",
+      "probe_anchor_frames": [
+        19738,
+        20400
+      ],
+      "query_id": "p1_q03",
+      "video_id": "L22_V021",
+      "video_relative_path": "videos/L22/L22_V021.mp4"
+    },
+    {
+      "channel": "ocr",
+      "expected_metadata_sha256": "c592e1e2c2f8c5447efb965ffcc3a1a4961d1abde8817c1dcd322adcda2a37d4",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L21_V010",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L21_V010.json",
+      "native_analysis_relative_dir": "provenance/analysis/L21_V010/ocr",
+      "native_evidence_relative_dir": "provenance/evidence/L21_V010/ocr",
+      "probe_anchor_frames": [
+        19430,
+        19625
+      ],
+      "query_id": "p1_q23",
+      "video_id": "L21_V010",
+      "video_relative_path": "videos/L21/L21_V010.mp4"
+    },
+    {
+      "channel": "ocr",
+      "expected_metadata_sha256": "0b439c5a3ba44075365e9eb8babd74e2d9b68f7feab0c02655a79bdd768b68a1",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L30_V026",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L30_V026.json",
+      "native_analysis_relative_dir": "provenance/analysis/L30_V026/ocr",
+      "native_evidence_relative_dir": "provenance/evidence/L30_V026/ocr",
+      "probe_anchor_frames": [
+        2400,
+        2450
+      ],
+      "query_id": "p2_q13",
+      "video_id": "L30_V026",
+      "video_relative_path": "videos/L30/L30_V026.mp4"
+    },
+    {
+      "channel": "ocr",
+      "expected_metadata_sha256": "d792ec860c23ba708b1b716794c0827d3393add3b0119c455e472b1395088ff4",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L30_V043",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L30_V043.json",
+      "native_analysis_relative_dir": "provenance/analysis/L30_V043/ocr",
+      "native_evidence_relative_dir": "provenance/evidence/L30_V043/ocr",
+      "probe_anchor_frames": [
+        3529,
+        2975
+      ],
+      "query_id": "p2_q23",
+      "video_id": "L30_V043",
+      "video_relative_path": "videos/L30/L30_V043.mp4"
+    },
+    {
+      "channel": "ocr",
+      "expected_metadata_sha256": "138e3ac497a335685db9665a7b023b49a46d14f8f46e0dcad25f8a7c0b8b2e51",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L25_V012",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/ocr/by-video/L25_V012.json",
+      "native_analysis_relative_dir": "provenance/analysis/L25_V012/ocr",
+      "native_evidence_relative_dir": "provenance/evidence/L25_V012/ocr",
+      "probe_anchor_frames": [
+        20500,
+        19625
+      ],
+      "query_id": "p2_q24",
+      "video_id": "L25_V012",
+      "video_relative_path": "videos/L25/L25_V012.mp4"
+    },
+    {
+      "channel": "asr",
+      "expected_metadata_sha256": "4fd7132e378c4444b480c22c76295519d3b591daf7c9830a0b74a7f4fdbd19b7",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L21_V029",
+      "known_fps": 30.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L21_V029.json",
+      "native_analysis_relative_dir": "provenance/analysis/L21_V029/asr",
+      "native_evidence_relative_dir": "provenance/evidence/L21_V029/asr",
+      "probe_anchor_frames": [
+        12000
+      ],
+      "query_id": "p0_q02",
+      "video_id": "L21_V029",
+      "video_relative_path": "videos/L21/L21_V029.mp4"
+    },
+    {
+      "channel": "asr",
+      "expected_metadata_sha256": "209f794750301d42c8bf88bb4cbb1e3f32410ae162e5f32dd9cd9c87d330708e",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L30_V072",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L30_V072.json",
+      "native_analysis_relative_dir": "provenance/analysis/L30_V072/asr",
+      "native_evidence_relative_dir": "provenance/evidence/L30_V072/asr",
+      "probe_anchor_frames": [
+        1745,
+        1750
+      ],
+      "query_id": "p0_q19",
+      "video_id": "L30_V072",
+      "video_relative_path": "videos/L30/L30_V072.mp4"
+    },
+    {
+      "channel": "asr",
+      "expected_metadata_sha256": "c5c4eda4ff969db887bc7f139943443ddd35bc9044ceebc8b4156bfc8ec80b09",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L25_V041",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L25_V041.json",
+      "native_analysis_relative_dir": "provenance/analysis/L25_V041/asr",
+      "native_evidence_relative_dir": "provenance/evidence/L25_V041/asr",
+      "probe_anchor_frames": [
+        17152,
+        16712
+      ],
+      "query_id": "p1_q17",
+      "video_id": "L25_V041",
+      "video_relative_path": "videos/L25/L25_V041.mp4"
+    },
+    {
+      "channel": "asr",
+      "expected_metadata_sha256": "7bd156da2faac5cf50ee8acbaec86cc396d0998863b0be5267c615057b421ca4",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L22_V008",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L22_V008.json",
+      "native_analysis_relative_dir": "provenance/analysis/L22_V008/asr",
+      "native_evidence_relative_dir": "provenance/evidence/L22_V008/asr",
+      "probe_anchor_frames": [
+        5638,
+        5875
+      ],
+      "query_id": "p1_q24",
+      "video_id": "L22_V008",
+      "video_relative_path": "videos/L22/L22_V008.mp4"
+    },
+    {
+      "channel": "asr",
+      "expected_metadata_sha256": "28922a817d8dc51e9c0f9d85c81e1a8743f00bb4f17cd66947b24a60fe240cb7",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L26_V450",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L26_V450.json",
+      "native_analysis_relative_dir": "provenance/analysis/L26_V450/asr",
+      "native_evidence_relative_dir": "provenance/evidence/L26_V450/asr",
+      "probe_anchor_frames": [
+        6300,
+        6387
+      ],
+      "query_id": "p2_q26",
+      "video_id": "L26_V450",
+      "video_relative_path": "videos/L26E/L26_V450.mp4"
+    },
+    {
+      "channel": "asr",
+      "expected_metadata_sha256": "bcd5c719927ec5d50a05a609cfd4dead859578fbc9ee9f10fb83d16901552286",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L26_V254",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L26_V254.json",
+      "native_analysis_relative_dir": "provenance/analysis/L26_V254/asr",
+      "native_evidence_relative_dir": "provenance/evidence/L26_V254/asr",
+      "probe_anchor_frames": [
+        543,
+        600
+      ],
+      "query_id": "p2_q28",
+      "video_id": "L26_V254",
+      "video_relative_path": "videos/L26C/L26_V254.mp4"
+    },
+    {
+      "channel": "asr",
+      "expected_metadata_sha256": "15bf356c840dd935d68f3fc16ed8795ed7adbcb35ce786aad58d5240a7ae6279",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L25_V075",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L25_V075.json",
+      "native_analysis_relative_dir": "provenance/analysis/L25_V075/asr",
+      "native_evidence_relative_dir": "provenance/evidence/L25_V075/asr",
+      "probe_anchor_frames": [
+        1787
+      ],
+      "query_id": "p3_q04",
+      "video_id": "L25_V075",
+      "video_relative_path": "videos/L25/L25_V075.mp4"
+    },
+    {
+      "channel": "asr",
+      "expected_metadata_sha256": "2a725ed08c695d9601fcdb1680937a3dc5cdb9f274a4ab9502c6fc15e91929db",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L21_V018",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L21_V018.json",
+      "native_analysis_relative_dir": "provenance/analysis/L21_V018/asr",
+      "native_evidence_relative_dir": "provenance/evidence/L21_V018/asr",
+      "probe_anchor_frames": [
+        21280
+      ],
+      "query_id": "p3_q08",
+      "video_id": "L21_V018",
+      "video_relative_path": "videos/L21/L21_V018.mp4"
+    },
+    {
+      "channel": "asr",
+      "expected_metadata_sha256": "e551bf2dfab716b19a6e0386158e67f7e267356158820752aee923bd791e0f4d",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L30_V010",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L30_V010.json",
+      "native_analysis_relative_dir": "provenance/analysis/L30_V010/asr",
+      "native_evidence_relative_dir": "provenance/evidence/L30_V010/asr",
+      "probe_anchor_frames": [
+        3292
+      ],
+      "query_id": "p3_q18",
+      "video_id": "L30_V010",
+      "video_relative_path": "videos/L30/L30_V010.mp4"
+    },
+    {
+      "channel": "asr",
+      "expected_metadata_sha256": "784d4b64d0df9520c3c6e53089231268280e53625e7945a4479e6eea8ebcfd87",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L22_V022",
+      "known_fps": 30.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L22_V022.json",
+      "native_analysis_relative_dir": "provenance/analysis/L22_V022/asr",
+      "native_evidence_relative_dir": "provenance/evidence/L22_V022/asr",
+      "probe_anchor_frames": [
+        16755,
+        18000
+      ],
+      "query_id": "p0_q16",
+      "video_id": "L22_V022",
+      "video_relative_path": "videos/L22/L22_V022.mp4"
+    },
+    {
+      "channel": "asr",
+      "expected_metadata_sha256": "cf74c2003d7151fecbcc49e8d2b2a53a153bb680a279cf4c2d241d106db07d43",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L27_V010",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L27_V010.json",
+      "native_analysis_relative_dir": "provenance/analysis/L27_V010/asr",
+      "native_evidence_relative_dir": "provenance/evidence/L27_V010/asr",
+      "probe_anchor_frames": [
+        5535,
+        5587
+      ],
+      "query_id": "p0_q20",
+      "video_id": "L27_V010",
+      "video_relative_path": "videos/L27/L27_V010.mp4"
+    },
+    {
+      "channel": "asr",
+      "expected_metadata_sha256": "41be6bdb64f9672ce96737a518dc43876e2e07bd33feae96d81b126785d6cf6c",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L30_V043",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L30_V043.json",
+      "native_analysis_relative_dir": "provenance/analysis/L30_V043/asr",
+      "native_evidence_relative_dir": "provenance/evidence/L30_V043/asr",
+      "probe_anchor_frames": [
+        3529,
+        2975
+      ],
+      "query_id": "p2_q23",
+      "video_id": "L30_V043",
+      "video_relative_path": "videos/L30/L30_V043.mp4"
+    },
+    {
+      "channel": "asr",
+      "expected_metadata_sha256": "0926fe857dbe505ede81bb5cff02bc27ecaf9247c8e3e746118612ca1c43ea1f",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L26_V161",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L26_V161.json",
+      "native_analysis_relative_dir": "provenance/analysis/L26_V161/asr",
+      "native_evidence_relative_dir": "provenance/evidence/L26_V161/asr",
+      "probe_anchor_frames": [
+        2743,
+        2550
+      ],
+      "query_id": "p2_q21",
+      "video_id": "L26_V161",
+      "video_relative_path": "videos/L26B/L26_V161.mp4"
+    },
+    {
+      "channel": "asr",
+      "expected_metadata_sha256": "297578812c67f4ce195d02e36dcccf8442da523e61084d436c58b8db7b79e886",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L25_V027",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L25_V027.json",
+      "native_analysis_relative_dir": "provenance/analysis/L25_V027/asr",
+      "native_evidence_relative_dir": "provenance/evidence/L25_V027/asr",
+      "probe_anchor_frames": [
+        11675
+      ],
+      "query_id": "p3_q06",
+      "video_id": "L25_V027",
+      "video_relative_path": "videos/L25/L25_V027.mp4"
+    },
+    {
+      "channel": "asr",
+      "expected_metadata_sha256": "54fee33d59ac7e10251b1f56b0d87e0b5f825260caa7198ba278348b4a056dea",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L30_V047",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L30_V047.json",
+      "native_analysis_relative_dir": "provenance/analysis/L30_V047/asr",
+      "native_evidence_relative_dir": "provenance/evidence/L30_V047/asr",
+      "probe_anchor_frames": [
+        5441
+      ],
+      "query_id": "p3_q14",
+      "video_id": "L30_V047",
+      "video_relative_path": "videos/L30/L30_V047.mp4"
+    },
+    {
+      "channel": "asr",
+      "expected_metadata_sha256": "ecbbc707da0eb7352e028a6157131697e1744ee4a6b676918ebad8988055f6cb",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L21_V015",
+      "known_fps": 30.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L21_V015.json",
+      "native_analysis_relative_dir": "provenance/analysis/L21_V015/asr",
+      "native_evidence_relative_dir": "provenance/evidence/L21_V015/asr",
+      "probe_anchor_frames": [
+        25283,
+        26175
+      ],
+      "query_id": "p0_q01",
+      "video_id": "L21_V015",
+      "video_relative_path": "videos/L21/L21_V015.mp4"
+    },
+    {
+      "channel": "asr",
+      "expected_metadata_sha256": "88e7399792bf4e8c2d61872513340bc48fbb63e5751d33218bb889d731ca33b0",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L26_V448",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L26_V448.json",
+      "native_analysis_relative_dir": "provenance/analysis/L26_V448/asr",
+      "native_evidence_relative_dir": "provenance/evidence/L26_V448/asr",
+      "probe_anchor_frames": [
+        2880
+      ],
+      "query_id": "p3_q24",
+      "video_id": "L26_V448",
+      "video_relative_path": "videos/L26E/L26_V448.mp4"
+    },
+    {
+      "channel": "asr",
+      "expected_metadata_sha256": "91b8f257b37508c7c2c745769d0ebcc962d806d10057e7325683bddfe2f916d3",
+      "feature_relative_dir": "features_L21-L30_branch-feats-siglip/features/L25_V016",
+      "known_fps": 25.0,
+      "metadata_relative_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L25_V016.json",
+      "native_analysis_relative_dir": "provenance/analysis/L25_V016/asr",
+      "native_evidence_relative_dir": "provenance/evidence/L25_V016/asr",
+      "probe_anchor_frames": [
+        4241
+      ],
+      "query_id": "p3_q05",
+      "video_id": "L25_V016",
+      "video_relative_path": "videos/L25/L25_V016.mp4"
+    }
+  ]
+}
