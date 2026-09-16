@@ -1,0 +1,360 @@
+{
+  "schema": "vecna82-packet-b-verified-analysis-checkpoint-v1",
+  "status": "EVALUATED_AND_INDEPENDENTLY_VERIFIED_FULL_ARTIFACT_PUBLICATION_PENDING_WORKSPACE_RECOVERY",
+  "cohort": {
+    "collected": 115,
+    "scored": 113,
+    "excluded": [
+      "p0_q15",
+      "p3_q09"
+    ]
+  },
+  "execution_head": "0ee966b8ddfe367fbf5a9bb4ba8301c2d43b5e54",
+  "research_base_head": "0d30c345845096e52b5c4f7cd3e8aa223ead9ff4",
+  "run_identity_sha256": "f0d32893564111064d47f6f2f72f7b03dbb14ebbfbb3d05c48e49e30ef165755",
+  "raw_capture": {
+    "path": "outputs/fusion/capture-full115-v1/provider_rankings.jsonl",
+    "bytes": 27146363,
+    "sha256": "d6223381ea8cbf4b4efcb0cc295f60dccfcae36afe0d9fac004438410c152a82",
+    "actions_run": 35103784571,
+    "artifact_id": 10449616592,
+    "artifact_zip_sha256": "95b505aa824f40cb730ab5bb989b0db1597a619ba348c60cb5bcb234eed84da8",
+    "normalized_patch_sha256": "b1cfc642c03c0e8e7805646b85c133260307187178d39c1bb5a28d91635e74f9",
+    "dispatch_comment": 5698484932,
+    "result_comment": 5698573112,
+    "source_replays_verified": 115,
+    "returncode": 0,
+    "child_elapsed_seconds": 322.797,
+    "ground_truth_read": false
+  },
+  "provider_states_all115": {
+    "qwen": {
+      "ok": 115
+    },
+    "siglip": {
+      "ok": 115
+    },
+    "ocr_sparse": {
+      "ok": 115
+    },
+    "asr_sparse": {
+      "ok": 115
+    },
+    "ocr_dense": {
+      "disabled": 115
+    },
+    "asr_dense": {
+      "disabled": 115
+    }
+  },
+  "descriptive_best_global_arm": "fusion_current_control",
+  "selection": "maximum distinct-video R20, then MRR20, then R1, then frozen arm order; no alternative wins",
+  "metrics_columns": [
+    "R1_count",
+    "R5_count",
+    "R10_count",
+    "R20_count",
+    "MRR20_mean"
+  ],
+  "distinct_video": {
+    "fusion_current_control": [
+      49,
+      77,
+      82,
+      87,
+      0.5299890165650186
+    ],
+    "fusion_rrf": [
+      36,
+      68,
+      76,
+      85,
+      0.43359078469286966
+    ],
+    "fusion_minmax_sum": [
+      36,
+      67,
+      79,
+      84,
+      0.42960058118178884
+    ],
+    "fusion_robust_z_sum": [
+      36,
+      61,
+      69,
+      81,
+      0.41147510215566874
+    ],
+    "fusion_softmax_sum": [
+      16,
+      62,
+      80,
+      86,
+      0.30435300427491996
+    ],
+    "qwen_only_matched": [
+      47,
+      71,
+      79,
+      84,
+      0.5074948563496195
+    ]
+  },
+  "frame_position_video": {
+    "fusion_current_control": [
+      49,
+      66,
+      74,
+      81,
+      0.49946184086605744
+    ],
+    "fusion_rrf": [
+      36,
+      56,
+      65,
+      75,
+      0.39875529477813104
+    ],
+    "fusion_minmax_sum": [
+      36,
+      43,
+      50,
+      61,
+      0.3530064971878446
+    ],
+    "fusion_robust_z_sum": [
+      36,
+      47,
+      54,
+      60,
+      0.3654000779716553
+    ],
+    "fusion_softmax_sum": [
+      16,
+      34,
+      37,
+      39,
+      0.2036732687175165
+    ],
+    "qwen_only_matched": [
+      47,
+      65,
+      71,
+      78,
+      0.4823018795363928
+    ]
+  },
+  "frozen_frame_range_event": {
+    "fusion_current_control": [
+      32,
+      52,
+      63,
+      67,
+      0.35596323538801417
+    ],
+    "fusion_rrf": [
+      23,
+      39,
+      51,
+      61,
+      0.2679554607819766
+    ],
+    "fusion_minmax_sum": [
+      22,
+      28,
+      34,
+      46,
+      0.22773193244952744
+    ],
+    "fusion_robust_z_sum": [
+      21,
+      31,
+      39,
+      50,
+      0.23334913067850957
+    ],
+    "fusion_softmax_sum": [
+      4,
+      19,
+      21,
+      26,
+      0.08464976426838396
+    ],
+    "qwen_only_matched": [
+      31,
+      52,
+      58,
+      61,
+      0.3525392994419543
+    ]
+  },
+  "current_vs_matched_qwen": {
+    "video_R20_rescues": [
+      "p0_q02",
+      "p1_q04",
+      "p2_q21"
+    ],
+    "video_R20_regressions": [],
+    "video_R1_rescues": 13,
+    "video_R1_regressions": 11,
+    "video_MRR_improved_queries": 14,
+    "video_MRR_regressed_queries": 20,
+    "video_R20_delta": 0.02654867256637168,
+    "video_R20_95_paired_interval": [
+      0,
+      0.061946902654867256
+    ],
+    "video_MRR_delta": 0.022494160215399153,
+    "video_MRR_95_paired_interval": [
+      -0.03751869995785925,
+      0.08206241552203941
+    ],
+    "frozen_R20_rescues": [
+      "p1_q04",
+      "p2_q15",
+      "p2_q21",
+      "p2_q23",
+      "p2_q24",
+      "p3_q06",
+      "p3_q26"
+    ],
+    "frozen_R20_regressions": [
+      "p3_q14"
+    ]
+  },
+  "alternative_vs_current_video_R20": {
+    "fusion_rrf": {
+      "rescues": [
+        "p0_q20",
+        "p0_q22",
+        "p0_q24",
+        "p2_q07"
+      ],
+      "regressions": [
+        "p0_q17",
+        "p1_q25",
+        "p2_q25",
+        "p3_q03",
+        "p3_q19",
+        "p3_q34"
+      ]
+    },
+    "fusion_minmax_sum": {
+      "rescues": [
+        "p0_q20",
+        "p0_q22",
+        "p0_q24",
+        "p2_q07",
+        "p3_q29"
+      ],
+      "regressions": [
+        "p0_q17",
+        "p1_q22",
+        "p1_q25",
+        "p2_q25",
+        "p3_q01",
+        "p3_q03",
+        "p3_q19",
+        "p3_q34"
+      ]
+    },
+    "fusion_robust_z_sum": {
+      "rescues": [
+        "p0_q20",
+        "p0_q22",
+        "p2_q07"
+      ],
+      "regressions": [
+        "p0_q17",
+        "p0_q18",
+        "p1_q09",
+        "p1_q25",
+        "p2_q18",
+        "p2_q25",
+        "p3_q03",
+        "p3_q19",
+        "p3_q34"
+      ]
+    },
+    "fusion_softmax_sum": {
+      "rescues": [
+        "p0_q20",
+        "p2_q07"
+      ],
+      "regressions": [
+        "p2_q25",
+        "p3_q19",
+        "p3_q34"
+      ]
+    }
+  },
+  "saved_set_headroom": {
+    "union": {
+      "video_queries": 101,
+      "complete_target_queries": 81,
+      "mean_target_coverage": 0.7300884955752213
+    },
+    "current_pre_collapse100": {
+      "video_queries": 92,
+      "complete_target_queries": 78,
+      "mean_target_coverage": 0.6991150442477876
+    },
+    "first_video_analysis_representatives": {
+      "video_queries": 92,
+      "complete_target_queries": 50,
+      "mean_target_coverage": 0.4446902654867257
+    },
+    "complete_target_admission_headroom_query_ids": [
+      "p0_q02",
+      "p0_q20",
+      "p2_q07"
+    ],
+    "additional_partial_target_query_ids": [
+      "p2_q29"
+    ],
+    "p2_q29_union_event_coverage": "2 of4; current100 has0 of4",
+    "video_absent_from_union_query_ids": [
+      "p0_q21",
+      "p1_q14",
+      "p1_q18",
+      "p2_q01",
+      "p2_q03",
+      "p2_q05",
+      "p2_q11",
+      "p2_q19",
+      "p2_q27",
+      "p2_q28",
+      "p3_q11",
+      "p3_q24"
+    ],
+    "queries_losing_some_target_coverage_in_analysis_projection": 30,
+    "qualification": "Saved-set ceiling only; no new admission arm executed. First-unique-video representatives are B's analysis projection, not a demonstrated serving/C timeline defect."
+  },
+  "independent_checks": [
+    "Root independently parsed canonical targets and recomputed all6 distinct-video surfaces x113 without importing evaluator/harness: exact counts and MRR within1e-12.",
+    "D independently rescored all5 arms x113 x3 layers and agreed with the math.fsum global winner.",
+    "Temporal reviewer independently checked113 union/provider OR/retained-subset/first-representative relations and81-to78-to50 complete-target totals."
+  ],
+  "original_local_artifact_hashes": {
+    "study_results_jsonl": {
+      "bytes": 18066333,
+      "sha256": "3a9fc4bd112260fcba775330d4b37f63a3d5255b0bf711fe32f88d665c4e1c0f"
+    },
+    "per_query_jsonl": {
+      "bytes": 1814560,
+      "sha256": "ac347171448dddc0559608df47075cb84acfb991a84940d4b27a23c250426e09"
+    },
+    "summary_json": {
+      "bytes": 96632,
+      "sha256": "40da7345a02a5f8b6e0e7e52440d323c64b219c28f117e6ad2f0363b477e477c"
+    }
+  },
+  "storage_recovery": "This compact checkpoint was reconstructed from already observed tool outputs after the shared scratch environment became unavailable. It is not a replacement for full per-query artifacts. The original capture is durable in the linked Actions run. If offline evaluation must be replayed, preserve the original hash records and label new CPU/wall timing/output hashes explicitly.",
+  "limitations": [
+    "Current control preserves nested normalization; alternatives use fixed nominal0.25 per active provider. Effective coefficients differ, so this is a frozen-configuration comparison, not an isolated flat-weight calibration.",
+    "B is a fresh capture with separately verified corrected Qwen weights and a matched same-run Qwen-only control. Historical C and corpus/index producer loading lineage remain unresolved and separate.",
+    "Top100 raw providers with native quote rules and common first100-frame cutoff differ from historical UI retrieval/segment processing.",
+    "Six historical TRAKE rows have provisional submission anchors; P3 source-text truth remains provisional. No calibrated probabilities or organizer-certified temporal metric.",
+    "No production integration, weight tuning, per-query routing, new model family, or next experiment was performed."
+  ]
+}

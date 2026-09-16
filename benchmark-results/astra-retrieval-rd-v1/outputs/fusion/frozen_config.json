@@ -1,0 +1,74 @@
+{
+  "schema": "vecna82-fusion-config-v1",
+  "provider_depth": 100,
+  "output_frame_k": 100,
+  "output_video_k": 100,
+  "expected_query_count": 115,
+  "nprobe": 32,
+  "ocr_weight": 0.25,
+  "asr_weight": 0.25,
+  "ocr_alpha": 0.0,
+  "asr_alpha": 0.0,
+  "visual_providers": [
+    "qwen",
+    "siglip"
+  ],
+  "visual_weight_policy": "equal_nominal_share",
+  "weight_authority": {
+    "repository": "JimmyK300/official-dataset-control",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "path": "evaluation/queries/p3-round3-benchmark-v1/baselines-20260913/all_fusion_v1.run.json",
+    "blob": "c63d742d2132458556d2b6f995fdc53d27cce152",
+    "outer_weights": "visual=0.5, OCR=0.25, ASR=0.25",
+    "visual_equal_share_authority": "JimmyK300/Vecna@eeeaf95b8d1676129702f60e6c1b232d27594edf:aic51-src/script/run_issue64_opencubee_fusion.py; equal across selected active visual models",
+    "availability_policy": "fixed nominal shares; no reweighting after missing/empty providers"
+  },
+  "alpha_authority": {
+    "repository": "JimmyK300/Vecna",
+    "commit": "95d63a6abf10c598e0e54af7d2071bedbe542d1e",
+    "path": "aic51-src/aic51/packages/search/searcher.py",
+    "blob": "10b4e62ea7a9ea7762a44dbe4a5602ae1a15cffd",
+    "policy": "Adopt current method defaults alpha=0 before collecting. Historical P3 run omits alphas; this does not assert its hidden runtime values.",
+    "primary_effective_providers": [
+      "qwen",
+      "siglip",
+      "ocr_sparse",
+      "asr_sparse"
+    ],
+    "dense_providers": "explicitly disabled at weight0; no unsupported six-active-provider claim"
+  },
+  "rrf_k": 60,
+  "rrf_authority": "JimmyK300/official-dataset-control@1f1ad1baef1e1d31817f6c5a12d4d94133611038:scripts/generate_unknown_query_candidates.py blob ab3151ba4eba261c41ad955fe16d1f0c6c663267",
+  "mad_factor": 1.4826,
+  "robust_clip": 6.0,
+  "softmax_temperature": 1.0,
+  "robust_zero_mad": "scale by maximum absolute deviation; if all scores equal, contribution0.5",
+  "minmax_equal_scores": "all_one",
+  "score_orientation": "higher_is_better",
+  "tie_break": "exported_main_set_order",
+  "collapse": "truncate_frames_then_first_unique_video",
+  "collection_name": "official_l21_l30_all_v2",
+  "collection_row_count": 322924,
+  "collection_count_authority": "P3 all_fusion_v1.run.json; collector fails if the live count differs",
+  "control_surface": "Main fusion semantics on same frozen raw provider top100, native quote filtering/boost retained. Public UI minimum200 and segment clustering are not replayed.",
+  "design_freeze": "All transform constants fixed before any fusion scoring; no truth used to select them. Alternative arms transform providers individually. Current control retains its nested normalization, so its data-dependent effective coefficients differ from nominal provider shares.",
+  "canonical_query_projection_sha256": "b2aa8de3bce8d24c5969fcf5a00757a7246a5182e4041cc2774559dbf49c6208",
+  "qwen_loader_validity": {
+    "status": "FROZEN_VERIFIED_REPAIR_REQUIRED",
+    "source_authority": "Separate reviewed Qwen loader repair in PR88; execute B on an isolated branch combining the B research commit and only its exact two production source files. Main remains unchanged.",
+    "source_lf_sha256": {
+      "qwen_vl.py": "18900a46da79c9738c7225f2993955f3c9e02030487b7cedffab0ddcf9f7d177",
+      "qwen_vl_checkpoint.py": "c1b0335ee855c5aaf8d33f688c28a351a2e8f93f3778e78316cf1ef0087b8169"
+    },
+    "verification_artifact": "qwen-repair-verification-v1/verification.json",
+    "verification_sha256": "8f459c0f25c62a712acea1ef59e4855e0d8d7428dc8623407ec6db9300790eb8",
+    "checkpoint_revision": "9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda",
+    "checkpoint_sha256": "c73fa9caeddeb3ff831d46c085a7a5708343248ca777e90f2d486964464509c1",
+    "checkpoint_bytes": 4255140312,
+    "expected_tensor_count": 625,
+    "device": "cpu",
+    "cpu_threads": 6,
+    "capture_gate": "Require the pinned verified audit, zero four audit loading lists, fresh checkpoint-byte hash, exact source/package contract, and current constructor exhaustive625-tensor equality before any provider query.",
+    "scope": "Corrected query loader only. Same main fusion math and frozen retrieval surface; no historical C or corpus feature/index lineage assertion."
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "schema": "vecna82-fusion-implementation-v1",
+  "validation": "29 focused unittest cases: 28 passed; 1 real-protobuf test skipped because protobuf is absent in analysis runtime",
+  "files": {
+    "code/fusion_study.py": {
+      "bytes": 21020,
+      "sha256": "57ded10b78c0a6649008d15e61882e3b52d2eb0b5cf63b57a7133a6a9da2a292"
+    },
+    "code/collect_fusion_providers.py": {
+      "bytes": 35249,
+      "sha256": "e77f16cc36044c358fc17e36b47cbe0aba08b2a2c9f0499039f1321535d99e76"
+    },
+    "code/evaluate_fusion_study.py": {
+      "bytes": 25968,
+      "sha256": "faef438a265ef61c6dc17a3221b0d6497efaadae6772bcba27a77dfa9e613f7b"
+    },
+    "tests/test_fusion_study.py": {
+      "bytes": 28305,
+      "sha256": "c08ca8fc30e24a590fcd32377e4e76afbb7a4d683dd5395be9d0c5142657897c"
+    },
+    "outputs/fusion/frozen_config.json": {
+      "bytes": 4261,
+      "sha256": "ff7a6f817579a2ba65572734016d51164f454a9d5012177841a458bbdca34b1a"
+    },
+    "outputs/fusion/queries.jsonl": {
+      "bytes": 58849,
+      "sha256": "3b91dfe26a893192a497a964d3a9ea5f50c595fdaabad000cbc60fc602be0d1a"
+    },
+    "outputs/fusion/evaluation_policy.json": {
+      "bytes": 784,
+      "sha256": "f6bcbc2081741d99dedfcae21d8f5aa53a821809348e07a98b33f2672ed2c6dd"
+    },
+    "outputs/fusion/CONTRACT.md": {
+      "bytes": 7755,
+      "sha256": "fca5925b842eb56b1a0deca42883079dbf2f3fbf874b84ea8fe12a339e98c0e5"
+    },
+    "code/audit_qwen_loading.py": {
+      "bytes": 10360,
+      "sha256": "104d5c47b12bd28e0e87c421c824b984508c9f4da806f9c3a78d661de9aaf487"
+    },
+    "code/verify_qwen_loading.py": {
+      "bytes": 13616,
+      "sha256": "29a0906f49d4f506fd943dad99e64c951022400943df3abd62f6f8da8d1713cf"
+    },
+    "code/inspect_qwen_loader.py": {
+      "bytes": 6693,
+      "sha256": "3002bd2fe5e4db2977bdba7fc8f478099634659ad364a787ae59181b3ca1d5c5"
+    },
+    "outputs/fusion/FULL_RUN.md": {
+      "bytes": 5993,
+      "sha256": "71b738cbae40032009736845ada1bb9b259cad9e092f32c0e95cf2bfe3ef960c"
+    },
+    "outputs/fusion/source/qwen_vl_main.py": {
+      "bytes": 5892,
+      "sha256": "2b49052e371f9cb7b0299392a5e81c6433c09941b5bc95056c9aebcda285de80"
+    },
+    "outputs/fusion/qwen-repair-verification-v1/verification.json": {
+      "bytes": 4078,
+      "sha256": "8f459c0f25c62a712acea1ef59e4855e0d8d7428dc8623407ec6db9300790eb8"
+    },
+    "outputs/fusion/qwen-repair-verification-v1/checkpoint_state_schema.json": {
+      "bytes": 90566,
+      "sha256": "b4f417040f3a8abf845e16451c17fc90170997316e3dd73bc1088fefea6ed9d8"
+    },
+    "outputs/fusion/qwen-repair-verification-v1/expected_state_schema.json": {
+      "bytes": 106716,
+      "sha256": "dba5edc95363d064f484b67c75708372b52fd1b9acdc873b938fe8de66442718"
+    },
+    "outputs/fusion/qwen-loader-defect.json": {
+      "bytes": 32730,
+      "sha256": "bb93f554dab3a36756c773dc38ac71be8d28266ef5613a538986fcb114553480"
+    }
+  },
+  "scientific_status_at_implementation_freeze": "Verified query-loader repair and capture gates frozen before any provider result; corrected-loader full115 capture pending. Exact main fusion transform unchanged; historical C and index lineage unresolved.",
+  "independent_review": "Read-only Qwen gate review passed; three new targeted tests passed. Corrected host smoke remains the integration confirmation."
+}
