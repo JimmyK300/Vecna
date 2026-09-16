@@ -117,8 +117,14 @@ class FailureEvidenceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             truth, rows, evaluated, summary, raw, selection, per_query = self.fusion_fixture(directory)
             per_query.unlink()
+            with self.assertRaisesRegex(ValueError, "only one evaluation artifact"):
+                ledger.fusion_evidence(raw, truth, AUDIT, SCORER)
+            selection.unlink()
             self.assertEqual(ledger.fusion_evidence(raw, truth, AUDIT, SCORER)["status"], "EVALUATION_PENDING")
             per_query.write_text("".join(json.dumps(r) + "\n" for r in evaluated), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "only one evaluation artifact"):
+                ledger.fusion_evidence(raw, truth, AUDIT, SCORER)
+            selection.write_text(json.dumps(summary), encoding="utf-8")
             result = ledger.fusion_evidence(raw, truth, AUDIT, SCORER)
             self.assertEqual(result["best_global_arm"], "fusion_rrf")
             self.assertEqual(result["per_query"]["q090"][result["best_global_arm"]]["frozen"]["metrics"]["R@20"], 0)

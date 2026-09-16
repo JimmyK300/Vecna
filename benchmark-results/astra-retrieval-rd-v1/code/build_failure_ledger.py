@@ -75,8 +75,10 @@ def fusion_evidence(path, truth, audit, scorer, selection_path=None, evaluated_p
         if selection_path.exists() or evaluated_path.exists():
             raise ValueError("Packet B evaluation artifacts exist but study_results.jsonl is absent. Hydrate outputs/fusion/evaluation/study_results.jsonl before regenerating D; completed B evidence must not be replaced with null. From the experiment root, run:\n" + HYDRATE)
         return {"status": "NOT_RUN", "best_global_arm": None, "per_query": {}, "reason": "All Packet B study/evaluation artifacts are absent."}
-    if not selection_path.exists() or not evaluated_path.exists():
-        return {"status": "EVALUATION_PENDING", "best_global_arm": None, "per_query": {}, "reason": "Raw fusion output exists but complete global selection and per-query evaluation are not both available."}
+    if selection_path.exists() != evaluated_path.exists():
+        raise ValueError("Packet B study has only one evaluation artifact: the completed evaluation bundle is partially restored. Restore both summary.json and per_query.jsonl before regenerating D; partial completed evidence must not become null. Hydration command:\n" + HYDRATE)
+    if not selection_path.exists():
+        return {"status": "EVALUATION_PENDING", "best_global_arm": None, "per_query": {}, "reason": "Raw fusion output exists and both evaluation artifacts are absent."}
     selection = read_json(selection_path)
     selected = selection.get("descriptive_best_global_arm")
     require(selected in FUSION_ARMS, "B evaluation has no supported descriptive_best_global_arm")
