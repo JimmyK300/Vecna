@@ -40,7 +40,7 @@ def sha(data):
 
 
 def git(repo, *args):
-    return subprocess.run(["git", "-C", str(repo), *args], check=True,
+    return subprocess.run(["git", "-C", str(repo), "-c", "core.autocrlf=false", "-c", "core.eol=lf", *args], check=True,
                           stdout=subprocess.PIPE, stderr=subprocess.PIPE).stdout
 
 
