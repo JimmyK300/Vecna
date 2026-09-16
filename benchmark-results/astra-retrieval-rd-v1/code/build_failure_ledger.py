@@ -30,7 +30,13 @@ TAXONOMY = ("none", "candidate_generation_missing_video", "candidate_generation_
     "fine_detail_attribute_failure", "ocr_extraction_failure", "ocr_retrieval_failure", "asr_extraction_failure",
     "asr_retrieval_failure", "fusion_calibration_failure", "fusion_duplicate_flooding", "reranker_regression",
     "temporal_representation_failure", "temporal_localization_failure", "ground_truth_weak_or_provisional", "query_ambiguous", "unresolved")
-HYDRATE = "python code/fusion_artifact_storage.py hydrate --root . --manifest outputs/fusion/artifact-storage/full115-v1-manifest.json"
+HYDRATE = (
+    "python code/hydrate_fusion_capture.py --root .\n"
+    "python code/fusion_study_storage.py rebuild --rankings outputs/fusion/capture-full115-v1/provider_rankings.jsonl "
+    "--config outputs/fusion/frozen_config.json --queries outputs/fusion/queries.jsonl "
+    "--collection-manifest outputs/fusion/capture-full115-v1/collection_manifest.json "
+    "--sidecar outputs/fusion/evaluation/study_timings.json --output outputs/fusion/evaluation/study_results.jsonl"
+)
 
 def read_json(path):
     return json.loads(Path(path).read_text(encoding="utf-8"))
