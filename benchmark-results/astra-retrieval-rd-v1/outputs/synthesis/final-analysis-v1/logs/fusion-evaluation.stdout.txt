@@ -1,0 +1,30 @@
+{
+  "cohort": {
+    "collected": 115,
+    "scored": 113,
+    "excluded": [
+      "p0_q15",
+      "p3_q09"
+    ]
+  },
+  "decision": {
+    "descriptive_best_global_arm": "fusion_current_control",
+    "production_integration": false,
+    "comparison_scope": "four nonzero provider weights with inherited outer weights/current default alphas; actual availability is explicit",
+    "weight_calibration_candidates": [],
+    "weight_calibration_caveat": "Frozen-contribution removal is a diagnostic hypothesis; no weights were tuned or validated out of sample.",
+    "evidence": "no_alternative_wins_the_predeclared_global_order",
+    "R20_regressions_preventing_unconditional_integration": [],
+    "top1_regressions": [],
+    "requested_slice_R20_deltas": {
+      "requested:asr_dependent_tag": 0.0,
+      "requested:combined_visual_and_text_tags": 0.0,
+      "requested:hard_negative_tag": 0.0,
+      "requested:ocr_dependent_tag": 0.0,
+      "requested:temporal_or_trake": 0.0,
+      "requested:visual_without_text_or_temporal_tags": 0.0
+    },
+    "slice_regressions": [],
+    "benefit_scope": "no globally winning alternative under the declared selection order"
+  }
+}

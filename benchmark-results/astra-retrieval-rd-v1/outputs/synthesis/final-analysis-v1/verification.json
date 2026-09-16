@@ -1,0 +1,107 @@
+{
+  "status": "passed",
+  "new_model_or_retrieval_calls": 0,
+  "pins": {
+    "B": "5ea6195fdfb4f895f378bac3c55c0d7bcb1c4353",
+    "source": "8c71336d73876d7c31292b453c636fa39efbd921",
+    "C": "897111a6f3fc65b42773f564357e7eb4ce6a19dd",
+    "A": "e08ef662bb0f02162b4aa72288729c71936bae90",
+    "D": "402fc03645a3ace6c1cdaffab26ef621b02c68d2"
+  },
+  "native_head_status_unchanged_after_fetch": true,
+  "native_head": "fd879fb0529165a441745374ab72244df8aadd5e",
+  "stage": "complete",
+  "checks": [
+    {
+      "name": "fusion-tests",
+      "returncode": 0,
+      "elapsed_seconds": 0.9170269000023836
+    },
+    {
+      "name": "fusion-evaluation",
+      "returncode": 0,
+      "elapsed_seconds": 18.56712620000326
+    },
+    {
+      "name": "headroom",
+      "returncode": 0,
+      "elapsed_seconds": 2.141532500005269
+    },
+    {
+      "name": "study-freeze",
+      "returncode": 0,
+      "elapsed_seconds": 3.3392792000013287
+    },
+    {
+      "name": "study-rebuild",
+      "returncode": 0,
+      "elapsed_seconds": 2.8322177000009106
+    },
+    {
+      "name": "ledger-tests",
+      "returncode": 0,
+      "elapsed_seconds": 2.3876464999993914
+    },
+    {
+      "name": "ledger-generation",
+      "returncode": 0,
+      "elapsed_seconds": 2.5948287999999593
+    },
+    {
+      "name": "ledger-repeat",
+      "returncode": 0,
+      "elapsed_seconds": 2.4687515999976313
+    }
+  ],
+  "native_head_status_unchanged_final": true,
+  "disposable_head_unchanged": true,
+  "ledger_replay_files": 4,
+  "ledger_replay_byte_identical": true,
+  "study_rebuild_byte_identical": true,
+  "study_sha256": "ba47bd96eb842d0bb57811e247cbd2ea29de8794c5dd3b289dce24a3032c10b1",
+  "sidecar_sha256": "6af4e2a4fbd7095e3bdd4461485f9a9e6f03792fb34dbfd3218e09a5c7236fcf",
+  "cohort": {
+    "excluded_query_ids": [
+      "p0_q15",
+      "p3_q09"
+    ],
+    "scoreable_queries": 113
+  },
+  "remaining_misses": 31,
+  "primary_failure_counts": {
+    "candidate_generation_missing_event": 18,
+    "candidate_generation_missing_video": 6,
+    "none": 82,
+    "unresolved": 7
+  },
+  "headroom": {
+    "overall": {
+      "active_provider_union": {
+        "queries": 113,
+        "video_queries": 101,
+        "complete_target_queries": 81,
+        "mean_target_coverage": 0.7300884955752213
+      },
+      "current_pre_collapse100": {
+        "queries": 113,
+        "video_queries": 92,
+        "complete_target_queries": 78,
+        "mean_target_coverage": 0.6991150442477876
+      },
+      "first_video_analysis_representatives": {
+        "queries": 113,
+        "video_queries": 92,
+        "complete_target_queries": 50,
+        "mean_target_coverage": 0.4446902654867257
+      }
+    },
+    "complete_target_admission_headroom_query_ids": [
+      "p0_q02",
+      "p0_q20",
+      "p2_q07"
+    ],
+    "additional_partial_target_admission_headroom_query_ids": [
+      "p2_q29"
+    ]
+  }
+}

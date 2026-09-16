@@ -1,0 +1,126 @@
+{
+  "asr": {
+    "coverage_comparison_at100": {
+      "both": 11,
+      "dense_only": 1,
+      "neither": 6,
+      "sparse_only": 0
+    },
+    "main_eligible": {
+      "any_target_hit": {
+        "R@1": 5,
+        "R@10": 9,
+        "R@100": 12,
+        "R@20": 9,
+        "R@5": 8
+      },
+      "same_video_exact_text_repeat_excess": 1599,
+      "strict_all_targets_hit": {
+        "R@1": 5,
+        "R@10": 9,
+        "R@100": 12,
+        "R@20": 9,
+        "R@5": 8
+      },
+      "video_hit": {
+        "R@1": 10,
+        "R@10": 10,
+        "R@100": 14,
+        "R@20": 10,
+        "R@5": 10
+      }
+    },
+    "provisional_truth_count": 7,
+    "queries_truncated_at1024_tokens": [],
+    "query_channel_count": 18,
+    "raw": {
+      "any_target_hit": {
+        "R@1": 8,
+        "R@10": 9,
+        "R@100": 12,
+        "R@20": 9,
+        "R@5": 9
+      },
+      "same_video_exact_text_repeat_excess": 1599,
+      "strict_all_targets_hit": {
+        "R@1": 8,
+        "R@10": 9,
+        "R@100": 12,
+        "R@20": 9,
+        "R@5": 9
+      },
+      "video_hit": {
+        "R@1": 10,
+        "R@10": 10,
+        "R@100": 14,
+        "R@20": 10,
+        "R@5": 10
+      }
+    }
+  },
+  "indexed_projection_parity": {
+    "comparisons": 731,
+    "matching": 731,
+    "mismatching": 0,
+    "missing_projected_frames": 0
+  },
+  "ocr": {
+    "coverage_comparison_at100": {
+      "both": 3,
+      "dense_only": 4,
+      "neither": 12,
+      "sparse_only": 1
+    },
+    "main_eligible": {
+      "any_target_hit": {
+        "R@1": 3,
+        "R@10": 5,
+        "R@100": 7,
+        "R@20": 5,
+        "R@5": 5
+      },
+      "same_video_exact_text_repeat_excess": 243,
+      "strict_all_targets_hit": {
+        "R@1": 3,
+        "R@10": 5,
+        "R@100": 7,
+        "R@20": 5,
+        "R@5": 5
+      },
+      "video_hit": {
+        "R@1": 4,
+        "R@10": 6,
+        "R@100": 9,
+        "R@20": 6,
+        "R@5": 5
+      }
+    },
+    "provisional_truth_count": 4,
+    "queries_truncated_at1024_tokens": [],
+    "query_channel_count": 20,
+    "raw": {
+      "any_target_hit": {
+        "R@1": 3,
+        "R@10": 5,
+        "R@100": 7,
+        "R@20": 5,
+        "R@5": 5
+      },
+      "same_video_exact_text_repeat_excess": 243,
+      "strict_all_targets_hit": {
+        "R@1": 3,
+        "R@10": 5,
+        "R@100": 7,
+        "R@20": 5,
+        "R@5": 5
+      },
+      "video_hit": {
+        "R@1": 4,
+        "R@10": 6,
+        "R@100": 9,
+        "R@20": 6,
+        "R@5": 5
+      }
+    }
+  }
+}

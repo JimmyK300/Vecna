@@ -1,0 +1,87 @@
+{
+  "schema": "vecna82-packet-b-offline-recovery-v1",
+  "status": "EVALUATION_RECOVERED_RAW_DURABLE_TRANSPORT_IN_PROGRESS",
+  "broker": {
+    "dispatch_comment": 5699053292,
+    "result_comment": 5699072888,
+    "run_id": 35108003259,
+    "artifact_id": 10451351118,
+    "artifact_zip_bytes": 1833235,
+    "artifact_zip_sha256": "9923e39afacfbba394ff447c63b974407c0bebfbf9ae420ae28163806b34a6e8",
+    "normalized_patch_bytes": 2564552,
+    "normalized_patch_sha256": "63c0221d6e5c1c99ac5e9f1bfdd80f6ce2992502cd29b88066adf0c4e0ab2ee2",
+    "artifact_expires_at": "2026-09-23T14:22:57Z"
+  },
+  "recovery": {
+    "all_six_video_metrics_match_original_verified_analysis": true,
+    "archives": [
+      {
+        "archive_bytes": 3090175,
+        "archive_path": "outputs/fusion/recovery-evaluation-v1/archives/provider_rankings.jsonl.gz",
+        "archive_sha256": "b04a28b3fdf6f334a460daf23195e28dbff6cc6f9fb4d50bbe773be21f2d8c86",
+        "original_bytes": 27146363,
+        "original_path": "outputs/fusion/capture-full115-v1/provider_rankings.jsonl",
+        "original_sha256": "d6223381ea8cbf4b4efcb0cc295f60dccfcae36afe0d9fac004438410c152a82"
+      },
+      {
+        "archive_bytes": 1399399,
+        "archive_path": "outputs/fusion/recovery-evaluation-v1/archives/study_results.jsonl.gz",
+        "archive_sha256": "c5d33ab3b5c826b3de2f83c53c5fe3834fe16745593496edc8a53b2339eab066",
+        "original_bytes": 18063557,
+        "original_path": "outputs/fusion/evaluation/study_results.jsonl",
+        "original_sha256": "2291194ca558d490a9c32d969136176578e3ca913efbd9e77554c739b7a867d5"
+      },
+      {
+        "archive_bytes": 98373,
+        "archive_path": "outputs/fusion/recovery-evaluation-v1/archives/per_query.jsonl.gz",
+        "archive_sha256": "b9431f0c1af83a3f03b9e42ae8b95a7855d713385ef5f6b34c7085cfe5a6c797",
+        "original_bytes": 1811946,
+        "original_path": "outputs/fusion/evaluation/per_query.jsonl",
+        "original_sha256": "04d8fb034e6e24999168aa598a5316c06e4114aca075e685875e38ed6ce51e4f"
+      },
+      {
+        "archive_bytes": 9560,
+        "archive_path": "outputs/fusion/recovery-evaluation-v1/archives/summary.json.gz",
+        "archive_sha256": "1ab57fc561444cc594ead1feca3f701e13ed38171526b33b37e3ee2e21228a34",
+        "original_bytes": 100069,
+        "original_path": "outputs/fusion/evaluation/summary.json",
+        "original_sha256": "aec67aaf7d2b43616c6655f93178ebed117a6d8e9ac9dc6f8ce47553e86a3200"
+      },
+      {
+        "archive_bytes": 52513,
+        "archive_path": "outputs/fusion/recovery-evaluation-v1/archives/slices.json.gz",
+        "archive_sha256": "64705f34424bc9c164803baf861904ca5a36b839558cc29b570bcfa81e2d82cf",
+        "original_bytes": 1202132,
+        "original_path": "outputs/fusion/evaluation/slices.json",
+        "original_sha256": "41c66a40fe041b4e2f6e76ae2f8eacbe762b53f8352621bc9a77e09d03f5abe7"
+      }
+    ],
+    "child_returncode": 0,
+    "elapsed_seconds": 17.70300000000134,
+    "execution_head": "0ee966b8ddfe367fbf5a9bb4ba8301c2d43b5e54",
+    "mode": "model_free_offline_replay_of_exact_saved_capture",
+    "new_retrieval_or_model_inference": false,
+    "new_study_sha256": "2291194ca558d490a9c32d969136176578e3ca913efbd9e77554c739b7a867d5",
+    "original_capture_sha256": "d6223381ea8cbf4b4efcb0cc295f60dccfcae36afe0d9fac004438410c152a82",
+    "original_study_sha256": "3a9fc4bd112260fcba775330d4b37f63a3d5255b0bf711fe32f88d665c4e1c0f",
+    "raw_compression_measurements": {
+      "xz9_extreme": {
+        "bytes": 1699128,
+        "elapsed_seconds": 12.327999999994063,
+        "roundtrip_sha256": "d6223381ea8cbf4b4efcb0cc295f60dccfcae36afe0d9fac004438410c152a82",
+        "sha256": "b793108e648605d413f8fd8d061fa6029f2a5e3b5a1c884f62e55849f004443f"
+      }
+    },
+    "run_identity_sha256": "f0d32893564111064d47f6f2f72f7b03dbb14ebbfbb3d05c48e49e30ef165755",
+    "status": "completed",
+    "timing_qualification": "Original local evaluation unavailable after workspace outage. New replay preserves inputs and all tested metrics; wall/CPU timings and resulting byte hashes are fresh, never relabeled as original."
+  },
+  "compact_per_query": {
+    "path": "outputs/fusion/evaluation/compact_per_query.json",
+    "bytes": 189118,
+    "sha256": "ef360ed383421baa8c6dfb7e280db6f01139888714e65737f318517beac260b9",
+    "git_blob": "a228a125ccde801146263e300b7c6d48080c6050",
+    "independent_gzip_crc_and_sha_verified": true
+  },
+  "export_caveat": "The host repository ignored *.gz; those derived gzip files were not exported in the patch. The original raw-provider .xz was exported and is being moved losslessly into this Git branch. Full derived evaluation can be replayed from that exact raw data, manifest, frozen source and canonical inputs. Original pre-outage and recovered timing/file hashes remain separate."
+}

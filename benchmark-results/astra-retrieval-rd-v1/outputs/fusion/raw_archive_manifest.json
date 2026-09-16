@@ -1,0 +1,671 @@
+{
+  "archive": {
+    "bytes": 1699128,
+    "compression": "Python lzma FORMAT_XZ preset9 | PRESET_EXTREME",
+    "format": "XZ",
+    "git_blob": "5a7c63101d01ff5b3cc8d5dc758a0d3b84cff496",
+    "path": "outputs/fusion/recovery-evaluation-v1/archives/provider_rankings.jsonl.xz",
+    "sha256": "b793108e648605d413f8fd8d061fa6029f2a5e3b5a1c884f62e55849f004443f"
+  },
+  "capture": {
+    "execution_commit": "0ee966b8ddfe367fbf5a9bb4ba8301c2d43b5e54",
+    "ground_truth_read": false,
+    "provider_state_counts": {
+      "asr_dense": {
+        "disabled": 115
+      },
+      "asr_sparse": {
+        "ok": 115
+      },
+      "ocr_dense": {
+        "disabled": 115
+      },
+      "ocr_sparse": {
+        "ok": 115
+      },
+      "qwen": {
+        "ok": 115
+      },
+      "siglip": {
+        "ok": 115
+      }
+    },
+    "queries": 115,
+    "source_replays_verified": 115
+  },
+  "compressed_capture_artifact": {
+    "artifact_id": 10451351118,
+    "dispatch_comment": 5699053292,
+    "normalized_patch_bytes": 2564552,
+    "normalized_patch_sha256": "63c0221d6e5c1c99ac5e9f1bfdd80f6ce2992502cd29b88066adf0c4e0ab2ee2",
+    "repository": "JimmyK300/ai-routing-hub",
+    "result_comment": 5699072888,
+    "run_id": 35108003259,
+    "zip_bytes": 1833235,
+    "zip_sha256": "9923e39afacfbba394ff447c63b974407c0bebfbf9ae420ae28163806b34a6e8"
+  },
+  "original_capture_artifact": {
+    "artifact_id": 10449616592,
+    "dispatch_comment": 5698484932,
+    "normalized_patch_bytes": 27410372,
+    "normalized_patch_sha256": "b1cfc642c03c0e8e7805646b85c133260307187178d39c1bb5a28d91635e74f9",
+    "repository": "JimmyK300/ai-routing-hub",
+    "result_comment": 5698573112,
+    "run_id": 35103784571,
+    "zip_bytes": 3223668,
+    "zip_sha256": "95b505aa824f40cb730ab5bb989b0db1597a619ba348c60cb5bcb234eed84da8"
+  },
+  "raw": {
+    "bytes": 27146363,
+    "path": "outputs/fusion/capture-full115-v1/provider_rankings.jsonl",
+    "sha256": "d6223381ea8cbf4b4efcb0cc295f60dccfcae36afe0d9fac004438410c152a82"
+  },
+  "reproduction": {
+    "exact_study": "Restore the committed study from its timing sidecar with code/fusion_study_storage.py rebuild; require the full original study SHA. See RECOVERY.md.",
+    "fresh_evaluation": "python code/hydrate_fusion_capture.py --root . --replay-outdir outputs/fusion/replay-local-v1",
+    "hydrate_command": "python code/hydrate_fusion_capture.py --root .",
+    "new_timing_boundary": "Fresh evaluator CPU/wall measurements change serialized study/per_query hashes; do not mix generations."
+  },
+  "retention": "Git archive is the durable raw authority. The original Actions artifacts have7-day retention and are provenance references, not a long-term storage dependency.",
+  "run_identity_sha256": "f0d32893564111064d47f6f2f72f7b03dbb14ebbfbb3d05c48e49e30ef165755",
+  "schema": "vecna82-raw-provider-archive-v1",
+  "status": "COMPLETE",
+  "transport": {
+    "broker_modifications": false,
+    "failed_attempts": [
+      {
+        "index": 35,
+        "result_comment": 5699545336,
+        "retry_success_comment": 5699606510,
+        "cause": "transient DNS getaddrinfo11004 before download",
+        "changed_paths": 0,
+        "scope_violations": 0,
+        "patch_bytes": 0,
+        "source_checkout_head_unchanged": true
+      },
+      {
+        "index": 45,
+        "result_comment": 5699630745,
+        "retry_success_comment": 5699688499,
+        "cause": "transient DNS getaddrinfo11004 before download",
+        "changed_paths": 0,
+        "scope_violations": 0,
+        "patch_bytes": 0,
+        "source_checkout_head_unchanged": true
+      },
+      {
+        "index": 47,
+        "result_comment": 5699630757,
+        "retry_success_comment": 5699688472,
+        "cause": "transient DNS getaddrinfo11004 before download",
+        "changed_paths": 0,
+        "scope_violations": 0,
+        "patch_bytes": 0,
+        "source_checkout_head_unchanged": true
+      }
+    ],
+    "limit_bypass": false,
+    "method": "60 fixed disjoint28500-byte chunks; last17628 bytes; stdout first28000 base64 characters and stderr remainder. Each host reader verifies full ZIP, patch and XZ first; connector verifies each chunk and final joined SHA.",
+    "no_host_commit_push_or_publication": true,
+    "no_models_or_retrieval": true,
+    "successful_receipts": [
+      {
+        "index": 0,
+        "offset": 0,
+        "bytes": 28500,
+        "sha256": "12bbd5f7e563a8f4c2ecee357185d7b64573b516d77f83fd248490acf1248e04",
+        "result_comment": 5699140523,
+        "actions_run": 35108600076
+      },
+      {
+        "index": 1,
+        "offset": 28500,
+        "bytes": 28500,
+        "sha256": "43545a835f505ed94ab82a860bce118272936cc7d11b9e9156cf5b3a488b2069",
+        "result_comment": 5699187155,
+        "actions_run": 35108947641
+      },
+      {
+        "index": 2,
+        "offset": 57000,
+        "bytes": 28500,
+        "sha256": "90c4b4e5715f2ba918c44b0a0f209929e2ce4ea4d1975db551e6b8402336df51",
+        "result_comment": 5699194957,
+        "actions_run": 35108950973
+      },
+      {
+        "index": 3,
+        "offset": 85500,
+        "bytes": 28500,
+        "sha256": "a056cad2b764b34774a0ed4280cb17c50686eb8781ac4dcf397d4f34ee0272fd",
+        "result_comment": 5699186326,
+        "actions_run": 35108953018
+      },
+      {
+        "index": 4,
+        "offset": 114000,
+        "bytes": 28500,
+        "sha256": "5a69f329c7a319fe8b382ec884d4c3ec1a1d0c3e2215f5b1cd26a3bef42b8b09",
+        "result_comment": 5699185129,
+        "actions_run": 35108956288
+      },
+      {
+        "index": 5,
+        "offset": 142500,
+        "bytes": 28500,
+        "sha256": "3156a7b4b472fe30eba3f223d5f07bd24bcddab0febef0991da8be332fea71a1",
+        "result_comment": 5699299889,
+        "actions_run": 35109863121
+      },
+      {
+        "index": 6,
+        "offset": 171000,
+        "bytes": 28500,
+        "sha256": "73beb58eab615c89ac7624933f167378542a9bde43c8a8b84e4645f86071b402",
+        "result_comment": 5699300044,
+        "actions_run": 35109866820
+      },
+      {
+        "index": 7,
+        "offset": 199500,
+        "bytes": 28500,
+        "sha256": "2770f54f6c03fc7df865272a85917ce963d20693301e7c334212e4bab0b3f7fc",
+        "result_comment": 5699300383,
+        "actions_run": 35109867857
+      },
+      {
+        "index": 8,
+        "offset": 228000,
+        "bytes": 28500,
+        "sha256": "a905c465e280a00a21c2ef56946d758cb142bf628d9987d4074b0401bbace84e",
+        "result_comment": 5699305753,
+        "actions_run": 35109869077
+      },
+      {
+        "index": 9,
+        "offset": 256500,
+        "bytes": 28500,
+        "sha256": "a8516edad437e6b8cb689ae7a0f19d5869ac3cc71fab85026232c8c2f2febcd1",
+        "result_comment": 5699302141,
+        "actions_run": 35109870755
+      },
+      {
+        "index": 10,
+        "offset": 285000,
+        "bytes": 28500,
+        "sha256": "4a120aa74cea9ee3c0858ec107b29a2e150e8248e41fac735782c74aff3657cd",
+        "result_comment": 5699303070,
+        "actions_run": 35109872512
+      },
+      {
+        "index": 11,
+        "offset": 313500,
+        "bytes": 28500,
+        "sha256": "7bf7f7fdac6b4fa7b894cc466dc11792d9e2bf38974906a21712cc5dd70f2649",
+        "result_comment": 5699330757,
+        "actions_run": 35110102707
+      },
+      {
+        "index": 12,
+        "offset": 342000,
+        "bytes": 28500,
+        "sha256": "2b3fe03d30a4134942eb8a45bf9a5085bb313a555c6e5a9170d7cfbb6cb5298a",
+        "result_comment": 5699334379,
+        "actions_run": 35110105838
+      },
+      {
+        "index": 13,
+        "offset": 370500,
+        "bytes": 28500,
+        "sha256": "0c0af209e8d8d8c606eda8536b58668aa98fe6d747b1e06c9382aff27d30739b",
+        "result_comment": 5699333600,
+        "actions_run": 35110107525
+      },
+      {
+        "index": 14,
+        "offset": 399000,
+        "bytes": 28500,
+        "sha256": "c1655d7f3d6240b1c38e35d1cca1517184f6c186cd931435c7d3638e14e8d0c9",
+        "result_comment": 5699332103,
+        "actions_run": 35110110082
+      },
+      {
+        "index": 15,
+        "offset": 427500,
+        "bytes": 28500,
+        "sha256": "003e014561eade68cd70a93518f42dceefcffb67dd4c9bf5436104f49d288e33",
+        "result_comment": 5699337432,
+        "actions_run": 35110112596
+      },
+      {
+        "index": 16,
+        "offset": 456000,
+        "bytes": 28500,
+        "sha256": "c947ec2fec00b30e03b36bf09f2ba0461659116f9dd97517bc10c7502d9a4a6f",
+        "result_comment": 5699334122,
+        "actions_run": 35110112590
+      },
+      {
+        "index": 17,
+        "offset": 484500,
+        "bytes": 28500,
+        "sha256": "a43af7d599d5bc2050b3b0e00c54a6b6dc15273aac65886fd61f6a6a73da40a1",
+        "result_comment": 5699407995,
+        "actions_run": 35110708853
+      },
+      {
+        "index": 18,
+        "offset": 513000,
+        "bytes": 28500,
+        "sha256": "a8af99327a09a133eecbd7a6ed759687256b46665b35b3158b03e38a9fdf0fb7",
+        "result_comment": 5699414641,
+        "actions_run": 35110709833
+      },
+      {
+        "index": 19,
+        "offset": 541500,
+        "bytes": 28500,
+        "sha256": "6851784371d82dd8be6f88eb482b1273bcc0bdb803dd70a468271af3bfde0ab1",
+        "result_comment": 5699414587,
+        "actions_run": 35110711600
+      },
+      {
+        "index": 20,
+        "offset": 570000,
+        "bytes": 28500,
+        "sha256": "65ddb36ebb0d6eaa87dd80436bea476e4ad71d3c68e5e2f243a29be59f2a925e",
+        "result_comment": 5699411089,
+        "actions_run": 35110717052
+      },
+      {
+        "index": 21,
+        "offset": 598500,
+        "bytes": 28500,
+        "sha256": "4759d4a89dd53ac8d63eb81acf94c14b2f10c7740277aa52cd42fa6e1033bad8",
+        "result_comment": 5699410512,
+        "actions_run": 35110717958
+      },
+      {
+        "index": 22,
+        "offset": 627000,
+        "bytes": 28500,
+        "sha256": "9d7aa940ca02d5e4379ce378680a088cbdb4697c7baabaf3ab994db3a85cf59c",
+        "result_comment": 5699416373,
+        "actions_run": 35110718412
+      },
+      {
+        "index": 23,
+        "offset": 655500,
+        "bytes": 28500,
+        "sha256": "c7bc4a96c47e76113b5e95cfe9daa33a3951cbd820147509fe485dc24434fc40",
+        "result_comment": 5699440545,
+        "actions_run": 35110972879
+      },
+      {
+        "index": 24,
+        "offset": 684000,
+        "bytes": 28500,
+        "sha256": "74df56ea457bee89ddaa88d0f77590ef12fe584af9f75c82632b3bdc5e7c3753",
+        "result_comment": 5699441615,
+        "actions_run": 35110974721
+      },
+      {
+        "index": 25,
+        "offset": 712500,
+        "bytes": 28500,
+        "sha256": "ada06fa83054f5e1f0e859c56a064433353486e02b41ae783cf9ed68c28fa759",
+        "result_comment": 5699443993,
+        "actions_run": 35110976156
+      },
+      {
+        "index": 26,
+        "offset": 741000,
+        "bytes": 28500,
+        "sha256": "26638a862b5f35122da7dad94e410ae294f25097484593c6f5a8b7b1df59d0d4",
+        "result_comment": 5699442774,
+        "actions_run": 35110977275
+      },
+      {
+        "index": 27,
+        "offset": 769500,
+        "bytes": 28500,
+        "sha256": "04e3b8f31cecae7249dff46c25efef3c087bb10a2f1bc1e3df4e253beb19092e",
+        "result_comment": 5699442769,
+        "actions_run": 35110981743
+      },
+      {
+        "index": 28,
+        "offset": 798000,
+        "bytes": 28500,
+        "sha256": "f646c09bdecd7d0601b7716a35f23c1850574730ab6a19d09961bfcb04d9ddd0",
+        "result_comment": 5699491377,
+        "actions_run": 35111329125
+      },
+      {
+        "index": 29,
+        "offset": 826500,
+        "bytes": 28500,
+        "sha256": "d0760fc51c6e7c33a2a31264759db80e91074a23a482238b6673f600e862dc43",
+        "result_comment": 5699499170,
+        "actions_run": 35111331871
+      },
+      {
+        "index": 30,
+        "offset": 855000,
+        "bytes": 28500,
+        "sha256": "1b5005fb7478a33114d6425a7ad27f9572c4f38819ff89238048ad126315152e",
+        "result_comment": 5699493252,
+        "actions_run": 35111332860
+      },
+      {
+        "index": 31,
+        "offset": 883500,
+        "bytes": 28500,
+        "sha256": "8d49c1ac982a75c809678e76bc761e01e35d3eba3583b293c8afaaa1b35b1cef",
+        "result_comment": 5699493457,
+        "actions_run": 35111333371
+      },
+      {
+        "index": 32,
+        "offset": 912000,
+        "bytes": 28500,
+        "sha256": "9e2558d3d04316aef67d3d9531025854eb2f1c6570c9118e27af65e4e9853892",
+        "result_comment": 5699493277,
+        "actions_run": 35111335420
+      },
+      {
+        "index": 33,
+        "offset": 940500,
+        "bytes": 28500,
+        "sha256": "6acfabf07869b263b22012d0cbf91bdc9a6decd9fc4a19d8ffae2874f7772098",
+        "result_comment": 5699496796,
+        "actions_run": 35111338653
+      },
+      {
+        "index": 34,
+        "offset": 969000,
+        "bytes": 28500,
+        "sha256": "a49ec4919a3f14e804190b651e1ecf6de7fbd602c977ac7c64491d59422ba261",
+        "result_comment": 5699548928,
+        "actions_run": 35111684342
+      },
+      {
+        "index": 35,
+        "offset": 997500,
+        "bytes": 28500,
+        "sha256": "fb4cac4fc11b6747862954788d4e41db3b9ea937fac3c039a2f58c2ac93ba19a",
+        "result_comment": 5699606510,
+        "actions_run": 35112085912
+      },
+      {
+        "index": 36,
+        "offset": 1026000,
+        "bytes": 28500,
+        "sha256": "74bcc87efd8b02255999945728e5855990b11e5a9b6e4e0d1b953f2d433d57da",
+        "result_comment": 5699545400,
+        "actions_run": 35111689191
+      },
+      {
+        "index": 37,
+        "offset": 1054500,
+        "bytes": 28500,
+        "sha256": "79fa32d2cd731ae82b8edf7ebd74bd1c3af231ef95b206b11dbfe08341819e47",
+        "result_comment": 5699547292,
+        "actions_run": 35111690537
+      },
+      {
+        "index": 38,
+        "offset": 1083000,
+        "bytes": 28500,
+        "sha256": "cf0d85dd2f2fd43e9f4ea37d4ef9e221f49c5615ebaf470e83cd967dcd58737d",
+        "result_comment": 5699547197,
+        "actions_run": 35111693843
+      },
+      {
+        "index": 39,
+        "offset": 1111500,
+        "bytes": 28500,
+        "sha256": "667ec18c103a878100264cada413598de43fb5f2edb82873ad9e017558092027",
+        "result_comment": 5699548743,
+        "actions_run": 35111694202
+      },
+      {
+        "index": 40,
+        "offset": 1140000,
+        "bytes": 28500,
+        "sha256": "b04129e50392169fde1305d405c775fc308734725ace693f9d2f8da930cafc5a",
+        "result_comment": 5699603784,
+        "actions_run": 35112092967
+      },
+      {
+        "index": 41,
+        "offset": 1168500,
+        "bytes": 28500,
+        "sha256": "747835bfdbaedee7ebb6afff684fbc9deb1cbe3f38d2e6f2fd5599a80fc0ad47",
+        "result_comment": 5699600031,
+        "actions_run": 35112089899
+      },
+      {
+        "index": 42,
+        "offset": 1197000,
+        "bytes": 28500,
+        "sha256": "ee98bedcc3d334059b13019e7107617d747d1153dc53fe11f71456e4a8183b73",
+        "result_comment": 5699602811,
+        "actions_run": 35112092590
+      },
+      {
+        "index": 43,
+        "offset": 1225500,
+        "bytes": 28500,
+        "sha256": "9a7b703f3e26acda478963a1beedbcfef766be6c5f79789129d728f1fa7db907",
+        "result_comment": 5699606204,
+        "actions_run": 35112094068
+      },
+      {
+        "index": 44,
+        "offset": 1254000,
+        "bytes": 28500,
+        "sha256": "d232578c4f5e0320b575aaff21546a08f18737ef89d0f802f3de75ecab7e9830",
+        "result_comment": 5699605767,
+        "actions_run": 35112096031
+      },
+      {
+        "index": 45,
+        "offset": 1282500,
+        "bytes": 28500,
+        "sha256": "b789388c70767b9ef289c7138a1c7d9fe972c1857810d94be4c41b9ed8fafccf",
+        "result_comment": 5699688499,
+        "actions_run": 35112789057
+      },
+      {
+        "index": 46,
+        "offset": 1311000,
+        "bytes": 28500,
+        "sha256": "cca53e2b78cefa0e3f56aa08225b25822b33b4d3fe89a707bd4d881219f32161",
+        "result_comment": 5699634749,
+        "actions_run": 35112319254
+      },
+      {
+        "index": 47,
+        "offset": 1339500,
+        "bytes": 28500,
+        "sha256": "d90e28eb826acdbc5448cccc176fe8746b63bfc84a25c4b7f5a173101ee5ffb5",
+        "result_comment": 5699688472,
+        "actions_run": 35112789905
+      },
+      {
+        "index": 48,
+        "offset": 1368000,
+        "bytes": 28500,
+        "sha256": "577425236bf0cc56e9758a40de10169aee4958236e3442e27fa328903934f7b1",
+        "result_comment": 5699631760,
+        "actions_run": 35112322405
+      },
+      {
+        "index": 49,
+        "offset": 1396500,
+        "bytes": 28500,
+        "sha256": "a3c7d2c21499929e724207552aa2b2de4a2abee0da03eecc0d80f6a1137b282b",
+        "result_comment": 5699631825,
+        "actions_run": 35112323276
+      },
+      {
+        "index": 50,
+        "offset": 1425000,
+        "bytes": 28500,
+        "sha256": "ef66d67f1bc97fd9ddaaa38fe3931eebae04d524774f4ea4204dd8d089444d15",
+        "result_comment": 5699632782,
+        "actions_run": 35112325002
+      },
+      {
+        "index": 51,
+        "offset": 1453500,
+        "bytes": 28500,
+        "sha256": "6312477b54db60722334bee17e3d8b4193d3880ad749ad43a5682b948b90c992",
+        "result_comment": 5699691567,
+        "actions_run": 35112792796
+      },
+      {
+        "index": 52,
+        "offset": 1482000,
+        "bytes": 28500,
+        "sha256": "8f2aba1a161047dd47c90e4906bccca2d8c7ea1d96cc4764c2de7d042c7a69ad",
+        "result_comment": 5699694312,
+        "actions_run": 35112795800
+      },
+      {
+        "index": 53,
+        "offset": 1510500,
+        "bytes": 28500,
+        "sha256": "964949f366d261b1422b6748d3645dda2a5b7a2567f69783e9bd7700acd727f3",
+        "result_comment": 5699692792,
+        "actions_run": 35112795798
+      },
+      {
+        "index": 54,
+        "offset": 1539000,
+        "bytes": 28500,
+        "sha256": "c726c4ffbc0989d63dd85a6270d02b536ed418ed12277d2159ca73e649741111",
+        "result_comment": 5699692806,
+        "actions_run": 35112798234
+      },
+      {
+        "index": 55,
+        "offset": 1567500,
+        "bytes": 28500,
+        "sha256": "249371d462e634049fdb250f992523cd988a1e478f651a2e558ebad69e45b635",
+        "result_comment": 5699740157,
+        "actions_run": 35113188675
+      },
+      {
+        "index": 56,
+        "offset": 1596000,
+        "bytes": 28500,
+        "sha256": "c1a65f6644625e5a43de0cfd4a82e89d1164262a893b84acd89cc03217f821ae",
+        "result_comment": 5699739493,
+        "actions_run": 35113192441
+      },
+      {
+        "index": 57,
+        "offset": 1624500,
+        "bytes": 28500,
+        "sha256": "402ca786b982ea349ec439c6a9d3aabf1444d26dacaed06e8501870952a58e5a",
+        "result_comment": 5699738827,
+        "actions_run": 35113192253
+      },
+      {
+        "index": 58,
+        "offset": 1653000,
+        "bytes": 28500,
+        "sha256": "abe901c5715d8a845b983ac01e9a08880fbcfac276782ba6bdc947145c5b31e3",
+        "result_comment": 5699740040,
+        "actions_run": 35113194547
+      },
+      {
+        "index": 59,
+        "offset": 1681500,
+        "bytes": 17628,
+        "sha256": "e88e8cb8ac146f9868e3bef83a9fbd74322847c3a0c8ce59aa0602c0271da20a",
+        "result_comment": 5699740170,
+        "actions_run": 35113194598
+      }
+    ]
+  },
+  "verification": {
+    "all60_chunk_hashes_verified": true,
+    "assembled_compressed_sha_verified": true,
+    "git_blob_sha1_verified_from_compressed_bytes": true,
+    "git_blob_sha1": "5a7c63101d01ff5b3cc8d5dc758a0d3b84cff496",
+    "host_original_decompression_roundtrip_verified": true,
+    "independent_local_decompression_roundtrip_verified": true,
+    "decoded_raw_sha256": "d6223381ea8cbf4b4efcb0cc295f60dccfcae36afe0d9fac004438410c152a82",
+    "decoded_rows": 115,
+    "decoded_unique_query_ids": 115
+  },
+  "final_evaluation": {
+    "actions_run": 35112926368,
+    "result_comment": 5699722359,
+    "study": {
+      "bytes": 18063504,
+      "sha256": "ba47bd96eb842d0bb57811e247cbd2ea29de8794c5dd3b289dce24a3032c10b1",
+      "storage": "reconstruct exactly from saved timings and original raw"
+    },
+    "files": [
+      {
+        "bytes": 3216,
+        "git_blob": "4b9ad0e033792329fb0daf18e03255b465876d4f",
+        "path": "outputs/fusion/evaluation/REPORT.md",
+        "sha256": "e7f66c011c451577e89573a843dd6dcb2fbd2ceeb3963f2e69ec44789564836c"
+      },
+      {
+        "bytes": 316916,
+        "git_blob": "f3bd6537a14ffa3759458006eb1ed1668a60f7bf",
+        "path": "outputs/fusion/evaluation/coverage_headroom.json",
+        "sha256": "ec1728065dfa10ce411fbefff6ca9d4b24c8ceaf976470a9fb1fe2dc35254a36"
+      },
+      {
+        "bytes": 1811900,
+        "git_blob": "8bf915aca7fcf3554b04f7683e8857e1a11bcf4c",
+        "path": "outputs/fusion/evaluation/per_query.jsonl",
+        "sha256": "1365eb7e19d1bbcd256544b5b595a4263e5c631dfe79d901276b36173f6784cd"
+      },
+      {
+        "bytes": 809,
+        "git_blob": "8b3d64db1d88b61c59846efbaa39321532b0bc84",
+        "path": "outputs/fusion/evaluation/policy.json",
+        "sha256": "b89c01ce665ab8cac2ae3d5faaef0cfa9317ca797ec4ae8ac309d8fc67d58f48"
+      },
+      {
+        "bytes": 1202132,
+        "git_blob": "6b05c7b1aba6a040b983837ba862cc99fcb61ace",
+        "path": "outputs/fusion/evaluation/slices.json",
+        "sha256": "41c66a40fe041b4e2f6e76ae2f8eacbe762b53f8352621bc9a77e09d03f5abe7"
+      },
+      {
+        "bytes": 1713,
+        "git_blob": "7c2a374712dae93a1ff5c6a4785d36dcdb75d228",
+        "path": "outputs/fusion/evaluation/study_reconstruction_proof.json",
+        "sha256": "b8bf1a3a337bd42ff4bdd212e6969b6f26bb4f634166a780f63a3c229365a4d2"
+      },
+      {
+        "bytes": 9301,
+        "git_blob": "f97fdce27b4df4dff582664500ffe16c730598f9",
+        "path": "outputs/fusion/evaluation/study_timings.json",
+        "sha256": "6af4e2a4fbd7095e3bdd4461485f9a9e6f03792fb34dbfd3218e09a5c7236fcf"
+      },
+      {
+        "bytes": 100072,
+        "git_blob": "e0cf9409d7f010748bbcd327b97ef4d703de0ac9",
+        "path": "outputs/fusion/evaluation/summary.json",
+        "sha256": "0f01d29d8afe4ca146f9acf7384b4b199eebfaccddfb4461084b917d9521ac5c"
+      }
+    ],
+    "tests": {
+      "fusion_recovery_storage_passed": 40,
+      "ledger_passed": 27,
+      "independent_ledger_readback_assertions_passed": 3599
+    },
+    "study_rebuild_byte_identical": true,
+    "four_ledger_files_repeated_byte_identical": true
+  }
+}

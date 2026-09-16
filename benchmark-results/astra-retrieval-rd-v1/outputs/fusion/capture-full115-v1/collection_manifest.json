@@ -1,0 +1,211 @@
+{
+  "schema": "vecna82-provider-export-v1",
+  "status": "complete",
+  "config_sha256": "966683614e4a6f67799c4b6432e8294980bffa8d8cef6b8391e63e43b3ab20df",
+  "run_id": "e2d070f36a104edd92bc7c6da184ff3b",
+  "collector_sha256": "e77f16cc36044c358fc17e36b47cbe0aba08b2a2c9f0499039f1321535d99e76",
+  "canonical_queries_sha256": "3b91dfe26a893192a497a964d3a9ea5f50c595fdaabad000cbc60fc602be0d1a",
+  "expected_query_count": 115,
+  "planned_query_count": 115,
+  "scope": "full_query_projection",
+  "identity": {
+    "searcher_sha256": "6f94bdd147c4b2b29b522a1f4bbbf004fb726fdfdf68a7cb316a4aec9e869e51",
+    "declared_main": "95d63a6abf10c598e0e54af7d2071bedbe542d1e",
+    "searcher_raw_file_sha256": "7b4fd62dc50d687f907cde29bba80a5157e3601bb61ee6fa072441c217757b12",
+    "searcher_source_newline_policy": "LF canonicalized for authority match; actual bytes hashed separately",
+    "runtime_head": "0ee966b8ddfe367fbf5a9bb4ba8301c2d43b5e54",
+    "runtime_config_sha256": "d8a5fbc1ec0eff59e6beb134656c9449c9bb0eab264f8639653cc31f893adba8",
+    "effective_config_sha256": "4bbdde7752b2e94cba55b8e7dfb02094dc8136541ffaf277ba34d0385a7caf56",
+    "collection": {
+      "name": "official_l21_l30_all_v2",
+      "row_count": 322924,
+      "description_sha256": "1e3da787fcadab0b6251e00f6b05fee9abe3888c17a36d0babad843d652bded6",
+      "index_descriptions_sha256": "99b4a5d374b036b1373c77ddbf9e5fe3253edaa3a35fd2374067b002f01e9860",
+      "fields": [
+        "asr",
+        "asr_dense",
+        "asr_sparse",
+        "frame_id",
+        "image_clip_pe_l_14_336",
+        "image_siglip_so400m_384",
+        "ocr",
+        "ocr_dense",
+        "ocr_sparse",
+        "qwen_vl"
+      ],
+      "index_names": [
+        "asr_BM25",
+        "asr_dense_SCANN",
+        "image_clip_pe_l_14_336_SCANN",
+        "image_siglip_so400m_384_SCANN",
+        "ocr_BM25",
+        "ocr_dense_SCANN",
+        "qwen_vl_SCANN"
+      ]
+    },
+    "models": {
+      "language_siglip_so400m-384": {
+        "extractor_class": "ImageSigLIP",
+        "model_class": "CustomTextCLIP",
+        "loaded_state_dict_sha256": "88d5d42b4764d73e26d7777cb47ed4d1c9725ce0afd527835aba4dd29e8a2f88",
+        "tensor_count": 674,
+        "tensor_bytes": 3511841992,
+        "model_config_sha256": null,
+        "model_module_structure_sha256": "058662eeda8691fdfa7d949fe14bafe9c12a74d625164b8a3d8c19402ae98b40",
+        "preprocessing": {
+          "sha256": "01ebb6a4a1dc32d5cb708bb50bd2fab2bd167bcfcd78f65d64710107084671eb",
+          "components": [
+            {
+              "class": "transformers.models.t5.tokenization_t5_fast.T5TokenizerFast",
+              "backend_tokenizer_sha256": "83163441a6ffc1dc9eab1d70c1f5d1d66a815cb173054c640a0b7a10d083640f",
+              "vocab_sha256": "f8e6e05b02715ac977e438a8bc16d73e6b4f625e6d7bf1782af8d9ecb38b27c0",
+              "init_kwargs_sha256": "23e65d8d3df3dab1bdb3ca8cb3517fdcb49f72573c8880e5605054ee994f1db1",
+              "special_tokens_map_sha256": "e68d62a23b92188ebf38b329c3036300f4b92401603718b098fcd8ac63b3d49d",
+              "special_tokens_map_extended_sha256": "e68d62a23b92188ebf38b329c3036300f4b92401603718b098fcd8ac63b3d49d",
+              "model_max_length_sha256": "965e1067e15e3af97bd491f95832b45be21b00d021f6dd485a15e386a1896afd",
+              "padding_side_sha256": "187e87df03ab04bf4b6b4a94666a8033fc292f0e31f2a8416a06275dd0f29e36",
+              "truncation_side_sha256": "187e87df03ab04bf4b6b4a94666a8033fc292f0e31f2a8416a06275dd0f29e36",
+              "clean_up_tokenization_spaces_sha256": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
+              "eos_token_id_sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+              "pad_token_id_sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+              "unk_token_id_sha256": "d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35",
+              "implementation_sha256": "13513f747f515d787b7a2d5cd6ef50ff9d7ca3e9f9c749ab84c2651ef96a2dbf"
+            },
+            {
+              "class": "tokenizers.Tokenizer",
+              "vocab_sha256": "f8e6e05b02715ac977e438a8bc16d73e6b4f625e6d7bf1782af8d9ecb38b27c0",
+              "implementation_sha256": "510d5e23458612433da9f1fe430b5009fb88ba90508ee4340d2397b32c319080"
+            }
+          ],
+          "text_tokenization_bound": true
+        },
+        "extractor_source_sha256": "507d11f154270908e60a62a6aba1a9fb99dc49f9491b91aa975b34857e17a194",
+        "identity_note": "exact loaded state/config identity; not a claimed Hugging Face revision"
+      },
+      "language_qwen_vl": {
+        "extractor_class": "QwenVLEmbedding",
+        "model_class": "SentenceTransformer",
+        "loaded_state_dict_sha256": "a0f97d38f6a4b7a8696c4644c3d481f866bc335df50528e1da89104dbcc2d69c",
+        "tensor_count": 625,
+        "tensor_bytes": 8510128128,
+        "model_config_sha256": null,
+        "model_module_structure_sha256": "59365f30b0baf8928f405f370024c0dd9e96af0e3e6f8451b0c930b4adb8565f",
+        "preprocessing": {
+          "sha256": "538a663621de19b867aadfa1e51401d2b3a7a42b868d52b496b78da249f4c627",
+          "components": [
+            {
+              "class": "transformers.models.qwen2.tokenization_qwen2_fast.Qwen2TokenizerFast",
+              "backend_tokenizer_sha256": "71241c4586582e04d5d51a420bad74d3ef5353bfdac5a53a7ba7440dbf33e350",
+              "vocab_sha256": "f488fa45d324a8bc64c84f0e27b47223872d550f2a6900564f77dfa67ca5ff4d",
+              "init_kwargs_sha256": "2ac7bf28b9421c09914497e8b0773dbfb46cf138f9db21f57cd64ee96df5f8e4",
+              "special_tokens_map_sha256": "94f02d4e8b7a6569bef78a7ff2c3b40744a0fd54e603a9c5a5bdba4d05256a10",
+              "special_tokens_map_extended_sha256": "94f02d4e8b7a6569bef78a7ff2c3b40744a0fd54e603a9c5a5bdba4d05256a10",
+              "chat_template_sha256": "3f17a61bce8baf3dc219ee192c236359dbb23aa1e05578e2be9855f492875af0",
+              "model_max_length_sha256": "54faea9b3eeffce2a5ea906fdd1232a52a55d57d993e5406a572b9a9ea2827d8",
+              "padding_side_sha256": "187e87df03ab04bf4b6b4a94666a8033fc292f0e31f2a8416a06275dd0f29e36",
+              "truncation_side_sha256": "187e87df03ab04bf4b6b4a94666a8033fc292f0e31f2a8416a06275dd0f29e36",
+              "clean_up_tokenization_spaces_sha256": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa",
+              "eos_token_id_sha256": "b4778fde720738498ace5dd4aa258dcfc1f4cdafbbb666da52e5ae2f5c95d7f8",
+              "pad_token_id_sha256": "fe0e2b2040ad8aa0df2608b821ef6767e41ede21db9eb5870bf56c3c0c34c906",
+              "implementation_sha256": "1025a3b86526283bd86a447f0fe2d991d09775b32d3fdcc233c9e447b0611049"
+            },
+            {
+              "class": "transformers.models.qwen3_vl.processing_qwen3_vl.Qwen3VLProcessor",
+              "chat_template_sha256": "3f17a61bce8baf3dc219ee192c236359dbb23aa1e05578e2be9855f492875af0",
+              "configuration_sha256": "0795cb0ae4c95c8987a81a04175c37e999f5f7cef3731b87700e841cebfbb015",
+              "implementation_sha256": "efd8d64aaf608aad1ffb3e6d503d6a99e5227d007df95c1d9fa905d998cda4a9"
+            },
+            {
+              "class": "sentence_transformers.base.modules.transformer.Transformer",
+              "module_configuration_sha256": "47498371d4b7f5b99395096f1d574a1f2717098d7ff0e6e741b91e500ef4a98f",
+              "implementation_sha256": "84d2cd999678e2acf8bc803001d50128dd7f21c145fd14b3119919b174ff75cf"
+            },
+            {
+              "class": "tokenizers.Tokenizer",
+              "vocab_sha256": "f488fa45d324a8bc64c84f0e27b47223872d550f2a6900564f77dfa67ca5ff4d",
+              "implementation_sha256": "510d5e23458612433da9f1fe430b5009fb88ba90508ee4340d2397b32c319080"
+            },
+            {
+              "class": "transformers.models.qwen3_vl.configuration_qwen3_vl.Qwen3VLConfig",
+              "configuration_sha256": "e15881941b081bf8966a894a5215e9ae19212420c64063363ed07b22bee13a94",
+              "implementation_sha256": "177fd0a4dc1b08307c08ca72cf26b8d7dc028ab6ab5975bf650fc14ab8132a83"
+            }
+          ],
+          "text_tokenization_bound": true
+        },
+        "extractor_source_sha256": "714f30696d1e9a1aae5262c73618bba80b6a1e6ce15eb69b2a81825cbd0a09b1",
+        "identity_note": "exact loaded state/config identity; not a claimed Hugging Face revision",
+        "checkpoint_validity": {
+          "status": "VERIFIED_REPAIR_AND_CURRENT_EXHAUSTIVE_CHECKPOINT_EQUALITY",
+          "audit_sha256": "8f459c0f25c62a712acea1ef59e4855e0d8d7428dc8623407ec6db9300790eb8",
+          "sources": {
+            "qwen_vl.py": {
+              "path": "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-fusion-corrected-loader-full115-20260916-tpmux8yw\\worktree\\aic51-src\\aic51\\packages\\analyse\\features\\qwen_vl.py",
+              "sha256": "714f30696d1e9a1aae5262c73618bba80b6a1e6ce15eb69b2a81825cbd0a09b1",
+              "lf_sha256": "18900a46da79c9738c7225f2993955f3c9e02030487b7cedffab0ddcf9f7d177"
+            },
+            "qwen_vl_checkpoint.py": {
+              "path": "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-fusion-corrected-loader-full115-20260916-tpmux8yw\\worktree\\aic51-src\\aic51\\packages\\analyse\\features\\qwen_vl_checkpoint.py",
+              "sha256": "25db0baef4c782e5620ee4efafde8557c3df50c709f4af77cd76d26953e50e45",
+              "lf_sha256": "c1b0335ee855c5aaf8d33f688c28a351a2e8f93f3778e78316cf1ef0087b8169"
+            }
+          },
+          "checkpoint_sha256": "c73fa9caeddeb3ff831d46c085a7a5708343248ca777e90f2d486964464509c1",
+          "checkpoint_bytes": 4255140312,
+          "current_constructor_proof": {
+            "status": "VERIFIED_ALL_CHECKPOINT_TENSORS",
+            "tensor_count": 625,
+            "element_count": 2127532032,
+            "checkpoint_directory": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--Qwen--Qwen3-VL-Embedding-2B\\snapshots\\9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda",
+            "checkpoint_files": [
+              "model.safetensors"
+            ],
+            "checkpoint_revision": "9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda",
+            "helper_source_sha256": "25db0baef4c782e5620ee4efafde8557c3df50c709f4af77cd76d26953e50e45",
+            "mapping_sha256": "a5838db688286ac3feb5bc65ea20f343490feb65e532491d21198bbdaf7a6389",
+            "comparison": "every tensor value equals checkpoint after casting to loaded dtype",
+            "second_model_loaded": false
+          },
+          "model_source": {
+            "path": "C:\\Users\\minhc\\Code\\Vecna\\.venv\\Lib\\site-packages\\transformers\\models\\qwen3_vl\\modeling_qwen3_vl.py",
+            "sha256": "dd63ed3b124232735b3dca1bfa28f9d6b0d3f7182afcb75dde8f3e724b2b22da",
+            "lf_sha256": "dd63ed3b124232735b3dca1bfa28f9d6b0d3f7182afcb75dde8f3e724b2b22da"
+          },
+          "loading_info_authority": "Pinned prior audit: all four lists empty; this constructor repeats exhaustive tensor equality",
+          "validity_scope": "Corrected query loader only; corpus feature/index lineage and historical C loader are unresolved"
+        }
+      }
+    },
+    "provider_loader_authority": "Reviewed Qwen checkpoint repair; exact main fusion transform unchanged",
+    "model_declarations_sha256": "a53511cb6324b6a54e9513675402699969f95e9cf206d9df5c632698491606f0",
+    "device": "cpu",
+    "cpu_threading": {
+      "requested_intraop_threads": 6,
+      "actual_intraop_threads": 6,
+      "actual_interop_threads": 14
+    },
+    "python": "3.12.1",
+    "packages": {
+      "torch": "2.8.0",
+      "numpy": "1.26.4",
+      "transformers": "4.57.6",
+      "sentence-transformers": "5.4.0",
+      "pymilvus": "3.0.0",
+      "open-clip-torch": "3.3.0"
+    },
+    "transformations": {
+      "query_expansion": false,
+      "translation": false,
+      "reranking": false,
+      "yolo": false,
+      "temporal_parser": false,
+      "segment_clustering": false
+    },
+    "disabled_unselected_model_loading": true,
+    "production_database_mutations": false
+  },
+  "ground_truth_read": false,
+  "rows_written": 115,
+  "run_identity_sha256": "f0d32893564111064d47f6f2f72f7b03dbb14ebbfbb3d05c48e49e30ef165755",
+  "rankings_sha256": "d6223381ea8cbf4b4efcb0cc295f60dccfcae36afe0d9fac004438410c152a82"
+}

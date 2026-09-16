@@ -1,0 +1,146 @@
+{
+  "checks": 3611,
+  "failures": [],
+  "primary": {
+    "none": 82,
+    "unresolved": 7,
+    "candidate_generation_missing_event": 18,
+    "candidate_generation_missing_video": 6
+  },
+  "remaining": [
+    "p0_q02",
+    "p0_q17",
+    "p0_q18",
+    "p0_q21",
+    "p0_q22",
+    "p0_q23",
+    "p0_q24",
+    "p1_q02",
+    "p1_q13",
+    "p1_q14",
+    "p1_q18",
+    "p1_q25",
+    "p2_q01",
+    "p2_q03",
+    "p2_q07",
+    "p2_q17",
+    "p2_q18",
+    "p2_q25",
+    "p2_q27",
+    "p2_q29",
+    "p2_q30",
+    "p3_q03",
+    "p3_q11",
+    "p3_q17",
+    "p3_q19",
+    "p3_q21",
+    "p3_q24",
+    "p3_q30",
+    "p3_q32",
+    "p3_q34",
+    "p3_q35"
+  ],
+  "additional_fusion_successes": [
+    "p1_q04",
+    "p2_q23",
+    "p3_q13",
+    "p3_q26",
+    "p3_q27"
+  ],
+  "reranker_rescues_fusion_missed": [
+    "p0_q20",
+    "p2_q11",
+    "p2_q28",
+    "p3_q16",
+    "p3_q29"
+  ],
+  "fusion_preserved_reranker_loss": [
+    "p2_q14"
+  ],
+  "source": {
+    "sourceChannels": 38,
+    "sourceQueries": 30,
+    "ocrInspected": 20,
+    "asrUnheard": 18,
+    "asrHeard": 0,
+    "visibilityPairs": 76,
+    "anchors": 31,
+    "points": 16,
+    "unknowns": 15
+  },
+  "global_arm": "fusion_current_control",
+  "schema": "vecna82-independent-final-ledger-review-v1",
+  "reference_sources": {
+    "canonical_truth": {
+      "bytes": 278815,
+      "commit": "897111a6f3fc65b42773f564357e7eb4ce6a19dd",
+      "full_queries": 115,
+      "git_blob_sha1": "7a1ea48bff3d33336ff37f3fb51da699c4e701c0",
+      "path": "benchmark-results/astra-retrieval-rd-v1/inputs/canonical_truth.jsonl",
+      "repository": "JimmyK300/Vecna",
+      "scoreable_queries": 113,
+      "sha256": "63f80eb6ff54ef3c623f6ae4926eba404dac8bb5543b86e31f8fa0da842b4c9f"
+    },
+    "embedded_projection": {
+      "bytes": 202876,
+      "content": "Canonical identity/scoreability projection; scoreable C frozen metrics and candidate pools; selected B/global and matched-Qwen score projections.",
+      "serialization": "UTF-8 JSON.stringify with embedded insertion order and no trailing newline",
+      "sha256": "b750ef1dd17171bfddd3831f64a8c458c2122ddd3b7c44bec0190a07da71840c"
+    },
+    "fresh_packet_b_compact": {
+      "bytes": 189118,
+      "embedded_arms": [
+        "fusion_current_control",
+        "qwen_only_matched"
+      ],
+      "git_blob_api_url": "https://api.github.com/repos/JimmyK300/Vecna/git/blobs/a228a125ccde801146263e300b7c6d48080c6050",
+      "git_blob_sha1": "a228a125ccde801146263e300b7c6d48080c6050",
+      "provider_rankings_sha256": "d6223381ea8cbf4b4efcb0cc295f60dccfcae36afe0d9fac004438410c152a82",
+      "queries": 113,
+      "repository": "JimmyK300/Vecna",
+      "run_identity_sha256": "f0d32893564111064d47f6f2f72f7b03dbb14ebbfbb3d05c48e49e30ef165755",
+      "schema": "vecna82-fusion-compact-per-query-v1",
+      "scope": "Immutable projection of all six scored arms; this validator embeds only the selected global arm and its same-run Qwen control. Historical C is a separate capture.",
+      "sha256": "ef360ed383421baa8c6dfb7e280db6f01139888714e65737f318517beac260b9"
+    },
+    "historical_packet_c": {
+      "bytes": 488663,
+      "commit": "897111a6f3fc65b42773f564357e7eb4ce6a19dd",
+      "embedded_scoreable_queries": 113,
+      "full_queries": 115,
+      "git_blob_sha1": "25539c5a84d597c8783c3bd1bfa65f57b5ba956a",
+      "path": "benchmark-results/astra-retrieval-rd-v1/outputs/reranker/per_query.jsonl",
+      "repository": "JimmyK300/Vecna",
+      "sha256": "e5fa520044e0329611aa3f9008280086d3bb3f9834c175c3a27aef7e65eddbe2"
+    }
+  },
+  "validator": {
+    "sha256": "1ff1a3180faa0e32bec1dc3ee5afda861c60a7ac45063a5f8e9e14c56cd3e65b",
+    "runtime": "Node.js v24.19.0",
+    "dependencies": "Node.js standard library only",
+    "new_model_or_retrieval_calls": false
+  },
+  "files": {
+    "outputs/failure-ledger/failure_ledger.jsonl": {
+      "bytes": 1872464,
+      "sha256": "f344d6a572fcccaf7ee927774f0f76fd22008820514298f23a7ffeefd16abd6d"
+    },
+    "outputs/failure-ledger/summary.json": {
+      "bytes": 216722,
+      "sha256": "2a551624bd73867eec85f5b39a9d7a5628665b0dc196e1b8bc50abc03e715b7a"
+    },
+    "outputs/failure-ledger/provenance.json": {
+      "bytes": 6666,
+      "sha256": "415af2c149bc49b555c1f29a94b3142c6ce44370ef76060f572eff9c53e3496b"
+    },
+    "outputs/failure-ledger/REPORT.md": {
+      "bytes": 4789,
+      "sha256": "15167552c19a96f58f9b4526bd6a6df680a489da0e786dc91a3db8679a34e162"
+    },
+    "outputs/fusion/evaluation/coverage_headroom.json": {
+      "bytes": 316916,
+      "sha256": "ec1728065dfa10ce411fbefff6ca9d4b24c8ceaf976470a9fb1fe2dc35254a36"
+    }
+  },
+  "status": "PASSED"
+}

@@ -14,6 +14,7 @@ from fusion_study import ContractError, PROVIDERS, _rank, current_scores, digest
 
 RUN_ID = "f0d32893564111064d47f6f2f72f7b03dbb14ebbfbb3d05c48e49e30ef165755"
 PINNED = {
+    "code/analyze_reranker.py": "2b9b2624fda6582c1ba894ecb8ec39e90b27d9d6258f8c75676773bb36bd2bb1",
     "code/fusion_study.py": "57ded10b78c0a6649008d15e61882e3b52d2eb0b5cf63b57a7133a6a9da2a292",
     "outputs/fusion/frozen_config.json": "ff7a6f817579a2ba65572734016d51164f454a9d5012177841a458bbdca34b1a",
     "outputs/fusion/queries.jsonl": "3b91dfe26a893192a497a964d3a9ea5f50c595fdaabad000cbc60fc602be0d1a",

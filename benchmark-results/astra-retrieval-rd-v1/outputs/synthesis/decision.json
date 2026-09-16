@@ -1,0 +1,155 @@
+{
+  "admission": {
+    "dense_providers": "remain disabled",
+    "eligible_set": "Exact exported candidate_tie_order union; preserve captured native quote/query eligibility.",
+    "frame_budget": 100,
+    "per_query_policy": false,
+    "per_video_cap": null,
+    "post_admission_order": "Existing current-control score computed over full frozen union, descending; original candidate_tie_order for ties.",
+    "provider_depth": 100,
+    "provider_order": [
+      "qwen",
+      "siglip",
+      "ocr_sparse",
+      "asr_sparse"
+    ],
+    "renormalize_after_admission": false,
+    "spacing_rule": null,
+    "turn_rule": "Advance through this provider's saved list to its next eligible unseen exact frame ID; admit one. Skip exhausted providers. Repeat fixed cyclic order until min(100,eligible union size)."
+  },
+  "cohort": {
+    "b_capture_query_hash_map_serialization": "Frozen fusion config digest_json of the canonical query_id to query_text_sha256 mapping.",
+    "b_capture_query_hash_map_sha256": "b2aa8de3bce8d24c5969fcf5a00757a7246a5182e4041cc2774559dbf49c6208",
+    "canonical_query_projection_serialization": "UTF-8 compact sorted-key JSON of the query-ID-ordered list of {query_id,query}; unchanged full query text.",
+    "canonical_query_projection_sha256": "bd15d05f6c8f00597cced4f50914547ca0b3de75a9e57ee262a4f4ba292485aa",
+    "canonical_truth_sha256": "63f80eb6ff54ef3c623f6ae4926eba404dac8bb5543b86e31f8fa0da842b4c9f",
+    "collected": 115,
+    "excluded": [
+      "p0_q15",
+      "p3_q09"
+    ],
+    "historical_empty_query_scope": "p2_q17 is empty only in historical C; fresh B is scored normally",
+    "scored": 113
+  },
+  "control": "fusion_current_control",
+  "headroom_checkpoint": {
+    "additional_partial_possible_rescues": {
+      "p2_q29": {
+        "control_targets": 0,
+        "required_targets": 4,
+        "union_targets": 2
+      }
+    },
+    "analysis_projection_complete_targets": 50,
+    "analysis_projection_some_target_loss_queries": 30,
+    "complete_headroom_case_already_successful_in_observed_arm_union": [
+      "p0_q20"
+    ],
+    "complete_headroom_cases_among_final_remaining_misses": [
+      "p0_q02",
+      "p2_q07"
+    ],
+    "complete_target_possible_rescues": [
+      "p0_q02",
+      "p0_q20",
+      "p2_q07"
+    ],
+    "current100_complete_targets": 78,
+    "current100_video": 92,
+    "qualification": "Saved-set upper bounds, not expected effects. Representative loss is analysis-only, not a demonstrated serving/C timeline defect.",
+    "union_complete_targets": 81,
+    "union_video": 101
+  },
+  "implemented": false,
+  "inputs": {
+    "config_file_sha256": "ff7a6f817579a2ba65572734016d51164f454a9d5012177841a458bbdca34b1a",
+    "final_d": {
+      "bytes": 1872464,
+      "path": "outputs/failure-ledger/failure_ledger.jsonl",
+      "primary_failure_counts": {
+        "candidate_generation_missing_event": 18,
+        "candidate_generation_missing_video": 6,
+        "none": 82,
+        "unresolved": 7
+      },
+      "remaining_misses": 31,
+      "scope": "Descriptive success union across observed historical/current arms, not a deployable per-query routing policy.",
+      "sha256": "f344d6a572fcccaf7ee927774f0f76fd22008820514298f23a7ffeefd16abd6d",
+      "summary_path": "outputs/failure-ledger/summary.json",
+      "summary_sha256": "2a551624bd73867eec85f5b39a9d7a5628665b0dc196e1b8bc50abc03e715b7a"
+    },
+    "headroom": {
+      "bytes": 316916,
+      "independent_d_coverage_parity_queries": 113,
+      "path": "outputs/fusion/evaluation/coverage_headroom.json",
+      "sha256": "ec1728065dfa10ce411fbefff6ca9d4b24c8ceaf976470a9fb1fe2dc35254a36",
+      "study_sha256": "ba47bd96eb842d0bb57811e247cbd2ea29de8794c5dd3b289dce24a3032c10b1"
+    },
+    "raw_capture_sha256": "d6223381ea8cbf4b4efcb0cc295f60dccfcae36afe0d9fac004438410c152a82",
+    "run_identity_sha256": "f0d32893564111064d47f6f2f72f7b03dbb14ebbfbb3d05c48e49e30ef165755",
+    "scorer_sha256": "82cbc5d7f5b6309f747165f8f278d4c3b66e9db83092c1808d2f72d1f8e76316"
+  },
+  "name": "fixed_budget_provider_balanced_admission100",
+  "negative_gate": "No complete-target rescue, or no target-coverage improvement with required-target regressions; otherwise inconclusive unless all positive gates pass.",
+  "new_model_or_retrieval_calls": false,
+  "positive_gate": {
+    "integration_authorized": false,
+    "maximum_accepted_video_presence_regressions": 0,
+    "maximum_complete_target_regressions": 0,
+    "mean_fractional_coverage_delta": "greater than0",
+    "minimum_complete_target_rescues": 2,
+    "positive_ci_lower_bound_required": false
+  },
+  "primary_endpoints": [
+    "all_required_targets_present_in_admitted100",
+    "mean_fractional_required_target_coverage_in_admitted100"
+  ],
+  "proposal_count": 1,
+  "question": "At the same100-frame budget, does one fixed provider-balanced admission rule preserve required-target evidence that current score-based admission excludes?",
+  "schema": "vecna82-packet-e-proposal-v1",
+  "scope_exclusions": [
+    "no implementation in Packet E",
+    "no new model or provider collection",
+    "no query decomposition/rewriting",
+    "no weight/order/quota/depth/spacing tuning",
+    "no per-query oracle or routing",
+    "no corpus re-embedding/training",
+    "no production integration"
+  ],
+  "source_audit": {
+    "asr_clips_captured_unheard": 18,
+    "asr_clips_heard": 0,
+    "ocr_frames_reviewed": 20,
+    "sampled_critical_text_gaps": 5,
+    "scope": "Anchor-level observations; extraction dominance over113 is not established."
+  },
+  "status": "READY_FOR_PARENT_REVIEW",
+  "stop_conditions": [
+    "changed canonical IDs/text or113/115 mapping",
+    "mixed or changed source/config/capture identity",
+    "active provider invalid or missing",
+    "current control replay fails",
+    "output budget differs",
+    "no saved-union headroom",
+    "all admitted sets identical to control"
+  ],
+  "uncertainty": {
+    "interval": 0.95,
+    "method": "ordinary nonparametric percentile bootstrap",
+    "qualification": "Only3 binary rescues are possible; even3/3 no-loss yields a zero lower percentile bound. Shared videos/templates and provisional truth prevent a generalization claim.",
+    "resamples": 10000,
+    "seed": 82,
+    "unit": "paired query"
+  },
+  "validation": {
+    "actions_run": 35112926368,
+    "fusion_recovery_storage_tests_passed": 40,
+    "independent_d_readback_assertions_passed": 3611,
+    "ledger_repeat_byte_identical": true,
+    "ledger_repeat_files": 4,
+    "ledger_tests_passed": 27,
+    "new_model_or_retrieval_calls": 0,
+    "result_comment": 5699722359,
+    "study_rebuild_byte_identical": true
+  }
+}

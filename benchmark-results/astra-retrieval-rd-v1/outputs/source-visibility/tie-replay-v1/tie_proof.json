@@ -1,0 +1,3310 @@
+{
+  "all_candidate_membership_and_score_sequences_preserved": true,
+  "capture_manifest_sha256": "f5669d5de204b5c46c7ccaa058150ff5d8cb2cbe1ebf2a9622df30889a5ec855",
+  "captured_rankings_sha256": "b1c1bcbdaacdea94c9fe77d0e67d8ac994504123195cf043305b9def2cf9bd19",
+  "configuration_sha256": "4cce109c09984cade9fcda2787e61c91b75f789b6d9b77347ad3361f89076726",
+  "evaluator_sha256": "8bf1ccaddb2775c501de2e20abf795907eff1d9e773c72fa6efe276fddb707a9",
+  "frozen_sample_sha256": "b4fd944228a033c37ea4d69ad757ceeae9635bfb026cf018e0d60f5b3c661be9",
+  "interpretation": "Observed current-main order depends on Python string hash seed within exact-score ties. This is reproducibility evidence, not a seeded retrieval arm or a tuned seed recommendation.",
+  "predeclared_seeds": [
+    0,
+    1,
+    82
+  ],
+  "queries_sha256": "68b315a98313fe8609b4fff460d65c0daebe79f4aff35d7dd75d17b5afd461b7",
+  "query_channel_count": 38,
+  "replay_sha256": {
+    "0": "bd4b040de85a3797ba62162285677fcbeff878b5271c62bddbfe32dc2115e8ac",
+    "1": "83226bc8649c3d4b861a4f1ba1cbb92175705bef2abc8545c8e5ecca94d3414f",
+    "82": "d9abc4ca6ecc8a0b35d45fafa21acfef66cb210ac92e49956cd22166d7201eaf"
+  },
+  "rows": [
+    {
+      "channel": "ocr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p0_q13",
+      "scores": {
+        "0": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "1": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "82": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "host": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "ocr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p0_q19",
+      "scores": {
+        "0": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "1": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "82": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "host": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "ocr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p0_q21",
+      "scores": {
+        "0": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "1": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "82": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "host": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "ocr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p1_q17",
+      "scores": {
+        "0": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "1": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "82": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "host": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "ocr",
+      "distinct_effective_orders_across_host_and_seeds": 3,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p1_q18",
+      "scores": {
+        "0": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "1": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "82": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "host": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "ocr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p1_q24",
+      "scores": {
+        "0": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 62,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            62
+          ]
+        },
+        "1": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 62,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            62
+          ]
+        },
+        "82": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 62,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            62
+          ]
+        },
+        "host": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 62,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            62
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "ocr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p1_q21",
+      "scores": {
+        "0": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "1": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "82": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "host": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "ocr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p2_q15",
+      "scores": {
+        "0": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 2,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.5,
+            "R@1": 0.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            2
+          ]
+        },
+        "1": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 2,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.5,
+            "R@1": 0.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            2
+          ]
+        },
+        "82": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 2,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.5,
+            "R@1": 0.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            2
+          ]
+        },
+        "host": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 2,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.5,
+            "R@1": 0.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            2
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "ocr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p2_q26",
+      "scores": {
+        "0": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "1": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "82": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "host": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "ocr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p2_q25",
+      "scores": {
+        "0": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "1": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "82": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "host": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "ocr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p3_q04",
+      "scores": {
+        "0": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "1": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "82": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "host": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        }
+      },
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation"
+    },
+    {
+      "channel": "ocr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p3_q02",
+      "scores": {
+        "0": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "1": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "82": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "host": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        }
+      },
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation"
+    },
+    {
+      "channel": "ocr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p3_q05",
+      "scores": {
+        "0": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "1": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "82": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "host": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        }
+      },
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation"
+    },
+    {
+      "channel": "ocr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p3_q35",
+      "scores": {
+        "0": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "1": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "82": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "host": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        }
+      },
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation"
+    },
+    {
+      "channel": "ocr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p0_q20",
+      "scores": {
+        "0": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        },
+        "1": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        },
+        "82": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        },
+        "host": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "ocr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p1_q03",
+      "scores": {
+        "0": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "1": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "82": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "host": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "ocr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p1_q23",
+      "scores": {
+        "0": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "1": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "82": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "host": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "ocr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p2_q13",
+      "scores": {
+        "0": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "1": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "82": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "host": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "ocr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p2_q23",
+      "scores": {
+        "0": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "1": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "82": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "host": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "ocr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p2_q24",
+      "scores": {
+        "0": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 4,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.25,
+            "R@1": 0.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            4
+          ]
+        },
+        "1": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 4,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.25,
+            "R@1": 0.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            4
+          ]
+        },
+        "82": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 4,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.25,
+            "R@1": 0.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            4
+          ]
+        },
+        "host": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 4,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.25,
+            "R@1": 0.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            4
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "asr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p0_q02",
+      "scores": {
+        "0": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 15,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.06666666666666667,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 1.0,
+            "R@5": 0.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            15
+          ]
+        },
+        "1": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 16,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.0625,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 1.0,
+            "R@5": 0.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            16
+          ]
+        },
+        "82": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 14,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.07142857142857142,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 1.0,
+            "R@5": 0.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            14
+          ]
+        },
+        "host": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 15,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.06666666666666667,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 1.0,
+            "R@5": 0.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            15
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "asr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p0_q19",
+      "scores": {
+        "0": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 3,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.3333333333333333,
+            "R@1": 0.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            3
+          ]
+        },
+        "1": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        },
+        "82": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 8,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.125,
+            "R@1": 0.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 0.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            8
+          ]
+        },
+        "host": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 10,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.1,
+            "R@1": 0.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 0.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            10
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "asr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p1_q17",
+      "scores": {
+        "0": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "1": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "82": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "host": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "asr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p1_q24",
+      "scores": {
+        "0": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 15,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.06666666666666667,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 1.0,
+            "R@5": 0.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            15
+          ]
+        },
+        "1": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 13,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.07692307692307693,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 1.0,
+            "R@5": 0.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            13
+          ]
+        },
+        "82": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 13,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.07692307692307693,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 1.0,
+            "R@5": 0.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            13
+          ]
+        },
+        "host": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 16,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.0625,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 1.0,
+            "R@5": 0.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            16
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "asr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p2_q26",
+      "scores": {
+        "0": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "1": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "82": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "host": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "asr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p2_q28",
+      "scores": {
+        "0": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "1": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "82": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "host": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "asr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p3_q04",
+      "scores": {
+        "0": {
+          "all_required_targets_present": true,
+          "family": "p3_range",
+          "first_success_rank": 3,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.3333333333333333,
+            "R@1": 0.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            3
+          ]
+        },
+        "1": {
+          "all_required_targets_present": true,
+          "family": "p3_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        },
+        "82": {
+          "all_required_targets_present": true,
+          "family": "p3_range",
+          "first_success_rank": 3,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.3333333333333333,
+            "R@1": 0.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            3
+          ]
+        },
+        "host": {
+          "all_required_targets_present": true,
+          "family": "p3_range",
+          "first_success_rank": 3,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.3333333333333333,
+            "R@1": 0.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            3
+          ]
+        }
+      },
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation"
+    },
+    {
+      "channel": "asr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p3_q08",
+      "scores": {
+        "0": {
+          "all_required_targets_present": true,
+          "family": "p3_range",
+          "first_success_rank": 3,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.3333333333333333,
+            "R@1": 0.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            3
+          ]
+        },
+        "1": {
+          "all_required_targets_present": true,
+          "family": "p3_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        },
+        "82": {
+          "all_required_targets_present": true,
+          "family": "p3_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        },
+        "host": {
+          "all_required_targets_present": true,
+          "family": "p3_range",
+          "first_success_rank": 2,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.5,
+            "R@1": 0.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            2
+          ]
+        }
+      },
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation"
+    },
+    {
+      "channel": "asr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p3_q18",
+      "scores": {
+        "0": {
+          "all_required_targets_present": true,
+          "family": "p3_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        },
+        "1": {
+          "all_required_targets_present": true,
+          "family": "p3_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        },
+        "82": {
+          "all_required_targets_present": true,
+          "family": "p3_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        },
+        "host": {
+          "all_required_targets_present": true,
+          "family": "p3_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        }
+      },
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation"
+    },
+    {
+      "channel": "asr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p0_q16",
+      "scores": {
+        "0": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 34,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            34
+          ]
+        },
+        "1": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 34,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            34
+          ]
+        },
+        "82": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 34,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            34
+          ]
+        },
+        "host": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 34,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            34
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "asr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p0_q20",
+      "scores": {
+        "0": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "1": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "82": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "host": {
+          "all_required_targets_present": false,
+          "family": "historical_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "asr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p2_q23",
+      "scores": {
+        "0": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 24,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            24
+          ]
+        },
+        "1": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 24,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            24
+          ]
+        },
+        "82": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 25,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            25
+          ]
+        },
+        "host": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 24,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            24
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "asr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p2_q21",
+      "scores": {
+        "0": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        },
+        "1": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        },
+        "82": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        },
+        "host": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "asr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p3_q06",
+      "scores": {
+        "0": {
+          "all_required_targets_present": true,
+          "family": "p3_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        },
+        "1": {
+          "all_required_targets_present": true,
+          "family": "p3_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        },
+        "82": {
+          "all_required_targets_present": true,
+          "family": "p3_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        },
+        "host": {
+          "all_required_targets_present": true,
+          "family": "p3_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        }
+      },
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation"
+    },
+    {
+      "channel": "asr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p3_q14",
+      "scores": {
+        "0": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "1": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "82": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "host": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        }
+      },
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation"
+    },
+    {
+      "channel": "asr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p0_q01",
+      "scores": {
+        "0": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        },
+        "1": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        },
+        "82": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        },
+        "host": {
+          "all_required_targets_present": true,
+          "family": "historical_range",
+          "first_success_rank": 1,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "metrics": {
+            "MRR@20": 1.0,
+            "R@1": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "R@5": 1.0
+          },
+          "rank_status": "observed",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 1.0,
+          "target_first_ranks": [
+            1
+          ]
+        }
+      },
+      "truth_tier": "frozen_headless_benchmark_truth"
+    },
+    {
+      "channel": "asr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p3_q24",
+      "scores": {
+        "0": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "1": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "82": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "host": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        }
+      },
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation"
+    },
+    {
+      "channel": "asr",
+      "distinct_effective_orders_across_host_and_seeds": 4,
+      "equal_scores_and_membership_preserved": true,
+      "query_id": "p3_q05",
+      "scores": {
+        "0": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "1": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "82": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        },
+        "host": {
+          "all_required_targets_present": false,
+          "family": "p3_range",
+          "first_success_rank": null,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "metrics": {
+            "MRR@20": 0.0,
+            "R@1": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "R@5": 0.0
+          },
+          "rank_status": "not_observed_within_100",
+          "retained_depth": 100,
+          "target_coverage_at_depth": 0.0,
+          "target_first_ranks": [
+            null
+          ]
+        }
+      },
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation"
+    }
+  ],
+  "rows_with_process_seed_order_variation": 38,
+  "schema": "vecna82-sparse-tie-proof-v1",
+  "totals": {
+    "asr": {
+      "0": {
+        "MRR@20_mean": 0.28518518518518515,
+        "range_or_event_R@1": 4.0,
+        "range_or_event_R@20": 9.0,
+        "range_or_event_R@5": 7.0
+      },
+      "1": {
+        "MRR@20_mean": 0.39663461538461536,
+        "range_or_event_R@1": 7.0,
+        "range_or_event_R@20": 9.0,
+        "range_or_event_R@5": 7.0
+      },
+      "82": {
+        "MRR@20_mean": 0.31148249898249897,
+        "range_or_event_R@1": 5.0,
+        "range_or_event_R@20": 9.0,
+        "range_or_event_R@5": 6.0
+      },
+      "host": {
+        "MRR@20_mean": 0.28125,
+        "range_or_event_R@1": 4.0,
+        "range_or_event_R@20": 9.0,
+        "range_or_event_R@5": 6.0
+      }
+    },
+    "ocr": {
+      "0": {
+        "MRR@20_mean": 0.0875,
+        "range_or_event_R@1": 1.0,
+        "range_or_event_R@20": 3.0,
+        "range_or_event_R@5": 3.0
+      },
+      "1": {
+        "MRR@20_mean": 0.0875,
+        "range_or_event_R@1": 1.0,
+        "range_or_event_R@20": 3.0,
+        "range_or_event_R@5": 3.0
+      },
+      "82": {
+        "MRR@20_mean": 0.0875,
+        "range_or_event_R@1": 1.0,
+        "range_or_event_R@20": 3.0,
+        "range_or_event_R@5": 3.0
+      },
+      "host": {
+        "MRR@20_mean": 0.0875,
+        "range_or_event_R@1": 1.0,
+        "range_or_event_R@20": 3.0,
+        "range_or_event_R@5": 3.0
+      }
+    }
+  },
+  "truth_sha256": "63f80eb6ff54ef3c623f6ae4926eba404dac8bb5543b86e31f8fa0da842b4c9f"
+}

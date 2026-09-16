@@ -52,3 +52,27 @@ The broker's Windows patch envelope is normalized to LF before its expected patc
 Broker runs export review artifacts from disposable clones with unchanged final HEAD. GitHub publication is performed separately on owned review branches. Artifact retention is finite; published manifests and lossless payloads must be sufficient to reconstruct results without relying only on an expiring Actions run. Timings came from a shared CPU host and are not isolated performance benchmarks.
 
 No main merge, model training, full-corpus re-embedding, query rewriting, production fusion integration or new model-family experiment is included. Packet E is a proposal only.
+
+## Final D input and reconstruction identity
+
+The final synthesis generation uses D `402fc03645a3ace6c1cdaffab26ef621b02c68d2`, B storage/analysis `5ea6195fdfb4f895f378bac3c55c0d7bcb1c4353`, source `8c71336d73876d7c31292b453c636fa39efbd921`, C outputs `897111a6f3fc65b42773f564357e7eb4ce6a19dd` and A summary `e08ef662bb0f02162b4aa72288729c71936bae90`. The final ledger provenance hashes all 49 consumed inputs before and after generation.
+
+The shared scorer is B's frozen `code/analyze_reranker.py` SHA-256 `2b9b2624fda6582c1ba894ecb8ec39e90b27d9d6258f8c75676773bb36bd2bb1`. The later C copy adds only qualification prose to report rendering; its scoring logic is unchanged. Current C outputs and loader qualification evidence are retained alongside the frozen B scorer.
+
+The final [combined host validation](https://github.com/JimmyK300/ai-routing-hub/actions/runs/35112926368) passed 40 fusion/recovery/storage tests and 27 ledger tests. It regenerated B from the exact original raw capture, independently rescored all saved arms and both text providers, froze only the two per-arm timing fields, and reproduced the complete study byte for byte. It then generated D with `--require-complete` and repeated all four output files byte for byte. No model or retrieval call occurred.
+
+| Final artifact | SHA-256 |
+|---|---|
+| Reconstructible study | `ba47bd96eb842d0bb57811e247cbd2ea29de8794c5dd3b289dce24a3032c10b1` |
+| Study timing sidecar, 9,301 bytes | `6af4e2a4fbd7095e3bdd4461485f9a9e6f03792fb34dbfd3218e09a5c7236fcf` |
+| Exact reconstruction proof | `b8bf1a3a337bd42ff4bdd212e6969b6f26bb4f634166a780f63a3c229365a4d2` |
+| Failure ledger, 1,872,464 bytes | `f344d6a572fcccaf7ee927774f0f76fd22008820514298f23a7ffeefd16abd6d` |
+| D summary | `2a551624bd73867eec85f5b39a9d7a5628665b0dc196e1b8bc50abc03e715b7a` |
+| D provenance | `415af2c149bc49b555c1f29a94b3142c6ce44370ef76060f572eff9c53e3496b` |
+| Saved-set headroom | `ec1728065dfa10ce411fbefff6ca9d4b24c8ceaf976470a9fb1fe2dc35254a36` |
+
+The exact study serialization was proved on Windows Python3.12.1. Platform/libm differences must fail the full study SHA gate; they must never be silently accepted as the same snapshot. Use the recorded runtime for byte-exact reconstruction. A fresh timing generation may be scored separately, with a new summary/study identity and all compact ranks/coverage verified.
+
+The final compressed transport bundle was independently checked for ZIP/patch hashes, compressed and decoded SHA-256, gzip CRC, each original file hash and exact UTF-8 round trip. Publication selects the verified original files. The broker's full review patch also contains temporary checkout newline differences; it is not applied wholesale.
+
+The separate PR #90 correctness implementation is tested at `fc91800b9bb1c280696fe81dbfb76e38598b798e` and published with evidence at `00f10bda20b757e0e0a85a43fd52b8d6927e495d`. It is not inserted into any frozen Packet82 capture or score.

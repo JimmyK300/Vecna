@@ -2,7 +2,7 @@
 
 **Recommendation:** retain the current fusion rule on the tested configuration; keep the historical reranker experimental or operator-triggered; review the separately verified Qwen loading repair before any fresh use of that wrapper. The native ordered-image result supports a narrow ranking signal on the bounded temporal pool, without evidence of event localization.
 
-**Publication status:** A and C are complete in draft PRs. B and the 38-row dense text audit have completed capture, scoring and independent checks; lossless evidence publication is in progress after the scratch environment disconnected. Final D classification and the single unimplemented E proposal are being assembled. No merge to main is requested or performed.
+**Publication status:** Packets0–D are complete with their recorded limitations, and Packet E is one unimplemented proposal. Source, sparse/dense visibility, the Qwen loading repair and the separate deterministic-tie fix are available on draft review branches. No merge to main is requested or performed.
 
 ## Cohort and interpretation
 
@@ -47,7 +47,7 @@ The lower-level metrics show why the scoring surface matters:
 | Softmax | 16 / 34 / 37 / 39 | 4 / 19 / 21 / 26 | 0.084650 |
 | Matched Qwen | 47 / 65 / 71 / 78 | 31 / 52 / 58 / 61 | 0.352539 |
 
-The original offline mean fusion CPU times were 0.8113 ms current, 0.7088 RRF, 0.4040 min-max, 0.6188 robust-z and 0.4823 softmax. They exclude retrieval and model inference, and come from a shared host. The recovery replay preserves the original capture and all six primary metrics; its timing-dependent study hash is explicitly a new analysis identity.
+The original scratch/Linux offline mean fusion CPU times were 0.8113 ms current, 0.7088 RRF, 0.4040 min-max, 0.6188 robust-z and 0.4823 softmax. They exclude retrieval and model inference and are not an isolated performance benchmark. The separate Windows recovery CPU clock is quantized: zero median or p95 readings must not be interpreted as free work. Its wall-clock timings are recorded with that replay. The recovery replay preserves the original capture and all six primary metrics; its timing-dependent study hash is explicitly a new analysis identity.
 
 The complete provider union contains an accepted video for 101/113 queries; current fusion's first100 frames contain one for 92/113. All-required-target coverage is 81 in the union and 78 in current first100 frames. Three full-target opportunities remain between those surfaces: `p0_q02`, `p0_q20`, `p2_q07`; `p2_q29` has an additional fractional opportunity from 0 to 0.5.
 
@@ -95,16 +95,31 @@ The OCR/ASR sample is frozen at 38 query/channel pairs across 30 queries. All 20
 |---|---:|---:|---:|---:|
 | Query/channel pairs | 20 | 20 | 18 | 18 |
 | Accepted video within100 hits | 7 | 9 | 13 | 14 |
-| Any required target within100 hits | 4 | 7 | 11 | 12 |
+| All current targets within100 hits | 4 | 7 | 11 | 12 |
 | Same-video/exact-text repeat excess | 344/2000 | 243/2000 | 1682/1800 | 1599/1800 |
 
 OCR target coverage has 3 pairs reached by both methods, 4 by dense only, 1 by sparse only and 12 by neither. ASR has 11 both, 1 dense only, 0 sparse only and 6 neither. Dense scoring matched 731/731 checked text projections and reproduced all four output files byte-for-byte. All six consumed BGE files and 389 active tensors / 566,705,152 elements were verified. No frozen query truncated at 1024 tokens.
 
-Sparse equal-score frame order varies with process hash seed. ASR main-eligible target R@1 is 4/18 on the captured host order and 4/18, 7/18, 5/18 for seeds 0, 1, 82; R@20 remains9/18. All 152 host/seed score objects were independently reproduced and no favorable seed was selected. Issue #89 tracks the correctness defect separately.
+Sparse equal-score frame order varies with process hash seed. The independent dense audit also finds 36/38 order changes confined to exact equal-score groups, preserving all 38 complete score sequences. ASR main-eligible target R@1 is 4/18 on the captured host order and 4/18, 7/18, 5/18 for seeds 0, 1, 82; R@20 remains9/18. All 152 host/seed score objects were independently reproduced and no favorable seed was selected. Issue #89 tracks the correctness defect separately. Draft PR #90 makes exact text-score ties deterministic by canonical frame ID; nine tests over 13 fixtures and three process seeds pass. The completed Packet82 captures preserve their original observed orders.
 
 ## D: unified failure ledger
 
-PENDING_FINAL_D_CLASSIFICATION
+The completed ledger contains one row for each of the 113 scoreable queries. Its descriptive union records 82 frozen-R@20 successes and 31 remaining misses.
+
+| Primary outcome | Queries | Interpretation |
+|---|---:|---|
+| Observed success (`none`) | 82 | At least one recorded baseline, reranker or selected fusion arm succeeds. |
+| `candidate_generation_missing_video` | 6 | No accepted video in the inspected historical C pool or fresh B active-provider union. |
+| `candidate_generation_missing_event` | 18 | An accepted video is observed, but at least one required frame/range/event target is absent from those saved pools. |
+| `unresolved` | 7 | Saved target evidence exists; the remaining ranking miss does not establish a more specific cause. |
+
+The six missing-video cases are `p0_q21`, `p1_q18`, `p2_q03`, `p2_q27`, `p3_q11`, `p3_q24`. The seven unresolved cases are `p0_q02`, `p0_q18`, `p1_q14`, `p2_q01`, `p2_q07`, `p3_q03`, `p3_q30`. The full ledger preserves all 18 missing-target IDs, capability/category counts, historical baseline labels, current pool evidence, provider visibility and the smallest follow-up for every row.
+
+Candidate coverage is the established obstruction for 24 of the 31 remaining misses. This describes the inspected saved pools, not a proof of absence from the entire collection or a confident OCR/ASR, visual-semantic or calibration diagnosis.
+
+The cross-run MRR contrast identifies `p1_q09`, `p2_q02`, `p3_q07`, `p3_q28` where fresh fusion improves over the historical reference while the historical reranker regresses. This is separate from the R@20-preservation case `p2_q14`. Seven temporal queries have a correct video in historical top100 but lack the complete event contract: `p0_q23`, `p0_q24`, `p1_q25`, `p2_q29`, `p2_q30`, `p3_q21`, `p3_q34`.
+
+Forty-one queries retain provisional text or historical event-proxy qualifications. Source review did not establish any query as failing mainly because of truth quality; the ledger explicitly leaves that causal attribution unestablished.
 
 An independent join of current C per-query evidence and recovered B scores gives 82/113 observed frozen-R@20 successes and 31 remaining misses. B supplies five successes absent from historical baseline and reranker: `p1_q04`, `p2_q23`, `p3_q13`, `p3_q26`, `p3_q27`. Current fusion retains the historical reranker's regression `p2_q14`. The reranker rescues five historical-baseline misses not reached by current fusion: `p0_q20`, `p2_q11`, `p2_q28`, `p3_q16`, `p3_q29`.
 
@@ -112,19 +127,26 @@ This is a diagnostic union across differently captured experiments. It is not a 
 
 ## E: one next experiment, not implemented
 
-PENDING_FINAL_E_PROPOSAL
+Propose one model-free test of provider-balanced admission at the same 100-frame budget. Cycle globally through Qwen, SigLIP, OCR sparse and ASR sparse, admitting the next eligible unseen frame from each saved list. Reuse current fusion scores computed over the full frozen union and its original tie order; do not renormalize after admission.
 
-The bounded candidate-admission headroom is three full-target cases and one partial case. The proposal will test one fixed provider-balanced admission rule on saved lists at the same 100-frame budget, preserving fusion scores and query text. It will not add a model, retrain, re-embed, change production retrieval or perform a quota/weight grid.
+A positive bounded result requires at least two complete-target rescues, zero complete-target regressions, a positive mean fractional-coverage change and no per-query loss of accepted-video presence. Report every regression and the paired 95% intervals; a strictly positive lower bound is not an attainable gate for a binary endpoint with only three possible rescues.
+
+Only `p0_q02` and `p2_q07` among the three full-target headroom cases belong to D's remaining 31 misses. `p0_q20` is already solved in an observed historical arm, and `p2_q29` offers only partial coverage. This is a cheap test of a small observed loss at admission, not a proposed solution to all 31 misses. The full frozen policy, stop conditions and evidence hashes are in [PROPOSAL.md](outputs/synthesis/PROPOSAL.md) and [decision.json](outputs/synthesis/decision.json).
+
+The bounded candidate-admission headroom is three full-target cases and one partial case. The proposal specifies one fixed provider-balanced admission rule on saved lists at the same 100-frame budget, preserving fusion scores and query text. It will not add a model, retrain, re-embed, change production retrieval or perform a quota/weight grid.
 
 ## Validation and review locations
 
-PENDING_FINAL_VALIDATION
+The combined host run passed **40 fusion/recovery/storage tests** and **27 ledger tests**, reconstructed the complete study byte for byte and repeated all four ledger outputs byte for byte. A portable independent reviewer passed **3,611 assertions**, checking schema, source identities, every observed-pool coverage record and all final file hashes. Original A validation passed31 tests, historical C analysis12 tests, and the checkpoint repair12 tests. The separate tie fix passed9 tests over13 fixtures and three process seeds.
+
+[REPRODUCE.md](REPRODUCE.md) provides the exact published-snapshot verification command. Per-query evidence, source hashes, lossless capture, timing sidecar, reconstruction proof and complete validation logs are included in the review branches.
 
 - [Packet0/C draft PR83](https://github.com/JimmyK300/Vecna/pull/83)
 - [Packet B draft PR84](https://github.com/JimmyK300/Vecna/pull/84)
 - [Packet A draft PR85](https://github.com/JimmyK300/Vecna/pull/85)
 - [Source, temporal and visibility draft PR87](https://github.com/JimmyK300/Vecna/pull/87)
 - [Verified Qwen checkpoint repair draft PR88](https://github.com/JimmyK300/Vecna/pull/88)
+- [Deterministic text ties draft PR90](https://github.com/JimmyK300/Vecna/pull/90)
 - [Native dataset review draft PR18](https://github.com/JimmyK300/official-dataset-control/pull/18)
 
 Main remains unchanged. Every integration decision remains subject to review of the separate draft PR and its exact evidence.

@@ -1,0 +1,201 @@
+{
+  "asr": {
+    "ascii_quoted_query_count": 0,
+    "main_eligible": {
+      "any_target_hit": {
+        "R@1": 4,
+        "R@10": 7,
+        "R@100": 11,
+        "R@20": 9,
+        "R@5": 6
+      },
+      "frozen_mixed_contract": {
+        "MRR@20_mean": 0.28125,
+        "R@1": 4.0,
+        "R@10": 7.0,
+        "R@20": 9.0,
+        "R@5": 6.0
+      },
+      "largest_same_video_exact_text_group": 28,
+      "raw_or_eligible_hits": 1800,
+      "same_video_exact_text_repeat_excess": 1682,
+      "strict_all_targets_hit": {
+        "R@1": 4,
+        "R@10": 7,
+        "R@100": 11,
+        "R@20": 9,
+        "R@5": 6
+      },
+      "video_hit": {
+        "R@1": 11,
+        "R@10": 11,
+        "R@100": 13,
+        "R@20": 12,
+        "R@5": 11
+      }
+    },
+    "phrase_removed_any_target_query_ids": [],
+    "phrase_removed_total": 0,
+    "provisional_truth_count": 7,
+    "query_channel_count": 18,
+    "raw": {
+      "any_target_hit": {
+        "R@1": 6,
+        "R@10": 7,
+        "R@100": 11,
+        "R@20": 9,
+        "R@5": 7
+      },
+      "frozen_mixed_contract": {
+        "MRR@20_mean": 0.3600936100936101,
+        "R@1": 6.0,
+        "R@10": 7.0,
+        "R@20": 9.0,
+        "R@5": 7.0
+      },
+      "largest_same_video_exact_text_group": 28,
+      "raw_or_eligible_hits": 1800,
+      "same_video_exact_text_repeat_excess": 1682,
+      "strict_all_targets_hit": {
+        "R@1": 6,
+        "R@10": 7,
+        "R@100": 11,
+        "R@20": 9,
+        "R@5": 7
+      },
+      "video_hit": {
+        "R@1": 11,
+        "R@10": 11,
+        "R@100": 13,
+        "R@20": 12,
+        "R@5": 11
+      }
+    },
+    "tie_order_effect": {
+      "all_changed_orders_confined_to_equal_bm25_scores": true,
+      "first_target_rank_changes": [
+        {
+          "main_eligible": 15,
+          "query_id": "p0_q02",
+          "raw": 14
+        },
+        {
+          "main_eligible": 10,
+          "query_id": "p0_q19",
+          "raw": 1
+        },
+        {
+          "main_eligible": 16,
+          "query_id": "p1_q24",
+          "raw": 13
+        },
+        {
+          "main_eligible": 3,
+          "query_id": "p3_q04",
+          "raw": 1
+        },
+        {
+          "main_eligible": 2,
+          "query_id": "p3_q08",
+          "raw": 3
+        }
+      ],
+      "query_count_with_changed_eligible_order": 18
+    },
+    "visibility_counts": {
+      "accepted_video_not_observed_in_main_eligible_top100": 5,
+      "accepted_video_observed_but_current_required_targets_incomplete": 2,
+      "all_current_required_targets_observed_in_main_eligible_top100": 11
+    }
+  },
+  "indexed_projection_parity": {
+    "matching": 621,
+    "mismatching": 0,
+    "projected_frame_missing": 0,
+    "query_frame_comparisons": 621,
+    "unique_channel_frame_comparisons": 621
+  },
+  "ocr": {
+    "ascii_quoted_query_count": 0,
+    "main_eligible": {
+      "any_target_hit": {
+        "R@1": 1,
+        "R@10": 3,
+        "R@100": 4,
+        "R@20": 3,
+        "R@5": 3
+      },
+      "frozen_mixed_contract": {
+        "MRR@20_mean": 0.0875,
+        "R@1": 1.0,
+        "R@10": 3.0,
+        "R@20": 3.0,
+        "R@5": 3.0
+      },
+      "largest_same_video_exact_text_group": 11,
+      "raw_or_eligible_hits": 2000,
+      "same_video_exact_text_repeat_excess": 344,
+      "strict_all_targets_hit": {
+        "R@1": 1,
+        "R@10": 3,
+        "R@100": 4,
+        "R@20": 3,
+        "R@5": 3
+      },
+      "video_hit": {
+        "R@1": 4,
+        "R@10": 4,
+        "R@100": 7,
+        "R@20": 4,
+        "R@5": 4
+      }
+    },
+    "phrase_removed_any_target_query_ids": [],
+    "phrase_removed_total": 0,
+    "provisional_truth_count": 4,
+    "query_channel_count": 20,
+    "raw": {
+      "any_target_hit": {
+        "R@1": 1,
+        "R@10": 3,
+        "R@100": 4,
+        "R@20": 3,
+        "R@5": 3
+      },
+      "frozen_mixed_contract": {
+        "MRR@20_mean": 0.0875,
+        "R@1": 1.0,
+        "R@10": 3.0,
+        "R@20": 3.0,
+        "R@5": 3.0
+      },
+      "largest_same_video_exact_text_group": 11,
+      "raw_or_eligible_hits": 2000,
+      "same_video_exact_text_repeat_excess": 344,
+      "strict_all_targets_hit": {
+        "R@1": 1,
+        "R@10": 3,
+        "R@100": 4,
+        "R@20": 3,
+        "R@5": 3
+      },
+      "video_hit": {
+        "R@1": 4,
+        "R@10": 4,
+        "R@100": 7,
+        "R@20": 4,
+        "R@5": 4
+      }
+    },
+    "tie_order_effect": {
+      "all_changed_orders_confined_to_equal_bm25_scores": true,
+      "first_target_rank_changes": [],
+      "query_count_with_changed_eligible_order": 20
+    },
+    "visibility_counts": {
+      "accepted_video_not_observed_in_main_eligible_top100": 13,
+      "accepted_video_observed_but_current_required_targets_incomplete": 3,
+      "all_current_required_targets_observed_in_main_eligible_top100": 4
+    }
+  }
+}
