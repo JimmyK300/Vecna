@@ -76,12 +76,40 @@ class FailureEvidenceTests(unittest.TestCase):
                         "distinct_video": AUDIT.score_video(arm["videos"], truth[q], SCORER)}
                 scored["arms"][ledger.MATCHED_QWEN] = copy.deepcopy(scored["arms"]["fusion_rrf"])
                 evaluated.append(scored)
-        raw, selection, per_query = (Path(directory) / name for name in ("study_results.jsonl", "summary.json", "per_query.jsonl"))
+        evaluation_dir = Path(directory) / "evaluation"
+        capture_dir = Path(directory) / "capture-full115-v1"
+        evaluation_dir.mkdir()
+        capture_dir.mkdir()
+        config = {"output_frame_k": 100, "output_video_k": 100, "visual_providers": ["qwen", "siglip"],
+                  "ocr_alpha": 0, "asr_alpha": 0, "ocr_weight": 0.25, "asr_weight": 0.25}
+        (Path(directory) / "frozen_config.json").write_text(json.dumps(config), encoding="utf-8")
+        provider_rows = []
+        for exported in rows:
+            q = exported["query_id"]
+            hits = [{**f, "frame_id": f"{f['video_id']}#000015"} for f in exported["arms"]["fusion_rrf"]["frames"]]
+            providers = {"qwen": {"state": "ok", "hits": hits, "raw_hit_count": len(hits)}}
+            providers.update({p: {"state": "empty", "hits": [], "raw_hit_count": 0} for p in ("siglip", "ocr_sparse", "asr_sparse")})
+            provider_rows.append({"query_id": q, "query_text": truth[q]["query"], "query_text_sha256": exported["query_text_sha256"],
+                "run_identity_sha256": identity, "providers": providers, "candidate_tie_order": [f["frame_id"] for f in hits]})
+        provider_path = capture_dir / "provider_rankings.jsonl"
+        provider_path.write_text("".join(json.dumps(r) + "\n" for r in provider_rows), encoding="utf-8")
+        for row in evaluated:
+            q = row["query_id"]
+            hits = next(r for r in provider_rows if r["query_id"] == q)["providers"]["qwen"]["hits"]
+            frozen = AUDIT.score_frozen(hits, truth[q], SCORER, depth=100)
+            row["arms"][ledger.MATCHED_QWEN].update({
+                "distinct_video_rank_observed": AUDIT.score_video(hits, truth[q], SCORER, depth=100)["first_success_rank"],
+                "frame_position_video_rank_observed": AUDIT.score_video(hits, truth[q], SCORER, depth=100)["first_success_rank"],
+                "frozen_rank_observed": frozen["first_success_rank"], "required_target_coverage_at_retained100": frozen["target_coverage_at_depth"],
+                "all_required_targets_at_retained100": frozen["all_required_targets_present"]})
+        raw, selection, per_query = (evaluation_dir / name for name in ("study_results.jsonl", "summary.json", "per_query.jsonl"))
         raw.write_text("".join(json.dumps(r) + "\n" for r in rows), encoding="utf-8")
         per_query.write_text("".join(json.dumps(r) + "\n" for r in evaluated), encoding="utf-8")
         summary = {"descriptive_best_global_arm": "fusion_rrf", "transform_proof": {
             "queries": 115, "arms": list(ledger.FUSION_ARMS), "ground_truth_read": False,
-            "output_sha256": ledger.sha256(raw), "run_identity_sha256": identity}}
+            "output_sha256": ledger.sha256(raw), "run_identity_sha256": identity,
+            "rankings_sha256": ledger.sha256(provider_path),
+            "config_sha256": hashlib.sha256(json.dumps(config, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()).hexdigest()}}
         selection.write_text(json.dumps(summary), encoding="utf-8")
         return truth, rows, evaluated, summary, raw, selection, per_query
 
@@ -125,6 +153,31 @@ class FailureEvidenceTests(unittest.TestCase):
             selection.write_text(json.dumps(summary), encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "actual study SHA256"):
                 ledger.fusion_evidence(raw, truth, AUDIT, SCORER)
+
+    def test_reported_matched_qwen_must_reproduce_from_bound_raw_candidates(self):
+        with tempfile.TemporaryDirectory() as directory:
+            truth, rows, evaluated, summary, raw, selection, per_query = self.fusion_fixture(directory)
+            evaluated[0]["arms"][ledger.MATCHED_QWEN]["frozen_frame_range_event"]["metrics"]["R@20"] = 0.0
+            per_query.write_text("".join(json.dumps(r) + "\n" for r in evaluated), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "matched-Qwen scores do not reproduce"):
+                ledger.fusion_evidence(raw, truth, AUDIT, SCORER)
+
+    def test_fresh_pool_evidence_prevents_stale_missing_video_label(self):
+        c = self.source(video=None, targets=False)
+        c["candidate_pool"]["target_first_ranks_at_100"] = [None]
+        empty = {"accepted_video_present": False, "target_present": [False]}
+        video = {"accepted_video_present": True, "target_present": [False]}
+        target = {"accepted_video_present": True, "target_present": [True]}
+        b = {"active_provider_union": video, "fusion_current_control": {"retained_frame_pool": video},
+             ledger.MATCHED_QWEN: {"retained_frame_pool": empty}}
+        self.assertEqual(ledger.baseline_failure(c), "candidate_generation_missing_video")
+        observed = ledger.observed_pool_evidence(c, b, "fusion_current_control")
+        self.assertEqual(ledger.remaining_failure(observed, True), "candidate_generation_missing_event")
+        b["active_provider_union"] = target
+        observed = ledger.observed_pool_evidence(c, b, "fusion_current_control")
+        self.assertEqual(ledger.remaining_failure(observed, True), "unresolved")
+        self.assertEqual(ledger.remaining_failure(observed, False), "none")
+        self.assertEqual(ledger.baseline_failure(c), "candidate_generation_missing_video")
 
     def test_evaluated_row_identity_must_match_study(self):
         with tempfile.TemporaryDirectory() as directory:

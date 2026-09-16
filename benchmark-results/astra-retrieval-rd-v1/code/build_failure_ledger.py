@@ -93,11 +93,41 @@ def fusion_evidence(path, truth, audit, scorer, selection_path=None, evaluated_p
     require(proof.get("output_sha256") == sha256(path), "B summary transform_proof does not bind the actual study SHA256")
     require(proof.get("run_identity_sha256") == run_identity, "B summary transform_proof run identity differs from study rows")
     require(proof.get("queries") == 115 and proof.get("arms") == list(FUSION_ARMS) and proof.get("ground_truth_read") is False, "B summary transform proof cohort/arm/isolation mismatch")
+    provider_path = path.parent.parent / "capture-full115-v1/provider_rankings.jsonl"
+    require(provider_path.exists(), "Completed B evaluation requires raw provider rankings for matched-Qwen rescoring. Hydrate the capture with:\n" + HYDRATE)
+    require(proof.get("rankings_sha256") == sha256(provider_path), "B raw-provider SHA256 differs from transform proof")
+    config_path = path.parent.parent / "frozen_config.json"
+    config = read_json(config_path)
+    config_digest = hashlib.sha256(json.dumps(config, sort_keys=True, ensure_ascii=False, separators=(",", ":"), allow_nan=False).encode()).hexdigest()
+    require(proof.get("config_sha256") == config_digest, "B transform configuration digest differs")
+    require(config["output_frame_k"] == config["output_video_k"] == 100 and config["visual_providers"] == ["qwen", "siglip"] and config["ocr_alpha"] == config["asr_alpha"] == 0 and config["ocr_weight"] > 0 and config["asr_weight"] > 0, "B observed-pool overlay requires the fixed four active providers and retained100")
+    active_providers = ("qwen", "siglip", "ocr_sparse", "asr_sparse")
+    providers = index(read_jsonl(provider_path))
+    require(set(providers) == set(truth), "B raw-provider cohort must preserve exact115 IDs")
+    for q, exported in providers.items():
+        require(exported.get("run_identity_sha256") == run_identity and exported.get("query_text_sha256") == raw[q]["query_text_sha256"] and exported.get("query_text") == truth[q]["query"], f"B raw-provider query/run identity mismatch: {q}")
+        if "provider_input_sha256" in raw[q]:
+            actual = hashlib.sha256(json.dumps(exported, sort_keys=True, ensure_ascii=False, separators=(",", ":"), allow_nan=False).encode()).hexdigest()
+            require(raw[q]["provider_input_sha256"] == actual, f"B study/raw-provider row digest mismatch: {q}")
     scores = {}
     for q, row in raw.items():
         if not truth[q]["scoreable"]:
             continue
         scores[q] = {}
+        exported = providers[q]
+        union = {}
+        for provider in active_providers:
+            observed = exported["providers"][provider]
+            hits = observed["hits"]
+            require(observed["state"] in {"ok", "empty"} and len(hits) <= 100 and [int(h["rank"]) for h in hits] == list(range(1, len(hits) + 1)), f"B active provider state/depth/rank mismatch: {q} {provider}")
+            require(len({h["frame_id"] for h in hits}) == len(hits), f"B active provider duplicate IDs: {q} {provider}")
+            for hit in hits:
+                video, number = str(hit["frame_id"]).rsplit("#", 1)
+                require(video == hit["video_id"] and number.isdigit(), f"B active provider frame/video mismatch: {q} {provider}")
+                union[hit["frame_id"]] = hit
+        tie_order = exported["candidate_tie_order"]
+        require(set(union) == set(tie_order) and len(tie_order) == len(union), f"B active union differs from captured tie order: {q}")
+        scores[q]["active_provider_union"] = pool_coverage([union[fid] for fid in tie_order], truth[q], audit, scorer)
         for name in FUSION_ARMS:
             arm = row["arms"][name]
             require("frames" in arm and "videos" in arm, f"fusion arm has no frame/video result arrays: {q} {name}")
@@ -105,7 +135,9 @@ def fusion_evidence(path, truth, audit, scorer, selection_path=None, evaluated_p
                 require([int(r["rank"]) for r in arm[field]] == list(range(1, len(arm[field]) + 1)), f"fusion {field} ranks are not contiguous: {q} {name}")
             scores[q][name] = {"frozen": audit.score_frozen(arm["frames"], truth[q], scorer),
                 "candidate_position_video": audit.score_video(arm["frames"], truth[q], scorer),
-                "deduplicated_video": audit.score_video(arm["videos"], truth[q], scorer), "frame_candidate_count": len(arm["frames"])}
+                "deduplicated_video": audit.score_video(arm["videos"], truth[q], scorer), "frame_candidate_count": len(arm["frames"]),
+                "retained_frame_pool": pool_coverage(arm["frames"], truth[q], audit, scorer),
+                "analysis_video_representatives": pool_coverage(arm["videos"], truth[q], audit, scorer)}
     require(len(scores) == 113, "Fusion scoreable cohort must be exactly113")
     evaluated = index(read_jsonl(evaluated_path))
     require(set(evaluated) == set(scores), "B per-query evaluation does not contain the exact 113 scoreable IDs")
@@ -117,12 +149,36 @@ def fusion_evidence(path, truth, audit, scorer, selection_path=None, evaluated_p
             for local, b_layer in layers.items():
                 require(reported["arms"][arm].get(b_layer) == scores[q][arm][local], f"B per-query score disagrees with D rescoring: {q} {arm} {b_layer}")
         matched = reported["arms"][MATCHED_QWEN]
+        qwen = providers[q]["providers"]["qwen"]
+        frames = qwen["hits"]
+        require(qwen["state"] in {"ok", "empty"} and len(frames) == qwen["raw_hit_count"] <= 100 and [int(f["rank"]) for f in frames] == list(range(1, len(frames) + 1)), f"B raw-Qwen rank/state/depth mismatch: {q}")
+        require(len({f["frame_id"] for f in frames}) == len(frames), f"B raw-Qwen duplicate frame IDs: {q}")
+        videos, seen_videos = [], set()
+        for frame in frames:
+            fid = str(frame["frame_id"])
+            video, number = fid.rsplit("#", 1)
+            require(video == frame["video_id"] and number.isdigit(), f"B raw-Qwen frame/video identity mismatch: {q}")
+            if frame["video_id"] not in seen_videos:
+                seen_videos.add(frame["video_id"])
+                videos.append({**frame, "rank": len(videos) + 1})
+        independent = {"frozen_frame_range_event": audit.score_frozen(frames, truth[q], scorer),
+            "frame_position_video": audit.score_video(frames, truth[q], scorer),
+            "distinct_video": audit.score_video(videos, truth[q], scorer)}
+        require(all(matched.get(k) == value for k, value in independent.items()), f"B matched-Qwen scores do not reproduce from raw candidates: {q}")
+        observed_frozen = audit.score_frozen(frames, truth[q], scorer, depth=100)
+        observed_ranks = {"distinct_video_rank_observed": audit.score_video(videos, truth[q], scorer, depth=100)["first_success_rank"],
+            "frame_position_video_rank_observed": audit.score_video(frames, truth[q], scorer, depth=100)["first_success_rank"],
+            "frozen_rank_observed": observed_frozen["first_success_rank"],
+            "required_target_coverage_at_retained100": observed_frozen["target_coverage_at_depth"],
+            "all_required_targets_at_retained100": observed_frozen["all_required_targets_present"]}
+        require(all(matched.get(k) == value for k, value in observed_ranks.items()), f"B matched-Qwen retained100 evidence does not reproduce: {q}")
         for b_layer in layers.values():
             value = matched.get(b_layer, {})
             require(value.get("retained_depth") == 20 and set(value.get("metrics", {})) == set(audit.METRICS), f"B matched Qwen lacks the declared top20 scoring layer: {q} {b_layer}")
         scores[q][MATCHED_QWEN] = {local: matched[b_layer] for local, b_layer in layers.items()}
         scores[q][MATCHED_QWEN]["retained100"] = {field: matched.get(field) for field in ("distinct_video_rank_observed", "frame_position_video_rank_observed", "frozen_rank_observed", "required_target_coverage_at_retained100", "all_required_targets_at_retained100")}
         scores[q][MATCHED_QWEN]["run_identity_sha256"] = run_identity
+        scores[q][MATCHED_QWEN]["retained_frame_pool"] = pool_coverage(frames, truth[q], audit, scorer)
     def aggregate(layer):
         return {name: {metric: math.fsum(scores[q][name][layer]["metrics"][metric] for q in scores) / len(scores) for metric in audit.METRICS} for name in FUSION_ARMS}
     frozen_aggregate, video_aggregate = aggregate("frozen"), aggregate("deduplicated_video")
@@ -136,7 +192,43 @@ def fusion_evidence(path, truth, audit, scorer, selection_path=None, evaluated_p
         "matched_qwen_status": "EVALUATED", "run_identity_sha256": run_identity,
         "matched_qwen_mean_metrics": {local: {metric: math.fsum(scores[q][MATCHED_QWEN][local]["metrics"][metric] for q in scores) / len(scores) for metric in audit.METRICS} for local in layers},
         "source_sha256": sha256(path), "selection_source_sha256": sha256(selection_path), "evaluated_source_sha256": sha256(evaluated_path),
-        "transform_proof": proof}
+        "transform_proof": proof, "raw_provider_source_sha256": sha256(provider_path), "configuration_source_sha256": sha256(config_path),
+        "active_providers": list(active_providers),
+        "matched_qwen_verification": "All113 raw-Qwen controls independently rescored in three top20 layers and retained100 diagnostics."}
+
+def pool_coverage(items, truth, audit, scorer):
+    ranked = [{**item, "rank": i} for i, item in enumerate(items, 1)]
+    frozen = audit.score_frozen(ranked, truth, scorer, depth=len(ranked))
+    bits = [rank is not None for rank in frozen["target_first_ranks"]]
+    return {"candidate_count": len(ranked), "accepted_video_present": audit.score_video(ranked, truth, scorer, depth=len(ranked))["first_success_rank"] is not None,
+        "target_present": bits, "required_target_count": len(bits), "present_target_count": sum(bits),
+        "target_coverage": frozen["target_coverage_at_depth"], "all_required_targets_present": frozen["all_required_targets_present"]}
+
+def observed_pool_evidence(c, b_query=None, selected_arm=None):
+    historical = {"accepted_video_present": c["candidate_pool"]["video_first_rank_at_100"] is not None,
+        "target_present": [rank is not None for rank in c["candidate_pool"]["target_first_ranks_at_100"]],
+        "scope": "Historical C saved HTTP Qwen top100; original timeline evidence retained."}
+    pools = {"historical_c_qwen_top100": historical}
+    if b_query:
+        pools["fresh_b_active_provider_union"] = b_query["active_provider_union"]
+        pools["fresh_b_selected_global_top100"] = b_query[selected_arm]["retained_frame_pool"]
+        pools["fresh_b_matched_qwen_top100"] = b_query[MATCHED_QWEN]["retained_frame_pool"]
+    lengths = {len(pool["target_present"]) for pool in pools.values()}
+    require(len(lengths) == 1, "Observed C/B pool target identities differ")
+    n = next(iter(lengths))
+    bits = [any(pool["target_present"][i] for pool in pools.values()) for i in range(n)]
+    return {"pools": pools, "any_accepted_video_present": any(pool["accepted_video_present"] for pool in pools.values()),
+        "combined_target_present": bits, "all_required_targets_observed": bool(bits) and all(bits),
+        "scope": "Observed saved-pool coverage across historical C and fresh B captures. This is a diagnostic OR of target presence, not an attainable ranking, corpus-wide absence claim, or matched intervention. Sparse/dense source-visibility diagnostics remain separate."}
+
+def remaining_failure(pool_evidence, remaining):
+    if not remaining:
+        return "none"
+    if not pool_evidence["any_accepted_video_present"]:
+        return "candidate_generation_missing_video"
+    if not pool_evidence["all_required_targets_observed"]:
+        return "candidate_generation_missing_event"
+    return "unresolved"
 
 def baseline_failure(c):
     if c["frozen"]["baseline"]["metrics"]["R@20"] == 1:
@@ -257,7 +349,8 @@ def build_rows(truth, crows, dataset, temporal_summary, temporal_inventory, fusi
         if best is not None:
             observed["best_fusion"] = best["frozen"]["metrics"]["R@20"] == 1
         remaining = not any(observed.values())
-        primary = baseline_failure(source) if remaining else "none"
+        pool_evidence = observed_pool_evidence(source, fusion["per_query"].get(q), fusion["best_global_arm"])
+        primary = remaining_failure(pool_evidence, remaining)
         channels = dataset.get(q, {})
         temporal = q in expected_temporal
         row = {
@@ -283,6 +376,8 @@ def build_rows(truth, crows, dataset, temporal_summary, temporal_inventory, fusi
             "reranker_regression": bool(regression_metrics), "reranker_regression_metrics": regression_metrics,
             "truth_qualification": weak_truth(source), "observed_success_at20": observed, "remaining_miss_after_observed_arms": remaining,
             "candidate_ceiling": source["candidate_pool"],
+            "observed_pool_evidence": pool_evidence,
+            "primary_failure_scope": "Remaining miss diagnosed only against observed historical-C top100 and fresh-B active-provider union/current100; target presence leads to unresolved ranking. No corpus/model extraction cause is inferred.",
             "candidate_ceiling_scope": "Packet C historical saved HTTP Qwen top100 only; separate from B's fresh raw-provider pool and matched Qwen control.",
             "dataset_audit": {"selected_channels": sorted(channels), "channels": channels, "selection_is_not_causal_evidence": True,
                 "status": "SOURCE_REVIEW_ATTACHED" if any("source_review" in x for x in channels.values()) else "SELECTED_FOR_SOURCE_REVIEW" if channels else "NOT_SELECTED"},
@@ -364,7 +459,7 @@ def summarize(rows, fusion, visibility=None):
     return {
         "schema": "vecna82-failure-ledger-v1", "status": "COMPLETE_WITH_QUALIFIED_SOURCE_DIAGNOSES" if fusion["status"] == "EVALUATED" else "LEDGER_READY_FUSION_PENDING",
         "cohort": {"scoreable_queries": len(rows), "excluded_query_ids": ["p0_q15", "p3_q09"]}, "comparison_scope": COMPARISON_SCOPE,
-        "primary_failure_scope": "Remaining misses after any observed C historical baseline/reranker or B fresh global-fusion arm succeeds under frozen R20. This is a descriptive union across saved runs, not a deployed/routed system metric. Baseline failure and candidate ceiling describe C's historical Qwen pool only.",
+        "primary_failure_scope": "Remaining misses after the descriptive success union are classified against observed C historical top100 plus fresh B active-provider union/current100. Missing-video/event labels describe absence from those saved pools only. Existing target evidence leaves ranking unresolved. Baseline failure and candidate ceiling remain historical-C-only; no extraction or corpus-wide absence cause is inferred.",
         "taxonomy": list(TAXONOMY), "taxonomy_extension": "none explicitly represents success; missing_event includes missing accepted ranges for non-TRAKE queries.",
         "primary_failure_counts": primary_counts, "baseline_primary_failure_counts": dict(collections.Counter(r["baseline_primary_failure"] for r in rows)),
         "remaining_misses": len(remaining), "remaining_miss_query_ids": [r["query_id"] for r in remaining],
@@ -477,6 +572,10 @@ def run(root, outdir, require_complete=False):
         if path not in before:
             paths.append(path)
             before[path] = observed
+    for additional in ("outputs/fusion/capture-full115-v1/provider_rankings.jsonl", "outputs/fusion/frozen_config.json"):
+        if (root / additional).exists():
+            paths.append(additional)
+            before[additional] = sha256(root / additional)
     for name in ("study_results.jsonl", "summary.json", "per_query.jsonl"):
         path = FUSION_EVALUATION + "/" + name
         if (root / path).exists():
