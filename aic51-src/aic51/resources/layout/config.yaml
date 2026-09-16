@@ -73,6 +73,19 @@ features: &analyse_features
       params:
         nlist: 512
 
+  qwen_vl_temporal:
+    model: "qwen_vl_embedding_temporal"
+    pretrained_model: "Qwen/Qwen3-VL-Embedding-2B"
+    analyse:
+      batch_size: 1
+    index:
+      datatype: "FLOAT_VECTOR"
+      dim: 2048
+      metric_type: "COSINE"
+      index_type: "SCANN"
+      params:
+        nlist: 512
+
   # video_clip_pe-l-14-336:
   #   model: "video_clip"
   #   source: "open_clip"
@@ -188,6 +201,7 @@ searcher:
       pretrained_model: "Qwen/Qwen3-VL-Embedding-2B"
       target:
         - qwen_vl
+        - qwen_vl_temporal
 
     text_bge_m3:
       model: "text_embedding"

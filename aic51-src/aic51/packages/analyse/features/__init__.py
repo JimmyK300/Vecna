@@ -10,6 +10,7 @@ for _module in (
     "ocr",
     "asr",
     "qwen_vl",
+    "qwen_vl_temporal",
 ):
     try:
         __import__(f"{__name__}.{_module}", fromlist=["*"])
