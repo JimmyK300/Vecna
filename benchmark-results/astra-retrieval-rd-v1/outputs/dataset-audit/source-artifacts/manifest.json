@@ -1,0 +1,46 @@
+{
+  "artifact": "asr-ocr-text-v1",
+  "created_at_utc": "2026-08-18T05:46:02Z",
+  "source_features_root": "D:\\Official-Dataset\\features_L21-L30_branch-feats-siglip\\features",
+  "source_features_root_relative": "features_L21-L30_branch-feats-siglip/features",
+  "source_video_root": "D:\\Official-Dataset\\videos",
+  "source_video_root_relative": "videos",
+  "generator": "tools/extract_asr_ocr_metadata.py",
+  "decode": "numpy allow_pickle; str(reshape(-1)[0]); strip",
+  "grouping": "consecutive identical nonempty strings; empty frames skipped",
+  "timestamp_formula": "frame_idx / round(r_frame_rate)",
+  "video_count": 873,
+  "frame_dir_count": 322924,
+  "asr_npy_present": 322924,
+  "asr_segment_count": 17875,
+  "ocr_npy_present": 322924,
+  "ocr_nonempty_frame_count": 117754,
+  "ocr_span_count": 104994,
+  "fps_probe_ok_count": 873,
+  "evidence_files": {
+    "coverage": {
+      "path": "coverage.csv",
+      "sha256": "c11cf0df465af6c622ea5325e1419e777a151195835c9646869fc58d4788d63c"
+    },
+    "catalog": {
+      "path": "catalog.json",
+      "sha256": "9c6ce118a2ab53947b3c684336ea49c7cfd63f8e767cfe5be8783d99ad16f754"
+    },
+    "readme": {
+      "path": "README.md",
+      "sha256": "0749b864f9a767184142a3b8038e28b950a0de38bebd3cc0319ad7a8f8493991"
+    },
+    "asr_segments": {
+      "path": "asr/segments.jsonl",
+      "sha256": "8cb3facaba6c07b7f91326bd63a54eed72463ad51ebc7d6fbf737a01e017b536"
+    },
+    "ocr_spans": {
+      "path": "ocr/spans.jsonl",
+      "sha256": "f80c1becee2a43d2f97484b8b136b6bbaa8644ae9a79a55016a4ed7b88550e61"
+    },
+    "ocr_frames": {
+      "path": "ocr/frames.jsonl",
+      "sha256": "26a1d1b441bc09cc1b6bc1b056e5553f9d430621795da38c507e253430b4f694"
+    }
+  }
+}

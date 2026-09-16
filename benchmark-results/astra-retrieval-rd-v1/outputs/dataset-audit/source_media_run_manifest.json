@@ -1,0 +1,21 @@
+{
+  "capture_manifest_sha256": "ba3a8539621fd159a4331ff4ea0d71eb6d9753ebe25d976b2c665cbc7014be67",
+  "code_sha256": "2245b3184a1162fd9afebe7403312f798e69683504f6d3c7a404d452b9b15c85",
+  "current_sample_sha256": "b4fd944228a033c37ea4d69ad757ceeae9635bfb026cf018e0d60f5b3c661be9",
+  "frozen_sample_sha256": "d3727ab99ce98b708c835c8e8b0f8d5688af47e9d25e65ce55a8e5ca839e7714",
+  "media_artifact_sha256": {
+    "outputs/source-audit/vecna82-source-media-review-v1/p0_q19_L30_V072_frame1745.jpg": "19cc56fef73a66606c768b3a23d1d30b1b5e1496d415b197f410114cf5b088e0",
+    "outputs/source-audit/vecna82-source-media-review-v1/p0_q20_L27_V010_215-233s.wav": "0360218142ae4b7e2d678d88f2b557e2f83f1ab14fee5d7ca6528f335dee4684",
+    "outputs/source-audit/vecna82-source-media-review-v1/p0_q21_L30_V078_frame1788.jpg": "9528ac6fba3652b7c169b8229fe568a459af70d46bbc97db83f0e83a0c32cedc",
+    "outputs/source-audit/vecna82-source-media-review-v1/p1_q17_L25_V041_frame17152.jpg": "0acc462af6b8fd07124429ea400cef15de49bf0106f32bb5d5400b4813e23bf3",
+    "outputs/source-audit/vecna82-source-media-review-v1/p3_q24_L26_V448_98-126s.wav": "5d6582ca61cc9b5751e5ae26cfa68a39449a505ea68c2431893dacb969eaf529"
+  },
+  "no_retrieval_or_model_run": true,
+  "review_annotation_basis": "three directly viewed JPEGs; explicit unsupported-audio-input result",
+  "sample_bridge_sha256": "a5f08cd56c42887c65cc7219ee527753feba738cd17b6a0ae999a6acec596c40",
+  "source_audio_clips_heard": 0,
+  "source_images_inspected": 3,
+  "source_parity_probe_sha256": "e9a7b5d8262706a5d0912a62287ec61bde64deb11762db48519fa3094bab7fcb",
+  "text_audit_sha256": "a36ef5e3ce5929ae463c4e1120247a33925e5c2d5d32cb037167071d2ccf3633",
+  "truth_changed": false
+}

@@ -1,0 +1,233 @@
+{
+  "canonical_inventory_order": [
+    "p0_q22:e1",
+    "p0_q22:e2",
+    "p0_q22:e3",
+    "p0_q22:e4",
+    "p0_q23:e1",
+    "p0_q23:e2",
+    "p0_q23:e3",
+    "p0_q23:e4",
+    "p0_q24:e1",
+    "p0_q24:e2",
+    "p0_q24:e3",
+    "p0_q24:e4",
+    "p1_q25:e1",
+    "p1_q25:e2",
+    "p1_q25:e3",
+    "p2_q29:e1",
+    "p2_q29:e2",
+    "p2_q29:e3",
+    "p2_q29:e4",
+    "p2_q30:e1",
+    "p2_q30:e2",
+    "p2_q30:e3",
+    "p2_q30:e4",
+    "p3_q21:e1",
+    "p3_q21:e2",
+    "p3_q21:e3",
+    "p3_q21:e4",
+    "p3_q34:e1",
+    "p3_q34:e2",
+    "p3_q34:e3",
+    "p3_q34:e4"
+  ],
+  "canonical_truth_sha256": "63f80eb6ff54ef3c623f6ae4926eba404dac8bb5543b86e31f8fa0da842b4c9f",
+  "canonical_truth_unchanged": true,
+  "checks": {
+    "all_media_hashes_and_bytes": true,
+    "all_review_artifact_hashes": true,
+    "archive_exact_member_names_hashes_and_bytes": true,
+    "archive_union_exact_133_without_overlap": true,
+    "canonical_point_identity": true,
+    "capture_code_matches_executed_sha256": true,
+    "each_archive_under_8000000_bytes": true,
+    "each_row_contains_own_clip_filmstrip_neighbors_index": true,
+    "formal_full_schema": true,
+    "immutable_fields": true,
+    "metadata_and_timebase_pins": true,
+    "no_truth_or_metric_promotion": true,
+    "null_interval_boundaries": true,
+    "proposed_point_source_pts_neighbors": true,
+    "query_hashes": true,
+    "retrieval_independent_capture": true
+  },
+  "counts": {
+    "anchors": 31,
+    "first_occurrence_certifications": 0,
+    "intervals": 0,
+    "new_event_order_metric_eligibility": 0,
+    "new_temporal_iou_eligibility": 0,
+    "queries": 8,
+    "representative_points": 16,
+    "source_media_reviewed": 31,
+    "truth_promotions": 0,
+    "unknown_locators": 15,
+    "verified_capture_files_including_index": 133,
+    "verified_media_assets": 132
+  },
+  "evidence_index_sha256": "4bb01f83f3f133b3d94e17703f993c62aec479aeebfd0e54447188c4c856f213",
+  "merged_ledger_sha256": "0ab32900e7389cc58e981d6e415000755a76c68b110389952fcc8e76657324f4",
+  "per_query": [
+    {
+      "events": 4,
+      "filmstrip": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q22_filmstrip.jpg",
+      "order_statuses_as_reviewed": [
+        "CONFIRMED"
+      ],
+      "query_id": "p0_q22",
+      "representative_points": 3,
+      "source_media_reviewed": 4,
+      "unknown_locators": 1,
+      "video_id": "L26_V194",
+      "video_statuses": [
+        "CONFIRMED"
+      ]
+    },
+    {
+      "events": 4,
+      "filmstrip": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q23_filmstrip.jpg",
+      "order_statuses_as_reviewed": [
+        "CONFIRMED"
+      ],
+      "query_id": "p0_q23",
+      "representative_points": 0,
+      "source_media_reviewed": 4,
+      "unknown_locators": 4,
+      "video_id": "L24_V033",
+      "video_statuses": [
+        "CONFIRMED"
+      ]
+    },
+    {
+      "events": 4,
+      "filmstrip": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p0_q24_filmstrip.jpg",
+      "order_statuses_as_reviewed": [
+        "CONFIRMED"
+      ],
+      "query_id": "p0_q24",
+      "representative_points": 3,
+      "source_media_reviewed": 4,
+      "unknown_locators": 1,
+      "video_id": "L26_V072",
+      "video_statuses": [
+        "CONFIRMED"
+      ]
+    },
+    {
+      "events": 3,
+      "filmstrip": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p1_q25_filmstrip.jpg",
+      "order_statuses_as_reviewed": [
+        "UNRESOLVED"
+      ],
+      "query_id": "p1_q25",
+      "representative_points": 0,
+      "source_media_reviewed": 3,
+      "unknown_locators": 3,
+      "video_id": "L24_V024",
+      "video_statuses": [
+        "CONFIRMED"
+      ]
+    },
+    {
+      "events": 4,
+      "filmstrip": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q29_filmstrip.jpg",
+      "order_statuses_as_reviewed": [
+        "UNRESOLVED"
+      ],
+      "query_id": "p2_q29",
+      "representative_points": 3,
+      "source_media_reviewed": 4,
+      "unknown_locators": 1,
+      "video_id": "L27_V011",
+      "video_statuses": [
+        "CONFIRMED"
+      ]
+    },
+    {
+      "events": 4,
+      "filmstrip": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p2_q30_filmstrip.jpg",
+      "order_statuses_as_reviewed": [
+        "UNRESOLVED"
+      ],
+      "query_id": "p2_q30",
+      "representative_points": 3,
+      "source_media_reviewed": 4,
+      "unknown_locators": 1,
+      "video_id": "L30_V031",
+      "video_statuses": [
+        "CONFIRMED"
+      ]
+    },
+    {
+      "events": 4,
+      "filmstrip": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q21_filmstrip.jpg",
+      "order_statuses_as_reviewed": [
+        "UNRESOLVED"
+      ],
+      "query_id": "p3_q21",
+      "representative_points": 2,
+      "source_media_reviewed": 4,
+      "unknown_locators": 2,
+      "video_id": "L26_V156",
+      "video_statuses": [
+        "CONFIRMED"
+      ]
+    },
+    {
+      "events": 4,
+      "filmstrip": "outputs/temporal-truth-review/vecna82-temporal-truth-source/p3_q34_filmstrip.jpg",
+      "order_statuses_as_reviewed": [
+        "UNRESOLVED"
+      ],
+      "query_id": "p3_q34",
+      "representative_points": 2,
+      "source_media_reviewed": 4,
+      "unknown_locators": 2,
+      "video_id": "L24_V013",
+      "video_statuses": [
+        "CONFIRMED"
+      ]
+    }
+  ],
+  "review_inputs": [
+    {
+      "path": "outputs/temporal-truth-review/review_p0.jsonl",
+      "rows": 12,
+      "sha256": "8f0f55d74cc4aac8b37c935d37f9388d8ea8e05305ddb0831c0687bb639a6585"
+    },
+    {
+      "path": "outputs/temporal-truth-review/review_p1_p2.jsonl",
+      "rows": 11,
+      "sha256": "cb1ed92cab8919914707f2bc4e2be71c9d972415955d29b319c3f0d66e82892f"
+    },
+    {
+      "path": "outputs/temporal-truth-review/review_p3.jsonl",
+      "rows": 8,
+      "sha256": "4f0669acf7fe85f04f6eae6bd148341ecdb3503dab1af1889e1edea5cfeb723f"
+    }
+  ],
+  "review_rows_copied_verbatim": true,
+  "schema": "temporal-source-review-validation-v2",
+  "schema_sha256": "1081a213df2672cec7ae092bfffc25a1fa3201d6ae87f3fd677378308d5a2e22",
+  "scope_note": "Source inspection is complete for all captured anchors. Exact first occurrence, unresolved semantics, and organizer adjudication are not claimed. P0 order confirmations refer only to inspected passage order; no new order metric eligibility is granted.",
+  "source_archives": [
+    {
+      "bytes": 6298976,
+      "exact_members_verified": 67,
+      "extract_into": "outputs/temporal-truth-review",
+      "path": "outputs/temporal-truth-review/source-evidence-1.zip",
+      "sha256": "4644b948ed1dfd7b4074fb43081f1a8dd7d923114527a8cb4f2066f94e872c3d"
+    },
+    {
+      "bytes": 6758090,
+      "exact_members_verified": 66,
+      "extract_into": "outputs/temporal-truth-review",
+      "path": "outputs/temporal-truth-review/source-evidence-2.zip",
+      "sha256": "fea5ef485bec67cdd160823b65e133fc6b51e9b2f701a9e221828932aa514a6e"
+    }
+  ],
+  "status": "PASS",
+  "template_sha256": "d048510cb76526f87a1fb3aca07840e3bb8e2561464bec025d1f31921f7382c0",
+  "validator": "jsonschema.Draft202012Validator + FormatChecker"
+}

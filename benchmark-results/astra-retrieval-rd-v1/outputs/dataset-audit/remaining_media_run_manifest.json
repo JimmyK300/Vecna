@@ -1,0 +1,12 @@
+{
+  "asr_capture_manifest_sha256": "84f4d60a0922e7cc3d262b88fe0c9c595d1ea4bdca9f32bc1c4ade6f808ed8da",
+  "code_sha256": "df5c34e2cda0e1d0ecc802a8149e109c5f98066c1bfc9982a5cd4c6e35628b6f",
+  "frozen_sample_sha256": "b4fd944228a033c37ea4d69ad757ceeae9635bfb026cf018e0d60f5b3c661be9",
+  "observations_sha256": "183f239888416bde95f62e749c102477db99286ba70046d17320361c3a07384b",
+  "ocr_capture_manifest_sha256": "ff5bef5f077a8f4b28e5ff13a35c3c9727a2462f766613f3aa00961608869c18",
+  "remaining_source_parity_probe_sha256": "39d5ab2bb371e88362f824d25f6955ab4e91196c71e3b2698d38444d4b4a242a",
+  "source_audio_clips_heard": 0,
+  "source_images_inspected": 20,
+  "source_parity_probe_sha256": "e9a7b5d8262706a5d0912a62287ec61bde64deb11762db48519fa3094bab7fcb",
+  "truth_changed": false
+}

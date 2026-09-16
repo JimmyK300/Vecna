@@ -1,0 +1,25 @@
+{
+  "schema": "vecna82-asr-bounded-listening-questions-v1",
+  "source_audio_heard_by_assistant": false,
+  "instructions": "For each available bounded WAV, record only the query-critical phrase, uncertain words, and approximate offset within the excerpt. If the phrase is not heard, report absence only within this excerpt. Do not infer absence over the full video, copy the stored ASR as a reference, or promote provisional truth.",
+  "questions": {
+    "p0_q01": "Which crew count and planned observation or mission activity are spoken in this excerpt? Transcribe only the relevant phrases.",
+    "p0_q02": "What animal, newborn count, and locality are named in the birth report? Transcribe only the relevant phrases.",
+    "p0_q16": "What film year, director, and marine-animal context are spoken? Transcribe only the phrases that match this query.",
+    "p0_q19": "Is a commune name spoken in this excerpt? Transcribe the locality phrase if heard, and distinguish commune from province.",
+    "p0_q20": "What exact two poem lines are spoken in this excerpt? Transcribe only those two lines and mark uncertain words.",
+    "p1_q17": "What distinction between remember plus V-ing and remember plus to-V is spoken? Transcribe the short contrast or examples actually heard.",
+    "p1_q24": "What mountain-pass name is spoken in the landslide report? Transcribe the name and a short surrounding phrase.",
+    "p2_q21": "What fish species is named while the ingredients are inserted? Transcribe the species and any query-linked seasonings heard.",
+    "p2_q23": "Is the lodging's street name spoken in this excerpt? Transcribe the street phrase if heard; otherwise record that it was not heard in this excerpt.",
+    "p2_q26": "What animal or meat ingredient is named for the orange topping? Transcribe only the ingredient phrase actually heard.",
+    "p2_q28": "What ingredient placed on the white plate is named? Transcribe only its spoken name and short context.",
+    "p3_q04": "Are the museum and football examples spoken in this excerpt? Transcribe each example actually heard; do not infer the full lesson sequence.",
+    "p3_q05": "Is a province or city count spoken for the region in this excerpt? Transcribe the count phrase if heard; otherwise record only the spoken region context.",
+    "p3_q06": "Is the requested mountain-region answer spoken in this excerpt? Transcribe the relevant phrase if heard and mark uncertain place names.",
+    "p3_q08": "What grandmother or childhood-toy clue is spoken? Transcribe the short query-linked phrase; the neon writing remains a separate visual obligation.",
+    "p3_q14": "What next school grade does the child say she will enter? Transcribe only that answer phrase if it occurs in this excerpt.",
+    "p3_q18": "What school name is spoken in this excerpt? Transcribe the name and mark uncertain spelling without changing provisional truth.",
+    "p3_q24": "What quantity and unit of soy sauce are spoken in this excerpt? Transcribe only that short phrase."
+  }
+}

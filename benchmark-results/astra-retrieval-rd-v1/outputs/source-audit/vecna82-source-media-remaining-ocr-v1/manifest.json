@@ -1,0 +1,1709 @@
+{
+  "schema": "vecna82-bounded-source-media-v1",
+  "started_utc": "2026-09-16T12:36:38.923315+00:00",
+  "frozen_sample_sha256": "b4fd944228a033c37ea4d69ad757ceeae9635bfb026cf018e0d60f5b3c661be9",
+  "truth_source": {
+    "commit": "f0b0f4707ceab91ba7e266f72fa982dce3ae1c4b",
+    "path": "benchmark-results/issue34-current-115/ground_truth_current_115.jsonl",
+    "repository": "JimmyK300/Vecna",
+    "sha256": "63f80eb6ff54ef3c623f6ae4926eba404dac8bb5543b86e31f8fa0da842b4c9f"
+  },
+  "text_source": {
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "path_pattern": "derived/metadata/asr-ocr-text-v1/{channel}/by-video/{video_id}.json",
+    "repository": "JimmyK300/official-dataset-control"
+  },
+  "code_sha256": "5dfa2b81708a38914cf422dd02492215bd09d11111a44ad2ac15a2ba1f4c1153",
+  "source_full_video_hashes": "not_computed_bounded_read_cost",
+  "writes": "new disposable output directory only",
+  "source_semantics_reviewed": false,
+  "assets": [
+    {
+      "canonical_query": "Đoạn video trong buổi trao quà từ thiện diễn ra tại 1 bệnh viện trong dịp Xuân 2024. Trong cảnh có hai người đàn ông (mặc áo sơ mi hồng và sơ mi trắng) đứng hai bên, đại diện ban tổ chức. Ở giữa là bốn em nhỏ và thiếu niên, trong đó có em mặc áo đỏ, em mặc áo trắng, em mặc váy hồng và em mặc áo xanh. Các em được trao bảng tượng trưng với nội dung “Chương trình: Trao kinh phí hỗ trợ cho trẻ em mồ côi do dịch COVID-19”. Trước mặt mỗi em là túi quà lớn mang logo y tế. Phía sau là phông nền màu đỏ với khẩu hiệu đón xuân và thông tin sự kiện.",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 2700,
+          "original": {
+            "end_frame": 2700,
+            "end_s": 108.0,
+            "start_frame": 2325,
+            "start_s": 93.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 2325,
+          "video_id": "L30_V092"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 2491,
+      "kind": "image",
+      "query_id": "p0_q13",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 2491,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L30/L30_V092.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L30\\L30_V092.mp4",
+      "source_file": {
+        "bytes": 41101206,
+        "mtime_ns": 1786613752957896200
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "173.400000",
+            "nb_frames": "4335"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "173.406621",
+            "nb_frames": "7468"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "173.406621"
+        }
+      },
+      "frame_identity_method": "zero-based decoded frame index via ffmpeg select(n); no source timestamp rounding",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-threads",
+        "4",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L30\\L30_V092.mp4",
+        "-map",
+        "0:v:0",
+        "-vf",
+        "select=eq(n\\,2491)",
+        "-frames:v",
+        "1",
+        "-fps_mode",
+        "vfr",
+        "-q:v",
+        "2",
+        "-an",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-ocr-source-capture-20260916-9nel47po\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-ocr-v1\\p0_q13_L30_V092_frame2491.jpg"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p0_q13_L30_V092_frame2491.jpg",
+      "artifact_sha256": "0baf357679c4e433303de650d5c397a7ce31ae0881e64674a16e15517bc20a49",
+      "artifact_bytes": 166179,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Hình ảnh giáo viên nam mặc sơ mi trắng, thắt cà vạt tối màu, nổi bật trên phông nền xanh dương đậm có hoa văn mờ.\n\nSlide bài giảng Nền trắng với khung viền màu hồng tím, phía trên có thanh tiêu đề xanh dương chứa họa tiết địa cầu và mũi tên vàng/xanh ngọc. Bên dưới là sơ đồ 3 tầng được liên kết bởi các mũi tên xanh ngọc trỏ xuống:\n\nTầng 1: 2 khối hộp được bao bởi 1 khối hộp cam.\n\nTầng 2: 1 khối hộp lớn màu xanh dương đậm ở chính giữa.\n\nTầng 3: 2 khối hộp được bao bởi 1 khối hộp xanh lá cây.",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 29000,
+          "original": {
+            "end_frame": 29000,
+            "end_s": 1160.0,
+            "start_frame": 26250,
+            "start_s": 1050.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 26250,
+          "video_id": "L25_V060"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 26533,
+      "kind": "image",
+      "query_id": "p1_q18",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 26533,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L25/L25_V060.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L25\\L25_V060.mp4",
+      "source_file": {
+        "bytes": 205989970,
+        "mtime_ns": 1786613762587084000
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "1582.760000",
+            "nb_frames": "39569"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "1582.811429",
+            "nb_frames": "68166"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "1582.811429"
+        }
+      },
+      "frame_identity_method": "zero-based decoded frame index via ffmpeg select(n); no source timestamp rounding",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-threads",
+        "4",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L25\\L25_V060.mp4",
+        "-map",
+        "0:v:0",
+        "-vf",
+        "select=eq(n\\,26533)",
+        "-frames:v",
+        "1",
+        "-fps_mode",
+        "vfr",
+        "-q:v",
+        "2",
+        "-an",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-ocr-source-capture-20260916-9nel47po\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-ocr-v1\\p1_q18_L25_V060_frame26533.jpg"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p1_q18_L25_V060_frame26533.jpg",
+      "artifact_sha256": "e3123df10723cf70cbf764466eed4c1b4015e067ffca7c96dfdfdd29b260a29e",
+      "artifact_bytes": 173711,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Đoạn clip mô tả hậu quả của hiện tượng sạt lở đất nghiêm trọng, đất đá tràn xuống gây tắc nghẽn hoàn toàn một đoạn đường đèo. Trong một cảnh quay cận, có thể thấy một cột mốc đường bộ với phần đỉnh màu đỏ chỉ còn lộ ra phần trên, phần lớn đã bị đất đá vùi lấp. Ở cảnh quay cuối, một người đi xe máy đang vật lộn để điều khiển phương tiện vượt qua khu vực bùn lầy, trên chiếc xe máy có treo một vật màu xanh lá. Tên của con đèo là gì?\n\n## Temporal Retrieval and Alignment of Key Events (TRAKE)",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 6250,
+          "original": {
+            "end_frame": 6250,
+            "end_s": 250.0,
+            "start_frame": 5500,
+            "start_s": 220.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 5500,
+          "video_id": "L22_V008"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 5638,
+      "kind": "image",
+      "query_id": "p1_q24",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 5638,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L22/L22_V008.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L22\\L22_V008.mp4",
+      "source_file": {
+        "bytes": 126829790,
+        "mtime_ns": 1786611663119413700
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "1095.720000",
+            "nb_frames": "27393"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "1095.772880",
+            "nb_frames": "47191"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "1095.772880"
+        }
+      },
+      "frame_identity_method": "zero-based decoded frame index via ffmpeg select(n); no source timestamp rounding",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-threads",
+        "4",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L22\\L22_V008.mp4",
+        "-map",
+        "0:v:0",
+        "-vf",
+        "select=eq(n\\,5638)",
+        "-frames:v",
+        "1",
+        "-fps_mode",
+        "vfr",
+        "-q:v",
+        "2",
+        "-an",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-ocr-source-capture-20260916-9nel47po\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-ocr-v1\\p1_q24_L22_V008_frame5638.jpg"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p1_q24_L22_V008_frame5638.jpg",
+      "artifact_sha256": "4fb5e228c5a161b34328c4b55a1e0b5599c3343c26fa028d714970358a5bf217",
+      "artifact_bytes": 94067,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Hình ảnh một con cá được đặt lên cân, sau đó có cảnh một con cá khác cùng loại bị một người cầm đuôi. Con số hiển thị cuối cùng trên cân là bao nhiêu?",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 28200,
+          "original": {
+            "end_frame": 28200,
+            "end_s": 940.0,
+            "start_frame": 25440,
+            "start_s": 848.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 25440,
+          "video_id": "L21_V023"
+        },
+        {
+          "end_frame": 26220,
+          "original": {
+            "end_frame": 26220,
+            "end_s": 874.0,
+            "start_frame": 25680,
+            "start_s": 856.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 25680,
+          "video_id": "L21_V023"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 30.0,
+      "frame": 26042,
+      "kind": "image",
+      "query_id": "p1_q21",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 26042,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L21/L21_V023.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L21\\L21_V023.mp4",
+      "source_file": {
+        "bytes": 120982146,
+        "mtime_ns": 1785580159011116500
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "30/1",
+            "avg_frame_rate": "30/1",
+            "time_base": "1/15360",
+            "start_time": "0.000000",
+            "duration": "1179.700000",
+            "nb_frames": "35391"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "1179.782676",
+            "nb_frames": "50809"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "1179.782676"
+        }
+      },
+      "frame_identity_method": "zero-based decoded frame index via ffmpeg select(n); no source timestamp rounding",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-threads",
+        "4",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L21\\L21_V023.mp4",
+        "-map",
+        "0:v:0",
+        "-vf",
+        "select=eq(n\\,26042)",
+        "-frames:v",
+        "1",
+        "-fps_mode",
+        "vfr",
+        "-q:v",
+        "2",
+        "-an",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-ocr-source-capture-20260916-9nel47po\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-ocr-v1\\p1_q21_L21_V023_frame26042.jpg"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p1_q21_L21_V023_frame26042.jpg",
+      "artifact_sha256": "42eaf30b38bed8b396d90bcb155834a795cb9c00b2fb902e1dd073173d34acf7",
+      "artifact_bytes": 73666,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Clip bài giảng môn Địa lí, có 1 bảng số liệu về mạng lưới đô thị ở Việt Nam. Bảng này thể hiện sự khác nhau về phân bố đô thị giữa các vùng bằng màu sắc: 3 vùng có nhiều đô thị nhất thì con số thể hiện số lượng đô thị được in màu đỏ, còn 2 vùng có ít đô thị nhất thì con số này được in màu xanh. Từ bảng số liệu ta còn có thể thấy rằng vùng có ít đô thị nhất lại là vùng có dân số đô thi cao nhất.",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 34375,
+          "original": {
+            "end_frame": 34375,
+            "end_s": 1375.0,
+            "start_frame": 33250,
+            "start_s": 1330.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 33250,
+          "video_id": "L25_V060"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 33299,
+      "kind": "image",
+      "query_id": "p2_q15",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 33299,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L25/L25_V060.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L25\\L25_V060.mp4",
+      "source_file": {
+        "bytes": 205989970,
+        "mtime_ns": 1786613762587084000
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "1582.760000",
+            "nb_frames": "39569"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "1582.811429",
+            "nb_frames": "68166"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "1582.811429"
+        }
+      },
+      "frame_identity_method": "zero-based decoded frame index via ffmpeg select(n); no source timestamp rounding",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-threads",
+        "4",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L25\\L25_V060.mp4",
+        "-map",
+        "0:v:0",
+        "-vf",
+        "select=eq(n\\,33299)",
+        "-frames:v",
+        "1",
+        "-fps_mode",
+        "vfr",
+        "-q:v",
+        "2",
+        "-an",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-ocr-source-capture-20260916-9nel47po\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-ocr-v1\\p2_q15_L25_V060_frame33299.jpg"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p2_q15_L25_V060_frame33299.jpg",
+      "artifact_sha256": "6c485e50e0388867ccfa145bc5aaca785da7faafe784e7c872ed90f4dd52c188",
+      "artifact_bytes": 181199,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Cảnh quay một tô cháo đã được nấu và trang trí hoàn chỉnh (đã xong các giai đoạn trang trí). Kế bên tô cháo có 1 chén nhỏ màu đen, để chứa 1 loại topping màu cam kết cấu hơi giống những sợi nhỏ. Loại topping này trước đó đã được rắc lên tô cháo. Xung quanh topping là các loại rau, hành,... Hỏi topping trong video là thịt của con gì?",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 6825,
+          "original": {
+            "end_frame": 6825,
+            "end_s": 273.0,
+            "start_frame": 5950,
+            "start_s": 238.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 5950,
+          "video_id": "L26_V450"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 6300,
+      "kind": "image",
+      "query_id": "p2_q26",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 6300,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L26E/L26_V450.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L26E\\L26_V450.mp4",
+      "source_file": {
+        "bytes": 75897670,
+        "mtime_ns": 1786621089328409300
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "337.840000",
+            "nb_frames": "8446"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "337.896780",
+            "nb_frames": "14552"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "337.896780"
+        }
+      },
+      "frame_identity_method": "zero-based decoded frame index via ffmpeg select(n); no source timestamp rounding",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-threads",
+        "4",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L26E\\L26_V450.mp4",
+        "-map",
+        "0:v:0",
+        "-vf",
+        "select=eq(n\\,6300)",
+        "-frames:v",
+        "1",
+        "-fps_mode",
+        "vfr",
+        "-q:v",
+        "2",
+        "-an",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-ocr-source-capture-20260916-9nel47po\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-ocr-v1\\p2_q26_L26_V450_frame6300.jpg"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p2_q26_L26_V450_frame6300.jpg",
+      "artifact_sha256": "cbaf4bf39754ece04ef310cf29b319ec8a2ec25c1b68880cf05e24071fa499fa",
+      "artifact_bytes": 120786,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Cảnh quay một chú lân đang biểu diễn từ đầu video, các cột để chú lân biểu diễn được dán những con số. Phía sau có 1 mô hình con rồng uốn lượn hình xoắn ốc. Trong các số từ 16 giây đầu tiên của video, số nào không được nhìn thấy từ góc nhìn của camera trong các số từ 1-8.",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 480,
+          "original": {
+            "end_frame": 480,
+            "end_s": 16.0,
+            "start_frame": 0,
+            "start_s": 0.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 0,
+          "video_id": "L24_V031"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 30.0,
+      "frame": 240,
+      "kind": "image",
+      "query_id": "p2_q25",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 240,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L24/L24_V031.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L24\\L24_V031.mp4",
+      "source_file": {
+        "bytes": 137271653,
+        "mtime_ns": 1786620960985797100
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "30/1",
+            "avg_frame_rate": "30/1",
+            "time_base": "1/15360",
+            "start_time": "0.000000",
+            "duration": "568.966667",
+            "nb_frames": "17069"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "569.051429",
+            "nb_frames": "24507"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "569.051429"
+        }
+      },
+      "frame_identity_method": "zero-based decoded frame index via ffmpeg select(n); no source timestamp rounding",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-threads",
+        "4",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L24\\L24_V031.mp4",
+        "-map",
+        "0:v:0",
+        "-vf",
+        "select=eq(n\\,240)",
+        "-frames:v",
+        "1",
+        "-fps_mode",
+        "vfr",
+        "-q:v",
+        "2",
+        "-an",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-ocr-source-capture-20260916-9nel47po\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-ocr-v1\\p2_q25_L24_V031_frame240.jpg"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p2_q25_L24_V031_frame240.jpg",
+      "artifact_sha256": "9e62dfcf130643f5dfa1de311fa89bf66547ead9178e1e41d740ed2cc37e51ee",
+      "artifact_bytes": 208975,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Một giáo viên nữ ngồi bên phải màn hình và giảng bài Tiếng Anh.\nTrên bảng xanh lần lượt xuất hiện hai câu ví dụ, một câu nói về việc đi bảo tàng vào tuần trước, câu còn lại nói về thói quen chơi bóng đá khi còn trẻ.\nSau đó, nội dung trên bảng bổ sung phần giải thích chức năng của hai ví dụ và cuối cùng xuất hiện công thức ngữ pháp tương ứng.",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 2550,
+          "group_index": 0,
+          "original": {
+            "end": 2550,
+            "kind": "interval",
+            "start": 1025,
+            "video_id": "L25_V075"
+          },
+          "source": "accepted_groups",
+          "start_frame": 1025,
+          "video_id": "L25_V075"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 1787,
+      "kind": "image",
+      "query_id": "p3_q04",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 1787,
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+      "video": "videos/L25/L25_V075.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L25\\L25_V075.mp4",
+      "source_file": {
+        "bytes": 123869771,
+        "mtime_ns": 1786613774834571900
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "1736.120000",
+            "nb_frames": "43403"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "1736.179229",
+            "nb_frames": "74771"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "1736.179229"
+        }
+      },
+      "frame_identity_method": "zero-based decoded frame index via ffmpeg select(n); no source timestamp rounding",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-threads",
+        "4",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L25\\L25_V075.mp4",
+        "-map",
+        "0:v:0",
+        "-vf",
+        "select=eq(n\\,1787)",
+        "-frames:v",
+        "1",
+        "-fps_mode",
+        "vfr",
+        "-q:v",
+        "2",
+        "-an",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-ocr-source-capture-20260916-9nel47po\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-ocr-v1\\p3_q04_L25_V075_frame1787.jpg"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p3_q04_L25_V075_frame1787.jpg",
+      "artifact_sha256": "1964803cf30311c3b937def8c6cccdaa11e7ac3b1a4277374d8564ed3099d4a4",
+      "artifact_bytes": 113990,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Một nhóm đông học sinh mặc đồng phục tập trung thành nhiều hàng trước khu vực trường học.\nPhía trước mỗi hàng có người cầm bảng ghi số lớp để phân chia các nhóm học sinh.\nSau đó, các hàng học sinh lần lượt di chuyển vào bên trong khuôn viên trường dưới sự hướng dẫn của giáo viên.\nCuối đoạn, học sinh nối thành hàng dài, đi qua hành lang và lên cầu thang của tòa nhà.",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 1775,
+          "group_index": 0,
+          "original": {
+            "end": 1775,
+            "kind": "interval",
+            "start": 1572,
+            "video_id": "L22_V026"
+          },
+          "source": "accepted_groups",
+          "start_frame": 1572,
+          "video_id": "L22_V026"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 30.0,
+      "frame": 1673,
+      "kind": "image",
+      "query_id": "p3_q02",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 1673,
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+      "video": "videos/L22/L22_V026.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L22\\L22_V026.mp4",
+      "source_file": {
+        "bytes": 123508655,
+        "mtime_ns": 1786611674627361500
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "30/1",
+            "avg_frame_rate": "30/1",
+            "time_base": "1/15360",
+            "start_time": "0.000000",
+            "duration": "1135.466667",
+            "nb_frames": "34064"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "1135.548662",
+            "nb_frames": "48904"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "1135.548662"
+        }
+      },
+      "frame_identity_method": "zero-based decoded frame index via ffmpeg select(n); no source timestamp rounding",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-threads",
+        "4",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L22\\L22_V026.mp4",
+        "-map",
+        "0:v:0",
+        "-vf",
+        "select=eq(n\\,1673)",
+        "-frames:v",
+        "1",
+        "-fps_mode",
+        "vfr",
+        "-q:v",
+        "2",
+        "-an",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-ocr-source-capture-20260916-9nel47po\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-ocr-v1\\p3_q02_L22_V026_frame1673.jpg"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p3_q02_L22_V026_frame1673.jpg",
+      "artifact_sha256": "2530330153c11ab95fd712a4004698ec8fce29475a69127a797d24038f5b3e09",
+      "artifact_bytes": 199324,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Một giáo viên nam đứng bên trái màn hình giảng bài ôn tập môn Địa lí. Nội dung trình chiếu giới thiệu khái quát một vùng kinh tế, sau đó chuyển sang vị trí địa lí, phạm vi lãnh thổ và ý nghĩa phát triển. Ở phần sau, một bản đồ khí hậu Việt Nam được đưa lên để minh họa cho bài giảng.\nTheo nội dung bài giảng, vùng được nhắc đến gồm bao nhiêu tỉnh, thành?",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 4825,
+          "group_index": 0,
+          "original": {
+            "end": 4825,
+            "kind": "interval",
+            "start": 3658,
+            "video_id": "L25_V016"
+          },
+          "source": "accepted_groups",
+          "start_frame": 3658,
+          "video_id": "L25_V016"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 4241,
+      "kind": "image",
+      "query_id": "p3_q05",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 4241,
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+      "video": "videos/L25/L25_V016.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L25\\L25_V016.mp4",
+      "source_file": {
+        "bytes": 216377830,
+        "mtime_ns": 1786613723428543000
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "1592.360000",
+            "nb_frames": "39809"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "1592.401270",
+            "nb_frames": "68579"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "1592.401270"
+        }
+      },
+      "frame_identity_method": "zero-based decoded frame index via ffmpeg select(n); no source timestamp rounding",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-threads",
+        "4",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L25\\L25_V016.mp4",
+        "-map",
+        "0:v:0",
+        "-vf",
+        "select=eq(n\\,4241)",
+        "-frames:v",
+        "1",
+        "-fps_mode",
+        "vfr",
+        "-q:v",
+        "2",
+        "-an",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-ocr-source-capture-20260916-9nel47po\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-ocr-v1\\p3_q05_L25_V016_frame4241.jpg"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p3_q05_L25_V016_frame4241.jpg",
+      "artifact_sha256": "80e8ee46ccd6df39ffba17f070e355391c2cb3ccc805930dd80e19850781f6cd",
+      "artifact_bytes": 210762,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Giải đề THPTQG 2018 tại nhóm X. Nhóm này gồm 4 câu hỏi trắc nghiệm 4 đáp án A, B, C, D, trong đó đáp án 4 câu không trùng nhau và đều chứa chữ số 0. Hỏi X là số mấy?",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 41124,
+          "group_index": 0,
+          "original": {
+            "end": 41124,
+            "kind": "interval",
+            "start": 40416,
+            "video_id": "L25_V014"
+          },
+          "source": "accepted_groups",
+          "start_frame": 40416,
+          "video_id": "L25_V014"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 29.97002997002997,
+      "frame": 40770,
+      "kind": "image",
+      "query_id": "p3_q35",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 40770,
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+      "video": "videos/L25/L25_V014.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L25\\L25_V014.mp4",
+      "source_file": {
+        "bytes": 176200584,
+        "mtime_ns": 1786613721784082300
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "30000/1001",
+            "avg_frame_rate": "30000/1001",
+            "time_base": "1/30000",
+            "start_time": "0.000000",
+            "duration": "1591.222967",
+            "nb_frames": "47689"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "1591.286712",
+            "nb_frames": "68531"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "1591.286712"
+        }
+      },
+      "frame_identity_method": "zero-based decoded frame index via ffmpeg select(n); no source timestamp rounding",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-threads",
+        "4",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L25\\L25_V014.mp4",
+        "-map",
+        "0:v:0",
+        "-vf",
+        "select=eq(n\\,40770)",
+        "-frames:v",
+        "1",
+        "-fps_mode",
+        "vfr",
+        "-q:v",
+        "2",
+        "-an",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-ocr-source-capture-20260916-9nel47po\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-ocr-v1\\p3_q35_L25_V014_frame40770.jpg"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p3_q35_L25_V014_frame40770.jpg",
+      "artifact_sha256": "a1c9e78bbf5f4057654d23682b70ec2bc4247324fe8ec121b478f003c3dc1e96",
+      "artifact_bytes": 156687,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Trong đoạn video có 2 câu thơ của một nhà thơ ca ngợi anh hùng Nguyễn Trung Trực trong đình thần Nguyễn Trung Trực tại Kiên Giang. Hai câu thơ đó là gì?",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 5800,
+          "original": {
+            "end_frame": 5800,
+            "end_s": 232.0,
+            "start_frame": 5375,
+            "start_s": 215.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 5375,
+          "video_id": "L27_V010"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 5535,
+      "kind": "image",
+      "query_id": "p0_q20",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 5535,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L27/L27_V010.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L27\\L27_V010.mp4",
+      "source_file": {
+        "bytes": 164425095,
+        "mtime_ns": 1786621109435552100
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "584.480000",
+            "nb_frames": "14612"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "584.492698",
+            "nb_frames": "25172"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "584.492698"
+        }
+      },
+      "frame_identity_method": "zero-based decoded frame index via ffmpeg select(n); no source timestamp rounding",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-threads",
+        "4",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L27\\L27_V010.mp4",
+        "-map",
+        "0:v:0",
+        "-vf",
+        "select=eq(n\\,5535)",
+        "-frames:v",
+        "1",
+        "-fps_mode",
+        "vfr",
+        "-q:v",
+        "2",
+        "-an",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-ocr-source-capture-20260916-9nel47po\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-ocr-v1\\p0_q20_L27_V010_frame5535.jpg"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p0_q20_L27_V010_frame5535.jpg",
+      "artifact_sha256": "439849e49e030ea685179565281ef04c1d06e882416d17bc3e552b9c0614cb40",
+      "artifact_bytes": 115542,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Một đàn sư tử đang nghỉ ngơi và leo trèo trên các bục gỗ trong khu nuôi dưỡng, phía trước có bảng thông tin của London Zoo phục vụ công tác theo dõi và bảo tồn động vật.. Sau đó có cảnh hai nhân viên mặc áo xanh lá đang cân và ghi nhận số liệu của một con vật trong khuôn viên sở thú.",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 21450,
+          "original": {
+            "end_frame": 21450,
+            "end_s": 715.0,
+            "start_frame": 19350,
+            "start_s": 645.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 19350,
+          "video_id": "L22_V021"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 30.0,
+      "frame": 19738,
+      "kind": "image",
+      "query_id": "p1_q03",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 19738,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L22/L22_V021.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L22\\L22_V021.mp4",
+      "source_file": {
+        "bytes": 135482049,
+        "mtime_ns": 1786611671474264800
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "30/1",
+            "avg_frame_rate": "30/1",
+            "time_base": "1/15360",
+            "start_time": "0.000000",
+            "duration": "1270.800000",
+            "nb_frames": "38124"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "1270.874558",
+            "nb_frames": "54732"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "1270.874558"
+        }
+      },
+      "frame_identity_method": "zero-based decoded frame index via ffmpeg select(n); no source timestamp rounding",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-threads",
+        "4",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L22\\L22_V021.mp4",
+        "-map",
+        "0:v:0",
+        "-vf",
+        "select=eq(n\\,19738)",
+        "-frames:v",
+        "1",
+        "-fps_mode",
+        "vfr",
+        "-q:v",
+        "2",
+        "-an",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-ocr-source-capture-20260916-9nel47po\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-ocr-v1\\p1_q03_L22_V021_frame19738.jpg"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p1_q03_L22_V021_frame19738.jpg",
+      "artifact_sha256": "807cae9679bc4ab465c7bdaf1c6773d507862cec624dd89f23fa1966f7b7d8d1",
+      "artifact_bytes": 159704,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Bản đồ phân bố động đất tại một vùng trên thế giới, với một bảng chú giải phía bên trái gồm các kí hiệu nhiều màu sắc tương ứng với các vị trí tâm chấn có cấp độ động đất khác nhau. Không tính bảng chú giải, có bao nhiêu vị trí ghi nhận động đất cấp độ 4?",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 20000,
+          "original": {
+            "end_frame": 20000,
+            "end_s": 800.0,
+            "start_frame": 19250,
+            "start_s": 770.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 19250,
+          "video_id": "L21_V010"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 19430,
+      "kind": "image",
+      "query_id": "p1_q23",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 19430,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L21/L21_V010.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L21\\L21_V010.mp4",
+      "source_file": {
+        "bytes": 134782223,
+        "mtime_ns": 1785580152272853100
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "1132.440000",
+            "nb_frames": "28311"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "1132.506848",
+            "nb_frames": "48773"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "1132.506848"
+        }
+      },
+      "frame_identity_method": "zero-based decoded frame index via ffmpeg select(n); no source timestamp rounding",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-threads",
+        "4",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L21\\L21_V010.mp4",
+        "-map",
+        "0:v:0",
+        "-vf",
+        "select=eq(n\\,19430)",
+        "-frames:v",
+        "1",
+        "-fps_mode",
+        "vfr",
+        "-q:v",
+        "2",
+        "-an",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-ocr-source-capture-20260916-9nel47po\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-ocr-v1\\p1_q23_L21_V010_frame19430.jpg"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p1_q23_L21_V010_frame19430.jpg",
+      "artifact_sha256": "1cbfb49426b2a5556035c465cd1f7e5415f4e5504bfefd5b35fd9b393eaf8b07",
+      "artifact_bytes": 133955,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Sân khấu với dòng chữ nổi 3D to, ánh kim phủ kim tuyến có nội dung: “SẮC CỔ ...” đặt ở mép trước sân khấu.",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 2950,
+          "original": {
+            "end_frame": 2950,
+            "end_s": 118.0,
+            "start_frame": 1950,
+            "start_s": 78.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 1950,
+          "video_id": "L30_V026"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 2400,
+      "kind": "image",
+      "query_id": "p2_q13",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 2400,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L30/L30_V026.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L30\\L30_V026.mp4",
+      "source_file": {
+        "bytes": 41813576,
+        "mtime_ns": 1786613732902395000
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "181.560000",
+            "nb_frames": "4539"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "181.626485",
+            "nb_frames": "7822"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "181.626485"
+        }
+      },
+      "frame_identity_method": "zero-based decoded frame index via ffmpeg select(n); no source timestamp rounding",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-threads",
+        "4",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L30\\L30_V026.mp4",
+        "-map",
+        "0:v:0",
+        "-vf",
+        "select=eq(n\\,2400)",
+        "-frames:v",
+        "1",
+        "-fps_mode",
+        "vfr",
+        "-q:v",
+        "2",
+        "-an",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-ocr-source-capture-20260916-9nel47po\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-ocr-v1\\p2_q13_L30_V026_frame2400.jpg"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p2_q13_L30_V026_frame2400.jpg",
+      "artifact_sha256": "f61bb9a82e30b4eec3ae9b99c1c364330af69b12684df6f4acae08e6eef9aa81",
+      "artifact_bytes": 222684,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Đoạn phim ghi lại cảnh mạnh thường quân hỗ trợ một quán trọ dành cho người cao tuổi, sau đó chuyển sang cảnh một cụ ông trò chuyện với nhóm người nước ngoài. Hỏi quán trọ được nhắc đến trong đoạn phim nằm trên đường nào?",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 3850,
+          "original": {
+            "end_frame": 3850,
+            "end_s": 154.0,
+            "start_frame": 2100,
+            "start_s": 84.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 2100,
+          "video_id": "L30_V043"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 3529,
+      "kind": "image",
+      "query_id": "p2_q23",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 3529,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L30/L30_V043.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L30\\L30_V043.mp4",
+      "source_file": {
+        "bytes": 40712348,
+        "mtime_ns": 1786613737687365500
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "184.680000",
+            "nb_frames": "4617"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "184.737959",
+            "nb_frames": "7956"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "184.737959"
+        }
+      },
+      "frame_identity_method": "zero-based decoded frame index via ffmpeg select(n); no source timestamp rounding",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-threads",
+        "4",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L30\\L30_V043.mp4",
+        "-map",
+        "0:v:0",
+        "-vf",
+        "select=eq(n\\,3529)",
+        "-frames:v",
+        "1",
+        "-fps_mode",
+        "vfr",
+        "-q:v",
+        "2",
+        "-an",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-ocr-source-capture-20260916-9nel47po\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-ocr-v1\\p2_q23_L30_V043_frame3529.jpg"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p2_q23_L30_V043_frame3529.jpg",
+      "artifact_sha256": "0ffc3383de138ad1f2ac37a80be6a3c494e1a7b67e51af3bc34a914d292ad19b",
+      "artifact_bytes": 166257,
+      "source_size_mtime_unchanged": true
+    },
+    {
+      "canonical_query": "Câu hỏi môn Sinh học nằm ở số thứ tự 11 trong đề thi THPTQG 2022. Trong câu hỏi có một biểu đồ đưa ra sự so sánh tốc độ sinh trưởng của các loài thực vật trong các hệ sinh thái ven biển. Hãy cho biết loài cây (II) đạt được tốc độ sinh trưởng tốt nhất khi môi trường sống có độ mặn là bao nhiêu phần nghìn?",
+      "canonical_windows_preserved": [
+        {
+          "end_frame": 21250,
+          "original": {
+            "end_frame": 21250,
+            "end_s": 850.0,
+            "start_frame": 18000,
+            "start_s": 720.0
+          },
+          "source": "accepted_ranges",
+          "start_frame": 18000,
+          "video_id": "L25_V012"
+        }
+      ],
+      "channel": "ocr",
+      "coverage_limit": "One source still can assess visible signal at this anchor; it does not establish a sequence, a count across time, first occurrence, or full-window visibility.",
+      "expected_fps": 25.0,
+      "frame": 20500,
+      "kind": "image",
+      "query_id": "p2_q24",
+      "reason": "Complete one representative source observation for each remaining row in the frozen sample, using the first previously declared anchor; no retrieval-outcome selection.",
+      "representative_anchor_frame": 20500,
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "video": "videos/L25/L25_V012.mp4",
+      "source_path": "D:\\Official-Dataset\\videos\\L25\\L25_V012.mp4",
+      "source_file": {
+        "bytes": 103838545,
+        "mtime_ns": 1786613720230077900
+      },
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "25/1",
+            "avg_frame_rate": "25/1",
+            "time_base": "1/12800",
+            "start_time": "0.000000",
+            "duration": "1240.800000",
+            "nb_frames": "31020"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/44100",
+            "start_time": "0.000000",
+            "duration": "1240.851156",
+            "nb_frames": "53439"
+          }
+        ],
+        "format": {
+          "start_time": "0.000000",
+          "duration": "1240.851156"
+        }
+      },
+      "frame_identity_method": "zero-based decoded frame index via ffmpeg select(n); no source timestamp rounding",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-nostdin",
+        "-threads",
+        "4",
+        "-i",
+        "D:\\Official-Dataset\\videos\\L25\\L25_V012.mp4",
+        "-map",
+        "0:v:0",
+        "-vf",
+        "select=eq(n\\,20500)",
+        "-frames:v",
+        "1",
+        "-fps_mode",
+        "vfr",
+        "-q:v",
+        "2",
+        "-an",
+        "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna82-remaining-ocr-source-capture-20260916-9nel47po\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-audit\\vecna82-source-media-remaining-ocr-v1\\p2_q24_L25_V012_frame20500.jpg"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "status": "CAPTURED",
+      "artifact": "p2_q24_L25_V012_frame20500.jpg",
+      "artifact_sha256": "fa2541893f8ac5b3e27a52512d5a2d334a561ec8e1f54ebe80bac3a4228d682c",
+      "artifact_bytes": 130568,
+      "source_size_mtime_unchanged": true
+    }
+  ],
+  "request_manifest_sha256": "f2bd74678507f5d9f7dd58eecb7fbc7fc88e8eaca2d3aa762d931fdf78996a24",
+  "selection_rule": "First previously declared probe anchor: first preserved submitted anchor within a canonical window, otherwise canonical window midpoint. ASR uses 28 seconds around that anchor fitted inside the containing window; windows <=28 seconds receive two seconds of surrounding context. No baseline/reranker outcome or extracted-text quality participates.",
+  "request_scope": "Only the remaining 17 OCR query/channel rows of the unchanged 20-OCR/18-ASR sample; no dataset writes or model runs.",
+  "elapsed_seconds": 94.282,
+  "captured": 17
+}

@@ -1,0 +1,297 @@
+{
+  "plan_sha256": "82b43e196b640a277cfa67e17e127ff9b2f270d13bf7906d8eac1457ad9fbb38",
+  "canonical_truth_sha256": "63f80eb6ff54ef3c623f6ae4926eba404dac8bb5543b86e31f8fa0da842b4c9f",
+  "inventory_sha256": "f5e0de1bfea8953f5cdc232d99a2aab6e2220e421633ce687c9ee27eb9d96d6a",
+  "queries": [
+    {
+      "query_id": "p0_q22",
+      "canonical_query": "E1: Khoảnh khắc đầu tiên bột được bỏ vào tô măng tây.\nE2: Khoảnh khắc đầu tiên thấy miến măng tây đầu tiên tiếp xúc với dầu trong chảo.\nE3: Khoảnh khắc miếng măng tây đầu tiên rời khỏi chảo dầu.\nE4: Khoảng khắc miếng măng tây cuối cùng rời chảo dầu và nằm hoàn toàn trên dĩa.",
+      "canonical_query_sha256": "12483e925dc0f1d3ca944fd8a715056a52febcd37534f5b69cdbbd9e53bb4e2f",
+      "video_id": "L26_V194",
+      "video_relative_path": "videos/L26B/L26_V194.mp4",
+      "archived_fps": "25/1",
+      "metadata_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L26_V194.json",
+      "metadata_blob_sha1": "e3af2718ff73766284a1297372ed0cbeaa6355ec",
+      "metadata_sha256": "5df1bea989a68707fb2685c8b4a77c827522884b09442c144207c16ed4d1b698",
+      "anchors": [
+        {
+          "event_index": 1,
+          "frame": 4707,
+          "truth_tier": "provisional_submission_anchor",
+          "source_field": "trake_event_truth"
+        },
+        {
+          "event_index": 2,
+          "frame": 5139,
+          "truth_tier": "provisional_submission_anchor",
+          "source_field": "trake_event_truth"
+        },
+        {
+          "event_index": 3,
+          "frame": 5427,
+          "truth_tier": "provisional_submission_anchor",
+          "source_field": "trake_event_truth"
+        },
+        {
+          "event_index": 4,
+          "frame": 5865,
+          "truth_tier": "provisional_submission_anchor",
+          "source_field": "trake_event_truth"
+        }
+      ]
+    },
+    {
+      "query_id": "p0_q23",
+      "canonical_query": "Đoạn video múa lân một con lân màu vàng đen trắng, tìm các sự kiện sau:\nE1: Lân quay vòng trên cột số 4 bằng 2 chân trước rồi tiếp đất. Khoảnh khắc đầu tiên mà lân bắt đầu xoay vòng.\nE2: Khoảnh khắc 4 chân hoàn toàn chạm đất đầu tiên.\nE3: Khoảnh khắc đầu tiên 2 người biểu diễn lân cuối chào ban giám khảo.\nE4: Sau đó lân tiến lại chào một con rồng. Khoảnh khắc đầu tiên con rồng cử động đầu.",
+      "canonical_query_sha256": "bcbd4b58239666929025f2b7d42b37936c9a30049dc2891a2615337188b775cb",
+      "video_id": "L24_V033",
+      "video_relative_path": "videos/L24/L24_V033.mp4",
+      "archived_fps": "30/1",
+      "metadata_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L24_V033.json",
+      "metadata_blob_sha1": "96535fc418de58187931c88b19d885e8b80ff344",
+      "metadata_sha256": "5a7b4f3a401db3e2090d14edccb1199dc4c150d81f99e1ba3c3bcfe9beaf7367",
+      "anchors": [
+        {
+          "event_index": 1,
+          "frame": 15945,
+          "truth_tier": "provisional_submission_anchor",
+          "source_field": "trake_event_truth"
+        },
+        {
+          "event_index": 2,
+          "frame": 16006,
+          "truth_tier": "provisional_submission_anchor",
+          "source_field": "trake_event_truth"
+        },
+        {
+          "event_index": 3,
+          "frame": 16354,
+          "truth_tier": "provisional_submission_anchor",
+          "source_field": "trake_event_truth"
+        },
+        {
+          "event_index": 4,
+          "frame": 16901,
+          "truth_tier": "provisional_submission_anchor",
+          "source_field": "trake_event_truth"
+        }
+      ]
+    },
+    {
+      "query_id": "p0_q24",
+      "canonical_query": "Trong đoạn video nấu ăn một món ăn về nấm, gồm các khoảnh khắc sơ chế:\nE1: Khoảnh khắc đầu tiên thấy cắt nấm.\nE2: Khoảnh khắc đầu tiên cắt củ năng.\nE2: Khoảnh khắc đầu tiên cắt đậu hủ.\nE4: Khoảnh khắc chảo đặt lên bếp, đầu bếp mở lửa và thấy lửa bắt đầu xuất hiện",
+      "canonical_query_sha256": "abe95262c85e82a968cc00869eac34f9f3a952ec727a312b9f8eceb7003b786e",
+      "video_id": "L26_V072",
+      "video_relative_path": "videos/L26A/L26_V072.mp4",
+      "archived_fps": "25/1",
+      "metadata_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L26_V072.json",
+      "metadata_blob_sha1": "719ecf484babbe87c5c50644199d3fe529a847a7",
+      "metadata_sha256": "5a68c99a42bdc040c08b4adbfdc2636cc3f8ad6d45e896ee52fbba121f6523e8",
+      "anchors": [
+        {
+          "event_index": 1,
+          "frame": 2466,
+          "truth_tier": "provisional_submission_anchor",
+          "source_field": "trake_event_truth"
+        },
+        {
+          "event_index": 2,
+          "frame": 3133,
+          "truth_tier": "provisional_submission_anchor",
+          "source_field": "trake_event_truth"
+        },
+        {
+          "event_index": 3,
+          "frame": 3420,
+          "truth_tier": "provisional_submission_anchor",
+          "source_field": "trake_event_truth"
+        },
+        {
+          "event_index": 4,
+          "frame": 3800,
+          "truth_tier": "provisional_submission_anchor",
+          "source_field": "trake_event_truth"
+        }
+      ]
+    },
+    {
+      "query_id": "p1_q25",
+      "canonical_query": "Đoạn video bắt đầu bằng ảnh cận đầu một con lân trắng, mũi đỏ, bên cạnh lá cờ trắng viền đỏ.\nE1 Khoảnh khắc đầu tiên xuất hiện đầy đủ hai con rồng vàng đang xoay vòng.\nE2 Khoảnh khắc đầu tiên con lân hoàn tất cú xoay người trên các thanh trụ (thời điểm đâu tiên các chân của lân đặt trên trụ sau khi xoay).\nE3 Khoảnh khắc đầu tiên dùi chạm vào kẻng đồng múa lân.",
+      "canonical_query_sha256": "fabe99ad531f96d61c7bcab0354aa14e3070621a95b4d35d6d053e26b3937a1c",
+      "video_id": "L24_V024",
+      "video_relative_path": "videos/L24/L24_V024.mp4",
+      "archived_fps": "30/1",
+      "metadata_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L24_V024.json",
+      "metadata_blob_sha1": "99ca70c98ccfb75933ebc235ce9cc8e7a04259ee",
+      "metadata_sha256": "605871b71919a111932a270b81187187a946671cd9bbc5fdd4b774c882e24cd5",
+      "anchors": [
+        {
+          "event_index": 1,
+          "frame": 9785,
+          "truth_tier": "provisional_submission_anchor",
+          "source_field": "trake_event_truth"
+        },
+        {
+          "event_index": 2,
+          "frame": 10135,
+          "truth_tier": "provisional_submission_anchor",
+          "source_field": "trake_event_truth"
+        },
+        {
+          "event_index": 3,
+          "frame": 10191,
+          "truth_tier": "provisional_submission_anchor",
+          "source_field": "trake_event_truth"
+        }
+      ]
+    },
+    {
+      "query_id": "p2_q29",
+      "canonical_query": "Video về một khu vườn cây ăn trái ở miền Tây Nam Bộ. Đây là chuỗi liên tiếp các cảnh quay về 4 loại trái cây trong vườn.\nE1: Cảnh đầu tiên có trái sầu riêng.\nE2: Cảnh đầu tiên có trái măng cụt.\nE3: Cảnh đầu tiên có trái bưởi.\nE4: Cảnh đầu tiên có trái dâu bòn bon.",
+      "canonical_query_sha256": "32ac6d640f065af07aea8a6986bf9e5b50afebe3ba60d560fafc3c801268f343",
+      "video_id": "L27_V011",
+      "video_relative_path": "videos/L27/L27_V011.mp4",
+      "archived_fps": "25/1",
+      "metadata_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L27_V011.json",
+      "metadata_blob_sha1": "7328f2abfc099b7adbe3e6265202aa606ad2433b",
+      "metadata_sha256": "81c1b754fe358b709751d2a680714787ff388d00a62aea6ce54de7cf2a1de09d",
+      "anchors": [
+        {
+          "event_index": 1,
+          "frame": 3793,
+          "truth_tier": "provisional_submission_anchor",
+          "source_field": "trake_event_truth"
+        },
+        {
+          "event_index": 2,
+          "frame": 3870,
+          "truth_tier": "provisional_submission_anchor",
+          "source_field": "trake_event_truth"
+        },
+        {
+          "event_index": 3,
+          "frame": 4014,
+          "truth_tier": "provisional_submission_anchor",
+          "source_field": "trake_event_truth"
+        },
+        {
+          "event_index": 4,
+          "frame": 4098,
+          "truth_tier": "provisional_submission_anchor",
+          "source_field": "trake_event_truth"
+        }
+      ]
+    },
+    {
+      "query_id": "p2_q30",
+      "canonical_query": "4 cảnh này xảy ra liên tiếp nhau.\nCảnh 1: Hai người phụ nữ cùng nhau dán niêm phong một thùng carton.\nCảnh 2: Các thùng mì tôm và bọc bánh mì được sắp xếp ngay ngắn.\nCảnh 3: Một người đàn ông nhấc thùng mì tôm lên và xếp lên trên chồng thùng mì.\nCảnh 4: Cảnh quay cận cảnh các thùng mì được xếp chồng trên xe tải.",
+      "canonical_query_sha256": "d3efa8c87a7071960fd2f705118dcab190268558fc89b97cc0835e65b913d4d3",
+      "video_id": "L30_V031",
+      "video_relative_path": "videos/L30/L30_V031.mp4",
+      "archived_fps": "25/1",
+      "metadata_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L30_V031.json",
+      "metadata_blob_sha1": "2d945da1047072e57728b650bf4a204944112c80",
+      "metadata_sha256": "65d808f3a6630606564683917416222e322019fdee2bbad8f5694b30073645ca",
+      "anchors": [
+        {
+          "event_index": 1,
+          "frame": 2076,
+          "truth_tier": "provisional_submission_anchor",
+          "source_field": "trake_event_truth"
+        },
+        {
+          "event_index": 2,
+          "frame": 2129,
+          "truth_tier": "provisional_submission_anchor",
+          "source_field": "trake_event_truth"
+        },
+        {
+          "event_index": 3,
+          "frame": 2168,
+          "truth_tier": "provisional_submission_anchor",
+          "source_field": "trake_event_truth"
+        },
+        {
+          "event_index": 4,
+          "frame": 2228,
+          "truth_tier": "provisional_submission_anchor",
+          "source_field": "trake_event_truth"
+        }
+      ]
+    },
+    {
+      "query_id": "p3_q21",
+      "canonical_query": "Một món ăn làm từ tôm và các loại gia vị.\nE1: Khoảnh khắc người đầu bếp bắt đầu trộn hỗn hợp nước xốt, trong nước xốt này có 2 thành phần là nước cam và vỏ cam.\nE2: Khoảnh khắc người đầu bếp bắt đầu cắt bỏ đầu tôm.\nE3: Người đầu bếp cho tôm ra dĩa. Hãy chọn khoảnh khắc con tôm đầu tiên chạm vào dĩa.\nE4: Khoảnh khắc tép cam thứ 4 được xếp lên dĩa khi trang trí món ăn.",
+      "canonical_query_sha256": "d81345b4383476336dbd2abcf1843488ca9f65d4af828122231f164890a31331",
+      "video_id": "L26_V156",
+      "video_relative_path": "videos/L26B/L26_V156.mp4",
+      "archived_fps": "25/1",
+      "metadata_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L26_V156.json",
+      "metadata_blob_sha1": "eb62d56bf2e3aa9e885d8890270d561d6e306f67",
+      "metadata_sha256": "accfe561d7889099563e78a4b0b1f6445ca5519e8ba24bc932dcd2582b717a76",
+      "anchors": [
+        {
+          "event_index": 1,
+          "frame": 3260,
+          "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+          "source_field": "accepted_groups"
+        },
+        {
+          "event_index": 2,
+          "frame": 3766,
+          "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+          "source_field": "accepted_groups"
+        },
+        {
+          "event_index": 3,
+          "frame": 4788,
+          "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+          "source_field": "accepted_groups"
+        },
+        {
+          "event_index": 4,
+          "frame": 6730,
+          "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+          "source_field": "accepted_groups"
+        }
+      ]
+    },
+    {
+      "query_id": "p3_q34",
+      "canonical_query": "Con lân màu đỏ đang biểu diễn trên các cột trụ.\n\nE1: Con lân treo hai chân trước vào phần dưới thân của hai trụ gần cuối (gần trụ cuối cùng cao nhất).\nE2: Con lân đứng thẳng sau khi di chuyển từ cuối dãy trụ về, hai chân đứng trên hai trụ khác nhau và một chân trước co lên.\nE3: Khoảnh khắc con lân hoàn tất động tác ngoảnh mặt theo hướng ngược lại.\nE4: Khoảnh khắc đầu tiên con lân ngậm một thanh trụ.",
+      "canonical_query_sha256": "b8db0149b8fdfdc16879dfaf28e980f55177d022a67052f747833ad8288c5949",
+      "video_id": "L24_V013",
+      "video_relative_path": "videos/L24/L24_V013.mp4",
+      "archived_fps": "25/1",
+      "metadata_path": "derived/metadata/asr-ocr-text-v1/asr/by-video/L24_V013.json",
+      "metadata_blob_sha1": "5f1592fd77b46a43fc09342505af55601d0ea63a",
+      "metadata_sha256": "6b460fe9ecd2d3d39071f99972eabdc8d42b04c17d9a7488177803b32fbd9aab",
+      "anchors": [
+        {
+          "event_index": 1,
+          "frame": 9900,
+          "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+          "source_field": "accepted_groups"
+        },
+        {
+          "event_index": 2,
+          "frame": 10218,
+          "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+          "source_field": "accepted_groups"
+        },
+        {
+          "event_index": 3,
+          "frame": 10330,
+          "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+          "source_field": "accepted_groups"
+        },
+        {
+          "event_index": 4,
+          "frame": 10576,
+          "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+          "source_field": "accepted_groups"
+        }
+      ]
+    }
+  ]
+}

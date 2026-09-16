@@ -1,0 +1,41 @@
+{
+  "source_url": "https://github.com/JimmyK300/ai-routing-hub/issues/1#issuecomment-5697217866",
+  "artifact_id": 10445228877,
+  "artifact_sha256": "sha256:7b4dc95adc4c31d3f6eb99081ae404eb4d9be5171f9c0da224fbfd3fe8a67ad1",
+  "raw_patch_sha256": "69ead1924c36fe781e8bf65db245ea3f97b484d6b012a2ba107e74d966ece3e6",
+  "patch_hash_verified_after_crlf_to_lf": true,
+  "result": {
+    "schema_version": 1,
+    "task_id": "vecna82-dataset-source-five-assets-v3-20260916",
+    "runner": "wsl-shell",
+    "repository": "JimmyK300/Vecna",
+    "base_commit": "95d63a6abf10c598e0e54af7d2071bedbe542d1e",
+    "scope": [
+      "benchmark-results/astra-retrieval-rd-v1"
+    ],
+    "dry_run": false,
+    "status": "success",
+    "exit_code": 0,
+    "changed_paths": [
+      "benchmark-results/astra-retrieval-rd-v1/code/capture_dataset_media.py",
+      "benchmark-results/astra-retrieval-rd-v1/outputs/source-audit/vecna82-source-media-review-v1/manifest.json",
+      "benchmark-results/astra-retrieval-rd-v1/outputs/source-audit/vecna82-source-media-review-v1/p0_q19_L30_V072_frame1745.jpg",
+      "benchmark-results/astra-retrieval-rd-v1/outputs/source-audit/vecna82-source-media-review-v1/p0_q20_L27_V010_215-233s.wav",
+      "benchmark-results/astra-retrieval-rd-v1/outputs/source-audit/vecna82-source-media-review-v1/p0_q21_L30_V078_frame1788.jpg",
+      "benchmark-results/astra-retrieval-rd-v1/outputs/source-audit/vecna82-source-media-review-v1/p1_q17_L25_V041_frame17152.jpg",
+      "benchmark-results/astra-retrieval-rd-v1/outputs/source-audit/vecna82-source-media-review-v1/p3_q24_L26_V448_98-126s.wav"
+    ],
+    "scope_violations": [],
+    "patch_artifact": "changes.patch",
+    "patch_bytes": 2275760,
+    "patch_sha256": "a300635b9bf48a07c959eee291b70dd8dcb3eb76ec98f9659f0e208852b4706c",
+    "worker_stdout": "{\"returncode\": 0, \"stdout\": \"{\\\"output_dir\\\": \\\"C:\\\\\\\\Users\\\\\\\\minhc\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp\\\\\\\\ai-broker-vecna82-dataset-source-five-assets-v3-20260916-s_myi3ej\\\\\\\\worktree\\\\\\\\benchmark-results\\\\\\\\astra-retrieval-rd-v1\\\\\\\\outputs\\\\\\\\source-audit\\\\\\\\vecna82-source-media-review-v1\\\", \\\"captured\\\": 5, \\\"requested\\\": 5, \\\"elapsed_seconds\\\": 6.484}\\r\\n\", \"stderr\": \"\", \"elapsed_s\": 6.828000000001339}\n",
+    "worker_stderr": "",
+    "duration_seconds": 13.981,
+    "resolved_executable": "C:\\WINDOWS\\system32\\wsl.exe",
+    "wsl_distribution": "Ubuntu",
+    "workspace_kind": "clone",
+    "authority": "high-host",
+    "final_head": "95d63a6abf10c598e0e54af7d2071bedbe542d1e"
+  }
+}

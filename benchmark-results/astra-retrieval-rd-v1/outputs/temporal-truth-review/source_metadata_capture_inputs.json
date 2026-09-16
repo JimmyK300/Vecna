@@ -1,0 +1,122 @@
+[
+  {
+    "video_id": "L26_V194",
+    "git_blob_sha1": "e3af2718ff73766284a1297372ed0cbeaa6355ec",
+    "timing": {
+      "r_frame_rate": "25/1",
+      "fps": 25,
+      "rounded_fps": 25,
+      "timestamp_formula": "frame_idx / rounded_fps",
+      "timestamp_note": "Inclusive keyframe times. ASR text is the WhisperX segment projected onto this keyframe, not a native word interval.",
+      "probe_status": "ok",
+      "probe_error": "",
+      "source_video_path": "D:\\Official-Dataset\\videos\\L26B\\L26_V194.mp4"
+    },
+    "content_sha256": "5df1bea989a68707fb2685c8b4a77c827522884b09442c144207c16ed4d1b698"
+  },
+  {
+    "video_id": "L24_V033",
+    "git_blob_sha1": "96535fc418de58187931c88b19d885e8b80ff344",
+    "timing": {
+      "r_frame_rate": "30/1",
+      "fps": 30,
+      "rounded_fps": 30,
+      "timestamp_formula": "frame_idx / rounded_fps",
+      "timestamp_note": "Inclusive keyframe times. ASR text is the WhisperX segment projected onto this keyframe, not a native word interval.",
+      "probe_status": "ok",
+      "probe_error": "",
+      "source_video_path": "D:\\Official-Dataset\\videos\\L24\\L24_V033.mp4"
+    },
+    "content_sha256": "5a7b4f3a401db3e2090d14edccb1199dc4c150d81f99e1ba3c3bcfe9beaf7367"
+  },
+  {
+    "video_id": "L26_V072",
+    "git_blob_sha1": "719ecf484babbe87c5c50644199d3fe529a847a7",
+    "timing": {
+      "r_frame_rate": "25/1",
+      "fps": 25,
+      "rounded_fps": 25,
+      "timestamp_formula": "frame_idx / rounded_fps",
+      "timestamp_note": "Inclusive keyframe times. ASR text is the WhisperX segment projected onto this keyframe, not a native word interval.",
+      "probe_status": "ok",
+      "probe_error": "",
+      "source_video_path": "D:\\Official-Dataset\\videos\\L26A\\L26_V072.mp4"
+    },
+    "content_sha256": "5a68c99a42bdc040c08b4adbfdc2636cc3f8ad6d45e896ee52fbba121f6523e8"
+  },
+  {
+    "video_id": "L24_V024",
+    "git_blob_sha1": "99ca70c98ccfb75933ebc235ce9cc8e7a04259ee",
+    "timing": {
+      "r_frame_rate": "30/1",
+      "fps": 30,
+      "rounded_fps": 30,
+      "timestamp_formula": "frame_idx / rounded_fps",
+      "timestamp_note": "Inclusive keyframe times. ASR text is the WhisperX segment projected onto this keyframe, not a native word interval.",
+      "probe_status": "ok",
+      "probe_error": "",
+      "source_video_path": "D:\\Official-Dataset\\videos\\L24\\L24_V024.mp4"
+    },
+    "content_sha256": "605871b71919a111932a270b81187187a946671cd9bbc5fdd4b774c882e24cd5"
+  },
+  {
+    "video_id": "L27_V011",
+    "git_blob_sha1": "7328f2abfc099b7adbe3e6265202aa606ad2433b",
+    "timing": {
+      "r_frame_rate": "25/1",
+      "fps": 25,
+      "rounded_fps": 25,
+      "timestamp_formula": "frame_idx / rounded_fps",
+      "timestamp_note": "Inclusive keyframe times. ASR text is the WhisperX segment projected onto this keyframe, not a native word interval.",
+      "probe_status": "ok",
+      "probe_error": "",
+      "source_video_path": "D:\\Official-Dataset\\videos\\L27\\L27_V011.mp4"
+    },
+    "content_sha256": "81c1b754fe358b709751d2a680714787ff388d00a62aea6ce54de7cf2a1de09d"
+  },
+  {
+    "video_id": "L30_V031",
+    "git_blob_sha1": "2d945da1047072e57728b650bf4a204944112c80",
+    "timing": {
+      "r_frame_rate": "25/1",
+      "fps": 25,
+      "rounded_fps": 25,
+      "timestamp_formula": "frame_idx / rounded_fps",
+      "timestamp_note": "Inclusive keyframe times. ASR text is the WhisperX segment projected onto this keyframe, not a native word interval.",
+      "probe_status": "ok",
+      "probe_error": "",
+      "source_video_path": "D:\\Official-Dataset\\videos\\L30\\L30_V031.mp4"
+    },
+    "content_sha256": "65d808f3a6630606564683917416222e322019fdee2bbad8f5694b30073645ca"
+  },
+  {
+    "video_id": "L26_V156",
+    "git_blob_sha1": "eb62d56bf2e3aa9e885d8890270d561d6e306f67",
+    "timing": {
+      "r_frame_rate": "25/1",
+      "fps": 25,
+      "rounded_fps": 25,
+      "timestamp_formula": "frame_idx / rounded_fps",
+      "timestamp_note": "Inclusive keyframe times. ASR text is the WhisperX segment projected onto this keyframe, not a native word interval.",
+      "probe_status": "ok",
+      "probe_error": "",
+      "source_video_path": "D:\\Official-Dataset\\videos\\L26B\\L26_V156.mp4"
+    },
+    "content_sha256": "accfe561d7889099563e78a4b0b1f6445ca5519e8ba24bc932dcd2582b717a76"
+  },
+  {
+    "video_id": "L24_V013",
+    "git_blob_sha1": "5f1592fd77b46a43fc09342505af55601d0ea63a",
+    "timing": {
+      "r_frame_rate": "25/1",
+      "fps": 25,
+      "rounded_fps": 25,
+      "timestamp_formula": "frame_idx / rounded_fps",
+      "timestamp_note": "Inclusive keyframe times. ASR text is the WhisperX segment projected onto this keyframe, not a native word interval.",
+      "probe_status": "ok",
+      "probe_error": "",
+      "source_video_path": "D:\\Official-Dataset\\videos\\L24\\L24_V013.mp4"
+    },
+    "content_sha256": "6b460fe9ecd2d3d39071f99972eabdc8d42b04c17d9a7488177803b32fbd9aab"
+  }
+]

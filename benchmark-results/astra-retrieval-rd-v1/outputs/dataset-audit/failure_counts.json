@@ -1,0 +1,37 @@
+{
+  "channels": {
+    "asr": {
+      "alignment_error_count": null,
+      "baseline_strict_misses": 6,
+      "baseline_strict_success_controls": 12,
+      "dense_failure_count": null,
+      "duplicate_flooding_count": null,
+      "eligible": 18,
+      "extraction_error_count": null,
+      "fusion_failure_count": null,
+      "pending_local_evidence": 18,
+      "selected": 18,
+      "source_media_reviewed": 0,
+      "sparse_failure_count": null
+    },
+    "ocr": {
+      "alignment_error_count": null,
+      "baseline_strict_misses": 7,
+      "baseline_strict_success_controls": 13,
+      "coverage_limit": "Representative still inspected; full temporal query obligations may remain unresolved.",
+      "dense_failure_count": null,
+      "duplicate_flooding_count": null,
+      "eligible": 33,
+      "extraction_error_count": null,
+      "fusion_failure_count": null,
+      "pending_local_evidence": 0,
+      "selected": 20,
+      "source_media_reviewed": 20,
+      "sparse_failure_count": null,
+      "visible_text_missing_at_persisted_feature": 5
+    }
+  },
+  "full_sample_failure_rates_estimated": false,
+  "same_frame_gap_scope": "Query-critical writing missing or unrecoverably corrupted at the inspected sampled frame; not a full-window absence or a retrieval miss.",
+  "status": "FIVE_SAME_FRAME_OCR_SIGNAL_GAPS_SOURCE_AUDIO_UNHEARD"
+}

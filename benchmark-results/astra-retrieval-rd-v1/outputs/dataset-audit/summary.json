@@ -1,0 +1,66 @@
+{
+  "canonical_rows": 115,
+  "canonical_truth_changed": false,
+  "channels": {
+    "asr": {
+      "alignment_error_count": null,
+      "baseline_strict_misses": 6,
+      "baseline_strict_success_controls": 12,
+      "dense_failure_count": null,
+      "duplicate_flooding_count": null,
+      "eligible": 18,
+      "extraction_error_count": null,
+      "fusion_failure_count": null,
+      "pending_local_evidence": 18,
+      "selected": 18,
+      "source_media_reviewed": 0,
+      "sparse_failure_count": null
+    },
+    "ocr": {
+      "alignment_error_count": null,
+      "baseline_strict_misses": 7,
+      "baseline_strict_success_controls": 13,
+      "coverage_limit": "Representative still inspected; full temporal query obligations may remain unresolved.",
+      "dense_failure_count": null,
+      "duplicate_flooding_count": null,
+      "eligible": 33,
+      "extraction_error_count": null,
+      "fusion_failure_count": null,
+      "pending_local_evidence": 0,
+      "selected": 20,
+      "source_media_reviewed": 20,
+      "sparse_failure_count": null,
+      "visible_text_missing_at_persisted_feature": 5
+    }
+  },
+  "excluded_query_ids": [
+    "p0_q15",
+    "p3_q09"
+  ],
+  "models_run": false,
+  "pinned_source_text_files": 37,
+  "projected_text_rows_inspected": 38,
+  "query_channel_audit_rows": 38,
+  "retrieval_indexes_queried": false,
+  "sample_selection_sha256": "b4fd944228a033c37ea4d69ad757ceeae9635bfb026cf018e0d60f5b3c661be9",
+  "scoreable_rows": 113,
+  "source_audio_clips_heard": 0,
+  "source_images_inspected": 20,
+  "source_media_assets_captured": 38,
+  "source_media_reviewed": 20,
+  "source_visible_missing_ocr_representation_rows": [
+    "p0_q13",
+    "p0_q19",
+    "p0_q20",
+    "p0_q21",
+    "p1_q24"
+  ],
+  "status": "ALL20_OCR_REPRESENTATIVES_INSPECTED_ASR_LISTENING_PENDING",
+  "temporal_event_count": 31,
+  "temporal_mechanical_flags": {
+    "provenance_anchor_list_differs_from_event_truth": 2,
+    "repeated_event_label_in_canonical_query": 1
+  },
+  "temporal_query_count": 8,
+  "unique_sampled_queries": 30
+}
