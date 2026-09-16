@@ -1,0 +1,322 @@
+{
+  "canonical_truth_sha256": "63f80eb6ff54ef3c623f6ae4926eba404dac8bb5543b86e31f8fa0da842b4c9f",
+  "capture_manifest": {
+    "code_identity": {
+      "helpers": [
+        "_build_exact_regex",
+        "_check_cancelled",
+        "check_exact_phrases",
+        "remove_diacritics"
+      ],
+      "main_commit": "95d63a6abf10c598e0e54af7d2071bedbe542d1e",
+      "methods": [
+        "_extract_query_texts",
+        "_normalize_scores",
+        "_search_text_component",
+        "_text_field_from_index_field"
+      ],
+      "models_loaded": false,
+      "production_module_imported": false,
+      "selected_ast_sha256": "a08da842e6faede7a384b832dbb8dfe6c183fc667b8f2f1d8bc5a96005e1b75c",
+      "source_lf_sha256": "6f94bdd147c4b2b29b522a1f4bbbf004fb726fdfdf68a7cb316a4aec9e869e51",
+      "source_raw_sha256": "6f94bdd147c4b2b29b522a1f4bbbf004fb726fdfdf68a7cb316a4aec9e869e51"
+    },
+    "collection": {
+      "description_sha256": "1e3da787fcadab0b6251e00f6b05fee9abe3888c17a36d0babad843d652bded6",
+      "fields": [
+        "asr",
+        "asr_dense",
+        "asr_sparse",
+        "frame_id",
+        "image_clip_pe_l_14_336",
+        "image_siglip_so400m_384",
+        "ocr",
+        "ocr_dense",
+        "ocr_sparse",
+        "qwen_vl"
+      ],
+      "index_descriptions_sha256": "99b4a5d374b036b1373c77ddbf9e5fe3253edaa3a35fd2374067b002f01e9860",
+      "index_names": [
+        "asr_BM25",
+        "asr_dense_SCANN",
+        "image_clip_pe_l_14_336_SCANN",
+        "image_siglip_so400m_384_SCANN",
+        "ocr_BM25",
+        "ocr_dense_SCANN",
+        "qwen_vl_SCANN"
+      ],
+      "name": "official_l21_l30_all_v2",
+      "row_count": 322924
+    },
+    "collection_mutations": false,
+    "collector_sha256": "aaddcc1b1b2c65e5d01b6a637c85b4b1294725bd7b5d7ed316c45d334ac93e8f",
+    "config_sha256": "4cce109c09984cade9fcda2787e61c91b75f789b6d9b77347ad3361f89076726",
+    "description": {
+      "aliases": [],
+      "auto_id": false,
+      "collection_id": 468432362739861365,
+      "collection_name": "official_l21_l30_all_v2",
+      "consistency_level": 2,
+      "consistency_level_name": "Bounded",
+      "created_timestamp": 468432469486731268,
+      "description": "",
+      "enable_dynamic_field": false,
+      "enable_namespace": false,
+      "fields": [
+        {
+          "description": "",
+          "field_id": 100,
+          "is_primary": true,
+          "name": "frame_id",
+          "params": {
+            "max_length": 32
+          },
+          "type": 21
+        },
+        {
+          "description": "",
+          "field_id": 101,
+          "name": "image_clip_pe_l_14_336",
+          "params": {
+            "dim": 1024
+          },
+          "type": 101
+        },
+        {
+          "description": "",
+          "field_id": 102,
+          "name": "image_siglip_so400m_384",
+          "params": {
+            "dim": 1152
+          },
+          "type": 101
+        },
+        {
+          "description": "",
+          "field_id": 103,
+          "name": "qwen_vl",
+          "params": {
+            "dim": 2048
+          },
+          "type": 101
+        },
+        {
+          "description": "",
+          "field_id": 104,
+          "is_function_output": true,
+          "name": "ocr_sparse",
+          "params": {},
+          "type": 104
+        },
+        {
+          "description": "",
+          "field_id": 105,
+          "name": "ocr",
+          "params": {
+            "enable_analyzer": "true",
+            "max_length": 8192
+          },
+          "type": 21
+        },
+        {
+          "description": "",
+          "field_id": 106,
+          "is_function_output": true,
+          "name": "asr_sparse",
+          "params": {},
+          "type": 104
+        },
+        {
+          "description": "",
+          "field_id": 107,
+          "name": "asr",
+          "params": {
+            "enable_analyzer": "true",
+            "max_length": 8192
+          },
+          "type": 21
+        },
+        {
+          "description": "",
+          "field_id": 108,
+          "name": "ocr_dense",
+          "params": {
+            "dim": 1024
+          },
+          "type": 101
+        },
+        {
+          "description": "",
+          "field_id": 109,
+          "name": "asr_dense",
+          "params": {
+            "dim": 1024
+          },
+          "type": 101
+        }
+      ],
+      "functions": [
+        {
+          "description": "",
+          "id": 100,
+          "input_field_ids": [
+            105
+          ],
+          "input_field_names": [
+            "ocr"
+          ],
+          "name": "ocr_bm25_emb",
+          "output_field_ids": [
+            104
+          ],
+          "output_field_names": [
+            "ocr_sparse"
+          ],
+          "params": {},
+          "type": 1
+        },
+        {
+          "description": "",
+          "id": 101,
+          "input_field_ids": [
+            107
+          ],
+          "input_field_names": [
+            "asr"
+          ],
+          "name": "asr_bm25_emb",
+          "output_field_ids": [
+            106
+          ],
+          "output_field_names": [
+            "asr_sparse"
+          ],
+          "params": {},
+          "type": 1
+        }
+      ],
+      "num_partitions": 1,
+      "num_shards": 1,
+      "properties": {},
+      "update_timestamp": 468432469486731268
+    },
+    "ground_truth_read": false,
+    "indexes": [
+      {
+        "bm25_b": "0.75",
+        "bm25_k1": "1.2",
+        "field_name": "asr_sparse",
+        "index_name": "asr_BM25",
+        "index_type": "SPARSE_INVERTED_INDEX",
+        "indexed_rows": 322924,
+        "inverted_index_algo": "TAAT_NAIVE",
+        "metric_type": "BM25",
+        "pending_index_rows": 0,
+        "state": "Finished",
+        "total_rows": 322924
+      },
+      {
+        "field_name": "asr_dense",
+        "index_name": "asr_dense_SCANN",
+        "index_type": "SCANN",
+        "indexed_rows": 322924,
+        "metric_type": "COSINE",
+        "nlist": "512",
+        "pending_index_rows": 0,
+        "state": "Finished",
+        "total_rows": 322924
+      },
+      {
+        "field_name": "image_clip_pe_l_14_336",
+        "index_name": "image_clip_pe_l_14_336_SCANN",
+        "index_type": "SCANN",
+        "indexed_rows": 322924,
+        "metric_type": "COSINE",
+        "nlist": "512",
+        "pending_index_rows": 0,
+        "state": "Finished",
+        "total_rows": 322924
+      },
+      {
+        "field_name": "image_siglip_so400m_384",
+        "index_name": "image_siglip_so400m_384_SCANN",
+        "index_type": "SCANN",
+        "indexed_rows": 322924,
+        "metric_type": "COSINE",
+        "nlist": "512",
+        "pending_index_rows": 0,
+        "state": "Finished",
+        "total_rows": 322924
+      },
+      {
+        "bm25_b": "0.75",
+        "bm25_k1": "1.2",
+        "field_name": "ocr_sparse",
+        "index_name": "ocr_BM25",
+        "index_type": "SPARSE_INVERTED_INDEX",
+        "indexed_rows": 322924,
+        "inverted_index_algo": "TAAT_NAIVE",
+        "metric_type": "BM25",
+        "pending_index_rows": 0,
+        "state": "Finished",
+        "total_rows": 322924
+      },
+      {
+        "field_name": "ocr_dense",
+        "index_name": "ocr_dense_SCANN",
+        "index_type": "SCANN",
+        "indexed_rows": 322924,
+        "metric_type": "COSINE",
+        "nlist": "512",
+        "pending_index_rows": 0,
+        "state": "Finished",
+        "total_rows": 322924
+      },
+      {
+        "field_name": "qwen_vl",
+        "index_name": "qwen_vl_SCANN",
+        "index_type": "SCANN",
+        "indexed_rows": 322924,
+        "metric_type": "COSINE",
+        "nlist": "512",
+        "pending_index_rows": 0,
+        "state": "Finished",
+        "total_rows": 322924
+      }
+    ],
+    "models_loaded": false,
+    "pymilvus_version": "3.0.0",
+    "python": "3.12.1",
+    "python_hash_seed": "process_randomized; observed order exported",
+    "queries_sha256": "68b315a98313fe8609b4fff460d65c0daebe79f4aff35d7dd75d17b5afd461b7",
+    "rankings_sha256": "b1c1bcbdaacdea94c9fe77d0e67d8ac994504123195cf043305b9def2cf9bd19",
+    "rows_written": 38,
+    "schema": "vecna82-sparse-visibility-run-v1",
+    "status": "complete"
+  },
+  "capture_manifest_sha256": "f5669d5de204b5c46c7ccaa058150ff5d8cb2cbe1ebf2a9622df30889a5ec855",
+  "captured_rankings_sha256": "b1c1bcbdaacdea94c9fe77d0e67d8ac994504123195cf043305b9def2cf9bd19",
+  "configuration_sha256": "4cce109c09984cade9fcda2787e61c91b75f789b6d9b77347ad3361f89076726",
+  "evaluator_sha256": "4f1f70f0f8b69ac9b14bbb6cd4e8dbc04d415d9305f8c0aef037bc9b47a7ef5e",
+  "frozen_sample_sha256": "b4fd944228a033c37ea4d69ad757ceeae9635bfb026cf018e0d60f5b3c661be9",
+  "outputs": {
+    "SPARSE_VISIBILITY.md": "52c1b54f58046efdd29cf2236669c3b492fdab0c88c0a59a21951e5a36566978",
+    "sparse_visibility.jsonl": "44bc5b761c17a968170218988827b8d2a1264642c8801abf2c1b02ee18947b4c",
+    "summary.json": "584c6d0a36cccf77a84d95acfdff7889c70bc0e3fad77830a1f5fbb1a0674cd6"
+  },
+  "queries_sha256": "68b315a98313fe8609b4fff460d65c0daebe79f4aff35d7dd75d17b5afd461b7",
+  "query_channel_count": 38,
+  "retrieval_complete_before_truth_join": true,
+  "schema": "vecna82-sparse-visibility-evaluation-v1",
+  "scorer_source": {
+    "blob_sha": "1c47b0abe5d81730e33f10d9c33d627d50cae58c",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "reference/evaluate_reranker_fusion.py",
+    "path": "experiments/vecna-reranker-fusion-v1-20260914/code/aic51-src/script/evaluate_reranker_fusion.py",
+    "repository": "JimmyK300/official-dataset-control",
+    "sha256": "82cbc5d7f5b6309f747165f8f278d4c3b66e9db83092c1808d2f72d1f8e76316"
+  },
+  "source_review_sha256": "c3800092585e7c9f4e04d2ae3a78c8d3f050d4b0daa571285bbee7b3ef2ddd9d",
+  "status": "complete",
+  "truth_changed": false
+}
