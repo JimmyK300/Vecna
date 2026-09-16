@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Capture five bounded source-evidence assets into a new disposable directory.
+"""Capture declared bounded source-evidence assets into a new disposable directory.
 
 Reads only the explicitly named dataset videos. Requires ffmpeg/ffprobe, no
 models or numpy. Images use decoded-frame selection, not timestamp rounding.
@@ -43,12 +43,34 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset-root", required=True, type=Path)
     parser.add_argument("--output-dir", required=True, type=Path)
+    parser.add_argument("--request-manifest", type=Path, help="Optional predeclared frozen-sample request packet; default is the original five assets.")
     args = parser.parse_args()
     root = args.dataset_root.resolve()
     out = args.output_dir.resolve()
     if out.exists() or not out.name.startswith("vecna82-source-media-") or out.is_relative_to(root):
         raise ValueError("Output must be a new vecna82-source-media-* disposable directory outside the dataset")
     out.mkdir(parents=True, exist_ok=False)
+    request_packet = None
+    requests = REQUESTS
+    if args.request_manifest:
+        request_packet = json.loads(args.request_manifest.read_text(encoding="utf-8"))
+        requests = request_packet["requests"]
+        if not requests or len(requests) > 38:
+            raise ValueError("Capture packet must contain one to 38 bounded query/channel requests")
+        if len({(r["query_id"], r["channel"]) for r in requests}) != len(requests):
+            raise ValueError("Duplicate query/channel capture request")
+        for request in requests:
+            source = (root / request["video"]).resolve()
+            if not source.is_relative_to(root / "videos") or source.suffix.lower() != ".mp4":
+                raise ValueError("Source must be an exact MP4 path under dataset videos")
+            if request["kind"] == "image":
+                if request["channel"] != "ocr" or not isinstance(request["frame"], int) or request["frame"] < 0:
+                    raise ValueError("Invalid bounded OCR frame request")
+            elif request["kind"] == "audio":
+                if request["channel"] != "asr" or not 0 <= request["start_s"] < request["end_s"] <= request["start_s"] + 32:
+                    raise ValueError("ASR request must be a positive source interval of at most 32 seconds")
+            else:
+                raise ValueError("Only declared image/audio source requests are supported")
     manifest = {
         "schema": "vecna82-bounded-source-media-v1", "started_utc": datetime.now(timezone.utc).isoformat(),
         "frozen_sample_sha256": "d3727ab99ce98b708c835c8e8b0f8d5688af47e9d25e65ce55a8e5ca839e7714",
@@ -60,8 +82,14 @@ def main():
         "code_sha256": sha(Path(__file__)), "source_full_video_hashes": "not_computed_bounded_read_cost",
         "writes": "new disposable output directory only", "source_semantics_reviewed": False, "assets": [],
     }
+    if request_packet:
+        for field in ("frozen_sample_sha256", "truth_source", "text_source"):
+            manifest[field] = request_packet[field]
+        manifest["request_manifest_sha256"] = sha(args.request_manifest)
+        manifest["selection_rule"] = request_packet["selection_rule"]
+        manifest["request_scope"] = request_packet["scope"]
     started = time.monotonic()
-    for request in REQUESTS:
+    for request in requests:
         source = root / request["video"]
         record = dict(request, source_path=str(source))
         manifest["assets"].append(record)
@@ -73,6 +101,11 @@ def main():
                          "-of", "json", str(source)]
             probe = subprocess.run(probe_cmd, capture_output=True, text=True, timeout=15, check=True)
             record["ffprobe"] = json.loads(probe.stdout)
+            if "expected_fps" in request:
+                from fractions import Fraction
+                actual_fps = float(Fraction(next(s for s in record["ffprobe"]["streams"] if s["codec_type"] == "video")["avg_frame_rate"]))
+                if abs(actual_fps - request["expected_fps"]) > 1e-6:
+                    raise ValueError("Fresh source FPS differs from the predeclared source timing; do not silently retime the request")
             if request["kind"] == "image":
                 filename = f"{request['query_id']}_{source.stem}_frame{request['frame']}.jpg"
                 command = ["ffmpeg", "-v", "error", "-nostdin", "-threads", "4", "-i", str(source),
@@ -98,13 +131,13 @@ def main():
                 record["status"] = "CAPTURE_FAILED"
             after = source.stat()
             record["source_size_mtime_unchanged"] = (before.st_size, before.st_mtime_ns) == (after.st_size, after.st_mtime_ns)
-        except (OSError, subprocess.SubprocessError, json.JSONDecodeError) as exc:
+        except (OSError, subprocess.SubprocessError, json.JSONDecodeError, ValueError) as exc:
             record.update({"status": "CAPTURE_FAILED", "error": str(exc)[:1200]})
         write_manifest(out / "manifest.json", manifest)
     manifest["elapsed_seconds"] = round(time.monotonic() - started, 3)
     manifest["captured"] = sum(r.get("status") == "CAPTURED" for r in manifest["assets"])
     write_manifest(out / "manifest.json", manifest)
-    print(json.dumps({"output_dir": str(out), "captured": manifest["captured"], "requested": len(REQUESTS), "elapsed_seconds": manifest["elapsed_seconds"]}))
+    print(json.dumps({"output_dir": str(out), "captured": manifest["captured"], "requested": len(requests), "elapsed_seconds": manifest["elapsed_seconds"]}))
 
 
 if __name__ == "__main__":
