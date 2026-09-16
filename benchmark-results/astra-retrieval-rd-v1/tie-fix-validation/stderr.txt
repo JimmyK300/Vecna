@@ -1,0 +1,53 @@
+test_dense_exact_ties_are_canonical (__main__.TextTieOrderTests.test_dense_exact_ties_are_canonical) ... <unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+ok
+test_empty_query_keeps_existing_empty_return (__main__.TextTieOrderTests.test_empty_query_keeps_existing_empty_return) ... <unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+ok
+test_exact_phrase_filter_and_boost_remain_in_all_modes (__main__.TextTieOrderTests.test_exact_phrase_filter_and_boost_remain_in_all_modes) ... <unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+ok
+test_hybrid_exact_ties_are_canonical (__main__.TextTieOrderTests.test_hybrid_exact_ties_are_canonical) ... <unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+ok
+test_independent_hash_seed_processes_have_identical_effective_order (__main__.TextTieOrderTests.test_independent_hash_seed_processes_have_identical_effective_order) ... ok
+test_multiple_queries_keep_accumulation_and_first_entity (__main__.TextTieOrderTests.test_multiple_queries_keep_accumulation_and_first_entity) ... <unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+ok
+test_near_ties_use_full_precision_in_all_modes (__main__.TextTieOrderTests.test_near_ties_use_full_precision_in_all_modes) ... <unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+ok
+test_nonpositive_scores_keep_zero_normalization (__main__.TextTieOrderTests.test_nonpositive_scores_keep_zero_normalization) ... <unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+ok
+test_sparse_exact_ties_are_canonical (__main__.TextTieOrderTests.test_sparse_exact_ties_are_canonical) ... <unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 5.032s
+
+OK
