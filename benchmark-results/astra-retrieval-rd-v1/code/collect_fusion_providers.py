@@ -256,8 +256,16 @@ def preprocessing_identity(extractor, model) -> dict:
                 entry[key + "_sha256"] = stable_hash(value)
         if callable(getattr(obj, "to_dict", None)):
             entry["configuration_sha256"] = stable_hash(obj.to_dict())
-        if callable(getattr(obj, "get_config_dict", None)):
-            entry["module_configuration_sha256"] = stable_hash(obj.get_config_dict())
+        get_config = getattr(obj, "get_config_dict", None)
+        if callable(get_config):
+            try:
+                inspect.signature(get_config).bind()
+            except (TypeError, ValueError):
+                # HF PretrainedConfig.get_config_dict(path) is a loader, not
+                # a zero-argument getter. Its in-memory to_dict is above.
+                pass
+            else:
+                entry["module_configuration_sha256"] = stable_hash(get_config())
         if len(entry) > 1:
             try:
                 entry["implementation_sha256"] = digest_bytes(Path(inspect.getfile(type(obj))).read_bytes())

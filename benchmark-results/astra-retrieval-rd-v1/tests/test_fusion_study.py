@@ -7,6 +7,7 @@ import json
 import math
 import re
 import sys
+import tempfile
 import unittest
 import unicodedata
 from pathlib import Path
@@ -15,8 +16,8 @@ from types import SimpleNamespace
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "code"))
 from fusion_study import (ContractError, ARMS, current_scores, digest_bytes, digest_json,
-                          nominal_weights, study_query, transform, validate_config)
-from collect_fusion_providers import capture_query, SearchOnlyDatabase
+                          nominal_weights, run, run_identity_digest, study_query, transform, validate_config)
+from collect_fusion_providers import capture_query, preprocessing_identity, SearchOnlyDatabase
 
 
 class Array:
@@ -223,6 +224,67 @@ class FusionTests(unittest.TestCase):
         self.assertFalse(hasattr(adapter, "__del__"))
         with self.assertRaises(ContractError):
             adapter.search(data=[[0.1]], anns_field="missing", search_params={"metric_type": "COSINE"})
+
+    def test_tokenizer_identity_includes_vocab_and_template(self):
+        class Tokenizer:
+            chat_template = "template A"
+            special_tokens_map = {"eos_token": "END"}
+            def get_vocab(self):
+                return {"token": 1, "END": 2}
+        tokenizer = Tokenizer()
+        extractor = SimpleNamespace(_tokenizer=tokenizer)
+        first = preprocessing_identity(extractor, SimpleNamespace())
+        tokenizer.chat_template = "template B"
+        second = preprocessing_identity(extractor, SimpleNamespace())
+        self.assertNotEqual(first["sha256"], second["sha256"])
+        self.assertTrue(first["text_tokenization_bound"])
+
+    def test_pretrained_config_loader_is_never_called_as_getter(self):
+        class Config:
+            def to_dict(self):
+                return {"max_length": 100}
+            @classmethod
+            def get_config_dict(cls, pretrained_model_name_or_path, **kwargs):
+                raise AssertionError("configuration loader must never be called")
+        class Tokenizer:
+            def get_vocab(self):
+                return {"token": 1}
+        result = preprocessing_identity(SimpleNamespace(_tokenizer=Tokenizer()), SimpleNamespace(config=Config()))
+        self.assertTrue(result["text_tokenization_bound"])
+
+    def test_completed_manifest_and_one_run_identity_required(self):
+        cfg, row, _, _ = fixture(expected_query_count=1)
+        projection = {row["query_id"]: row["query_text_sha256"]}
+        cfg["canonical_query_projection_sha256"] = digest_json(projection)
+        row["config_sha256"] = digest_json(cfg)
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp)
+            queries = [{"query_id": row["query_id"], "query_text": row["query_text"]}]
+            (path / "queries.jsonl").write_text(json.dumps(queries[0]) + "\n")
+            manifest = {"status": "complete", "scope": "full_query_projection", "rows_written": 1,
+                        "run_id": "synthetic-run", "identity": {"fixture": "exact source replay"},
+                        "collector_sha256": "0" * 64, "config_sha256": digest_json(cfg),
+                        "canonical_queries_sha256": digest_bytes((path / "queries.jsonl").read_bytes())}
+            manifest["run_identity_sha256"] = run_identity_digest(manifest)
+            row["run_identity_sha256"] = manifest["run_identity_sha256"]
+            (path / "rankings.jsonl").write_text(json.dumps(row) + "\n")
+            manifest["rankings_sha256"] = digest_bytes((path / "rankings.jsonl").read_bytes())
+            (path / "manifest.json").write_text(json.dumps(manifest))
+            (path / "config.json").write_text(json.dumps(cfg))
+            args = (path / "rankings.jsonl", path / "config.json", path / "queries.jsonl")
+            result = run(*args, path / "output.jsonl", path / "manifest.json")
+            self.assertEqual(result["queries"], 1)
+            manifest["status"] = "failed_closed"
+            (path / "manifest.json").write_text(json.dumps(manifest))
+            with self.assertRaisesRegex(ContractError, "manifest is incomplete"):
+                run(*args, path / "blocked-output.jsonl", path / "manifest.json")
+            manifest["status"] = "complete"
+            row["run_identity_sha256"] = "f" * 64
+            (path / "rankings.jsonl").write_text(json.dumps(row) + "\n")
+            manifest["rankings_sha256"] = digest_bytes((path / "rankings.jsonl").read_bytes())
+            (path / "manifest.json").write_text(json.dumps(manifest))
+            with self.assertRaisesRegex(ContractError, "mixed or foreign"):
+                run(*args, path / "blocked-output.jsonl", path / "manifest.json")
 
 
 if __name__ == "__main__":
