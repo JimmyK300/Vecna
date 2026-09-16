@@ -1,0 +1,4462 @@
+{
+  "code_identity": {
+    "helpers": [
+      "_build_exact_regex",
+      "_check_cancelled",
+      "check_exact_phrases",
+      "remove_diacritics"
+    ],
+    "main_commit": "95d63a6abf10c598e0e54af7d2071bedbe542d1e",
+    "methods": [
+      "_extract_query_texts",
+      "_normalize_scores",
+      "_search_text_component",
+      "_text_field_from_index_field"
+    ],
+    "models_loaded": false,
+    "production_module_imported": false,
+    "selected_ast_sha256": "a08da842e6faede7a384b832dbb8dfe6c183fc667b8f2f1d8bc5a96005e1b75c",
+    "source_lf_sha256": "6f94bdd147c4b2b29b522a1f4bbbf004fb726fdfdf68a7cb316a4aec9e869e51",
+    "source_raw_sha256": "6f94bdd147c4b2b29b522a1f4bbbf004fb726fdfdf68a7cb316a4aec9e869e51"
+  },
+  "collection": {
+    "description_sha256": "1e3da787fcadab0b6251e00f6b05fee9abe3888c17a36d0babad843d652bded6",
+    "fields": [
+      "asr",
+      "asr_dense",
+      "asr_sparse",
+      "frame_id",
+      "image_clip_pe_l_14_336",
+      "image_siglip_so400m_384",
+      "ocr",
+      "ocr_dense",
+      "ocr_sparse",
+      "qwen_vl"
+    ],
+    "index_descriptions_sha256": "99b4a5d374b036b1373c77ddbf9e5fe3253edaa3a35fd2374067b002f01e9860",
+    "index_names": [
+      "asr_BM25",
+      "asr_dense_SCANN",
+      "image_clip_pe_l_14_336_SCANN",
+      "image_siglip_so400m_384_SCANN",
+      "ocr_BM25",
+      "ocr_dense_SCANN",
+      "qwen_vl_SCANN"
+    ],
+    "name": "official_l21_l30_all_v2",
+    "row_count": 322924
+  },
+  "collection_mutations": false,
+  "collector_sha256": "f4daac0debe0e33c043bd0a38e1dc722fe6d51283c0d370c0b171a03bda3938b",
+  "config_sha256": "c50d1cc64cc0b5e62913343c9bb2329780314d1480d6e422603ba22a1dd33071",
+  "description": {
+    "aliases": [],
+    "auto_id": false,
+    "collection_id": 468432362739861365,
+    "collection_name": "official_l21_l30_all_v2",
+    "consistency_level": 2,
+    "consistency_level_name": "Bounded",
+    "created_timestamp": 468432469486731268,
+    "description": "",
+    "enable_dynamic_field": false,
+    "enable_namespace": false,
+    "fields": [
+      {
+        "description": "",
+        "field_id": 100,
+        "is_primary": true,
+        "name": "frame_id",
+        "params": {
+          "max_length": 32
+        },
+        "type": 21
+      },
+      {
+        "description": "",
+        "field_id": 101,
+        "name": "image_clip_pe_l_14_336",
+        "params": {
+          "dim": 1024
+        },
+        "type": 101
+      },
+      {
+        "description": "",
+        "field_id": 102,
+        "name": "image_siglip_so400m_384",
+        "params": {
+          "dim": 1152
+        },
+        "type": 101
+      },
+      {
+        "description": "",
+        "field_id": 103,
+        "name": "qwen_vl",
+        "params": {
+          "dim": 2048
+        },
+        "type": 101
+      },
+      {
+        "description": "",
+        "field_id": 104,
+        "is_function_output": true,
+        "name": "ocr_sparse",
+        "params": {},
+        "type": 104
+      },
+      {
+        "description": "",
+        "field_id": 105,
+        "name": "ocr",
+        "params": {
+          "enable_analyzer": "true",
+          "max_length": 8192
+        },
+        "type": 21
+      },
+      {
+        "description": "",
+        "field_id": 106,
+        "is_function_output": true,
+        "name": "asr_sparse",
+        "params": {},
+        "type": 104
+      },
+      {
+        "description": "",
+        "field_id": 107,
+        "name": "asr",
+        "params": {
+          "enable_analyzer": "true",
+          "max_length": 8192
+        },
+        "type": 21
+      },
+      {
+        "description": "",
+        "field_id": 108,
+        "name": "ocr_dense",
+        "params": {
+          "dim": 1024
+        },
+        "type": 101
+      },
+      {
+        "description": "",
+        "field_id": 109,
+        "name": "asr_dense",
+        "params": {
+          "dim": 1024
+        },
+        "type": 101
+      }
+    ],
+    "functions": [
+      {
+        "description": "",
+        "id": 100,
+        "input_field_ids": [
+          105
+        ],
+        "input_field_names": [
+          "ocr"
+        ],
+        "name": "ocr_bm25_emb",
+        "output_field_ids": [
+          104
+        ],
+        "output_field_names": [
+          "ocr_sparse"
+        ],
+        "params": {},
+        "type": 1
+      },
+      {
+        "description": "",
+        "id": 101,
+        "input_field_ids": [
+          107
+        ],
+        "input_field_names": [
+          "asr"
+        ],
+        "name": "asr_bm25_emb",
+        "output_field_ids": [
+          106
+        ],
+        "output_field_names": [
+          "asr_sparse"
+        ],
+        "params": {},
+        "type": 1
+      }
+    ],
+    "num_partitions": 1,
+    "num_shards": 1,
+    "properties": {},
+    "update_timestamp": 468432469486731268
+  },
+  "ground_truth_read": false,
+  "index_generation_identity": {
+    "interpretation": "Collection schema/index metadata are pinned; historical stored-vector encoder/index generation remains unresolved unless the existing index registry provides an actual generation chain. Target absence is only absence from this dense field's retained100 under the declared current encoder.",
+    "state": "not_established_by_available_probe"
+  },
+  "index_registry_records": [
+    {
+      "exists": false,
+      "path": "D:\\Official-Dataset\\provenance\\indexes\\official_l21_l30_all_v2.json",
+      "state": "legacy_or_unmanifested_index"
+    },
+    {
+      "exists": false,
+      "path": "D:\\Official-Dataset\\features_L21-L30_branch-feats-siglip\\provenance\\indexes\\official_l21_l30_all_v2.json",
+      "state": "legacy_or_unmanifested_index"
+    }
+  ],
+  "indexes": [
+    {
+      "bm25_b": "0.75",
+      "bm25_k1": "1.2",
+      "field_name": "asr_sparse",
+      "index_name": "asr_BM25",
+      "index_type": "SPARSE_INVERTED_INDEX",
+      "indexed_rows": 322924,
+      "inverted_index_algo": "TAAT_NAIVE",
+      "metric_type": "BM25",
+      "pending_index_rows": 0,
+      "state": "Finished",
+      "total_rows": 322924
+    },
+    {
+      "field_name": "asr_dense",
+      "index_name": "asr_dense_SCANN",
+      "index_type": "SCANN",
+      "indexed_rows": 322924,
+      "metric_type": "COSINE",
+      "nlist": "512",
+      "pending_index_rows": 0,
+      "state": "Finished",
+      "total_rows": 322924
+    },
+    {
+      "field_name": "image_clip_pe_l_14_336",
+      "index_name": "image_clip_pe_l_14_336_SCANN",
+      "index_type": "SCANN",
+      "indexed_rows": 322924,
+      "metric_type": "COSINE",
+      "nlist": "512",
+      "pending_index_rows": 0,
+      "state": "Finished",
+      "total_rows": 322924
+    },
+    {
+      "field_name": "image_siglip_so400m_384",
+      "index_name": "image_siglip_so400m_384_SCANN",
+      "index_type": "SCANN",
+      "indexed_rows": 322924,
+      "metric_type": "COSINE",
+      "nlist": "512",
+      "pending_index_rows": 0,
+      "state": "Finished",
+      "total_rows": 322924
+    },
+    {
+      "bm25_b": "0.75",
+      "bm25_k1": "1.2",
+      "field_name": "ocr_sparse",
+      "index_name": "ocr_BM25",
+      "index_type": "SPARSE_INVERTED_INDEX",
+      "indexed_rows": 322924,
+      "inverted_index_algo": "TAAT_NAIVE",
+      "metric_type": "BM25",
+      "pending_index_rows": 0,
+      "state": "Finished",
+      "total_rows": 322924
+    },
+    {
+      "field_name": "ocr_dense",
+      "index_name": "ocr_dense_SCANN",
+      "index_type": "SCANN",
+      "indexed_rows": 322924,
+      "metric_type": "COSINE",
+      "nlist": "512",
+      "pending_index_rows": 0,
+      "state": "Finished",
+      "total_rows": 322924
+    },
+    {
+      "field_name": "qwen_vl",
+      "index_name": "qwen_vl_SCANN",
+      "index_type": "SCANN",
+      "indexed_rows": 322924,
+      "metric_type": "COSINE",
+      "nlist": "512",
+      "pending_index_rows": 0,
+      "state": "Finished",
+      "total_rows": 322924
+    }
+  ],
+  "model_identity": {
+    "checkpoint_parameter_audit": {
+      "active_parameter_elements": 566705152,
+      "active_parameter_tensor_count": 389,
+      "all_active_encoder_parameters_equal_cached_checkpoint": true,
+      "parameter_mapping_sha256": "5ff04c753f99e02e8f4de184b60c122c2af947c6aa5a560d3d89da99cb670970",
+      "parameters": [
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "embeddings.word_embeddings.weight",
+          "elements": 256002048,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "embeddings.word_embeddings.weight",
+          "shape": [
+            250002,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "embeddings.position_embeddings.weight",
+          "elements": 8390656,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "embeddings.position_embeddings.weight",
+          "shape": [
+            8194,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "embeddings.token_type_embeddings.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "embeddings.token_type_embeddings.weight",
+          "shape": [
+            1,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "embeddings.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "embeddings.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "embeddings.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "embeddings.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.0.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.0.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.0.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.0.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.0.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.0.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.0.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.0.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.0.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.0.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.0.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.0.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.0.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.0.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.0.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.0.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.0.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.0.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.0.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.0.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.0.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.0.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.0.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.0.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.0.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.0.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.0.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.0.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.0.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.0.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.0.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.0.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.1.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.1.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.1.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.1.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.1.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.1.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.1.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.1.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.1.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.1.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.1.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.1.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.1.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.1.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.1.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.1.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.1.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.1.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.1.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.1.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.1.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.1.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.1.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.1.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.1.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.1.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.1.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.1.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.1.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.1.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.1.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.1.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.2.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.2.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.2.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.2.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.2.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.2.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.2.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.2.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.2.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.2.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.2.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.2.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.2.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.2.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.2.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.2.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.2.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.2.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.2.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.2.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.2.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.2.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.2.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.2.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.2.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.2.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.2.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.2.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.2.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.2.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.2.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.2.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.3.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.3.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.3.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.3.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.3.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.3.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.3.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.3.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.3.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.3.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.3.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.3.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.3.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.3.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.3.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.3.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.3.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.3.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.3.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.3.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.3.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.3.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.3.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.3.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.3.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.3.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.3.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.3.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.3.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.3.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.3.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.3.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.4.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.4.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.4.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.4.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.4.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.4.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.4.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.4.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.4.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.4.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.4.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.4.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.4.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.4.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.4.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.4.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.4.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.4.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.4.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.4.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.4.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.4.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.4.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.4.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.4.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.4.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.4.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.4.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.4.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.4.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.4.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.4.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.5.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.5.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.5.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.5.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.5.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.5.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.5.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.5.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.5.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.5.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.5.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.5.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.5.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.5.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.5.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.5.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.5.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.5.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.5.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.5.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.5.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.5.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.5.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.5.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.5.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.5.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.5.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.5.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.5.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.5.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.5.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.5.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.6.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.6.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.6.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.6.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.6.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.6.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.6.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.6.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.6.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.6.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.6.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.6.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.6.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.6.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.6.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.6.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.6.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.6.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.6.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.6.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.6.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.6.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.6.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.6.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.6.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.6.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.6.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.6.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.6.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.6.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.6.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.6.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.7.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.7.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.7.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.7.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.7.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.7.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.7.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.7.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.7.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.7.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.7.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.7.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.7.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.7.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.7.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.7.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.7.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.7.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.7.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.7.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.7.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.7.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.7.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.7.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.7.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.7.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.7.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.7.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.7.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.7.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.7.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.7.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.8.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.8.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.8.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.8.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.8.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.8.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.8.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.8.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.8.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.8.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.8.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.8.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.8.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.8.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.8.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.8.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.8.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.8.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.8.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.8.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.8.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.8.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.8.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.8.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.8.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.8.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.8.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.8.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.8.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.8.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.8.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.8.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.9.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.9.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.9.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.9.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.9.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.9.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.9.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.9.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.9.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.9.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.9.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.9.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.9.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.9.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.9.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.9.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.9.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.9.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.9.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.9.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.9.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.9.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.9.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.9.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.9.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.9.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.9.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.9.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.9.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.9.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.9.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.9.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.10.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.10.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.10.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.10.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.10.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.10.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.10.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.10.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.10.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.10.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.10.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.10.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.10.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.10.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.10.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.10.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.10.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.10.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.10.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.10.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.10.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.10.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.10.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.10.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.10.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.10.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.10.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.10.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.10.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.10.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.10.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.10.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.11.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.11.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.11.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.11.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.11.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.11.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.11.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.11.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.11.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.11.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.11.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.11.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.11.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.11.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.11.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.11.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.11.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.11.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.11.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.11.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.11.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.11.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.11.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.11.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.11.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.11.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.11.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.11.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.11.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.11.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.11.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.11.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.12.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.12.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.12.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.12.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.12.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.12.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.12.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.12.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.12.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.12.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.12.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.12.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.12.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.12.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.12.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.12.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.12.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.12.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.12.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.12.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.12.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.12.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.12.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.12.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.12.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.12.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.12.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.12.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.12.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.12.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.12.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.12.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.13.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.13.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.13.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.13.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.13.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.13.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.13.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.13.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.13.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.13.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.13.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.13.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.13.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.13.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.13.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.13.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.13.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.13.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.13.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.13.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.13.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.13.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.13.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.13.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.13.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.13.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.13.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.13.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.13.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.13.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.13.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.13.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.14.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.14.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.14.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.14.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.14.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.14.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.14.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.14.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.14.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.14.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.14.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.14.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.14.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.14.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.14.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.14.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.14.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.14.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.14.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.14.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.14.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.14.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.14.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.14.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.14.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.14.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.14.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.14.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.14.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.14.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.14.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.14.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.15.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.15.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.15.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.15.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.15.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.15.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.15.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.15.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.15.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.15.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.15.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.15.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.15.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.15.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.15.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.15.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.15.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.15.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.15.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.15.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.15.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.15.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.15.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.15.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.15.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.15.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.15.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.15.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.15.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.15.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.15.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.15.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.16.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.16.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.16.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.16.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.16.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.16.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.16.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.16.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.16.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.16.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.16.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.16.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.16.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.16.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.16.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.16.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.16.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.16.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.16.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.16.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.16.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.16.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.16.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.16.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.16.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.16.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.16.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.16.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.16.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.16.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.16.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.16.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.17.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.17.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.17.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.17.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.17.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.17.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.17.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.17.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.17.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.17.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.17.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.17.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.17.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.17.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.17.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.17.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.17.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.17.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.17.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.17.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.17.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.17.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.17.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.17.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.17.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.17.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.17.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.17.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.17.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.17.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.17.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.17.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.18.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.18.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.18.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.18.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.18.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.18.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.18.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.18.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.18.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.18.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.18.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.18.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.18.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.18.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.18.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.18.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.18.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.18.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.18.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.18.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.18.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.18.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.18.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.18.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.18.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.18.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.18.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.18.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.18.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.18.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.18.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.18.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.19.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.19.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.19.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.19.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.19.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.19.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.19.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.19.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.19.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.19.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.19.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.19.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.19.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.19.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.19.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.19.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.19.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.19.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.19.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.19.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.19.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.19.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.19.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.19.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.19.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.19.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.19.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.19.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.19.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.19.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.19.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.19.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.20.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.20.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.20.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.20.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.20.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.20.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.20.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.20.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.20.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.20.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.20.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.20.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.20.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.20.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.20.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.20.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.20.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.20.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.20.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.20.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.20.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.20.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.20.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.20.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.20.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.20.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.20.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.20.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.20.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.20.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.20.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.20.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.21.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.21.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.21.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.21.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.21.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.21.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.21.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.21.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.21.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.21.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.21.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.21.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.21.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.21.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.21.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.21.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.21.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.21.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.21.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.21.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.21.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.21.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.21.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.21.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.21.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.21.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.21.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.21.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.21.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.21.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.21.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.21.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.22.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.22.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.22.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.22.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.22.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.22.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.22.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.22.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.22.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.22.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.22.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.22.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.22.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.22.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.22.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.22.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.22.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.22.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.22.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.22.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.22.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.22.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.22.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.22.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.22.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.22.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.22.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.22.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.22.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.22.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.22.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.22.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.23.attention.self.query.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.23.attention.self.query.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.23.attention.self.query.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.23.attention.self.query.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.23.attention.self.key.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.23.attention.self.key.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.23.attention.self.key.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.23.attention.self.key.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.23.attention.self.value.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.23.attention.self.value.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.23.attention.self.value.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.23.attention.self.value.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.23.attention.output.dense.weight",
+          "elements": 1048576,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.23.attention.output.dense.weight",
+          "shape": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.23.attention.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.23.attention.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.23.attention.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.23.attention.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.23.attention.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.23.attention.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.23.intermediate.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.23.intermediate.dense.weight",
+          "shape": [
+            4096,
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.23.intermediate.dense.bias",
+          "elements": 4096,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.23.intermediate.dense.bias",
+          "shape": [
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.23.output.dense.weight",
+          "elements": 4194304,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.23.output.dense.weight",
+          "shape": [
+            1024,
+            4096
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.23.output.dense.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.23.output.dense.bias",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.23.output.LayerNorm.weight",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.23.output.LayerNorm.weight",
+          "shape": [
+            1024
+          ]
+        },
+        {
+          "checkpoint_file": "pytorch_model.bin",
+          "checkpoint_key": "encoder.layer.23.output.LayerNorm.bias",
+          "elements": 1024,
+          "equal_after_declared_dtype_cast": true,
+          "parameter": "encoder.layer.23.output.LayerNorm.bias",
+          "shape": [
+            1024
+          ]
+        }
+      ],
+      "unused_pooler_exclusion": "Exact main embedding reads last_hidden_state[:,0] and never pooler_output; pooler parameters do not affect this output."
+    },
+    "core_encoder_missing_keys": [],
+    "core_encoder_unexpected_keys": [],
+    "files": [
+      {
+        "bytes": 687,
+        "digest_pin_scope": "checksum_verified_against_identity_probe",
+        "mtime_ns": 1786942632082347900,
+        "relative_path": "config.json",
+        "sha256": "26159e7ad065073448460117eb24b7a4572f6f4e78eadff65dc0a11c052449fa",
+        "size_and_mtime_stable_after_loading": true
+      },
+      {
+        "bytes": 2271145830,
+        "digest_pin_scope": "metadata_frozen_before_run_sha256_frozen_before_model_loading",
+        "mtime_ns": 1786942764448578200,
+        "relative_path": "pytorch_model.bin",
+        "sha256": "b5e0ce3470abf5ef3831aa1bd5553b486803e83251590ab7ff35a117cf6aad38",
+        "size_and_mtime_stable_after_loading": true
+      },
+      {
+        "bytes": 5069051,
+        "digest_pin_scope": "metadata_frozen_before_run_sha256_frozen_before_model_loading",
+        "mtime_ns": 1786942628748800600,
+        "relative_path": "sentencepiece.bpe.model",
+        "sha256": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+        "size_and_mtime_stable_after_loading": true
+      },
+      {
+        "bytes": 964,
+        "digest_pin_scope": "checksum_verified_against_identity_probe",
+        "mtime_ns": 1786942630677487300,
+        "relative_path": "special_tokens_map.json",
+        "sha256": "8c785abebea9ae3257b61681b4e6fd8365ceafde980c21970d001e834cf10835",
+        "size_and_mtime_stable_after_loading": true
+      },
+      {
+        "bytes": 17098108,
+        "digest_pin_scope": "metadata_frozen_before_run_sha256_frozen_before_model_loading",
+        "mtime_ns": 1786942630131946700,
+        "relative_path": "tokenizer.json",
+        "sha256": "21106b6d7dab2952c1d496fb21d5dc9db75c28ed361a05f5020bbba27810dd08",
+        "size_and_mtime_stable_after_loading": true
+      },
+      {
+        "bytes": 444,
+        "digest_pin_scope": "checksum_verified_against_identity_probe",
+        "mtime_ns": 1786942625458021300,
+        "relative_path": "tokenizer_config.json",
+        "sha256": "a62b2b6784f990259fddef5f16388693a8043be4f69179e6a5257eeb3f9abac4",
+        "size_and_mtime_stable_after_loading": true
+      }
+    ],
+    "initialization_scope": "Same effective PyTorch CPU/float32 tokenizer/model settings as main, with local-files-only and loading-state audit; exact main encoding methods are executed.",
+    "initialization_wall_ns": 3448053100,
+    "loading_info": {
+      "error_msgs": [],
+      "mismatched_keys": [],
+      "missing_keys": [],
+      "unexpected_keys": []
+    },
+    "model_class": "XLMRobertaModel",
+    "repository": "BAAI/bge-m3",
+    "runtime_semantics": {
+      "backend": "pytorch",
+      "compute_type": "float32",
+      "device": "cpu",
+      "execution_framework": "transformers",
+      "hidden_size": 1024,
+      "max_length": 1024,
+      "pretrained_model": "BAAI/bge-m3"
+    },
+    "selected_ast_sha256": "1f3a66e7388b154bb445e36955552944c539546e56af870e88312f107d2b1890",
+    "selected_methods": [
+      "_encode_texts",
+      "get_text_features",
+      "runtime_semantics"
+    ],
+    "snapshot_path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181",
+    "snapshot_revision": "5617a9f61b028005a4858fdac845db406aefb181",
+    "snapshot_top_level_files": [
+      ".gitattributes",
+      "README.md",
+      "colbert_linear.pt",
+      "config.json",
+      "config_sentence_transformers.json",
+      "long.jpg",
+      "modules.json",
+      "pytorch_model.bin",
+      "sentence_bert_config.json",
+      "sentencepiece.bpe.model",
+      "sparse_linear.pt",
+      "special_tokens_map.json",
+      "tokenizer.json",
+      "tokenizer_config.json"
+    ],
+    "source_lf_sha256": "ec26570cf87a9d3e6a4e2d481531a46f470e0a7f70f220c1c5cb15da126d3f01",
+    "tokenizer_class": "XLMRobertaTokenizerFast",
+    "trainable_parameter_elements": 567754752
+  },
+  "packages": {
+    "numpy": "1.26.4",
+    "pymilvus": "3.0.0",
+    "tokenizers": "0.22.2",
+    "torch": "2.8.0",
+    "transformers": "4.57.6"
+  },
+  "python": "3.12.1",
+  "python_hash_seed": "process_randomized; observed order exported",
+  "queries_sha256": "68b315a98313fe8609b4fff460d65c0daebe79f4aff35d7dd75d17b5afd461b7",
+  "rankings_sha256": "097bc5f7680457d068fe075372f67dd03b17d2fac745d7e5a68a85f7195bcfc2",
+  "rows_written": 38,
+  "schema": "vecna82-dense-visibility-run-v1",
+  "status": "complete",
+  "visual_models_loaded": false
+}

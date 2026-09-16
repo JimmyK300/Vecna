@@ -1,0 +1,24 @@
+{
+  "status": "completed",
+  "returncode": 0,
+  "elapsed_s": 32.625,
+  "runtime_head": "759782480ad4da4927be1e1a383a9323e16906a0",
+  "logs": {
+    "stderr.txt": {
+      "bytes": 2059,
+      "sha256": "511b9bb553c9af644a84216240ba7fa99aff03c51124969f3df04b9b7c2b9a24"
+    },
+    "stdout.txt": {
+      "bytes": 3078,
+      "sha256": "25e7d112612e504234a9daebe4b52f9218bd996643b6643bdc1ff2fd20eb8f97"
+    }
+  },
+  "manifest_summary": {
+    "status": "complete",
+    "rows_written": 38,
+    "planned_query_count": null,
+    "rankings_sha256": "097bc5f7680457d068fe075372f67dd03b17d2fac745d7e5a68a85f7195bcfc2",
+    "ground_truth_read": false,
+    "error_type": null
+  }
+}
