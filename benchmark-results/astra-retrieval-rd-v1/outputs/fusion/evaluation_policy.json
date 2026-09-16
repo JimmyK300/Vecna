@@ -1,0 +1,25 @@
+{
+  "schema": "vecna82-fusion-evaluation-policy-v1",
+  "primary_layer": "distinct_video",
+  "global_selection_order": [
+    "maximum R@20",
+    "maximum MRR@20",
+    "maximum R@1",
+    "fixed arm order"
+  ],
+  "fixed_arm_order": [
+    "fusion_current_control",
+    "fusion_rrf",
+    "fusion_minmax_sum",
+    "fusion_robust_z_sum",
+    "fusion_softmax_sum"
+  ],
+  "bootstrap_seed": 82,
+  "bootstrap_resamples": 10000,
+  "comparison_controls": [
+    "fusion_current_control",
+    "qwen_only_matched"
+  ],
+  "integration": "No production integration; select one descriptive global arm and disclose every regression.",
+  "diagnostic_ablation": "Remove one already-computed provider contribution; freeze normalizers and candidate union. This is not recollection or an optimized weight."
+}

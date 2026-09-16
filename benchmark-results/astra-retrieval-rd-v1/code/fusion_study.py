@@ -194,8 +194,9 @@ def transform(scores: dict[str, float], arm: str) -> tuple[dict[str, float], dic
     if arm == "fusion_rrf":
         out = [1.0 / (RRF_K + rank) for rank in range(1, len(values) + 1)]
     elif arm == "fusion_minmax_sum":
-        spread = max(values) - min(values)
-        out = [(value - min(values)) / spread for value in values] if spread else [1.0] * len(values)
+        minimum = stats["min"]
+        spread = stats["max"] - minimum
+        out = [(value - minimum) / spread for value in values] if spread else [1.0] * len(values)
         stats["equal_score_rule"] = "all_one" if not spread else None
     elif arm == "fusion_robust_z_sum":
         center = statistics.median(values)
@@ -373,6 +374,7 @@ def run(rankings_path: Path, config_path: Path, queries_path: Path, output_path:
         for result in results:
             handle.write(json.dumps(result, ensure_ascii=False, allow_nan=False) + "\n")
     return {"queries": len(results), "arms": list(ARMS), "ground_truth_read": False,
+            "harness_sha256": digest_bytes(Path(__file__).read_bytes()),
             "collection_manifest_sha256": digest_bytes(manifest_path.read_bytes()),
             "run_identity_sha256": identity_hash,
             "rankings_sha256": digest_bytes(rankings_path.read_bytes()),

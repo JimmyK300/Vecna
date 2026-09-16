@@ -18,6 +18,8 @@ sys.path.insert(0, str(ROOT / "code"))
 from fusion_study import (ContractError, ARMS, current_scores, digest_bytes, digest_json,
                           nominal_weights, run, run_identity_digest, study_query, transform, validate_config)
 from collect_fusion_providers import capture_query, preprocessing_identity, SearchOnlyDatabase
+from evaluate_fusion_study import matched_qwen_items, paired, score_arm, select_global_arm
+from analyze_reranker import load_scorer
 
 
 class Array:
@@ -285,6 +287,32 @@ class FusionTests(unittest.TestCase):
             (path / "manifest.json").write_text(json.dumps(manifest))
             with self.assertRaisesRegex(ContractError, "mixed or foreign"):
                 run(*args, path / "blocked-output.jsonl", path / "manifest.json")
+
+    def test_global_selection_is_one_arm_with_paired_rescues_regressions(self):
+        rows = []
+        def score(rank):
+            return {"first_success_rank": rank,
+                    "metrics": {**{f"R@{k}": float(rank is not None and rank <= k) for k in (1, 5, 10, 20)},
+                                "MRR@20": 1 / rank if rank else 0}}
+        for query_id, before, after in (("q0", 1, 2), ("q1", None, 1), ("q2", 20, None)):
+            row = {"query_id": query_id, "arms": {arm: {"distinct_video": score(before)} for arm in ARMS}}
+            row["arms"]["fusion_rrf"]["distinct_video"] = score(after)
+            rows.append(row)
+        self.assertEqual(select_global_arm(rows), "fusion_rrf")
+        comparison = paired(rows, "distinct_video", "fusion_rrf", "fusion_current_control")
+        self.assertEqual(comparison["metrics"]["R@20"]["improved_query_ids"], ["q1"])
+        self.assertEqual(comparison["metrics"]["R@20"]["regressed_query_ids"], ["q2"])
+
+    def test_video_collapse_and_frame_position_scoring_stay_distinct(self):
+        cfg, raw, _, _ = fixture({"qwen_vl": [hit("A#1", .9), hit("A#2", .8), hit("B#3", .7)]})
+        frames, videos = matched_qwen_items(raw, cfg)
+        target = {"truth_tier": "frozen_headless_benchmark_truth", "task_type": "kis",
+                  "accepted_video_id": "B", "accepted_ranges": [{"start_frame": 3, "end_frame": 3}]}
+        scorer = load_scorer(ROOT / "reference/evaluate_reranker_fusion.py")
+        result = score_arm(frames, videos, target, scorer)
+        self.assertEqual(result["distinct_video"]["first_success_rank"], 2)
+        self.assertEqual(result["frame_position_video"]["first_success_rank"], 3)
+        self.assertEqual(result["frozen_frame_range_event"]["first_success_rank"], 3)
 
 
 if __name__ == "__main__":

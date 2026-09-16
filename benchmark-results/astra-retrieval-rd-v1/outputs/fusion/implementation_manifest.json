@@ -1,0 +1,39 @@
+{
+  "schema": "vecna82-fusion-implementation-v1",
+  "validation": "19 focused unittest cases passed",
+  "files": {
+    "code/fusion_study.py": {
+      "bytes": 21020,
+      "sha256": "57ded10b78c0a6649008d15e61882e3b52d2eb0b5cf63b57a7133a6a9da2a292"
+    },
+    "code/collect_fusion_providers.py": {
+      "bytes": 23463,
+      "sha256": "fcf5ad34ae2137b34faaf38ace66b8ef4f27087708513a1d007ae3f2ace64bad"
+    },
+    "code/evaluate_fusion_study.py": {
+      "bytes": 23980,
+      "sha256": "904537063934381bc1d1e31919adb208a8745f909b74e28cfdb96d9490e4ea8d"
+    },
+    "tests/test_fusion_study.py": {
+      "bytes": 17081,
+      "sha256": "52061d250e917e8cc62cf249c3a8af5d254cb969beae77a5deedf56b08d88dc3"
+    },
+    "outputs/fusion/frozen_config.json": {
+      "bytes": 2917,
+      "sha256": "e268f2ce399c33267c30de10be346e4f389b9187b1024ae7ccf32a26c51b00fe"
+    },
+    "outputs/fusion/queries.jsonl": {
+      "bytes": 58849,
+      "sha256": "3b91dfe26a893192a497a964d3a9ea5f50c595fdaabad000cbc60fc602be0d1a"
+    },
+    "outputs/fusion/evaluation_policy.json": {
+      "bytes": 784,
+      "sha256": "f6bcbc2081741d99dedfcae21d8f5aa53a821809348e07a98b33f2672ed2c6dd"
+    },
+    "outputs/fusion/CONTRACT.md": {
+      "bytes": 5753,
+      "sha256": "7d206552cea487c66757a791d95c01e41b2b263541905d5b7bb8d5221000628d"
+    }
+  },
+  "scientific_status_at_implementation_freeze": "No full provider export has been scored; runtime endpoint recovery remains with parent"
+}
