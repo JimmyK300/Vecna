@@ -1,0 +1,35 @@
+{
+  "schema": "vecna82-synthesis-publication-checkpoint-v1",
+  "status": "IN_PROGRESS",
+  "as_of_utc": "2026-09-16T14:23:00Z",
+  "authority": {
+    "vecna_main": "95d63a6abf10c598e0e54af7d2071bedbe542d1e",
+    "dataset_main": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "query_total": 115,
+    "scoreable": 113,
+    "excluded": [
+      "p0_q15",
+      "p3_q09"
+    ]
+  },
+  "completed": [
+    "Packet A native image result published in draft PR85",
+    "Packet C historical reranker analysis published in draft PR83",
+    "Current Qwen checkpoint repair and exhaustive verification published in draft PR88",
+    "Full B provider capture and independent primary scoring completed",
+    "Dense text capture completed",
+    "Temporal/OCR/ASR source review and sparse visibility published in draft PR87; native overlays in dataset PR18"
+  ],
+  "pending": [
+    "Lossless B/dense artifact recovery and final publication",
+    "Final dense scoring",
+    "Reconstructed Packet D generator validation and final 113-query ledger",
+    "Exactly one Packet E proposal and final report"
+  ],
+  "constraints": {
+    "merge_main": false,
+    "packet_e_implementation": false,
+    "production_integration": false,
+    "model_rerun_for_recovery": false
+  }
+}
