@@ -1,0 +1,27 @@
+{
+  "state": "needs_review",
+  "records": [
+    {
+      "query_id": "p0_q04",
+      "family": "dense-natural",
+      "returncode": 1,
+      "status": "ERROR",
+      "view_file_called": false,
+      "unexpected_tools": [],
+      "elapsed_s": 5.549880266189575,
+      "conversation_id": "",
+      "sandbox": "C:\\Users\\minhc\\.codex\\media-sandboxes\\issue95-quality-v1\\61e45dd0767d405e9233f363d17976c6",
+      "clip_sha256": "549ba985059266ec7e14c7ae793eaa3bce778e059790cfe0ab564f7521d2a70f",
+      "request_sha256": "8e7a23ed1987c914de363d563c2e108dee7c8eff8a398dd3adb9870c6ec06f08",
+      "caption_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "thinking_tokens": 0,
+        "cache_read_tokens": 0,
+        "total_tokens": 0
+      },
+      "candidate_valid": false
+    }
+  ]
+}

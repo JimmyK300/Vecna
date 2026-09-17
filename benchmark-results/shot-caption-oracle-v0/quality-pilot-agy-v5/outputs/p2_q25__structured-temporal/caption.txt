@@ -1,0 +1,160 @@
+{
+  "overview": "A broadcast recording of a traditional lion dance performance during an athletic event or competition. A two-person white and red lion costume begins elevated high on its hind performer on the left side of the stage floor next to a yellow dragon prop, lowers to all fours, and advances across the stage toward a row of numbered high metal stilt poles surrounded by blue crash mats. A persistent picture-in-picture inset in the lower-right corner shows a percussion ensemble actively playing a drum and cymbals.",
+  "start_state": [
+    "A wide camera shot shows an outdoor or covered festival stage with a large LED screen and a golden dragon sculpture in the background.",
+    "A white lion dance costume with shaggy white fur and red/gold decorative accents is held high aloft in a two-legged lifted pose on the left side of the stage floor.",
+    "A yellow dragon dance body prop is held upright on poles by performers to the left of the lion.",
+    "Foreground officials in blue shirts with yellow accents sit and stand at a table draped in light blue fabric; one seated official has his right arm raised vertically.",
+    "On the right half of the stage floor stands a row of vertical metal poles with square placards numbered '3', '4', '5', '5', '7', surrounded by blue safety crash mats.",
+    "An inset video window in the bottom-right corner shows three percussionists in white athletic t-shirts with red trim playing a traditional barrel drum and cymbals before seated audience members.",
+    "A red circular logo reading 'QUẬN 5' is displayed in the upper-left corner of the broadcast.",
+    "The television channel logo 'HTV THỂ THAO' is displayed in the upper-right corner."
+  ],
+  "timeline": [
+    {
+      "relative_time": "00:00 - 00:06",
+      "event": "The white lion costume remains hoisted in an upright balance pose while performing subtle head movements, before any forward movement occurs.",
+      "evidence": "The front performer stands elevated on the rear performer's shoulders or thighs; the seated official in the foreground keeps his right arm held straight up; the yellow dragon is held stationary on the left; the drummer and cymbal players in the inset play continuously.",
+      "uncertainty": "none"
+    },
+    {
+      "relative_time": "00:07 - 00:08",
+      "event": "The front performer of the lion costume descends back down to the floor, placing the lion on all four legs, and the foreground official lowers his arm.",
+      "evidence": "The lion's front section lowers smoothly to floor level; the seated official in the blue shirt lowers his raised right arm down toward the desk surface.",
+      "uncertainty": "none"
+    },
+    {
+      "relative_time": "00:09 - 00:10",
+      "event": "The lion costume walks forward on all fours from left to right across the green floor mat toward the numbered metal poles.",
+      "evidence": "Both front and hind performers step forward in quadrupedal coordination; the lion passes the foreground official's desk.",
+      "uncertainty": "none"
+    },
+    {
+      "relative_time": "00:10 - 00:11",
+      "event": "The broadcast camera cuts from a wide shot to a closer medium shot focused on the white lion arriving before pole number 3.",
+      "evidence": "Instantaneous cut occurs; the lion fills the left-to-center frame at ground level directly in front of the blue crash mat at pole '3'.",
+      "uncertainty": "none"
+    },
+    {
+      "relative_time": "00:11 - 00:15",
+      "event": "The white lion stands stationary on all fours facing right toward the high poles, nodding, tilting its head, and blinking its eyelids and moving its mouth.",
+      "evidence": "The lion's head turns and tilts upward toward the top of the poles; ear and eyelid mechanisms twitch; the back of an official's blue shirt is visible in the foreground; the percussionists in the inset continue striking the drum and clashing cymbals.",
+      "uncertainty": "none"
+    }
+  ],
+  "end_state": [
+    "The camera is in a closer medium shot framing the white lion dance costume standing on all four feet on the floor mat in front of pole number '3'.",
+    "The lion is oriented toward the right, looking up toward the numbered stilt poles while animatedly moving its head and blinking.",
+    "The back of a seated official in a blue and yellow polo shirt is visible in the lower foreground alongside documents and a water bottle on the table.",
+    "The inset video in the bottom right continues to show the percussionists striking the drum and cymbals.",
+    "The 'QUẬN 5' and 'HTV THỂ THAO' corner broadcast logos remain visible in the upper-left and upper-right corners."
+  ],
+  "state_changes": [
+    "The lion costume transitions from an elevated two-legged lifted pose to a four-legged stance on the floor.",
+    "The lion moves horizontally from the left side of the stage to the base of the metal poles on the right.",
+    "The seated foreground official transitions his right arm from fully raised to resting down.",
+    "The camera view changes from a wide establishing angle to a closer medium angle."
+  ],
+  "transient_events": [
+    "Front dancer descends from the elevated lift to the ground at approximately 00:07-00:08.",
+    "Seated official lowers his upright arm at approximately 00:08.",
+    "A hard camera cut occurs between 00:10 and 00:11.",
+    "Percussionist in the inset repeatedly raises arms overhead and strikes downward onto the drumhead.",
+    "Cymbalist in the inset clashes brass cymbals together repeatedly.",
+    "Lion costume's eyelids, mouth flap, and ears repeatedly twitch and blink between 00:11 and 00:15."
+  ],
+  "people": [
+    "Two performers inside the white lion dance costume, wearing white and red matching pants and athletic shoes.",
+    "Performers wearing bright yellow short-sleeved shirts holding poles supporting the yellow dragon prop on the left.",
+    "Officials or judges in the foreground wearing royal blue short-sleeved polo shirts with yellow shoulder trim; one seated with short dark hair, one standing wearing a dark backpack.",
+    "An official in a cyan polo shirt seated behind a table in the background near the stage entrance.",
+    "An individual standing in the background right wearing white pants and a red/white sash near ceremonial banners.",
+    "Three percussionists in the picture-in-picture inset wearing white short-sleeved shirts with red trim and dark trousers.",
+    "Spectators in the background of the inset sitting in tiered chairs wearing casual dark clothing."
+  ],
+  "objects": [
+    "White lion dance head and body costume with shaggy white fur, red, yellow, and black facial paint, and a horn.",
+    "Segmented yellow Chinese dragon prop mounted on vertical poles.",
+    "High metal stilt poles (jong poles) of varying heights fixed to a base, labeled with square placards displaying numbers '3', '4', '5', '5', '7'.",
+    "Blue rectangular foam crash/landing mats placed beneath and around the high poles.",
+    "Large traditional Chinese barrel drum (tanggu) on a dark wooden frame in the inset.",
+    "Pair of metal hand cymbals held by the percussionist in the inset.",
+    "Tables covered with light blue tablecloths in the foreground and background.",
+    "Documents, papers, pens, and a clear plastic beverage bottle on the foreground judge table.",
+    "Large stage LED video screen displaying a live camera feed.",
+    "Sculpted decorative golden dragon structure on the background stage wall.",
+    "Triangular ceremonial flag with saw-toothed red borders mounted on a pole near the background judge table."
+  ],
+  "actions": [
+    "Performing a high stationary balance lift inside the lion dance costume.",
+    "Lowering the front performer down to floor level.",
+    "Walking and trotting in coordination on all fours across the stage mat.",
+    "Manipulating the lion costume's eyes, ears, and mouth mechanisms.",
+    "Raising and holding an arm upright, then lowering it, by a seated official.",
+    "Holding and steadying dragon prop support poles.",
+    "Striking a barrel drum with drumsticks.",
+    "Clashing cymbals together rhythmically."
+  ],
+  "visual_attributes": [
+    "Shaggy textured white fur on the lion costume body with red-and-gold trim.",
+    "Bright yellow scaled fabric on the dragon prop.",
+    "Royal blue fabric with yellow collars/stripes on the officials' shirts.",
+    "Light blue fabric draped over the judging desks.",
+    "Grey/silver metallic cylindrical poles.",
+    "Matte royal blue rectangular crash mats.",
+    "White t-shirts with red diagonal accents and red collar trim worn by the musicians in the inset.",
+    "Golden metallic sheen on the sculpted stage dragon."
+  ],
+  "counts": [
+    "1 lion dance costume with 2 performers inside.",
+    "At least 4 support poles for the yellow dragon visible on the left.",
+    "At least 5 numbered high metal poles visible in the frame (bearing numbers 3, 4, 5, 5, 7).",
+    "At least 2 officials seated or standing at the foreground left table.",
+    "At least 1 official seated at the background judge table.",
+    "3 percussionists clearly visible in the picture-in-picture inset.",
+    "At least 6 spectators seated in the background of the inset.",
+    "1 large barrel drum and 1 pair of cymbals visible in the inset.",
+    "2 permanent on-screen broadcast channel/event logos."
+  ],
+  "spatial_relations": [
+    "The yellow dragon is situated to the left of and slightly behind the white lion.",
+    "The white lion begins on the left side of the stage and travels to the right toward the poles.",
+    "The numbered metal poles stand on the right half of the stage floor.",
+    "Blue crash mats are laid directly around the bases and between the metal poles.",
+    "The officials' table is positioned in the lower-left foreground.",
+    "The large LED screen is located against the rear stage backdrop directly behind the lion's starting position.",
+    "The golden dragon sculpture is positioned to the right of the LED screen on the stage backdrop.",
+    "The picture-in-picture window is situated in the lower-right corner of the broadcast video.",
+    "The 'QUẬN 5' logo is anchored in the upper-left corner; the 'HTV THỂ THAO' logo is anchored in the upper-right corner."
+  ],
+  "visible_text": [
+    "QUẬN 5",
+    "HTV",
+    "THỂ THAO",
+    "3",
+    "4",
+    "5",
+    "7",
+    "... LÂM ... (partially visible yellow letters on the back of the foreground official's blue shirt)"
+  ],
+  "spoken_content": [],
+  "fine_grained_details": [
+    "High-pole lion dance discipline (Mai Hoa Thung / Jong high poles).",
+    "Broadcast network: HTV Thể Thao (Ho Chi Minh City Television Sports channel, Vietnam).",
+    "Host district: Quận 5 (District 5, Ho Chi Minh City, known as Cho Lon).",
+    "Percussion instruments: Traditional southern lion dance tanggu barrel drum and brass cymbals (bo/chao)."
+  ],
+  "scene_context": [
+    "An organized public martial arts and lion dance championship or festival stage, likely in District 5, Ho Chi Minh City, Vietnam, broadcast by HTV Thể Thao."
+  ],
+  "camera": [
+    "Begins at 00:00 as a wide, static establishing shot from an elevated frontal-left perspective showing the overall stage, background screen, and judging tables.",
+    "A hard cut occurs between 00:10 and 00:11 to a closer medium shot focused on the lion at ground level.",
+    "A fixed picture-in-picture window remains in the lower-right corner throughout the entire clip."
+  ],
+  "uncertainties": [
+    "Audio speech transcription is unavailable from the visual data; percussion sounds dominate without discernible spoken dialogue.",
+    "Full text on the back of the officials' blue shirts is partially occluded and not fully legible.",
+    "Total number of metal poles beyond those numbered up to 7 extending out of frame to the right is not fully observable."
+  ]
+}

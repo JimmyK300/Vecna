@@ -1,0 +1,115 @@
+{
+  "schema": "agy-native-video-quality-pilot-v1",
+  "query_ids": [
+    "p0_q04",
+    "p0_q13",
+    "p0_q19",
+    "p1_q02",
+    "p2_q14",
+    "p2_q25"
+  ],
+  "selection": "Fixed before output: fine detail, OCR/count, speech QA, slides/sequence, motion, negation.",
+  "families": [
+    "dense-natural",
+    "structured-evidence",
+    "structured-temporal"
+  ],
+  "model": "gemini-3.8-flash-high",
+  "route": "AGY CLI native view_file; fps/resolution/audio pipeline not controlled or proven API-equivalent",
+  "source_commit": "4ee9b935739633e2c5fe169e6c83c8b3274bde02",
+  "dirty_state": "?? quality-pilot-agy-v1/\n?? quality-pilot-agy-v2/\n?? quality-pilot-agy-v3/\n?? quality-pilot-agy-v4/\n",
+  "code_sha256": "059ec3765cb433c45a65f1501adaf80b05b232b63741ca969a626dc28a2a939c",
+  "prefix": "Open clip.mp4 in your current working directory using your native view_file tool, then carry out the caption instructions below. You must actually view the media. Do not inspect any other files or directories, use commands, external APIs, web search, other agents, or prior conversations. Do not write files. Use only native video viewing and return your caption in the final response. If media viewing fails, report that failure instead of inventing content. Media sampling/resolution is controlled by the native tool; do not claim a configured fps or resolution.\n\n",
+  "clips": [
+    {
+      "clip_path": "C:\\Users\\minhc\\Code\\Vecna-issue95-local\\benchmark-results\\shot-caption-oracle-v0\\clips\\p0_q04__L26_V056__245.000-295.000.mp4",
+      "clip_sha256": "549ba985059266ec7e14c7ae793eaa3bce778e059790cfe0ab564f7521d2a70f",
+      "clip_size": 12702048,
+      "duration_s": 50.0,
+      "end_s": 295.0,
+      "ffmpeg": "ffmpeg version 8.1.2-full_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers",
+      "query_id": "p0_q04",
+      "source_path": "D:\\Official-Dataset\\videos\\L26A\\L26_V056.mp4",
+      "source_sha256": "070c52823021e915de3b46f81e98b09ab0f3c3712106c8c4db20c84910d043a6",
+      "source_size": 71015614,
+      "start_s": 245.0,
+      "video_id": "L26_V056"
+    },
+    {
+      "clip_path": "C:\\Users\\minhc\\Code\\Vecna-issue95-local\\benchmark-results\\shot-caption-oracle-v0\\clips\\p0_q13__L30_V092__93.000-108.000.mp4",
+      "clip_sha256": "9f67445b9e4869c270b81f8fe30b09ea1be25b5228546cb9ca8ec00bd0f1d2ec",
+      "clip_size": 4628856,
+      "duration_s": 15.0,
+      "end_s": 108.0,
+      "ffmpeg": "ffmpeg version 8.1.2-full_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers",
+      "query_id": "p0_q13",
+      "source_path": "D:\\Official-Dataset\\videos\\L30\\L30_V092.mp4",
+      "source_sha256": "439ac115c80e852cc0e25feffe02929a1a9965e8b43679613b1a26bc545ffd86",
+      "source_size": 41101206,
+      "start_s": 93.0,
+      "video_id": "L30_V092"
+    },
+    {
+      "clip_path": "C:\\Users\\minhc\\Code\\Vecna-issue95-local\\benchmark-results\\shot-caption-oracle-v0\\clips\\p0_q19__L30_V072__55.000-85.000.mp4",
+      "clip_sha256": "f6a6ef411dd4744e5f4a2723aa7364cc27bfa15cf31e2bda3e8cc7e641cb0d83",
+      "clip_size": 23984945,
+      "duration_s": 30.0,
+      "end_s": 85.0,
+      "ffmpeg": "ffmpeg version 8.1.2-full_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers",
+      "query_id": "p0_q19",
+      "source_path": "D:\\Official-Dataset\\videos\\L30\\L30_V072.mp4",
+      "source_sha256": "740fb71b8fd645fb23f55686f6997e73761c005d41493115b70391ebabadb1ee",
+      "source_size": 22847131,
+      "start_s": 55.0,
+      "video_id": "L30_V072"
+    },
+    {
+      "clip_path": "C:\\Users\\minhc\\Code\\Vecna-issue95-local\\benchmark-results\\shot-caption-oracle-v0\\clips\\p1_q02__L28_V018__105.000-128.000.mp4",
+      "clip_sha256": "6835a28a1686c474a06583941b824aca4950d32fa9cc45a7c87f596603e8e038",
+      "clip_size": 3360199,
+      "duration_s": 23.0,
+      "end_s": 128.0,
+      "ffmpeg": "ffmpeg version 8.1.2-full_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers",
+      "query_id": "p1_q02",
+      "source_path": "D:\\Official-Dataset\\videos\\L28\\L28_V018.mp4",
+      "source_sha256": "28fdb516bdc708e044830ce14c6532eb73e6d52d1869ec166a3e8697b3e2490d",
+      "source_size": 308152428,
+      "start_s": 105.0,
+      "video_id": "L28_V018"
+    },
+    {
+      "clip_path": "C:\\Users\\minhc\\Code\\Vecna-issue95-local\\benchmark-results\\shot-caption-oracle-v0\\clips\\p2_q14__L23_V017__96.080-103.120.mp4",
+      "clip_sha256": "147b1f614d8833fe1573e9af13b8c05030b4f605204147726765a843004725ff",
+      "clip_size": 4086670,
+      "duration_s": 7.040000000000006,
+      "end_s": 103.12,
+      "ffmpeg": "ffmpeg version 8.1.2-full_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers",
+      "query_id": "p2_q14",
+      "source_path": "D:\\Official-Dataset\\videos\\L23\\L23_V017.mp4",
+      "source_sha256": "68fa775d31d03862cbb9791f047f448239f9d52579199cbaa44bdad4b6292ebe",
+      "source_size": 51168735,
+      "start_s": 96.08,
+      "video_id": "L23_V017"
+    },
+    {
+      "clip_path": "C:\\Users\\minhc\\Code\\Vecna-issue95-local\\benchmark-results\\shot-caption-oracle-v0\\clips\\p2_q25__L24_V031__0.000-16.000.mp4",
+      "clip_sha256": "49e2f0188c8bd0ed632cce3ee946e25baf51a4b90bdd3eb178c8a4403c7d6e9c",
+      "clip_size": 5276987,
+      "duration_s": 16.0,
+      "end_s": 16.0,
+      "ffmpeg": "ffmpeg version 8.1.2-full_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers",
+      "query_id": "p2_q25",
+      "source_path": "D:\\Official-Dataset\\videos\\L24\\L24_V031.mp4",
+      "source_sha256": "a46b5456ddaca24335fc91fb37aa45cd3595c2f6f57e35a9cb4dfd355e3dcddc",
+      "source_size": 137271653,
+      "start_s": 0.0,
+      "video_id": "L24_V031"
+    }
+  ],
+  "prompt_sha256": {
+    "dense-natural": "e2992b0b626a29f1d8fe731fb436dedd2c9e45ed72771039060d79fcfdd04754",
+    "structured-evidence": "e4e61f2e51d1b3532dd8cdca555390d2f4d125ffd201cbd46af40e73e3a456a5",
+    "structured-temporal": "504e226e9357430cf687d26f0a97b61559a16ed72eabda2aa5249c9d74b7c0b7"
+  },
+  "evaluation_plan": "After freeze, inspect authoritative requirements and videos. Record atom support, missing evidence, contradictions, OCR/count accuracy and unverifiable audio. Audit concrete claims independently with frames; same-model judging alone is not verification. Six clips are diagnostic, not population estimates. No full-batch launch from this pilot without review."
+}

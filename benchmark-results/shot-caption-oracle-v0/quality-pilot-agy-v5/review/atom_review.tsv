@@ -1,0 +1,32 @@
+query_id	atom	dense_natural	structured_evidence	structured_temporal	independent_check
+p0_q04	Plating rolls on dish	covered	covered	covered	Gloved hand and plating visible at 9.07-18.15s; chef identity inferred from surrounding show
+p0_q04	Vegetarian/tofu filling	covered	covered	covered	Leaf layers and pale filling visible; menu names CUON CHAY DAU HU RAU RUNG; individual ingredient identity not wholly visual
+p0_q04	Yellow and purple wrappers	covered	covered	covered	Visible in 13.61s and 40.83s frames
+p0_q04	Green leaf garnish	covered	covered	covered	Visible at 13.61s
+p0_q04	Purple-yellow pansy garnish	covered	covered	covered	Visible at 13.61s; botanical identification limited to appearance
+p0_q04	Starts with plating	input_boundary_mismatch	input_boundary_mismatch	input_boundary_mismatch	Extracted interval starts with host; plating begins later; not caption omission
+p0_q13	Hospital charity Spring 2024	covered	filter_response	filter_response	Backdrop year 2024 and hospital name visible
+p0_q13	Pink and white shirt men flanking recipients	partial	filter_response	filter_response	6.77s frame clearly shows both; caption describes pink man but omits full flanking relation
+p0_q13	Four young recipients with red white pink blue clothing	missing_exact_configuration	filter_response	filter_response	6.77s frame supports four recipients and colors; dense caption does not preserve this configuration
+p0_q13	Exact COVID-19 orphan support board text	partial	filter_response	filter_response	6.77s has legible board; dense caption abbreviates CHUONG TRINH and amount; COVID-19 only in claimed audio
+p0_q13	Gift bag before each recipient with medical logo	partial	filter_response	filter_response	Four white bags with hospital emblems visible; caption calls them rice/groceries with red brand emblems
+p0_q13	Red spring-event backdrop	covered	filter_response	filter_response	6.77s frame
+p0_q19	FANA club identity	wrong_VANA	wrong_SANA	missing_FANA	16.31s banner upper left explicitly FANA; other club name preserved
+p0_q19	Gift distribution	covered	covered	covered	16.31s and 19.03s frames
+p0_q19	Khanh Hoa location	covered	covered	covered	16.31s banner readable
+p0_q19	Commune name at depicted time	covered_Giang_Ly	covered_Giang_Ly	covered_Giang_Ly	Banner and building sign independently show Giang Ly; frozen truth has no scoreable QA answer
+p1_q02	Map opening	covered	covered	covered	All sampled frames show map
+p1_q02	Sequential waterworks appearances	partial	partial	partial	Main canal followed by T3 T4 T5 and further branches; captions capture order but not exact four-event query interpretation
+p1_q02	Aerial dam after map	missing_input_evidence	missing_input_evidence	missing_input_evidence	No dam in 12 evenly spaced frames; suspect accepted range too narrow; not counted as proven model omission
+p1_q02	Close dam in rain after aerial dam	missing_input_evidence	missing_input_evidence	missing_input_evidence	Same extraction concern; no frozen range or truth changed
+p2_q14	Rear following viewpoint	covered	covered	covered	0-6.94s contact sheet
+p2_q14	One leader and three followers	incomplete	incomplete	incomplete	Captions track two near riders; evidence/temporal also note one distant rider; do not retain required configuration
+p2_q14	Right turn	wrong_left	wrong_left	wrong_left	Sequence bends right around island; all three captions explicitly say left
+p2_q14	Ho Tung Mau street	claimed_audio_unverified	claimed_audio_unverified	claimed_audio_unverified	Dense/evidence also claim visible subtitles not corroborated by sampled frames; speech not independently listened to
+p2_q14	Green traffic light	covered	covered	covered	6.31s full-resolution frame
+p2_q14	Countdown 13	covered	covered	covered	6.31s full-resolution frame clearly reads 13
+p2_q25	Lion performs from beginning	covered	covered	covered	0-15.90s sampled sequence
+p2_q25	Numbered poles	covered	covered	covered	10.12s and 11.56s full-resolution frames
+p2_q25	Spiral dragon behind	partial	partial	partial	Decorative dragon described; exact spiral form not retained explicitly
+p2_q25	Complete observed number set in first 16s	incomplete_or_wrong	wrong_1_through_7	incomplete_or_wrong	8 visible at 10.12s; 1 at 11.56s; dense/temporal list 3 4 5 5 7; evidence confidently claims 1-7
+p2_q25	Determine absent number among 1-8	insufficient	insufficient	insufficient	No complete reliable visibility inventory; no QA gold in frozen truth; absence not established from sparse frames

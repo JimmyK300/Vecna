@@ -1,0 +1,23 @@
+{
+  "query_id": "p0_q04",
+  "family": "structured-evidence",
+  "returncode": 0,
+  "status": "ERROR",
+  "view_file_called": true,
+  "unexpected_tools": [],
+  "elapsed_s": 173.29866242408752,
+  "conversation_id": "e3ca2f7f-6cba-4b07-a90e-fafc30180db7",
+  "sandbox": "C:\\Users\\minhc\\.codex\\media-sandboxes\\issue95-quality-v4\\312ed2e5c2cb4220bf279d3f720c348e",
+  "clip_sha256": "549ba985059266ec7e14c7ae793eaa3bce778e059790cfe0ab564f7521d2a70f",
+  "request_sha256": "61ddbb0fe5485f82fef0037fd736b70ae9c0057c901b9d50a4388d32f82ffe0b",
+  "caption_sha256": "3724f063bedec301fb854e75af9c79aac5160e4a9cbda8378906f4273b046b11",
+  "usage": {
+    "input_tokens": 125079,
+    "output_tokens": 69020,
+    "thinking_tokens": 64542,
+    "cache_read_tokens": 0,
+    "total_tokens": 194099
+  },
+  "tool_errors": [],
+  "candidate_valid": false
+}

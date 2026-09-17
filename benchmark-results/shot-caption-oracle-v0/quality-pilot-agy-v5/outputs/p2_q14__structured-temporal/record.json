@@ -1,0 +1,24 @@
+{
+  "query_id": "p2_q14",
+  "family": "structured-temporal",
+  "returncode": 0,
+  "status": "SUCCESS",
+  "error": null,
+  "view_file_called": true,
+  "unexpected_tools": [],
+  "elapsed_s": 36.36644911766052,
+  "conversation_id": "b68eba48-1843-4390-8f42-31b9cf0927ec",
+  "sandbox": "C:\\Users\\minhc\\.codex\\media-sandboxes\\issue95-quality-v5\\adb784c3d70a42e7b0f4336ea8aaaee2",
+  "clip_sha256": "147b1f614d8833fe1573e9af13b8c05030b4f605204147726765a843004725ff",
+  "request_sha256": "b12dc0dcaac05fd13ed697b48c8d239c23df61a278c9d5d18a69cb54b7feff26",
+  "caption_sha256": "2aa17189683c21b3d6e6b65899a3cc95cda4b55e6a3211ea978fdd8d8fbb05a7",
+  "usage": {
+    "input_tokens": 37229,
+    "output_tokens": 5213,
+    "thinking_tokens": 3543,
+    "cache_read_tokens": 0,
+    "total_tokens": 42442
+  },
+  "tool_errors": [],
+  "candidate_valid": true
+}

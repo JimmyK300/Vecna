@@ -1,0 +1,23 @@
+The video is a satellite map graphic presentation lasting approximately 22 seconds with Vietnamese voiceover narration and instrumental background music. 
+
+### Visual Elements and Graphic Layout
+- **Station Identification**: A permanent channel bug / logo is visible in the upper-left corner with white letters **"HTV"** above the word **"Online"**.
+- **Base Map**: Top-down satellite imagery displaying the southwestern coastal region of Vietnam along the Gulf of Thailand:
+  - Deep blue and turquoise coastal sea on the left and lower-left, dotted with multiple small green/brown islands and shallow coastal shoals.
+  - Two geographical water body labels in white sans-serif text appear on the sea: **"Vịnh Cây Dương"** along the mid-coast and **"Vịnh Rạch Giá"** positioned vertically near the lower-right coastal bay.
+  - The landmass is predominantly green, patterned with agricultural plots, irrigation grids, and mountainous/hilly terrain towards the northwest.
+- **Terminal Points**: 
+  - An orange-red circular marker in the northwest is labeled with white text: **"Hà Tiên"**.
+  - An orange-red circular marker in the southeast near the coast is labeled with white text: **"Tp. Rạch Giá"**.
+
+### Chronological Animation and State Changes
+- **00:00 – 00:07**: A solid orange line traces the main canal route connecting Hà Tiên in the northwest to Tp. Rạch Giá in the southeast. A centered, angled white label with drop shadow reads **"Kênh Hà Tiên – Rạch Giá"**.
+- **00:07 – 00:09**: An orange branch line extends diagonally northeast into the inland plains from the main canal line, labeled in white text as **"Kênh T3"**.
+- **00:09 – 00:11**: A second parallel orange branch line extends northeast further southeast along the main canal, labeled in white text as **"Kênh T4"**.
+- **00:11 – 00:14**: A third parallel orange branch line extends northeast, labeled in white text as **"Kênh T5"**.
+- **00:15 – 00:22**: Additional orange linear segments light up across the map, forming an interconnected grid of canals, including cross-connecting perpendicular waterways between the branch canals and feeder canal lines around the Hà Tiên area.
+
+### Audio and Spoken Narration
+- A female Vietnamese narrator speaks continuously in a documentary broadcast style over gentle acoustic/instrumental background music:
+  - *Transcribed Vietnamese audio*: "...gần 88 km, kênh Rạch Giá – Hà Tiên còn là tuyến vận tải nằm trong lộ trình của tuyến đường thủy cấp quốc gia Thành phố Hồ Chí Minh... Từ tuyến kênh chính Rạch Giá – Hà Tiên, tiếp tục mở ra hệ thống các nhánh kênh phụ tương ứng, không chỉ có nhiệm vụ chi viện nguồn nước ngọt vào sâu trong nội đồng, mà còn giúp vận chuyển, trao đổi nguồn hàng hóa nông sản của địa phương sang các vùng lân cận."
+  - *Content translation summary*: Discusses the canal spanning nearly 88 km as part of the national waterway route to Ho Chi Minh City, noting how the main Rạch Giá – Hà Tiên canal connects to a system of secondary branch canals that bring fresh water into inland fields and support the transport and exchange of local agricultural produce to neighboring regions.

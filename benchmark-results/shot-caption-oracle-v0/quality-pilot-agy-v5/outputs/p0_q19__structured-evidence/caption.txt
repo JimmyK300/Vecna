@@ -1,0 +1,103 @@
+{
+  "overview": "A video report documents a charitable gift distribution event organized by the club 'Nắng Ấm Yêu Thương' for ethnic minority children in Giang Ly commune, Khanh Vinh district, Khanh Hoa province, Vietnam. The video features volunteers and local residents sorting through piles of donated clothes spread on plastic tarps, children holding colorful balloons posing near an entrance gate, a large crowd of children seated in an open yard, an on-stage presentation where children receive red gift bags and envelopes in front of a banner titled 'Sana CÙNG EM ĐẾN TRƯỜNG' dated 04.08.2024, and children wearing red sun hats walking across the paved courtyard of the Giang Ly Commune People's Committee building carrying their gifts.",
+  "people": [
+    "Dozens of children of various ages wearing casual clothes such as t-shirts, sports jerseys, shorts, pants, flip-flops, sandals, and red floppy sun hats",
+    "Adult volunteers and organizers wearing black polo shirts with yellow collars or casual shirts, jeans, hoodies, and sun hats",
+    "A female volunteer standing with children near a gate, wearing a tan bucket hat, green checkered scarf (khăn rằn) around her neck, olive long-sleeved shirt, and blue jeans, smiling and waving to the camera",
+    "A girl standing next to the volunteer wearing a white and black Juventus 'Jeep' football jersey and shorts",
+    "A woman sitting on the ground wearing a pink zippered hoodie, pink pants, and a light blue bucket hat",
+    "A woman sitting on a sack with her back turned, wearing a grey sweatshirt with 'ad sb...' text",
+    "A woman crouching on the ground in a black-and-white horizontally striped long-sleeve shirt handling clothes",
+    "A line of eight children standing side-by-side on outdoor steps holding bright red gift tote bags",
+    "A young boy in an olive green sweatshirt with 'ESSENTIALS' printed on the chest receiving a gift envelope",
+    "A young girl in a pink-and-maroon striped football jersey receiving a red gift bag",
+    "Two girls walking across the courtyard in the foreground: one in a green outfit holding a pink balloon, and one in a pink tracksuit holding two red bags and a plastic bag of food items"
+  ],
+  "objects": [
+    "Large piles of donated garments (shirts, jackets, pants, dresses) spread on blue and white plastic sheets",
+    "Bright red gift tote bags with white printed text and graphics and white handles",
+    "Latex balloons in pink, purple, white, yellow (with printed smiling faces), green (with printed smiling face), blue, orange, and red",
+    "Rectangular greeting cards or gift envelopes with blue-and-white patterned borders",
+    "Large event backdrop banner reading 'Sana CÙNG EM ĐẾN TRƯỜNG'",
+    "Clear plastic grocery bags containing bread rolls or prepackaged food items",
+    "Parked motorcycles and commuter scooters (red, black, silver)",
+    "Paved geometric concrete courtyard pavers and stone tiles",
+    "Two-story administrative building with tiled roof, balcony, and flagpoles",
+    "Single-story administrative building with white walls and red trim",
+    "Concrete flowerbeds planted with purple-leaved foliage"
+  ],
+  "actions": [
+    "Adults and children sorting through and picking up clothes from piles laid on ground tarps",
+    "Volunteer woman waving her right hand towards the camera while standing with children",
+    "Children sitting together in organized rows on the grass/dirt ground listening or waiting",
+    "Eight children lining up on porch steps holding red gift tote bags facing the camera",
+    "Volunteers handing gift envelopes and red tote bags directly into children's hands",
+    "Children walking and jogging across the paved courtyard holding red bags and balloons"
+  ],
+  "visual_attributes": [
+    "Bright red non-woven tote bags",
+    "Wide-brimmed red cloth bucket/floppy hats worn by multiple children",
+    "Multi-colored balloons (pink, purple, yellow with smile prints, green with smile prints, blue, red)",
+    "Peach/beige and white building walls with red tiled roofing and prominent red signboards with white and gold text",
+    "Bright sunny natural daylight creating strong, distinct shadows on the ground",
+    "Lush green trees and forested mountains in the background under a blue sky with light clouds",
+    "Paved courtyard with round decorative interlocking concrete paving slabs"
+  ],
+  "counts": [
+    "8 children standing in a row on the steps displaying red gift bags",
+    "Approximately 40 to 80 children seated together in the outdoor lawn gathering (approximate; dense group)",
+    "Approximately 15 to 25 people clustered around the clothes sorting tarp area (approximate)",
+    "At least 6 parked motorcycles visible in the courtyard",
+    "2 national/political flags on the roof of the main commune building (National flag of Vietnam and Communist Party flag)"
+  ],
+  "spatial_relations": [
+    "Donated clothing piles are laid on plastic tarps on the ground in the foreground of the opening scene",
+    "Children sit in rows facing towards the left on the ground in front of a white building",
+    "The event banner is hung directly behind the row of children standing on the entrance steps",
+    "The 'ỦY BAN NHÂN DÂN XÃ GIANG LY' building stands centrally in the background behind the wide courtyard",
+    "Motorcycles are parked along the side perimeter and under the eaves of the single-story building on the right",
+    "Flowerbeds with purple plants separate the walkway from the main courtyard area"
+  ],
+  "visible_text": [
+    "tuoitre TV (watermark in top right corner throughout)",
+    "Sana CÙNG EM ĐẾN TRƯỜNG (large cursive text on event banner)",
+    "SANA (logo on banner upper left)",
+    "CLB NẮNG ẤM YÊU THƯƠNG (text on banner and volunteer shirt backs)",
+    "Xã Giang Ly, huyện Khánh Vĩnh, tỉnh Khánh Hòa (location subtext on banner)",
+    "04.08.2024 (date on banner)",
+    "ĐẢNG CỦY - HỘI ĐỒNG NHÂN DÂN (text on upper building sign)",
+    "ỦY BAN NHÂN DÂN XÃ GIANG LY (large red sign on main facade)",
+    "HỘI TRƯỜNG (sign above door on background building)",
+    "79-X1 111.99 (license plate on parked red motorcycle)",
+    "79-X1 161.81 (partial license plate visible on parked scooter)",
+    "Tác giả: Nguyễn Nhi (lower green banner credit from 00:24 to 00:29)",
+    "Herbalife (sponsor logo on lower left from 00:24 to 00:29)",
+    "SANFORD 3 (text on back of jacket)",
+    "Jeep (text on football jersey)",
+    "ESSENTIALS (text on sweatshirt)",
+    "Emirates FLY BETTER (text on football jersey)",
+    "ETIHAD (text on football jersey)",
+    "Rakuten (text on football jersey)"
+  ],
+  "spoken_content": [
+    "Female narrator speaking Vietnamese: '...thiểu số sinh sống, điều kiện sinh hoạt và cuộc sống còn gặp nhiều khó khăn, thiếu thốn. Tính đến nay, câu lạc bộ đã đi qua khoảng hơn 20 tỉnh thành, có thể kể đến như Đắk Nông, Đắk Lắk, Lâm Đồng, Bình Phước, Tây Ninh, Khánh Hòa, Bình Thuận, Ninh Thuận, Phú Yên, Đồng Tháp, Sóc Trăng và Tiền Giang.'"
+  ],
+  "fine_grained_details": [
+    "Event location specified on banner: Giang Ly Commune, Khanh Vinh District, Khanh Hoa Province, Vietnam",
+    "Event date on banner: August 4, 2024 (04.08.2024)",
+    "Charity program name: 'Sana Cùng Em Đến Trường'",
+    "Charity group name: 'CLB Nắng Ấm Yêu Thương'",
+    "Vehicle registration number prefix '79' corresponds to Khanh Hoa Province, Vietnam"
+  ],
+  "scene_context": [
+    "Headquarters and courtyard of the People's Committee of Giang Ly Commune (Ủy ban Nhân dân xã Giang Ly), located in a mountainous rural region of Khanh Vinh District, Khanh Hoa Province, Vietnam"
+  ],
+  "camera": [
+    "Combination of ground-level eye-level medium shots, slightly elevated medium-wide shot of the seated crowd, static medium wide shot of the step presentation, tracking shot moving with children walking across the courtyard, and a final rightward pan across the courtyard on a sunny day"
+  ],
+  "uncertainties": [
+    "Exact total number of beneficiaries and attendees cannot be determined precisely due to crowd density and camera movement",
+    "Exact items inside the red gift tote bags and paper envelopes cannot be verified beyond notebooks and gift packages",
+    "Some partial text on personal clothing items is occluded or illegible"
+  ]
+}

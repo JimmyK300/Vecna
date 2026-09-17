@@ -1,0 +1,1 @@
+error: Eligibility check failed: failed to get profile picture: Get "https://lh3.googleusercontent.com/a/ACg8ocJpz2hSyPrlG9PSxMXPBuWxrlRdoZMiwfosfj-ge7BfwtMItg=s96-c": dial tcp: lookup lh3.googleusercontent.com: getaddrinfow: The requested name is valid, but no data of the requested type was found.

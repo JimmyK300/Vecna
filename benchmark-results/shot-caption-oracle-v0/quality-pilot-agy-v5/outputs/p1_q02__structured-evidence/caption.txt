@@ -1,0 +1,80 @@
+{
+  "overview": "A satellite map graphic illustrates the canal network between Hà Tiên and Rạch Giá in southwestern Vietnam. The primary canal route, labeled 'Kênh Hà Tiên – Rạch Giá', is marked as a solid orange line running across green agricultural plains adjacent to the sea between orange dots at 'Hà Tiên' and 'Tp. Rạch Giá'. Over the course of the clip, three secondary branch canal lines labeled 'Kênh T3', 'Kênh T4', and 'Kênh T5' animate northeastward into the interior plain, followed by additional interconnected orange grid lines near Hà Tiên. A female voiceover in Vietnamese describes the canal length of nearly 88 km, its classification within the national inland waterway route connecting to Ho Chi Minh City, and how the branching canals convey freshwater inland and transport agricultural goods to neighboring areas. The 'HTV Online' broadcast watermark is positioned in the top-left corner throughout.",
+  "people": [],
+  "objects": [
+    "satellite map / aerial imagery of southwestern Vietnam coastline and Gulf of Thailand",
+    "primary orange route line representing Kênh Hà Tiên – Rạch Giá",
+    "secondary orange route lines representing branch canals Kênh T3, Kênh T4, and Kênh T5",
+    "secondary interconnected orange line grid near Hà Tiên",
+    "orange circular dot markers at Hà Tiên and Tp. Rạch Giá",
+    "white text labels on map",
+    "HTV Online logo graphic in upper-left corner",
+    "islands and coastal landforms in the sea",
+    "agricultural field plots across the land area"
+  ],
+  "actions": [
+    "The primary orange canal line remains displayed across the landscape.",
+    "At approximately 00:08, an orange branch line labeled 'Kênh T3' extends northeastward from the main canal line.",
+    "At approximately 00:10, a parallel orange branch line labeled 'Kênh T4' extends northeastward.",
+    "At approximately 00:13, a third parallel orange branch line labeled 'Kênh T5' extends northeastward.",
+    "At approximately 00:18, an interconnected grid of orange canal lines illuminates between Hà Tiên and the inland canals."
+  ],
+  "visual_attributes": [
+    "bright solid orange color for all canal graphic lines and circular endpoint markers",
+    "white sans-serif font for location names and canal identifiers",
+    "dark blue to slate-blue ocean waters with lighter turquoise/greenish shallow coastal contours",
+    "patchwork green and brownish-green agricultural landscape",
+    "HTV Online logo featuring stylized blue and red 'HTV' lettering with white 'Online' text beneath"
+  ],
+  "counts": [
+    "1 primary canal route line",
+    "3 labeled secondary branch canal lines (Kênh T3, Kênh T4, Kênh T5)",
+    "approximately 6 to 8 additional smaller orange canal network segments appearing near Hà Tiên",
+    "2 orange circular endpoint markers",
+    "1 broadcast station logo",
+    "0 visible people"
+  ],
+  "spatial_relations": [
+    "The sea/gulf is situated in the lower-left and bottom portion of the frame.",
+    "The landmass covers the upper-left, central, and upper-right portions of the screen.",
+    "'Hà Tiên' is located at the northwestern (upper-left) endpoint of the primary canal line.",
+    "'Tp. Rạch Giá' is located at the southeastern (lower-right) endpoint of the primary canal line.",
+    "The main canal line runs diagonally from upper-left to lower-right roughly parallel to the coastline.",
+    "Branch lines 'Kênh T3', 'Kênh T4', and 'Kênh T5' extend northeastward (up and to the right) from the main line into the inland plain.",
+    "'Vịnh Cây Dương' label is located in the coastal bay south of the central canal stretch.",
+    "'Vịnh Rạch Giá' label is located in the coastal bay southwest of Rạch Giá.",
+    "'HTV Online' logo is fixed in the upper-left corner."
+  ],
+  "visible_text": [
+    "HTV Online",
+    "Hà Tiên",
+    "Kênh Hà Tiên – Rạch Giá",
+    "Tp. Rạch Giá",
+    "Vịnh Cây Dương",
+    "Vịnh Rạch Giá",
+    "Kênh T3",
+    "Kênh T4",
+    "Kênh T5",
+    "faint, low-contrast map attribution watermark text in the lower-left ocean area (partially illegible)"
+  ],
+  "spoken_content": [
+    "[speech begins mid-sentence] ...gần 88 km, kênh Rạch Giá - Hà Tiên còn là tuyến vận tải nằm trong lộ trình của tuyến đường thủy cấp quốc gia Thành phố Hồ Chí Minh. Từ tuyến kênh chính Rạch Giá - Hà Tiên, tiếp tục mở ra hệ thống các nhánh kênh phụ tương ứng, không chỉ có nhiệm vụ chi [hoặc chia/chuyển] nguồn nước ngọt vào sâu trong nội đồng, mà còn giúp vận chuyển, trao đổi nguồn hàng hóa nông sản của địa phương sang các vùng lân cận."
+  ],
+  "fine_grained_details": [
+    "geographic region: Kiên Giang province, Mekong Delta region of southern Vietnam, bordering the Gulf of Thailand",
+    "specific waterways shown: Kênh Hà Tiên – Rạch Giá, Kênh T3, Kênh T4, Kênh T5, Vịnh Cây Dương, Vịnh Rạch Giá",
+    "presentation format: televised documentary or educational infographic overlay on satellite orthoimagery",
+    "background audio: soft instrumental music accompanying narration"
+  ],
+  "scene_context": [
+    "An animated broadcast map graphic detailing regional water infrastructure, agricultural irrigation, and transport networks in southwestern Vietnam."
+  ],
+  "camera": [
+    "Static top-down satellite / aerial planimetric view; no camera movement, pan, or tilt."
+  ],
+  "uncertainties": [
+    "The exact beginning of the spoken sentence prior to 'gần 88 km' is cut off at the start of the clip.",
+    "The exact verb in 'chi [hoặc chia/chuyển] nguồn nước ngọt' is slightly indistinct in the narration audio.",
+    "The tiny satellite attribution / copyright text in the ocean area is too small and low-contrast to transcribe safely."
+  ]
+}

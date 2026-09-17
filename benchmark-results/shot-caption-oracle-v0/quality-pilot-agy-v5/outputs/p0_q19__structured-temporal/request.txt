@@ -1,0 +1,42 @@
+The exact absolute video path is: C:\Users\minhc\.codex\media-sandboxes\issue95-quality-v5\9936131d33cc4ff4b7f6b7e1bb07e548\clip.mp4
+Call view_file with AbsolutePath set to exactly this path. Do not guess paths. If this exact path fails, stop and report the error immediately.
+
+Open clip.mp4 in your current working directory using your native view_file tool, then carry out the caption instructions below. You must actually view the media. Do not inspect any other files or directories, use commands, external APIs, web search, other agents, or prior conversations. Do not write files. Use only native video viewing and return your caption in the final response. If media viewing fails, report that failure instead of inventing content. Media sampling/resolution is controlled by the native tool; do not claim a configured fps or resolution.
+
+You are creating a query-independent retrieval evidence record for a video interval.
+
+Inspect the entire interval literally and exhaustively, including visual and audible evidence. Preserve details that could distinguish it from similar footage. Do not answer an unseen question and do not infer unsupported facts.
+
+Return ONLY valid JSON with this schema:
+{
+  "overview": "literal overview",
+  "start_state": ["what is visibly/audibly true near the beginning"],
+  "timeline": [
+    {"relative_time": "approximate seconds or beginning/middle/end", "event": "literal event/state", "evidence": "important visible/audible details", "uncertainty": "none or explicit uncertainty"}
+  ],
+  "end_state": ["what is visibly/audibly true near the end"],
+  "state_changes": ["object/person state changes across the interval"],
+  "transient_events": ["brief contacts, appearances, gestures, flashes, crossings, placements, removals, turns, impacts, etc."],
+  "people": ["appearance, clothing, pose, interactions"],
+  "objects": ["objects, ingredients, tools, animals, vehicles, signs, diagrams, scene elements"],
+  "actions": ["actions actually visible"],
+  "visual_attributes": ["colors, shapes, materials, textures and fine appearance"],
+  "counts": ["exact or approximate counts; mark uncertainty"],
+  "spatial_relations": ["relative positions and layout"],
+  "visible_text": ["verbatim text/numbers/labels/signs/subtitles/readouts when legible; mark partial/uncertain text"],
+  "spoken_content": ["verbatim or close transcription of clearly understandable speech/names/quantities; mark uncertainty"],
+  "fine_grained_details": ["species, ingredient, tool, model, diagram type, etc. only when directly supported"],
+  "scene_context": ["environment/location/context directly supported"],
+  "camera": ["viewpoint, shot changes, zoom, pan, motion, slow motion when directly observable"],
+  "uncertainties": ["anything ambiguous, unreadable, occluded, or not safely identifiable"]
+}
+
+Rules:
+- Preserve chronology. If A occurs before B, say so explicitly.
+- Record brief events rather than averaging them into a general summary.
+- Preserve exact numbers, counts, colors, visible text, spoken quantities and spatial relationships.
+- Prefer precise physical description over an uncertain semantic label.
+- Never infer an identity/location/ingredient/species merely because it seems likely.
+- Do not omit details because they seem irrelevant.
+- Use [] for genuinely absent categories.
+- Output no Markdown or commentary outside the JSON.

@@ -1,0 +1,36 @@
+### Visual and Audio Evidence Caption
+
+**Event & Broadcast Overlays:**
+* **Top-Right Channel Bug:** The channel logo features stylized letters **"HTV"** above the text **"THỂ THAO"** with a multicolored athletic figure emblem.
+* **Top-Left Race Information:** A circular race crest/emblem sits to the left of an orange rectangular banner labeled **"CHẶNG 17"** (Stage 17). Below this is an elapsed race timer displaying **03:54:35**, which increments continuously to **03:54:41**.
+* **Top-Center Race Tracker Banner:** 
+  * A black-and-white checkered flag icon accompanies a rounded orange indicator displaying the remaining distance: starts at **0.9 Km** and updates to **0.8 Km** around 00:05.
+  * An orange box labeled **1** represents the race leader(s), with a small animated cyclist icon beneath it.
+  * A time gap readout displays values transitioning from **- 9.49** to **- 10.3** and then to **- 9.8**.
+  * An orange box labeled **2** represents the pursuing group.
+  * A virtual traffic light / countdown graphic floating over the road displays a green signal alongside numbers counting down from **15** to **14** and **13**.
+* **On-Screen Subtitles & Audio:**
+  * Spoken audio features an energetic Vietnamese male race commentator.
+  * Subtitles appear in white text at the bottom center:
+    * At 00:02–00:03: *"Một km cuối cùng rồi"* (Spoken: "Một km cuối cùng rồi").
+    * At 00:04–00:05: *"đã vào dốc đường Hồ Tùng Mậu"* (Spoken: "...đã vào dốc đường Hồ Tùng Mậu").
+
+**Participants & Bicycles:**
+* **Lead Cyclists:** Two road cyclists are in a breakaway, riding in close formation on the right-hand lane of an asphalt road.
+  * **Cyclist #7 (Foreground/Center):** Wears a cycling jersey with yellow, red, and black color blocking (red sleeves, black upper shoulders), black cycling bib shorts, white cycling shoes, black socks, and a black aerodynamic cycling helmet. A white square race number bib pinned to his lower back clearly shows the black digit **7**. He is riding in a deep aerodynamic drop position on a dark/black road bicycle with drop handlebars.
+  * **Partner Cyclist:** Positioned closely alongside/ahead on the inside left, wearing a predominantly yellow cycling jersey with red accents, black shorts, and a helmet, pedaling in tandem through the turn.
+* **Support / Official Vehicles:**
+  * Around 00:05–00:06, as the camera view widens, a race official/camera motorcycle with a rider wearing a dark jacket and a red-and-white helmet rides on the far left lane behind the cyclists.
+
+**Environment, Road, & Setting:**
+* **Roadway & Manoeuver:** A wide, multi-lane urban asphalt road with prominent double solid yellow center lines. The cyclists approach an open intersection and execute a sweeping leftward turn around a curved, curbed median/traffic island.
+* **Street Infrastructure & Signs:**
+  * On the right roadside stands a dark green traffic signal pole displaying a green traffic light, a circular red-and-blue/white regulatory sign, and a blue square pedestrian crossing sign.
+  * Further along the right curb stands a large blue directional highway/street sign with multiple white arrows and street/destination labels.
+  * Street lamps, landscaped flowerbeds, low brick/stone walls, and tall pine and palm trees line the sidewalks.
+* **Background Urban Elements:**
+  * On the left sidewalk, several spectators and pedestrians in casual clothing (white shirts, dark trousers) stand watching the race behind a vertical red promotional banner hung from a street pole.
+  * In the far background across the intersection, white commercial and residential buildings with terracotta/red tile roofs, several parked and moving motorbikes/scooters, and a white commercial box truck are visible under an overcast, daylight sky.
+
+**Camera Motion:**
+* The footage begins with a low, rear-following tracking shot positioned directly behind the two riders, then smoothly pans and widens to capture their lean and trajectory through the sweeping left-hand bend into the uphill gradient (*dốc đường Hồ Tùng Mậu*).

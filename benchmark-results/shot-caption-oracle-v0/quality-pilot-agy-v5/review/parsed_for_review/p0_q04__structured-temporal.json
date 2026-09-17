@@ -1,0 +1,199 @@
+{
+  "overview": "A cooking program excerpt from 'Món Ngon Mỗi Ngày' on HTV Online presenting a vegetarian roll dish ('Cuốn chay đậu hũ rau rừng'). A female host introduces the aroma of the dipping sauce, gloved hands arrange cut vegetable and tofu rolls on an ornamental ceramic platter, a male chef introduces a daily fat-reduction nutrition menu, a full-screen nutrition menu graphic is shown, the host directs viewers to the program website, and a close-up demonstration shows a roll being dipped into dipping sauce with wooden chopsticks.",
+  "start_state": [
+    "A female presenter with dark hair in a half-up style, wearing a bright magenta/pink top and red apron straps, stands in a kitchen studio holding a small white ceramic dipping dish in her right hand.",
+    "A semi-transparent 'HTV Online' station logo is visible in the top-left corner of the frame.",
+    "The presenter speaks in Vietnamese about the sauce's distinctive aroma.",
+    "In the background, a white shelving unit with green artificial foliage, a clear wine glass, a silver refrigerator labeled 'MINUS-ZERO COOLING', and white tiled walls are visible."
+  ],
+  "timeline": [
+    {
+      "relative_time": "00:00 - 00:06",
+      "event": "Female host speaks while gesturing with a sauce dish",
+      "evidence": "Host holds a white triangular/leaf-shaped dipping dish in her right hand, lifts her left hand to gesture near her chest, and smiles while describing the fragrance of 'nước tương Phú Sĩ'.",
+      "uncertainty": "none"
+    },
+    {
+      "relative_time": "00:06 - 00:09",
+      "event": "Chef begins plating sliced rolls onto a platter",
+      "evidence": "Cut to a close-up of a blue-rimmed, white-textured ceramic plate. A person wearing clear plastic disposable gloves places a diagonally cut purple-skinned vegetarian roll upright on the right side of the platter.",
+      "uncertainty": "none"
+    },
+    {
+      "relative_time": "00:09 - 00:13",
+      "event": "Chef places second and third sliced rolls",
+      "evidence": "The gloved hand places an upright translucent greenish roll, then lays another matching piece horizontally next to it, accompanied by the chef's voice saying: 'Một cái đứng nè... một cái nằm nè...'.",
+      "uncertainty": "none"
+    },
+    {
+      "relative_time": "00:13 - 00:19",
+      "event": "Chef arranges additional rolls onto the platter",
+      "evidence": "The gloved hand places a fourth roll segment upright near the top right, followed by a fifth segment placed next to it, aligning them neatly on the plate beside edible flower garnishes.",
+      "uncertainty": "none"
+    },
+    {
+      "relative_time": "00:20 - 00:26",
+      "event": "Male chef explains the dietary benefits to camera",
+      "evidence": "Cut to a male chef in a white chef jacket with red trim standing before a light wood-paneled wall next to a red square 'MÓN NGON MỖI NGÀY' logo sign, speaking and gesturing with his right hand.",
+      "uncertainty": "none"
+    },
+    {
+      "relative_time": "00:26 - 00:31",
+      "event": "Nutritional menu graphic displays on screen",
+      "evidence": "A full-screen graphic appears with a red header reading 'THỰC ĐƠN DINH DƯỠNG' and listing meals for breakfast, lunch, and dinner advised by 'TS.BS Đào Thị Yến Phi'.",
+      "uncertainty": "none"
+    },
+    {
+      "relative_time": "00:31 - 00:37",
+      "event": "Host returns on camera directing viewers to the website",
+      "evidence": "Cut to the female host wearing a white apron with the red 'Món Ngon Mỗi Ngày' logo over her pink shirt, clasping her hands and smiling as she gives website instructions.",
+      "uncertainty": "none"
+    },
+    {
+      "relative_time": "00:37 - 00:43",
+      "event": "Macro beauty shots of the plated vegetarian rolls",
+      "evidence": "Close-up camera pan showing cross-sections of the rolls packed with dense green herbs and strips of tofu/coconut shoot, wrapped in pinkish-purple and yellow-green translucent wrappers.",
+      "uncertainty": "none"
+    },
+    {
+      "relative_time": "00:43 - 00:50",
+      "event": "Chopsticks dip a roll into dipping sauce",
+      "evidence": "High-angle view of the table setting; a right hand uses light-colored wooden chopsticks to grasp a sliced roll, dip its cut base into a small white bowl of dark reddish-brown sauce, and lift it coated in sauce.",
+      "uncertainty": "none"
+    }
+  ],
+  "end_state": [
+    "A piece of cut vegetarian roll, held between wooden chopsticks, is lifted above a small scalloped white dipping bowl filled with dark brown sauce containing visible chili and sesame bits.",
+    "The full platter rests on a striped textile napkin on the wooden table, flanked by an ingredient basket and a small wooden dish of cut tofu strips in the background.",
+    "A female voiceover concludes praising the flavor combination: '...rất cuốn!'."
+  ],
+  "state_changes": [
+    "The ceramic serving platter transitions from having one roll piece being placed to holding five neatly arranged cut roll pieces surrounded by garnishes.",
+    "The host appears first without an apron (only red straps visible) holding a saucer, and later reappears wearing a full white bib apron with the program's logo.",
+    "A dry cut roll piece is dipped into dark sauce, becoming visibly coated with sauce, oil, and chili/sesame specks."
+  ],
+  "transient_events": [
+    "Gloved hand places and releases individual roll pieces onto the serving platter.",
+    "Male chef points right index finger and opens hand outward while speaking.",
+    "Graphic card transition to and from full-screen graphic.",
+    "Host clasps hands together in front of her chest.",
+    "Chopsticks submerge the tip of the spring roll into the sauce bowl and lift it up."
+  ],
+  "people": [
+    {
+      "appearance": "Female host with shoulder-length styled black hair, fair skin, coral-pink lipstick, wearing a magenta short-sleeved top and later a white bib apron with red logo.",
+      "pose": "Standing facing the camera, holding a dish initially, later clasping hands.",
+      "interactions": "Speaking directly to the audience/camera."
+    },
+    {
+      "appearance": "Male chef with short black hair, wearing a white chef coat with a mandarin collar, red piping along the collar and right placket, and a red embroidered logo badge on the left chest.",
+      "pose": "Standing facing the camera, gesturing with his right hand.",
+      "interactions": "Addressing the audience directly."
+    },
+    {
+      "appearance": "Plating chef's hands wearing clear, loosely fitted disposable polyethylene gloves.",
+      "pose": "Bending over the plate, manipulating rolls with fingertips.",
+      "interactions": "Positioning food items onto the plate."
+    },
+    {
+      "appearance": "Bare right hand holding light wooden chopsticks.",
+      "pose": "Holding chopsticks from above.",
+      "interactions": "Gripping roll and dipping into sauce."
+    }
+  ],
+  "objects": [
+    "Cut vegetarian spring rolls wrapped in translucent purple, yellow-green, and light amber rice paper wrappers, filled with dense green leafy herbs and pale white strips.",
+    "Large rectangular ceramic serving platter with a dark blue-grey rim and textured white/semi-opaque surface.",
+    "Edible flowers (yellow, purple, white pansies/violas and small red petals) and green herb sprigs on the platter.",
+    "Small white ceramic floral/scalloped dipping bowl containing dark reddish-brown sauce with visible red chili flakes and sesame seeds.",
+    "Small triangular/teardrop-shaped white dipping saucer held by the host.",
+    "Pair of light-colored wooden chopsticks.",
+    "Square light-wood dish holding rectangular white tofu strips.",
+    "Woven bamboo/straw basket containing assorted fresh green wild vegetables/herbs.",
+    "Blue-and-white striped/checkered cloth placemat/napkin.",
+    "Light wood dining/kitchen tabletop.",
+    "Red square wall plaque with 'MÓN NGON MỖI NGÀY' logo.",
+    "Stainless steel / silver refrigerator with 'MINUS-ZERO COOLING' badge.",
+    "White shelving unit containing glass jars (one labeled 'Blendy'), dried ingredients, and a stemmed wine glass."
+  ],
+  "actions": [
+    "Female host holding a sauce dish and talking to camera.",
+    "Gloved hands placing and adjusting vegetarian rolls upright and on their sides on the platter.",
+    "Male chef speaking and gesturing with hand towards the camera.",
+    "Female host speaking to camera with clasped hands.",
+    "Hand using chopsticks to pick up a vegetarian roll piece, immerse the cut end into the sauce, and lift it up."
+  ],
+  "visual_attributes": [
+    "Colors: magenta/pink, white, red, deep green, translucent yellow-green, translucent reddish-purple, dark blue-grey, light wood tan, dark brown sauce.",
+    "Textures: glossy translucent rice paper wrapper, dense leafy herb layers, firm pale tofu strips, textured bumpy white ceramic platter surface, speckled brown sauce with seeds.",
+    "Lighting: bright, uniform studio lighting with soft reflections on the plate and refrigerator."
+  ],
+  "counts": [
+    "2 visible television presenters (1 female host, 1 male chef).",
+    "1 pair of gloved hands plating.",
+    "1 bare hand using chopsticks.",
+    "5 cut vegetarian roll pieces visible on/around the platter in the final arrangement.",
+    "3 visible complete edible pansy flowers on the platter (yellow, purple-and-white, dark purple) plus scattered loose red petals.",
+    "1 dipping sauce bowl.",
+    "1 wooden dish with tofu strips.",
+    "1 woven herb basket.",
+    "3 meal columns on the nutrition menu graphic (Bữa Sáng, Bữa Trưa, Bữa Tối)."
+  ],
+  "spatial_relations": [
+    "Host is positioned center frame, with the shelving unit to the viewer's left and the refrigerator to the viewer's right.",
+    "Chef stands center frame with the red logo sign mounted on the wall to the viewer's left.",
+    "On the final table layout: the large rectangular platter is in the center, the dipping sauce dish is at the bottom right, the square tofu dish is at the top left, and the woven basket of herbs is at the top right.",
+    "On the plate, the rolls are grouped in the center-left and center-right with edible flowers scattered along the front and bottom edge."
+  ],
+  "visible_text": [
+    "HTV Online (top-left persistent watermark)",
+    "MINUS-ZERO COOLING (on front of refrigerator door)",
+    "Blendy (on container on kitchen shelf)",
+    "MÓN NGON mỗi ngày / Eat Well, Live Well. / Aj / AJINOMOTO (on wall plaque, chef uniform chest patch, and host apron)",
+    "THỰC ĐƠN DINH DƯỠNG (graphic header)",
+    "ĐƯỢC TƯ VẤN BỞI CHUYÊN GIA DINH DƯỠNG (graphic subheader)",
+    "TS.BS Đào Thị Yến Phi - Chuyên gia dinh dưỡng (graphic credential line)",
+    "THỰC ĐƠN HỖ TRỢ GIẢM KHỐI MỠ THỪA (graphic topic line)",
+    "BỮA SÁNG (graphic category)",
+    "BÚN RIÊU CUA (graphic menu item)",
+    "MẬN (graphic menu item)",
+    "BỮA TRƯA (graphic category)",
+    "CƠM (graphic menu item)",
+    "CANH CHUA CÁ ĐIÊU HỒNG (graphic menu item)",
+    "HEO XIÊN QUE NƯỚNG MẮC KHÉN (graphic menu item)",
+    "MƯỚP XÀO ĐẬU PHỘNG (graphic menu item)",
+    "NHO XANH (graphic menu item)",
+    "BỮA TỐI (graphic category)",
+    "CUỐN CHAY ĐẬU HŨ RAU RỪNG (graphic menu item)",
+    "YAOURT TRÁI CÂY (graphic menu item)"
+  ],
+  "spoken_content": [
+    "Female host (00:00 - 00:06): 'Á mùi thơm rất là đặc trưng, trong đó có hương vị đặc trưng của nước tương Phú Sĩ làm dậy lên mùi thơm và sự hấp dẫn cho món cuốn.'",
+    "Plating chef (00:07 - 00:13): 'Chúng ta sẽ đặt một cái đứng nè... một cái nằm nè...'",
+    "Male chef (00:20 - 00:26): 'Để đạt được hiệu quả giúp giảm khối mỡ thừa trong cơ thể, các bạn có thể tham khảo món ăn này cùng với bảng thực đơn nguyên một ngày sau đây các bạn nhé.'",
+    "Female host (00:32 - 00:37): 'Và để cập nhật đầy đủ thông tin về thực đơn, các bạn vui lòng truy cập vào website Món Ngon Mỗi Ngày.'",
+    "Female narrator voiceover (00:37 - 00:50): 'Cuốn chay tươi mát, giòn ngọt từ củ hũ dừa, chua chua chát nhẹ và thơm lừng của rau rừng, chấm cùng xốt đậm đà, bùi bùi, như lôi cuốn và hòa quyện vào nhau, rất cuốn!'"
+  ],
+  "fine_grained_details": [
+    "Dish name identified in graphic and voiceover: 'Cuốn chay đậu hũ rau rừng'.",
+    "Key ingredients specified in spoken dialogue: 'nước tương Phú Sĩ' (Phu Si soy sauce), 'đậu hũ' (tofu), 'củ hũ dừa' (coconut heart / coconut shoot), 'rau rừng' (wild forest herbs).",
+    "Nutrition advisor named on slide: 'TS.BS Đào Thị Yến Phi'.",
+    "Serving plate: rectangular ceramic tray with crinkled ice/water-like frosted white base texture and slate-blue glazed border."
+  ],
+  "scene_context": [
+    "Television culinary show set ('Món Ngon Mỗi Ngày' sponsored by Ajinomoto, broadcast on HTV Online) in a modern domestic kitchen studio setting."
+  ],
+  "camera": [
+    "00:00 - 00:06: Eye-level static medium close-up on female host.",
+    "00:06 - 00:19: High-angle semi-close-up on the serving plate and plating hands.",
+    "00:20 - 00:26: Eye-level static medium shot of male chef.",
+    "00:26 - 00:31: Full-screen static digital graphic card.",
+    "00:31 - 00:37: Eye-level static medium shot of female host.",
+    "00:37 - 00:43: Macro close-up slow tracking/pan across the sliced spring rolls.",
+    "00:43 - 00:50: High-angle shot of tabletop arrangement showing the dipping action."
+  ],
+  "uncertainties": [
+    "The exact identity of the hand holding the chopsticks at the end cannot be determined (unseen body).",
+    "Specific botanical species of all herbs bundled inside the rolls are not individually listed on screen beyond the collective term 'rau rừng'."
+  ]
+}

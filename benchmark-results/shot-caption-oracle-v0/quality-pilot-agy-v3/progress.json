@@ -1,0 +1,30 @@
+[
+  {
+    "query_id": "p0_q04",
+    "family": "dense-natural",
+    "returncode": 0,
+    "status": "SUCCESS",
+    "view_file_called": true,
+    "unexpected_tools": [],
+    "elapsed_s": 7.194127559661865,
+    "conversation_id": "d102b290-914b-4b3d-a971-22d776d213b2",
+    "sandbox": "C:\\Users\\minhc\\.codex\\media-sandboxes\\issue95-quality-v3\\d6ee57c9464a4e6e9cc7bf71006c83e7",
+    "clip_sha256": "549ba985059266ec7e14c7ae793eaa3bce778e059790cfe0ab564f7521d2a70f",
+    "request_sha256": "fca45db57b265327b371a0eabff03af1f37991326046fddf9f88e5bf39ed7bc7",
+    "caption_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "usage": {
+      "input_tokens": 18152,
+      "output_tokens": 554,
+      "thinking_tokens": 464,
+      "cache_read_tokens": 0,
+      "total_tokens": 18706
+    },
+    "tool_errors": [
+      {
+        "type": "TOOL_ERROR",
+        "message": "permission check failed for read_file \"C:\\\\Users\\\\minhc\\\\.codex\\\\media-sandboxes\\\\issue95-quality-v3\\\\d6ee57c9464a4e6e9cc7bf71006c83e7\\\\clip.mp4\": user denied permission for read_file(C:\\Users\\minhc\\.codex\\media-sandboxes\\issue95-quality-v3\\d6ee57c9464a4e6e9cc7bf71006c83e7\\clip.mp4)"
+      }
+    ],
+    "candidate_valid": false
+  }
+]

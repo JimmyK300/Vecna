@@ -1,0 +1,217 @@
+[
+  {
+    "query_id": "p0_q04",
+    "family": "dense-natural",
+    "returncode": 0,
+    "status": "SUCCESS",
+    "view_file_called": false,
+    "unexpected_tools": [
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "clip.mp4"
+        }
+      },
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "clip.mp4"
+        },
+        "error": {
+          "type": "TOOL_ERROR",
+          "message": "declaring permissions: cortex tool view_file: convert tool call for permissions: model output error: invalid tool call error (invalid_args) clip.mp4 must be an absolute path: path is not absolute"
+        }
+      },
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "C:\\Users\\minhc\\clip.mp4"
+        }
+      },
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "C:\\Users\\minhc\\clip.mp4"
+        },
+        "error": {
+          "type": "TOOL_ERROR",
+          "message": "declaring permissions: cortex tool view_file: convert tool call for permissions: model output error: invalid tool call error (invalid_args) failed to read file: GetFileAttributesEx C:/Users/minhc/clip.mp4: The system cannot find the file specified."
+        }
+      },
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "C:\\Users\\minhc\\.gemini\\antigravity-cli\\scratch\\clip.mp4"
+        }
+      },
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "C:\\Users\\minhc\\.gemini\\antigravity-cli\\scratch\\clip.mp4"
+        },
+        "error": {
+          "type": "TOOL_ERROR",
+          "message": "declaring permissions: cortex tool view_file: convert tool call for permissions: model output error: invalid tool call error (invalid_args) failed to read file: GetFileAttributesEx C:/Users/minhc/.gemini/antigravity-cli/scratch/clip.mp4: The system cannot find the file specified."
+        }
+      },
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "C:\\Users\\minhc\\Desktop\\clip.mp4"
+        }
+      },
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "C:\\Users\\minhc\\Desktop\\clip.mp4"
+        },
+        "error": {
+          "type": "TOOL_ERROR",
+          "message": "declaring permissions: cortex tool view_file: convert tool call for permissions: model output error: invalid tool call error (invalid_args) failed to read file: GetFileAttributesEx C:/Users/minhc/Desktop/clip.mp4: The system cannot find the file specified."
+        }
+      },
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "C:\\Users\\minhc\\Downloads\\clip.mp4"
+        }
+      },
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "C:\\Users\\minhc\\Downloads\\clip.mp4"
+        },
+        "error": {
+          "type": "TOOL_ERROR",
+          "message": "declaring permissions: cortex tool view_file: convert tool call for permissions: model output error: invalid tool call error (invalid_args) failed to read file: GetFileAttributesEx C:/Users/minhc/Downloads/clip.mp4: The system cannot find the file specified."
+        }
+      },
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "C:\\Users\\minhc\\Videos\\clip.mp4"
+        }
+      },
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "C:\\Users\\minhc\\Videos\\clip.mp4"
+        },
+        "error": {
+          "type": "TOOL_ERROR",
+          "message": "declaring permissions: cortex tool view_file: convert tool call for permissions: model output error: invalid tool call error (invalid_args) failed to read file: GetFileAttributesEx C:/Users/minhc/Videos/clip.mp4: The system cannot find the file specified."
+        }
+      },
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "C:\\Users\\minhc\\Documents\\clip.mp4"
+        }
+      },
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "C:\\Users\\minhc\\Documents\\clip.mp4"
+        },
+        "error": {
+          "type": "TOOL_ERROR",
+          "message": "declaring permissions: cortex tool view_file: convert tool call for permissions: model output error: invalid tool call error (invalid_args) failed to read file: GetFileAttributesEx C:/Users/minhc/Documents/clip.mp4: The system cannot find the file specified."
+        }
+      },
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "C:\\Users\\minhc\\.gemini\\antigravity-cli\\clip.mp4"
+        }
+      },
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "C:\\Users\\minhc\\.gemini\\antigravity-cli\\clip.mp4"
+        },
+        "error": {
+          "type": "TOOL_ERROR",
+          "message": "declaring permissions: cortex tool view_file: convert tool call for permissions: model output error: invalid tool call error (invalid_args) failed to read file: GetFileAttributesEx C:/Users/minhc/.gemini/antigravity-cli/clip.mp4: The system cannot find the file specified."
+        }
+      },
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "C:\\Users\\minhc\\.gemini\\antigravity-cli\\brain\\4955c239-b5c1-4b2b-bc16-2a576f51aac7\\clip.mp4"
+        }
+      },
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "C:\\Users\\minhc\\.gemini\\antigravity-cli\\brain\\4955c239-b5c1-4b2b-bc16-2a576f51aac7\\clip.mp4"
+        },
+        "error": {
+          "type": "TOOL_ERROR",
+          "message": "declaring permissions: cortex tool view_file: convert tool call for permissions: model output error: invalid tool call error (invalid_args) failed to read file: GetFileAttributesEx C:/Users/minhc/.gemini/antigravity-cli/brain/4955c239-b5c1-4b2b-bc16-2a576f51aac7/clip.mp4: The system cannot find the file specified."
+        }
+      },
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "C:\\clip.mp4"
+        }
+      },
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "C:\\clip.mp4"
+        },
+        "error": {
+          "type": "TOOL_ERROR",
+          "message": "declaring permissions: cortex tool view_file: convert tool call for permissions: model output error: invalid tool call error (invalid_args) failed to read file: GetFileAttributesEx C:/clip.mp4: The system cannot find the file specified."
+        }
+      },
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "C:\\Users\\minhc\\OneDrive\\Desktop\\clip.mp4"
+        }
+      },
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "C:\\Users\\minhc\\OneDrive\\Desktop\\clip.mp4"
+        },
+        "error": {
+          "type": "TOOL_ERROR",
+          "message": "declaring permissions: cortex tool view_file: convert tool call for permissions: model output error: invalid tool call error (invalid_args) failed to read file: GetFileAttributesEx C:/Users/minhc/OneDrive/Desktop/clip.mp4: The system cannot find the path specified."
+        }
+      },
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "C:\\Users\\minhc\\OneDrive\\Documents\\clip.mp4"
+        }
+      },
+      {
+        "name": "view_file",
+        "parameters": {
+          "AbsolutePath": "C:\\Users\\minhc\\OneDrive\\Documents\\clip.mp4"
+        },
+        "error": {
+          "type": "TOOL_ERROR",
+          "message": "declaring permissions: cortex tool view_file: convert tool call for permissions: model output error: invalid tool call error (invalid_args) failed to read file: GetFileAttributesEx C:/Users/minhc/OneDrive/Documents/clip.mp4: The system cannot find the path specified."
+        }
+      }
+    ],
+    "elapsed_s": 46.42603397369385,
+    "conversation_id": "4955c239-b5c1-4b2b-bc16-2a576f51aac7",
+    "sandbox": "C:\\Users\\minhc\\.codex\\media-sandboxes\\issue95-quality-v2\\eada2166420a4b2aa3559e917d30244c",
+    "clip_sha256": "549ba985059266ec7e14c7ae793eaa3bce778e059790cfe0ab564f7521d2a70f",
+    "request_sha256": "8e7a23ed1987c914de363d563c2e108dee7c8eff8a398dd3adb9870c6ec06f08",
+    "caption_sha256": "730aadfd85aa56fc0fa5b37794e1b116b4f0cc1249e243013c0de5d8025ac55b",
+    "usage": {
+      "input_tokens": 126066,
+      "output_tokens": 7518,
+      "thinking_tokens": 6279,
+      "cache_read_tokens": 158494,
+      "total_tokens": 133584
+    },
+    "candidate_valid": false
+  }
+]

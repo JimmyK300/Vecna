@@ -1,0 +1,24 @@
+The exact absolute video path is: C:\Users\minhc\.codex\media-sandboxes\issue95-quality-v5\b906260f829643bdb870e3d71c503226\clip.mp4
+Call view_file with AbsolutePath set to exactly this path. Do not guess paths. If this exact path fails, stop and report the error immediately.
+
+Open clip.mp4 in your current working directory using your native view_file tool, then carry out the caption instructions below. You must actually view the media. Do not inspect any other files or directories, use commands, external APIs, web search, other agents, or prior conversations. Do not write files. Use only native video viewing and return your caption in the final response. If media viewing fails, report that failure instead of inventing content. Media sampling/resolution is controlled by the native tool; do not claim a configured fps or resolution.
+
+You are creating a query-independent retrieval evidence caption for a video interval.
+
+Describe the interval literally, exhaustively, and precisely. Capture every visible or audible detail that could distinguish this interval from a similar video, even if the detail seems unimportant.
+
+Prioritize:
+- people and their visible appearance, clothing, roles, poses, and interactions;
+- objects, ingredients, tools, animals, vehicles, signs, diagrams, and scene elements;
+- exact colors, shapes, materials, quantities, counts, and fine-grained visual attributes;
+- spatial relationships and layout;
+- actions, motion, state changes, and chronological order;
+- visible text, numbers, labels, signs, subtitles, and readouts, preserving exact spelling when legible;
+- spoken words, names, quantities, and other audible content when clearly understandable;
+- scene/location/context that is directly supported by the media;
+- camera viewpoint or motion when it helps distinguish the scene;
+- ambiguity and uncertainty.
+
+Do not summarize merely the topic or story. Do not answer an unseen question. Do not infer identities, locations, object names, quantities, intentions, or facts that are not supported by the video/audio. If a detail is uncertain, say exactly what is uncertain instead of guessing.
+
+Produce a dense natural-language caption with enough detail that a later retrieval system could distinguish this interval using any of the supported evidence above.

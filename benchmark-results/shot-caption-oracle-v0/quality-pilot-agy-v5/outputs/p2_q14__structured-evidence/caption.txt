@@ -1,0 +1,93 @@
+{
+  "overview": "A live sports broadcast clip from a road bicycle race follows two cyclists from behind as they navigate an asphalt road curving left around a landscaped roundabout intersection. The leading cyclist wears a yellow and black jersey, while the following cyclist wears a red, yellow, and black jersey with bib number 7. Further ahead, an escort motorcycle travels on the left side of the street, and another cyclist is briefly visible in the distance across the intersection. Broadcast telemetry graphics from HTV Thể Thao are displayed across the top of the frame showing Stage 17 ('CHẶNG 17'), an elapsed time counting from 03:54:35 to 03:54:41, a countdown of distance from 0.9 Km to 0.8 Km, and a time gap between groups. Vietnamese commentary and on-screen caption text announce the final kilometer on the slope of Hồ Tùng Mậu street.",
+  "people": [
+    "Lead cyclist: wearing a yellow and black cycling jersey, dark bib shorts, and a cycling helmet, riding in a crouched aerodynamic posture and pedaling actively.",
+    "Trailing cyclist: wearing a red, yellow, and black cycling jersey with a white rectangular number patch '7' pinned to the lower back, black bib shorts, black and white shoes, and a dark helmet, drafting closely behind the lead cyclist.",
+    "Distant cyclist (visible at 00:00-00:01): wearing dark cycling attire, riding ahead through the roundabout intersection.",
+    "Motorcyclist (visible at 00:05-00:06): wearing a dark jacket, dark pants, and a red-and-black helmet, operating a motorcycle ahead in the left lane.",
+    "Bystanders and spectators: approximately 10 to 15 individuals in casual clothing standing along the left sidewalk and corner watching the race.",
+    "Two pedestrians or officials in light/white shirts walking along the roadside corner on the left (00:00-00:01).",
+    "Distant motorists and pedestrians visible traversing the background intersection."
+  ],
+  "objects": [
+    "Road racing bicycles with drop handlebars, derailleur gears, and thin tires.",
+    "Motorcycle with rear storage boxes/panniers traveling in the left lane.",
+    "Multi-lane asphalt road with painted solid white edge lines and double solid yellow center lines.",
+    "Traffic light poles with illuminated green signals and green digital countdown timers.",
+    "Large blue rectangular directional road sign mounted on posts along the right shoulder.",
+    "Curved concrete curbstones and landscaped traffic islands with lawn grass and trimmed hedges.",
+    "White delivery box truck parked or moving in the distant intersection.",
+    "Various cars, buses, and motor scooters in the background.",
+    "Ornate street light poles, roadside banner posts, and coniferous/pine trees.",
+    "Commercial and residential buildings with beige/white walls and red/orange tile roofs."
+  ],
+  "actions": [
+    "The two cyclists pedal continuously at high speed, steering into a left-hand curve around the central road island.",
+    "The trailing cyclist (bib 7) drafts directly behind the lead cyclist before shifting slightly to the left alongside.",
+    "The motorcycle ahead on the left accelerates along the road in front of the cyclists.",
+    "A distant cyclist rides through the intersection ahead.",
+    "Spectators stand and turn to watch the cyclists pass.",
+    "Vehicles and motorbikes cross and navigate the distant road junction."
+  ],
+  "visual_attributes": [
+    "Lead cyclist clothing: predominantly yellow jersey with black side panels and black shorts.",
+    "Trailing cyclist clothing: red, yellow, and black patterned jersey, black shorts, and a white number bib with black numeral '7'.",
+    "Traffic lights: dark casing with bright green circular signal illuminated and green digital countdown digits ('13').",
+    "Road surface: dark grey asphalt with yellow and white road markings.",
+    "Signage: blue highway sign with white directional arrows and white text.",
+    "Broadcast graphics: red badge with 'CHẶNG 17', white digital clock digits, orange and white distance/gap indicators, and a red-and-white 'HTV THỂ THAO' logo banner in the upper right.",
+    "Surroundings: overcast daylight, manicured green grass, dark green pine trees, and cream-colored buildings with terracotta roofs."
+  ],
+  "counts": [
+    "2 cyclists in the immediate foreground/midground.",
+    "1 cyclist visible further ahead in the distance (at 00:00-00:01).",
+    "1 motorcycle traveling ahead on the left.",
+    "1 white delivery truck in the background intersection.",
+    "Approximately 10 to 15 spectators along the left sidewalk (uncertain due to distance and movement).",
+    "Approximately 5 to 15 distant motorbikes and vehicles visible in the background intersection (uncertain due to distance).",
+    "2 traffic signal poles visible along the central median."
+  ],
+  "spatial_relations": [
+    "The camera follows closely behind and slightly above the two main cyclists.",
+    "The cyclist in yellow is positioned directly in front of the cyclist with bib number 7.",
+    "The motorcycle travels ahead and to the left of the leading cyclist.",
+    "The curved median with grass and traffic lights lies to the right of the cyclists' travel path.",
+    "The spectators and sidewalk are located to the far left of the cyclists.",
+    "The blue directional sign stands on the right roadside near the start of the clip.",
+    "The broadcast graphics remain fixed across the upper third of the frame."
+  ],
+  "visible_text": [
+    "'CHẶNG 17'",
+    "'03:54:35', '03:54:36', '03:54:37', '03:54:38', '03:54:39', '03:54:40', '03:54:41'",
+    "'0.9 Km', '0.8 Km'",
+    "'1'",
+    "'- 9 49', '- 10 3', '- 9 8'",
+    "'2'",
+    "'HTV THỂ THAO'",
+    "'1 km cuối cùng rồi!'",
+    "'Đã vào dốc đường Hồ Tùng Mậu.'",
+    "'7'",
+    "'13' (green LED countdown on traffic signal)",
+    "Blue road sign: contains white arrows and partially legible Vietnamese place names, including 'ĐÀ LẠT'"
+  ],
+  "spoken_content": [
+    "'Một cây cuối cùng rồi! Đã vào dốc đường Hồ Tùng Mậu.' (Commentator speaking in Vietnamese, matching the on-screen captions).",
+    "Audible background engine hum from escort vehicles and ambient road noise."
+  ],
+  "fine_grained_details": [
+    "Televised coverage of Stage 17 ('CHẶNG 17') of the HTV Cup road cycling race in Vietnam.",
+    "Geographic location on the slope of Hồ Tùng Mậu street ('dốc đường Hồ Tùng Mậu') approaching Đà Lạt, Vietnam.",
+    "Race telemetry indicates a gap of approximately 9 to 10 minutes between group 1 and group 2, with less than 1 km remaining."
+  ],
+  "scene_context": [
+    "Televised professional road bicycle race on a paved multi-lane urban thoroughfare and roundabout in Vietnam under daylight conditions."
+  ],
+  "camera": [
+    "Forward-moving trailing tracking shot at eye level / medium height, following the two cyclists and panning slightly left through the road curvature."
+  ],
+  "uncertainties": [
+    "Full verbatim text on the blue destination highway sign and roadside red banners due to distance and motion blur.",
+    "Individual cyclist names and team identities beyond the visible number 7 bib and kit designs.",
+    "Exact counts of distant pedestrians and vehicles across the background intersection."
+  ]
+}

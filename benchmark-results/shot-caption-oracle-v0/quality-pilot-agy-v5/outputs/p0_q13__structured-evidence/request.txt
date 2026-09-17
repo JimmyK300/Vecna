@@ -1,0 +1,33 @@
+The exact absolute video path is: C:\Users\minhc\.codex\media-sandboxes\issue95-quality-v5\daece6ae5b794a709afdb624520a0d0c\clip.mp4
+Call view_file with AbsolutePath set to exactly this path. Do not guess paths. If this exact path fails, stop and report the error immediately.
+
+Open clip.mp4 in your current working directory using your native view_file tool, then carry out the caption instructions below. You must actually view the media. Do not inspect any other files or directories, use commands, external APIs, web search, other agents, or prior conversations. Do not write files. Use only native video viewing and return your caption in the final response. If media viewing fails, report that failure instead of inventing content. Media sampling/resolution is controlled by the native tool; do not claim a configured fps or resolution.
+
+You are creating a query-independent retrieval evidence record for a video interval.
+
+Inspect the video and audio literally and exhaustively. Preserve details that could distinguish this interval from similar footage. Do not answer an unseen question and do not infer unsupported facts.
+
+Return ONLY valid JSON with this schema:
+{
+  "overview": "literal one-paragraph overview",
+  "people": ["visible people, appearance, clothing, pose, role only when directly supported"],
+  "objects": ["objects, ingredients, tools, animals, vehicles, signs, diagrams, scene elements"],
+  "actions": ["actions and interactions actually visible"],
+  "visual_attributes": ["colors, shapes, materials, textures, clothing, fine-grained appearance"],
+  "counts": ["exact or approximate counts; explicitly mark uncertainty"],
+  "spatial_relations": ["left/right/above/below/inside/on/near/front/behind and scene layout"],
+  "visible_text": ["verbatim visible text, numbers, labels, signs, subtitles or readouts when legible; mark partial/uncertain text"],
+  "spoken_content": ["verbatim or close transcription of clearly understandable speech, names and quantities; mark uncertainty"],
+  "fine_grained_details": ["species, ingredient, tool, model, diagram type or other fine detail only when directly supported"],
+  "scene_context": ["environment/location/context directly supported by the media"],
+  "camera": ["viewpoint, framing or camera motion when useful"],
+  "uncertainties": ["anything ambiguous, unreadable, occluded, or not safely identifiable"]
+}
+
+Rules:
+- Prefer precise physical descriptions over uncertain semantic guesses.
+- Preserve exact numbers, colors, counts, text and relationships whenever visible/audible.
+- Do not omit a detail because it seems irrelevant.
+- Do not convert uncertainty into a confident claim.
+- Use [] for genuinely absent categories.
+- Output no Markdown and no commentary outside the JSON.

@@ -1,0 +1,164 @@
+[
+  {
+    "query_id": "p0_q04",
+    "family": "dense-natural",
+    "raw_sha256": "061bb14f004de887a4779cfd0db08c52bcbf3d0cc6cd7d973fdc94f7e8869220",
+    "source": "quality-pilot-agy-v4/outputs/p0_q04__dense-natural",
+    "format": "prose_requires_manual_review",
+    "integrity_pass": true,
+    "content_acceptance": "not_implied_by_integrity"
+  },
+  {
+    "query_id": "p0_q04",
+    "family": "structured-evidence",
+    "raw_sha256": "7be73a7374b5431ae68c33ceca8ea109201f05192f8b0c592457b2b871c97755",
+    "source": "quality-pilot-agy-v5/outputs/p0_q04__structured-evidence",
+    "format": "json_with_extra_text",
+    "integrity_pass": true,
+    "content_acceptance": "not_implied_by_integrity"
+  },
+  {
+    "query_id": "p0_q04",
+    "family": "structured-temporal",
+    "raw_sha256": "1145f3801f268567df5e107e7e10774bf197ed5b5e8c6d1d16a9fc48d5714730",
+    "source": "quality-pilot-agy-v5/outputs/p0_q04__structured-temporal",
+    "format": "strict_json",
+    "integrity_pass": true,
+    "content_acceptance": "not_implied_by_integrity"
+  },
+  {
+    "query_id": "p0_q13",
+    "family": "dense-natural",
+    "raw_sha256": "ad32db82b8a3e04e6a51a85758519a0591ecd02b9b0efb1640041a4b4bd811cd",
+    "source": "quality-pilot-agy-v5/outputs/p0_q13__dense-natural",
+    "format": "prose_requires_manual_review",
+    "integrity_pass": true,
+    "content_acceptance": "not_implied_by_integrity"
+  },
+  {
+    "query_id": "p0_q13",
+    "family": "structured-evidence",
+    "raw_sha256": "977893fe221108753720828cf4a9ac6ee6bd165475b19e345f972d9260d2d3e8",
+    "source": "quality-pilot-agy-v5/outputs/p0_q13__structured-evidence",
+    "format": "filter_response",
+    "integrity_pass": true,
+    "content_acceptance": "not_implied_by_integrity"
+  },
+  {
+    "query_id": "p0_q13",
+    "family": "structured-temporal",
+    "raw_sha256": "977893fe221108753720828cf4a9ac6ee6bd165475b19e345f972d9260d2d3e8",
+    "source": "quality-pilot-agy-v5/outputs/p0_q13__structured-temporal",
+    "format": "filter_response",
+    "integrity_pass": true,
+    "content_acceptance": "not_implied_by_integrity"
+  },
+  {
+    "query_id": "p0_q19",
+    "family": "dense-natural",
+    "raw_sha256": "f08779d657db4d1d969cf25b7df9ff6ccd1d8605dfbcc08455901a7c6ba58f5e",
+    "source": "quality-pilot-agy-v5/outputs/p0_q19__dense-natural",
+    "format": "prose_requires_manual_review",
+    "integrity_pass": true,
+    "content_acceptance": "not_implied_by_integrity"
+  },
+  {
+    "query_id": "p0_q19",
+    "family": "structured-evidence",
+    "raw_sha256": "937a2077df8963c47a729b90f7e2a6d3970b60df81ba309845b3651c82a0cbe2",
+    "source": "quality-pilot-agy-v5/outputs/p0_q19__structured-evidence",
+    "format": "strict_json",
+    "integrity_pass": true,
+    "content_acceptance": "not_implied_by_integrity"
+  },
+  {
+    "query_id": "p0_q19",
+    "family": "structured-temporal",
+    "raw_sha256": "748a069714f1069da09de4e9f8b88b967c80b253774e5320c6460ace0549ceed",
+    "source": "quality-pilot-agy-v5/outputs/p0_q19__structured-temporal",
+    "format": "strict_json",
+    "integrity_pass": true,
+    "content_acceptance": "not_implied_by_integrity"
+  },
+  {
+    "query_id": "p1_q02",
+    "family": "dense-natural",
+    "raw_sha256": "24521a02d704570d600bf2d83b5da0b341bf777e105071f44b2e8e88d0d8f12b",
+    "source": "quality-pilot-agy-v5/outputs/p1_q02__dense-natural",
+    "format": "prose_requires_manual_review",
+    "integrity_pass": true,
+    "content_acceptance": "not_implied_by_integrity"
+  },
+  {
+    "query_id": "p1_q02",
+    "family": "structured-evidence",
+    "raw_sha256": "0368aef85b73de8970057d89995e441b71b34fad4a1083cca9ab51abb89097cb",
+    "source": "quality-pilot-agy-v5/outputs/p1_q02__structured-evidence",
+    "format": "strict_json",
+    "integrity_pass": true,
+    "content_acceptance": "not_implied_by_integrity"
+  },
+  {
+    "query_id": "p1_q02",
+    "family": "structured-temporal",
+    "raw_sha256": "5f5ce98c5d860192a857e889f1912e18f2c2fb13a2488fd789c235e61c2b873a",
+    "source": "quality-pilot-agy-v5/outputs/p1_q02__structured-temporal",
+    "format": "strict_json",
+    "integrity_pass": true,
+    "content_acceptance": "not_implied_by_integrity"
+  },
+  {
+    "query_id": "p2_q14",
+    "family": "dense-natural",
+    "raw_sha256": "39ec4827cc89d4e87e933e6d868f39f7471e87a4a36a1820aae5c665ba9d2d64",
+    "source": "quality-pilot-agy-v5/outputs/p2_q14__dense-natural",
+    "format": "prose_requires_manual_review",
+    "integrity_pass": true,
+    "content_acceptance": "not_implied_by_integrity"
+  },
+  {
+    "query_id": "p2_q14",
+    "family": "structured-evidence",
+    "raw_sha256": "5a8f98fee9c8377f65c127b25f79d1b32aa6f12d8faa7dc097be617d59a39071",
+    "source": "quality-pilot-agy-v5/outputs/p2_q14__structured-evidence",
+    "format": "strict_json",
+    "integrity_pass": true,
+    "content_acceptance": "not_implied_by_integrity"
+  },
+  {
+    "query_id": "p2_q14",
+    "family": "structured-temporal",
+    "raw_sha256": "2aa17189683c21b3d6e6b65899a3cc95cda4b55e6a3211ea978fdd8d8fbb05a7",
+    "source": "quality-pilot-agy-v5/outputs/p2_q14__structured-temporal",
+    "format": "strict_json",
+    "integrity_pass": true,
+    "content_acceptance": "not_implied_by_integrity"
+  },
+  {
+    "query_id": "p2_q25",
+    "family": "dense-natural",
+    "raw_sha256": "3b52103b2cfe3d1938289d8c47dc0fba371819cacff5ae9fbe0cc26e5aa8b2ec",
+    "source": "quality-pilot-agy-v5/outputs/p2_q25__dense-natural",
+    "format": "prose_requires_manual_review",
+    "integrity_pass": true,
+    "content_acceptance": "not_implied_by_integrity"
+  },
+  {
+    "query_id": "p2_q25",
+    "family": "structured-evidence",
+    "raw_sha256": "835047d15f5d439848fb1c2b3cb9c8f20dad543e1cdd14f9cb103456cafb5728",
+    "source": "quality-pilot-agy-v5/outputs/p2_q25__structured-evidence",
+    "format": "json_with_extra_text",
+    "integrity_pass": true,
+    "content_acceptance": "not_implied_by_integrity"
+  },
+  {
+    "query_id": "p2_q25",
+    "family": "structured-temporal",
+    "raw_sha256": "39837369d8ad8df5c9a2df5478bf0ce99ade324788a1af2202705efb59228658",
+    "source": "quality-pilot-agy-v5/outputs/p2_q25__structured-temporal",
+    "format": "strict_json",
+    "integrity_pass": true,
+    "content_acceptance": "not_implied_by_integrity"
+  }
+]

@@ -1,0 +1,97 @@
+{
+  "overview": "A lion dance troupe performs at an outdoor competition or festival broadcast on HTV Thể Thao. A white, ornate lion costume operated by two performers cautiously approaches a series of numbered high steel poles set above blue safety crash mats on a green stage. In the background stands an elevated stage featuring a large video display screen, a decorative golden dragon sculpture, and an official judging table. A picture-in-picture inset in the lower-right corner shows the accompanying percussion team playing a large barrel drum and cymbals to a fast, driving rhythm.",
+  "people": [
+    "Two performers concealed inside the white lion dance costume, visible only by their lower legs and footwear during movement",
+    "Spectator or team assistant standing on the left wearing a bright blue short-sleeved shirt, dark backpack, and glasses",
+    "Team assistant or coach seated at a table in the foreground wearing a blue and yellow collared athletic shirt, raising their right hand signaling or cheering",
+    "Seated team member in blue and yellow shirt next to the table facing the stage",
+    "Individual seated on the far left edge wearing a dark cap and polo shirt",
+    "Judge or official seated at a long draped table in the mid-background wearing a light blue collared shirt",
+    "Drummer in the picture-in-picture inset wearing a white, red, and yellow uniform striking a large Chinese barrel drum with wooden drumsticks",
+    "Cymbal player in the inset wearing a matching martial arts uniform playing brass cymbals",
+    "Performer in the inset raising his arm high while cheering or marking musical accents",
+    "Several spectators and personnel seated or standing in the background behind tables and railings"
+  ],
+  "objects": [
+    "White lion dance costume with furry body, decorative head, large eyes, and red fabric trim",
+    "Steel jumping poles (mai hoa thung) of varying heights topped with flat circular metal discs, labeled with numbers",
+    "Thick blue foam landing and safety mats placed underneath the poles",
+    "Large Chinese barrel drum (tanggu) on a wooden support stand in the inset",
+    "Pair of handheld brass cymbals and drumsticks in the inset",
+    "Long judging tables covered in white and blue tablecloths",
+    "Blue plastic chairs",
+    "Large LED backdrop display screen showing the live performance",
+    "Large golden Chinese dragon prop or sculpture positioned on stage",
+    "Triangular team flag/banner mounted on a pole in the background",
+    "Water bottles and papers on tables",
+    "Overhead stage truss and lighting equipment"
+  ],
+  "actions": [
+    "The lion costume steps forward along the green mat, bobbing and tilting its head while inspecting the steel poles",
+    "A team member seated in the foreground raises his arm upward toward the lion",
+    "The drummer and cymbalists in the inset vigorously strike their instruments in rhythmic synchronization with the performance",
+    "One percussionist in the inset thrusts his arm straight up into the air during the drum sequence"
+  ],
+  "visual_attributes": [
+    "Lion costume: white fluffy faux fur, ornate red, gold, and green accents on the head with reflective mirror elements and red frills",
+    "Team uniform shirts: royal blue with bright yellow trim across the shoulders, back, and collar",
+    "Musician uniforms: white shirts with red shoulder panels, yellow piping, and red/yellow patterned martial arts trousers",
+    "Poles: metallic gray/silver vertical posts with circular flat top plates and square number tags",
+    "Stage: green carpeted floor with red border trim, blue safety pads, and red-carpeted platform steps in the background",
+    "Screen overlay: decorative watercolor floral and bird border along top, bottom, and left margins",
+    "Logos: red circular festival emblem in top left; red, green, and blue stylized 'HTV' with 'THỂ THAO' in top right"
+  ],
+  "counts": [
+    "1 lion dance costume (2 performers inside)",
+    "At least 7 visible numbered high poles (numbers 1 through 7 clearly marked)",
+    "At least 4 visible team members and assistants in the foreground",
+    "At least 1 official seated at the background judge table",
+    "At least 4 musicians/performers visible in the picture-in-picture inset",
+    "1 large barrel drum",
+    "1 pair of brass cymbals",
+    "1 large LED screen",
+    "1 decorative golden dragon sculpture"
+  ],
+  "spatial_relations": [
+    "The lion dance costume is positioned in the lower-left to center-left of the performance area, facing right toward the poles",
+    "The high steel poles span horizontally across the center and right side of the main arena floor",
+    "Blue safety mats lie directly under and around the bases of the steel poles",
+    "Two team assistants are seated in the foreground directly in front of the performance mat",
+    "The elevated stage with the LED screen and golden dragon is located behind the poles",
+    "The judges' table is positioned behind the elevated stage structure",
+    "The TV channel logo 'HTV THỂ THAO' is anchored in the upper-right corner",
+    "The festival emblem is anchored in the upper-left corner",
+    "The musical accompaniment view is displayed in an inset box anchored in the lower-right corner"
+  ],
+  "visible_text": [
+    "HTV THỂ THAO",
+    "QUẬN 5",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "LÂN SƯ RỒNG [partially visible troupe name on shirt backs]"
+  ],
+  "spoken_content": [],
+  "fine_grained_details": [
+    "Southern lion dance high-pole routine (mai hoa thung / plum blossom poles)",
+    "Percussion instruments: tanggu (Chinese barrel drum) and cymbals (chao bo / luo)",
+    "Broadcasting station: HTV Thể Thao (Ho Chi Minh City Television Sports Channel)",
+    "Event context: District 5 (Quận 5, Ho Chi Minh City, Vietnam) lion dance festival/tournament"
+  ],
+  "scene_context": [
+    "Outdoor evening tournament or public cultural exhibition stage equipped with professional lighting, LED display, and crash mats"
+  ],
+  "camera": [
+    "Static wide-angle shot of the full competition ground from 00:00 to 00:10, cutting to a tighter medium shot focusing on the lion facing the poles from 00:11 to 00:15",
+    "Fixed picture-in-picture inset in the lower-right quadrant showing the live musical accompaniment throughout"
+  ],
+  "uncertainties": [
+    "Full troupe name printed on the back of the team members' blue shirts due to partial occlusion",
+    "Identities and exact movements of the two performers inside the lion costume",
+    "Exact text and numbers inside the circular Quận 5 logo aside from the district name"
+  ]
+}

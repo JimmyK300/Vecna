@@ -1,0 +1,128 @@
+{
+  "overview": "A satellite map graphic displays the canal system connecting Tp. Rạch Giá and Hà Tiên in Vietnam, sequentially highlighting the main Kênh Hà Tiên - Rạch Giá route followed by branch canals Kênh T3, Kênh T4, Kênh T5, and secondary waterways, accompanied by Vietnamese narration and background music.",
+  "start_state": [
+    "A top-down satellite view of the coastal region between Rach Gia and Ha Tien is displayed.",
+    "A prominent orange line traces the main canal route between 'Tp. Rạch Giá' and 'Hà Tiên' labeled 'Kênh Hà Tiên - Rạch Giá'.",
+    "Labels 'Hà Tiên', 'Tp. Rạch Giá', 'Vịnh Cây Dương', and 'Vịnh Rạch Giá' are visible on the map.",
+    "The 'HTV Online' logo is visible in the upper-left corner.",
+    "Female narrator begins speaking in Vietnamese over background music."
+  ],
+  "timeline": [
+    {
+      "relative_time": "00:00 - 00:07",
+      "event": "Main canal route displayed with initial narration",
+      "evidence": "Orange line connects Tp. Rạch Giá at bottom right to Hà Tiên at upper left with label 'Kênh Hà Tiên - Rạch Giá'; narrator speaks: '...gần 88 km, kênh Rạch Giá Hà Tiên còn là tuyến vận tải nằm trong lộ trình của tuyến đường thủy cấp quốc gia Thành phố Hồ Chí Minh...'",
+      "uncertainty": "none"
+    },
+    {
+      "relative_time": "00:07 - 00:09",
+      "event": "Appearance of Kênh T3 branch line",
+      "evidence": "An orange line branches off toward the northeast from the main canal, labeled 'Kênh T3'; narrator says: 'Từ tuyến kênh chính Rạch Giá Hà Tiên...'",
+      "uncertainty": "none"
+    },
+    {
+      "relative_time": "00:09 - 00:11",
+      "event": "Appearance of Kênh T4 branch line",
+      "evidence": "A second parallel orange line branches northeast from the main canal, labeled 'Kênh T4'; narrator says: '...tiếp tục mở ra hệ thống các nhánh kênh phụ tương ứng...'",
+      "uncertainty": "none"
+    },
+    {
+      "relative_time": "00:11 - 00:14",
+      "event": "Appearance of Kênh T5 branch line",
+      "evidence": "A third parallel orange line branches northeast from the main canal, labeled 'Kênh T5'; narrator says: '...không chỉ có nhiệm vụ chia nguồn nước ngọt vào sâu trong nội đồng...'",
+      "uncertainty": "none"
+    },
+    {
+      "relative_time": "00:14 - 00:18",
+      "event": "Appearance of secondary coastal and inland canal lines",
+      "evidence": "Additional orange line segments appear extending southwest toward the coast and interconnecting near Hà Tiên; narrator says: '...mà còn giúp vận chuyển, trao đổi nguồn hàng hóa nông sản của địa phương...'",
+      "uncertainty": "none"
+    },
+    {
+      "relative_time": "00:18 - 00:22",
+      "event": "Final map state maintained through conclusion of narration",
+      "evidence": "The complete network of main and branch canal lines remains visible while narration concludes: '...sang các vùng lân cận.' and background music fades.",
+      "uncertainty": "none"
+    }
+  ],
+  "end_state": [
+    "Satellite map displays the full network of orange lines representing Kênh Hà Tiên - Rạch Giá, Kênh T3, Kênh T4, Kênh T5, and secondary branch canals.",
+    "All text labels ('HTV Online', 'Hà Tiên', 'Kênh T3', 'Kênh T4', 'Kênh T5', 'Kênh Hà Tiên - Rạch Giá', 'Vịnh Cây Dương', 'Vịnh Rạch Giá', 'Tp. Rạch Giá') remain in place.",
+    "Narration has completed and audio fades out."
+  ],
+  "state_changes": [
+    "Kênh T3 orange line and label appear on the satellite map at approximately 00:07.",
+    "Kênh T4 orange line and label appear on the satellite map at approximately 00:10.",
+    "Kênh T5 orange line and label appear on the satellite map at approximately 00:12.",
+    "Multiple unlabeled secondary orange canal lines appear between the main canal, the coast, and Hà Tiên between 00:14 and 00:18."
+  ],
+  "transient_events": [
+    "Digital graphical pop-in of canal line Kênh T3 at ~00:07.",
+    "Digital graphical pop-in of canal line Kênh T4 at ~00:10.",
+    "Digital graphical pop-in of canal line Kênh T5 at ~00:12.",
+    "Digital graphical pop-in of secondary canal branch lines at ~00:15 - 00:17."
+  ],
+  "people": [],
+  "objects": [
+    "Satellite map graphic showing land, sea, islands, and agricultural parcels",
+    "Orange graphical overlay lines representing canal routes",
+    "Digital text labels and location marker dots",
+    "HTV Online broadcast corner logo"
+  ],
+  "actions": [
+    "Sequential digital animation / appearance of canal lines and text overlays on the satellite map"
+  ],
+  "visual_attributes": [
+    "Satellite landscape colors: green agricultural fields, brownish/gray urban and rural settlements, blue-green coastal sea water",
+    "Canal lines: bright solid orange/red-orange strokes",
+    "Text typography: white sans-serif letters with soft dark drop shadows",
+    "Logo: 'HTV' stylized letters in blue, white, and red with 'Online' in white italic font below"
+  ],
+  "counts": [
+    "1 main canal line ('Kênh Hà Tiên - Rạch Giá')",
+    "3 labeled branch canal lines ('Kênh T3', 'Kênh T4', 'Kênh T5')",
+    "approximately 5 to 7 secondary unlabeled orange canal segments appearing near the coast and Hà Tiên",
+    "4 geographic location labels on the terrain ('Hà Tiên', 'Tp. Rạch Giá', 'Vịnh Cây Dương', 'Vịnh Rạch Giá')",
+    "1 broadcast network logo ('HTV Online')",
+    "0 people visible"
+  ],
+  "spatial_relations": [
+    "'Tp. Rạch Giá' is positioned at the lower right (southeast) of the map.",
+    "'Hà Tiên' is positioned at the upper left (northwest) of the map.",
+    "'Kênh Hà Tiên - Rạch Giá' runs diagonally across the land from southeast to northwest.",
+    "'Kênh T3', 'Kênh T4', and 'Kênh T5' branch off orthogonally towards the northeast into the interior plain, arranged sequentially from west to east.",
+    "'Vịnh Cây Dương' is located in the coastal bay southwest of the main canal.",
+    "'Vịnh Rạch Giá' is located south of 'Tp. Rạch Giá'.",
+    "'HTV Online' logo is permanently positioned in the upper-left corner of the screen."
+  ],
+  "visible_text": [
+    "HTV Online",
+    "Hà Tiên",
+    "Kênh T3",
+    "Kênh T4",
+    "Kênh T5",
+    "Kênh Hà Tiên - Rạch Giá",
+    "Vịnh Cây Dương",
+    "Vịnh Rạch Giá",
+    "Tp. Rạch Giá"
+  ],
+  "spoken_content": [
+    "Gần 88 km, kênh Rạch Giá Hà Tiên còn là tuyến vận tải nằm trong lộ trình của tuyến đường thủy cấp quốc gia Thành phố Hồ Chí Minh...",
+    "Từ tuyến kênh chính Rạch Giá Hà Tiên, tiếp tục mở ra hệ thống các nhánh kênh phụ tương ứng, không chỉ có nhiệm vụ chia nguồn nước ngọt vào sâu trong nội đồng, mà còn giúp vận chuyển, trao đổi nguồn hàng hóa nông sản của địa phương sang các vùng lân cận."
+  ],
+  "fine_grained_details": [
+    "Vietnamese television program graphic broadcast segment (HTV)",
+    "Satellite imagery shows the Mekong Delta / Kiên Giang coastal plain bordering the Gulf of Thailand",
+    "Canal names correspond to the Long Xuyên Quadrangle water management canal network (Kênh T3, T4, T5 drainage and freshwater supply canals)"
+  ],
+  "scene_context": [
+    "Television documentary or news broadcast graphic displaying satellite geospatial cartography of Kiên Giang Province, Vietnam"
+  ],
+  "camera": [
+    "Static top-down orthographic/satellite display view; no camera movement, panning, zooming, tilt, or cut throughout the 22-second clip"
+  ],
+  "uncertainties": [
+    "Exact number of minor secondary orange branch lines appearing between 00:14 and 00:18 is approximate due to pixel rendering of small intersecting segments.",
+    "Exact source provider and capture date of the underlying satellite imagery tiles are not explicitly displayed on screen."
+  ]
+}

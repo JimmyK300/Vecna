@@ -1,0 +1,24 @@
+{
+  "query_id": "p2_q25",
+  "family": "dense-natural",
+  "returncode": 0,
+  "status": "SUCCESS",
+  "error": null,
+  "view_file_called": true,
+  "unexpected_tools": [],
+  "elapsed_s": 26.70255708694458,
+  "conversation_id": "8a268099-ef98-423b-be0d-db22010ec8c1",
+  "sandbox": "C:\\Users\\minhc\\.codex\\media-sandboxes\\issue95-quality-v5\\5a075b9f6f524372b4be620e2c00d103",
+  "clip_sha256": "49e2f0188c8bd0ed632cce3ee946e25baf51a4b90bdd3eb178c8a4403c7d6e9c",
+  "request_sha256": "3a2ac0c085ac64527fefb73b70236ab8d20b346cc4f07d18d0e516106bdd00a5",
+  "caption_sha256": "3b52103b2cfe3d1938289d8c47dc0fba371819cacff5ae9fbe0cc26e5aa8b2ec",
+  "usage": {
+    "input_tokens": 36779,
+    "output_tokens": 4100,
+    "thinking_tokens": 306,
+    "cache_read_tokens": 0,
+    "total_tokens": 40879
+  },
+  "tool_errors": [],
+  "candidate_valid": true
+}

@@ -1,0 +1,108 @@
+{
+  "overview": "A televised broadcast shot from a trailing vehicle follows two road cyclists from behind as they ride down an asphalt street and initiate a left turn at a wide intersection, while a commentator speaks in Vietnamese indicating the final kilometer and the approach to the Ho Tung Mau slope.",
+  "start_state": [
+    "Two road cyclists are seen from behind pedaling forward along a wide, multi-lane paved road towards a curved intersection.",
+    "The leading cyclist in the pair wears a jersey with red and yellow accents and a white bib numbered '7' on the back, while the cyclist closely following wears a yellow jersey.",
+    "A lone cyclist is visible further ahead entering a left bend.",
+    "On-screen graphics display 'CHẶNG 17', a race elapsed timer at '03:54:35', distance '0.9 Km', time gap '- 9.49', and the 'HTV THỂ THAO' channel bug.",
+    "A traffic signal pole ahead displays a green countdown number '16'."
+  ],
+  "timeline": [
+    {"relative_time": "00:00 - 00:01", "event": "Cyclists ride straight along the road approaching an intersection curve", "evidence": "Two cyclists pedal steadily in drafting formation; timer advances from 03:54:35 to 03:54:36; green traffic signal changes from 16 to 15; a single cyclist ahead navigates the bend.", "uncertainty": "none"},
+    {"relative_time": "00:02 - 00:03", "event": "Commentator speaks as distance gap updates", "evidence": "Vietnamese sports commentary begins: 'Một km cuối cùng rồi! Đã vào dốc đường Hồ Tùng Mậu!'; gap graphic updates to '- 10.3'; traffic signal displays 14; timer reaches 03:54:38.", "uncertainty": "none"},
+    {"relative_time": "00:04 - 00:05", "event": "Cyclists begin banking into the left turn", "evidence": "Both riders lean leftwards into the turn around the median island; distance graphic updates from '0.9 Km' to '0.8 Km' and gap to '- 9.8'; timer reaches 03:54:40.", "uncertainty": "none"},
+    {"relative_time": "00:06", "event": "Cyclists proceed through the curve onto the ascending incline", "evidence": "Riders continue turning left past the traffic light showing green '13'; elapsed timer displays '03:54:41'; a motorbike rider in a red jacket appears on the left.", "uncertainty": "none"}
+  ],
+  "end_state": [
+    "The two cyclists are banked into the left turn progressing onto the slope.",
+    "The elapsed timer reads '03:54:41' and remaining distance displays '0.8 Km' with gap '- 9.8'.",
+    "The traffic signal countdown displays '13'.",
+    "A motorbike rider in dark pants and red jacket is visible on the left side of the street."
+  ],
+  "state_changes": [
+    "The two cyclists transition from riding straight along the roadway to banking and turning left.",
+    "Broadcast elapsed timer increments continuously from 03:54:35 to 03:54:41.",
+    "Distance-to-finish graphic changes from 0.9 Km to 0.8 Km around 00:04 - 00:05.",
+    "Broadcast time gap readout shifts from - 9.49 to - 10.3 to - 9.8.",
+    "Digital traffic signal countdown decreases sequentially from 16 to 15, 14, and 13."
+  ],
+  "transient_events": [
+    "Broadcast graphic for distance updates from 0.9 Km to 0.8 Km.",
+    "Traffic countdown digit flips on the overhead/post signal.",
+    "Vietnamese commentator voice delivers an energetic call announcing the final kilometer and entrance to the slope.",
+    "A motorbike with a rider in red enters the frame on the left side."
+  ],
+  "people": [
+    "Leading cyclist of the pair: seen from behind, wearing a black, red, and yellow cycling jersey with a white square race number bib '7' pinned to the back, black cycling shorts, black helmet with yellow accents, white socks, and black cycling shoes.",
+    "Trailing cyclist: seen from behind directly behind or adjacent to cyclist 7, wearing a primarily yellow cycling jersey with red accents, black helmet, and black shorts.",
+    "Distant lead cyclist: visible in the distance at 00:00 leaning into the curve ahead, wearing a cycling kit and helmet.",
+    "Motorbike rider on left at 00:05-00:06: wearing a helmet, red jacket, and dark pants.",
+    "Spectators: several people standing on the sidewalk to the left behind curbs and barriers, wearing various casual jackets, pants, and hats."
+  ],
+  "objects": [
+    "Road racing bicycles equipped with drop handlebars and thin tires.",
+    "Traffic light pole with green signal and illuminated countdown numbers.",
+    "Large blue overhead/ground-mounted highway directional road sign with white arrows and text.",
+    "White delivery/box truck parked or stationary in the background left.",
+    "Multiple motorcycles/scooters on surrounding streets and race route.",
+    "Curbs, raised traffic island medians, street lampposts, and banner posts."
+  ],
+  "actions": [
+    "Cyclists actively pedaling road bicycles in aerodynamic riding posture.",
+    "Cyclists leaning into a left turn.",
+    "Camera vehicle driving behind the cyclists while tracking and panning.",
+    "Motorbikes traveling along the perimeter of the road course."
+  ],
+  "visual_attributes": [
+    "Gray asphalt pavement marked with white lane and edge lines.",
+    "Yellow, red, and black colored cycling jerseys.",
+    "Blue reflective rectangular road sign with white lettering and directional arrows.",
+    "Green illuminated numbers on traffic light countdown display.",
+    "Green trees and roadside vegetation, including pine trees in the background.",
+    "Daylight conditions with slightly overcast/bright sky."
+  ],
+  "counts": [
+    "2 cyclists closely tracked in foreground.",
+    "1 cyclist visible ahead in the distance at 00:00.",
+    "1 visible white box truck in background left.",
+    "At least 4 motorcycles/scooters visible across the scene.",
+    "4 countdown integers observed on traffic light: 16, 15, 14, 13."
+  ],
+  "spatial_relations": [
+    "The two foreground cyclists ride near the center-left of the roadway, moving away from the camera.",
+    "Cyclist 7 is slightly in front of the yellow-jersey cyclist.",
+    "The blue directional sign stands on a traffic island to the right of the roadway.",
+    "The traffic light pole is situated on the inner corner of the left turn curve.",
+    "Spectators stand along the sidewalk to the left of the riders."
+  ],
+  "visible_text": [
+    "CHẶNG 17",
+    "03:54:35 (incrementing through 03:54:41)",
+    "0.9 Km (later 0.8 Km)",
+    "1",
+    "2",
+    "- 9.49 (later - 10.3, - 9.8)",
+    "7",
+    "HTV THỂ THAO",
+    "16, 15, 14, 13 (green digital traffic countdown numbers)",
+    "White text on the blue directional sign (partially legible directional labels)"
+  ],
+  "spoken_content": [
+    "Một km cuối cùng rồi! Đã vào dốc đường Hồ Tùng Mậu!"
+  ],
+  "fine_grained_details": [
+    "Location context confirmed by speech as Dốc đường Hồ Tùng Mậu (in Da Lat, Vietnam).",
+    "Cycling race stage identified on screen as 'CHẶNG 17' (Stage 17) broadcast by HTV Thể Thao."
+  ],
+  "scene_context": [
+    "Urban road during a professional cycling race stage finish in Vietnam, passing an intersection onto an uphill slope lined with spectators, commercial buildings, and pine trees."
+  ],
+  "camera": [
+    "Single continuous tracking shot from a vehicle moving forward directly behind the riders, panning slightly left to follow their trajectory into the turn; no cuts or zoom changes."
+  ],
+  "uncertainties": [
+    "Specific place names and route numbers printed on the blue directional sign are too blurry to transcribe fully with certainty.",
+    "Text on the vertical street banner along the left sidewalk is partially occluded and blurry.",
+    "The identity and exact bib number of the trailing cyclist in yellow and the distant lead cyclist are not legible."
+  ]
+}
