@@ -1,0 +1,14 @@
+{
+  "eligible_count": 28,
+  "ineligible": {
+    "p3_q12": "no_legitimate_interval_with_seconds",
+    "p3_q29": "no_legitimate_interval_with_seconds"
+  },
+  "pilot_count": 30,
+  "pilot_path": "C:\\Users\\minhc\\Code\\Vecna-issue95-local\\benchmark-results\\shot-caption-oracle-v0\\pilot_config.json",
+  "pilot_sha256": "e2f3491f0908aea1aa8c5c04cc73f8e313d4227d7e7ab6a498413b3fb8772e66",
+  "query_text_exposed_to_captioner": false,
+  "schema": "shot-caption-oracle-manifest-v0",
+  "truth_path": "C:\\Users\\minhc\\Code\\Vecna-issue95-local\\benchmark-results\\issue34-current-115\\ground_truth_current_115.jsonl",
+  "truth_sha256": "f29dbe929e61b2fa87947d2d824587752dbfae0d2a6b9d26de91297908f97c38"
+}

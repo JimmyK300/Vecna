@@ -218,11 +218,14 @@ def extract_clips(args: argparse.Namespace) -> None:
     index = index_videos(args.dataset_root)
     args.output_dir.mkdir(parents=True, exist_ok=True)
     results: list[dict[str, Any]] = []
+    source_hashes: dict[Path, str] = {}
     for row in manifest:
         if not row.get("eligible"):
             continue
         qid = row["query_id"]
         source = resolve_video(index, row["video_id"])
+        if source not in source_hashes:
+            source_hashes[source] = sha256_file(source)
         target = args.output_dir / f"{qid}__{row['video_id']}__{row['start_s']:.3f}-{row['end_s']:.3f}.mp4"
         if not target.exists() or args.force:
             cmd = [
@@ -237,6 +240,7 @@ def extract_clips(args: argparse.Namespace) -> None:
             "video_id": row["video_id"],
             "source_path": str(source),
             "source_size": source.stat().st_size,
+            "source_sha256": source_hashes[source],
             "clip_path": str(target),
             "clip_size": target.stat().st_size,
             "clip_sha256": sha256_file(target),
@@ -295,6 +299,22 @@ def parse_json_output(text: str) -> Any:
         return None
 
 
+def retryable_api_error(exc: Exception) -> bool:
+    status = getattr(exc, "status_code", None)
+    if status in {429, 500, 502, 503, 504}:
+        return True
+    message = str(exc).lower()
+    return isinstance(exc, (TimeoutError, ConnectionError)) or any(
+        marker in message for marker in ("error code: 429", "error code: 500", "error code: 502", "error code: 503", "error code: 504", "timed out")
+    )
+
+
+def retry_wait_seconds(exc: Exception, attempt: int, base: float, maximum: float) -> float:
+    match = re.search(r"retry in ([0-9.]+)s", str(exc), flags=re.I)
+    server_wait = float(match.group(1)) + 1.0 if match else 0.0
+    return min(max(server_wait, base * (2 ** (attempt - 1))), maximum)
+
+
 def caption(args: argparse.Namespace) -> None:
     # Import only in the API stage so manifest/extraction work without the SDK.
     try:
@@ -320,15 +340,25 @@ def caption(args: argparse.Namespace) -> None:
             prompt = prompt_rows[name]
             config_identity = {
                 "model": args.model,
-                "processing": {"type": "static", "fps": args.fps},
+                "processing": {"type": "static", "fps": args.fps, "resolution": args.resolution},
                 "prompt_sha256": prompt["sha256"],
                 "clip_sha256": clip_sha,
             }
             cache_key = sha256_bytes(json.dumps(config_identity, sort_keys=True).encode("utf-8"))
-            target = args.output_dir / f"{clip['query_id']}__{name}__{cache_key[:16]}.json"
+            stem = f"{clip['query_id']}__{name}__{cache_key[:16]}"
+            target = args.output_dir / f"{stem}.json"
             if target.exists() and not args.force:
-                completed += 1
-                continue
+                try:
+                    existing = json.loads(target.read_text(encoding="utf-8"))
+                except Exception:
+                    existing = {}
+                if existing.get("status") == "ok":
+                    completed += 1
+                    continue
+                retry = 1
+                while (args.output_dir / f"{stem}__retry-{retry:02d}.json").exists():
+                    retry += 1
+                target = args.output_dir / f"{stem}__retry-{retry:02d}.json"
             started = time.time()
             record: dict[str, Any] = {
                 "schema": "shot-caption-response-v0",
@@ -339,44 +369,59 @@ def caption(args: argparse.Namespace) -> None:
                 "clip_sha256": clip_sha,
                 "clip_path": str(clip_path),
                 "model": args.model,
-                "processing": {"type": "static", "fps": args.fps},
+                "processing": {"type": "static", "fps": args.fps, "resolution": args.resolution},
                 "cache_key": cache_key,
                 "started_at_unix": started,
             }
+            attempt_errors: list[dict[str, Any]] = []
             try:
-                if clip_sha not in uploaded_cache:
-                    uploaded = client.files.upload(file=str(clip_path))
-                    uploaded_cache[clip_sha] = wait_file_ready(client, uploaded, timeout_s=args.upload_timeout)
-                uploaded = uploaded_cache[clip_sha]
-                mime = getattr(uploaded, "mime_type", None) or mimetypes.guess_type(clip_path.name)[0] or "video/mp4"
-                interaction = client.interactions.create(
-                    model=args.model,
-                    input=[
-                        {
-                            "type": "video",
-                            "uri": getattr(uploaded, "uri"),
-                            "mime_type": mime,
-                            "processing": {"type": "static", "fps": args.fps},
-                        },
-                        {"type": "text", "text": prompt["text"]},
-                    ],
-                )
-                text = str(getattr(interaction, "output_text", "") or "")
-                record.update({
-                    "status": "ok",
-                    "output_text": text,
-                    "parsed_json": parse_json_output(text) if name != "dense-natural" else None,
-                    "interaction_id": getattr(interaction, "id", None),
-                    "usage": _jsonable(getattr(interaction, "usage", None)),
-                    "uploaded_file": {
-                        "name": getattr(uploaded, "name", None),
-                        "uri": getattr(uploaded, "uri", None),
-                        "mime_type": mime,
-                    },
-                })
-                completed += 1
+                for attempt in range(1, args.max_attempts + 1):
+                    try:
+                        if clip_sha not in uploaded_cache:
+                            uploaded = client.files.upload(file=str(clip_path))
+                            uploaded_cache[clip_sha] = wait_file_ready(client, uploaded, timeout_s=args.upload_timeout)
+                        uploaded = uploaded_cache[clip_sha]
+                        mime = getattr(uploaded, "mime_type", None) or mimetypes.guess_type(clip_path.name)[0] or "video/mp4"
+                        interaction = client.interactions.create(
+                            model=args.model,
+                            input=[
+                                {
+                                    "type": "video",
+                                    "uri": getattr(uploaded, "uri"),
+                                    "mime_type": mime,
+                                    "processing": {"type": "static", "fps": args.fps},
+                                    "resolution": args.resolution,
+                                },
+                                {"type": "text", "text": prompt["text"]},
+                            ],
+                        )
+                        text = str(getattr(interaction, "output_text", "") or "")
+                        record.update({
+                            "status": "ok",
+                            "output_text": text,
+                            "parsed_json": parse_json_output(text) if name != "dense-natural" else None,
+                            "interaction_id": getattr(interaction, "id", None),
+                            "usage": _jsonable(getattr(interaction, "usage", None)),
+                            "uploaded_file": {
+                                "name": getattr(uploaded, "name", None),
+                                "uri": getattr(uploaded, "uri", None),
+                                "mime_type": mime,
+                            },
+                        })
+                        completed += 1
+                        break
+                    except Exception as exc:
+                        attempt_errors.append({"attempt": attempt, "error_type": type(exc).__name__, "error": str(exc), "at_unix": time.time()})
+                        if attempt >= args.max_attempts or not retryable_api_error(exc):
+                            raise
+                        wait_s = retry_wait_seconds(exc, attempt, args.retry_base_wait, args.retry_max_wait)
+                        print(json.dumps({"query_id": clip["query_id"], "prompt": name, "status": "retrying", "attempt": attempt, "wait_s": wait_s}, ensure_ascii=False), flush=True)
+                        time.sleep(wait_s)
+                if attempt_errors:
+                    record["attempt_errors"] = attempt_errors
             except Exception as exc:
                 record.update({"status": "error", "error_type": type(exc).__name__, "error": str(exc)})
+                record["attempt_errors"] = attempt_errors
                 failed += 1
             record["elapsed_s"] = time.time() - started
             target.write_text(json.dumps(record, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -389,6 +434,7 @@ def caption(args: argparse.Namespace) -> None:
 def build_eval_packets(args: argparse.Namespace) -> None:
     """Freeze post-caption judge inputs. Query text appears only in this post-caption stage."""
     decompositions = {row["query_id"]: row for row in read_jsonl(args.decompositions)}
+    manifest = {row["query_id"]: row for row in read_jsonl(args.manifest)}
     captions: dict[tuple[str, str], dict[str, Any]] = {}
     for path in sorted(args.caption_dir.glob("*.json")):
         try:
@@ -406,11 +452,13 @@ def build_eval_packets(args: argparse.Namespace) -> None:
             "query_id": qid,
             "prompt_family": family,
             "capability_tags": decomp.get("capability_tags", []),
+            "task_type": manifest.get(qid, {}).get("task_type"),
             "query_text": decomp.get("query_text"),
             "requirements": decomp.get("events", []),
             "caption": cap.get("parsed_json") if cap.get("parsed_json") is not None else cap.get("output_text"),
             "caption_cache_key": cap.get("cache_key"),
             "caption_was_frozen_before_query_join": True,
+            "decompositions_sha256": sha256_file(args.decompositions),
         })
     write_jsonl(args.output, packets)
     print(json.dumps({"packets": len(packets), "output": str(args.output)}, ensure_ascii=False))
@@ -440,13 +488,18 @@ def parser() -> argparse.ArgumentParser:
     c.add_argument("--prompt", choices=["all", *PROMPTS], default="all")
     c.add_argument("--model", default="gemini-3.8-flash")
     c.add_argument("--fps", type=float, default=4.0)
+    c.add_argument("--resolution", choices=["low", "medium", "high", "ultra_high"], default="high")
     c.add_argument("--upload-timeout", type=float, default=900)
+    c.add_argument("--max-attempts", type=int, default=6)
+    c.add_argument("--retry-base-wait", type=float, default=20.0)
+    c.add_argument("--retry-max-wait", type=float, default=120.0)
     c.add_argument("--force", action="store_true")
     c.add_argument("--stop-on-error", action="store_true")
     c.set_defaults(func=caption)
 
     j = sub.add_parser("build-eval-packets")
     j.add_argument("--decompositions", type=Path, required=True)
+    j.add_argument("--manifest", type=Path, default=MANIFEST_DEFAULT)
     j.add_argument("--caption-dir", type=Path, default=ROOT / "captions")
     j.add_argument("--output", type=Path, default=ROOT / "eval_packets.jsonl")
     j.set_defaults(func=build_eval_packets)

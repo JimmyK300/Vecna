@@ -1,0 +1,123 @@
+{
+  "cache_key": "a86a1cd756ae20b306e48fb7c4e2427b26635b9a297bec02fe8cdceba67da887",
+  "caption_model_received_query_text": false,
+  "clip_path": "C:\\Users\\minhc\\Code\\Vecna-issue95-local\\benchmark-results\\shot-caption-oracle-v0\\clips\\p0_q03__L27_V014__280.000-335.000.mp4",
+  "clip_sha256": "772c912c1709fc2d1a57c51b8a06d681720f4e5d7db6cb18757f129f621cf9a4",
+  "elapsed_s": 83.98897242546082,
+  "interaction_id": "v1_ChdMNS1yYXFlN012ZTBnOFVQbzVXZGdRSRIXTDUtcmFxZTdNdmUwZzhVUG81V2RnUUk",
+  "model": "gemini-3.8-flash",
+  "output_text": "{\n  \"overview\": \"A young woman feeds leafy branches to horned goats in an indoor farm barn before walking along the central aisle with an older woman, who points out pens of young goat kids feeding at wooden troughs.\",\n  \"people\": [\n    \"Young woman with long dark ponytail, wearing a white t-shirt with a heart graphic, red long-sleeve draped over shoulders, blue jeans, and a watch.\",\n    \"Older woman with dark hair tied back, wearing a purple and black vertically striped long-sleeved shirt and patterned pants.\"\n  ],\n  \"objects\": [\n    \"Wooden goat pens with slatted rails and troughs\",\n    \"Goats with horns and ear tags\",\n    \"Young goat kids\",\n    \"Green leafy branches and chopped green fodder\",\n    \"Metal-frame barn structure with corrugated roof\"\n  ],\n  \"actions\": [\n    \"Young woman feeds leafy branches to adult goats and laughs towards the camera\",\n    \"Both women walk along the central aisle of the goat barn\",\n    \"Older woman gestures with her hand toward pens of young goats while explaining\",\n    \"Young goats lean heads through wooden slats to eat chopped fodder from the trough\"\n  ],\n  \"visual_attributes\": [\n    \"Adult goats are mostly white, some with tan markings and long curved horns\",\n    \"One young goat has brown facial markings and floppy ears; others are primarily white\",\n    \"Well-lit barn interior with concrete floor and raised wooden slatted pens\"\n  ],\n  \"counts\": [\n    \"2 women\",\n    \"at least 4 young goat kids visible in close-up\",\n    \"dozens of goats visible in long wide shot of barn\"\n  ],\n  \"spatial_relations\": [\n    \"Central concrete aisle situated between rows of elevated pens on both left and right\",\n    \"Troughs mounted along the exterior of pen slats facing the aisle\",\n    \"Older woman walks to the right of the young woman\"\n  ],\n  \"visible_text\": [\n    \"HTV Online\",\n    \"VIỆT NAM Đi là ghiền\"\n  ],\n  \"spoken_content\": [\n    \"Còn đây là những chú dê con đang...\",\n    \"mình chăm sóc kỹ một chút, mình cho ăn lá non\"\n  ],\n  \"fine_grained_details\": [\n    \"Yellow identification tags clipped to goats' ears\",\n    \"Bright transition flash at 00:33-00:34 between feeding scene and wide barn shot\"\n  ],\n  \"scene_context\": \"Indoor goat breeding and dairy barn facility.\",\n  \"camera\": [\n    \"Starts on medium close-up of woman feeding goats, transitions via bright flash to high-angle wide shot of the aisle, follows with eye-level medium tracking shot, and cuts to low close-up of kids eating\"\n  ],\n  \"uncertainties\": []\n}",
+  "parsed_json": {
+    "actions": [
+      "Young woman feeds leafy branches to adult goats and laughs towards the camera",
+      "Both women walk along the central aisle of the goat barn",
+      "Older woman gestures with her hand toward pens of young goats while explaining",
+      "Young goats lean heads through wooden slats to eat chopped fodder from the trough"
+    ],
+    "camera": [
+      "Starts on medium close-up of woman feeding goats, transitions via bright flash to high-angle wide shot of the aisle, follows with eye-level medium tracking shot, and cuts to low close-up of kids eating"
+    ],
+    "counts": [
+      "2 women",
+      "at least 4 young goat kids visible in close-up",
+      "dozens of goats visible in long wide shot of barn"
+    ],
+    "fine_grained_details": [
+      "Yellow identification tags clipped to goats' ears",
+      "Bright transition flash at 00:33-00:34 between feeding scene and wide barn shot"
+    ],
+    "objects": [
+      "Wooden goat pens with slatted rails and troughs",
+      "Goats with horns and ear tags",
+      "Young goat kids",
+      "Green leafy branches and chopped green fodder",
+      "Metal-frame barn structure with corrugated roof"
+    ],
+    "overview": "A young woman feeds leafy branches to horned goats in an indoor farm barn before walking along the central aisle with an older woman, who points out pens of young goat kids feeding at wooden troughs.",
+    "people": [
+      "Young woman with long dark ponytail, wearing a white t-shirt with a heart graphic, red long-sleeve draped over shoulders, blue jeans, and a watch.",
+      "Older woman with dark hair tied back, wearing a purple and black vertically striped long-sleeved shirt and patterned pants."
+    ],
+    "scene_context": "Indoor goat breeding and dairy barn facility.",
+    "spatial_relations": [
+      "Central concrete aisle situated between rows of elevated pens on both left and right",
+      "Troughs mounted along the exterior of pen slats facing the aisle",
+      "Older woman walks to the right of the young woman"
+    ],
+    "spoken_content": [
+      "Còn đây là những chú dê con đang...",
+      "mình chăm sóc kỹ một chút, mình cho ăn lá non"
+    ],
+    "uncertainties": [],
+    "visible_text": [
+      "HTV Online",
+      "VIỆT NAM Đi là ghiền"
+    ],
+    "visual_attributes": [
+      "Adult goats are mostly white, some with tan markings and long curved horns",
+      "One young goat has brown facial markings and floppy ears; others are primarily white",
+      "Well-lit barn interior with concrete floor and raised wooden slatted pens"
+    ]
+  },
+  "processing": {
+    "fps": 4.0,
+    "resolution": "high",
+    "type": "static"
+  },
+  "prompt_family": "structured-evidence",
+  "prompt_sha256": "aaa39422ba6d72e25357af6bf583c38bc6a0a13d08cbf30fc2cc688295476dc2",
+  "query_id": "p0_q03",
+  "schema": "shot-caption-response-v0",
+  "started_at_unix": 1789632222.265875,
+  "status": "ok",
+  "uploaded_file": {
+    "mime_type": "video/mp4",
+    "name": "files/mifh53wfiywp",
+    "uri": "https://generativelanguage.googleapis.com/v1beta/files/mifh53wfiywp"
+  },
+  "usage": {
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 418
+      },
+      {
+        "modality": "video",
+        "tokens": 59455
+      }
+    ],
+    "model_invocation_token_counts": [
+      {
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 636
+          }
+        ],
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 1088
+          },
+          {
+            "modality": "video",
+            "tokens": 59455
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 646
+          }
+        ]
+      }
+    ],
+    "raw_prompt_token": 63018,
+    "total_cached_tokens": 0,
+    "total_input_tokens": 59873,
+    "total_output_tokens": 632,
+    "total_thought_tokens": 646,
+    "total_tokens": 61151,
+    "total_tool_use_tokens": 0
+  }
+}

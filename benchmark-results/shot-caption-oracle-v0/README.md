@@ -68,6 +68,8 @@ Each clip is hashed. The source video, interval and ffmpeg identity are retained
 
 Requires the modern `google-genai` package and `GEMINI_API_KEY` or `GOOGLE_API_KEY` in the process environment.
 
+For a reproducible isolated environment, install `requirements.txt` into a Python 3.12 virtual environment.
+
 ```bash
 python benchmark-results/shot-caption-oracle-v0/code/shot_caption_oracle.py caption \
   --prompt all \
@@ -87,6 +89,15 @@ python benchmark-results/shot-caption-oracle-v0/code/shot_caption_oracle.py buil
 ```
 
 This is the first stage that joins query text/requirements to the already-frozen caption.
+
+After the full caption cache is frozen, run the cached post-caption judge and deterministic aggregation:
+
+```bash
+python benchmark-results/shot-caption-oracle-v0/code/evaluate_caption_sufficiency.py judge --stop-on-error
+python benchmark-results/shot-caption-oracle-v0/code/evaluate_caption_sufficiency.py aggregate
+```
+
+`evaluation_config.json` predeclares the fixed manual-audit subset and prompt-family tie-break policy. Do not run aggregation as a final result until that manual audit is present.
 
 ## Evaluation contract
 

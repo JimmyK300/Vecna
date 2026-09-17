@@ -1,0 +1,72 @@
+{
+  "cache_key": "dd005bed34469ea2a2f5bdd2064ca6468d73288d8e5404fc50261cae1d87a03d",
+  "caption_model_received_query_text": false,
+  "clip_path": "C:\\Users\\minhc\\Code\\Vecna-issue95-local\\benchmark-results\\shot-caption-oracle-v0\\clips\\p0_q01__L21_V015__840.000-905.000.mp4",
+  "clip_sha256": "43df57e3ae13e04093ab40801f023fe5367aa729b81f5b12e7449ff235315609",
+  "elapsed_s": 71.50052428245544,
+  "interaction_id": "v1_ChdVNTZyYXRtN010YmNnOFVQaV9pRTRBNBIXVTU2cmF0bTdNdGJjZzhVUGlfaUU0QTQ",
+  "model": "gemini-3.8-flash",
+  "output_text": "A female news anchor with short dark hair, wearing a white collared blouse and a blue skirt, stands on the left of the studio against a sunset cityscape backdrop while holding a red tablet. In the upper right inset screen, the \"60 giây\" logo transitions at 00:00.750 into launch footage of a SpaceX Starship rocket. The inset initially displays an overhead aerial shot of the launch pad engulfed in bright orange flames and dense white clouds of smoke as the rocket lifts off, with telemetry data showing speed, altitude, and flight time at the bottom corners. Around 00:04.000, the inset cuts to a close-up camera mounted on the silver metallic rocket fuselage looking downwards past grid fins as exhaust billows below. By 00:09.100, the shot changes to a camera looking along the fiery rocket engines as flames and smoke erupt during ascent, with speed readings surpassing 160 km/h. A scrolling news ticker runs along the bottom of the broadcast screen, and the HTV9 HD logo with a live clock appears in the upper right. Throughout, the presenter delivers the report in Vietnamese.",
+  "parsed_json": null,
+  "processing": {
+    "fps": 4.0,
+    "resolution": "high",
+    "type": "static"
+  },
+  "prompt_family": "dense-natural",
+  "prompt_sha256": "358bfabd010ea55aa53c838d22dc047f98b34a3d8055d21f171eb991baa13449",
+  "query_id": "p0_q01",
+  "schema": "shot-caption-response-v0",
+  "started_at_unix": 1789632014.701299,
+  "status": "ok",
+  "uploaded_file": {
+    "mime_type": "video/mp4",
+    "name": "files/5g3vaf5yekbs",
+    "uri": "https://generativelanguage.googleapis.com/v1beta/files/5g3vaf5yekbs"
+  },
+  "usage": {
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 292
+      },
+      {
+        "modality": "video",
+        "tokens": 70265
+      }
+    ],
+    "model_invocation_token_counts": [
+      {
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 246
+          }
+        ],
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 973
+          },
+          {
+            "modality": "video",
+            "tokens": 70265
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 709
+          }
+        ]
+      }
+    ],
+    "raw_prompt_token": 74163,
+    "total_cached_tokens": 0,
+    "total_input_tokens": 70557,
+    "total_output_tokens": 242,
+    "total_thought_tokens": 709,
+    "total_tokens": 71508,
+    "total_tool_use_tokens": 0
+  }
+}

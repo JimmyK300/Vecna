@@ -1,0 +1,21 @@
+{
+  "cache_key": "0f37191fd0b2feb3ccb747032ca8b2ec1de0adafcebdcdd96756e306c0c6fc4a",
+  "caption_model_received_query_text": false,
+  "clip_path": "C:\\Users\\minhc\\Code\\Vecna-issue95-local\\benchmark-results\\shot-caption-oracle-v0\\clips\\p0_q03__L27_V014__280.000-335.000.mp4",
+  "clip_sha256": "772c912c1709fc2d1a57c51b8a06d681720f4e5d7db6cb18757f129f621cf9a4",
+  "elapsed_s": 37.10531497001648,
+  "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.8-flash\\nPlease retry in 16.465429318s.', 'code': 'too_many_requests'}}",
+  "error_type": "RateLimitError",
+  "model": "gemini-3.8-flash",
+  "processing": {
+    "fps": 4.0,
+    "resolution": "high",
+    "type": "static"
+  },
+  "prompt_family": "structured-temporal",
+  "prompt_sha256": "ea92647fe2b7ae94e935b58a3a0189890f208b4583b5616040160428163f3563",
+  "query_id": "p0_q03",
+  "schema": "shot-caption-response-v0",
+  "started_at_unix": 1789632306.2558463,
+  "status": "error"
+}

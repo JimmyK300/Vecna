@@ -1,0 +1,72 @@
+{
+  "cache_key": "11331d1f429791f72aea46d33a3b4deabf8ba05122f05df5fd63fd2269fa9f61",
+  "caption_model_received_query_text": false,
+  "clip_path": "C:\\Users\\minhc\\Code\\Vecna-issue95-local\\benchmark-results\\shot-caption-oracle-v0\\clips\\p0_q03__L27_V014__280.000-335.000.mp4",
+  "clip_sha256": "772c912c1709fc2d1a57c51b8a06d681720f4e5d7db6cb18757f129f621cf9a4",
+  "elapsed_s": 39.77604556083679,
+  "interaction_id": "v1_ChcyNTZyYXVXWUx0bWtnOFVQLWRqWHFBMBIXMjU2cmF1V1lMdG1rZzhVUC1kalhxQTA",
+  "model": "gemini-3.8-flash",
+  "output_text": "The video shows the interior of an elongated, covered goat barn with elevated wooden slatted pens arranged in long rows on both sides of a concrete central walkway. Numerous white and partly brown goats stand along the feeding troughs on either side under an open steel-truss roof structure. At the top left of the screen, an “HTV Online” logo remains visible throughout.  At 00:37, a young woman wearing a white t-shirt with a red sweater tied over her shoulders and blue jeans walks beside an older woman wearing a purple-and-black striped button-down shirt and floral pants. The older woman gestures with her right hand toward the pens along the left while explaining the goats. A colorful lower-third graphic appears on the bottom left reading “VIỆT NAM Đi là ghiền” accompanied by a Vietnamese flag icon.   The scene then shifts to a closer shot of several young goat kids, primarily white with one brown-and-white headed kid, eagerly munching greens in a wooden trough before poking their heads between the slats. An on-screen caption appears at the bottom reading “Trải nghiệm cho dê con bú bình”. The older woman presents a clear baby bottle filled with white milk and a purple ring collar to the younger woman, handing it to her so she can bottle-feed the kids. The younger woman takes the bottle and holds the nipple up to a young white goat kid, which eagerly latches on and suckles, while other kids push against the trough nearby.",
+  "parsed_json": null,
+  "processing": {
+    "fps": 4.0,
+    "resolution": "high",
+    "type": "static"
+  },
+  "prompt_family": "dense-natural",
+  "prompt_sha256": "358bfabd010ea55aa53c838d22dc047f98b34a3d8055d21f171eb991baa13449",
+  "query_id": "p0_q03",
+  "schema": "shot-caption-response-v0",
+  "started_at_unix": 1789632182.4892564,
+  "status": "ok",
+  "uploaded_file": {
+    "mime_type": "video/mp4",
+    "name": "files/mifh53wfiywp",
+    "uri": "https://generativelanguage.googleapis.com/v1beta/files/mifh53wfiywp"
+  },
+  "usage": {
+    "input_tokens_by_modality": [
+      {
+        "modality": "video",
+        "tokens": 59455
+      },
+      {
+        "modality": "text",
+        "tokens": 292
+      }
+    ],
+    "model_invocation_token_counts": [
+      {
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 310
+          }
+        ],
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 873
+          },
+          {
+            "modality": "video",
+            "tokens": 59455
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 388
+          }
+        ]
+      }
+    ],
+    "raw_prompt_token": 62803,
+    "total_cached_tokens": 0,
+    "total_input_tokens": 59747,
+    "total_output_tokens": 306,
+    "total_thought_tokens": 388,
+    "total_tokens": 60441,
+    "total_tool_use_tokens": 0
+  }
+}

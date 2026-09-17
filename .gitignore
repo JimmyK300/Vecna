@@ -15,6 +15,7 @@ eggs/
 venv/
 env/
 .venv*/
+benchmark-results/shot-caption-oracle-v0/clips/*.mp4
 
 # IDE
 .vscode/

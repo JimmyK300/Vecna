@@ -1,0 +1,148 @@
+{
+  "cache_key": "92fb4a804e93f81405d65d109cb156f2038d2023919efa9b82eae025f2d412be",
+  "caption_model_received_query_text": false,
+  "clip_path": "C:\\Users\\minhc\\Code\\Vecna-issue95-local\\benchmark-results\\shot-caption-oracle-v0\\clips\\p0_q01__L21_V015__840.000-905.000.mp4",
+  "clip_sha256": "43df57e3ae13e04093ab40801f023fe5367aa729b81f5b12e7449ff235315609",
+  "elapsed_s": 54.51081204414368,
+  "interaction_id": "v1_ChZpcDZyYXJPUUZJbTVnOFVQaVBmT1lBEhZpcDZyYXJPUUZJbTVnOFVQaVBmT1lB",
+  "model": "gemini-3.8-flash",
+  "output_text": "{\n  \"overview\": \"A news broadcast covers SpaceX's planned human spaceflight mission over Earth's polar regions, transitioning between news anchors in the studio and footage of rocket launches, crew members, orbital simulations, and space views.\",\n  \"people\": [\n    \"Female news anchor with short dark hair, white blouse, and blue skirt holding a folder\",\n    \"Four crew members (two men, two women) wearing black SpaceX t-shirts standing together outdoors\",\n    \"Male news anchor wearing eyeglasses, navy blue button-down shirt, patterned tie, and dark trousers holding a folder\"\n  ],\n  \"objects\": [\n    \"Digital tablet/folder\",\n    \"SpaceX Falcon 9 rocket and launch tower\",\n    \"SpaceX Starship/Super Heavy vehicle\",\n    \"Exhaust plumes and flames\",\n    \"Tablet showing Wayfinder orbital debris simulation\",\n    \"Spacecraft cupola window frame\",\n    \"Solar panel array on spacecraft\"\n  ],\n  \"actions\": [\n    \"Female anchor introduces the report on SpaceX polar human mission\",\n    \"Rocket engines ignite, generating exhaust clouds as the rocket ascends\",\n    \"Four crew members smile and pose side-by-side\",\n    \"Rocket ascends past the atmosphere with exterior camera views\",\n    \"Male anchor speaks while holding a folder in studio\"\n  ],\n  \"visual_attributes\": [\n    \"Studio backdrop with warm orange sunset glow over city skyscrapers\",\n    \"Black crew t-shirts with white 'SPACEX' lettering\",\n    \"White rocket body with black interstage and booster sections\",\n    \"Bright orange flame and gray smoke during launch\",\n    \"Curved blue Earth with white clouds seen from space\",\n    \"Purple plasma glow around rocket fin during high-speed flight\"\n  ],\n  \"counts\": [\n    \"1 female news presenter\",\n    \"4 astronauts/crew members\",\n    \"1 male news presenter\",\n    \"1 launch vehicle\"\n  ],\n  \"spatial_relations\": [\n    \"Female presenter stands left of an inset video screen\",\n    \"Crew members stand shoulder-to-shoulder in a row\",\n    \"News tickers and program banners run along the bottom of the screen\",\n    \"Earth visible below through the circular cupola window\"\n  ],\n  \"visible_text\": [\n    \"HTV9 HD\",\n    \"06:47:43\",\n    \"60 giây\",\n    \"SPEED\",\n    \"ALTITUDE\",\n    \"SPACEX\",\n    \"TÀU VŨ TRỤ CHỞ NGƯỜI ĐẦU TIÊN SẼ BAY QUA CÁC CỰC TRÁI ĐẤT\",\n    \"WAYFINDER\",\n    \"STARLINK\"\n  ],\n  \"spoken_content\": [\n    \"Hãng SpaceX cho biết họ đang hướng đến phá vỡ giới hạn khi...\",\n    \"Tàu Dragon của SpaceX dự kiến chở phi hành đoàn 4 người, chỉ huy là doanh nhân Chun Wang...\",\n    \"Các nhà bảo tồn động vật Chile vừa công bố phát hiện một con hươu Huemul...\"\n  ],\n  \"fine_grained_details\": [\n    \"Fram2 mission crew led by Chun Wang\",\n    \"SpaceX Crew Dragon / Falcon 9 and Starship test footage\",\n    \"Wayfinder orbital debris visualization system interface\"\n  ],\n  \"scene_context\": [\n    \"Television news studio with digital skyline backdrop\",\n    \"Rocket launch facility and orbital space environment\"\n  ],\n  \"camera\": [\n    \"Static medium shots of news anchors\",\n    \"Aerial drone tracking overhead launch\",\n    \"Onboard rocket cameras facing downward and upward\"\n  ],\n  \"uncertainties\": [\n    \"Exact dates and full names of all individual crew members shown\"\n  ]\n}",
+  "parsed_json": {
+    "actions": [
+      "Female anchor introduces the report on SpaceX polar human mission",
+      "Rocket engines ignite, generating exhaust clouds as the rocket ascends",
+      "Four crew members smile and pose side-by-side",
+      "Rocket ascends past the atmosphere with exterior camera views",
+      "Male anchor speaks while holding a folder in studio"
+    ],
+    "camera": [
+      "Static medium shots of news anchors",
+      "Aerial drone tracking overhead launch",
+      "Onboard rocket cameras facing downward and upward"
+    ],
+    "counts": [
+      "1 female news presenter",
+      "4 astronauts/crew members",
+      "1 male news presenter",
+      "1 launch vehicle"
+    ],
+    "fine_grained_details": [
+      "Fram2 mission crew led by Chun Wang",
+      "SpaceX Crew Dragon / Falcon 9 and Starship test footage",
+      "Wayfinder orbital debris visualization system interface"
+    ],
+    "objects": [
+      "Digital tablet/folder",
+      "SpaceX Falcon 9 rocket and launch tower",
+      "SpaceX Starship/Super Heavy vehicle",
+      "Exhaust plumes and flames",
+      "Tablet showing Wayfinder orbital debris simulation",
+      "Spacecraft cupola window frame",
+      "Solar panel array on spacecraft"
+    ],
+    "overview": "A news broadcast covers SpaceX's planned human spaceflight mission over Earth's polar regions, transitioning between news anchors in the studio and footage of rocket launches, crew members, orbital simulations, and space views.",
+    "people": [
+      "Female news anchor with short dark hair, white blouse, and blue skirt holding a folder",
+      "Four crew members (two men, two women) wearing black SpaceX t-shirts standing together outdoors",
+      "Male news anchor wearing eyeglasses, navy blue button-down shirt, patterned tie, and dark trousers holding a folder"
+    ],
+    "scene_context": [
+      "Television news studio with digital skyline backdrop",
+      "Rocket launch facility and orbital space environment"
+    ],
+    "spatial_relations": [
+      "Female presenter stands left of an inset video screen",
+      "Crew members stand shoulder-to-shoulder in a row",
+      "News tickers and program banners run along the bottom of the screen",
+      "Earth visible below through the circular cupola window"
+    ],
+    "spoken_content": [
+      "Hãng SpaceX cho biết họ đang hướng đến phá vỡ giới hạn khi...",
+      "Tàu Dragon của SpaceX dự kiến chở phi hành đoàn 4 người, chỉ huy là doanh nhân Chun Wang...",
+      "Các nhà bảo tồn động vật Chile vừa công bố phát hiện một con hươu Huemul..."
+    ],
+    "uncertainties": [
+      "Exact dates and full names of all individual crew members shown"
+    ],
+    "visible_text": [
+      "HTV9 HD",
+      "06:47:43",
+      "60 giây",
+      "SPEED",
+      "ALTITUDE",
+      "SPACEX",
+      "TÀU VŨ TRỤ CHỞ NGƯỜI ĐẦU TIÊN SẼ BAY QUA CÁC CỰC TRÁI ĐẤT",
+      "WAYFINDER",
+      "STARLINK"
+    ],
+    "visual_attributes": [
+      "Studio backdrop with warm orange sunset glow over city skyscrapers",
+      "Black crew t-shirts with white 'SPACEX' lettering",
+      "White rocket body with black interstage and booster sections",
+      "Bright orange flame and gray smoke during launch",
+      "Curved blue Earth with white clouds seen from space",
+      "Purple plasma glow around rocket fin during high-speed flight"
+    ]
+  },
+  "processing": {
+    "fps": 4.0,
+    "resolution": "high",
+    "type": "static"
+  },
+  "prompt_family": "structured-evidence",
+  "prompt_sha256": "aaa39422ba6d72e25357af6bf583c38bc6a0a13d08cbf30fc2cc688295476dc2",
+  "query_id": "p0_q01",
+  "schema": "shot-caption-response-v0",
+  "started_at_unix": 1789632086.202822,
+  "status": "ok",
+  "uploaded_file": {
+    "mime_type": "video/mp4",
+    "name": "files/5g3vaf5yekbs",
+    "uri": "https://generativelanguage.googleapis.com/v1beta/files/5g3vaf5yekbs"
+  },
+  "usage": {
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 418
+      },
+      {
+        "modality": "video",
+        "tokens": 70265
+      }
+    ],
+    "model_invocation_token_counts": [
+      {
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 839
+          }
+        ],
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 1188
+          },
+          {
+            "modality": "video",
+            "tokens": 70265
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 632
+          }
+        ]
+      }
+    ],
+    "raw_prompt_token": 74378,
+    "total_cached_tokens": 0,
+    "total_input_tokens": 70683,
+    "total_output_tokens": 835,
+    "total_thought_tokens": 632,
+    "total_tokens": 72150,
+    "total_tool_use_tokens": 0
+  }
+}

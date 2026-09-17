@@ -1,0 +1,27 @@
+{
+  "schema": "shot-caption-oracle-evaluation-config-v0",
+  "judge_model": "gemini-3.8-flash",
+  "judge_scope": "frozen-caption text against authoritative query requirements; no caption regeneration",
+  "manual_audit_packets": [
+    {"query_id": "p0_q01", "prompt_family": "dense-natural"},
+    {"query_id": "p0_q01", "prompt_family": "structured-evidence"},
+    {"query_id": "p0_q01", "prompt_family": "structured-temporal"},
+    {"query_id": "p1_q09", "prompt_family": "dense-natural"},
+    {"query_id": "p1_q09", "prompt_family": "structured-evidence"},
+    {"query_id": "p1_q09", "prompt_family": "structured-temporal"},
+    {"query_id": "p2_q25", "prompt_family": "dense-natural"},
+    {"query_id": "p2_q25", "prompt_family": "structured-evidence"},
+    {"query_id": "p2_q25", "prompt_family": "structured-temporal"}
+  ],
+  "prompt_freeze_policy": [
+    "highest_all_requirements_covered_rate",
+    "highest_strict_atomic_recall",
+    "highest_exact_requirement_correctness",
+    "lowest_contradicted_atom_rate",
+    "lowest_reviewable_unsupported_claim_caption_rate",
+    "shortest_average_caption_length",
+    "lexicographic_prompt_family"
+  ],
+  "partial_credit_weight": 0.5,
+  "unsupported_claim_review_scope": "claims directly contradicted by supplied requirements only; other caption claims are unreviewable without clip-level annotation"
+}

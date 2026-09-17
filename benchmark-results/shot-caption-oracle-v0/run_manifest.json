@@ -1,0 +1,193 @@
+{
+  "artifact_inventory": [
+    {
+      "path": "README.md",
+      "sha256": "5fde8959622aca44800cc81e2a50e0810370190095d91eb8d8ef4d6e3e1777de",
+      "size": 5856
+    },
+    {
+      "path": "REPORT.md",
+      "sha256": "b21d85157bf595cd391f59a45cf7ea6f194c4b373a5483ec684336111d816b3e",
+      "size": 3802
+    },
+    {
+      "path": "captions/p0_q01__dense-natural__dd005bed34469ea2.json",
+      "sha256": "93ca204ae622d42a5b9c590afdd9e6f8b72d58efa1c942957370da7f1f155b66",
+      "size": 3180
+    },
+    {
+      "path": "captions/p0_q01__structured-evidence__92fb4a804e93f814.json",
+      "sha256": "969345424e527a16b23aa7db2051e9e5ef028f6fdcbb828c60c35e0c87067f5e",
+      "size": 9024
+    },
+    {
+      "path": "captions/p0_q01__structured-temporal__9bc8034160001e09.json",
+      "sha256": "c8fc95a284b0868246034219f04a6df7c4639937d519a96d5f35e818e0335880",
+      "size": 14624
+    },
+    {
+      "path": "captions/p0_q03__dense-natural__11331d1f429791f7.json",
+      "sha256": "598616c79f2e86dd87adfa56663b6b7bd367afab0d0bd38416906b39a89308bb",
+      "size": 3563
+    },
+    {
+      "path": "captions/p0_q03__structured-evidence__a86a1cd756ae20b3.json",
+      "sha256": "5a8d2b453918a257f7f005b551f821f7d37ce9ab05122f9c4c2f1444583eceb2",
+      "size": 7379
+    },
+    {
+      "path": "captions/p0_q03__structured-temporal__0f37191fd0b2feb3.json",
+      "sha256": "657215be2981f520c7901cad7f109f3c53b4e80b274be0dc705a41fd8f0f3011",
+      "size": 1327
+    },
+    {
+      "path": "captions/p0_q03__structured-temporal__0f37191fd0b2feb3__retry-01.json",
+      "sha256": "b260d67e9902f144109753e8e4a9b9452e8a60793bb6a54fbb37c9708421339f",
+      "size": 5044
+    },
+    {
+      "path": "clips/clips.jsonl",
+      "sha256": "fa83e53e8cde790a2cbdfa43e364b5e9fe486851c825160038f85e483b107c31",
+      "size": 17835
+    },
+    {
+      "path": "code/build_run_archive.py",
+      "sha256": "680ef9f4f1941b5e45fe4e58464d9a7adf989e676701499ba64c6b968d190e01",
+      "size": 5366
+    },
+    {
+      "path": "code/evaluate_caption_sufficiency.py",
+      "sha256": "f7c1f08dece39e1dc6fab3a0ee9427f6c6e7ddf9d588d5b0b64b7e84c6d56df8",
+      "size": 17817
+    },
+    {
+      "path": "code/shot_caption_oracle.py",
+      "sha256": "cb1bae842f92289d440f517ee95406f8b6b6c906ab0e2791c638df89dfbc4943",
+      "size": 23514
+    },
+    {
+      "path": "evaluation_config.json",
+      "sha256": "412d244888e1315c2cf19b87b36069bda51b5aba376e83307c4316ec7ee4d53f",
+      "size": 1352
+    },
+    {
+      "path": "evaluation_inputs/decompositions_113.jsonl",
+      "sha256": "9b061e659a94fd3e99fb2f25b5cc094a6f1f52226e8e691d47c675984a110060",
+      "size": 147354
+    },
+    {
+      "path": "oracle_manifest.jsonl",
+      "sha256": "325f11031a3610684655dfce6bf2da3d92281d654e822d05e50d3dc2cbfd464e",
+      "size": 20409
+    },
+    {
+      "path": "oracle_manifest.summary.json",
+      "sha256": "6e51c94187faececf6bcb8fc85c0c852593be3e945caab5c7c6e8c54164ae6e5",
+      "size": 713
+    },
+    {
+      "path": "pilot_config.json",
+      "sha256": "e2f3491f0908aea1aa8c5c04cc73f8e313d4227d7e7ab6a498413b3fb8772e66",
+      "size": 2572
+    },
+    {
+      "path": "prompts/dense-natural.txt",
+      "sha256": "e2992b0b626a29f1d8fe731fb436dedd2c9e45ed72771039060d79fcfdd04754",
+      "size": 1474
+    },
+    {
+      "path": "prompts/structured-evidence.txt",
+      "sha256": "e4e61f2e51d1b3532dd8cdca555390d2f4d125ffd201cbd46af40e73e3a456a5",
+      "size": 1938
+    },
+    {
+      "path": "prompts/structured-temporal.txt",
+      "sha256": "504e226e9357430cf687d26f0a97b61559a16ed72eabda2aa5249c9d74b7c0b7",
+      "size": 2555
+    },
+    {
+      "path": "requirements.txt",
+      "sha256": "d684bfac368f05a6ae3fff510df00b0532338e2af9e476b40cb411520bc9973d",
+      "size": 21
+    }
+  ],
+  "authority": {
+    "decomposition_blob": "caf0a7b30a275b9ed47cab354fbb21bda00bf899",
+    "decomposition_commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "decomposition_sha256": "9b061e659a94fd3e99fb2f25b5cc094a6f1f52226e8e691d47c675984a110060",
+    "truth_sha256": "f29dbe929e61b2fa87947d2d824587752dbfae0d2a6b9d26de91297908f97c38"
+  },
+  "commands": [
+    "python benchmark-results/shot-caption-oracle-v0/code/shot_caption_oracle.py build-manifest",
+    "python benchmark-results/shot-caption-oracle-v0/code/shot_caption_oracle.py extract-clips --dataset-root D:\\Official-Dataset",
+    ".\\.venv-issue95\\Scripts\\python.exe benchmark-results/shot-caption-oracle-v0/code/shot_caption_oracle.py caption --prompt all --model gemini-3.8-flash --fps 4 --resolution high --stop-on-error"
+  ],
+  "environment": {
+    "ffmpeg": "ffmpeg version 8.1.2-full_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers",
+    "google_genai": "2.24.0",
+    "python": "3.12.1"
+  },
+  "frozen_caption_config": {
+    "fps": 4.0,
+    "mode": "static",
+    "model": "gemini-3.8-flash",
+    "prompt_families": [
+      "dense-natural",
+      "structured-evidence",
+      "structured-temporal"
+    ],
+    "resolution": "high",
+    "window": "oracle_union_interval"
+  },
+  "generated_at_utc": "2026-09-17T08:21:05.255148+00:00",
+  "git": {
+    "branch": "local/issue-95-gemini-shot-caption-oracle",
+    "head": "471df5489eb395333ee8f509e84015c0ba405fa3"
+  },
+  "resume_command": ".\\.venv-issue95\\Scripts\\python.exe benchmark-results/shot-caption-oracle-v0/code/shot_caption_oracle.py caption --prompt all --model gemini-3.8-flash --fps 4 --resolution high --stop-on-error",
+  "schema": "shot-caption-oracle-run-manifest-v0",
+  "stages": {
+    "captions": {
+      "error_record_count": 2,
+      "errors": [
+        {
+          "attempt_count": 0,
+          "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.8-flash\\nPlease retry in 16.465429318s.', 'code': 'too_many_requests'}}",
+          "error_type": "RateLimitError",
+          "file": "p0_q03__structured-temporal__0f37191fd0b2feb3.json",
+          "prompt_family": "structured-temporal",
+          "query_id": "p0_q03"
+        },
+        {
+          "attempt_count": 6,
+          "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.8-flash\\nPlease retry in 14.437696155s.', 'code': 'too_many_requests'}}",
+          "error_type": "RateLimitError",
+          "file": "p0_q03__structured-temporal__0f37191fd0b2feb3__retry-01.json",
+          "prompt_family": "structured-temporal",
+          "query_id": "p0_q03"
+        }
+      ],
+      "planned": 84,
+      "successful_unique_cache_entries": 5
+    },
+    "clips": {
+      "count": 28,
+      "total_bytes": 380423946,
+      "unique_clip_sha256": 28,
+      "unique_source_sha256": 27
+    },
+    "evaluation": {
+      "status": "not_started_incomplete_caption_freeze"
+    },
+    "manifest": {
+      "eligible_count": 28,
+      "ineligible": {
+        "p3_q12": "no_legitimate_interval_with_seconds",
+        "p3_q29": "no_legitimate_interval_with_seconds"
+      },
+      "pilot_count": 30
+    }
+  },
+  "stop_condition": "current Gemini account quota rejects remaining gemini-3.8-flash interactions with HTTP 429 free-tier request limit 20",
+  "tracker": "JimmyK300/Vecna#95"
+}

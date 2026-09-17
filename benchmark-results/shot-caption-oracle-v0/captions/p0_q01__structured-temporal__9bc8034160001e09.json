@@ -1,0 +1,215 @@
+{
+  "cache_key": "9bc8034160001e09cbc84806a529afcefb66315f8023f8689f171bed8063a85c",
+  "caption_model_received_query_text": false,
+  "clip_path": "C:\\Users\\minhc\\Code\\Vecna-issue95-local\\benchmark-results\\shot-caption-oracle-v0\\clips\\p0_q01__L21_V015__840.000-905.000.mp4",
+  "clip_sha256": "43df57e3ae13e04093ab40801f023fe5367aa729b81f5b12e7449ff235315609",
+  "elapsed_s": 41.77460336685181,
+  "interaction_id": "v1_ChdzNTZyYXFyY1BMckZnOFVQMWVfMDZBWRIXczU2cmFxcmNQTHJGZzhVUDFlXzA2QVk",
+  "model": "gemini-3.8-flash",
+  "output_text": "```json\n{\n  \"overview\": \"A news segment displays computer graphics of Earth orbit tracking (Wayfinder), views of Earth from spacecraft windows, orbital imagery, and footage of SpaceX Starship during flight and atmospheric entry while a Vietnamese voiceover details an upcoming Dragon mission.\",\n  \"start_state\": [\n    \"A digital simulation labeled 'WAYFINDER' displays Earth enveloped in orbits of tracked space objects.\",\n    \"A Vietnamese male voiceover describes the planned orbital flight parameters.\"\n  ],\n  \"timeline\": [\n    {\"relative_time\": \"00:36.500 - 00:38.500\", \"event\": \"Earth orbit tracking interface 'WAYFINDER' shows dense orbits and satellite clusters around the globe.\", \"evidence\": \"Digital globe surrounded by white and teal data points with watch readout at lower left.\", \"uncertainty\": \"none\"},\n    {\"relative_time\": \"00:38.500 - 00:39.750\", \"event\": \"Screen switches to a regional map tracking Starlink satellites over the UK and Western Europe.\", \"evidence\": \"Labels like 'STARLINK 31492' and 'STARLINK 3282' overlaid on land masses.\", \"uncertainty\": \"none\"},\n    {\"relative_time\": \"00:39.750 - 00:43.700\", \"event\": \"Interior view through a multi-pane cupola window of a spacecraft looking down at Earth.\", \"evidence\": \"Circular central window surrounded by trapezoidal panes showing blue ocean and white cloud cover.\", \"uncertainty\": \"none\"},\n    {\"relative_time\": \"00:43.700 - 00:46.750\", \"event\": \"Orbital footage shows Earth's horizon, swirling clouds, and a solar panel edge.\", \"evidence\": \"Curvature of the planet against black space, solar array structure on the left.\", \"uncertainty\": \"none\"},\n    {\"relative_time\": \"00:46.750 - 00:49.250\", \"event\": \"Exterior camera on Starship looks along its fuselage and grid flap against the blackness of space.\", \"evidence\": \"Black heat shield tiles and metal fuselage with telemetric speed and altitude readouts.\", \"uncertainty\": \"none\"},\n    {\"relative_time\": \"00:49.250 - 00:50.500\", \"event\": \"Rendered graphic of Starship firing thrusters over Earth.\", \"evidence\": \"Animated Starship model ascending over illuminated planetary horizon.\", \"uncertainty\": \"none\"},\n    {\"relative_time\": \"00:50.500 - 00:52.500\", \"event\": \"Onboard Starlink feed captures atmospheric reentry with purple plasma glowing around the flap.\", \"evidence\": \"Intense magenta/violet plasma glow enveloping the control surface, 'VIEWS BY STARLINK' watermark.\", \"uncertainty\": \"none\"}\n  ],\n  \"end_state\": [\n    \"Footage displays Starship's flap glowing amidst purple reentry plasma with telemetry showing speed over 26,000 km/h and altitude around 71 km.\",\n    \"Voiceover discusses aurora observations over polar regions.\"\n  ],\n  \"state_changes\": [\n    \"Visual transitions from orbital tracking graphics to spacecraft cupola view, orbital landscape, and Starship flight/reentry footage.\"\n  ],\n  \"transient_events\": [\n    \"Cut from Wayfinder globe to regional Starlink tracker at 00:38.500.\",\n    \"Cut to cupola window looking at Earth at 00:39.750.\",\n    \"Cut to exterior view of Earth with solar array at 00:43.700.\",\n    \"Cut to Starship onboard camera in space at 00:46.750.\",\n    \"Cut to animated rendering of Starship at 00:49.250.\",\n    \"Cut to live plasma reentry onboard view at 00:50.500.\"\n  ],\n  \"people\": [],\n  \"objects\": [\n    \"Wayfinder orbital tracker display\",\n    \"Spacecraft cupola window frame\",\n    \"Solar panel edge\",\n    \"SpaceX Starship vehicle (tiles, flap, hull)\",\n    \"Earth (oceans, continents, cloud layers)\"\n  ],\n  \"actions\": [\n    \"Satellites and space debris orbiting in simulation\",\n    \"Spacecraft orbiting Earth\",\n    \"Starship flying through space and entering atmosphere generating plasma\"\n  ],\n  \"visual_attributes\": [\n    \"Green and white orbit paths on dark background\",\n    \"Dark interior frame with bright blue and white Earth outside cupola\",\n    \"Black hexagonal heat shield tiles on Starship\",\n    \"Vibrant purple and violet reentry plasma glow\"\n  ],\n  \"counts\": [\n    \"1 cupola window structure with 1 large central circular pane and surrounding trapezoidal panes\",\n    \"1 visible Starship flap in reentry shot\"\n  ],\n  \"spatial_relations\": [\n    \"Solar array on the far left of the frame at 00:43.750\",\n    \"Starship flap protruding from the upper hull on the left side during reentry\"\n  ],\n  \"visible_text\": [\n    \"WAYFINDER\",\n    \"HTV9 HD\",\n    \"06:48:20\",\n    \"06:48:35\",\n    \"VIEWS BY STARLINK\",\n    \"SPEED 26415 KM/H\",\n    \"ALTITUDE 71 KM\",\n    \"STARLINK 31492\",\n    \"STARLINK 3282\",\n    \"STARLINK 3941\"\n  ],\n  \"spoken_content\": [\n    \"Với các chuyến bay tới, tàu Dragon trang bị vòm quan sát sẽ bay ở độ cao 425 đến 450 km. Phi hành đoàn dự định tiến hành các nghiên cứu như chụp ảnh X-quang trong không gian và nghiên cứu hiện tượng ánh sáng cực quang ở vùng cực này.\"\n  ],\n  \"fine_grained_details\": [\n    \"Wayfinder application tracks orbital objects around Earth\",\n    \"Starship telemetry displays hypersonic speeds above 26,000 km/h during reentry\",\n    \"Starlink-provided high-definition downlink feed during plasma heating phase\"\n  ],\n  \"scene_context\": [\n    \"Television news broadcast covering space exploration, featuring satellite tracking graphics and SpaceX mission footage.\"\n  ],\n  \"camera\": [\n    \"Digital interface screen recording\",\n    \"Fixed interior camera looking out cupola window\",\n    \"Fixed onboard exterior cameras mounted on spacecraft and Starship hull\"\n  ],\n  \"uncertainties\": [\n    \"Specific mission designations for the cupola and orbital b-roll footage are not explicitly identified in the broadcast graphics.\"\n  ]\n}\n```",
+  "parsed_json": {
+    "actions": [
+      "Satellites and space debris orbiting in simulation",
+      "Spacecraft orbiting Earth",
+      "Starship flying through space and entering atmosphere generating plasma"
+    ],
+    "camera": [
+      "Digital interface screen recording",
+      "Fixed interior camera looking out cupola window",
+      "Fixed onboard exterior cameras mounted on spacecraft and Starship hull"
+    ],
+    "counts": [
+      "1 cupola window structure with 1 large central circular pane and surrounding trapezoidal panes",
+      "1 visible Starship flap in reentry shot"
+    ],
+    "end_state": [
+      "Footage displays Starship's flap glowing amidst purple reentry plasma with telemetry showing speed over 26,000 km/h and altitude around 71 km.",
+      "Voiceover discusses aurora observations over polar regions."
+    ],
+    "fine_grained_details": [
+      "Wayfinder application tracks orbital objects around Earth",
+      "Starship telemetry displays hypersonic speeds above 26,000 km/h during reentry",
+      "Starlink-provided high-definition downlink feed during plasma heating phase"
+    ],
+    "objects": [
+      "Wayfinder orbital tracker display",
+      "Spacecraft cupola window frame",
+      "Solar panel edge",
+      "SpaceX Starship vehicle (tiles, flap, hull)",
+      "Earth (oceans, continents, cloud layers)"
+    ],
+    "overview": "A news segment displays computer graphics of Earth orbit tracking (Wayfinder), views of Earth from spacecraft windows, orbital imagery, and footage of SpaceX Starship during flight and atmospheric entry while a Vietnamese voiceover details an upcoming Dragon mission.",
+    "people": [],
+    "scene_context": [
+      "Television news broadcast covering space exploration, featuring satellite tracking graphics and SpaceX mission footage."
+    ],
+    "spatial_relations": [
+      "Solar array on the far left of the frame at 00:43.750",
+      "Starship flap protruding from the upper hull on the left side during reentry"
+    ],
+    "spoken_content": [
+      "Với các chuyến bay tới, tàu Dragon trang bị vòm quan sát sẽ bay ở độ cao 425 đến 450 km. Phi hành đoàn dự định tiến hành các nghiên cứu như chụp ảnh X-quang trong không gian và nghiên cứu hiện tượng ánh sáng cực quang ở vùng cực này."
+    ],
+    "start_state": [
+      "A digital simulation labeled 'WAYFINDER' displays Earth enveloped in orbits of tracked space objects.",
+      "A Vietnamese male voiceover describes the planned orbital flight parameters."
+    ],
+    "state_changes": [
+      "Visual transitions from orbital tracking graphics to spacecraft cupola view, orbital landscape, and Starship flight/reentry footage."
+    ],
+    "timeline": [
+      {
+        "event": "Earth orbit tracking interface 'WAYFINDER' shows dense orbits and satellite clusters around the globe.",
+        "evidence": "Digital globe surrounded by white and teal data points with watch readout at lower left.",
+        "relative_time": "00:36.500 - 00:38.500",
+        "uncertainty": "none"
+      },
+      {
+        "event": "Screen switches to a regional map tracking Starlink satellites over the UK and Western Europe.",
+        "evidence": "Labels like 'STARLINK 31492' and 'STARLINK 3282' overlaid on land masses.",
+        "relative_time": "00:38.500 - 00:39.750",
+        "uncertainty": "none"
+      },
+      {
+        "event": "Interior view through a multi-pane cupola window of a spacecraft looking down at Earth.",
+        "evidence": "Circular central window surrounded by trapezoidal panes showing blue ocean and white cloud cover.",
+        "relative_time": "00:39.750 - 00:43.700",
+        "uncertainty": "none"
+      },
+      {
+        "event": "Orbital footage shows Earth's horizon, swirling clouds, and a solar panel edge.",
+        "evidence": "Curvature of the planet against black space, solar array structure on the left.",
+        "relative_time": "00:43.700 - 00:46.750",
+        "uncertainty": "none"
+      },
+      {
+        "event": "Exterior camera on Starship looks along its fuselage and grid flap against the blackness of space.",
+        "evidence": "Black heat shield tiles and metal fuselage with telemetric speed and altitude readouts.",
+        "relative_time": "00:46.750 - 00:49.250",
+        "uncertainty": "none"
+      },
+      {
+        "event": "Rendered graphic of Starship firing thrusters over Earth.",
+        "evidence": "Animated Starship model ascending over illuminated planetary horizon.",
+        "relative_time": "00:49.250 - 00:50.500",
+        "uncertainty": "none"
+      },
+      {
+        "event": "Onboard Starlink feed captures atmospheric reentry with purple plasma glowing around the flap.",
+        "evidence": "Intense magenta/violet plasma glow enveloping the control surface, 'VIEWS BY STARLINK' watermark.",
+        "relative_time": "00:50.500 - 00:52.500",
+        "uncertainty": "none"
+      }
+    ],
+    "transient_events": [
+      "Cut from Wayfinder globe to regional Starlink tracker at 00:38.500.",
+      "Cut to cupola window looking at Earth at 00:39.750.",
+      "Cut to exterior view of Earth with solar array at 00:43.700.",
+      "Cut to Starship onboard camera in space at 00:46.750.",
+      "Cut to animated rendering of Starship at 00:49.250.",
+      "Cut to live plasma reentry onboard view at 00:50.500."
+    ],
+    "uncertainties": [
+      "Specific mission designations for the cupola and orbital b-roll footage are not explicitly identified in the broadcast graphics."
+    ],
+    "visible_text": [
+      "WAYFINDER",
+      "HTV9 HD",
+      "06:48:20",
+      "06:48:35",
+      "VIEWS BY STARLINK",
+      "SPEED 26415 KM/H",
+      "ALTITUDE 71 KM",
+      "STARLINK 31492",
+      "STARLINK 3282",
+      "STARLINK 3941"
+    ],
+    "visual_attributes": [
+      "Green and white orbit paths on dark background",
+      "Dark interior frame with bright blue and white Earth outside cupola",
+      "Black hexagonal heat shield tiles on Starship",
+      "Vibrant purple and violet reentry plasma glow"
+    ]
+  },
+  "processing": {
+    "fps": 4.0,
+    "resolution": "high",
+    "type": "static"
+  },
+  "prompt_family": "structured-temporal",
+  "prompt_sha256": "ea92647fe2b7ae94e935b58a3a0189890f208b4583b5616040160428163f3563",
+  "query_id": "p0_q01",
+  "schema": "shot-caption-response-v0",
+  "started_at_unix": 1789632140.713634,
+  "status": "ok",
+  "uploaded_file": {
+    "mime_type": "video/mp4",
+    "name": "files/5g3vaf5yekbs",
+    "uri": "https://generativelanguage.googleapis.com/v1beta/files/5g3vaf5yekbs"
+  },
+  "usage": {
+    "cached_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 533
+      },
+      {
+        "modality": "video",
+        "tokens": 65645
+      }
+    ],
+    "input_tokens_by_modality": [
+      {
+        "modality": "video",
+        "tokens": 70265
+      },
+      {
+        "modality": "text",
+        "tokens": 571
+      }
+    ],
+    "model_invocation_token_counts": [
+      {
+        "cache_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 1341
+          },
+          {
+            "modality": "video",
+            "tokens": 65645
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 1559
+          }
+        ],
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 1341
+          },
+          {
+            "modality": "video",
+            "tokens": 70265
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 692
+          }
+        ]
+      }
+    ],
+    "raw_prompt_token": 74531,
+    "total_cached_tokens": 66178,
+    "total_input_tokens": 70836,
+    "total_output_tokens": 1555,
+    "total_thought_tokens": 692,
+    "total_tokens": 73083,
+    "total_tool_use_tokens": 0
+  }
+}
