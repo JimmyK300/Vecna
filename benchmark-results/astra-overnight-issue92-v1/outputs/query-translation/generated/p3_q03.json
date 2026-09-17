@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q03",
+  "canonical_sha256": "20dde95936a6022adfcc92a1889c4439df7e8a4e9f4109882da42c3f5a37c618",
+  "texts": [
+    "Người đầu bếp lần lượt cho nhiều loại nguyên liệu vào một nồi nước dùng đang sôi.\nĐầu tiên, một loại rau củ màu cam được cho vào nồi.\nSau đó, một loại nguyên liệu dạng ống nhỏ được đổ từ đĩa vào nồi.\nTiếp theo, các loại rau củ và nấm được cho vào, gồm những miếng màu xanh và các lát nấm màu nâu.\nCuối cùng, một đĩa thịt đã cắt thành từng miếng mỏng được đổ vào nồi để nấu cùng các nguyên liệu trước đó.",
+    "The cook puts a variety of ingredients into a boiling pot of water, first of all, a kind of orange vegetable that was put into the pot, and then, after that, a small tube material was poured out of the dish into the pot, and then, the vegetables and mushrooms were added, including blue pieces and brown mushrooms, and finally, a plate of meat that had been cut into thin pieces was poured into the pot to cook with the earlier ingredients.",
+    "The cook puts a variety of ingredients into a boiling pot of water, first of all, a kind of orange vegetable that was put into the pot, and then, after that, a small tube material was poured out of the dish into the pot, and then, the vegetables and mushrooms were added, including blue pieces and brown mushrooms, and finally, a plate of meat that had been cut into thin pieces was poured into the pot to cook with the other ingredients."
+  ],
+  "input_tokens": 100,
+  "status": "translated",
+  "generation_wall_ns": 2295178200
+}

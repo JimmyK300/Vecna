@@ -1,0 +1,58 @@
+{
+  "new-tests": {
+    "argv": [
+      "C:\\Users\\minhc\\Code\\Vecna\\.venv\\Scripts\\python.exe",
+      "-X",
+      "utf8",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "benchmark-results\\astra-overnight-issue92-v1\\code",
+      "-p",
+      "test_*.py"
+    ],
+    "returncode": 0
+  },
+  "inherited-fusion-tests": {
+    "argv": [
+      "C:\\Users\\minhc\\Code\\Vecna\\.venv\\Scripts\\python.exe",
+      "-X",
+      "utf8",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "benchmark-results\\astra-retrieval-rd-v1\\tests",
+      "-p",
+      "test_fusion*.py"
+    ],
+    "returncode": 0
+  },
+  "inherited-ledger-tests": {
+    "argv": [
+      "C:\\Users\\minhc\\Code\\Vecna\\.venv\\Scripts\\python.exe",
+      "-X",
+      "utf8",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "benchmark-results\\astra-retrieval-rd-v1\\tests",
+      "-p",
+      "test_failure_ledger.py"
+    ],
+    "returncode": 0
+  },
+  "git-diff-check": {
+    "argv": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "returncode": 0
+  }
+}

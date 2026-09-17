@@ -1,0 +1,12 @@
+{
+  "query_id": "p1_q11",
+  "canonical_sha256": "9f4b16307a2cf0a2991052bb10eb6ca831d177e38a410841b0136ab54c8f3c3f",
+  "texts": [
+    "Một người đứng dưới nước và rọi đèn. Tiếp theo là cảnh người này kéo lưới cá lúc bình minh, sau đó được một nhóm người khác tiến đến dùng máy quay ghi hình.",
+    "One man stood in the water and lit a light, and the next was this man pulling a net at dawn, and then another group approached him with a camera.",
+    "One person stood in the water and lit a light, and the next was this man pulling a net at dawn, and then another group approached him with a camera."
+  ],
+  "input_tokens": 38,
+  "status": "translated",
+  "generation_wall_ns": 824469200
+}

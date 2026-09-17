@@ -1,0 +1,12 @@
+{
+  "query_id": "p0_q16",
+  "canonical_sha256": "a47c17431a5ab2c1e0645215b843735f46737675b99b354a84b1b02d3cd82b2e",
+  "texts": [
+    "Đoạn clip về 1 thị trấn ven biển thu hút du khách hiếu kỳ nhờ 1 loài động vật biển nguy hiểm. Loài động vật này nổi tiếng trong 1 bộ phim của đạo diễn Steven Spielberg được sản xuất vào năm 1975",
+    "The clip of a coastal town attracts curious visitors through a dangerous sea animal, a species known for a film by Steven Spielberg, who was produced in 1975.",
+    "The clip of a coastal town attracts curious visitors through a dangerous sea animal, a species known for a film by Steven Spielberg in 1975."
+  ],
+  "input_tokens": 47,
+  "status": "translated",
+  "generation_wall_ns": 971942900
+}

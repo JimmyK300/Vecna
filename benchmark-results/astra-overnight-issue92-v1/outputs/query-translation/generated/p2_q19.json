@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q19",
+  "canonical_sha256": "cd5b47a6e3ea74fcd490a89b88693a9b127714ac5c99b393b8d7f7f7e0f9ccf1",
+  "texts": [
+    "Đây là một đoạn trong bài giảng. Trên slide bao gồm:\n- Một nhóm nhân vật người 3D màu trắng vây quanh một nhân vật màu đỏ ở chính giữa.\n- Hai nhân vật hoạt hình nam đang trong tư thế thi đấu kéo co, đối đầu nhau với sợi dây thừng.\n\n## Question Answering (Q&A)",
+    "Here's a piece from the presentation.",
+    "Here's a paragraph in the lecture."
+  ],
+  "input_tokens": 72,
+  "status": "translated",
+  "generation_wall_ns": 266083100
+}

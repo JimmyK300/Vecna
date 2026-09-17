@@ -1,0 +1,67 @@
+{
+  "status": "passed",
+  "queries": 115,
+  "scored": 113,
+  "policy_and_detection_hashes": true,
+  "independent_order_replay": true,
+  "metrics": {
+    "control": {
+      "queries": 113,
+      "metrics": {
+        "R@1": {
+          "mean": 0.4336283185840708,
+          "sum": 49.0
+        },
+        "R@5": {
+          "mean": 0.6814159292035398,
+          "sum": 77.0
+        },
+        "R@10": {
+          "mean": 0.7522123893805309,
+          "sum": 85.0
+        },
+        "R@20": {
+          "mean": 0.7964601769911505,
+          "sum": 90.0
+        },
+        "MRR@20": {
+          "mean": 0.5406434596816525,
+          "sum": 61.092710944026734
+        }
+      },
+      "median_correct_rank_observed_within20": 1.0,
+      "median_correct_rank_observed_in_retained_list": 1.0,
+      "unobserved_in_retained_list": 19,
+      "unobserved_within20": 23
+    },
+    "object_rank": {
+      "queries": 113,
+      "metrics": {
+        "R@1": {
+          "mean": 0.4336283185840708,
+          "sum": 49.0
+        },
+        "R@5": {
+          "mean": 0.6814159292035398,
+          "sum": 77.0
+        },
+        "R@10": {
+          "mean": 0.7522123893805309,
+          "sum": 85.0
+        },
+        "R@20": {
+          "mean": 0.7964601769911505,
+          "sum": 90.0
+        },
+        "MRR@20": {
+          "mean": 0.5406434596816525,
+          "sum": 61.092710944026734
+        }
+      },
+      "median_correct_rank_observed_within20": 1.0,
+      "median_correct_rank_observed_in_retained_list": 1.0,
+      "unobserved_in_retained_list": 19,
+      "unobserved_within20": 23
+    }
+  }
+}

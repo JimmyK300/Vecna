@@ -1,0 +1,12 @@
+{
+  "query_id": "p0_q04",
+  "canonical_sha256": "5d18734b2308be9500cb463cf10319d9f5a1a65fb212d2c946d13efd5bf0aff1",
+  "texts": [
+    "Đoạn clip cần tìm bắt đầu bằng cảnh 1 người đầu bếp đặt đang đặt món gỏi cuốn chay bày trên đĩa, nhân gồm rau xanh cuộn tròn và đậu hũ, gói trong bánh tráng màu vàng và tím. Đĩa được trang trí thêm lá xanh và hoa pansy tím-vàng, tạo cảm giác thanh mát và tinh tế.",
+    "The clip we're looking for begins with the scene where a cook is putting a vegetarian roll on his plate, multiplied with green vegetables rolled and soybeans, wrapped in yellow and purple cookies, and the plate is decorated with green leaves and purple pansy-gold pansy flowers, which create a cool and delicate feeling.",
+    "The clip we're looking for begins with the scene where a cook is putting a vegetarian roll on his plate, multiplied with green vegetables rolled and soybeans, wrapped in yellow and purple cookies, and the plate is decorated with green leaves and purple pansy-gold pansy-gold flowers, which create a cool and delicate feeling."
+  ],
+  "input_tokens": 67,
+  "status": "translated",
+  "generation_wall_ns": 1697743800
+}

@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q20",
+  "canonical_sha256": "928e3e61d6f9c930d27758fe918f8a83a8c79c22aea567874579fcd6f11cf091",
+  "texts": [
+    "Đoạn clip được quay từ bên trong một chiếc xe ô tô tự lái, có thể thấy rõ vô lăng được xoay để chiếc xe rẽ sang phải. Sau đó, góc quay chuyển ra ngoài, bắt trọn cảnh chiếc xe màu trắng rẽ trái, và ở góc trên khung hình có một dưới một biển hiệu đỏ gồm 6 ký tự chữ Hán. Con số được viết trên phần hông xe màu trắng là số mấy?",
+    "The clip is shot from inside a self-driving car, which can clearly be seen as the wheel is turned to the right, and then the angle turns to the outside, where the whole white car turns to the left, and in the upper corner of the frame there's a red sign with six Han characters on it, what's the number on the white side?",
+    "The clip is shot from inside a self-driving car, which can clearly be seen as the wheel is turned to the right, and then the angle turns to the outside, where the entire white car turns to the left, and in the upper corner of the frame there's a red sign with six Han characters on it, what's the number on the white side?"
+  ],
+  "input_tokens": 85,
+  "status": "translated",
+  "generation_wall_ns": 1955754400
+}

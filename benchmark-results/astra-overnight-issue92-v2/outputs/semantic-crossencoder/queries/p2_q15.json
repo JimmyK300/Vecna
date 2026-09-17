@@ -1,0 +1,104 @@
+{
+  "query_id": "p2_q15",
+  "query_text_sha256": "0f5cc5fa90085ab6d4c133f959d6086b4e68fd5131e4aa330a4acbf9553a4070",
+  "policy_sha256": "1fc8828282ff85a215e0b6ff72abd915ae09feaf5fb9222cb45cd526f88d533b",
+  "chosen": [
+    {
+      "video_id": "L25_V060",
+      "record_index": 2030,
+      "dense_score": 0.5913830995559692
+    },
+    {
+      "video_id": "L25_V024",
+      "record_index": 1780,
+      "dense_score": 0.5046396851539612
+    },
+    {
+      "video_id": "L22_V005",
+      "record_index": 1028,
+      "dense_score": 0.4487876296043396
+    },
+    {
+      "video_id": "L27_V008",
+      "record_index": 2722,
+      "dense_score": 0.35188546776771545
+    },
+    {
+      "video_id": "L30_V040",
+      "record_index": 2899,
+      "dense_score": 0.2699625790119171
+    },
+    {
+      "video_id": "L27_V009",
+      "record_index": 2726,
+      "dense_score": 0.3529507517814636
+    },
+    {
+      "video_id": "L28_V022",
+      "record_index": 2828,
+      "dense_score": 0.4311099052429199
+    },
+    {
+      "video_id": "L21_V016",
+      "record_index": 473,
+      "dense_score": 0.40392088890075684
+    },
+    {
+      "video_id": "L21_V029",
+      "record_index": 841,
+      "dense_score": 0.4631112813949585
+    },
+    {
+      "video_id": "L27_V011",
+      "record_index": 2732,
+      "dense_score": 0.3673889935016632
+    },
+    {
+      "video_id": "L27_V010",
+      "record_index": 2730,
+      "dense_score": 0.38848692178726196
+    },
+    {
+      "video_id": "L25_V007",
+      "record_index": 1674,
+      "dense_score": 0.5351477265357971
+    },
+    {
+      "video_id": "L25_V016",
+      "record_index": 1729,
+      "dense_score": 0.5002215504646301
+    }
+  ],
+  "logits": [
+    -0.2691424489021301,
+    -4.674880027770996,
+    -10.739418029785156,
+    -8.386770248413086,
+    -8.923812866210938,
+    -10.276488304138184,
+    -8.280875205993652,
+    -10.593852996826172,
+    -9.594985961914062,
+    -9.812660217285156,
+    -6.090749740600586,
+    -1.458321452140808,
+    -2.342072010040283
+  ],
+  "token_counts": [
+    132,
+    179,
+    183,
+    328,
+    224,
+    512,
+    410,
+    200,
+    248,
+    511,
+    494,
+    168,
+    165
+  ],
+  "truncated_pairs": 0,
+  "wall_ns": 11113502300
+}

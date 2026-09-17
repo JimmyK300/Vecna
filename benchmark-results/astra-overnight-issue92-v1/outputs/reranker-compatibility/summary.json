@@ -1,0 +1,10 @@
+{
+  "verdict": "INCONCLUSIVE",
+  "executed": false,
+  "reason": "Historical top20 retained scores do not establish matched scores over fresh fused top10/top20. No censored scores invented; no historical fusion sweep repeated.",
+  "same_ordered_pool_queries": 0,
+  "all_top10_scores_present_queries": 2,
+  "all_top20_scores_present_queries": 0,
+  "input_sha256": "4e949d95916c9fed7b11327ace67e207eb9238bb9f3beb4e66ff4873cb3ec8be",
+  "new_inference_calls": 0
+}

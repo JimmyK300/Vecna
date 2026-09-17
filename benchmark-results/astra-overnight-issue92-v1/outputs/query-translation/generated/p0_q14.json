@@ -1,0 +1,12 @@
+{
+  "query_id": "p0_q14",
+  "canonical_sha256": "58b9e0ca47ac24717e151848f891181372fca57771805a8ab4b1c43706e59056",
+  "texts": [
+    "Trên đĩa tròn màu trắng có 1 ly panna cotta. Có một bàn tay lần lượt đặt thêm 2 ly panna cotta nữa vào đĩa.\nMỗi ly panna cotta có lớp kem mịn màu trắng ngà, bên trên trang trí vài lát nho đỏ, thêm lá bạc hà xanh tạo điểm nhấn tươi mát.\nBên cạnh trên đĩa còn có hai bông hoa ăn được (màu đỏ và vàng) để tăng phần đẹp mắt.",
+    "On a white round dish with a panna cotta, one hand at a time put another two panna cotta glasses on a plate, each of the panna cotta glasses with a smooth, ivory cream, on top of a few slices of red grape, plus a blue mint, which is a cool touch point, and on the plate there are two flowers that can be eaten (Relt and yellow) to make it look good.",
+    "On a white round dish with a panna cotta, one hand at a time put another two panna cotta glasses on a plate, each of the panna cotta glasses with a smooth, ivory cream, on top of a few slices of red grape, with a blue mint, which is a cool touch point, and on the plate there are two flowers that can be eaten (Relt and yellow) to make it look good."
+  ],
+  "input_tokens": 89,
+  "status": "translated",
+  "generation_wall_ns": 2242768000
+}

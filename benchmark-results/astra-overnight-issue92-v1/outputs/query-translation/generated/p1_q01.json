@@ -1,0 +1,12 @@
+{
+  "query_id": "p1_q01",
+  "canonical_sha256": "1579455bb7f5b2138e7887f3f7bb401951ddc74e44f72adfa72843ff1ddd453d",
+  "texts": [
+    "Cảnh quay một nhóm hơn 5 người xếp thành hàng tập thể dục, cùng thực hiện động tác hai tay chạm mũi chân. Trong nhóm chỉ có một người đeo kính và ba người đội nón có màu đỏ.",
+    "The scene of a group of more than five people lined up in a line of exercise, doing the same two-fingered touch of the leg, in a group of only one person wearing glasses, and three people wearing a red hat.",
+    "The scene of a group of more than five people lined up in a line of exercise, doing the same two-fingered touch of the leg, in the group of only one person wearing glasses, and three people wearing a red hat."
+  ],
+  "input_tokens": 43,
+  "status": "translated",
+  "generation_wall_ns": 1146333100
+}

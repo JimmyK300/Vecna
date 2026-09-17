@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q13",
+  "canonical_sha256": "72fd12ba3dc6d0bde416abc4046cdd82c0ca4b058653503bbcf2f1da07548e20",
+  "texts": [
+    "Sân khấu với dòng chữ nổi 3D to, ánh kim phủ kim tuyến có nội dung: “SẮC CỔ ...” đặt ở mép trước sân khấu.",
+    "The stage is marked with a large 3D Braille sign, a metal - covered metal beam that contains the contents: “SYRIA... is located at the edge of the front of the stage.",
+    "The stage is marked with a large 3D Braille sign, a metal - covered metal beam that contains the contents: “SYRIA... is located on the front edge of the stage."
+  ],
+  "input_tokens": 34,
+  "status": "translated",
+  "generation_wall_ns": 891493900
+}

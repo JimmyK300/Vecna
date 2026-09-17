@@ -1,0 +1,12 @@
+{
+  "query_id": "p1_q24",
+  "canonical_sha256": "1b65416d6492c725def2006102e216a8cd446a38217606e5d490fc51f63f8b9b",
+  "texts": [
+    "Đoạn clip mô tả hậu quả của hiện tượng sạt lở đất nghiêm trọng, đất đá tràn xuống gây tắc nghẽn hoàn toàn một đoạn đường đèo. Trong một cảnh quay cận, có thể thấy một cột mốc đường bộ với phần đỉnh màu đỏ chỉ còn lộ ra phần trên, phần lớn đã bị đất đá vùi lấp. Ở cảnh quay cuối, một người đi xe máy đang vật lộn để điều khiển phương tiện vượt qua khu vực bùn lầy, trên chiếc xe máy có treo một vật màu xanh lá. Tên của con đèo là gì?\n\n## Temporal Retrieval and Alignment of Key Events (TRAKE)",
+    "The clip depicts the effects of a serious landslide, which caused a total blockage of a pass. In a close-up shot, a footpost with a red top only reveals the top, most of which had been buried in the ground. At the last shot, a motorist was struggling to control his vehicle across the mud area, on the machine with a green object on it.",
+    "The clip depicts the effects of a serious landslide, which caused a total blockage of a pass. In a close-up shot, a footpost with a red top only reveals the top, most of which had been buried in the ground. At the last shot, a motorist was struggling to control his vehicle over the mud area, on the machine with a green object on it."
+  ],
+  "input_tokens": 131,
+  "status": "translated",
+  "generation_wall_ns": 1949593000
+}

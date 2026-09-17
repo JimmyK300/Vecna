@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q30",
+  "canonical_sha256": "d3efa8c87a7071960fd2f705118dcab190268558fc89b97cc0835e65b913d4d3",
+  "texts": [
+    "4 cảnh này xảy ra liên tiếp nhau.\nCảnh 1: Hai người phụ nữ cùng nhau dán niêm phong một thùng carton.\nCảnh 2: Các thùng mì tôm và bọc bánh mì được sắp xếp ngay ngắn.\nCảnh 3: Một người đàn ông nhấc thùng mì tôm lên và xếp lên trên chồng thùng mì.\nCảnh 4: Cảnh quay cận cảnh các thùng mì được xếp chồng trên xe tải.",
+    "These four scenes occurred in a row. 1: Two women sealed a carton together. (Video) Scenes of shrimp cans and bread wraps are arranged in short order.",
+    "These four scenes occurred in a row. 1: Two women sealed a carton together."
+  ],
+  "input_tokens": 77,
+  "status": "translated",
+  "generation_wall_ns": 958201700
+}

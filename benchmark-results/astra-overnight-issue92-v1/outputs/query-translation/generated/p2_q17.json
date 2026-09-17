@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q17",
+  "canonical_sha256": "bdeb0a66a9a3805d19c49804f162ce53814c695e12b63e310d0c877ae4b81c49",
+  "texts": [
+    "Đoạn clip ghi lại khoảnh khắc về đích của một chặng đua xe đạp diễn ra tại thành phố thuộc tỉnh Quảng Nam (cũ, trước ngày 01/7/2025). Vận động viên người Estonia mặc áo xanh nước biển dẫn đầu đoàn. Khi chỉ còn cách đích một đoạn ngắn, anh buông cả hai tay khỏi ghi-đông, giang hai tay lên cao ăn mừng chiến thắng trong khi xe vẫn tiến về phía trước. Ngay phía sau anh là một vận động viên mặc áo vàng và một vận động viên mặc áo cam đang lần lượt lao về đích.",
+    "The clip recorded the moment of a bicycle race taking place in the city of Guangnan (177, before October 1,2025), the Estonian sportsman in a blue suit led the crew, and when he was only a short distance from the finish, he let his hands go off the record, and he raised his hands to celebrate the victory while the car was still moving forward.",
+    "The clip recorded the moment of a bicycle race taking place in the city of Guangnan (177, before October 1,2025), the Estonian sportsman in a blue suit led the crew, and when he was only a short distance from the finish, he lifted both hands from the record, and raised his hands to celebrate the victory while the car was still moving forward."
+  ],
+  "input_tokens": 114,
+  "status": "translated",
+  "generation_wall_ns": 2459023400
+}

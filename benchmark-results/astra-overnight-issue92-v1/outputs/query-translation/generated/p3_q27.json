@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q27",
+  "canonical_sha256": "5c6ed831849438a5f02c619b0c542b935bc835fd4bcad0d6a37348c4a5cb0f3d",
+  "texts": [
+    "Cảnh quay 2 người đang nắn những cục bột nhỏ thành hình dẹt. 1 người nắn cục bột màu trắng, người còn lại nắn cục bột màu khác. Sau đó họ đặt nhân vào phần giữa và cuộn lớp bột bao quanh phần nhân. Trước khi đặt lên dĩa, họ đặt thành phẩm lên 1 miếng lá nhỏ. Hỏi trên dĩa có mấy màu bột khác nhau?",
+    "The scene where two people are making small dough into aminos, the person who's making a white starch, the other person who's making a different color dough, and then they put it in the middle and then the roll that covers the nucleus, and before they put it on the plate, they put it on a little piece of paper, and they ask how many different colors of flour are on the plate?",
+    "The scene where two people are making small dough into aminos, the person who's making a white starch, the other person who's making a different color dough, and then they put it in the middle and then the roll that covers the nucleus, and before they put it on the fork, they put it on a little piece of paper, and they ask how many different colors of flour are on the plate?"
+  ],
+  "input_tokens": 75,
+  "status": "translated",
+  "generation_wall_ns": 2062217800
+}

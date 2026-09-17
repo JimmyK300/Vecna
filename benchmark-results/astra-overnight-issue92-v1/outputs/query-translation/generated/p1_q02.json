@@ -1,0 +1,12 @@
+{
+  "query_id": "p1_q02",
+  "canonical_sha256": "d66b15c11d2f152ba64f2d89925fa300ce40846b0774d4a852fabaf37614add0",
+  "texts": [
+    "Đoạn phim bắt đầu bằng một bản đồ, trên đó một loại công trình thủy lợi lần lượt xuất hiện bốn lần. Sau đó chuyển sang cảnh một con đập được quay từ trên cao, tiếp đến là cảnh cận con đập dưới trời mưa.",
+    "The video starts with a map, on which a kind of waterwork occurs four times, and then it turns to a dam that is shot from above, and then closes to a dam in the rain.",
+    "The video begins with a map, on which a kind of waterwork occurs four times, and then it turns to a dam that is shot from above, and then closes to a dam in the rain."
+  ],
+  "input_tokens": 50,
+  "status": "translated",
+  "generation_wall_ns": 1023873200
+}

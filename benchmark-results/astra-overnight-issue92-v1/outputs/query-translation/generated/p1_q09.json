@@ -1,0 +1,12 @@
+{
+  "query_id": "p1_q09",
+  "canonical_sha256": "9a9c3d63b723f36894b9ba6d7c8f8ed4b285b2a9278888baa365b29bce7cfbdc",
+  "texts": [
+    "Cảnh quay chậm tại vị trí vạch đích của cuộc đua xe đạp. Góc máy sát mặt đường bắt trọn khoảnh khắc về đích theo thứ tự nhất, nhì, ba lần lượt là 1 tay đua áo vàng quần đen, 1 tay đua áo xanh dương quần đen và 1 tay đua áo xanh dương quần đỏ",
+    "The slow shot at the finish line of the bicycle race, the angle of the machine close to the road, takes the complete moment to the finish, second, three times a black yellow shirt driver, a black blue shirt driver, and a red blue shirt driver.",
+    "The slow shot at the finish line of the bicycle race, the angle of the machine close to the road, takes the complete moment to the finish, second, three times a black yellow shirt driver, a black blue suit driver, and a red blue shirt driver."
+  ],
+  "input_tokens": 63,
+  "status": "translated",
+  "generation_wall_ns": 1279244200
+}

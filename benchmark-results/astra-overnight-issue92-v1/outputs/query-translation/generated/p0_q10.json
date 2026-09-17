@@ -1,0 +1,12 @@
+{
+  "query_id": "p0_q10",
+  "canonical_sha256": "9aadffb2a942c13d1e3e43030b4e6e01e6781edc9f0c62e87310cac0a59857da",
+  "texts": [
+    "Đoạn video mô tả cảnh trang trí bánh rán. Phân cảnh bắt đầu là một chiếc đĩa sứ màu trắng nằm trên một khay gỗ hình chữ nhật. Bên cạnh chiếc đĩa sứ là một chén đựng một vài trái dâu, nhưng có 2 trái bị rơi ra ngoài. Ngoài ra, bên cạnh đĩa sứ còn có một chén sứ nhỏ màu trắng đựng chuối đã được cắt sẵn và một cái thìa nhỏ màu nâu. Phân cảnh tiếp theo cho thấy đầu bếp đặt 2 chiếc bánh rán lên đĩa sứ và bắt đầu trang trí. Bước đầu tiên là việc rưới chocolate lên trên mặt bánh. Sau đó, đầu bếp đặt các lát chuối lên trên một chiếc bánh rán, chiếc còn lại được đặt các lát dâu tây lên.",
+    "The video depicts a set of donut decorations. The scene begins as a white dish on a wooden tray of Japanese wood. Next to the dish is a bowl of some berries, but two lefts are thrown out. Besides, the first step is to sprinkle chocolate on top of the cake. Then the first step is to put bananas on top of a donut, and the next scene shows that the chef put two donuts on a dish and start to make a decoration.",
+    "The video depicts a set of donut decorations. The scene begins as a white dish on a wooden tray of Japanese wood. Next to the dish is a bowl of some berries, but two lefts are thrown out. Besides, the first step is to sprinkle chocolate on top of the cake. Then the first step is to put bananas on top of a donut, and the next scene shows that the chef put two donuts on a plate and start to make a decoration. The first step is to sprinkle chocolate on the side. Then, the first step is to put bananas on a doughnut, and then the left on the side of the tray, and then the slices are placed on the apple."
+  ],
+  "input_tokens": 145,
+  "status": "translated",
+  "generation_wall_ns": 3587574300
+}

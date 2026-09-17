@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q18",
+  "canonical_sha256": "f05de1788b91d1a1c5a609f7edc71ed7a5873637add6b4722b8c3abb7dde6eaf",
+  "texts": [
+    "Các cảnh quay nối tiếp nhau từ nhiều góc máy trong một lớp học tại một thời điểm. Cảnh đầu tiên là cảnh một sư cô ân cần quan sát một cậu bé áo xanh lá ngồi học bài. Sau đó là cảnh quay cận trang vở môn Toán, ghi lại các nét chữ mà học sinh đang ghi chép. Trong lớp học này, giáo viên nữ trong trang phục màu hồng đứng lớp chính, còn sư cô di chuyển xung quanh lớp học để hỗ trợ các em. Các giáo viên tham gia giảng dạy tại lớp học này là giáo viên dạy chính ở trường tiểu học nào?",
+    "The first scene is a professor who kindly observes a boy in green sitting around studying lessons, and then a close-up scene of math shows where the students are taking notes, and in this class, the girl in pink dress, and the teacher moves around the class to support the students, and the teacher who's teaching in this class is the teacher in the primary school.",
+    "The first scene is a professor who kindly observes a boy in green sitting around studying lessons, and then a close-up scene of math shows where the students are taking notes, and in this class, the girl in pink dress, and the teacher moves around the class to support the students, and the teacher who's teaching in this class is the main teacher in this class."
+  ],
+  "input_tokens": 119,
+  "status": "translated",
+  "generation_wall_ns": 1864975800
+}

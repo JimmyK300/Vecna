@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q16",
+  "canonical_sha256": "cc83e11e6e7f8073f3adf99042f8b6a931ee41b5dae6231e1f1e1f142185d5c7",
+  "texts": [
+    "Trong video nấu ăn, một loại nguyên liệu hải sản màu trắng được khứa theo những đường thẳng vuông góc nhau, trên cả 2 bề mặt của nguyên liệu này. Nguyên liệu sau đó được cắt thành từng que và cho vào tô, trước khi được trộn đều với các gia vị gồm rượu, tiêu và hạt nêm.",
+    "In the cooking video, a type of white seafood material is drawn in square lines, on both sides of this material, the material that is then cut into sticks and put into a bowl, before being mixed together with wine, pepper, and mustard.",
+    "In the cooking video, a type of white seafood material is drawn in square lines, on both sides of this material, the material that is then cut into sticks and put into the bowl, before being mixed together with wine, pepper, and mustard."
+  ],
+  "input_tokens": 65,
+  "status": "translated",
+  "generation_wall_ns": 1228191100
+}

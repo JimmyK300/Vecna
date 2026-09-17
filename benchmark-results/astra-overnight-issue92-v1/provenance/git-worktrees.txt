@@ -1,0 +1,124 @@
+worktree C:/Users/minhc/Code/Vecna
+HEAD fd879fb0529165a441745374ab72244df8aadd5e
+branch refs/heads/masterplan/ox-alpha-20260824
+
+worktree C:/Users/minhc/Code/vecna-issue-63
+HEAD ec4a38d397c9a3a49a821812b37db47f52327049
+branch refs/heads/codex/issue-63-stage-b
+
+worktree C:/Users/minhc/Code/Vecna-issue92-overnight
+HEAD 37b321048432ccba5182a66bd39b1ca73c547537
+branch refs/heads/codex/issue-92-overnight-20260916
+
+worktree C:/Users/minhc/Code/Vecna-qwen-temporal
+HEAD 3ce50ded89dfb9f60a4d84cad176c91e8404a717
+detached
+
+worktree C:/Users/minhc/Code/Vecna/.worktrees/bge-m3-onnx-directml
+HEAD 517a4ffb8b52edb872cde57938e5ca6e02939d02
+branch refs/heads/agent/bge-m3-onnx-directml
+
+worktree C:/Users/minhc/Code/Vecna/.worktrees/codex-headless-qwenbge-publish
+HEAD ef31ad095574ba38b24b21a726125b1e6a721909
+branch refs/heads/agent/headless-qwenbge-benchmark
+
+worktree C:/Users/minhc/Code/Vecna/.worktrees/codex-partial-feature-indexing
+HEAD d44030bb40a81cd212df7a74cfa9959072005e6c
+branch refs/heads/agent/partial-feature-indexing
+
+worktree C:/Users/minhc/Code/Vecna/.worktrees/codex-qwen-vl-embedding
+HEAD d78353821809d60d7533bd1f5b48b875302ab21f
+branch refs/heads/agent/qwen-vl-embedding
+
+worktree C:/Users/minhc/Code/Vecna/.worktrees/codex-remote-webui-evaluation
+HEAD 4c7b2f4e0c72a70d49539686e8c0671fa4d131b6
+branch refs/heads/agent/remote-webui-evaluation
+
+worktree C:/Users/minhc/Code/Vecna/.worktrees/headless-integrated-latest
+HEAD 23f6203572be6ae0559bc3b7fb3e8a3ced8b8926
+branch refs/heads/codex/headless-integrated-latest
+
+worktree C:/Users/minhc/Code/Vecna/.worktrees/headless-retrieval
+HEAD 85c1b23bf30e553004486f1b99a0e22c3e99cb99
+branch refs/heads/benchmark/headless-retrieval
+
+worktree C:/Users/minhc/Code/Vecna/.worktrees/issue64-opencubee-late-fusion
+HEAD eeeaf95b8d1676129702f60e6c1b232d27594edf
+branch refs/heads/btl/issue-64-opencubee-late-fusion
+
+worktree C:/Users/minhc/Code/Vecna/.worktrees/issue66-similarity-labels
+HEAD 74c2c5b7ff3573266f2ef1115f5cef658030046c
+branch refs/heads/btl/issue-66-similarity-labels
+
+worktree C:/Users/minhc/Code/Vecna/.worktrees/issue68-promotion-smoke
+HEAD 96c96088b1ff0170d548966c7c89cf4d7c83c14f
+detached
+
+worktree C:/Users/minhc/Code/Vecna/.worktrees/issue68-sentence-level-asr
+HEAD f6c00474dbe7117a85c14796677aa1106db1a592
+branch refs/heads/btl/issue-68-sentence-level-asr
+
+worktree C:/Users/minhc/Code/Vecna/.worktrees/issue79-temporal
+HEAD 114bbaaf1c134df0369d7c6aa7bc50c46bff92ba
+branch refs/heads/codex/issue-79-temporal
+
+worktree C:/Users/minhc/Code/Vecna/.worktrees/issue81-temporal-representation
+HEAD fe5b3dc8de93adfb3f82a82e80764c1d59a111dd
+branch refs/heads/codex/issue-81-temporal-representation
+
+worktree C:/Users/minhc/Code/Vecna/.worktrees/main
+HEAD 5a84d9c40d1a08e6c4fbc0c58b8b3e66dfe9822b
+detached
+
+worktree C:/Users/minhc/Code/Vecna/.worktrees/reranker-fusion-v1
+HEAD e0981b9022723f0a8bb20d4ccb108f725f4f2e50
+branch refs/heads/codex/reranker-fusion-v1
+
+worktree C:/Users/minhc/Code/Vecna/.worktrees/semantic-headroom-20260827
+HEAD fd879fb0529165a441745374ab72244df8aadd5e
+detached
+
+worktree C:/Users/minhc/Code/Vecna/.worktrees/shot-clustering
+HEAD e0981b9022723f0a8bb20d4ccb108f725f4f2e50
+branch refs/heads/benchmark/headless-p0-p1-p2-v1
+
+worktree C:/Users/minhc/Code/Vecna/.worktrees/shot-clustering-9ea7543-clean
+HEAD 9ea75434059cb006091d8070c6038d0add7cb62d
+detached
+
+worktree C:/Users/minhc/Code/Vecna/.worktrees/thread5a-semantic-evidence-adapter
+HEAD faf8aaa5e89b5858423f233f2d16b88251d0bb5b
+detached
+
+worktree C:/Users/minhc/Code/Vecna/.worktrees/vecna-code-atlas
+HEAD 7332effd796461771b2d84903d3656e309ee3966
+branch refs/heads/agent/gemini/vecna-code-atlas
+
+worktree C:/Users/minhc/Code/Vecna/.worktrees/vecna-playbook-implementation
+HEAD 59a1b2845ea46cd75def77b079a1d403bf4d547d
+branch refs/heads/vecna-playbook-implementation
+
+worktree C:/Users/minhc/Code/Vecna/.worktrees/yolo-semantic-index-bench
+HEAD 44262d6d31ace249e4a73612dc32e2c4c1db3869
+branch refs/heads/feat/yolo-semantic-index
+
+worktree C:/Users/minhc/Documents/Codex/2026-08-25/turn-on-actions-runner/worktrees/vecna-issue-58
+HEAD cb5216b6f80826f626d61e01496589179520dfa4
+branch refs/heads/codex/issue-58-baseline-sweep
+
+worktree C:/Users/minhc/Documents/Codex/2026-08-25/turn-on-actions-runner/worktrees/vecna-issue-59
+HEAD 6f81433a437c9aef1fbc86efb8c655199662dcf6
+branch refs/heads/codex/issue-59-trake-audit
+
+worktree C:/Users/minhc/Documents/Codex/2026-08-25/turn-on-actions-runner/worktrees/vecna-issue-60
+HEAD db4ac01afdf57d5a610bc8821322bfcc2d5fbf01
+branch refs/heads/codex/issue-60-corpus-audit
+
+worktree C:/Users/minhc/Documents/Codex/2026-08-25/turn-on-actions-runner/worktrees/vecna-issue-61
+HEAD d3126537e897daca7f9c502464b80eb80dc205ba
+branch refs/heads/codex/issue-61-query-decomposition
+
+worktree C:/Users/minhc/Documents/Codex/2026-08-25/turn-on-actions-runner/worktrees/vecna-issue-62
+HEAD f42440acce53397c557bd6542f516e78df9a9a0c
+branch refs/heads/codex/issue-62-compat-bench
+

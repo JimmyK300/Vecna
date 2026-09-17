@@ -1,0 +1,12 @@
+{
+  "query_id": "p1_q12",
+  "canonical_sha256": "aa101b4abe8b30327a30f15a0a8a5b23daacd048ca35ca64a6ffc5297a3daa45",
+  "texts": [
+    "Người đầu bếp lần lượt đặt các miếng nguyên liệu dạng thanh và những lát cắt hình hoa vào một đĩa đang được hấp trong nồi.\nCác nguyên liệu được dùng đũa sắp xếp xen kẽ xung quanh phần thức ăn đã có sẵn trên đĩa.\nSau đó, đầu bếp dùng muỗng lấy thêm một loại nguyên liệu mềm từ tô thủy tinh.\nPhần nguyên liệu này được đặt vào giữa đĩa, xung quanh là các miếng dạng thanh và hình hoa đã được sắp xếp trước đó.",
+    "The cook took turns putting the bar-shaped material and the flower slices into a dish that was steamed in the pot. The ingredients were used to interlocking them around the food that was already available on the plate. Then the cook took another soft material from the glass bowl. The material was placed in the center of the dish, surrounded by pieces of the stick and flower shape that had been arranged before.",
+    "The cook took turns putting the bar-shaped material and the flower slices into a dish that was steamed in the pot. The ingredients were used to interlocking them around the food that was already available on the plate. Then the cook took another soft material from the glass bowl. The material was placed in the center of the dish, surrounded by pieces of the stick and flower shape that had been set up earlier."
+  ],
+  "input_tokens": 95,
+  "status": "translated",
+  "generation_wall_ns": 2281352500
+}

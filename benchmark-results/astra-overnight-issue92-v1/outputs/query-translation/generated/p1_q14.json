@@ -1,0 +1,12 @@
+{
+  "query_id": "p1_q14",
+  "canonical_sha256": "89a6b325e40c58a4446aa46f2cb6a0ee4ee0170e18be9f2e4a36e46ef04571d8",
+  "texts": [
+    "Con lân do hai người điều khiển đang đứng thẳng và xoay vòng trên đỉnh cột. Sau vài giây nghỉ, con lân bất ngờ nhảy qua hai chiếc cột kế bên, chúi đầu xuống ngoạm lấy quả bí đỏ kèm bông hoa màu vàng. Cảnh quay kết thúc khi con lân tiếp tục nhảy sang các cột tiếp theo.",
+    "After a few seconds of rest, the neighbor suddenly leaps over the next two columns, head down and grabs the red one with the yellow one on it, and the scene ends as the neighbor continues to jump over the next column.",
+    "After a few seconds of rest, the neighbor suddenly leaps over the next two columns, head down and grabs the red one with the yellow one on it, and the shot ends as the neighbor continues to jump over the next column."
+  ],
+  "input_tokens": 66,
+  "status": "translated",
+  "generation_wall_ns": 1128773500
+}

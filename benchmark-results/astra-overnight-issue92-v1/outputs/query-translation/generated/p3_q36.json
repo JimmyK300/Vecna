@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q36",
+  "canonical_sha256": "f39b23830b02e9e636b9e405e07be2296cb5f3a7dc41999f71c179ddf1782146",
+  "texts": [
+    "Camera lia chậm trên mặt bàn làm việc, bắt đầu từ một bức ảnh/tranh một người đang bắt tay với Bác Hồ, sau đó chuyển sang phần bên phải là tay nghệ nhân đang vẽ lại chân dung người bắt tay Bác. Người nghệ nhân này vẽ bằng một cây bút đặc biệt trên một chất liệu đặc biệt.",
+    "The camera slows down on the desk, starting with a photo/contracted person who's shaking hands with Mr. Ho, and then moving to the right is the artist who's repainting the portrait of the person who shook his hand, and this artist painted with a special pen on a special material.",
+    "The camera slows down on the desk, starting with a photo/contracted person who's shaking hands with Mr. Ho, and then moving to the right is the artist who's repainting the portrait of the person who shook his hand, and this artist painted with a special pen on a particular material."
+  ],
+  "input_tokens": 66,
+  "status": "translated",
+  "generation_wall_ns": 1756068200
+}

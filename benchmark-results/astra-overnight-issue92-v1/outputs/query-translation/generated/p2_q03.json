@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q03",
+  "canonical_sha256": "ebe1ce380818d8e13e3bd7f821de2da7892adbc89e51624d70d188c77d9cda48",
+  "texts": [
+    "Một chú lân (hay rồng/sư tử?) màu vàng nhảy hay rơi từ trên cao xuống, gần với mô hình chiếc tàu thủy nhỏ màu xanh dương.",
+    "A unicorn (or dragon/ lion?) yellow jumps or falls from the sky, close to the model of the little blue ship.",
+    "A unicorn (or a dragon / lion?) yellow jumps or falls from the sky, close to the model of the little blue ship."
+  ],
+  "input_tokens": 34,
+  "status": "translated",
+  "generation_wall_ns": 646738200
+}

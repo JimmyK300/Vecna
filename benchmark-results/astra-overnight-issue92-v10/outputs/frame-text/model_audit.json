@@ -1,0 +1,13 @@
+{
+  "loading": {
+    "missing_keys": [],
+    "unexpected_keys": [],
+    "mismatched_keys": [],
+    "error_msgs": []
+  },
+  "torch": "2.8.0+cpu",
+  "transformers": "4.57.6",
+  "device": "cpu",
+  "dtype": "torch.float32",
+  "policy_sha256": "63aaedaeb24211e7b0f4809634172212753daf31e374cce255b2008cbae88e26"
+}

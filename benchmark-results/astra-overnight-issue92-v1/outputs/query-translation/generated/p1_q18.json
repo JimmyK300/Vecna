@@ -1,0 +1,12 @@
+{
+  "query_id": "p1_q18",
+  "canonical_sha256": "bd35cb4ce47f3a5a10c756c282b33c71c46ab696c3465dac0b7dae96241c0efe",
+  "texts": [
+    "Hình ảnh giáo viên nam mặc sơ mi trắng, thắt cà vạt tối màu, nổi bật trên phông nền xanh dương đậm có hoa văn mờ.\n\nSlide bài giảng Nền trắng với khung viền màu hồng tím, phía trên có thanh tiêu đề xanh dương chứa họa tiết địa cầu và mũi tên vàng/xanh ngọc. Bên dưới là sơ đồ 3 tầng được liên kết bởi các mũi tên xanh ngọc trỏ xuống:\n\nTầng 1: 2 khối hộp được bao bởi 1 khối hộp cam.\n\nTầng 2: 1 khối hộp lớn màu xanh dương đậm ở chính giữa.\n\nTầng 3: 2 khối hộp được bao bởi 1 khối hộp xanh lá cây.",
+    "The picture of the male teacher in the white shirt, the dark tie, stands out on the dark blue background. Slide the white background with the purple border frame, on top there's the blue title bar containing the global texture and the yellow/ top blue arrow, and the three-story diagrams are linked by the blue arrows pointing down: floor one, two blocks covered by one orange cube.",
+    "The picture of the male teacher in the white shirt, the dark tie, stands out on the dark blue background. Slide the white background with the purple border frame, on top there's the blue title bar containing the global texture and the yellow/ top blue arrow, and the three-story diagrams are linked by the blue arrows pointing down: floor one, two blocks covered by one orange box."
+  ],
+  "input_tokens": 124,
+  "status": "translated",
+  "generation_wall_ns": 1956877600
+}

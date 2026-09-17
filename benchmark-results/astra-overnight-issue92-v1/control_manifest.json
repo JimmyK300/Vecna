@@ -1,0 +1,20 @@
+{
+  "parent_commit": "37b321048432ccba5182a66bd39b1ca73c547537",
+  "parent_root": "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-retrieval-rd-v1",
+  "sha256": {
+    "code/analyze_reranker.py": "2b9b2624fda6582c1ba894ecb8ec39e90b27d9d6258f8c75676773bb36bd2bb1",
+    "code/fusion_study.py": "57ded10b78c0a6649008d15e61882e3b52d2eb0b5cf63b57a7133a6a9da2a292",
+    "outputs/fusion/frozen_config.json": "ff7a6f817579a2ba65572734016d51164f454a9d5012177841a458bbdca34b1a",
+    "outputs/fusion/queries.jsonl": "3b91dfe26a893192a497a964d3a9ea5f50c595fdaabad000cbc60fc602be0d1a",
+    "inputs/canonical_truth.jsonl": "63f80eb6ff54ef3c623f6ae4926eba404dac8bb5543b86e31f8fa0da842b4c9f",
+    "reference/evaluate_reranker_fusion.py": "82cbc5d7f5b6309f747165f8f278d4c3b66e9db83092c1808d2f72d1f8e76316",
+    "outputs/fusion/capture-full115-v1/provider_rankings.jsonl": "d6223381ea8cbf4b4efcb0cc295f60dccfcae36afe0d9fac004438410c152a82",
+    "outputs/fusion/capture-full115-v1/collection_manifest.json": "01333a2ce910605b537a90aa6897938103aaf1728048d216af350d26bde756d8",
+    "outputs/fusion/evaluation/study_results.jsonl": "ba47bd96eb842d0bb57811e247cbd2ea29de8794c5dd3b289dce24a3032c10b1"
+  },
+  "exclusions": [
+    "p0_q15",
+    "p3_q09"
+  ],
+  "run_identity": "f0d32893564111064d47f6f2f72f7b03dbb14ebbfbb3d05c48e49e30ef165755"
+}

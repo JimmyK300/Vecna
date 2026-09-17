@@ -1,0 +1,11 @@
+{
+  "job_id": "20260916T161439Z-f2f1f1768b",
+  "thread": "01a0aadd-a16d-77a2-b833-fc55ded727f2",
+  "status": "exited",
+  "started_at": "2026-09-16T16:14:40.065444+00:00",
+  "supervisor_pid": 37680,
+  "supervisor_parent_pid": 30628,
+  "worker_pid": 38440,
+  "exit_code": 0,
+  "finished_at": "2026-09-16T16:27:17.089986+00:00"
+}

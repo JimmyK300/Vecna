@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q26",
+  "canonical_sha256": "a624dd8b9e62086a5f9eec75607eb45bad3d48a4239121a34d5e8cdfbe484bdc",
+  "texts": [
+    "Cảnh quay một tô cháo đã được nấu và trang trí hoàn chỉnh (đã xong các giai đoạn trang trí). Kế bên tô cháo có 1 chén nhỏ màu đen, để chứa 1 loại topping màu cam kết cấu hơi giống những sợi nhỏ. Loại topping này trước đó đã được rắc lên tô cháo. Xung quanh topping là các loại rau, hành,... Hỏi topping trong video là thịt của con gì?",
+    "A complete bowl of porridge (paged stages) next to a little black bowl of porridge, to contain a little black topping orange that looks a little bit like tiny fibers. This topping has been sprinkled on a bowl of porridge. Around topping are the vegetables, onion, ask the topping in the video which is the meat of which?",
+    "A complete bowl of porridge (paged stages) next to a little black bowl of porridge, to contain a little black topping orange that looks a little bit like tiny fibers. This topping has been sprinkled on a bowl of porridge. Around topping are the vegetables, onion, ask the topping in the video what's the meat of the animal?"
+  ],
+  "input_tokens": 86,
+  "status": "translated",
+  "generation_wall_ns": 1783402400
+}

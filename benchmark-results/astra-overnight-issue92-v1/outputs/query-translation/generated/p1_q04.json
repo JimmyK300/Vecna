@@ -1,0 +1,12 @@
+{
+  "query_id": "p1_q04",
+  "canonical_sha256": "fc49ba8d25ebcdd43d0e2389205ec8f4dab5f80ef25263fad0cd5ffb37ac2e4f",
+  "texts": [
+    "Đoạn clip bắt đầu bằng việc đậu hà lan được bỏ vào với mực đang được xào trên chảo, bên cạnh là đĩa hành tây và ớt đỏ thái lát chuẩn bị cho vào món ăn. Đoạn clip kết thúc với khung quay chậm (slow motion) cảnh lắc chảo trên bếp lửa.",
+    "The clip begins with the beans being put in with the ink being on the pan, besides the onions and red peppers being prepared for the meal. The clip ends with slow motion frames on the stove.",
+    "The clip begins with the beans being put in with the ink being on the pan, besides the onions and red peppers being prepared for the dish. The clip ends with slow motion frames on the stove."
+  ],
+  "input_tokens": 60,
+  "status": "translated",
+  "generation_wall_ns": 1000666600
+}

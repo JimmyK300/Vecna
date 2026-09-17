@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q15",
+  "canonical_sha256": "60b39c12953fcca45a7d602ef08ce2dbc3608f8a2f16c79ee0d4acc95d951aa3",
+  "texts": [
+    "Đoạn video ghi lại cảnh 1 người đầu bếp đã sơ chế thực phẩm với nước lạnh và để ráo nước. Sau đó, đầu bếp sử dụng 1 loạt bột nhào chung với thực phẩm, để qua một bên và chuẩn bị các loại gia vị khác. Tiếp theo, đầu bếp cho 1 miếng nguyên liệu màu xanh lá cây kết hợp 2 miếng màu vàng vào 1 chảo màu đỏ đã đổ dầu ăn trước khi chiên thực phẩm chính.",
+    "The video recorded a cook who developed food with cold water and ran water, and then the cook used a bunch of dough together with food, left it on the side, and prepared all the other spices.",
+    "The video recorded a cook who developed food with cold water and ran water, and then the cook used a bunch of dough together with food, and left it on the side, and prepared all the other spices."
+  ],
+  "input_tokens": 88,
+  "status": "translated",
+  "generation_wall_ns": 1620803100
+}

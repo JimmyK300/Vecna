@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q12",
+  "canonical_sha256": "3016586b187683cb6e2382762a7a560a184823cbd9364cea339ecef811639e8a",
+  "texts": [
+    "Trong một ngôi nhà nông thôn có cửa sổ lớn, hai người phụ nữ đang làm thủ công trên một bộ ván ngựa, phía sau là một dãy khoảng 10 thớt gỗ được treo thành một hàng ngang.",
+    "In a rural home with a large window, two women were making handmade work on a horse board, a series of about 10 pieces of wood hanging in a row.",
+    "In a rural home with a large window, two women were making handmade work on a horse board, a row of about 10 pieces of wood hanging in a row."
+  ],
+  "input_tokens": 42,
+  "status": "translated",
+  "generation_wall_ns": 817745300
+}

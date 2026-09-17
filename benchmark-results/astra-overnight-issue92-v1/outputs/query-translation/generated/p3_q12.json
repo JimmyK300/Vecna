@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q12",
+  "canonical_sha256": "dd25d2f1db3e4fe7275e7989792d75c128bda442523d4c10f944e10e27698aba",
+  "texts": [
+    "Một người đang đổ 1 chất lỏng đựng trong bát màu trắng vào chiếc chảo màu đỏ, sau khi chất lỏng được xóc đều cùng các thực phẩm có sẵn trong chảo, tạo 1 hiện tượng bốc lên trong chảo có màu hồng. Sau đó. chuyển từ nồi to qua nồi nhỏ hơn, công đoạn tương tự, khi chất lỏng tiếp xúc lửa trên bếp đều tạo chung 1 hiện tượng.",
+    "One person is pouring a liquid in a white bowl into a red pan, after the liquid is already wet in the pan, creating a phenomenon that's in the pink pan, and then moving from the pot to the smaller pot, and the same thing, when the liquid touches the fire on the kitchen, it's all making the same phenomenon.",
+    "One person is pouring a liquid in a white bowl into a red pan, after the liquid is already wet in the pan, creating a phenomenon that's in the pink pan, and then moving from the pot to the smaller pot, and the same thing, when the liquid touches the fire on the kitchen, it makes the same phenomenon."
+  ],
+  "input_tokens": 79,
+  "status": "translated",
+  "generation_wall_ns": 1706370200
+}

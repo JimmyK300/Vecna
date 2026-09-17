@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q14",
+  "canonical_sha256": "4c94f56621d6aade419839ad842095e215f093b75d17cc44c48c53bd1c3e3899",
+  "texts": [
+    "Đoạn phim quay từ phía sau nhóm dẫn đầu, gồm 1 tay đua dẫn trước và 3 tay đua bám phía sau, khi cả nhóm rẽ phải vào đường Hồ Tùng Mậu tại giao lộ có đèn xanh đang đếm ngược đến 13 giây.",
+    "The footage is from behind the lead group, one driver ahead, and three drivers behind, as the team turn right onto Hochang Road at the intersection with a green light counting down to 13 seconds.",
+    "The video is from behind the lead group, one driver ahead, and three drivers behind, as the team turn right onto Hochang Road at the intersection with a green light counting down to 13 seconds."
+  ],
+  "input_tokens": 49,
+  "status": "translated",
+  "generation_wall_ns": 900775000
+}

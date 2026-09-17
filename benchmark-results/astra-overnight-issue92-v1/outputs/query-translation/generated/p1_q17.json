@@ -1,0 +1,12 @@
+{
+  "query_id": "p1_q17",
+  "canonical_sha256": "1231aba463169a537b43e0353ac0c8ba0376e19a2f9c1e88c50d460d72198ea5",
+  "texts": [
+    "Người phụ nữ mặc áo dài màu hồng, đeo kính đang giảng giải về các trường hợp sử dụng khác nhau của động từ 'remember' dựa trên mốc thời gian của hành động được nhắc tới.",
+    "The woman in the long pink shirt, the glasses explaining the various uses of the verb 'Jember' based on the time period of the action mentioned.",
+    "The woman in the long pink shirt, the glasses explaining the various uses of the verb 'Jember' based on the time pattern of the action mentioned."
+  ],
+  "input_tokens": 42,
+  "status": "translated",
+  "generation_wall_ns": 708179000
+}

@@ -1,0 +1,18 @@
+.....<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+.<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+...<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+......<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+..<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+.<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+....<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+..<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+...<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+..<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+.<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+.<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+..<unknown>:107: SyntaxWarning: invalid escape sequence '\w'
+.......
+----------------------------------------------------------------------
+Ran 40 tests in 0.285s
+
+OK

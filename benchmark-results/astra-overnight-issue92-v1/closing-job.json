@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "C:\\Users\\minhc\\Code\\Vecna\\.venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "-B",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v1\\code\\closing_audit.py"
+  ],
+  "cwd": "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight",
+  "timeout_seconds": 28800,
+  "next_action": "Close Issue92 at its8-hour bound. Read result.json/spec.json and research-root closing_audit.json. Acceptance requires status passed,12arms,1356paired score rows,49parent input hashes, byte-identical parent ledger and current ARCHIVE_MANIFEST SHA. Do not relaunch this job or start another experiment. On success save usage_report_final.json via code/archive.py usage --output <absolute new path>, then create CLOSING_RETURN.md with actual end UTC, explicitly distinguish completed research from deadline standby (no8-hour active-compute claim), READY_FOR_PARENT_REVIEW, E1 NEGATIVE83vs87 R20 and unchanged selected parent; reference OVERNIGHT_RETURN/METRICS/reports. Save a separate CLOSING_MANIFEST.json with hashes of final additions; preserve frozen snapshot. Report uncommitted branch/worktree and no remote SHA; no commit,push,merge or truth edits. On audit failure preserve exact evidence, return NEEDS_DECISION, do not silently repair the frozen archive or make improvement claims. This is final verification of authorized work, not an instruction to extend the run."
+}

@@ -1,0 +1,34 @@
+{
+  "frozen_before_generation": true,
+  "hypothesis": "English alternate translations may align Vietnamese canonical queries with English semantic descriptions; test cross-language query expansion without answer access.",
+  "snapshot": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--Helsinki-NLP--opus-mt-vi-en\\snapshots\\c8d2853e77f5fae31124d993e0b35176b1c8914e",
+  "variants": "canonical plus two alternate English beam translations, duplicate token streams removed",
+  "generation": {
+    "do_sample": false,
+    "num_beams": 4,
+    "num_return_sequences": 2,
+    "max_new_tokens": 512,
+    "early_stopping": true
+  },
+  "fallback": "input over512tokens or no completed translation retains canonical only; record exact exclusions; no repair",
+  "retrieval": "semantic BM25 positive top100records/route, equal RRF60 record merge, mapped unique100frames",
+  "coverage_gate": "new accepted video or target coverage over exact control",
+  "integration": "one equalRRF60 provider/current control if contribution gate passes; fixed100frames",
+  "selection": "same frozen promotion gate; strongest supported parent remains PR91",
+  "resource": "cached289MB translator; query-only generation; no embedding/extraction or download",
+  "input_sha256": {
+    "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--Helsinki-NLP--opus-mt-vi-en\\snapshots\\c8d2853e77f5fae31124d993e0b35176b1c8914e\\config.json": "190952e8f4572e178fcadb653ed67d6fbd5a576e411b1e69b5628f3a287d40e4",
+    "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--Helsinki-NLP--opus-mt-vi-en\\snapshots\\c8d2853e77f5fae31124d993e0b35176b1c8914e\\generation_config.json": "bdf35ed0c2adac39290be99dc3111f704270425875f4a15b21403f15c2429161",
+    "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--Helsinki-NLP--opus-mt-vi-en\\snapshots\\c8d2853e77f5fae31124d993e0b35176b1c8914e\\pytorch_model.bin": "b824e712e1668a5387d897cdd55f58ef45431bd61b14298d0426650cda4de58d",
+    "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--Helsinki-NLP--opus-mt-vi-en\\snapshots\\c8d2853e77f5fae31124d993e0b35176b1c8914e\\source.spm": "9deb4f9e7bebd3876f4bf238a9eb52f2f95a1fba2210a4a8239167c55c15e67d",
+    "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--Helsinki-NLP--opus-mt-vi-en\\snapshots\\c8d2853e77f5fae31124d993e0b35176b1c8914e\\target.spm": "629182070d11db929990c603779345a11743b749f6586f224829303fa979c138",
+    "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--Helsinki-NLP--opus-mt-vi-en\\snapshots\\c8d2853e77f5fae31124d993e0b35176b1c8914e\\tokenizer_config.json": "8209e0a7ea4e8b8da5172e4c260320ab0bfd485d5735c722a084148e6e60274f",
+    "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--Helsinki-NLP--opus-mt-vi-en\\snapshots\\c8d2853e77f5fae31124d993e0b35176b1c8914e\\vocab.json": "07a5fc1c8250a0e3c503933c7e9145a9b5eee83afde59408deb640d85d79dd35",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v1\\code\\query_translation.py": "4bab521da39c9e225ff5823df15be393de734c9de5f8d215dad7791bd1c7ee6c",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v1\\outputs\\semantic\\records.jsonl": "60dcb55a70f6e112f31788bc5bbc9970b17be94059c0647be4a2875fcc732d34",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v1\\outputs\\semantic\\record_frame_mapping.json": "926f4b673d6a78776a78248bf0940db90d799ad80ca7c1f0cffbf6d0d87956c6",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v1\\outputs\\semantic\\source_bm25.py": "a25f33a051dc72fe91a983f978a5dc3978634cdacac26061dfe9892bced298bb",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v1\\outputs\\packet-e\\rankings.jsonl": "0db9fac2a3cc7869805bcad1b4a005bedc66b808b41f730699b4ed14f46e2290",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\fusion\\queries.jsonl": "3b91dfe26a893192a497a964d3a9ea5f50c595fdaabad000cbc60fc602be0d1a"
+  }
+}

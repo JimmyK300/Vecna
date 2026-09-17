@@ -1,0 +1,14 @@
+{
+  "python": "3.12.1",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "packages": {
+    "numpy": "1.26.4",
+    "torch": "2.8.0",
+    "transformers": "4.57.6",
+    "sentencepiece": "0.2.2",
+    "safetensors": "0.8.0"
+  },
+  "device": "CPU; BGE float32 threads8; translation float32 threads8",
+  "obvious_process_at_last_inventory": "grok.exe; no Python/ffmpeg heavy worker before translation launch; not killed",
+  "timing_limit": "No claim of isolated hardware or generalizable speed; one session, caches/order/contention may affect timings."
+}

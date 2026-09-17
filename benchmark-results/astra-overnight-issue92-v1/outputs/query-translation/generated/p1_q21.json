@@ -1,0 +1,12 @@
+{
+  "query_id": "p1_q21",
+  "canonical_sha256": "f237c85e350348852fd9c115657a84b355452b05524a2e4ce9f3e21e478c026a",
+  "texts": [
+    "Hình ảnh một con cá được đặt lên cân, sau đó có cảnh một con cá khác cùng loại bị một người cầm đuôi. Con số hiển thị cuối cùng trên cân là bao nhiêu?",
+    "The image of a fish is on the scale, and then there's another fish of the same kind that's got a tail.",
+    "The image of a fish is on the scale, and then there's another fish of the same type that's got a tail."
+  ],
+  "input_tokens": 39,
+  "status": "translated",
+  "generation_wall_ns": 682332100
+}

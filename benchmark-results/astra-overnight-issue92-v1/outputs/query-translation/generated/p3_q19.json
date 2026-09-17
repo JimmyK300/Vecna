@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q19",
+  "canonical_sha256": "1372bb81127e179fafd6d8c561e2dd0f543f3ea95eb07d3aedd555b5dc085f17",
+  "texts": [
+    "Sau khi lướt qua các cọc trụ, chú lân vàng đứng thăng bằng bằng ba chân trên ba đỉnh trụ, trước khi khéo léo đặt nốt chân còn lại lên trụ thứ tư. Chú lân cúi đầu ngoạm lấy cành hoa màu tím rồi xoay người quay lưng lại. Theo từng tiếng chập cheng vang lên, lân mở rồi đóng hàm đúng 4 nhịp, rồi nhả cành hoa rơi xuống đất.",
+    "After slogging over the pillars, the golden unicorn balances his three legs on the top of the pillars, before he tactfully lays his other leg on the fourth pillar, with his head bowed with purple flowers, and turned his back around, and at the sound of each flickering, he opens and closes his jaw exactly four clicks, and then drops it to the ground.",
+    "After slogging over the pillars, the golden unicorn balances his three legs on the top of the pillars, before he tactfully lays his other leg on the fourth pillar, with his head bowed with purple flowers, and turned his back around, and at the sound of each flickering, he opens and closes his jaws exactly four clicks, and then drops them to the ground."
+  ],
+  "input_tokens": 80,
+  "status": "translated",
+  "generation_wall_ns": 1931507300
+}

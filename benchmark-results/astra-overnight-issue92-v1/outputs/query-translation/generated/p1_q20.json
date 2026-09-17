@@ -1,0 +1,12 @@
+{
+  "query_id": "p1_q20",
+  "canonical_sha256": "aa5f072d6149fd511962d2266f26fe654390e2113a12784b2eb165c684c51d0a",
+  "texts": [
+    "Hai bạn học sinh mặc đồng phục áo trắng, quần xanh, quàng khăn đỏ đang làm MC trên một sân khấu tại trường học, phía sau là một bộ trống cơ màu đỏ và một cây đàn piano.\n\n## Question Answering (Q&A)",
+    "Two students in white uniforms, blue pants, red towels making MC on a stage at school, behind them a red drum and a piano.",
+    "Two students in white uniforms, blue pants, red scarfes making MC on a stage at school, behind them a red drum and a piano."
+  ],
+  "input_tokens": 56,
+  "status": "translated",
+  "generation_wall_ns": 692882300
+}

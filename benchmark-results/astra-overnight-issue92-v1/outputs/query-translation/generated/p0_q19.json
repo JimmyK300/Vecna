@@ -1,0 +1,12 @@
+{
+  "query_id": "p0_q19",
+  "canonical_sha256": "1a7d2f1770afc35b51a29cf14506519de0da0656e663dc2858e5e935da036e71",
+  "texts": [
+    "Đoạn video về một chương trình từ thiện của một câu lạc bộ tên là FANA. Trong đoạn video có thể thấy câu lạc bộ này đang đi trao quà tại một xã thuộc tỉnh Khánh Hòa. Hỏi xã này có tên là gì? (tại thời điểm đó)",
+    "This video of a charity program for a club called FANA, and in the video, you can see this club is giving presents in a town in the province of South Korea.",
+    "This video of a charity program for a club called FANA, and in this video, you can see this club is giving presents in a town in the province of South Korea."
+  ],
+  "input_tokens": 55,
+  "status": "translated",
+  "generation_wall_ns": 920555500
+}

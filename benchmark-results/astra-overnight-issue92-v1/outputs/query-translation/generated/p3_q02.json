@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q02",
+  "canonical_sha256": "4fed0ba11c6e304e56f8e773509fa53988560c97da09b793bc572d3d77de03e7",
+  "texts": [
+    "Một nhóm đông học sinh mặc đồng phục tập trung thành nhiều hàng trước khu vực trường học.\nPhía trước mỗi hàng có người cầm bảng ghi số lớp để phân chia các nhóm học sinh.\nSau đó, các hàng học sinh lần lượt di chuyển vào bên trong khuôn viên trường dưới sự hướng dẫn của giáo viên.\nCuối đoạn, học sinh nối thành hàng dài, đi qua hành lang và lên cầu thang của tòa nhà.",
+    "A large group of students in uniform were lined up in front of the school area, and in front of each row, there was a list of classes to divide groups of students, and then students moved into the school’s courtyards, and at the end of the day, students lined up in long rows, walked through the corridors, and went up the stairs of the building.",
+    "A large group of students in uniform were lined up in front of the school area, and in front of each row, there was a list of classes to divide groups of students, and then students moved into the school’s courtyards, and at the end of the day, students connected into long rows, passed through the corridors, and went up the stairs of the building."
+  ],
+  "input_tokens": 87,
+  "status": "translated",
+  "generation_wall_ns": 1901956800
+}

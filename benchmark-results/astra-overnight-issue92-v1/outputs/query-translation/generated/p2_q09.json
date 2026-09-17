@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q09",
+  "canonical_sha256": "97a59b847b62f7c81b0a06cdcbdd33727e323358d1b06514d0ed5b66b8e54c74",
+  "texts": [
+    "Người đầu bếp đảo đều một hỗn hợp các nguyên liệu trong chảo, nhìn bằng mắt thường có thể thấy một số nguyên liệu như thịt gà, ớt đỏ, ớt xanh, đậu phộng và hành tím. Sau đó cô ấy tắt lửa, cho thêm vỏ chanh và nước cốt chanh vào chảo trước khi trút hỗn hợp thức ăn này ra đĩa.",
+    "The chef of the island was all a mixture of ingredients in the pan, seen by the eye, to see some ingredients such as chicken, red peppers, green peppers, peanuts, and purple onions, and she turned off the fire, adding lemon peels and lemon juice to the pan before pouring this mixture of food into a dish.",
+    "The chef of the island was all a mixture of ingredients in the pan, seen by the eye, to see some ingredients such as chicken, red peppers, green peppers, peanuts, and purple onions, and she turned off the fire, adding lemon peels and lemon juice to the pan before pouring this mixture of food into the dish."
+  ],
+  "input_tokens": 70,
+  "status": "translated",
+  "generation_wall_ns": 1669246800
+}

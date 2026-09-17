@@ -1,0 +1,15 @@
+{
+  "start": 2012,
+  "count": 4,
+  "policy_sha256": "39d120e1c259e2ecbe721fb0cab3b550617315cd31bce4e0ade5bbb41bde56dd",
+  "text_sha256": "d485990c8fa42fbc0ed34f326171fd8195da8def3790b3808306475fb6f46df1",
+  "vectors_sha256": "574e9c57472b3c924090217cb4f3673b0732bcb9abfba73e1e5a9e7e0b06c28c",
+  "wall_ns": 356278700,
+  "untruncated_tokens": [
+    31,
+    30,
+    31,
+    30
+  ],
+  "truncated_count": 0
+}

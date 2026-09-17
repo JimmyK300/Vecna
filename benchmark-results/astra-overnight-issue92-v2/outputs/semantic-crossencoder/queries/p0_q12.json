@@ -1,0 +1,125 @@
+{
+  "query_id": "p0_q12",
+  "query_text_sha256": "56dfe2cd9c0c0b0fef9cd71601378e40cbf82efc1d9a163ef60a24ac431febb9",
+  "policy_sha256": "1fc8828282ff85a215e0b6ff72abd915ae09feaf5fb9222cb45cd526f88d533b",
+  "chosen": [
+    {
+      "video_id": "L21_V027",
+      "record_index": 803,
+      "dense_score": 0.5885351896286011
+    },
+    {
+      "video_id": "L24_V018",
+      "record_index": 1604,
+      "dense_score": 0.44522345066070557
+    },
+    {
+      "video_id": "L24_V027",
+      "record_index": 1613,
+      "dense_score": 0.4939209818840027
+    },
+    {
+      "video_id": "L21_V025",
+      "record_index": 719,
+      "dense_score": 0.4753880500793457
+    },
+    {
+      "video_id": "L24_V011",
+      "record_index": 1597,
+      "dense_score": 0.45551374554634094
+    },
+    {
+      "video_id": "L24_V014",
+      "record_index": 1600,
+      "dense_score": 0.4501741826534271
+    },
+    {
+      "video_id": "L24_V042",
+      "record_index": 1627,
+      "dense_score": 0.4608839452266693
+    },
+    {
+      "video_id": "L24_V008",
+      "record_index": 1594,
+      "dense_score": 0.4678635001182556
+    },
+    {
+      "video_id": "L21_V028",
+      "record_index": 821,
+      "dense_score": 0.45877179503440857
+    },
+    {
+      "video_id": "L24_V010",
+      "record_index": 1596,
+      "dense_score": 0.49347373843193054
+    },
+    {
+      "video_id": "L24_V021",
+      "record_index": 1607,
+      "dense_score": 0.48440465331077576
+    },
+    {
+      "video_id": "L24_V024",
+      "record_index": 1610,
+      "dense_score": 0.4590347111225128
+    },
+    {
+      "video_id": "L24_V043",
+      "record_index": 1628,
+      "dense_score": 0.43536537885665894
+    },
+    {
+      "video_id": "L24_V017",
+      "record_index": 1603,
+      "dense_score": 0.4488365352153778
+    },
+    {
+      "video_id": "L24_V019",
+      "record_index": 1605,
+      "dense_score": 0.46305590867996216
+    },
+    {
+      "video_id": "L24_V026",
+      "record_index": 1612,
+      "dense_score": 0.44772234559059143
+    }
+  ],
+  "logits": [
+    0.8505768775939941,
+    -8.519050598144531,
+    -6.691283226013184,
+    -10.535266876220703,
+    -7.621081829071045,
+    -6.806430816650391,
+    -5.701687812805176,
+    -7.751457691192627,
+    -9.880603790283203,
+    -5.670571804046631,
+    -4.325191497802734,
+    -7.3372955322265625,
+    -8.01431655883789,
+    -2.322821855545044,
+    -8.367624282836914,
+    -8.008584976196289
+  ],
+  "token_counts": [
+    201,
+    329,
+    347,
+    191,
+    380,
+    315,
+    354,
+    353,
+    205,
+    347,
+    356,
+    338,
+    408,
+    440,
+    313,
+    313
+  ],
+  "truncated_pairs": 0,
+  "wall_ns": 13330634200
+}

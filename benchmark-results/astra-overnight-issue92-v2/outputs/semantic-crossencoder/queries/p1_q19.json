@@ -1,0 +1,97 @@
+{
+  "query_id": "p1_q19",
+  "query_text_sha256": "5dfe200499a91493c6fb27cf41d5fe360fe883dc0fc7c1021612ebb0d9530452",
+  "policy_sha256": "1fc8828282ff85a215e0b6ff72abd915ae09feaf5fb9222cb45cd526f88d533b",
+  "chosen": [
+    {
+      "video_id": "L29_V001",
+      "record_index": 2837,
+      "dense_score": 0.6286792159080505
+    },
+    {
+      "video_id": "L21_V015",
+      "record_index": 424,
+      "dense_score": 0.4734456241130829
+    },
+    {
+      "video_id": "L22_V013",
+      "record_index": 1164,
+      "dense_score": 0.4537326395511627
+    },
+    {
+      "video_id": "L28_V010",
+      "record_index": 2786,
+      "dense_score": 0.46357327699661255
+    },
+    {
+      "video_id": "L22_V017",
+      "record_index": 1243,
+      "dense_score": 0.40730565786361694
+    },
+    {
+      "video_id": "L30_V023",
+      "record_index": 2882,
+      "dense_score": 0.4747726619243622
+    },
+    {
+      "video_id": "L29_V017",
+      "record_index": 2853,
+      "dense_score": 0.5367918014526367
+    },
+    {
+      "video_id": "L30_V096",
+      "record_index": 2955,
+      "dense_score": 0.4280688762664795
+    },
+    {
+      "video_id": "L21_V027",
+      "record_index": 786,
+      "dense_score": 0.49382609128952026
+    },
+    {
+      "video_id": "L21_V025",
+      "record_index": 714,
+      "dense_score": 0.4710583984851837
+    },
+    {
+      "video_id": "L21_V029",
+      "record_index": 851,
+      "dense_score": 0.4344068169593811
+    },
+    {
+      "video_id": "L22_V004",
+      "record_index": 1018,
+      "dense_score": 0.4331498444080353
+    }
+  ],
+  "logits": [
+    0.9006749391555786,
+    -10.562243461608887,
+    -10.719110488891602,
+    -6.088258266448975,
+    -10.495059967041016,
+    -9.982707977294922,
+    -4.089385032653809,
+    -9.935890197753906,
+    -7.421453952789307,
+    -9.42965316772461,
+    -10.442047119140625,
+    -10.766357421875
+  ],
+  "token_counts": [
+    264,
+    240,
+    175,
+    528,
+    175,
+    219,
+    229,
+    325,
+    230,
+    181,
+    227,
+    184
+  ],
+  "truncated_pairs": 0,
+  "wall_ns": 8315393000
+}

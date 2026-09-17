@@ -1,0 +1,12 @@
+{
+  "query_id": "p1_q13",
+  "canonical_sha256": "1060001e7d9e9761ca4814f5193ce96b55d227fd49dfb6ea0ed10a4e4bc93f97",
+  "texts": [
+    "Cảnh quay cho thấy hành động trình bày món ăn sau khi hoàn thành giai đoạn chế biến. Bún được cho đầu tiên vào một chén rỗng, sau đó đầu bếp lần lượt cho từng vá nước dùng cùng các nguyên liệu như thịt gà, cà rốt, sả, nấm mèo vào chén bún, và kết thúc bằng việc thả một cọng ngò lên trên cùng. Cảnh quay tiếp theo là cảnh zoom xa dần chén bún, ta thấy bên cạnh chén bún còn có 1 chén nước chấm nhỏ với 2 miếng ớt.",
+    "The scene shows that the action of showing the dish after the processing period is completed. The initial feed is given on an empty bowl, then the cook turns for every patch of water used by chicken, carrots, sauces, mushrooms, and mushrooms into the bowl, and ends with dropping a stick onto the top. The next shot is a zoom that's gone from the bowl, and we see that next bowl has a small cup of sauce with two pieces of peppers.",
+    "The scene shows that the action of showing the dish after the processing period is completed. The initial feed is given on an empty bowl, then the cook turns for every patch of water used by chicken, carrots, sauces, mushrooms, and mushrooms into the bowl, and ends with dropping a stick onto the top. The next shot is a zoom that's gone from the bowl, and we see that next bowl has a little cup of sauce with two pieces of peppers."
+  ],
+  "input_tokens": 107,
+  "status": "translated",
+  "generation_wall_ns": 2392092100
+}

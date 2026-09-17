@@ -1,0 +1,12 @@
+{
+  "query_id": "p0_q22",
+  "canonical_sha256": "12483e925dc0f1d3ca944fd8a715056a52febcd37534f5b69cdbbd9e53bb4e2f",
+  "texts": [
+    "E1: Khoảnh khắc đầu tiên bột được bỏ vào tô măng tây.\nE2: Khoảnh khắc đầu tiên thấy miến măng tây đầu tiên tiếp xúc với dầu trong chảo.\nE3: Khoảnh khắc miếng măng tây đầu tiên rời khỏi chảo dầu.\nE4: Khoảng khắc miếng măng tây cuối cùng rời chảo dầu và nằm hoàn toàn trên dĩa.",
+    "E1: The first moment the powder was placed in the cement bowl.",
+    "E1: The first moment the powder was put in the cement bowl."
+  ],
+  "input_tokens": 74,
+  "status": "translated",
+  "generation_wall_ns": 424580800
+}

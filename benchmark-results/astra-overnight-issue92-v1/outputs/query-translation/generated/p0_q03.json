@@ -1,0 +1,12 @@
+{
+  "query_id": "p0_q03",
+  "canonical_sha256": "fad38a20d581e13d8f6cc698c1e26412bc694fcef600b9a05cfa9fcc006b3ab8",
+  "texts": [
+    "Đoạn clip cần tìm là cảnh hai người phụ nữ đang cho dê ăn: một người mặc áo thun trắng quàng áo đỏ trên vai, người kia mặc áo dài tay kẻ sọc tím truyền thống. Cả hai đều mỉm cười, tỏ vẻ thích thú.\nKhông gian trại rộng rãi, có mái che bằng tôn và hàng rào gỗ chia thành nhiều dãy chuồng, trong đó có hàng dài dê được nuôi nhốt.",
+    "The clip we're looking for is a scene where two women are feeding the goats: one wore a white T-shirt on his shoulder, the other wearing a long coat of traditional purple, both smiling and enjoying the pleasant appearance of a large camp, covered with a cover and a wooden fence that was divided into many folds, including the long line of goats that were kept in prison.",
+    "The clip we're looking for is a scene where two women are feeding the goats: one wore a white T-shirt on his shoulder, the other wearing a long coat of traditional purple, both smiling and enjoying the pleasant appearance of a large camp, covered with a cover and a wooden fence that was divided into many folds, including the long line of goats that were kept in captivity."
+  ],
+  "input_tokens": 83,
+  "status": "translated",
+  "generation_wall_ns": 1938467700
+}

@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q02",
+  "canonical_sha256": "09425e5e8fa316966a0846bc42e4233b882136eca72eefb5c8a0c38395b8bceb",
+  "texts": [
+    "Đoạn clip bắt đầu với cảnh một người đang dùng điện thoại chụp ảnh bức tranh hình tê giác trên tường. Đoạn clip kết thúc với cảnh một người chụp ảnh các hình graffiti 3 chú khỉ trên một cây cầu",
+    "The clip begins with a person who's using a phone to take a picture of a rhino image on the wall.",
+    "The clip starts with a person who's using a phone to take a picture of a rhino image on the wall."
+  ],
+  "input_tokens": 43,
+  "status": "translated",
+  "generation_wall_ns": 538624000
+}

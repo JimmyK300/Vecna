@@ -1,0 +1,12 @@
+{
+  "query_id": "p0_q02",
+  "canonical_sha256": "def9478695ff36f4e04b821177c7819d8bba0b7056c4aa3024407daec624a0a0",
+  "texts": [
+    "Mẩu tin giới thiệu về đàn hổ tại một địa phương ở miền Nam vừa có thêm khoảng 3-6 con hổ con. Đây là một giống hổ quý hiếm",
+    "This is a rare tiger species.",
+    "This is a rare species of tiger."
+  ],
+  "input_tokens": 33,
+  "status": "translated",
+  "generation_wall_ns": 200671400
+}

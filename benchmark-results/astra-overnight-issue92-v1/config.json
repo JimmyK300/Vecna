@@ -1,0 +1,8 @@
+{
+  "parent_commit": "37b321048432ccba5182a66bd39b1ca73c547537",
+  "started_utc": "2026-09-16T15:50:00Z",
+  "deadline_utc": "2026-09-16T23:50:00Z",
+  "packet_e": {"providers": ["qwen", "siglip", "ocr_sparse", "asr_sparse"], "budget": 100, "admission": "cyclic_next_eligible_unseen", "scoring": "unchanged_full_union_current_scores", "bootstrap_seed": 82, "bootstrap_resamples": 10000},
+  "prohibitions": ["truth edits", "answer-aware tuning", "production merge", "writes to friend/browser branches", "large speculative model downloads"],
+  "start_note": "Conservative minute-rounded start of research setup; deadline is not extended by interruptions."
+}

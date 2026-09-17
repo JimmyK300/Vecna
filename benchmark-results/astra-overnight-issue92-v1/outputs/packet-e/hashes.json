@@ -1,0 +1,10 @@
+{
+  "code\\admission.py": "43fc7587c0e1259219a3ddab65c8a254e4384bf244a719d0453860afeaf4e7bd",
+  "code\\evaluate_e.py": "71df6a186a4853e770f093c9f9b2bbc5023ac11eb4e16903ebfa366867bb9c48",
+  "code\\test_admission.py": "3e9843b9a6dcda4b81bde1f12ef69d6ff110dee1b06d41acba391c3cfee05658",
+  "config.json": "9aba6439a2f9d93f83137591c0f29ad3a13b458a04439d01e0d4f79e0e93a887",
+  "control_manifest.json": "13a268a219537567a2683944043acc7b0b8ce493c72e3e3a7dc5fa24867e0a9c",
+  "outputs\\packet-e\\rankings.jsonl": "0db9fac2a3cc7869805bcad1b4a005bedc66b808b41f730699b4ed14f46e2290",
+  "outputs\\packet-e\\per_query.jsonl": "d91eafc3fe2675f8057dadb78b33beb4e4aa7404c24be80a2da33875b90d16a0",
+  "outputs\\packet-e\\summary.json": "f081305913bfcf2a5e1ad87f9efff81f19918917b8cb11e599ef783327fad180"
+}

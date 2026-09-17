@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q04",
+  "canonical_sha256": "f12c27be5f515f65a9bec2b04d66a26e45a55fcca31752f5b0e2f37d19406a66",
+  "texts": [
+    "Hai bạn trẻ đang treo băng-rôn lớn có tông màu xanh dương, được trang trí bằng hình ảnh núi, mây và một con đường dẫn tới trường học. Trên băng rôn còn có hình ảnh 02 em bé vùng khó khăn đang mặc áo màu vàng.",
+    "Two young people are hanging large blue banners, decorated with mountain images, clouds and a road leading to school; on the banner there are 2-2 babies in the hard zone dressed in yellow.",
+    "Two young people are hanging large blue banners, decorated with mountain images, clouds and a road leading to school; on the banner there are 2-2 babies in the hard zone wearing yellow shirts."
+  ],
+  "input_tokens": 53,
+  "status": "translated",
+  "generation_wall_ns": 885347900
+}

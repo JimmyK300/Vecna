@@ -1,0 +1,41 @@
+{
+  "query_id": "p3_q05",
+  "query_text_sha256": "167615a9ec34f4bea24436727d9e0f52ed2d1a59ebbbc881a65e759d4e66ac5d",
+  "policy_sha256": "1fc8828282ff85a215e0b6ff72abd915ae09feaf5fb9222cb45cd526f88d533b",
+  "chosen": [
+    {
+      "video_id": "L25_V024",
+      "record_index": 1782,
+      "dense_score": 0.5102362036705017
+    },
+    {
+      "video_id": "L25_V016",
+      "record_index": 1729,
+      "dense_score": 0.5600428581237793
+    },
+    {
+      "video_id": "L25_V087",
+      "record_index": 2182,
+      "dense_score": 0.5507479310035706
+    },
+    {
+      "video_id": "L25_V051",
+      "record_index": 1961,
+      "dense_score": 0.5201300978660583
+    }
+  ],
+  "logits": [
+    -1.6272292137145996,
+    -3.533151149749756,
+    -5.7583208084106445,
+    -4.083683490753174
+  ],
+  "token_counts": [
+    174,
+    150,
+    131,
+    122
+  ],
+  "truncated_pairs": 0,
+  "wall_ns": 1478271300
+}

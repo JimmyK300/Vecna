@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q24",
+  "canonical_sha256": "ef838f0632cfc5b7fc168c2eec11b22728e3dc28d0b9b80b3560d5f462756912",
+  "texts": [
+    "Câu hỏi môn Sinh học nằm ở số thứ tự 11 trong đề thi THPTQG 2022. Trong câu hỏi có một biểu đồ đưa ra sự so sánh tốc độ sinh trưởng của các loài thực vật trong các hệ sinh thái ven biển. Hãy cho biết loài cây (II) đạt được tốc độ sinh trưởng tốt nhất khi môi trường sống có độ mặn là bao nhiêu phần nghìn?",
+    "In the question, there's a chart that compares the growth rate of plants in coastal ecosystems.",
+    "In the question, there's a chart that compares the growth rate of plants in the coastal ecosystems."
+  ],
+  "input_tokens": 81,
+  "status": "translated",
+  "generation_wall_ns": 583644100
+}

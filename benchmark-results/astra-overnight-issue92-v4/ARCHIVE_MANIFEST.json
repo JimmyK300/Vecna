@@ -1,0 +1,18 @@
+{
+  "created_at": "2026-09-16T18:21:43.258594+00:00",
+  "source_commit": "37b321048432ccba5182a66bd39b1ca73c547537",
+  "uncommitted": true,
+  "files": {
+    "code\\temporal_bins.py": "7f092e113e4eedccb1d311fcd758043c8af32a9008124798a8a4db299faad8f2",
+    "code\\test_temporal_bins.py": "adf8317e3861c1fe5a39e0ddac3027f7c8ece0df6dcc30cdaa5113383f791c8a",
+    "outputs\\temporal-bins\\complete.json": "7f574b2f02c1e6bb8536adc289c69b1e93b82d0bdb85e0ff2546853803034ab7",
+    "outputs\\temporal-bins\\per_query.jsonl": "c07cf099f1670df7d53ed6d2bd668a4838f10adea8dec37241bce1a8e1245597",
+    "outputs\\temporal-bins\\rankings.jsonl": "6073a9bfc7fdd83c29234271631d1bfb46df410d711efd776310edf495d79051",
+    "outputs\\temporal-bins\\summary.json": "ac0984ecf78cf4c82d1e5eb0c23498a55e2b0b3ee10fa7ea32794643e10dbeb3",
+    "policy.json": "3c29fc99e2f55c2049ac719c254fcf5e8d5015eb74d74013c2ed66a268f8c580",
+    "README.md": "3e55150b2883be1c0aebc235f197f32cea2979f9772d5379318db9df5ce15a1b",
+    "validation\\accepted.json": "b021f5fd844fc49dbb4be60bec41eb4f4f631abd26df473b390d34793a936ee9",
+    "validation\\recomputed\\per_query.jsonl": "c07cf099f1670df7d53ed6d2bd668a4838f10adea8dec37241bce1a8e1245597",
+    "validation\\recomputed\\rankings.jsonl": "6073a9bfc7fdd83c29234271631d1bfb46df410d711efd776310edf495d79051"
+  }
+}

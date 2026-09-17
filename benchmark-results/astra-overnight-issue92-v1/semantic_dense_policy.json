@@ -1,0 +1,28 @@
+{
+  "frozen_before_dense_inference": true,
+  "hypothesis": "Multilingual dense semantic retrieval may recover concepts missed by lexical matching against mixed English/Vietnamese semantic records.",
+  "parent": "exact PR91 control; no prior arm promoted",
+  "representation": "cached BAAI/bge-m3 pinned parent loader; CLS L2 CPU float32 max1024; unchanged record text and canonical queries",
+  "batch_size": 4,
+  "cpu_threads": 8,
+  "stop_compute_utc": "2026-09-16T22:50:00+00:00",
+  "query_count": 115,
+  "record_count": 2956,
+  "candidate_budget": 100,
+  "provider_tie_break": "descending cosine, segment_id, record_index; deduplicate mapped frame",
+  "mapping": "existing frozen midpoint representative; no new frame extraction",
+  "contribution_gate": "new accepted video or fractional target coverage over parent pool",
+  "integration": "one equal RRF60 against exact parent control, fixed100; no weight sweep",
+  "selection": "existing architecture promotion gate; no answer-aware tuning",
+  "resources": "one new long embedding job; cached model only; batched resumable embeddings approx13MB; no corpus/index writes",
+  "inputs_sha256": {
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v1\\outputs\\semantic\\records.jsonl": "60dcb55a70f6e112f31788bc5bbc9970b17be94059c0647be4a2875fcc732d34",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v1\\outputs\\semantic\\record_frame_mapping.json": "926f4b673d6a78776a78248bf0940db90d799ad80ca7c1f0cffbf6d0d87956c6",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v1\\outputs\\packet-e\\rankings.jsonl": "0db9fac2a3cc7869805bcad1b4a005bedc66b808b41f730699b4ed14f46e2290",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\fusion\\queries.jsonl": "3b91dfe26a893192a497a964d3a9ea5f50c595fdaabad000cbc60fc602be0d1a",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-visibility\\dense_config.json": "c50d1cc64cc0b5e62913343c9bb2329780314d1480d6e422603ba22a1dd33071",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\source-visibility\\source\\text_embedding_main.py": "ec26570cf87a9d3e6a4e2d481531a46f470e0a7f70f220c1c5cb15da126d3f01",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-retrieval-rd-v1\\code\\collect_dense_visibility.py": "f4daac0debe0e33c043bd0a38e1dc722fe6d51283c0d370c0b171a03bda3938b",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v1\\code\\semantic_dense.py": "1f63e64d1be47226757681046cc36186b7c1ce6361337c4ba970d7d029fde2f1"
+  }
+}

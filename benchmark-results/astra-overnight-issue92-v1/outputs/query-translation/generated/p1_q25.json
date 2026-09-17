@@ -1,0 +1,12 @@
+{
+  "query_id": "p1_q25",
+  "canonical_sha256": "fabe99ad531f96d61c7bcab0354aa14e3070621a95b4d35d6d053e26b3937a1c",
+  "texts": [
+    "Đoạn video bắt đầu bằng ảnh cận đầu một con lân trắng, mũi đỏ, bên cạnh lá cờ trắng viền đỏ.\nE1 Khoảnh khắc đầu tiên xuất hiện đầy đủ hai con rồng vàng đang xoay vòng.\nE2 Khoảnh khắc đầu tiên con lân hoàn tất cú xoay người trên các thanh trụ (thời điểm đâu tiên các chân của lân đặt trên trụ sau khi xoay).\nE3 Khoảnh khắc đầu tiên dùi chạm vào kẻng đồng múa lân.",
+    "The video begins with a close-up photo of a white, red-nosed unicorn, next to the red-line white flag. E1 moment first appeared in full rotation of two golden dragons. E2 seconds the animal first completed its turn on the pillars (the first time the legs of its neighbor were placed on the pillar after the rotation). E3 seconds first struck its partner.",
+    "The video begins with a close-up photo of a white, red-nosed unicorn, next to the red-line white flag. E1 moment first appeared in full rotation of two golden dragons. E2 seconds the animal first completed its turn on the pillars (the first time the legs of its neighbor were placed on the pillar after the rotation). E3 seconds first struck its fellow dancer."
+  ],
+  "input_tokens": 94,
+  "status": "translated",
+  "generation_wall_ns": 2035144200
+}

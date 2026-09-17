@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q24",
+  "canonical_sha256": "030d87e69c8372cf32b525d5256fae70239368cd10502f428b8f9be14ba3def4",
+  "texts": [
+    "Một đầu bếp đang chuẩn bị một món ăn từ một miếng thực phẩm màu cam. Người này băm nhỏ một số nguyên liệu, tách các hạt nhỏ khỏi cành rồi trộn chúng thành hỗn hợp gia vị. Sau đó, nhiều loại gia vị được lần lượt thêm vào và hỗn hợp được phủ lên cả hai mặt của nguyên liệu chính trước khi thêm một chất lỏng.\nTrong quá trình nêm gia vị, lượng nước tương được sử dụng là bao nhiêu?",
+    "A chef is preparing a dish from an orange piece of food, which slices some of the ingredients, separates the small particles from the branches, and mixes them into seasoning mixtures, and then, many of the spices are added in addition, and the mixture is covered on both sides of the main material before adding a liquid.",
+    "A chef is preparing a dish from an orange piece of food, which slices some of the ingredients, separates the little particles from the branches, and mixes them into seasoning mixtures, and then, many of the spices are added in addition, and the mixture is covered on both sides of the main material before adding a liquid."
+  ],
+  "input_tokens": 91,
+  "status": "translated",
+  "generation_wall_ns": 2095282800
+}

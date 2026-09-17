@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q25",
+  "canonical_sha256": "0234caf0cb03df4fb17542f7ef120834313f00953b0e33686973c212a44c7d4f",
+  "texts": [
+    "Cảnh quay một chú lân đang biểu diễn từ đầu video, các cột để chú lân biểu diễn được dán những con số. Phía sau có 1 mô hình con rồng uốn lượn hình xoắn ốc. Trong các số từ 16 giây đầu tiên của video, số nào không được nhìn thấy từ góc nhìn của camera trong các số từ 1-8.",
+    "The scene where a unicorn is performing from the top of the video, the columns for the neighbor are pasted numbers, and behind them there's a model of the dragon spinning spiral shapes, and in the first 16 seconds of the video, the number that's not seen from the camera's point of view in the number of words from 1-8.",
+    "The scene where a unicorn is performing from the top of the video, the columns for the neighbor are pasted numbers, and behind them there's a model of the dragon spinning spiral shapes, and in the first 16 seconds of the video, the number that's not seen from the camera's point of view in the number of words 1-8."
+  ],
+  "input_tokens": 70,
+  "status": "translated",
+  "generation_wall_ns": 1759938300
+}

@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q09",
+  "canonical_sha256": "3b1bc60ca2ff64cc1d59898596ca190c3502448832d4a6f9a8302d99f7151cc9",
+  "texts": [
+    "Đoạn clip bắt đầu với các người mẫu trình diễn những bộ trang phục màu kem dáng rộng, được điểm xuyết bằng các mảng vải nhiều màu sắc và họa tiết hình học. Nhiều tác phẩm đầy màu sắc được trưng bày trên thảm cỏ ngoài trời, thu hút đông đảo người dân và du khách tham quan. Những món đồ thủ công như búp bê và quả cầu được tạo nên từ nhiều mảnh vải màu sắc, hoa văn khác nhau.",
+    "The clip begins with role models performing large - coloured ice - cream costumes, marked with colorful pieces of cloth and geometry, and many colorful works displayed on open grass, attracting large numbers of people and visitors, such as dolls and spheres are made of different pieces of cloth.",
+    "The clip begins with role models performing large - coloured ice - cream costumes, marked with colorful pieces of cloth and geometry, and many colorful works displayed on open grass, attracting large numbers of people and visitors, such as dolls and spheres are made of different pieces of fine, colorful cloth."
+  ],
+  "input_tokens": 91,
+  "status": "translated",
+  "generation_wall_ns": 1418407100
+}

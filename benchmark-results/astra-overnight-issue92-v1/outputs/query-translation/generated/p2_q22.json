@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q22",
+  "canonical_sha256": "76c4861df88322e7e2b40b67521adee14a95845f9eb47593e7931fcb5deb7a27",
+  "texts": [
+    "Đoạn video mô tả quá trình làm bánh, bánh được tạo ra có màu tím, nguyên liệu bên trong có giá, cà rốt, và bên trong mỗi bánh đều có 1 hạt sen. Mỗi lần khuôn này làm được bao nhiêu cái bánh?",
+    "The video shows how the bread, the cake, is made of purple, the material inside is priced, carrots, and inside each cake has a lot of lotion, and how many pies does this mold make?",
+    "The video shows how the bread, the cake, is made of purple, the material inside is priced, carrots, and inside each cake has a lot of lotion, and how many pies does it make every time?"
+  ],
+  "input_tokens": 50,
+  "status": "translated",
+  "generation_wall_ns": 1080804700
+}

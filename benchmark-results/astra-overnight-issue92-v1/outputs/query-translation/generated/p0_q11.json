@@ -1,0 +1,12 @@
+{
+  "query_id": "p0_q11",
+  "canonical_sha256": "ac6befe7e3b1454d9edecd5a5704bce487900a1607aa9a4109e48aa8d67c0900",
+  "texts": [
+    "Đoạn video mô tả một người ngồi vệ sinh máy ảnh. Công đoạn này bắt đầu bằng việc tháo rời máy ảnh. Tiếp theo, chiếc ống kính đã được tháo rời và được đặt ngay ngắn trên một chiếc khăn màu tím hồng. Phân cảnh cuối cùng là vệ sinh ống kính (lens) bằng một chiếc tăm bông.",
+    "The video depicts a camera toilet, which begins with removing the camera from the camera. Next, the lens has been removed and is placed briefly on a pink veil, and the last scene is the hygiene of the lens (lens) in a cotton mask.",
+    "The video depicts a camera toilet, which begins with removing the camera from the camera. Next, the lens has been removed and is placed briefly on a pink scarf, and the last scene is the hygiene of the lens (lens) in a cotton mask."
+  ],
+  "input_tokens": 67,
+  "status": "translated",
+  "generation_wall_ns": 1259969900
+}

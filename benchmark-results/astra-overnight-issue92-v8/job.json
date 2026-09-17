@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "C:\\Users\\minhc\\Code\\Vecna\\.venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "-B",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v8\\code\\query_rank.py"
+  ],
+  "cwd": "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight",
+  "timeout_seconds": 11000,
+  "next_action": "Read result.json/spec.json and v8 outputs complete/summary/rankings/per_query/115query caches. Verify all policy/cache/model/source/query variant identities, exact v5 control, preserved first frame and100 membership, independent RRF replay and113score rows. Compare to exact PR91 too. Preserve negative findings. Continue Issue92 from strongest supported arm until original23:50Z deadline or evidenced quota exhaustion; no deadline standby or completed-job relaunch."
+}

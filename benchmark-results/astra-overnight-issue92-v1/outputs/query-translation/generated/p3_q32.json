@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q32",
+  "canonical_sha256": "1e0a0c61f7555771e3d18c0c2f6106898a8ea18dd4e57eca55507d10c5c3222e",
+  "texts": [
+    "Đoạn phim bắt đầu với cảnh hai mẹ con cầm điện thoại trò chuyện, sau đó chuyển sang cảnh người con trả lời phỏng vấn, phía sau có một phụ nữ da đen đang bước qua.",
+    "The video begins with the mother and daughter holding the phone and then switching to the scene where the son answered the interview, where a black woman was passing by.",
+    "The video begins with the mother and daughter holding the phone and then switching to the scene where the son answered the interview, where a black woman was coming through."
+  ],
+  "input_tokens": 40,
+  "status": "translated",
+  "generation_wall_ns": 710703300
+}

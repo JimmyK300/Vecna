@@ -1,0 +1,12 @@
+{
+  "query_id": "p0_q15",
+  "canonical_sha256": "957f53c1daacd93d8aadc4075267b3ab4a35f2a4ddc2f7e3cc7c4cf72092f64e",
+  "texts": [
+    "Đoạn video vể nghiên cứu tại 1 Đại học ở thành phố Lausanne về việc nghiên cứu cơ chế bay của bọ để chế tạo robot",
+    "A video of research at a university in the city of Larissa about studying the flying mechanism of beetles to build robots.",
+    "A video of research at a university in the city of Larissa about studying the flying mechanisms of bugs to build robots."
+  ],
+  "input_tokens": 27,
+  "status": "translated",
+  "generation_wall_ns": 619668400
+}

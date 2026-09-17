@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q29",
+  "canonical_sha256": "32ac6d640f065af07aea8a6986bf9e5b50afebe3ba60d560fafc3c801268f343",
+  "texts": [
+    "Video về một khu vườn cây ăn trái ở miền Tây Nam Bộ. Đây là chuỗi liên tiếp các cảnh quay về 4 loại trái cây trong vườn.\nE1: Cảnh đầu tiên có trái sầu riêng.\nE2: Cảnh đầu tiên có trái măng cụt.\nE3: Cảnh đầu tiên có trái bưởi.\nE4: Cảnh đầu tiên có trái dâu bòn bon.",
+    "The video of a fruit garden in the southwest of the Ministry -- this is a series of scenes of four types of fruit in the garden.",
+    "The video of a fruit garden in the southwest of the Ministry -- this is a sequence of four types of fruit in the garden."
+  ],
+  "input_tokens": 76,
+  "status": "translated",
+  "generation_wall_ns": 958230800
+}

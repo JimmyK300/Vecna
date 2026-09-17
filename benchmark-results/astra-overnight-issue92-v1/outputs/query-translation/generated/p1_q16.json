@@ -1,0 +1,12 @@
+{
+  "query_id": "p1_q16",
+  "canonical_sha256": "2bee64693d59d3846d265ccff3f655a809e6f0c479b099c247d6a99ab1a3c103",
+  "texts": [
+    "Cảnh quay bắt đầu bằng cảnh những con tôm đã được lột vỏ và nấu chín đang nằm trên dĩa, phía sau là người đầu bếp đang đặt 3 ổ bánh mì lên bàn. Sau đó là cảnh quay các đầu bếp, có người thì trang trí món ăn, có người thì chế biến món ăn. Những con tôm được cắt làm đôi và được nướng trên bếp.",
+    "The scene begins with the peeling and cooking shrimps sitting on the plate, and behind is the cook putting three loaves of bread on the table, and then the scene of the cooks, and some of them refurbishing, some of them cooking, shrimps being cut in half and baked in the kitchen.",
+    "The scene begins with the peeling and cooking shrimps sitting on the plate, and behind is the cook putting three loaves of bread on the table, and then the scene of the cooks, and some of them refurbishing, some of them cooking, shrimps being cut in half and baked on the kitchen."
+  ],
+  "input_tokens": 75,
+  "status": "translated",
+  "generation_wall_ns": 1551668600
+}

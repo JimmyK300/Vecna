@@ -1,0 +1,12 @@
+{
+  "query_id": "p0_q18",
+  "canonical_sha256": "6eff5d5f49f13148956d7776be109d03fd163021ace3d390d61fffb057e5f5b4",
+  "texts": [
+    "Tìm một đoạn video đua xe đạp, góc quay từ flycam trên cao, một vận động viên mặc áo xanh dương, trắng đang vượt ba vận động viên khác và lên vị trí dẫn đầu. Biết sau đó vận động viên này dẫn đầu suốt đoạn đường còn lại đến đích.\n\n## Question Answering (Q&A)",
+    "Finds a video of the racing car, the angle shot from the flycam on high ground, a blue, white athlete crossing three other athletes and taking the lead, then this athlete leads the rest of the way to the finish.",
+    "Finds a video of the racing car, the angle shot from the flycam on high ground, a blue, white athlete crossing three other athletes and taking the lead, then this athlete leads the entire way to the finish line."
+  ],
+  "input_tokens": 72,
+  "status": "translated",
+  "generation_wall_ns": 1199765900
+}

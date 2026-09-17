@@ -1,0 +1,12 @@
+{
+  "query_id": "p1_q05",
+  "canonical_sha256": "17ae93eabbfc96cfa08a1521278ccfa5edbf5345c2fb21a3bc33d10d71cc8668",
+  "texts": [
+    "Mẩu tin bắt đầu với hình ảnh nột người đàn ông mặc vest xanh đậm, sơ mi trắng và cà vạt, đang ngồi trên một chiếc ghế lớn. Ông cầm bằng hai tay một khối đá quý thô khá lớn, đưa lên gần mặt để quan sát.\nBên phải là một phụ nữ mặc trang phục công sở màu đen và khăn trùm đầu màu hồng tím, đang đứng cạnh và mỉm cười. Tiếp theo có hình ảnh toàn cảnh từ trên cao của một mỏ đá quý lộ thiên quy mô lớn với hố khai thác sâu nhiều tầng và hệ thống đường vận chuyển bao quanh.",
+    "The news begins with the angry picture of the man in a dark blue suit, a white shirt and a tie, sitting on a big chair with two hands a pretty large rough rock, raised up close to the face to observe, and on the right was a woman dressed in a black job dress and a pink hood, standing by and smiling, followed by a picture of a large high-streaming rock with extensive mining and moving systems all around.",
+    "The news begins with the angry picture of the man in a dark blue suit, a white shirt and a tie, sitting on a big chair with two hands a pretty large rough rock, raised up close to the face to observe, and on the right was a woman dressed in a black job costume and a pink hood, standing by and smiling, followed by a picture of a large high-streaming rock with extensive mining and moving systems all around."
+  ],
+  "input_tokens": 120,
+  "status": "translated",
+  "generation_wall_ns": 2464339700
+}

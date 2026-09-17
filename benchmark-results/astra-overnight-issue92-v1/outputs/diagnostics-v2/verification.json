@@ -1,0 +1,10 @@
+{
+  "scored_arms": 12,
+  "canonical_queries_per_arm": 115,
+  "scoreable_queries_per_arm": 113,
+  "control_exact_all_arms": true,
+  "all_saved_scores_recomputed_exact": true,
+  "candidate_budget_unique100": true,
+  "e1_new_useful_candidates": 600,
+  "note": "Diversity across videos is not necessarily redundant evidence. Segment metrics cover only known five-video map. Slices are descriptive, overlapping, and not held out."
+}

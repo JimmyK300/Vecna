@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q16",
+  "canonical_sha256": "9919ebc7313471df06203d91ed3f4fd0a613f7c1463ff251da82e3e189e230ba",
+  "texts": [
+    "Một người đang đổ 1 nguyên liệu vào trong 1 nồi thủy tinh, sau đó, sử dụng 1 đôi đũa để đảo nguyên liệu màu đỏ có chút màu xanh lá cây. Sau khi, nguyên liệu đã biến đổi màu, người đàn ông đổ thêm 1.5L nguyên liệu dạng lỏng, 1/2 muỗng (cà phê) nguyên liệu trắng có vị mặn, 1/2 muỗng nguyên liệu trắng có vị ngọt, 2 muỗng hạt nguyên liệu có vị từ xương hầm",
+    "A person is pouring a material into a glass pot, and then, using a pair of wands to reverse the red material that's a little green, and then after, the material has changed color, the man adds 1.5L of liquid material, 1/2 spoons of salt white material, 1/2 spoons of sweet white material, two spoons of grains that are filled with the taste of a stew.",
+    "A person is pouring a material into a glass pot, and then, using a pair of wands to reverse the red material that's a little green, and then after, the material has changed color, the man adds 1.5L of liquid material, 1/2 spoons of salt white material, 1/2 spoons of sweet white material, two spoons of grains that are filled with the taste of a bone."
+  ],
+  "input_tokens": 90,
+  "status": "translated",
+  "generation_wall_ns": 1990934000
+}

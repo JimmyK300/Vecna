@@ -1,0 +1,62 @@
+{
+  "status": "passed",
+  "archives": {
+    "v1": {
+      "manifest_sha256": "4499774188206f767b77398fa3d4e083eb6e342f7eb34176226592b8f111f523",
+      "verified_files": 1795,
+      "all_archive_bytes": 136003623
+    },
+    "v2": {
+      "manifest_sha256": "a50feaafeed30b8c39dfd16472753fe789d873ca83ec692b7f4626649e747a58",
+      "verified_files": 129,
+      "all_archive_bytes": 16010021
+    },
+    "v3": {
+      "manifest_sha256": "a916d5c9adff26f1c409ff5607fafe5ac13ba9c9ea8f5e262184d0df8131b46d",
+      "verified_files": 131,
+      "all_archive_bytes": 20381431
+    },
+    "v4": {
+      "manifest_sha256": "9ce76236795615a600ad27af2683ae0b602d0eb44801799971c0a036e60b1708",
+      "verified_files": 11,
+      "all_archive_bytes": 16156656
+    },
+    "v5": {
+      "manifest_sha256": "c883670a070453de9ecb912b99576c5552eb7c08f0bd0b033885fa0699c91d6b",
+      "verified_files": 137,
+      "all_archive_bytes": 40606862
+    },
+    "v6": {
+      "manifest_sha256": "71733eb4fc610054a19de6afe5197d8a2798dd56f6a0575fb9a0612ae95cf033",
+      "verified_files": 139,
+      "all_archive_bytes": 42880056
+    },
+    "v7": {
+      "manifest_sha256": "340d3e4f1f2e1071eaef27fc616cfd98665b4de24775abc79d2fb5ed54224158",
+      "verified_files": 15,
+      "all_archive_bytes": 16429780
+    },
+    "v8": {
+      "manifest_sha256": "2da16b39dfa57953ef4fa3e5ebe2afb978e4d367012077a08dde8d4eae5a0859",
+      "verified_files": 136,
+      "all_archive_bytes": 24620499
+    },
+    "v9": {
+      "manifest_sha256": "609c004a6f0a414c42d97912c993ca74af554ea0aa702f6ecbccea757d6c98ab",
+      "verified_files": 139,
+      "all_archive_bytes": 43660645
+    },
+    "v10": {
+      "manifest_sha256": "30c208a6f70cf963abebceadd68569394c2772e3ba18a6ad6f181f6974348f6f",
+      "verified_files": 138,
+      "all_archive_bytes": 35805913
+    },
+    "v11": {
+      "manifest_sha256": "de3f110cba169f557c32ae1297be45bcd694f7c001f2f3f31b417f7f2dd401c4",
+      "verified_files": 117,
+      "all_archive_bytes": 15110045
+    }
+  },
+  "archive_bytes": 407665531,
+  "limit_bytes": 30000000000
+}

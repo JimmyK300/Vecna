@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q01",
+  "canonical_sha256": "90239b9a64ec74ad52b2ede63a59d87ad0c8086747997fbdae4cf34a1116935e",
+  "texts": [
+    "Nhóm 5 người đang chơi đùa bên cạnh một con vật màu vàng. Một trong số đó đã mang một vật trông như trái bí đỏ đi giấu. Người đàn ông thức dậy không thấy quả bí đỏ đâu nên đánh thức con vật dậy.",
+    "The group of five were playing alongside a yellow animal, and one of them carried something that looked like a pumpkin to hide.",
+    "Five people playing beside a yellow animal, one of whom carried an object that looked like a pumpkin to hide."
+  ],
+  "input_tokens": 49,
+  "status": "translated",
+  "generation_wall_ns": 596175900
+}

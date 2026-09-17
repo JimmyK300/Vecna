@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q10",
+  "canonical_sha256": "f7ceba06ae2b93f5bf3730724a8c36891e5c76b2b59c875d92f5037a6678175e",
+  "texts": [
+    "Cận cảnh một nhóm 3 vận động viên đua xe đạp đang di chuyển sát nhau, hai tay đua mặc áo xanh biển đội mũ bảo hiểm đỏ và trắng, bên cạnh có một tay đua mặc áo vàng đang đua cùng. Bên dưới quai mũ của tay đua nón đỏ có một sợi dây màu trắng treo lủng xuống gần cổ.",
+    "Close to the scene of a group of three cyclists moving together, two drivers wearing blue hats wearing red and white helmets, next to a driver in a yellow shirt racing with a white string hanging down his neck.",
+    "Close to the scene of a group of three cyclists moving together, two drivers wearing blue hats wearing red and white helmets, next to a driver in a yellow shirt racing with a white rope hanging down his neck."
+  ],
+  "input_tokens": 68,
+  "status": "translated",
+  "generation_wall_ns": 1073721500
+}

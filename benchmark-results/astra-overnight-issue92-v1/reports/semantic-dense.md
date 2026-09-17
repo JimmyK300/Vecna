@@ -1,0 +1,28 @@
+# semantic-dense: NEGATIVE
+
+All counts use113 scoreable queries;115 canonical input rows. Parent control unchanged.
+
+Video metrics: {"R@1": {"mean": 0.23008849557522124, "sum": 26.0}, "R@5": {"mean": 0.37168141592920356, "sum": 42.0}, "R@10": {"mean": 0.4336283185840708, "sum": 49.0}, "R@20": {"mean": 0.5398230088495575, "sum": 61.0}, "MRR@20": {"mean": 0.2978183848368648, "sum": 33.65347748656572}}
+
+Workload: {"embedded_documents": 2956, "embedded_queries": 115, "inference_batches": 768, "encoding_wall_ns": 690267403200, "search_wall_ns": 229115400, "cosine_pairs": 339940, "truncated_texts": 0, "cpu_threads": 8, "new_model_download_bytes": 0, "external_index_writes": 0}
+
+Paired changes (query bootstrap10000, seed82; exploratory, no pristine holdout):
+
+- R@1: delta=-0.20353982300884957; CI=[-0.30973451327433627, -0.10619469026548672]; rescues=['p0_q02', 'p0_q20', 'p1_q11', 'p2_q02', 'p2_q07', 'p3_q05', 'p3_q07', 'p3_q12']; regressions=['p0_q04', 'p0_q07', 'p0_q08', 'p0_q13', 'p0_q14', 'p0_q16', 'p1_q05', 'p1_q07', 'p1_q08', 'p1_q10', 'p1_q12', 'p1_q15', 'p1_q20', 'p1_q24', 'p2_q04', 'p2_q08', 'p2_q09', 'p2_q12', 'p2_q13', 'p2_q21', 'p2_q23', 'p2_q26', 'p2_q29', 'p3_q02', 'p3_q04', 'p3_q06', 'p3_q18', 'p3_q27', 'p3_q28', 'p3_q31', 'p3_q36'].
+
+- R@5: delta=-0.30973451327433627; CI=[-0.40707964601769914, -0.20353982300884957]; rescues=['p0_q20', 'p1_q13', 'p1_q22', 'p2_q07', 'p2_q25']; regressions=['p0_q05', 'p0_q08', 'p0_q13', 'p0_q14', 'p0_q18', 'p1_q01', 'p1_q05', 'p1_q06', 'p1_q07', 'p1_q08', 'p1_q09', 'p1_q12', 'p1_q15', 'p1_q16', 'p1_q20', 'p1_q21', 'p1_q24', 'p2_q04', 'p2_q08', 'p2_q09', 'p2_q10', 'p2_q13', 'p2_q14', 'p2_q17', 'p2_q20', 'p2_q21', 'p2_q22', 'p2_q26', 'p2_q29', 'p2_q30', 'p3_q04', 'p3_q13', 'p3_q14', 'p3_q18', 'p3_q20', 'p3_q27', 'p3_q28', 'p3_q30', 'p3_q31', 'p3_q36'].
+
+- R@10: delta=-0.2920353982300885; CI=[-0.39823008849557523, -0.18584070796460178]; rescues=['p0_q20', 'p1_q13', 'p2_q03', 'p2_q07', 'p2_q25', 'p3_q17']; regressions=['p0_q05', 'p0_q08', 'p0_q17', 'p0_q18', 'p1_q01', 'p1_q05', 'p1_q06', 'p1_q07', 'p1_q08', 'p1_q09', 'p1_q12', 'p1_q16', 'p1_q20', 'p1_q21', 'p1_q24', 'p1_q25', 'p2_q04', 'p2_q08', 'p2_q09', 'p2_q10', 'p2_q13', 'p2_q14', 'p2_q17', 'p2_q20', 'p2_q21', 'p2_q22', 'p2_q26', 'p2_q30', 'p3_q01', 'p3_q13', 'p3_q14', 'p3_q18', 'p3_q20', 'p3_q27', 'p3_q28', 'p3_q30', 'p3_q31', 'p3_q33', 'p3_q36'].
+
+- R@20: delta=-0.23008849557522124; CI=[-0.336283185840708, -0.12389380530973451]; rescues=['p0_q20', 'p0_q22', 'p1_q13', 'p1_q14', 'p2_q03', 'p2_q07', 'p2_q16', 'p3_q17']; regressions=['p0_q05', 'p0_q08', 'p0_q17', 'p0_q18', 'p1_q01', 'p1_q06', 'p1_q07', 'p1_q08', 'p1_q09', 'p1_q12', 'p1_q16', 'p1_q20', 'p1_q21', 'p1_q24', 'p2_q04', 'p2_q08', 'p2_q09', 'p2_q10', 'p2_q13', 'p2_q14', 'p2_q17', 'p2_q21', 'p2_q22', 'p2_q26', 'p2_q30', 'p3_q01', 'p3_q03', 'p3_q19', 'p3_q20', 'p3_q25', 'p3_q27', 'p3_q28', 'p3_q30', 'p3_q34'].
+
+- MRR@20: delta=-0.23217063172815386; CI=[-0.319241167672486, -0.14399149676527997]; rescues=['p0_q02', 'p0_q20', 'p0_q22', 'p1_q11', 'p1_q13', 'p1_q14', 'p1_q22', 'p2_q02', 'p2_q03', 'p2_q06', 'p2_q07', 'p2_q16', 'p2_q25', 'p3_q05', 'p3_q07', 'p3_q12', 'p3_q17']; regressions=['p0_q04', 'p0_q05', 'p0_q07', 'p0_q08', 'p0_q13', 'p0_q14', 'p0_q16', 'p0_q17', 'p0_q18', 'p0_q23', 'p1_q01', 'p1_q05', 'p1_q06', 'p1_q07', 'p1_q08', 'p1_q09', 'p1_q10', 'p1_q12', 'p1_q15', 'p1_q16', 'p1_q20', 'p1_q21', 'p1_q23', 'p1_q24', 'p1_q25', 'p2_q04', 'p2_q08', 'p2_q09', 'p2_q10', 'p2_q12', 'p2_q13', 'p2_q14', 'p2_q17', 'p2_q20', 'p2_q21', 'p2_q22', 'p2_q23', 'p2_q26', 'p2_q29', 'p2_q30', 'p3_q01', 'p3_q02', 'p3_q03', 'p3_q04', 'p3_q06', 'p3_q13', 'p3_q14', 'p3_q18', 'p3_q19', 'p3_q20', 'p3_q25', 'p3_q27', 'p3_q28', 'p3_q30', 'p3_q31', 'p3_q33', 'p3_q34', 'p3_q36'].
+
+- Pool all_required_targets_present: 78->23; rescues=[]; regressions=['p0_q03', 'p0_q04', 'p0_q05', 'p0_q06', 'p0_q08', 'p0_q09', 'p0_q10', 'p0_q13', 'p0_q14', 'p0_q19', 'p1_q01', 'p1_q04', 'p1_q06', 'p1_q07', 'p1_q08', 'p1_q09', 'p1_q11', 'p1_q12', 'p1_q16', 'p1_q17', 'p1_q19', 'p1_q20', 'p1_q21', 'p2_q04', 'p2_q08', 'p2_q09', 'p2_q10', 'p2_q12', 'p2_q13', 'p2_q14', 'p2_q15', 'p2_q21', 'p2_q22', 'p2_q26', 'p3_q01', 'p3_q02', 'p3_q03', 'p3_q04', 'p3_q06', 'p3_q08', 'p3_q12', 'p3_q13', 'p3_q14', 'p3_q15', 'p3_q18', 'p3_q20', 'p3_q22', 'p3_q25', 'p3_q26', 'p3_q27', 'p3_q28', 'p3_q30', 'p3_q31', 'p3_q33', 'p3_q36'].
+
+- Pool target_coverage: 79.0->23.0; rescues=[]; regressions=['p0_q03', 'p0_q04', 'p0_q05', 'p0_q06', 'p0_q08', 'p0_q09', 'p0_q10', 'p0_q13', 'p0_q14', 'p0_q19', 'p0_q23', 'p1_q01', 'p1_q04', 'p1_q06', 'p1_q07', 'p1_q08', 'p1_q09', 'p1_q11', 'p1_q12', 'p1_q16', 'p1_q17', 'p1_q19', 'p1_q20', 'p1_q21', 'p2_q04', 'p2_q08', 'p2_q09', 'p2_q10', 'p2_q12', 'p2_q13', 'p2_q14', 'p2_q15', 'p2_q21', 'p2_q22', 'p2_q26', 'p2_q30', 'p3_q01', 'p3_q02', 'p3_q03', 'p3_q04', 'p3_q06', 'p3_q08', 'p3_q12', 'p3_q13', 'p3_q14', 'p3_q15', 'p3_q18', 'p3_q20', 'p3_q22', 'p3_q25', 'p3_q26', 'p3_q27', 'p3_q28', 'p3_q30', 'p3_q31', 'p3_q33', 'p3_q36'].
+
+- Pool accepted_video_present: 92->82; rescues=['p0_q20', 'p0_q21', 'p0_q22', 'p1_q13', 'p1_q14', 'p2_q01', 'p2_q03', 'p2_q07', 'p2_q19', 'p3_q17', 'p3_q21', 'p3_q35']; regressions=['p0_q24', 'p1_q02', 'p1_q06', 'p1_q07', 'p1_q08', 'p1_q12', 'p1_q16', 'p1_q20', 'p1_q21', 'p2_q04', 'p2_q08', 'p2_q09', 'p2_q10', 'p2_q13', 'p2_q14', 'p2_q22', 'p2_q30', 'p3_q15', 'p3_q25', 'p3_q28', 'p3_q30', 'p3_q32'].
+
+All capability/truth/task/phase slices, diversity and failure classes: ../outputs/diagnostics-v2/arms.json and per_query.jsonl.
+Frozen frame/range/event and frame-position-video metrics remain separate in the machine-readable summary.

@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q21",
+  "canonical_sha256": "b468608846335cab053d01a7b14b1fb2b28cf976d8896bba7c221ab790db9484",
+  "texts": [
+    "Trong video hướng dẫn nấu ăn, người đầu bếp lần lượt cho các loại hương liệu gồm tiêu xanh, lá chanh và sả vào bên trong bụng của tổng cộng 4 con cá. Đây là loài cá gì?",
+    "In the cooking instruction video, the cook takes turns for spices that include green peppers, lemon leaves, and cut into the belly of a total of four fish.",
+    "In the cooking instruction video, the cook takes turns for spices that include green peppers, lemon leaves, and cut into the belly of four fish."
+  ],
+  "input_tokens": 43,
+  "status": "translated",
+  "generation_wall_ns": 776513500
+}

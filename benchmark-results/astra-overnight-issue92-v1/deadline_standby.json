@@ -1,0 +1,8 @@
+{
+  "deadline_utc": "2026-09-16T23:50:00Z",
+  "reason": "Tiny frozen experiment families and one grounding interaction exhausted; none meets promotion gate. Preserve remaining window for user steering and one closing integrity audit rather than parameter sweeps.",
+  "scientific_state": "measurement complete; parent control retained",
+  "standby_is_active_research": false,
+  "periodic_model_checks": 0,
+  "final_audit_new_inference": 0
+}

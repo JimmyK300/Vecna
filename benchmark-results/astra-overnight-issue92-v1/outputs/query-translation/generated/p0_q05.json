@@ -1,0 +1,12 @@
+{
+  "query_id": "p0_q05",
+  "canonical_sha256": "73e6c07bb070e74150ead74bc08d6bb55429fdbc9897a526a77d0a0fba9406ec",
+  "texts": [
+    "Đoạn clip cần tìm là cảnh quay trong một khu rừng, dưới gốc cây to với nhiều lá khô phủ đầy mặt đất. Nổi bật ở cận cảnh là một chú chim có bộ lông đen ánh xanh ở đầu và thân trên, còn cánh và lưng màu nâu đỏ. Đôi mắt chim đỏ rực, tạo điểm nhấn rõ ràng. Đây là loài chim thường thấy ở vùng Nam Bộ Việt Nam.",
+    "The video to look for was footage in a forest, under a large tree tree with many dry leaves all over the ground, striking in the vicinity as a bird with blue fur in its head and upper body, with its wings and red backs, and red eyes, which made a clear point.",
+    "The video to look for was footage in a forest, under a large tree tree with many dry leaves all over the ground, striking in the vicinity as a bird with blue fur in its head and upper body, with its wings and red backs, and red eyes, which provide a clear accent."
+  ],
+  "input_tokens": 80,
+  "status": "translated",
+  "generation_wall_ns": 1425444100
+}

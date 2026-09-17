@@ -1,0 +1,12 @@
+{
+  "query_id": "p0_q20",
+  "canonical_sha256": "ea5e54045887b9e2bcd50a6b75ecdaf7d0c85d81e3deccc9ee652b4b383802b0",
+  "texts": [
+    "Trong đoạn video có 2 câu thơ của một nhà thơ ca ngợi anh hùng Nguyễn Trung Trực trong đình thần Nguyễn Trung Trực tại Kiên Giang. Hai câu thơ đó là gì?",
+    "In the video, there are two verses from a poet praising the hero of Central City who lives in Jiang Jiang.",
+    "In the video, there are two verses from a poet praising the hero of Central City who lives in Jiangji's court."
+  ],
+  "input_tokens": 38,
+  "status": "translated",
+  "generation_wall_ns": 666052600
+}

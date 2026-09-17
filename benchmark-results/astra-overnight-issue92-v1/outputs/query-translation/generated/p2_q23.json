@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q23",
+  "canonical_sha256": "3eab2698b10990e612730f20be4e14ac047f919a46b72b2dd8f533eac860ef18",
+  "texts": [
+    "Đoạn phim ghi lại cảnh mạnh thường quân hỗ trợ một quán trọ dành cho người cao tuổi, sau đó chuyển sang cảnh một cụ ông trò chuyện với nhóm người nước ngoài. Hỏi quán trọ được nhắc đến trong đoạn phim nằm trên đường nào?",
+    "The video recorded a strong scene in which troops supported an elderly inn and then turned to an elderly man who spoke to a foreign group, asking what street was the inn mentioned in the video?",
+    "The video recorded a strong scene in which the army supported an elderly inn and then turned to an elderly man who spoke to a foreign group, asking what street was the inn mentioned in the video?"
+  ],
+  "input_tokens": 50,
+  "status": "translated",
+  "generation_wall_ns": 905273400
+}

@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q05",
+  "canonical_sha256": "46b9b27a33539ffe8014880575c30b9024cc5d3387a2a8a959ab0180a19f7f54",
+  "texts": [
+    "Một người áo đỏ, đội nón màu trắng, đang lấy nước rưới vào mặt của mình. Khung hình có hai người đi xe đạp, người mặc áo xanh đậm đang đuổi theo người mặc áo đen phối cam.",
+    "A man in red, wearing a white hat, is putting water on his face, and there's two people on a bicycle, and the man in a dark blue shirt is chasing the man in black and orange.",
+    "A man in red, wearing a white hat, is putting water on his face, and there's two people on a bicycle, and the man in a dark blue shirt is chasing the man in black with oranges."
+  ],
+  "input_tokens": 44,
+  "status": "translated",
+  "generation_wall_ns": 997708700
+}

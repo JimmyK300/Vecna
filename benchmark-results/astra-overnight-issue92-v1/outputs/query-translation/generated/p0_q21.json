@@ -1,0 +1,12 @@
+{
+  "query_id": "p0_q21",
+  "canonical_sha256": "c773fd4b2a9c5262cdab2b48c8acef69d33b428a822f885663138a5ab7f68760",
+  "texts": [
+    "Đoạn video về một người phụ nữ dạy nấu ăn cho những người khác. Trong đoạn video có thể thấy một người đang cầm công thức món ăn với nguyên liệu chính là 200g thịt nạc xay. Hỏi tiêu đề của công thức nấu ăn (tên món ăn) này là gì?\n\n## Temporal Retrieval and Alignment of Key Events (TRAKE)",
+    "The video of a woman teaching cooking to others. In the video you can see a person holding a recipe with a material of 200 grams of ground meat. Ask the title of this recipe.",
+    "The video of a woman teaching cooking to others. In the video you can see a person holding a recipe with a material of 200 grams of ground meat. Ask for the title of this recipe."
+  ],
+  "input_tokens": 81,
+  "status": "translated",
+  "generation_wall_ns": 1846284900
+}

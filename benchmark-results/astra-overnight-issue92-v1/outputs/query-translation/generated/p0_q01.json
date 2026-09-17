@@ -1,0 +1,12 @@
+{
+  "query_id": "p0_q01",
+  "canonical_sha256": "588d4254b1df76236018d4b2ff9ef7343774768656f7a7344e6143c6e69ff87f",
+  "texts": [
+    "Đây là phần giới thiệu việc phóng tàu vũ trụ tư nhân. Đoạn clip bắt đầu với hình ảnh 4 phi hành gia mặc áo đen. Một trong những nhiệm vụ dự kiến của tàu vũ trụ là nghiên cứu ánh sáng cực quang ở vùng cực",
+    "This is the introduction to the launch of a private spacecraft, where the clip begins with a picture of four astronauts in black, one of the missions of the spacecraft is to study polar light.",
+    "This is the introduction to the launch of a private spacecraft, where the clip begins with a picture of four astronauts in black, one of the missions of the spacecraft is to study the polar lights."
+  ],
+  "input_tokens": 50,
+  "status": "translated",
+  "generation_wall_ns": 964254600
+}

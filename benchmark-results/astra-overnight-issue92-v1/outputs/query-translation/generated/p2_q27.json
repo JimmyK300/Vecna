@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q27",
+  "canonical_sha256": "d5ce880a15225d455496edf57be31a00e42a5a015e674995da78a99ba5c40d79",
+  "texts": [
+    "Cảnh quay liệt kê các nguyên liệu để nấu một món ăn. Ảnh nền bao gồm dĩa thịt, bó lá tươi xanh đặt ở góc bên trái, một gói hạt nêm, hũ thủy tinh nhỏ đựng nước cốt dừa, bột cà ri, nấm mèo (mộc nhĩ) khô đặt phía dưới chén gia vị, sả cây và ớt hiểm đỏ đặt ở góc trái phía dưới. Bảng nguyên liệu hiện lên gồm 9 thành phần cụ thể. Hỏi phần thịt có trọng lượng bao nhiêu trong bảng nguyên liệu (số và đơn vị được ghi trong bảng)?",
+    "The shot lists the ingredients for cooking a dish. The background image includes the meat plate, the green bundle on the left-hand corner, a package of mustard grains, a small glass jar containing coconut juice, curry powder, cat mushrooms, and cat mushrooms placed under the spices, red dippings, and red peppers placed at the bottom left-hand corner. The table appears to be made up of nine specific components. Ask how much weight is the meat in the table (the amount and the unit in the table)?",
+    "The scene shows the ingredients for cooking a dish. The background image includes the meat plate, the green bundle on the left-hand corner, a package of mustard grains, a small glass jar containing coconut juice, curry powder, cat mushrooms, and cat mushrooms placed under the spices, red dippings, and red peppers placed at the bottom left-hand corner. The table appears to be made up of nine specific components. Ask how much weight is the meat in the table (the amount and the unit in the table)?"
+  ],
+  "input_tokens": 111,
+  "status": "translated",
+  "generation_wall_ns": 2622982200
+}

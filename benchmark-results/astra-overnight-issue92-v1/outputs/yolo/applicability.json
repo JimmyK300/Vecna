@@ -1,0 +1,674 @@
+{
+  "p0_q01": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p0_q02": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p0_q03": {
+    "categories": [],
+    "negative_marker": true,
+    "applicable": false
+  },
+  "p0_q04": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p0_q05": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p0_q06": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p0_q07": {
+    "categories": [
+      "chair"
+    ],
+    "negative_marker": true,
+    "applicable": false
+  },
+  "p0_q08": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p0_q09": {
+    "categories": [
+      "cat"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p0_q10": {
+    "categories": [
+      "cat"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p0_q11": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p0_q12": {
+    "categories": [
+      "cat"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p0_q13": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p0_q14": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p0_q15": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p0_q16": {
+    "categories": [
+      "knife"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p0_q17": {
+    "categories": [
+      "bicycle"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p0_q18": {
+    "categories": [
+      "bicycle"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p0_q19": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p0_q20": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p0_q21": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p0_q22": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p0_q23": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p0_q24": {
+    "categories": [
+      "cat"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p1_q01": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p1_q02": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p1_q03": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p1_q04": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p1_q05": {
+    "categories": [
+      "chair"
+    ],
+    "negative_marker": true,
+    "applicable": false
+  },
+  "p1_q06": {
+    "categories": [
+      "cat",
+      "knife"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p1_q07": {
+    "categories": [
+      "cat"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p1_q08": {
+    "categories": [
+      "cat"
+    ],
+    "negative_marker": true,
+    "applicable": false
+  },
+  "p1_q09": {
+    "categories": [
+      "bicycle"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p1_q10": {
+    "categories": [
+      "motorcycle"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p1_q11": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p1_q12": {
+    "categories": [
+      "cat"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p1_q13": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p1_q14": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p1_q15": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p1_q16": {
+    "categories": [
+      "cat"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p1_q17": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p1_q18": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p1_q19": {
+    "categories": [
+      "cat",
+      "cup"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p1_q20": {
+    "categories": [
+      "piano"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p1_q21": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p1_q22": {
+    "categories": [
+      "car"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p1_q23": {
+    "categories": [],
+    "negative_marker": true,
+    "applicable": false
+  },
+  "p1_q24": {
+    "categories": [
+      "motorcycle"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p1_q25": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p2_q01": {
+    "categories": [],
+    "negative_marker": true,
+    "applicable": false
+  },
+  "p2_q02": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p2_q03": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p2_q04": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p2_q05": {
+    "categories": [
+      "bicycle"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p2_q06": {
+    "categories": [
+      "motorcycle",
+      "car",
+      "umbrella"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p2_q07": {
+    "categories": [
+      "knife"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p2_q08": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p2_q09": {
+    "categories": [
+      "knife"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p2_q10": {
+    "categories": [
+      "bicycle",
+      "helmet"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p2_q11": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p2_q12": {
+    "categories": [
+      "horse"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p2_q13": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p2_q14": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p2_q15": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p2_q16": {
+    "categories": [
+      "cat"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p2_q17": {
+    "categories": [
+      "bicycle"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p2_q18": {
+    "categories": [
+      "chair",
+      "cup"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p2_q19": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p2_q20": {
+    "categories": [
+      "car"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p2_q21": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p2_q22": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p2_q23": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p2_q24": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p2_q25": {
+    "categories": [],
+    "negative_marker": true,
+    "applicable": false
+  },
+  "p2_q26": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p2_q27": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p2_q28": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p2_q29": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p2_q30": {
+    "categories": [
+      "truck"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p3_q01": {
+    "categories": [
+      "cat",
+      "knife"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p3_q02": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p3_q03": {
+    "categories": [
+      "cat"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p3_q04": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p3_q05": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p3_q06": {
+    "categories": [],
+    "negative_marker": true,
+    "applicable": false
+  },
+  "p3_q07": {
+    "categories": [
+      "car"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p3_q08": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p3_q09": {
+    "categories": [
+      "knife"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p3_q10": {
+    "categories": [
+      "car",
+      "knife"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p3_q11": {
+    "categories": [],
+    "negative_marker": true,
+    "applicable": false
+  },
+  "p3_q12": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p3_q13": {
+    "categories": [
+      "chair"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p3_q14": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p3_q15": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p3_q16": {
+    "categories": [
+      "knife"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p3_q17": {
+    "categories": [
+      "cat",
+      "cup"
+    ],
+    "negative_marker": true,
+    "applicable": false
+  },
+  "p3_q18": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p3_q19": {
+    "categories": [
+      "cup"
+    ],
+    "negative_marker": true,
+    "applicable": false
+  },
+  "p3_q20": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p3_q21": {
+    "categories": [
+      "cat"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p3_q22": {
+    "categories": [
+      "cat"
+    ],
+    "negative_marker": true,
+    "applicable": false
+  },
+  "p3_q23": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p3_q24": {
+    "categories": [
+      "cup"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p3_q25": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p3_q26": {
+    "categories": [],
+    "negative_marker": true,
+    "applicable": false
+  },
+  "p3_q27": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p3_q28": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p3_q29": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p3_q30": {
+    "categories": [
+      "bicycle"
+    ],
+    "negative_marker": false,
+    "applicable": true
+  },
+  "p3_q31": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p3_q32": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p3_q33": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p3_q34": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  },
+  "p3_q35": {
+    "categories": [],
+    "negative_marker": true,
+    "applicable": false
+  },
+  "p3_q36": {
+    "categories": [],
+    "negative_marker": false,
+    "applicable": false
+  }
+}

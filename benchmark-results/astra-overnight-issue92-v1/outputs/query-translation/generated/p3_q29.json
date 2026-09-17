@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q29",
+  "canonical_sha256": "1cc4a546db52a4b9035df029226938b0f9eefc2d8b2fdc539027ac8503ffd1b6",
+  "texts": [
+    "Một người đang múc canh từ trong nồi qua một tô nhỏ hơn. Chiếc tô này đang đặt trên 1 tấm vải có sọc trắng và đặt trên một khay gỗ. Tổng số lần quay được của người này múc canh ra tô là 2 lần.",
+    "A man was drawing a soup from the pot through a smaller bowl, and the bowl was sitting on a cloth with white strips and putting it on a wooden tray, and the total number of turns of the man pulled out of the bowl was twice.",
+    "A man was drawing a soup from the pot through a smaller bowl, and the bowl was sitting on a cloth with white strips and putting it on a wooden tray, and the total number of turns of the man pulled out the soup was twice."
+  ],
+  "input_tokens": 50,
+  "status": "translated",
+  "generation_wall_ns": 1115671500
+}

@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "C:\\Users\\minhc\\Code\\Vecna\\.venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "-B",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v11\\code\\frame_text.py"
+  ],
+  "cwd": "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight",
+  "timeout_seconds": 2000,
+  "next_action": "Read result/spec and v11 outputs complete/summary/rankings/per_query/115query caches. Verify frozen ASR-only transformation, all source/input/cache hashes, exactv5control,100membership/firstframe, score-reuse identities, independent ranking replay and113rescored rows. Compare exactPR91 too. Preserve all negatives. Continue substantive Issue92 research/final synthesis until original23:50Z bound; no deadline standby, no completed-job relaunch."
+}

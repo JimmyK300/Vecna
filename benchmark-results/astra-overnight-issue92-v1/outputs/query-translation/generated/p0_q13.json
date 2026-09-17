@@ -1,0 +1,12 @@
+{
+  "query_id": "p0_q13",
+  "canonical_sha256": "5f596f4afc6a9dde4f392f9db4e031f247c001c7b9136de2b61bbe8fbd113b78",
+  "texts": [
+    "Đoạn video trong buổi trao quà từ thiện diễn ra tại 1 bệnh viện trong dịp Xuân 2024. Trong cảnh có hai người đàn ông (mặc áo sơ mi hồng và sơ mi trắng) đứng hai bên, đại diện ban tổ chức. Ở giữa là bốn em nhỏ và thiếu niên, trong đó có em mặc áo đỏ, em mặc áo trắng, em mặc váy hồng và em mặc áo xanh. Các em được trao bảng tượng trưng với nội dung “Chương trình: Trao kinh phí hỗ trợ cho trẻ em mồ côi do dịch COVID-19”. Trước mặt mỗi em là túi quà lớn mang logo y tế. Phía sau là phông nền màu đỏ với khẩu hiệu đón xuân và thông tin sự kiện.",
+    "The video of the charity gift presentation took place at a hospital during the 2030 P.E., where there were two men in pink shirts and white shirts standing on each side, representing the organization, and in the middle were four children in red shirts, you in white shirts, you in pink shirts, and you in blue shirts, and you were given a chart with the contents “Shortemms: Economic funding for orphans because of COVIDKEEM.",
+    "The video of the charity gift presentation took place at a hospital during the 2030 P.E., where there were two men in pink shirts and white shirts standing on each side, representing the organization, and in the middle were four children in red shirts, you in white shirts, you in pink shirts, and you in blue shirts, and you were given a chart with the contents “Shortemms: Economic funding for orphans because of COVIDKEEM, each one of them in front of you is a large medical gift."
+  ],
+  "input_tokens": 147,
+  "status": "translated",
+  "generation_wall_ns": 3439788800
+}

@@ -1,0 +1,12 @@
+{
+  "query_id": "p1_q10",
+  "canonical_sha256": "6ec9be33b0ae5cb4c181e58f35de6729922b9e57e56b696e4a3c2580fb27d43b",
+  "texts": [
+    "Có thể thấy trong cảnh quay có 4 tài xế xe ôm công nghệ trong trạm xăng, trong đó 3 người đứng đợi còn 1 người lái xe từ trái sang phải khung hình. Trước đó là cảnh một người đậy nắp bình xăng xe máy của họ. Có thông tin về giá dầu mazut được hiển thị trong khung hình.",
+    "You can see in the scene that there were four tech drivers in the gas station, where three of them were waiting for one driver to drive from left to right of the frame, and before that was the scene of a man covering their tank, there was information about the mazut price displayed in the frame.",
+    "You can see in the scene that there were four tech drivers in the gas station, where three of them were waiting for one driver to drive from left to right of the frame, and before that was the scene of a man covering their motorcycle tank, there was information about the mazut price displayed in the frame."
+  ],
+  "input_tokens": 68,
+  "status": "translated",
+  "generation_wall_ns": 1597583900
+}

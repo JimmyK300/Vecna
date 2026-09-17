@@ -1,0 +1,97 @@
+{
+  "query_id": "p1_q25",
+  "query_text_sha256": "fabe99ad531f96d61c7bcab0354aa14e3070621a95b4d35d6d053e26b3937a1c",
+  "policy_sha256": "1fc8828282ff85a215e0b6ff72abd915ae09feaf5fb9222cb45cd526f88d533b",
+  "chosen": [
+    {
+      "video_id": "L24_V014",
+      "record_index": 1600,
+      "dense_score": 0.4540519416332245
+    },
+    {
+      "video_id": "L24_V011",
+      "record_index": 1597,
+      "dense_score": 0.5050508975982666
+    },
+    {
+      "video_id": "L24_V015",
+      "record_index": 1601,
+      "dense_score": 0.5081433057785034
+    },
+    {
+      "video_id": "L24_V030",
+      "record_index": 1616,
+      "dense_score": 0.5047220587730408
+    },
+    {
+      "video_id": "L24_V031",
+      "record_index": 1617,
+      "dense_score": 0.5342389345169067
+    },
+    {
+      "video_id": "L24_V042",
+      "record_index": 1627,
+      "dense_score": 0.46763187646865845
+    },
+    {
+      "video_id": "L24_V024",
+      "record_index": 1610,
+      "dense_score": 0.5095204710960388
+    },
+    {
+      "video_id": "L24_V039",
+      "record_index": 1624,
+      "dense_score": 0.49011215567588806
+    },
+    {
+      "video_id": "L24_V036",
+      "record_index": 1621,
+      "dense_score": 0.46381184458732605
+    },
+    {
+      "video_id": "L24_V029",
+      "record_index": 1615,
+      "dense_score": 0.484681099653244
+    },
+    {
+      "video_id": "L24_V038",
+      "record_index": 1623,
+      "dense_score": 0.48785629868507385
+    },
+    {
+      "video_id": "L24_V016",
+      "record_index": 1602,
+      "dense_score": 0.49110129475593567
+    }
+  ],
+  "logits": [
+    -3.8214330673217773,
+    -3.2322182655334473,
+    -3.000544786453247,
+    -2.8874006271362305,
+    -2.0056638717651367,
+    -2.847367525100708,
+    -2.860712766647339,
+    -3.4595561027526855,
+    -3.7878265380859375,
+    -2.9937562942504883,
+    -4.532567977905273,
+    -3.474806070327759
+  ],
+  "token_counts": [
+    322,
+    387,
+    375,
+    335,
+    325,
+    361,
+    345,
+    304,
+    366,
+    350,
+    328,
+    349
+  ],
+  "truncated_pairs": 0,
+  "wall_ns": 9964565300
+}

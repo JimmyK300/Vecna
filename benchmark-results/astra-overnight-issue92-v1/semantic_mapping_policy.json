@@ -1,0 +1,10 @@
+{
+  "frozen_before_semantic_scores": true,
+  "identity": "canonical video ID; frame integer resolves to exact existing zero-padded feature directory name",
+  "fps": "existing asr-ocr metadata coverage.csv rounded_fps",
+  "representative": "existing indexed frame inside semantic interval closest to interval midpoint; lower frame wins tie; omit record if no indexed frame inside interval",
+  "scope": "one representative frame per coarse semantic interval, not proof that entire interval satisfies an event",
+  "source_roots": {"semantic": "C:/Users/minhc/Code/official-dataset-control", "features": "D:/Official-Dataset/features_L21-L30_branch-feats-siglip/features"},
+  "dedup": "first ranked occurrence of exact video#frame; continue until100 unique frames; skip nonpositive BM25 records",
+  "fusion": "RRF k60 over saved current top100 and mapped semantic top100; equal weights; stable current-first then semantic-first-seen tie order; retain100 frames"
+}

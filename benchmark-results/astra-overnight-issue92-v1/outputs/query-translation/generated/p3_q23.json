@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q23",
+  "canonical_sha256": "bff141715d31f471f12dc9f0ad071a203ae9b1e6e983ed41c79e3b2d7e6025e6",
+  "texts": [
+    "Trong clip có cảnh 3 cặp trâu nước đang được điều khiển chạy đua trên ruộng bùn ở 1 quốc gia Đông Nam Á. Sau đó có cảnh 1 cặp trâu màu trắng (màu sáng) chạy đua.",
+    "In the clip, three pairs of water buffalo are being run in a mud field in an Southeast Asian country, and then there's a pair of white buffalo running.",
+    "In the clip, three pairs of water buffalo are being run in a mud field in an Southeast Asian country, and then there's a pair of white buffalo race."
+  ],
+  "input_tokens": 42,
+  "status": "translated",
+  "generation_wall_ns": 752058300
+}

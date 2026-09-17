@@ -1,0 +1,12 @@
+{
+  "query_id": "p0_q12",
+  "canonical_sha256": "56dfe2cd9c0c0b0fef9cd71601378e40cbf82efc1d9a163ef60a24ac431febb9",
+  "texts": [
+    "Đoạn clip bắt đầu với cảnh một tác phẩm điêu khắc cát hoành tráng tại Lễ hội điêu khắc trên cát. Tác phẩm mô tả cảnh những thanh niên chơi thể thao đường phố: một người trượt patin, hai người trượt ván\nNền phía sau là họa tiết vòm cong lớn và có khắc chữ.\nTiếp theo có cảnh nhiều tác phẩm khác bằng cát, và có 2 cột khói màu hồng",
+    "The clip begins with a magnificent sand sculpture at the Catastrophic Festival, which describes young men playing street sports: one skater, two skaters on the back, the big archipelling, and the inscription, followed by several other pieces of sand, and two columns of pink smoke.",
+    "The clip begins with a magnificent sand sculpture at the Catastrophic Festival, which describes young men playing street sports: one skater, two skaters on the back, the big archipelling, and the inscription, followed by many other pieces of sand, and two columns of pink smoke."
+  ],
+  "input_tokens": 78,
+  "status": "translated",
+  "generation_wall_ns": 1541017500
+}

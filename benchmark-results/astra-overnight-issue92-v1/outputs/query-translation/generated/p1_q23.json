@@ -1,0 +1,12 @@
+{
+  "query_id": "p1_q23",
+  "canonical_sha256": "f4678072b92a852f85dec7abb412192609f1eca137aedf5f70116f1a6808551e",
+  "texts": [
+    "Bản đồ phân bố động đất tại một vùng trên thế giới, với một bảng chú giải phía bên trái gồm các kí hiệu nhiều màu sắc tương ứng với các vị trí tâm chấn có cấp độ động đất khác nhau. Không tính bảng chú giải, có bao nhiêu vị trí ghi nhận động đất cấp độ 4?",
+    "The earthquake distribution map in one part of the world, with a comment board on the left, is composed of multi-color symbols that correspond to the different earthquake-level epic positions.",
+    "The earthquake distribution map in one part of the world, with a comment board on the left, is composed of multi-color symbols that correspond to the different earthquake-level epic position."
+  ],
+  "input_tokens": 64,
+  "status": "translated",
+  "generation_wall_ns": 1130355600
+}

@@ -1,0 +1,111 @@
+{
+  "captured_utc": "2026-09-16T23:41:53.592116+00:00",
+  "thread": "01a0aadd-a16d-77a2-b833-fc55ded727f2",
+  "source_session": "C:\\Users\\minhc\\.codex\\sessions\\2026\\09\\16\\rollout-2026-09-16T22-37-26-01a0aadd-a16d-77a2-b833-fc55ded727f2.jsonl",
+  "models_observed": [
+    "gpt-6-astra"
+  ],
+  "research_start_utc": "2026-09-16T15:50:00Z",
+  "hard_deadline_utc": "2026-09-16T23:50:00Z",
+  "pre_start_latest_counter": {
+    "timestamp": "2026-09-16T15:47:21.531Z",
+    "info": {
+      "total_token_usage": {
+        "input_tokens": 1483869,
+        "cached_input_tokens": 1383424,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 14756,
+        "reasoning_output_tokens": 2986,
+        "total_tokens": 1498625
+      },
+      "last_token_usage": {
+        "input_tokens": 97194,
+        "cached_input_tokens": 96640,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 93,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 97287
+      },
+      "model_context_window": 258400
+    },
+    "rate_limits": {
+      "limit_id": "codex",
+      "limit_name": null,
+      "primary": {
+        "used_percent": 1.0,
+        "window_minutes": 10080,
+        "resets_at": 1790165802
+      },
+      "secondary": null,
+      "credits": {
+        "has_credits": false,
+        "unlimited": false,
+        "balance": "0"
+      },
+      "individual_limit": null,
+      "spend_control_reached": null,
+      "plan_type": "prolite",
+      "rate_limit_reached_type": null
+    }
+  },
+  "latest_counter": {
+    "timestamp": "2026-09-16T23:41:46.155Z",
+    "info": {
+      "total_token_usage": {
+        "input_tokens": 17653697,
+        "cached_input_tokens": 16249088,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 144730,
+        "reasoning_output_tokens": 19784,
+        "total_tokens": 17798427
+      },
+      "last_token_usage": {
+        "input_tokens": 54597,
+        "cached_input_tokens": 53248,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 191,
+        "reasoning_output_tokens": 13,
+        "total_tokens": 54788
+      },
+      "model_context_window": 258400
+    },
+    "rate_limits": {
+      "limit_id": "codex",
+      "limit_name": null,
+      "primary": {
+        "used_percent": 11.0,
+        "window_minutes": 10080,
+        "resets_at": 1790165802
+      },
+      "secondary": null,
+      "credits": {
+        "has_credits": false,
+        "unlimited": false,
+        "balance": "0"
+      },
+      "individual_limit": null,
+      "spend_control_reached": null,
+      "plan_type": "prolite",
+      "rate_limit_reached_type": null
+    }
+  },
+  "counter_delta_since_pre_start_event": {
+    "input_tokens": 16169828,
+    "cached_input_tokens": 14865664,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 129974,
+    "reasoning_output_tokens": 16798,
+    "total_tokens": 16299802
+  },
+  "token_counter_events": 231,
+  "request_count": "unavailable; token events are not asserted to be API requests",
+  "compaction_events": [
+    "2026-09-16T15:55:32.253Z",
+    "2026-09-16T16:12:13.817Z",
+    "2026-09-16T17:22:01.364Z",
+    "2026-09-16T20:09:07.678Z",
+    "2026-09-16T23:16:18.932Z"
+  ],
+  "quota_terminal_error": "none observed",
+  "interpretation": "Harness counters include repeated/cached context and earlier transport setup in cumulative totals. Delta is bracketed by recorded events, not an exact isolated research bill. No wall-time token estimation. Dollar cost and remaining paid credits unavailable."
+}

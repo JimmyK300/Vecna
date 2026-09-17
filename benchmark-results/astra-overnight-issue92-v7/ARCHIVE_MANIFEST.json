@@ -1,0 +1,76 @@
+{
+  "created_utc": "2026-09-16T20:39:39.065701+00:00",
+  "source_commit": "37b321048432ccba5182a66bd39b1ca73c547537",
+  "branch": "codex/issue-92-overnight-20260916",
+  "uncommitted": true,
+  "files": {
+    "code/object_rank.py": {
+      "sha256": "af45249dc649062268c740ffac4c89ed6096b9a478db1ff415d8cbb611e3a4b7",
+      "bytes": 3881
+    },
+    "code/test_object_rank.py": {
+      "sha256": "bccd102789eaf2e8267e2bf5b4183819394335980e1241210e68a23de1801f67",
+      "bytes": 674
+    },
+    "code/verify.py": {
+      "sha256": "2f8cd49826b002ff58cdff0ce3774901c6d1a21e1c31ca4f7b2bb5172664d960",
+      "bytes": 1738
+    },
+    "inputs/detection_hashes.json": {
+      "sha256": "ac0261b66c9ad62099d4d8713b0a4fa6ee963a645cf5167fb32f2cf9a99a1ec5",
+      "bytes": 135628
+    },
+    "inputs/detection_labels.json": {
+      "sha256": "07f17a1f758124c8fdcc591ff9ec0148816a832d1611d4cf73c27ceea65d9fdb",
+      "bytes": 304782
+    },
+    "inputs/evidence.jsonl": {
+      "sha256": "6edf9e165150eccd126fb8ca3f639c36113b658a159585faab1f8d8023e55317",
+      "bytes": 36470
+    },
+    "outputs/complete.json": {
+      "sha256": "6407b1f89f7b9676f7aae00e8f36eb65bb7dd73ce9ab29155a7cab3eea227c82",
+      "bytes": 267
+    },
+    "outputs/per_query.jsonl": {
+      "sha256": "667f5a0946d20ad6cd2f634fe01baca6180ec45ad90203387e756966e2dc8be8",
+      "bytes": 286601
+    },
+    "outputs/rankings.jsonl": {
+      "sha256": "154e4bd2369589a9edca1ce7f1a1605897e4d4ffc296e4ac926bae581781e60e",
+      "bytes": 7673871
+    },
+    "outputs/summary.json": {
+      "sha256": "f66b09b9e34737cd1e97ae8c04bd3e6f0cea852c4f1b3fd808908341231c53dc",
+      "bytes": 15871
+    },
+    "policy.json": {
+      "sha256": "969141409453046b525bb46e32477ff8767300cefe4bd6dcf4b64d2ef78acbe7",
+      "bytes": 1992
+    },
+    "README.md": {
+      "sha256": "87d145b4729003d63da521fc77941718f1f3b3715cb6286d4bfee0b515007ada",
+      "bytes": 2286
+    },
+    "validation/accepted.json": {
+      "sha256": "6086a3ab46cf85fe5d666c231392f3089440fb9c5e5806d070fcf0316d2d6479",
+      "bytes": 1592
+    },
+    "validation/recomputed/per_query.jsonl": {
+      "sha256": "667f5a0946d20ad6cd2f634fe01baca6180ec45ad90203387e756966e2dc8be8",
+      "bytes": 286601
+    },
+    "validation/recomputed/rankings.jsonl": {
+      "sha256": "154e4bd2369589a9edca1ce7f1a1605897e4d4ffc296e4ac926bae581781e60e",
+      "bytes": 7673871
+    }
+  },
+  "inherited_archive_manifests": {
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v1\\ARCHIVE_MANIFEST.json": "4499774188206f767b77398fa3d4e083eb6e342f7eb34176226592b8f111f523",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v2\\ARCHIVE_MANIFEST.json": "a50feaafeed30b8c39dfd16472753fe789d873ca83ec692b7f4626649e747a58",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v3\\ARCHIVE_MANIFEST.json": "a916d5c9adff26f1c409ff5607fafe5ac13ba9c9ea8f5e262184d0df8131b46d",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v4\\ARCHIVE_MANIFEST.json": "9ce76236795615a600ad27af2683ae0b602d0eb44801799971c0a036e60b1708",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v5\\ARCHIVE_MANIFEST.json": "c883670a070453de9ecb912b99576c5552eb7c08f0bd0b033885fa0699c91d6b"
+  },
+  "input_contract": "policy.json and detection/source hash artifacts bind external inputs; all inherited code/dependencies bound by archive manifests. Scientific acceptance validation/accepted.json."
+}

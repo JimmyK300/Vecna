@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q34",
+  "canonical_sha256": "b8db0149b8fdfdc16879dfaf28e980f55177d022a67052f747833ad8288c5949",
+  "texts": [
+    "Con lân màu đỏ đang biểu diễn trên các cột trụ.\n\nE1: Con lân treo hai chân trước vào phần dưới thân của hai trụ gần cuối (gần trụ cuối cùng cao nhất).\nE2: Con lân đứng thẳng sau khi di chuyển từ cuối dãy trụ về, hai chân đứng trên hai trụ khác nhau và một chân trước co lên.\nE3: Khoảnh khắc con lân hoàn tất động tác ngoảnh mặt theo hướng ngược lại.\nE4: Khoảnh khắc đầu tiên con lân ngậm một thanh trụ.",
+    "The red unicorn is performing on the pillars. E1: The horse hangs its front legs on the lower part of the two pillars near the last. E2: The neighbor stands upright after moving from the end of the pillar to the back, the legs stand on two different pillars and the front leg shrinks. E3: The moment the child’s face is completed in the opposite direction. E4: The first moment the child closes a pillar.",
+    "The red unicorn is performing on the pillars. E1: The horse hangs its front legs on the lower part of the two pillars near the last. E2: The neighbor stands upright after moving from the end of the pillar to the back, the legs stand on two different pillars and the front leg shrinks. E3: The moment the child’s face is completed in the opposite direction. E4: The first moment of the mouse swallows a pillar."
+  ],
+  "input_tokens": 106,
+  "status": "translated",
+  "generation_wall_ns": 2475103300
+}

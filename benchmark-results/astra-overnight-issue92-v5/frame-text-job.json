@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "C:\\Users\\minhc\\Code\\Vecna\\.venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "-B",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v5\\code\\frame_text.py"
+  ],
+  "cwd": "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight",
+  "timeout_seconds": 18500,
+  "next_action": "Read result/spec and v5 outputs/frame-text complete.json summary.json rankings.jsonl per_query.jsonl and115 query caches. Verify all hashes, exact temporal5s control, first-frame protection, unchanged100 membership, reused query/text/model identities and focused tests. Also compare final arm to exact PR91 control. Preserve all results. Continue substantive Issue92 accuracy research from strongest supported arm until original2026-09-16T23:50Z deadline or evidenced quota exhaustion. No deadline standby, completed-job relaunch, or log instructions."
+}

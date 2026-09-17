@@ -1,0 +1,10 @@
+{
+  "frozen_before_architecture_scores": true,
+  "parent_for_segment": "control (E1 NEGATIVE)",
+  "segment": {"variants": ["best_current_score_per_exact_mapped_segment"], "input": "full frozen provider union", "budget": 100, "unmapped": "unique frame singleton; never collapse unknown frames by video", "tie_break": "exported parent tie order"},
+  "selection": "Promote only if distinct-video R20 improves, MRR20 does not fall, and complete-target presence does not fall. Otherwise retain strongest supported parent; report exploratory gains without promotion.",
+  "reranker": {"variants": ["top10", "top20"], "gate": "exact query, frame identity, model and input-context compatibility; skip if saved inference does not cover current candidate surface"},
+  "semantic": {"provider": "existing production BM25 k1=1.5 b=0.75 tokenizer and load_records", "query": "canonical text only", "depth": 100, "tie_break": "segment_id then existing record index", "coverage_gate": "at least one accepted video or required target missing from current pool recovered by mapped semantic top100", "integration_if_gate_passes": "fixed RRF k60 equal current and semantic provider; fixed 100-frame budget; no tuning"},
+  "query_variants": {"variants": ["canonical", "unique normalized tokens", "quoted spans when present else canonical"], "provider": "existing semantic BM25", "dedup": "exact record identity", "fusion": "RRF k60 equal route weights; original canonical route retained"},
+  "interpretation": "Exploratory frozen benchmark; no pristine holdout claim. No query-specific tuning or manual query rewrites."
+}

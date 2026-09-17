@@ -1,0 +1,12 @@
+{
+  "query_id": "p1_q03",
+  "canonical_sha256": "4daf2ca0fcdd4fba3a9753e6ac49ff2ad960804bd48bc61d6803ca29384aef3f",
+  "texts": [
+    "Một đàn sư tử đang nghỉ ngơi và leo trèo trên các bục gỗ trong khu nuôi dưỡng, phía trước có bảng thông tin của London Zoo phục vụ công tác theo dõi và bảo tồn động vật.. Sau đó có cảnh hai nhân viên mặc áo xanh lá đang cân và ghi nhận số liệu của một con vật trong khuôn viên sở thú.",
+    "A pride of lions is resting and climbing on wooden platforms in the foster area, and there's London Zoo's information sheet for animal tracking and conservation, and then there's two blue-suited employees who are weighing and picking up the data of an animal on the zoo campus.",
+    "A pride of lions is resting and climbing on wooden platforms in the foster area, and there's London Zoo's information sheet for animal tracking and conservation, and then there's two blue-suited employees who are weighing and recording the data of an animal on the zoo campus."
+  ],
+  "input_tokens": 70,
+  "status": "translated",
+  "generation_wall_ns": 1476752600
+}

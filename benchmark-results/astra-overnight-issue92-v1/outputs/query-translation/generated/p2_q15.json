@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q15",
+  "canonical_sha256": "0f5cc5fa90085ab6d4c133f959d6086b4e68fd5131e4aa330a4acbf9553a4070",
+  "texts": [
+    "Clip bài giảng môn Địa lí, có 1 bảng số liệu về mạng lưới đô thị ở Việt Nam. Bảng này thể hiện sự khác nhau về phân bố đô thị giữa các vùng bằng màu sắc: 3 vùng có nhiều đô thị nhất thì con số thể hiện số lượng đô thị được in màu đỏ, còn 2 vùng có ít đô thị nhất thì con số này được in màu xanh. Từ bảng số liệu ta còn có thể thấy rằng vùng có ít đô thị nhất lại là vùng có dân số đô thi cao nhất.",
+    "The Geography lecture, where there's a chart on urban networks in Vietnam, and this panel shows the difference in urban distribution between areas by color: the three most urban areas, the number of cities that are printed in red, and the two areas that have the least urbanity are printed in blue.",
+    "The Geography lecture, where there's a chart on urban networks in Vietnam, and this panel shows the difference in urban distribution between areas by color: the three most urban areas, the number of cities that are printed in red, and the two areas that are least urban, this number is printed in blue."
+  ],
+  "input_tokens": 106,
+  "status": "translated",
+  "generation_wall_ns": 1957588100
+}

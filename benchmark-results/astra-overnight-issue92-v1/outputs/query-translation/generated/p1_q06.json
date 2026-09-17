@@ -1,0 +1,12 @@
+{
+  "query_id": "p1_q06",
+  "canonical_sha256": "c6092653384e4c97b8053d682674ce26cc96b74bd22aa0f972a97b57d98c8176",
+  "texts": [
+    "Đoạn clip bắt đầu bằng cảnh cà rốt cắt hình ngôi sao đang được luộc trong nồi nước sôi, đặt trong rổ lưới kim loại và được đảo bằng đôi đũa gỗ.\nĐoạn clip kết thúc bằng hình ảnh đĩa rau củ luộc và đồ chiên được trình bày đẹp mắt, gồm đậu bắp, súp lơ, cà rốt hình ngôi sao, bí xanh, chén nước chấm màu hồng ở giữa và đôi đũa màu hồng nhạt đặt bên phải",
+    "The clip begins with a photo of a carrot that is being boiled in a boiling pot of water, put in a metal net, and turned over a pair of wooden wands, and the clip ends with a beautifully displayed dish of vegetables and frying sheep, including corn, cauliflowers, star carrots, blue-shaped carrots, a bowl of pink dotted water in the middle and pale pink wands on the right.",
+    "The clip begins with a photo of a carrot that is being boiled in a boiling pot of water, put in a metal net, and turned over a pair of wooden wands, and the clip ends with a beautifully displayed dish of vegetables and frying sheep, including corn, cauliflowers, star carrots, blue-shaped carrots, a bowl of pink dotted water in the middle and a pale pink wand on the right."
+  ],
+  "input_tokens": 87,
+  "status": "translated",
+  "generation_wall_ns": 2276278500
+}

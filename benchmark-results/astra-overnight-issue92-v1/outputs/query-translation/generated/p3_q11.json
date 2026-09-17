@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q11",
+  "canonical_sha256": "95c336ab14ddecc8e5ea6727e7f6e3c0346517f7f0a44a30aef5f369b71a60f1",
+  "texts": [
+    "Người phụ nữ đang lấy 1 thành phẩm từ trong đồ vật màu đỏ, và cho lần lượt nguyên liệu vào tiếp, thành phầm có màu trắng, được nở to hơn ban đầu, có hình thù giống các sợi que dính với nhau. Các thành phẩm được bày trí trên 1 vật liệu màu trắng.",
+    "The woman was taking a product from the red object, and giving it a turn in, the white Ceylon, which was growing larger than the beginning, shaped like sticks stuck together.",
+    "The woman was taking a product from the red object, and giving it a turn in, the white Ceylon, which was growing larger than it was originally, shaped like sticks stuck together."
+  ],
+  "input_tokens": 62,
+  "status": "translated",
+  "generation_wall_ns": 1102665700
+}

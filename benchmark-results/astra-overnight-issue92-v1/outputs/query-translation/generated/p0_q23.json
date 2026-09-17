@@ -1,0 +1,12 @@
+{
+  "query_id": "p0_q23",
+  "canonical_sha256": "bcbd4b58239666929025f2b7d42b37936c9a30049dc2891a2615337188b775cb",
+  "texts": [
+    "Đoạn video múa lân một con lân màu vàng đen trắng, tìm các sự kiện sau:\nE1: Lân quay vòng trên cột số 4 bằng 2 chân trước rồi tiếp đất. Khoảnh khắc đầu tiên mà lân bắt đầu xoay vòng.\nE2: Khoảnh khắc 4 chân hoàn toàn chạm đất đầu tiên.\nE3: Khoảnh khắc đầu tiên 2 người biểu diễn lân cuối chào ban giám khảo.\nE4: Sau đó lân tiến lại chào một con rồng. Khoảnh khắc đầu tiên con rồng cử động đầu.",
+    "And then the first moment the neighbor starts spinning, and the first time the four legs hit the ground, the first moment the dragon moves.",
+    "And then the first moment the neighbor starts spinning, and the first time the four legs touch the ground, the first moment the dragon moves."
+  ],
+  "input_tokens": 107,
+  "status": "translated",
+  "generation_wall_ns": 740223700
+}

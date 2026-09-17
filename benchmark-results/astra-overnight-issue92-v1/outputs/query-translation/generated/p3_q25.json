@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q25",
+  "canonical_sha256": "e1aaa1d1662e68b9eba8aec6ae53bff6c165f8b9cd2fb3560c9e5afbdc2890e2",
+  "texts": [
+    "Một người dùng vá nhúng những lát thịt mỏng vào nồi nước đang sôi. Thịt sau đó được cho vào tô có sẵn sợi trắng cùng với cà chua và một số nguyên liệu khác. Cuối cùng, nước dùng nóng được chan vào tô.",
+    "The meat was then added to the bowl with white fibers and some other ingredients, and finally the water was filled with hot water in the bowl.",
+    "The meat was then added to the bowl with white fibers and some other ingredients, and finally the water was filled with hot water."
+  ],
+  "input_tokens": 49,
+  "status": "translated",
+  "generation_wall_ns": 733388000
+}

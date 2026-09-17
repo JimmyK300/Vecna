@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q17",
+  "canonical_sha256": "a665e209966470841f61d6279e153388f96fab9b55b97f51b47299db6383d785",
+  "texts": [
+    "Một nguyên liệu đã được chiên sơ, được sơ chế cắt làm 2 nửa (không để 2 nửa tách rời). Tiếp theo, người đàn ông sử dụng 1 công cụ để tách phần lõi và lớp vỏ của nguyên liệu. Sau đó, đặt phần nguyên liệu vừa sơ chế trên 1 loại công cụ có màu trắng.",
+    "A raw material, cut in half (don't let two half separate), followed by the man using a tool to separate the core and the crust of the material.",
+    "A raw material, cut in half (don't let two half separate), followed by the man using a tool to separate the core from the crust of the material."
+  ],
+  "input_tokens": 65,
+  "status": "translated",
+  "generation_wall_ns": 839109500
+}

@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q06",
+  "canonical_sha256": "f9e9a097a835bf6034ef259e9799fa3c1a65e0ffdf75d5613a826daa803c2021",
+  "texts": [
+    "Đoạn video do người đi đường phía sau ghi lại cho thấy 2 thanh niên điều khiển xe máy bất ngờ nằm dài trên yên và phóng với tốc độ cao. Xuất hiện trong khung hình còn có một chiếc ô tô màu xanh cùng một người đi xe máy mặc áo xanh khác. Có 2 vòng tròn màu đỏ xuất hiện để khoanh vùng vị trí 2 thanh niên này.",
+    "The video from the streetwalker's video shows two young men running their bikes suddenly sitting on the saddle and moving at high speed, and there's also a blue car in the frame with a man in a car wearing a blue shirt, and there's two red circles that appear to circle the location of these two young people.",
+    "The video from the streetwalker's video shows two young men running their bikes suddenly sitting on the saddle and moving at high speed, and there's also a blue car in the frame with a man in a car wearing a blue shirt, and there's two red circles that appear to circle the location of these two young men."
+  ],
+  "input_tokens": 75,
+  "status": "translated",
+  "generation_wall_ns": 1671870800
+}

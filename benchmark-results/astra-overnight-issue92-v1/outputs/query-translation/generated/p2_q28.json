@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q28",
+  "canonical_sha256": "b1b1174e74ce0faf9dac41e939bc8dc19362f5599d26324284aa6db2088d2bac",
+  "texts": [
+    "Một cô gái đeo tạp dề màu trắng, bên cạnh là một lọ hoa riềng tía. Sau đó cô gái này đặt lên 1 dĩa trắng 4 con X, được biết X là nguyên liệu cho món ăn trong tập này. Sau đó người này lại cầm lên 2 con X. Sau đó người này đối thoại với một người đối diện để xem hôm nay nấu món gì. Hỏi X là con gì?\n\n## Temporal Retrieval and Alignment of Key Events (TRAKE)",
+    "A girl wearing a white apron next to a bottle of purple flowers, and then she puts on a white plate, four Xs, known as X is the ingredients for the dish. Then he picks up two Xs. Then he talks to someone opposite to see what they're cooking today.",
+    "A girl wearing a white apron next to a bottle of purple flowers, and then she puts on a white plate, four Xs, known as X is the ingredients for the dish. Then he picks up two Xs. Then he talks to someone opposite to see what he cooks today."
+  ],
+  "input_tokens": 105,
+  "status": "translated",
+  "generation_wall_ns": 1662477400
+}

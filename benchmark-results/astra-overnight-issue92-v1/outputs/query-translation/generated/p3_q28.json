@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q28",
+  "canonical_sha256": "104050ae292019bb5829d4ca3cc8d693d2a73a44080aab9d30f9cb23b6e02094",
+  "texts": [
+    "Cảnh quay phỏng vấn một người phụ nữ, đeo kính gọng đen, tay đang ôm một bao đồ như quần áo. Xung quanh đó có những bao đồ khác. Bao đồ trên tay người phụ nữ có màu trắng vào có 1 logo màu xanh lá cây.",
+    "There was an interview with a woman with black glasses and a bag of clothes in her hand, and she was surrounded by other bags of stuff, and she was wrapped in the arms of a white woman with a green logo.",
+    "There was an interview with a woman with black glasses and a bag of clothes in her hand, and she was surrounded by other bags of stuff, and she had this white woman in her hand with a green logo in her hand."
+  ],
+  "input_tokens": 54,
+  "status": "translated",
+  "generation_wall_ns": 1028775200
+}

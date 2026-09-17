@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q35",
+  "canonical_sha256": "d9789499f42eb5ffe1d9d2d91e0b0928a0382a2ee1b848b74a5c632e017a74f8",
+  "texts": [
+    "Giải đề THPTQG 2018 tại nhóm X. Nhóm này gồm 4 câu hỏi trắc nghiệm 4 đáp án A, B, C, D, trong đó đáp án 4 câu không trùng nhau và đều chứa chữ số 0. Hỏi X là số mấy?",
+    "So, let's say that the NPTQGK is in group X. This group is four multiple choice questions.",
+    "So, let's say that the NPTQGK solution is a group of X. This group is four multiple choice questions."
+  ],
+  "input_tokens": 53,
+  "status": "translated",
+  "generation_wall_ns": 693452700
+}

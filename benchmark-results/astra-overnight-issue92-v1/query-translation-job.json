@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "C:\\Users\\minhc\\Code\\Vecna\\.venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "-B",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v1\\code\\query_translation.py"
+  ],
+  "cwd": "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight",
+  "timeout_seconds": 7200,
+  "next_action": "Continue Issue92: verify result/spec, outputs/query-translation/complete.json, model audit, all115 generated query records and their canonical hashes, provider115 rankings/113scored rows and summary, conditional integration. No completed job relaunch. Record translation scope honestly (English reformulations, not Vietnamese paraphrases). Retain strongest supported parent under frozen promotion gate. Finish candidate-attribution/capability diagnostics, aggregate reports, usage and hashes; deadline2026-09-16T23:50Z."
+}

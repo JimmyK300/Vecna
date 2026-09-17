@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "C:\\Users\\minhc\\Code\\Vecna\\.venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "-B",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v1\\code\\semantic_dense.py"
+  ],
+  "cwd": "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight",
+  "timeout_seconds": 23800,
+  "next_action": "Issue92 authorized continuation: read result/spec and verify outputs/semantic-dense/complete.json, model_audit.json, input_binding.json, all batch hashes, rankings115, per_query113, summary and conditional semantic-dense-integrated summary. Process success alone is not acceptance. Do not relaunch completed job. If deadline_stop exists preserve partial batches and classify incomplete. Carry strongest supported arm; complete required candidate attribution, slices, exact deltas, hashes, usage evidence and OVERNIGHT_RETURN. Research hard deadline2026-09-16T23:50Z; do not modify truth, production, or friend branches.",
+  "thread": "01a0aadd-a16d-77a2-b833-fc55ded727f2",
+  "codex": "C:\\Users\\minhc\\.codex\\packages\\standalone\\releases\\0.154.0-x86_64-pc-windows-msvc\\bin\\codex.exe"
+}

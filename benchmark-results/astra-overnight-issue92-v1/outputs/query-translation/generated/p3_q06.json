@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q06",
+  "canonical_sha256": "58153c59b082fd1f3ac91bebcface33394c0f54bfc3e93274b93961e2e1c6e02",
+  "texts": [
+    "Một giáo viên nam đứng bên trái màn hình và giảng bài trước một máy tính.\nTrên màn hình lớn hiển thị hướng dẫn chấm điểm, trong đó phần a đề cập đến cấu trúc của bài nghị luận văn học gồm mở bài, thân bài và kết bài.\nNội dung bài giảng liên quan đến một tác phẩm văn học và yêu cầu phân tích nhân vật.\nPhía dưới màn hình xuất hiện dòng chữ giới thiệu chương trình ôn thi môn Ngữ văn.\nTác giả được giới thiệu là người có duyên nợ gắn bó với đề tài miền núi nào?",
+    "A male teacher standing on the left side of the screen and giving a talk in front of a computer. On the large screen showing the grading instructions, in which part A refers to the structure of the essay, which is open cards and sums up. The content of the talk is related to a piece of literature and requires character analysis. Under the screen appears the introduction to the text of the literary program.",
+    "A male teacher standing on the left side of the screen and giving a talk in front of a computer. On the large screen showing the grading instructions, in which part A refers to the structure of the essay, which is open cards and sums up. The content of the talk is related to a literature work and requires character analysis. Under the screen appears the introduction to the text of the literary program. The writer is introduced as someone who has a debt to which mountain?"
+  ],
+  "input_tokens": 112,
+  "status": "translated",
+  "generation_wall_ns": 2341400900
+}

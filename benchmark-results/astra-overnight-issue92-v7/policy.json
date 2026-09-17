@@ -1,0 +1,16 @@
+{
+  "frozen_at": "2026-09-16T20:35:29.577516+00:00",
+  "parent": "accepted v5",
+  "hypothesis": "Sparse existing positive object evidence may complement OCR/ASR ranking without filtering missing detections.",
+  "rule": "Protect first frame; rank tail by61/(60+accepted frame rank)+0.05*fraction supported categories. Same inherited dictionary/confidence0.5/negation guard. Stable ties. No sweeps.",
+  "inputs_sha256": {
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v5\\outputs\\frame-text\\rankings.jsonl": "21a79a1f9bfc93323f23c11008157b684ac4f5103199a4965f4e0acebbcefd33",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v5\\validation\\accepted.json": "c679dec7c38b5841b24150f19b2008f3117c5d451d1f4e3f1d8497a9daa48c39",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v1\\yolo_policy.json": "5765f6c33fd10fdeb0298b7490b74c70cd9cf3816eeaf98155c38560e6479427",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v1\\code\\yolo.py": "5b4d806bc852da4fa95e94bcb6588f7d731b185bf9daad2c11fe09bfef661481",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\fusion\\queries.jsonl": "3b91dfe26a893192a497a964d3a9ea5f50c595fdaabad000cbc60fc602be0d1a",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-retrieval-rd-v1\\inputs\\canonical_truth.jsonl": "63f80eb6ff54ef3c623f6ae4926eba404dac8bb5543b86e31f8fa0da842b4c9f",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-retrieval-rd-v1\\reference\\evaluate_reranker_fusion.py": "82cbc5d7f5b6309f747165f8f278d4c3b66e9db83092c1808d2f72d1f8e76316",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v7\\code\\object_rank.py": "af45249dc649062268c740ffac4c89ed6096b9a478db1ff415d8cbb611e3a4b7"
+  }
+}

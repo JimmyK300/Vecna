@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q01",
+  "canonical_sha256": "845c492370fcdd1432dfc0e38ef65b2898ee37aa176a28d9b3061cbcd3f01a72",
+  "texts": [
+    "Một chén trứng gà đã đánh tan được đổ vào nồi nước súp đang nấu.\nTrong nồi có các nguyên liệu được cắt thành sợi, gồm nấm và măng.\nNgười đầu bếp dùng dao cắt đậu hũ thành từng miếng nhỏ ngay phía trên nồi.\nĐậu hũ được cho trực tiếp vào nồi rồi các nguyên liệu được khuấy đều với nhau.",
+    "A bowl of fried chicken eggs was poured into a cooking soup pot, where the ingredients were cut into fibers, made of mushrooms and cement, and the cook cut the jar into small pieces above the pot, and the jars were placed directly into the pot, and the ingredients were all stirred together.",
+    "A bowl of fried chicken eggs was poured into a cooking soup pot, where the ingredients were cut into fibers, made of mushrooms and cement, and the cook cut the jar into small pieces above the pot, and the jar was placed directly into the pot, and the ingredients were all stirred together."
+  ],
+  "input_tokens": 68,
+  "status": "translated",
+  "generation_wall_ns": 1415915100
+}

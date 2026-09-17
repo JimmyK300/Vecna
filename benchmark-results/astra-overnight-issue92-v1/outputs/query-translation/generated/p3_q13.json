@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q13",
+  "canonical_sha256": "021718da5e3fccfc080949311d1818378fd529e39bfb6b1d54c567df515cbb9f",
+  "texts": [
+    "Hàng trăm chiếc lờ/lợp bắt cá bằng tre đan được tập kết thành từng dãy lớn bên bờ sông. Khung cảnh bờ sông miền Tây rợp bóng những hàng dừa, với ghe neo sát mép nước và rất nhiều cần xé tre được tập kết dưới các gốc dừa, tạo nên nét sinh hoạt làng nghề mộc mạc, đặc trưng vùng sông nước.",
+    "Hundreds of candor - catching fish were made up of huge sequences by the river bank, a view of the west river shining with a line of coconuts, with 217 anchored by the water edge and a great deal of need to tear the bamboo together under the coconut stumps, creating a life of a humble village, a typical watery region.",
+    "Hundreds of candor - catching fish were made up of huge sequences by the river bank, a view of the west river shining with a line of coconuts, with 217 anchored by the water edge and a great deal of need to tear the bamboo together under the coconut stumps, creating a life of a humble village, a typical watery area."
+  ],
+  "input_tokens": 74,
+  "status": "translated",
+  "generation_wall_ns": 1729192100
+}

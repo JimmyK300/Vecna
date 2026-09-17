@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q07",
+  "canonical_sha256": "17393fba8bc739f60b5d816ce82375bd4192c604569d6f75e82377729f5f9f4f",
+  "texts": [
+    "Đoạn phim ghi lại cảnh giao thông trên đường phố, trong đó hai thanh niên chạy xe với tư thế bất cẩn trên làn ô tô, tiềm ẩn nguy cơ gây tai nạn giao thông.",
+    "Videos show traffic footage on the street, two young men driving carelessly on traffic lanes, hiding in danger of traffic accidents.",
+    "Videos show traffic footage on the street, two young men driving carelessly on the lanes of cars, hiding in danger of traffic accidents."
+  ],
+  "input_tokens": 41,
+  "status": "translated",
+  "generation_wall_ns": 645483100
+}

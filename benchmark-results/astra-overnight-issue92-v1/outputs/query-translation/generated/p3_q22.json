@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q22",
+  "canonical_sha256": "adab5e2b233f4eb293ce88795e0fd2aae73e681c754ded4fd858ab0f015ef95e",
+  "texts": [
+    "Một phương tiện giao thông trên không chạy bằng điện đang bay thử nghiệm phía trên khuôn viên rộng lớn với những khu vườn xanh được cắt tỉa theo hình học và các công trình kiến trúc cổ kính. Phần phía trên thiết bị bay có dạng khung tròn lớn. Đây là việc thử nghiệm thiết bị bay này ở một nước Tây Âu",
+    "An electric aerial vehicle is testing over the vast campus with green gardens cut in geometry and glass architecture, the top of the flying device is a large circle, and this is a test of this flying device in a Western European country.",
+    "An electric aerial vehicle is testing over the vast campus with green gardens cut in geometry and glass architecture, the top of the flying device is a big circle, and this is a test of this flying device in a Western European country."
+  ],
+  "input_tokens": 67,
+  "status": "translated",
+  "generation_wall_ns": 1080635600
+}

@@ -1,0 +1,12 @@
+{
+  "query_id": "p1_q19",
+  "canonical_sha256": "5dfe200499a91493c6fb27cf41d5fe360fe883dc0fc7c1021612ebb0d9530452",
+  "texts": [
+    "Đoạn clip được cắt từ một phóng sự về một nhóm các nghệ nhân làm nghề đan lát các sản phẩm thủ công từ cây lục bình. Đầu tiên là một cảnh lia cam duy nhất từ trái sang phải, theo thứ tự ta thấy 4 sản phẩm: túi xách, chậu hoa, bộ ấm tách trà và túi xách. Ngay sau cảnh này, người phụ nữ bên trái lấy một tách trà trong bộ ấm tách và nâng niu trong khi nghe người phụ nữ bên phải trò chuyện.",
+    "The clip was cut from a press release about a group of artists who were trờiking handmade products from a vase tree, first of all, a single orange scene from left to right, and in order we saw four products: bag, flowerpot, teacup and handbag.",
+    "The clip was cut from a press release about a group of artists who were trờiking handmade products from a vase tree, first of all, a single orange scene from left to right, and in order we saw four products: bag, flowerpot, teacup and purse."
+  ],
+  "input_tokens": 98,
+  "status": "translated",
+  "generation_wall_ns": 1347244300
+}

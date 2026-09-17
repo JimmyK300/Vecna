@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q21",
+  "canonical_sha256": "d81345b4383476336dbd2abcf1843488ca9f65d4af828122231f164890a31331",
+  "texts": [
+    "Một món ăn làm từ tôm và các loại gia vị.\nE1: Khoảnh khắc người đầu bếp bắt đầu trộn hỗn hợp nước xốt, trong nước xốt này có 2 thành phần là nước cam và vỏ cam.\nE2: Khoảnh khắc người đầu bếp bắt đầu cắt bỏ đầu tôm.\nE3: Người đầu bếp cho tôm ra dĩa. Hãy chọn khoảnh khắc con tôm đầu tiên chạm vào dĩa.\nE4: Khoảnh khắc tép cam thứ 4 được xếp lên dĩa khi trang trí món ăn.",
+    "A dish made from shrimp and spices. E1: The cook started mixing the sauce mix, and in this sauce there were two ingredients of orange juice and orange shell.",
+    "A dish made from shrimp and spices. E1: The cook started mixing the sauce mix, and in this sauce there were two components of orange juice and orange shell."
+  ],
+  "input_tokens": 105,
+  "status": "translated",
+  "generation_wall_ns": 834018800
+}

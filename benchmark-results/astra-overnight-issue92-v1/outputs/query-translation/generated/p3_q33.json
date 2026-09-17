@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q33",
+  "canonical_sha256": "141022b07c3d61471ada63b65897d02753e2bc850f32f52293a810b7caaf53f2",
+  "texts": [
+    "Cảnh quay slow motion từ flycam ghi lại màn nước rút của hai tay đua dẫn đầu, trong đó tay đua mũ đen được cho là đuối sức hơn tay đua mũ trắng và để thua ở đoạn cuối.",
+    "A video of the kickoff power from the flycam recording the retreat of the two top drivers, in which the black hat driver is said to be weaker than the white hat driver and to lose at the end.",
+    "A video of the kickoff power from the flycam recording the retreat of the two top drivers, in which the black hat driver is said to be more exhausted than the white hat driver and to lose at the end."
+  ],
+  "input_tokens": 46,
+  "status": "translated",
+  "generation_wall_ns": 1027391400
+}

@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q04",
+  "canonical_sha256": "818080cf13fbc83b9b043419541082a2fec63bce44ac1f9505220013a6f8857f",
+  "texts": [
+    "Một giáo viên nữ ngồi bên phải màn hình và giảng bài Tiếng Anh.\nTrên bảng xanh lần lượt xuất hiện hai câu ví dụ, một câu nói về việc đi bảo tàng vào tuần trước, câu còn lại nói về thói quen chơi bóng đá khi còn trẻ.\nSau đó, nội dung trên bảng bổ sung phần giải thích chức năng của hai ví dụ và cuối cùng xuất hiện công thức ngữ pháp tương ứng.",
+    "A woman teacher sitting on the right side of the screen and giving lessons in English, and on the blueboard, there were two examples, one about going to the museum last week, the other about the habit of playing soccer when you were young.",
+    "A woman teacher sitting on the right side of the screen and giving lessons in English, and on the blueboard, there were two examples, one about going to the museum last week, the other about the habit of playing soccer when you were young; then the content on the table explained the function of the two examples and finally came up with the corresponding French formula."
+  ],
+  "input_tokens": 84,
+  "status": "translated",
+  "generation_wall_ns": 1731243900
+}

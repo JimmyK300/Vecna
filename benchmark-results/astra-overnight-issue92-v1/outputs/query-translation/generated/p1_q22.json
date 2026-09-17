@@ -1,0 +1,12 @@
+{
+  "query_id": "p1_q22",
+  "canonical_sha256": "ae1ccb7cc9779d2c0457c216a8357bb3ccd4784c8e80f07c1d82139bb12e643a",
+  "texts": [
+    "Đoạn phim ghi lại cảnh những chiếc xe ô tô lội nước, chiếc xe màu vàng, màu đỏ và màu đen lần lượt chuẩn bị đi qua cầu. Con số được ghi trên biển báo bên trái của cây cầu là bao nhiêu?",
+    "The video shows cars wading in water, yellow, red, and black cars getting ready to cross the bridge.",
+    "The video shows cars wading in water, yellow, red, and black cars going across the bridge."
+  ],
+  "input_tokens": 48,
+  "status": "translated",
+  "generation_wall_ns": 524026900
+}

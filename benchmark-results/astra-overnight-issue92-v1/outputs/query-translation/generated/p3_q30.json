@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q30",
+  "canonical_sha256": "50e8add2b6ad16362201c4140b4e03ad8c80959993c380e090a0333996ed60fe",
+  "texts": [
+    "Đoạn clip bắt đầu khi có 1 người đang phất cờ về đích đến trong chặng đua xe đạp quanh hồ. Ngay sau đó, một đoàn đông vận động viên xe đạp đang vào cua giữa khung cảnh đường phố rợp bóng cây. Một người đứng bên đường, tay trái cầm điện thoại để ghi hình, còn tay phải cầm một cây gậy có gắn thiết bị quay ở đầu hướng về phía đoàn đua.",
+    "The clip begins when a man is waving a flag at his destination in a bicycle race around the lake, and immediately after that, a large group of bikers are coming into the corner of the street, a man standing on the road with his left hand on his phone to record, and then with a stick attached to the head of the team.",
+    "The clip begins when a man is waving a flag at his destination in a bicycle race around the lake, and immediately after that, a large group of bikers are coming into the corner of the street, a man standing on the road with his left hand on his phone to record, and then with a stick attached to the head of the team with a spinning device."
+  ],
+  "input_tokens": 83,
+  "status": "translated",
+  "generation_wall_ns": 1819918500
+}

@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q18",
+  "canonical_sha256": "bc3cfddca7dbfc144692455721b034df1227702691e40cd76e9f0c98b2e144ed",
+  "texts": [
+    "Cảnh giáo viên nam đeo kính, mặc áo sơ mi kẻ sọc ngắn tay, xuất hiện ở góc dưới bên trái và dùng hai tay làm cử chỉ minh họa khi đang giảng bài.\n\nKhung hình chứa một bức ảnh minh họa cô gái trẻ đeo kính, mặc áo sơ mi trắng, ngồi khoanh chân trên ghế sofa màu xám vừa cầm cốc nước vừa nhìn vào laptop mở trên đùi.",
+    "The male teacher wearing glasses, wearing a short sleeveed shirt, appears in the lower left corner and uses both hands as an illustration while giving a talk. The box contains a picture of the young girl wearing a white shirt, sitting on a gray sofa, holding a glass of water and looking at the laptop on her thigh.",
+    "The male teacher wearing glasses, wearing a short sleeveed shirt, appears in the lower left corner and uses both hands as an illustration while giving a talk."
+  ],
+  "input_tokens": 78,
+  "status": "translated",
+  "generation_wall_ns": 1567757900
+}

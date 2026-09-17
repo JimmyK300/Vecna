@@ -1,0 +1,9 @@
+{
+  "status": "complete",
+  "policy_sha256": "39d120e1c259e2ecbe721fb0cab3b550617315cd31bce4e0ade5bbb41bde56dd",
+  "coverage_gate": true,
+  "rankings_sha256": "40c53b9394b90e5b1c81fe924cb84654afe3979a83e2f10975e6e49374cef22b",
+  "summary_sha256": "8d275bcb38cee8fb174abad6b0e92249412f915a2522bf2b334035beddfc210c",
+  "batch_count": 768,
+  "vector_count": 3071
+}

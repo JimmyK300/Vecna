@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q07",
+  "canonical_sha256": "16cd292d73bbb11ec3c10142ef4b607eff0a138ecc14f7967d62d4f9b501903e",
+  "texts": [
+    "Một đầu bếp chế biến món ăn trong chảo, với các miếng dồi trường màu trắng và rau xanh.\nĐầu bếp cho bông hẹ vào chảo đang có dồi trường rồi dùng dụng cụ đảo các nguyên liệu.\nCác đoạn bông hẹ dài màu xanh được trộn cùng những miếng dồi trường trắng trong chảo.\nMáy quay chuyển sang cận cảnh chảo khi đầu bếp tiếp tục xào và trộn hai nguyên liệu.",
+    "A cook who prepares food in a pan, with white and green mats, and the chef put cotton into the pan, and then he uses the tools to reverse the ingredients, and the long blue cottons are mixed with the white fields in the pan, and the camera moves to the pan as the cook continues to chew and mix the two ingredients.",
+    "A cook who prepares food in a pan, with white and green mats, and the chef put cotton into the pan, and then he uses the tools to reverse the ingredients, and the long blue cottons are mixed with the white fields in the pan, and the camera moves to the pan as the cook continues to grind and mix the two ingredients."
+  ],
+  "input_tokens": 79,
+  "status": "translated",
+  "generation_wall_ns": 1728482900
+}

@@ -1,0 +1,12 @@
+{
+  "query_id": "p1_q08",
+  "canonical_sha256": "cf6f4637d24efb830553f551a01cce83934dc57d414c6a1cb1ea9b6aedfc23de",
+  "texts": [
+    "Hành động cắt chùm nho bằng kéo từ giàn nho bằng một chiếc kéo màu đen. Có thể thấy có một sợi dây màu xanh dương được buộc vào cuống của chùm nho này trước khi nó được cắt.",
+    "The act of cutting the grapes with a black pair of scissors can be seen with a blue string tied to the trunk of this vine before it is cut.",
+    "The act of cutting the grapes with a black pair of scissors can be seen with a blue string tied to the stem of the vine before it is cut."
+  ],
+  "input_tokens": 42,
+  "status": "translated",
+  "generation_wall_ns": 753526400
+}

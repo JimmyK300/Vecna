@@ -1,0 +1,289 @@
+{
+  "created_utc": "2026-09-16T23:43:40.349418+00:00",
+  "files": {
+    "ALL_ARMS_VS_PR91.json": {
+      "sha256": "e3507dc49e6a9d32ffc18173a3c59583077ea185c451779253e240763ae7e1aa",
+      "bytes": 188408
+    },
+    "ARCHIVE_INTEGRITY.json": {
+      "sha256": "a1f99a8646a5b92485e33afd1929932f845653566a9e25b9f9dadaa8cf57ab79",
+      "bytes": 2114
+    },
+    "code/build_comparisons.py": {
+      "sha256": "26f3d4a1cccf2cc1cfeccab0a9870040e1a1b646c955342ec598d072209ab902",
+      "bytes": 2620
+    },
+    "code/finalize.py": {
+      "sha256": "52c4918fa1293dd651918e9d8dba10152d144d8f213b64d5b3d5f12af70b0752",
+      "bytes": 9607
+    },
+    "comparisons/v10/per_query.jsonl": {
+      "sha256": "5eb4698bfa387aac4e6036c6751bb9ae86ff0c89ef2499f639bbf13ff998c89a",
+      "bytes": 286105
+    },
+    "comparisons/v10/rankings.jsonl": {
+      "sha256": "30decbb940e8879a6b8e24af8a4fc2ea0aa25a0b8ce1d9fb5a9e3a4e41bafb4c",
+      "bytes": 7545385
+    },
+    "comparisons/v10/summary.json": {
+      "sha256": "3a42180c60878ff4e1f97fc2cb98ccf2196409ac556bbf2af6757f2c27d7f882",
+      "bytes": 18471
+    },
+    "comparisons/v1_packet-e/per_query.jsonl": {
+      "sha256": "7981ad0e21b7b02c38945d86b818167dcf56b160918c7283cbdab430e1d11987",
+      "bytes": 284724
+    },
+    "comparisons/v1_packet-e/rankings.jsonl": {
+      "sha256": "bdd37133f18ceb8933b9df8ab3e1fd8339de38f12396cd5ff75f347bd0e46ac6",
+      "bytes": 7159547
+    },
+    "comparisons/v1_packet-e/summary.json": {
+      "sha256": "8b4e05ee3856069c936f01ba69e55ca76c436ad3054498f020f4a4e9e43f479c",
+      "bytes": 19136
+    },
+    "comparisons/v1_query-translation/per_query.jsonl": {
+      "sha256": "62e44dbe3657a97417275adeaba6dea1e5886f6602d9425f01a1769342ae39cb",
+      "bytes": 288159
+    },
+    "comparisons/v1_query-translation/rankings.jsonl": {
+      "sha256": "df23a7d7ed5cb510d0f142e16f1c543e10229503781a388ee8fb021c499ab283",
+      "bytes": 5639062
+    },
+    "comparisons/v1_query-translation/summary.json": {
+      "sha256": "19cbc00f27c19b1bac254953d4d1cfa3c3c646cdfc1cb613728cecef6698aa14",
+      "bytes": 22410
+    },
+    "comparisons/v1_query-translation_provider/per_query.jsonl": {
+      "sha256": "daefd1262ba8b85e66f8ad680e5cca876a94011aa70c50b7029b44efe99e47cb",
+      "bytes": 291849
+    },
+    "comparisons/v1_query-translation_provider/rankings.jsonl": {
+      "sha256": "5af3577f658a05aba28e32fd2dc7e0326dc615ff7c257feacccb1f29fbb2a55a",
+      "bytes": 6372145
+    },
+    "comparisons/v1_query-translation_provider/summary.json": {
+      "sha256": "74f6d1d33932602cf4366e4fdea8eab9a25182d6cbdcaa21dde8fa354a5a2d0f",
+      "bytes": 36935
+    },
+    "comparisons/v1_query-variants/per_query.jsonl": {
+      "sha256": "5cec5fd39075a3ee6145f43c2e273dca46f8a7c22cf9a889dea0503b13cf627f",
+      "bytes": 287575
+    },
+    "comparisons/v1_query-variants/rankings.jsonl": {
+      "sha256": "54ef25004ce5e7b061eef6614c6015471a749df8047ea1089f67c68567a234dc",
+      "bytes": 5633065
+    },
+    "comparisons/v1_query-variants/summary.json": {
+      "sha256": "9ef8fba02daaf23c1b75b0b74188ee1e89227121bda784b4f6e5d7eb4d0e1911",
+      "bytes": 22604
+    },
+    "comparisons/v1_segment-v2/per_query.jsonl": {
+      "sha256": "e28ae689a31b946228f1a47f58027c56cde385e214beacc2a617d43eecd1bc1e",
+      "bytes": 285753
+    },
+    "comparisons/v1_segment-v2/rankings.jsonl": {
+      "sha256": "51e87e7f07ddf57ba14f94182070853be23b220689aec2f8c6cb7faedfd6d770",
+      "bytes": 7420420
+    },
+    "comparisons/v1_segment-v2/summary.json": {
+      "sha256": "06342ba79e8a8fbed6dd713d195f9965a8ccef434a91bd61a08f39bbce95ff3c",
+      "bytes": 15358
+    },
+    "comparisons/v1_semantic/per_query.jsonl": {
+      "sha256": "d3430ec7c1be9e68f66569209f811f5ee7c7a49f9cc4dad0a8f8af73018b54d2",
+      "bytes": 289343
+    },
+    "comparisons/v1_semantic/rankings.jsonl": {
+      "sha256": "8936e934a8d273dff4a554144123511877b258798cc80f46fac152c9fa75007a",
+      "bytes": 6334156
+    },
+    "comparisons/v1_semantic/summary.json": {
+      "sha256": "29be01495b7dccb58465545cbf6304627450028e38a5bff302ba58bf99a0d486",
+      "bytes": 39530
+    },
+    "comparisons/v1_semantic-dense/per_query.jsonl": {
+      "sha256": "55315887936e6b39fd5f095da8bb689bf4777f1471855ee7262f48ec8c7d9b8f",
+      "bytes": 289514
+    },
+    "comparisons/v1_semantic-dense/rankings.jsonl": {
+      "sha256": "5b3cd6e27272bc7f229d04a811f7200bd11ce3d71af4b753bce0dc64b0ed901c",
+      "bytes": 6336052
+    },
+    "comparisons/v1_semantic-dense/summary.json": {
+      "sha256": "1b4c73a1874644a246dea1b4de00ff31ec030a5201ba04341a05229ac1d0cf81",
+      "bytes": 35434
+    },
+    "comparisons/v1_semantic-dense-integrated/per_query.jsonl": {
+      "sha256": "968c008a0aea94006b6aaaf8c120d7f35a2829ce844de6a7c71c0a4a661d9669",
+      "bytes": 288653
+    },
+    "comparisons/v1_semantic-dense-integrated/rankings.jsonl": {
+      "sha256": "c06fd0a7b79091b0858dd285fa9c2e0d8b249a6b3e5ee5f132a3209c661a8dbf",
+      "bytes": 5586575
+    },
+    "comparisons/v1_semantic-dense-integrated/summary.json": {
+      "sha256": "57391fa39d880ab0841ded619989e51e1bc4f09c4d9aed1b19bc1046bc6ebb75",
+      "bytes": 23776
+    },
+    "comparisons/v1_semantic-grounding/per_query.jsonl": {
+      "sha256": "91592e10c104c1517e0b98b91c6875368a8f89052a43e6d35b7f6a27096a2dc8",
+      "bytes": 288515
+    },
+    "comparisons/v1_semantic-grounding/rankings.jsonl": {
+      "sha256": "8a0bfcab676f8003297e6610095eaef17bc480fde86ed9b422f0d5045abd51be",
+      "bytes": 5625728
+    },
+    "comparisons/v1_semantic-grounding/summary.json": {
+      "sha256": "a022de52061b2137c5b7a8131fda8c71bc5a4d93301f40161fe18b7550fb3fc4",
+      "bytes": 25362
+    },
+    "comparisons/v1_semantic-grounding_provider/per_query.jsonl": {
+      "sha256": "7042b62cb0c4bce3497ef20c9438cf197bd9a8c6ea375605c9126a72186f353c",
+      "bytes": 289240
+    },
+    "comparisons/v1_semantic-grounding_provider/rankings.jsonl": {
+      "sha256": "60dc1fdbb999d59a0a07ef95154ee325e39df7a0a3bc38d590cf51f362b363e7",
+      "bytes": 7715402
+    },
+    "comparisons/v1_semantic-grounding_provider/summary.json": {
+      "sha256": "657ac557bd8be272aa5a1814ff78461b47a96d914f29d591814ecac318d67001",
+      "bytes": 34040
+    },
+    "comparisons/v1_semantic-integrated/per_query.jsonl": {
+      "sha256": "13b5b80e700a6fff6e43dec7831526fa4fc26ecfddd74d5434a6312d90f05922",
+      "bytes": 287506
+    },
+    "comparisons/v1_semantic-integrated/rankings.jsonl": {
+      "sha256": "3951594c06a78343b821a46736b26836ef8ffb1e0ecb9a53579a89ced7ede89b",
+      "bytes": 5640201
+    },
+    "comparisons/v1_semantic-integrated/summary.json": {
+      "sha256": "32c122b3d087815bca70d9b0934688f8233189f2a33442bd8699770661c78aa0",
+      "bytes": 22670
+    },
+    "comparisons/v1_yolo/per_query.jsonl": {
+      "sha256": "643a3eca67f594c5f81e10892525ff372d9de0dc247fbdc37215bb27fe83c9ba",
+      "bytes": 285099
+    },
+    "comparisons/v1_yolo/rankings.jsonl": {
+      "sha256": "f68744ca6b1cb0c271c84b37bca5a7d4baa0896a473011aadeb8b348e212e8f4",
+      "bytes": 8113506
+    },
+    "comparisons/v1_yolo/summary.json": {
+      "sha256": "e038be95501302432a13050b230fbb1f03cb868f1264efc8eb470a5fb0bf07cf",
+      "bytes": 16292
+    },
+    "comparisons/v2/per_query.jsonl": {
+      "sha256": "6aa5c6c320e582289e400284430b22ae57082cbbb2acd0b51d68241631ac83d4",
+      "bytes": 288887
+    },
+    "comparisons/v2/rankings.jsonl": {
+      "sha256": "5f8fb56b2b77523d21ea256f5aa0714d01c3446ea4a0f8193e6f07b5a3096b3b",
+      "bytes": 7419075
+    },
+    "comparisons/v2/summary.json": {
+      "sha256": "ae83ec392fd3a1f436cb5eeaff970bc462bbc4aa2a39d6cd6052c34decd10a5c",
+      "bytes": 22923
+    },
+    "comparisons/v3/per_query.jsonl": {
+      "sha256": "6805c8e24c56f4eaf52d0411783e337afc1c2e2777760739f6f9bb770f933aa7",
+      "bytes": 287960
+    },
+    "comparisons/v3/rankings.jsonl": {
+      "sha256": "47fe920fbfc9b4c5f94ed69452d093c3bdac2934d627b018f592a48227bbf59d",
+      "bytes": 7419322
+    },
+    "comparisons/v3/summary.json": {
+      "sha256": "1ba47d8e7e99e3a998543e699315e50ed452f77572e9fc848372d397bc9a51c7",
+      "bytes": 20283
+    },
+    "comparisons/v4/per_query.jsonl": {
+      "sha256": "c07cf099f1670df7d53ed6d2bd668a4838f10adea8dec37241bce1a8e1245597",
+      "bytes": 286467
+    },
+    "comparisons/v4/rankings.jsonl": {
+      "sha256": "0000a9777245cb1479d22ef8a57cf20352b6e7234830f1e3055b1e7d15411790",
+      "bytes": 7545206
+    },
+    "comparisons/v4/summary.json": {
+      "sha256": "8c91b15b7d7a470a177acd057ed91f91e88f7c71b320c2a020d4e16c4db77f86",
+      "bytes": 17302
+    },
+    "comparisons/v5/per_query.jsonl": {
+      "sha256": "4314989af1f38681dc9329adcf7f43501afd180137980d5c7e03e62057440d6b",
+      "bytes": 289334
+    },
+    "comparisons/v5/rankings.jsonl": {
+      "sha256": "d012675a965412724aeb0c2a97e4f2c138df3c090c9d5b2c6d9c1ae0d384d8eb",
+      "bytes": 7547290
+    },
+    "comparisons/v5/summary.json": {
+      "sha256": "6e5189d4a27c65367b261ad8e7535ccf887c7d249a1dd4b0eef714fa2db29914",
+      "bytes": 20276
+    },
+    "comparisons/v6/per_query.jsonl": {
+      "sha256": "517597073e875a874eaa660038df0b1f5788087394dae0fbb069cfb7ac9806be",
+      "bytes": 287820
+    },
+    "comparisons/v6/rankings.jsonl": {
+      "sha256": "ab0ea40785dc2d24bcc4736ca1169aebf90d97e77d8d8da5bbb1b0bdef561f40",
+      "bytes": 7691780
+    },
+    "comparisons/v6/summary.json": {
+      "sha256": "a18027a4c3dddc7640db9581d3f3733caa442a8b131c6955579aa82256e001cf",
+      "bytes": 20476
+    },
+    "comparisons/v7/per_query.jsonl": {
+      "sha256": "4179d8e2cd5b8e2440707d8225490e970010793559a7a4b9db5ef5ac13b29446",
+      "bytes": 286651
+    },
+    "comparisons/v7/rankings.jsonl": {
+      "sha256": "4f4613b4594bad9ece625c4811f46198af8ba0796bc1a9150838184af5320a3d",
+      "bytes": 7545912
+    },
+    "comparisons/v7/summary.json": {
+      "sha256": "4ded963bc1a31eeb30276de65ac4086ca5fa148c23f996b24c49b3af8bbaaa8b",
+      "bytes": 20268
+    },
+    "comparisons/v8/per_query.jsonl": {
+      "sha256": "36de7154b4afb0f8e079db78c57c2ba12cc104b1f5d2e109b3b2be01ebc97827",
+      "bytes": 287142
+    },
+    "comparisons/v8/rankings.jsonl": {
+      "sha256": "5f70404d66a1aaa848727804b1f157931a8aa40a10f82be2db6e5c794b0bd7b6",
+      "bytes": 7546166
+    },
+    "comparisons/v8/summary.json": {
+      "sha256": "4ce54b36b4f0ad6e46fcf56bbdfa40f070006f7cf1371c9cbe316c8139a88102",
+      "bytes": 19917
+    },
+    "comparisons/v9/per_query.jsonl": {
+      "sha256": "0ba9e453952a23db8f717a17a46b95163984d7360cafb7c1c51484f2f9c6fbe1",
+      "bytes": 287791
+    },
+    "comparisons/v9/rankings.jsonl": {
+      "sha256": "f328918b865395326a962e22918781a3ded9f0d01d00bf43c38344328c815344",
+      "bytes": 7903231
+    },
+    "comparisons/v9/summary.json": {
+      "sha256": "ffc8c8633d69822d146a9dc78cb0d14fd56b04a4a66acfc8aed2700ea883c44c",
+      "bytes": 20530
+    },
+    "README.md": {
+      "sha256": "cd13bcbba7be86b65fbe3ddda7712eb6a1d587dc3e1ff334b528799c17823345",
+      "bytes": 1430
+    },
+    "REPORT.md": {
+      "sha256": "28b8ce838a6bf04accdcec039724d8ddced23b6053aa2b014212b8a064874d69",
+      "bytes": 8242
+    },
+    "usage_final.json": {
+      "sha256": "bd80a588ae690702375d43a9e798626f7a6327e95a8adfe74dfa862be3d1894e",
+      "bytes": 3486
+    },
+    "WORKLOADS.json": {
+      "sha256": "4de5ebbd213dad67c457d59f6de0da0cf6562592615a8b93ea399f5f9a32eca9",
+      "bytes": 4101
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "query_id": "p0_q24",
+  "canonical_sha256": "abe95262c85e82a968cc00869eac34f9f3a952ec727a312b9f8eceb7003b786e",
+  "texts": [
+    "Trong đoạn video nấu ăn một món ăn về nấm, gồm các khoảnh khắc sơ chế:\nE1: Khoảnh khắc đầu tiên thấy cắt nấm.\nE2: Khoảnh khắc đầu tiên cắt củ năng.\nE2: Khoảnh khắc đầu tiên cắt đậu hủ.\nE4: Khoảnh khắc chảo đặt lên bếp, đầu bếp mở lửa và thấy lửa bắt đầu xuất hiện",
+    "In the video cooking a mushroom dish, including the preliminary moments: E1: the first moment you cut the mushrooms. E2: the first moment you cut the power. E2: the first moment you cut the beans.",
+    "In the video cooking a mushroom dish, including the preliminary moments: E1: the first moment you cut the mushrooms. E2: The first moment you cut the power. E2: the first moment you cut the beans."
+  ],
+  "input_tokens": 78,
+  "status": "translated",
+  "generation_wall_ns": 1153514800
+}

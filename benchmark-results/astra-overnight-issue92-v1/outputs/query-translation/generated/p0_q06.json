@@ -1,0 +1,12 @@
+{
+  "query_id": "p0_q06",
+  "canonical_sha256": "6462400ce0ac1cc24945f95a3a86687cc3335a1eb08c431f54eab9f467daacab",
+  "texts": [
+    "Đoạn video về một lễ hội ẩm thực Nhật Bản lớn nhất thế giới. Hãy tìm chính xác phân cảnh một cô bé đeo một con bạch tuộc / con mực màu đỏ phía trước ngực. Trên tay cô bé có cầm một chiếc túi giấy.",
+    "The video of the largest Japanese food festival in the world, let's find the exact view of a little girl wearing an octopus / red squid in front of her chest with a paper bag in her hand.",
+    "The video of the largest Japanese food festival in the world, let's find the exact picture of a little girl wearing an octopus / red squid in front of her chest with a paper bag in her hand."
+  ],
+  "input_tokens": 50,
+  "status": "translated",
+  "generation_wall_ns": 919792800
+}

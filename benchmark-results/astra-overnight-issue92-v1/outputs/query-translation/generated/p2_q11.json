@@ -1,0 +1,12 @@
+{
+  "query_id": "p2_q11",
+  "canonical_sha256": "81761ad46cea299708a4e6b292616310b0ca6232bfd9f5b965c648c09de441f7",
+  "texts": [
+    "Cảnh phim lần lượt giới thiệu các nguyên liệu của món ăn qua 3 chuyển cảnh: máy quay chéo lên và kết thúc ở nguyên liệu hải sản đầu tiên; quay từ trên xuống cận cảnh nguyên liệu hải sản thứ hai rồi chuyển sang các nguyên liệu nhiều màu sắc; cuối cùng là cú máy tĩnh toàn cảnh toàn bộ nguyên liệu.",
+    "The scene in turn introduces the ingredients of the dish to three turns the scene: the translucent camera up and ends up in the first seafood material; it rotates from the top down to the second seafood landscape, and then it turns to colorful materials; finally, the machine is the whole landscape.",
+    "The scene in turn introduces the ingredients of the dish to three turns the scene: the translucent camera up and ends up in the first seafood material; it rotates from the top down to the second seafood landscape, and then it turns to colorful materials; eventually, the machine is the whole landscape."
+  ],
+  "input_tokens": 68,
+  "status": "translated",
+  "generation_wall_ns": 1635625800
+}

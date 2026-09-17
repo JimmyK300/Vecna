@@ -1,0 +1,4 @@
+# Preserve SHA-256-bound overnight experiment evidence byte for byte.
+astra-overnight-issue92*/** -text
+astra-retrieval-rd-v1/outputs/fusion/capture-full115-v1/provider_rankings.jsonl -text
+astra-retrieval-rd-v1/outputs/fusion/evaluation/study_results.jsonl -text

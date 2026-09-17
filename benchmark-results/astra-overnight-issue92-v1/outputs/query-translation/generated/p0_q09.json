@@ -1,0 +1,12 @@
+{
+  "query_id": "p0_q09",
+  "canonical_sha256": "b062f406101e5f4e11d4646a5ed79754ab3d7d637211067b0fa25cb964b8dbab",
+  "texts": [
+    "Trong đoạn clip có là một chàng trai đội mũ lưỡi trai đen, mặc áo thun trắng có dòng chữ tiếng Anh, đang ngồi cạnh một chiếc hộp. Trên hộp, anh sắp xếp nhiều mảnh bìa cắt rời với hình thù ngẫu nhiên.\nNhờ ánh sáng chiếu từ một phía, các mảnh bìa đó đổ bóng lên tường, tạo thành hình chân dung một người đàn ông với khuôn mặt rõ nét, tóc vuốt gọn và mặc vest.",
+    "In the clip there was a guy wearing a black hat, wearing a white T-shirt with an English line, sitting next to a box, and on the box, he organized various pieces of paper cut off in a random shape, and by means of the light shining from one side of the wall, they poured the shadow on the wall, creating a portrait of a man with a clear face, a sharp hair, and a suit.",
+    "In the clip there was a guy wearing a black hat, wearing a white T-shirt with an English line, sitting next to a box, and on the box, he organized various pieces of paper cut off in a random shape, and by means of the light shining from one side of the wall, they poured a shadow on the wall, creating a portrait of a man with a clear face, a sharp hair, and a suit."
+  ],
+  "input_tokens": 88,
+  "status": "translated",
+  "generation_wall_ns": 2090460100
+}

@@ -1,0 +1,118 @@
+{
+  "query_id": "p1_q18",
+  "query_text_sha256": "bd35cb4ce47f3a5a10c756c282b33c71c46ab696c3465dac0b7dae96241c0efe",
+  "policy_sha256": "1fc8828282ff85a215e0b6ff72abd915ae09feaf5fb9222cb45cd526f88d533b",
+  "chosen": [
+    {
+      "video_id": "L25_V002",
+      "record_index": 1640,
+      "dense_score": 0.4403493106365204
+    },
+    {
+      "video_id": "L25_V049",
+      "record_index": 1953,
+      "dense_score": 0.41046762466430664
+    },
+    {
+      "video_id": "L25_V069",
+      "record_index": 2092,
+      "dense_score": 0.4772351086139679
+    },
+    {
+      "video_id": "L25_V087",
+      "record_index": 2182,
+      "dense_score": 0.44480186700820923
+    },
+    {
+      "video_id": "L25_V008",
+      "record_index": 1683,
+      "dense_score": 0.5169174075126648
+    },
+    {
+      "video_id": "L25_V083",
+      "record_index": 2164,
+      "dense_score": 0.40075650811195374
+    },
+    {
+      "video_id": "L25_V019",
+      "record_index": 1753,
+      "dense_score": 0.4327109456062317
+    },
+    {
+      "video_id": "L25_V046",
+      "record_index": 1934,
+      "dense_score": 0.37328439950942993
+    },
+    {
+      "video_id": "L25_V024",
+      "record_index": 1784,
+      "dense_score": 0.42153796553611755
+    },
+    {
+      "video_id": "L25_V076",
+      "record_index": 2123,
+      "dense_score": 0.47926053404808044
+    },
+    {
+      "video_id": "L25_V084",
+      "record_index": 2166,
+      "dense_score": 0.445138543844223
+    },
+    {
+      "video_id": "L25_V021",
+      "record_index": 1762,
+      "dense_score": 0.5235850811004639
+    },
+    {
+      "video_id": "L25_V039",
+      "record_index": 1891,
+      "dense_score": 0.47255739569664
+    },
+    {
+      "video_id": "L25_V071",
+      "record_index": 2105,
+      "dense_score": 0.4522463381290436
+    },
+    {
+      "video_id": "L25_V051",
+      "record_index": 1968,
+      "dense_score": 0.443246066570282
+    }
+  ],
+  "logits": [
+    -4.509969711303711,
+    -7.036333084106445,
+    -3.3405022621154785,
+    -4.137792110443115,
+    -3.4145889282226562,
+    -4.987051963806152,
+    -6.417168617248535,
+    -6.029191970825195,
+    -5.202469348907471,
+    -3.3551321029663086,
+    -5.560366630554199,
+    -3.2643375396728516,
+    -4.983087062835693,
+    -4.521568298339844,
+    -3.8637466430664062
+  ],
+  "token_counts": [
+    193,
+    173,
+    170,
+    175,
+    202,
+    167,
+    205,
+    172,
+    200,
+    173,
+    185,
+    204,
+    256,
+    173,
+    165
+  ],
+  "truncated_pairs": 0,
+  "wall_ns": 7048167400
+}

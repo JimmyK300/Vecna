@@ -1,0 +1,12 @@
+{
+  "query_id": "p3_q05",
+  "canonical_sha256": "167615a9ec34f4bea24436727d9e0f52ed2d1a59ebbbc881a65e759d4e66ac5d",
+  "texts": [
+    "Một giáo viên nam đứng bên trái màn hình giảng bài ôn tập môn Địa lí. Nội dung trình chiếu giới thiệu khái quát một vùng kinh tế, sau đó chuyển sang vị trí địa lí, phạm vi lãnh thổ và ý nghĩa phát triển. Ở phần sau, một bản đồ khí hậu Việt Nam được đưa lên để minh họa cho bài giảng.\nTheo nội dung bài giảng, vùng được nhắc đến gồm bao nhiêu tỉnh, thành?",
+    "A male teacher standing on the left-hand side of the lecture on the Geography slide, and the presentations generalize an economy, and then move to the geographic location, the territory and the meaning of development.",
+    "A male teacher standing on the left-hand side of the lecture on the Geography slide, and the presentations generalize an economy, and then move to the geographic location, the territory and the meaning of development, and in the back, a Vietnamese climate map that was presented to illustrate the lecture."
+  ],
+  "input_tokens": 88,
+  "status": "translated",
+  "generation_wall_ns": 1447765300
+}

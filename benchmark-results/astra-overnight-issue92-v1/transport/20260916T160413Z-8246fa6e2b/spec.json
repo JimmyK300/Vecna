@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "C:\\Users\\minhc\\Code\\Vecna\\.venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "-B",
+    "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight\\benchmark-results\\astra-overnight-issue92-v1\\code\\semantic.py"
+  ],
+  "cwd": "C:\\Users\\minhc\\Code\\Vecna-issue92-overnight",
+  "timeout_seconds": 1800,
+  "next_action": "Verify semantic complete.json, summary and rankings plus conditional semantic-integrated summary; do not relaunch. Continue Issue92 from strongest supported arm: existing YOLO constraints then fixed semantic query variants. Preserve all negatives and produce hash-bound OVERNIGHT_RETURN and usage evidence.",
+  "thread": "01a0aadd-a16d-77a2-b833-fc55ded727f2",
+  "codex": "C:\\Users\\minhc\\.codex\\packages\\standalone\\releases\\0.154.0-x86_64-pc-windows-msvc\\bin\\codex.exe"
+}

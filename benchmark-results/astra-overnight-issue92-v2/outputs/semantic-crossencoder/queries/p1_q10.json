@@ -1,0 +1,83 @@
+{
+  "query_id": "p1_q10",
+  "query_text_sha256": "6ec9be33b0ae5cb4c181e58f35de6729922b9e57e56b696e4a3c2580fb27d43b",
+  "policy_sha256": "1fc8828282ff85a215e0b6ff72abd915ae09feaf5fb9222cb45cd526f88d533b",
+  "chosen": [
+    {
+      "video_id": "L22_V001",
+      "record_index": 944,
+      "dense_score": 0.5016906261444092
+    },
+    {
+      "video_id": "L22_V008",
+      "record_index": 1080,
+      "dense_score": 0.46973559260368347
+    },
+    {
+      "video_id": "L22_V029",
+      "record_index": 1460,
+      "dense_score": 0.5120794177055359
+    },
+    {
+      "video_id": "L22_V015",
+      "record_index": 1191,
+      "dense_score": 0.47943881154060364
+    },
+    {
+      "video_id": "L22_V022",
+      "record_index": 1332,
+      "dense_score": 0.4938289225101471
+    },
+    {
+      "video_id": "L22_V027",
+      "record_index": 1437,
+      "dense_score": 0.44258642196655273
+    },
+    {
+      "video_id": "L28_V022",
+      "record_index": 2829,
+      "dense_score": 0.3762940466403961
+    },
+    {
+      "video_id": "L21_V030",
+      "record_index": 883,
+      "dense_score": 0.46545034646987915
+    },
+    {
+      "video_id": "L22_V013",
+      "record_index": 1171,
+      "dense_score": 0.4514949917793274
+    },
+    {
+      "video_id": "L22_V004",
+      "record_index": 1018,
+      "dense_score": 0.43394187092781067
+    }
+  ],
+  "logits": [
+    -7.654736518859863,
+    -6.477346420288086,
+    -5.327124118804932,
+    -6.932130813598633,
+    -6.625675201416016,
+    -10.728094100952148,
+    -8.01025104522705,
+    -9.866455078125,
+    -10.66504955291748,
+    -10.824161529541016
+  ],
+  "token_counts": [
+    127,
+    149,
+    141,
+    140,
+    157,
+    147,
+    510,
+    193,
+    152,
+    146
+  ],
+  "truncated_pairs": 0,
+  "wall_ns": 4976645300
+}

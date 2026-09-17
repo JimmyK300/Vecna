@@ -1,0 +1,20 @@
+{
+  "query_id": "p2_q24",
+  "query_text_sha256": "ef838f0632cfc5b7fc168c2eec11b22728e3dc28d0b9b80b3560d5f462756912",
+  "policy_sha256": "1fc8828282ff85a215e0b6ff72abd915ae09feaf5fb9222cb45cd526f88d533b",
+  "chosen": [
+    {
+      "video_id": "L25_V012",
+      "record_index": 1707,
+      "dense_score": 0.6284871697425842
+    }
+  ],
+  "logits": [
+    -0.8579304814338684
+  ],
+  "token_counts": [
+    149
+  ],
+  "truncated_pairs": 0,
+  "wall_ns": 422277400
+}

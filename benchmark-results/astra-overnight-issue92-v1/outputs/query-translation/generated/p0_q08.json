@@ -1,0 +1,12 @@
+{
+  "query_id": "p0_q08",
+  "canonical_sha256": "44853fec48379b2f89372f034431eb43524e41568882c5aca11a3d4012421414",
+  "texts": [
+    "Tìm chính xác đoạn clip ngắn có ba người (hai phụ nữ và một nam giới) đang ngồi cạnh nhau, tập trung chơi nhạc cụ kim loại có dạng tròn, rỗng, với các vết lõm để tạo ra âm thanh khi gõ tay. Có 1 người mặc áo trắng ngồi giữa 2 người mặc áo đen. Bối cảnh phía sau là một kệ sách nhiều ngăn, xếp đầy sách với nhiều màu sắc",
+    "Find exactly the short clip of three people (two women and a man) sitting next to each other, focusing on playing metal instruments in round, empty, with holes in which to make sounds when they type, there's a white man sitting between two people in black, and the background behind is a stack of books, filled with many colors.",
+    "Find exactly the short clip of three people (two women and a man) sitting next to each other, focusing on playing metal instruments in round, empty, with holes in which to make sounds when you type, and a white man sitting between two people in black, and the background behind is a stack of books, filled with many colors."
+  ],
+  "input_tokens": 83,
+  "status": "translated",
+  "generation_wall_ns": 1631999700
+}

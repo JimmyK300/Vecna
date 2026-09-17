@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "verified_utc": "2026-09-16T16:48:18.778561+00:00",
+  "archive_manifest_sha256": "4499774188206f767b77398fa3d4e083eb6e342f7eb34176226592b8f111f523",
+  "archive_files": 1795,
+  "parent_input_hashes": 49,
+  "parent_ledger_byte_rebuild": true,
+  "arms_verified": 12,
+  "ranking_rows": 1380,
+  "paired_score_rows": 1356,
+  "new_inference_or_retrieval_calls": 0,
+  "selected_arm": "PR91 current control"
+}
