@@ -1,0 +1,131 @@
+{
+  "timestamp_utc": "2026-09-17T08:54:36.597974+00:00",
+  "agy_executable": "C:\\Users\\minhc\\AppData\\Local\\agy\\bin\\agy.EXE",
+  "help_probe": {
+    "returncode": 0,
+    "flags_found": [
+      "--add-dir",
+      "--agent",
+      "--continue",
+      "--conversation",
+      "--dangerously-skip-permissions",
+      "--disable-slash-commands",
+      "--effort",
+      "--input-format",
+      "--json-schema",
+      "--log-file",
+      "--mode",
+      "--model",
+      "--new-project",
+      "--output-format",
+      "--print",
+      "--print-timeout",
+      "--project",
+      "--prompt",
+      "--prompt-interactive",
+      "--remote-control",
+      "--sandbox"
+    ],
+    "has_input_format": true,
+    "has_output_format": true,
+    "has_video_flags": false
+  },
+  "models_probe": {
+    "returncode": 0,
+    "raw_output": "gemini-3.8-flash-high\tGemini 3.8 Flash (High)\ngemini-3.8-flash-medium\tGemini 3.8 Flash (Medium)\ngemini-3.8-flash-low\tGemini 3.8 Flash (Low)\ngemini-3.7-flash-high\tGemini 3.7 Flash (High)\ngemini-3.7-flash-medium\tGemini 3.7 Flash (Medium)\ngemini-3.7-flash-low\tGemini 3.7 Flash (Low)\ngemini-3.6-flash-high\tGemini 3.6 Flash (High)\ngemini-3.6-flash-medium\tGemini 3.6 Flash (Medium)\ngemini-3.6-flash-low\tGemini 3.6 Flash (Low)\ngemini-3.1-pro-high\tGemini 3.1 Pro (High)\ngemini-3.1-pro-low\tGemini 3.1 Pro (Low)\nclaude-sonnet-4-6\tClaude Sonnet 4.6 (Thinking)\nclaude-opus-4-6-thinking\tClaude Opus 4.6 (Thinking)\ngpt-oss-120b-medium\tGPT-OSS 120B (Medium)",
+    "models": [
+      "gemini-3.8-flash-high",
+      "gemini-3.8-flash-medium",
+      "gemini-3.8-flash-low",
+      "gemini-3.7-flash-high",
+      "gemini-3.7-flash-medium",
+      "gemini-3.7-flash-low",
+      "gemini-3.6-flash-high",
+      "gemini-3.6-flash-medium",
+      "gemini-3.6-flash-low",
+      "gemini-3.1-pro-high",
+      "gemini-3.1-pro-low",
+      "claude-sonnet-4-6",
+      "claude-opus-4-6-thinking",
+      "gpt-oss-120b-medium"
+    ],
+    "gemini_3_8_flash_high_available": true
+  },
+  "text_stream_probe": {
+    "returncode": 0,
+    "status": "SUCCESS",
+    "conversation_id": "cc332925-1610-4569-8d52-eae98b34031d",
+    "result_event": {
+      "conversation_id": "cc332925-1610-4569-8d52-eae98b34031d",
+      "status": "SUCCESS",
+      "response": "OK_TEXT\n",
+      "duration_seconds": 2.3788961,
+      "num_turns": 1,
+      "usage": {
+        "input_tokens": 17653,
+        "output_tokens": 122,
+        "thinking_tokens": 119,
+        "cache_read_tokens": 0,
+        "total_tokens": 17775
+      }
+    }
+  },
+  "non_text_block_probe": {
+    "returncode": 1,
+    "stdout": "{\"event\":\"init\",\"conversation_id\":\"a9807a61-af24-409c-a9ad-4f106572daa3\",\"init\":{\"model\":\"gemini-3.8-flash-high\",\"cwd\":\"C:\\\\Users\\\\minhc\\\\Code\\\\Vecna-issue95-local\",\"tools\":[\"ask_custom_permission\",\"ask_permission\",\"ask_question\",\"browser_click_element\",\"browser_drag_pixel_to_pixel\",\"browser_get_dom\",\"browser_get_network_request\",\"browser_input\",\"browser_list_network_requests\",\"browser_mouse_down\",\"browser_mouse_up\",\"browser_move_mouse\",\"browser_press_key\",\"browser_refresh_page\",\"browser_resize_window\",\"browser_scroll\",\"browser_scroll_dom\",\"browser_select_option\",\"browser_subagent\",\"call_mcp_tool\",\"capture_browser_console_logs\",\"capture_browser_screenshot\",\"click_browser_pixel\",\"command_status\",\"define_subagent\",\"delete_knowledge\",\"execute_browser_javascript\",\"find_by_name\",\"finish\",\"generate_image\",\"grep_search\",\"invoke_subagent\",\"list_browser_pages\",\"list_dir\",\"list_permissions\",\"list_resources\",\"manage_inbox\",\"manage_subagents\",\"manage_task\",\"multi_replace_file_content\",\"notebook_edit\",\"notebook_execution\",\"open_browser_url\",\"read_browser_page\",\"read_resource\",\"read_url_content\",\"replace_file_content\",\"run_command\",\"schedule\",\"search_web\",\"sed_file\",\"send_command_input\",\"send_message\",\"view_file\",\"wait\",\"wait_5_seconds\",\"write_to_file\"],\"permission_mode\":\"request-review\"}}\n{\"event\":\"result\",\"result\":{\"conversation_id\":\"a9807a61-af24-409c-a9ad-4f106572daa3\",\"status\":\"ERROR\",\"response\":\"\",\"error\":\"stream input content block type \\\"video\\\" is not supported (only \\\"text\\\")\",\"duration_seconds\":0,\"num_turns\":0,\"usage\":{\"input_tokens\":0,\"output_tokens\":0,\"thinking_tokens\":0,\"cache_read_tokens\":0,\"total_tokens\":0}}}",
+    "stderr": "error: stream input content block type \"video\" is not supported (only \"text\")",
+    "observed_error": "error: stream input content block type \"video\" is not supported (only \"text\")"
+  },
+  "binary_inspection": {
+    "found": true,
+    "format_string": "stream input content block type %q is not supported (only %q)",
+    "supported_block_types": [
+      "text"
+    ]
+  },
+  "capability_matrix": {
+    "requested_model": {
+      "required": "gemini-3.8-flash",
+      "agy_candidate": "gemini-3.8-flash-high",
+      "supported": true,
+      "notes": "Available in agy models list"
+    },
+    "native_video_access": {
+      "required": "Direct multimodal video ingestion via Files/Interactions API",
+      "agy_candidate": "None in headless mode (stream input content block type only supports text)",
+      "supported": false,
+      "notes": "Headless stream-json explicitly rejects non-text content blocks; interactive paste supports video but cannot be driven headlessly"
+    },
+    "static_sampling_4fps": {
+      "required": "static at 4.0 fps",
+      "agy_candidate": "None",
+      "supported": false,
+      "notes": "No CLI flags, settings, or parameters exist to configure video sampling rate or static mode"
+    },
+    "high_resolution": {
+      "required": "resolution: high",
+      "agy_candidate": "None",
+      "supported": false,
+      "notes": "No resolution flag exists in AGY CLI"
+    },
+    "audio_handling": {
+      "required": "Native video container audio decoding",
+      "agy_candidate": "None",
+      "supported": false,
+      "notes": "No headless audio track ingestion mechanism in AGY CLI"
+    },
+    "isolated_context": {
+      "required": "Zero-shot context with ONLY generic prompt and neutral media",
+      "agy_candidate": "Agent scaffolding (57 tools, >17k system/tool tokens injected)",
+      "supported": false,
+      "notes": "AGY boots full agent environment, violating isolated frozen captioning contract"
+    }
+  },
+  "gate_verdict": "NEEDS_DECISION",
+  "decision_options": [
+    "1. Authorize paid Gemini API quota / project billing for gemini-3.8-flash to resume native shot_caption_oracle.py harness without contract deviation.",
+    "2. Authorize local client-side frame extraction (4 fps, high resolution) via ffmpeg and define an image-based or external evaluation contract variance.",
+    "3. Authorize Google Cloud Vertex AI route using ADC / enterprise credentials for gemini-3.8-flash with the exact video processing configuration.",
+    "4. Await free-tier quota reset if a daily reset window applies."
+  ]
+}

@@ -1,57 +1,79 @@
-# Gemini shot-caption oracle sufficiency v0 — blocked run
+# Gemini shot-caption oracle sufficiency v0 — AGY capability gate report
 
 Tracker: `JimmyK300/Vecna#95`
 
 ## Result
 
-`BLOCKED`: the fixed caption run cannot finish with the currently available Gemini account quota. The declared `gemini-3.8-flash` model and key are valid—five frozen captions completed—but subsequent calls repeatedly returned HTTP 429 for `generativelanguage.googleapis.com/generate_content_free_tier_requests`, limit 20. Six bounded retries over 442.7 seconds did not clear the quota.
+`NEEDS_DECISION`. The authorized AGY CLI route was evaluated against the frozen experiment requirements. While `gemini-3.8-flash-high` is available in the CLI model catalog, AGY CLI's headless execution protocol cannot satisfy the experiment's native video captioning contract. Specifically, headless stream input (`--input-format stream-json`) strictly supports only `"text"` content blocks and rejects non-text blocks with `error: stream input content block type "video" is not supported (only "text")`. Furthermore, the CLI provides no mechanism for static 4.0 fps sampling, high-resolution specification, audio track ingestion, or zero-shot unpolluted context isolation.
 
-No substitute model was used. The prompt comparison, atom-level scoring, prompt freeze, and window-robustness stage were not run because the full caption set is not frozen.
+Per worker instructions, the worker halted at the capability gate rather than silently substituting frame montages, lower fps, audio omission, or tool-based file inspection.
 
-## Completed proof
+## Completed proof and evidence
 
-- Harness syntax and CLI checks passed under Python 3.12 and `google-genai==2.24.0`.
-- Fixed pilot manifest: 30 rows, 28 eligible.
-- Ineligible rows: `p3_q12` and `p3_q29`, both `no_legitimate_interval_with_seconds`; no timestamps were invented.
-- Clip extraction: 28 clips, 28 unique clip SHA-256 values, 27 unique source videos with source SHA-256 values, 380,423,946 total clip bytes.
-- All 28 ffprobe durations matched the requested interval within 0.25 seconds.
-- Caption cache: 5 successful model/prompt/clip records and 2 preserved error records (the initial 429 plus the bounded-retry record).
-- Successful frozen captions: all three prompt families for `p0_q01`; `dense-natural` and `structured-evidence` for `p0_q03`.
-- The exact post-caption decomposition authority was fetched from `JimmyK300/official-dataset-control@1f1ad1baef1e1d31817f6c5a12d4d94133611038`; Git blob `caf0a7b30a275b9ed47cab354fbb21bda00bf899` is retained as `evaluation_inputs/decompositions_113.jsonl`.
+### 1. Model availability
+- `agy models` was executed and lists `gemini-3.8-flash-high` (Gemini 3.8 Flash High) as an active model.
 
-## Reproducibility corrections
+### 2. Headless stream input restriction
+- Evaluated `agy --input-format stream-json --output-format stream-json --model gemini-3.8-flash-high`.
+- Passing a standard text prompt succeeds (`status: SUCCESS`), but passing a non-text content block (e.g. `type: "video"`) immediately terminates with returncode 1 and exact error:
+  ```
+  error: stream input content block type "video" is not supported (only "text")
+  ```
+- Binary audit of `agy.EXE` confirms the format string at rodata offset:
+  `stream input content block type %q is not supported (only %q)`
+  with supported type hardcoded to `"text"`.
 
-The supplied harness was corrected before or during execution to:
+### 3. Missing video processing and audio parameters
+- `agy --help` lists 21 flags; none provide video sampling control (`fps`), video processing mode (`static`), resolution control (`high`), or audio container handling.
+- Passing a video path as text (e.g. `"Describe video C:\path\to\clip.mp4"`) does not pass multimodal video tokens to the underlying model; the model only receives the text string.
 
-- retain source-video SHA-256 values with per-source hash caching;
-- include `resolution=high` in both the Gemini request and cache identity;
-- preserve failed attempts rather than treating an error file as a completed cache entry;
-- apply bounded exponential retries to transient 429/5xx/timeouts while recording every attempt;
-- carry task type and decomposition SHA-256 into post-caption evaluation packets.
+### 4. Context isolation violation
+- AGY CLI operates as an interactive/agentic environment. In print/stream mode, it injects over 17,000 prompt tokens comprising agent system instructions and 57 built-in developer tools (e.g., `run_command`, `replace_file_content`, `grep_search`, `browser_*`) per turn.
+- This violates the frozen contract requiring an isolated zero-shot completion context containing ONLY the generic prompt and neutral media.
 
-The post-freeze judge and deterministic metric aggregator are implemented but intentionally unexecuted until all 84 caption cache entries succeed.
+### 5. Interactive paste boundary
+- Official Antigravity documentation confirms that while clipboard paste (`ctrl+v`) in the interactive TUI can attach video recordings for UI debugging, interactive mode cannot be automated headlessly for batch processing across the 79 missing combinations, nor does it expose the required 4 fps / static sampling parameters.
 
-## Exact blocker and resume
+### 6. Existing artifacts preserved
+- 28 extracted oracle clips (380,423,946 bytes, 28 unique clip SHA-256s, 27 unique source SHA-256s) remain intact and immutable in `clips/`.
+- 5 frozen successful captions and 2 error records from the initial API run remain untouched in `captions/`.
+- Post-caption decomposition authority (`decompositions_113.jsonl`, blob `caf0a7b30a...`) remains preserved in `evaluation_inputs/`.
 
-The complete API error and all six retry errors are preserved in the two `p0_q03__structured-temporal__0f37191fd0b2feb3*.json` records under `captions/`. The error identifies the free-tier request metric, limit 20, model `gemini-3.8-flash`, and HTTP 429.
+## Reproducible diagnostics
 
-After quota is raised or reset, resume without `--force`:
+The diagnostic verification suite and evidence are preserved in:
+- `diagnostics/agy_preflight/probe_agy_capabilities.py`
+- `diagnostics/agy_preflight/agy_preflight_evidence.json`
+- `diagnostics/agy_preflight/README.md`
 
+Rerun command:
 ```powershell
-.\.venv-issue95\Scripts\python.exe benchmark-results/shot-caption-oracle-v0/code/shot_caption_oracle.py caption --prompt all --model gemini-3.8-flash --fps 4 --resolution high --stop-on-error
+.\.venv-issue95\Scripts\python.exe benchmark-results/shot-caption-oracle-v0/diagnostics/agy_preflight/probe_agy_capabilities.py
 ```
 
-Successful cache keys will be skipped. Once 84 successful caption records exist, run `build-eval-packets`, then `evaluate_caption_sufficiency.py judge`, perform the predeclared nine-packet manual audit, and run `aggregate`.
+## Concrete decision options
+
+1. **Authorize paid Google GenAI API quota / billing project (Recommended):**
+   Attach billing or a standard-tier API key for `gemini-3.8-flash`. The existing, verified `code/shot_caption_oracle.py` harness will resume without `--force`, skipping the 5 frozen successes and completing the remaining 79 captions with 100% fidelity to the frozen contract (4.0 fps static sampling, high resolution, native audio track ingestion, query-independent zero-shot context).
+
+2. **Authorize client-side frame extraction variance:**
+   Allow local extraction of static 4.0 fps frames via ffmpeg and define an explicit contract variance to evaluate whether an image-montage or sequential image API route is acceptable.
+
+3. **Authorize Google Cloud Vertex AI route:**
+   If enterprise Google Cloud Vertex AI credentials / ADC are available on the host, adapt the harness to use the Vertex AI endpoint for `gemini-3.8-flash` with the frozen video processing configuration.
+
+4. **Await free-tier quota reset:**
+   If the free-tier quota resets on a rolling 24-hour cycle, resume after the reset window without modifying the contract.
 
 ## Scope check
 
-- Child branch only; no merge to `main`.
-- No full-corpus pass, production retrieval change, TransNetV2 work, prompt/window sweep, per-query tuning, answer-aware regeneration, or alternate Gemini model.
-- Caption generation never loaded or sent query text, answers, capability tags, or decomposition atoms.
-- Clips remain local and are ignored by Git; their provenance and hashes are archived in `clips/clips.jsonl`.
+- Branch: `local/issue-95-gemini-shot-caption-oracle`; no merge to `main`.
+- No production retrieval changes, full-corpus pass, TransNetV2 dependency, prompt tuning, or answer leakage.
+- No private OAuth tokens or credentials extracted or committed.
 
 ## Uncertainty
 
-The observed error proves current quota exhaustion, but not whether the account needs billing/quota configuration or a later reset. Repeated waits longer than the advertised retry intervals did not restore access.
+- Whether a future release of AGY CLI will add headless multimodal content blocks (`type: "video"`, `type: "image"`).
+- The exact reset schedule or billing requirements of the user's Google GenAI API key.
 
-Next state: `BLOCKED`.
+Next state: `NEEDS_DECISION`.

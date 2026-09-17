@@ -7,8 +7,8 @@
     },
     {
       "path": "REPORT.md",
-      "sha256": "b21d85157bf595cd391f59a45cf7ea6f194c4b373a5483ec684336111d816b3e",
-      "size": 3802
+      "sha256": "ea9ed933d70c97f85936b1f1df4c769c070ce51e809b1abf8ceff632a2ac69a7",
+      "size": 5449
     },
     {
       "path": "captions/p0_q01__dense-natural__dd005bed34469ea2.json",
@@ -52,8 +52,8 @@
     },
     {
       "path": "code/build_run_archive.py",
-      "sha256": "680ef9f4f1941b5e45fe4e58464d9a7adf989e676701499ba64c6b968d190e01",
-      "size": 5366
+      "sha256": "2e3b2262285abe3b06a6b888e58936fd2ae4ca7b069a5bfe0f03b9afc525c2fe",
+      "size": 6207
     },
     {
       "path": "code/evaluate_caption_sufficiency.py",
@@ -64,6 +64,21 @@
       "path": "code/shot_caption_oracle.py",
       "sha256": "cb1bae842f92289d440f517ee95406f8b6b6c906ab0e2791c638df89dfbc4943",
       "size": 23514
+    },
+    {
+      "path": "diagnostics/agy_preflight/README.md",
+      "sha256": "047d06bcb6fd11f173c8b0bb0213d817d26afe317ab7de960b8b5a6adf171083",
+      "size": 2245
+    },
+    {
+      "path": "diagnostics/agy_preflight/agy_preflight_evidence.json",
+      "sha256": "f04be65bced970772d81278bdf64b4eac0505b61a56afc2ad60eb13974306bf6",
+      "size": 7135
+    },
+    {
+      "path": "diagnostics/agy_preflight/probe_agy_capabilities.py",
+      "sha256": "5ed51a13dbd2ca6829ebff137ae3786ee80b63684b8e791817eafc98056f44ab",
+      "size": 7914
     },
     {
       "path": "evaluation_config.json",
@@ -120,7 +135,8 @@
   "commands": [
     "python benchmark-results/shot-caption-oracle-v0/code/shot_caption_oracle.py build-manifest",
     "python benchmark-results/shot-caption-oracle-v0/code/shot_caption_oracle.py extract-clips --dataset-root D:\\Official-Dataset",
-    ".\\.venv-issue95\\Scripts\\python.exe benchmark-results/shot-caption-oracle-v0/code/shot_caption_oracle.py caption --prompt all --model gemini-3.8-flash --fps 4 --resolution high --stop-on-error"
+    ".\\.venv-issue95\\Scripts\\python.exe benchmark-results/shot-caption-oracle-v0/code/shot_caption_oracle.py caption --prompt all --model gemini-3.8-flash --fps 4 --resolution high --stop-on-error",
+    ".\\.venv-issue95\\Scripts\\python.exe benchmark-results/shot-caption-oracle-v0/diagnostics/agy_preflight/probe_agy_capabilities.py"
   ],
   "environment": {
     "ffmpeg": "ffmpeg version 8.1.2-full_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers",
@@ -139,14 +155,20 @@
     "resolution": "high",
     "window": "oracle_union_interval"
   },
-  "generated_at_utc": "2026-09-17T08:21:05.255148+00:00",
+  "generated_at_utc": "2026-09-17T08:55:49.318657+00:00",
   "git": {
     "branch": "local/issue-95-gemini-shot-caption-oracle",
-    "head": "471df5489eb395333ee8f509e84015c0ba405fa3"
+    "head": "7bd06895000d417a6cfd26c8bdc227b787cc8602"
   },
   "resume_command": ".\\.venv-issue95\\Scripts\\python.exe benchmark-results/shot-caption-oracle-v0/code/shot_caption_oracle.py caption --prompt all --model gemini-3.8-flash --fps 4 --resolution high --stop-on-error",
   "schema": "shot-caption-oracle-run-manifest-v0",
   "stages": {
+    "agy_preflight": {
+      "evidence_path": "diagnostics/agy_preflight/agy_preflight_evidence.json",
+      "rejection_error": "error: stream input content block type \"video\" is not supported (only \"text\")",
+      "status": "NEEDS_DECISION",
+      "supported_headless_video": false
+    },
     "captions": {
       "error_record_count": 2,
       "errors": [
@@ -188,6 +210,6 @@
       "pilot_count": 30
     }
   },
-  "stop_condition": "current Gemini account quota rejects remaining gemini-3.8-flash interactions with HTTP 429 free-tier request limit 20",
+  "stop_condition": "AGY capability preflight halted with NEEDS_DECISION: headless stream input only supports 'text' content blocks, lacking native multimodal video ingestion, static 4 fps sampling, high resolution, and unpolluted zero-shot context.",
   "tracker": "JimmyK300/Vecna#95"
 }

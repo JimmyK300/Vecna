@@ -51,6 +51,21 @@ def main() -> int:
     successful = {(r.get("query_id"), r.get("prompt_family"), r.get("cache_key")) for _, r in caption_rows if r.get("status") == "ok"}
     errors = [{"file": name, "query_id": r.get("query_id"), "prompt_family": r.get("prompt_family"), "error_type": r.get("error_type"), "error": r.get("error"), "attempt_count": len(r.get("attempt_errors", []))} for name, r in caption_rows if r.get("status") == "error"]
     inventory = [{"path": p.relative_to(ROOT).as_posix(), "size": p.stat().st_size, "sha256": sha256(p)} for p in included_files()]
+    agy_evidence_file = ROOT / "diagnostics" / "agy_preflight" / "agy_preflight_evidence.json"
+    agy_evidence = json.loads(agy_evidence_file.read_text(encoding="utf-8")) if agy_evidence_file.exists() else None
+    stages: dict[str, Any] = {
+        "manifest": {"pilot_count": len(manifest_rows), "eligible_count": sum(bool(r.get("eligible")) for r in manifest_rows), "ineligible": {r["query_id"]: r.get("eligibility_reason") for r in manifest_rows if not r.get("eligible")}},
+        "clips": {"count": len(clip_rows), "unique_clip_sha256": len({r["clip_sha256"] for r in clip_rows}), "unique_source_sha256": len({r["source_sha256"] for r in clip_rows}), "total_bytes": sum(r["clip_size"] for r in clip_rows)},
+        "captions": {"planned": sum(bool(r.get("eligible")) for r in manifest_rows) * 3, "successful_unique_cache_entries": len(successful), "error_record_count": len(errors), "errors": errors},
+        "evaluation": {"status": "not_started_incomplete_caption_freeze"},
+    }
+    if agy_evidence:
+        stages["agy_preflight"] = {
+            "status": agy_evidence.get("gate_verdict"),
+            "evidence_path": "diagnostics/agy_preflight/agy_preflight_evidence.json",
+            "supported_headless_video": False,
+            "rejection_error": agy_evidence.get("non_text_block_probe", {}).get("observed_error"),
+        }
     run = {
         "schema": "shot-caption-oracle-run-manifest-v0",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -68,17 +83,14 @@ def main() -> int:
             "python benchmark-results/shot-caption-oracle-v0/code/shot_caption_oracle.py build-manifest",
             "python benchmark-results/shot-caption-oracle-v0/code/shot_caption_oracle.py extract-clips --dataset-root D:\\Official-Dataset",
             ".\\.venv-issue95\\Scripts\\python.exe benchmark-results/shot-caption-oracle-v0/code/shot_caption_oracle.py caption --prompt all --model gemini-3.8-flash --fps 4 --resolution high --stop-on-error",
+            ".\\.venv-issue95\\Scripts\\python.exe benchmark-results/shot-caption-oracle-v0/diagnostics/agy_preflight/probe_agy_capabilities.py",
         ],
-        "stages": {
-            "manifest": {"pilot_count": len(manifest_rows), "eligible_count": sum(bool(r.get("eligible")) for r in manifest_rows), "ineligible": {r["query_id"]: r.get("eligibility_reason") for r in manifest_rows if not r.get("eligible")}},
-            "clips": {"count": len(clip_rows), "unique_clip_sha256": len({r["clip_sha256"] for r in clip_rows}), "unique_source_sha256": len({r["source_sha256"] for r in clip_rows}), "total_bytes": sum(r["clip_size"] for r in clip_rows)},
-            "captions": {"planned": sum(bool(r.get("eligible")) for r in manifest_rows) * 3, "successful_unique_cache_entries": len(successful), "error_record_count": len(errors), "errors": errors},
-            "evaluation": {"status": "not_started_incomplete_caption_freeze"},
-        },
-        "stop_condition": "current Gemini account quota rejects remaining gemini-3.8-flash interactions with HTTP 429 free-tier request limit 20",
+        "stages": stages,
+        "stop_condition": "AGY capability preflight halted with NEEDS_DECISION: headless stream input only supports 'text' content blocks, lacking native multimodal video ingestion, static 4 fps sampling, high resolution, and unpolluted zero-shot context.",
         "resume_command": ".\\.venv-issue95\\Scripts\\python.exe benchmark-results/shot-caption-oracle-v0/code/shot_caption_oracle.py caption --prompt all --model gemini-3.8-flash --fps 4 --resolution high --stop-on-error",
         "artifact_inventory": inventory,
     }
+
     (ROOT / "run_manifest.json").write_text(json.dumps(run, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     checksum_lines = [f"{item['sha256']}  {item['path']}" for item in inventory]
     checksum_lines.append(f"{sha256(ROOT / 'run_manifest.json')}  run_manifest.json")
