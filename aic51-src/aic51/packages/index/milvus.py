@@ -36,14 +36,47 @@ class MilvusDatabase(object):
         collection_exists = self._client.has_collection(collection_name)
 
         if do_overwrite or not collection_exists:
+            max_retries = 6
             if collection_exists:
                 logger.info(f'Deleting collection "{collection_name}"')
-                self._client.drop_collection(self._collection_name)
+                for attempt in range(max_retries):
+                    try:
+                        self._client.drop_collection(self._collection_name)
+                        break
+                    except Exception as e:
+                        err_str = str(e).lower()
+                        if (
+                            "node not match" in err_str
+                            or "invalidatecollectionmetacache" in err_str
+                        ) and attempt < max_retries - 1:
+                            logger.warning(
+                                f"Milvus proxy reconciling in etcd (attempt {attempt + 1}/{max_retries}). "
+                                f"Waiting 3s for lease expiration..."
+                            )
+                            time.sleep(3)
+                        else:
+                            raise e
 
             schema = self._create_schema()
             index_params = self._create_indices()
 
-            self._client.create_collection(collection_name, schema=schema, index_params=index_params)
+            for attempt in range(max_retries):
+                try:
+                    self._client.create_collection(collection_name, schema=schema, index_params=index_params)
+                    break
+                except Exception as e:
+                    err_str = str(e).lower()
+                    if (
+                        "node not match" in err_str
+                        or "invalidatecollectionmetacache" in err_str
+                    ) and attempt < max_retries - 1:
+                        logger.warning(
+                            f"Milvus proxy reconciling in etcd (attempt {attempt + 1}/{max_retries}). "
+                            f"Waiting 3s..."
+                        )
+                        time.sleep(3)
+                    else:
+                        raise e
 
         self._client.load_collection(self._collection_name)
 
@@ -318,6 +351,7 @@ class MilvusDatabase(object):
             "-d",
         ]
         subprocess.run(compose_cmd)
+        time.sleep(2)
 
     @classmethod
     def stop_server(cls):

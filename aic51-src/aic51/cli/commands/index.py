@@ -212,6 +212,12 @@ class IndexCommand(BaseCommand):
                 if claims:
                     frame_lineage_claims.setdefault(feature_name, []).extend(claims)
 
+            # If qwen_vl_temporal is requested but not extracted for this frame (due to Min-Gap filtering),
+            # gracefully fall back to the frame's static qwen_vl embedding (exact same 2048-d semantic space)
+            if "qwen_vl_temporal" in feature_fields and "qwen_vl_temporal" not in data:
+                if "qwen_vl" in data:
+                    data["qwen_vl_temporal"] = data["qwen_vl"]
+
             if all([f in data for f in feature_fields]):
                 data_list.append({database.process_field_name(k): v for k, v in data.items()})
                 for feature_name, provider_ids in frame_provider_generations.items():

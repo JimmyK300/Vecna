@@ -61,6 +61,12 @@ class AnalyseCommand(BaseCommand):
             help="Use Qwen VL embedding feature extractor (CUDA only)",
         )
         parser.add_argument(
+            "--use-qwen-temporal",
+            dest="use_qwen_temporal",
+            action="store_true",
+            help="Use Qwen VL temporal video clip feature extractor (CUDA only)",
+        )
+        parser.add_argument(
             "--use-image-siglip",
             dest="use_image_siglip",
             action="store_true",
@@ -112,6 +118,7 @@ class AnalyseCommand(BaseCommand):
         verbose: bool,
         use_image_clip: bool = False,
         use_qwen_vl: bool = False,
+        use_qwen_temporal: bool = False,
         use_image_siglip: bool = False,
         use_video_clip: bool = False,
         use_asr: bool = False,
@@ -132,6 +139,7 @@ class AnalyseCommand(BaseCommand):
         any_use_flag = (
             use_image_clip
             or use_qwen_vl
+            or use_qwen_temporal
             or use_image_siglip
             or use_video_clip
             or use_asr
@@ -143,6 +151,8 @@ class AnalyseCommand(BaseCommand):
             target_models.add("image_clip")
         if use_qwen_vl:
             target_models.add("qwen_vl_embedding")
+        if use_qwen_temporal:
+            target_models.add("qwen_vl_embedding_temporal")
         if use_image_siglip:
             target_models.add("image_siglip")
         if use_video_clip:
@@ -167,6 +177,15 @@ class AnalyseCommand(BaseCommand):
             ):
                 continue
             if use_ocr and not use_text_embedding and model_name == "text_embedding":
+                continue
+            if (
+                any_use_flag
+                and not use_qwen_temporal
+                and (
+                    model_name == "qwen_vl_embedding_temporal"
+                    or feature_name == "qwen_vl_temporal"
+                )
+            ):
                 continue
 
             feature_extractor_cls = FeatureExtractorFactory.get(model_name)

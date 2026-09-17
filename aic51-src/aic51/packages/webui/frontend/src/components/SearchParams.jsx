@@ -449,18 +449,19 @@ export default function SearchParams({
                   let displayName = item;
                   if (lower.includes("siglip")) displayName = "SigLIP";
                   else if (lower.includes("clip")) displayName = "CLIP";
+                  else if (lower.includes("temporal")) displayName = "Qwen-Temporal";
                   else if (lower.includes("qwen")) displayName = "Qwen-VL";
                   else if (lower.includes("bge") || lower.includes("dense")) displayName = "BGE-M3";
 
                   return (
-                    <label key={item} className="flex items-center gap-1.5 text-xs text-gray-700 cursor-pointer hover:text-gray-900">
+                    <label key={item} className="flex items-center gap-1.5 text-xs text-gray-700 cursor-pointer hover:text-gray-900" title={item}>
                       <input
                         type="checkbox"
                         checked={isChecked}
                         onChange={() => handleCheckboxToggle(item)}
                         className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                       />
-                      <span className="truncate text-xs font-bold">{displayName}</span>
+                      <span className="truncate text-xs font-bold" title={item}>{displayName}</span>
                     </label>
                   );
                 })}

@@ -80,6 +80,27 @@ class AddCommand(BaseCommand):
             help="Extract to clips",
         )
         parser.add_argument(
+            "--clip-length",
+            dest="clip_length",
+            type=float,
+            default=None,
+            help="Length of each video clip in seconds (default: 5.0s or from config)",
+        )
+        parser.add_argument(
+            "--min-clip-gap",
+            dest="min_clip_gap",
+            type=float,
+            default=None,
+            help="Minimum temporal gap (seconds) between consecutive video clips (default: 4.0s or from config)",
+        )
+        parser.add_argument(
+            "-g",
+            "--gpu",
+            dest="use_gpu",
+            action="store_true",
+            help="Use GPU hardware acceleration (NVENC) for fast video clip generation",
+        )
+        parser.add_argument(
             "-C",
             "--compress",
             dest="do_compress",
@@ -107,6 +128,9 @@ class AddCommand(BaseCommand):
         do_compress: bool,
         do_compress_first: bool,
         verbose: bool,
+        clip_length: float | None = None,
+        min_clip_gap: float | None = None,
+        use_gpu: bool = False,
         *args,
         **kwargs,
     ):
@@ -139,6 +163,9 @@ class AddCommand(BaseCommand):
             do_compress,
             do_compress_first,
             verbose,
+            clip_length=clip_length,
+            min_clip_gap=min_clip_gap,
+            use_gpu=use_gpu,
         )
 
     def _add_videos(
@@ -152,6 +179,9 @@ class AddCommand(BaseCommand):
         do_compress: bool,
         do_compress_first: bool,
         verbose: bool,
+        clip_length: float | None = None,
+        min_clip_gap: float | None = None,
+        use_gpu: bool = False,
     ):
         max_workers_ratio = GlobalConfig.get("max_workers_ratio") or 0
         max_workers = max(
@@ -200,7 +230,7 @@ class AddCommand(BaseCommand):
                     if do_audio:
                         self._extract_audio(video_path, do_overwrite, show_progress(task_id))
 
-                    if do_keyframe:
+                    if do_keyframe or do_clip:
                         self._extract_keyframes(
                             output_path,
                             video_path,
@@ -208,6 +238,9 @@ class AddCommand(BaseCommand):
                             do_audio,
                             do_clip,
                             show_progress(task_id),
+                            clip_length=clip_length,
+                            min_clip_gap=min_clip_gap,
+                            use_gpu=use_gpu,
                         )
 
                     if status_ok and do_compress and not do_compress_first:
@@ -291,6 +324,129 @@ class AddCommand(BaseCommand):
             },
         )
 
+    def _extract_clips_from_existing_keyframes(
+        self,
+        video_path: Path,
+        keyframe_dir: Path,
+        video_clips_dir: Path,
+        clip_length: float,
+        min_clip_gap: float,
+        use_gpu: bool,
+        update_progress: Callable,
+    ):
+        video_clips_dir.mkdir(parents=True, exist_ok=True)
+        video_fps = self._get_fps(video_path)
+        min_clip_gap_frames = int(round(min_clip_gap * video_fps))
+
+        keyframe_files = sorted(
+            [
+                p
+                for p in keyframe_dir.glob("*")
+                if p.is_file() and p.suffix.lower() in [".jpg", ".png", ".jpeg"]
+            ],
+            key=lambda p: p.stem,
+        )
+        if not keyframe_files:
+            return
+
+        frame_indices = []
+        for kf in keyframe_files:
+            try:
+                frame_indices.append(int(kf.stem))
+            except ValueError:
+                pass
+        frame_indices.sort()
+
+        selected_frames = []
+        if frame_indices:
+            selected_frames.append(frame_indices[0])
+            last_f = frame_indices[0]
+            for f in frame_indices[1:]:
+                if f - last_f >= min_clip_gap_frames:
+                    selected_frames.append(f)
+                    last_f = f
+
+        update_progress(
+            description="Clipping with GPU" if use_gpu else "Clipping",
+            completed=0,
+            total=len(selected_frames),
+        )
+
+        half_len_sec = clip_length / 2.0
+        tasks = []
+        for f_idx in selected_frames:
+            out_clip = video_clips_dir / f"{f_idx:06d}.mp4"
+            if out_clip.exists() and out_clip.stat().st_size > 1024:
+                update_progress(advance=1)
+                continue
+            center_sec = f_idx / video_fps
+            start_sec = max(0.0, center_sec - half_len_sec)
+            tasks.append((out_clip, start_sec))
+
+        if not tasks:
+            return
+
+        def _cut(out_clip: Path, start_sec: float):
+            if use_gpu:
+                cmd = [
+                    "ffmpeg",
+                    "-y",
+                    "-hide_banner",
+                    "-loglevel",
+                    "error",
+                    "-hwaccel",
+                    "cuda",
+                    "-ss",
+                    f"{start_sec:.3f}",
+                    "-t",
+                    f"{clip_length:.3f}",
+                    "-i",
+                    str(video_path),
+                    "-c:v",
+                    "h264_nvenc",
+                    "-preset",
+                    "p1",
+                    "-b:v",
+                    "3M",
+                    "-maxrate",
+                    "4M",
+                    "-bufsize",
+                    "8M",
+                    "-an",
+                    str(out_clip),
+                ]
+                res = subprocess.run(cmd, capture_output=True)
+                if res.returncode == 0 and out_clip.exists() and out_clip.stat().st_size > 1024:
+                    return True
+
+            cmd_cpu = [
+                "ffmpeg",
+                "-y",
+                "-hide_banner",
+                "-loglevel",
+                "error",
+                "-ss",
+                f"{start_sec:.3f}",
+                "-t",
+                f"{clip_length:.3f}",
+                "-i",
+                str(video_path),
+                "-c:v",
+                "libx264",
+                "-preset",
+                "ultrafast",
+                "-an",
+                str(out_clip),
+            ]
+            res_cpu = subprocess.run(cmd_cpu, capture_output=True)
+            return res_cpu.returncode == 0 and out_clip.exists() and out_clip.stat().st_size > 1024
+
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            futures = [executor.submit(_cut, out_clip, s_sec) for out_clip, s_sec in tasks]
+            for fut in futures:
+                fut.result()
+                update_progress(advance=1)
+
     def _extract_keyframes(
         self,
         video_path: Path,
@@ -299,6 +455,9 @@ class AddCommand(BaseCommand):
         do_audio: bool,
         do_clip: bool,
         update_progress: Callable,
+        clip_length: float | None = None,
+        min_clip_gap: float | None = None,
+        use_gpu: bool = False,
     ):
         audio_path = self._work_dir / constant.AUDIO_DIR / f"{video_path.stem}.wav"
         keyframe_dir = self._work_dir / constant.KEYFRAME_DIR / video_path.stem
@@ -306,7 +465,10 @@ class AddCommand(BaseCommand):
         video_clips_dir = self._work_dir / constant.VIDEO_CLIP_DIR / video_path.stem
         audio_clips_dir = self._work_dir / constant.AUDIO_CLIP_DIR / video_path.stem
 
-        if keyframe_dir.exists():
+        if keyframe_dir.exists() and (
+            not do_clip
+            or (video_clips_dir.exists() and any(video_clips_dir.glob("*.mp4")))
+        ):
             if do_overwrite:
                 shutil.rmtree(keyframe_dir)
                 if thumbnail_dir.exists():
@@ -318,6 +480,36 @@ class AddCommand(BaseCommand):
                 # their historical producer/configuration remains unknown.
                 self._provenance.ensure_keyframe_generation(video_path.stem)
                 return
+        elif do_overwrite:
+            if keyframe_dir.exists():
+                shutil.rmtree(keyframe_dir)
+            if thumbnail_dir.exists():
+                shutil.rmtree(thumbnail_dir)
+            if video_clips_dir.exists():
+                shutil.rmtree(video_clips_dir)
+
+        if keyframe_dir.exists() and not do_overwrite and do_clip:
+            actual_clip_length = (
+                clip_length
+                if clip_length is not None
+                else (GlobalConfig.get("add", "clip_length") or 5.0)
+            )
+            actual_min_clip_gap = (
+                min_clip_gap
+                if min_clip_gap is not None
+                else (GlobalConfig.get("add", "min_clip_gap") or 4.0)
+            )
+            self._extract_clips_from_existing_keyframes(
+                video_path=video_path,
+                keyframe_dir=keyframe_dir,
+                video_clips_dir=video_clips_dir,
+                clip_length=float(actual_clip_length),
+                min_clip_gap=float(actual_min_clip_gap),
+                use_gpu=use_gpu,
+                update_progress=update_progress,
+            )
+            self._provenance.ensure_keyframe_generation(video_path.stem)
+            return
 
         keyframe_dir.mkdir(parents=True, exist_ok=True)
         thumbnail_dir.mkdir(parents=True, exist_ok=True)
@@ -336,11 +528,23 @@ class AddCommand(BaseCommand):
         max_scene_length = int(round(max_scene_length_seconds * video_fps))
         keyframe_ratio = GlobalConfig.get("add", "keyframe_resize_ratio") or 0.5
         thumbnail_ratio = GlobalConfig.get("add", "thumbnail_resize_ratio") or 0.25
-        clip_length = GlobalConfig.get("add", "clip_length") or 7
+
+        actual_clip_length = (
+            clip_length
+            if clip_length is not None
+            else (GlobalConfig.get("add", "clip_length") or 5.0)
+        )
+        actual_min_clip_gap = (
+            min_clip_gap
+            if min_clip_gap is not None
+            else (GlobalConfig.get("add", "min_clip_gap") or 4.0)
+        )
+        clip_length = float(actual_clip_length)
+        min_clip_gap_seconds = float(actual_min_clip_gap)
 
         video_length = int(round(clip_length * video_fps))
-        video_clip_fps = max(1, int(round(1 / (video_length / video_fps)))) if video_length > 0 else 1
-        video_clip_interval = max(1, video_length // 7)
+        min_clip_gap_frames = int(round(min_clip_gap_seconds * video_fps))
+        video_clip_fps = video_fps
 
         if do_audio:
             with wave.open(str(audio_path), "rb") as f:
@@ -430,6 +634,7 @@ class AddCommand(BaseCommand):
         video_frames = []
         frame_counter = 0
         scene_length = 0
+        last_clip_frame = -min_clip_gap_frames
 
         while True:
             ret, frame = cap.read()
@@ -480,6 +685,42 @@ class AddCommand(BaseCommand):
                     thumbnail,
                     [cv2.IMWRITE_JPEG_QUALITY, 50],
                 )
+
+                if do_clip and not use_gpu and (video_frame_counter - last_clip_frame >= min_clip_gap_frames):
+                    last_clip_frame = video_frame_counter
+                    video_frame_center = len(video_frames) - video_length
+                    half_len = video_length // 2
+                    start_idx = max(0, video_frame_center - half_len)
+                    end_idx = min(len(video_frames) - 1, video_frame_center + half_len)
+
+                    clip_path = video_clips_dir / f"{video_frame_counter:06d}.mp4"
+                    video_writer = cv2.VideoWriter(
+                        str(clip_path),
+                        cv2.VideoWriter_fourcc(*"mp4v"),
+                        video_clip_fps,
+                        (target_w, target_h),
+                    )
+                    for i in range(start_idx, end_idx + 1):
+                        video_writer.write(video_frames[i])
+                    video_writer.release()
+
+                    if do_audio and audio_frames is not None and audio_frame_size:
+                        audio_frame_counter = round(video_frame_counter / video_fps * audio_fps)
+                        half_audio_len = int(round((clip_length / 2) * audio_fps))
+                        audio_start = max(0, audio_frame_counter - half_audio_len)
+                        audio_end = min(
+                            len(audio_frames) // audio_frame_size,
+                            audio_start + int(round(clip_length * audio_fps)),
+                        )
+                        audio_clip_path = audio_clips_dir / f"{video_frame_counter:06d}.wav"
+                        with wave.open(str(audio_clip_path), "wb") as f_out:
+                            f_out.setparams(wave_params)
+                            f_out.writeframes(
+                                audio_frames[
+                                    audio_start * audio_frame_size : audio_end * audio_frame_size
+                                ]
+                            )
+
                 scene_length = 0
 
             if video_frame_counter >= 0:
@@ -487,6 +728,17 @@ class AddCommand(BaseCommand):
             frame_counter += 1
 
         cap.release()
+
+        if do_clip and use_gpu:
+            self._extract_clips_from_existing_keyframes(
+                video_path=video_path,
+                keyframe_dir=keyframe_dir,
+                video_clips_dir=video_clips_dir,
+                clip_length=clip_length,
+                min_clip_gap=min_clip_gap_seconds,
+                use_gpu=True,
+                update_progress=update_progress,
+            )
         self._record_keyframe_provenance(
             video_path.stem,
             keyframe_dir,
