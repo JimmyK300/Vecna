@@ -1,0 +1,49 @@
+{
+  "schema": "shot-caption-oracle-pilot-v0",
+  "selection_policy": "fixed 30-query pilot chosen before caption results to cover diverse current-113 capability tags; caption model never receives query text or these tags",
+  "query_ids": [
+    "p0_q01", "p0_q03", "p0_q04", "p0_q08", "p0_q10", "p0_q13", "p0_q17", "p0_q19", "p0_q20", "p0_q21",
+    "p1_q02", "p1_q04", "p1_q09", "p1_q10", "p1_q17", "p1_q18", "p1_q21", "p1_q23", "p1_q24",
+    "p2_q03", "p2_q05", "p2_q11", "p2_q14", "p2_q15", "p2_q17", "p2_q20", "p2_q21", "p2_q25",
+    "p3_q12", "p3_q29"
+  ],
+  "capability_tags": {
+    "p0_q01": ["ASR", "ENTITY", "SEM", "VIS_ATTR", "VIS_OBJ"],
+    "p0_q03": ["ACT", "SCENE", "SPATIAL", "VIS_ATTR", "VIS_OBJ"],
+    "p0_q04": ["ACT", "FINE", "SPATIAL", "VIS_ATTR"],
+    "p0_q08": ["COUNT", "FINE", "SCENE", "VIS_ATTR", "VIS_OBJ"],
+    "p0_q10": ["ACT", "COUNT", "SEQ", "VIS_ATTR", "VIS_OBJ"],
+    "p0_q13": ["COUNT", "ENTITY", "OCR", "SCENE", "VIS_ATTR", "VIS_OBJ"],
+    "p0_q17": ["COUNT", "MOTION", "SPATIAL", "TRACK", "VIS_ATTR"],
+    "p0_q19": ["ASR", "ENTITY", "OCR", "QA"],
+    "p0_q20": ["ASR", "ENTITY", "OCR", "QA"],
+    "p0_q21": ["FINE", "OCR", "QA"],
+    "p1_q02": ["COUNT", "SCENE", "SEQ", "SLIDE", "VIS_OBJ"],
+    "p1_q04": ["ACT", "FINE", "MOTION", "SEQ", "VIS_OBJ"],
+    "p1_q09": ["MOTION", "SEQ", "TRACK", "VIS_ATTR"],
+    "p1_q10": ["ACT", "COUNT", "OCR", "VIS_ATTR", "VIS_OBJ"],
+    "p1_q17": ["ASR", "OCR", "SEM", "SLIDE", "VIS_OBJ"],
+    "p1_q18": ["OCR", "SLIDE", "SPATIAL", "VIS_ATTR"],
+    "p1_q21": ["FINE", "OCR", "QA", "VIS_OBJ"],
+    "p1_q23": ["COUNT", "OCR", "QA", "SLIDE", "SPATIAL"],
+    "p1_q24": ["ASR", "ENTITY", "OCR", "QA", "SCENE"],
+    "p2_q03": ["ACT", "SPATIAL", "VIS_ATTR", "VIS_OBJ"],
+    "p2_q05": ["ACT", "MOTION", "TRACK", "VIS_ATTR"],
+    "p2_q11": ["FINE", "SEQ", "SPATIAL", "VIS_OBJ"],
+    "p2_q14": ["MOTION", "OCR", "SEQ", "SPATIAL", "TRACK"],
+    "p2_q15": ["COUNT", "OCR", "SEM", "SLIDE", "SPATIAL"],
+    "p2_q17": ["ACT", "ENTITY", "MOTION", "TRACK", "VIS_ATTR"],
+    "p2_q20": ["OCR", "QA", "SEQ", "VIS_OBJ"],
+    "p2_q21": ["ASR", "FINE", "QA", "VIS_OBJ"],
+    "p2_q25": ["NEG", "OCR", "QA", "SEQ", "TRACK"],
+    "p3_q12": ["ACT", "SEQ", "VIS_ATTR", "VIS_EVENT"],
+    "p3_q29": ["ACT", "COUNT", "VIS_OBJ"]
+  },
+  "caption_processing": {
+    "model": "gemini-3.8-flash",
+    "mode": "static",
+    "fps": 4.0,
+    "window": "oracle_union_interval",
+    "prompt_families": ["dense-natural", "structured-evidence", "structured-temporal"]
+  }
+}
