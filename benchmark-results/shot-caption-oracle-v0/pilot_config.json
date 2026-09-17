@@ -43,6 +43,7 @@
     "model": "gemini-3.8-flash",
     "mode": "static",
     "fps": 4.0,
+    "resolution": "high",
     "window": "oracle_union_interval",
     "prompt_families": ["dense-natural", "structured-evidence", "structured-temporal"]
   }
