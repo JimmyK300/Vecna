@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { getTargetFeatures, expandQuery } from "../services/search.js";
 
 const VIDEO_PREFIX_OPTIONS = [
   { prefix: "L21", name: "L21: HTV 60 Seconds (P1)" },
@@ -87,7 +86,6 @@ export function AdvanceQueryContainer({
   translationFailed = false,
 }) {
   const [showPrefixMenu, setShowPrefixMenu] = useState(false);
-  const [targetFeatures, setTargetFeatures] = useState([]);
 
   // State thông báo lỗi dịch tự động dưới thanh query
   const [showTranslateErrorToast, setShowTranslateErrorToast] = useState(false);
@@ -101,16 +99,6 @@ export function AdvanceQueryContainer({
       return () => clearTimeout(timer);
     }
   }, [translationFailed, autoTranslate]);
-
-  // State cho Query Expansion, Google-style Suggestion & Jina Auto-Fusion
-  const [isExpanding, setIsExpanding] = useState(false);
-  const [autoFusion, setAutoFusion] = useState(false);
-  const [expansionVariants, setExpansionVariants] = useState([]);
-  const [expansionDetailed, setExpansionDetailed] = useState(null);
-  const [expansionError, setExpansionError] = useState("");
-  const [suggestionInfo, setSuggestionInfo] = useState(null);
-  const [showVariants, setShowVariants] = useState(false);
-  const [forceOriginal, setForceOriginal] = useState(false);
 
   // State đóng/mở 2 bộ lọc bên cạnh (OCR/ASR Filters & Video Filters)
   const [showOcrAsrPanel, setShowOcrAsrPanel] = useState(() => !/[\/\\\\]/.test(q || ""));
@@ -190,7 +178,6 @@ export function AdvanceQueryContainer({
 
     const newFullQuery = buildFullQuery(currentSegments, temporalDelimiter);
     setMainQuery(newFullQuery);
-    setForceOriginal(false);
   };
 
 
@@ -221,51 +208,19 @@ export function AdvanceQueryContainer({
   // Debounced live search trigger (only when autoSearch is true)
   useEffect(() => {
     if (!autoSearch) return;
-    const timer = setTimeout(async () => {
+    const timer = setTimeout(() => {
       const trimmed = mainQuery.trim();
       if (!trimmed) {
         lastSubmittedRef.current = "";
-        setSuggestionInfo(null);
         if (q !== "") onChange("");
         return;
       }
 
-      if (forceOriginal || hasTemporal) {
-        setSuggestionInfo(null);
-        lastSubmittedRef.current = trimmed;
-        if (trimmed !== q) onChange(trimmed);
-        return;
-      }
-
-      let textToSearch = trimmed;
-
-      // If Auto-Fusion is ON and NOT temporal: expand query via LLM for vector search
-      if (autoFusion && !isExpanding && trimmed && !hasTemporal) {
-        try {
-          const res = await expandQuery(trimmed);
-          if (res && res.detailed) {
-            const corrected = res.detailed.corrected || trimmed;
-            if (corrected.toLowerCase() !== trimmed.toLowerCase()) {
-              setSuggestionInfo({ original: trimmed, corrected });
-              textToSearch = corrected;
-            } else {
-              setSuggestionInfo(null);
-            }
-            setExpansionDetailed(res.detailed);
-            setExpansionVariants(res.variants || []);
-          }
-        } catch (e) {
-          console.error("Auto-Fusion background search error:", e);
-        }
-      } else {
-        setSuggestionInfo(null);
-      }
-
       lastSubmittedRef.current = trimmed;
-      if (textToSearch !== q) onChange(textToSearch);
+      if (trimmed !== q) onChange(trimmed);
     }, 450);
     return () => clearTimeout(timer);
-  }, [mainQuery, autoSearch, autoFusion, forceOriginal, hasTemporal]);
+  }, [mainQuery, autoSearch, q]);
 
   const [incInput, setIncInput] = useState(includeVideos || "");
   const [excInput, setExcInput] = useState(excludeVideos || "");
@@ -321,47 +276,7 @@ export function AdvanceQueryContainer({
     }
   };
 
-  const handleExpandQuery = async () => {
-    if (!mainQuery || !mainQuery.trim()) {
-      setExpansionError("Please enter a search query before expanding.");
-      return;
-    }
-    setIsExpanding(true);
-    setExpansionError("");
-    setExpansionVariants([]);
-    setExpansionDetailed(null);
-    setShowVariants(true);
-
-    try {
-      const res = await expandQuery(mainQuery.trim());
-      if (res && res.error) {
-        setExpansionError(res.error);
-      } else if (!res || (!res.variants && !res.detailed) || (res.variants && res.variants.length === 0)) {
-        setExpansionError("Failed to expand query (check GROQ_API_KEY).");
-      } else {
-        setExpansionVariants(res.variants || []);
-        setExpansionDetailed(res.detailed || null);
-      }
-    } catch (err) {
-      console.error("Error expanding query:", err);
-      setExpansionError("GROQ_API_KEY is not configured in workspace/config.yaml (or GROQ_API_KEY environment variable)");
-    } finally {
-      setIsExpanding(false);
-    }
-  };
-
-  const handleSelectExpansionVariant = (variantText) => {
-    setMainQuery(variantText);
-    setShowVariants(false);
-    setSuggestionInfo(null);
-    setExpansionVariants([]);
-    setExpansionDetailed(null);
-    setExpansionError("");
-    if (onResetQueryHeight) onResetQueryHeight();
-    onChange(variantText);
-  };
-
-  const triggerManualSearch = async () => {
+  const triggerManualSearch = () => {
     const trimmed = mainQuery.trim();
     if (!trimmed) {
       lastSubmittedRef.current = "";
@@ -369,37 +284,8 @@ export function AdvanceQueryContainer({
       return;
     }
 
-    if (forceOriginal || hasTemporal) {
-      lastSubmittedRef.current = trimmed;
-      onChange(trimmed);
-      return;
-    }
-
-    let textToSearch = trimmed;
-
-    if (autoFusion && !isExpanding && !hasTemporal) {
-      try {
-        const res = await expandQuery(trimmed);
-        if (res && res.detailed) {
-          const corrected = res.detailed.corrected || trimmed;
-          if (corrected.toLowerCase() !== trimmed.toLowerCase()) {
-            setSuggestionInfo({ original: trimmed, corrected });
-            textToSearch = corrected;
-          } else {
-            setSuggestionInfo(null);
-          }
-          setExpansionDetailed(res.detailed);
-          setExpansionVariants(res.variants || []);
-        }
-      } catch (e) {
-        console.error("Auto-Fusion manual search error:", e);
-      }
-    } else if (suggestionInfo && suggestionInfo.corrected) {
-      textToSearch = suggestionInfo.corrected;
-    }
-
     lastSubmittedRef.current = trimmed;
-    onChange(textToSearch);
+    onChange(trimmed);
   };
 
   const handleMainQueryKeyDown = (e) => {
@@ -469,56 +355,6 @@ export function AdvanceQueryContainer({
             )}
 
 
-
-            <button
-              type="button"
-              onClick={() => {
-                if (showVariants && (expansionVariants.length > 0 || expansionDetailed)) {
-                  setShowVariants(false);
-                  if (onResetQueryHeight) onResetQueryHeight();
-                } else {
-                  handleExpandQuery();
-                }
-              }}
-              disabled={isExpanding}
-              className={`text-[11px] font-bold px-2.5 py-0.5 rounded border transition-all shadow-sm flex items-center gap-1.5 cursor-pointer ${
-                isExpanding
-                  ? "bg-purple-300 text-purple-900 border-purple-400 cursor-wait animate-pulse"
-                  : showVariants && (expansionVariants.length > 0 || expansionDetailed)
-                  ? "bg-purple-100 hover:bg-purple-200 text-purple-900 border-purple-400"
-                  : "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white border-purple-700 hover:shadow"
-              }`}
-              title="Click to expand query or toggle view"
-            >
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-              {isExpanding
-                ? "Expanding..."
-                : showVariants && (expansionVariants.length > 0 || expansionDetailed)
-                ? "Hide Expansion ▴"
-                : "Expand Query ▾"}
-            </button>
-
-            {/* Auto-Fusion Toggle Button */}
-            <button
-              type="button"
-              onClick={() => setAutoFusion(!autoFusion)}
-              className={`text-[11px] font-semibold px-2 py-0.5 rounded border transition-all flex items-center gap-1 shadow-sm cursor-pointer ${
-                autoFusion
-                  ? "bg-purple-600 hover:bg-purple-700 text-white border-purple-700 font-bold"
-                  : "bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-300"
-              }`}
-              title={
-                autoFusion
-                  ? "Auto-Fusion ON: Searches using background LLM typo-correction & HyDE WITHOUT altering your input text. Click to turn OFF."
-                  : "Auto-Fusion OFF: Searches raw input text without background LLM expansion. Click to turn ON."
-              }
-            >
-              <span className={`w-2 h-2 rounded-full ${autoFusion ? "bg-white animate-pulse" : "bg-gray-400"}`}></span>
-              Auto-Fusion: {autoFusion ? "ON" : "OFF"}
-            </button>
-
             {/* OCR/ASR Filter Panel Toggle */}
             <button
               type="button"
@@ -569,7 +405,6 @@ export function AdvanceQueryContainer({
           value={mainQuery}
           onChange={(e) => {
             setMainQuery(e.target.value);
-            setForceOriginal(false);
           }}
           onKeyDown={handleMainQueryKeyDown}
         />
@@ -594,145 +429,7 @@ export function AdvanceQueryContainer({
           </div>
         )}
 
-        {/* Google-Style 2-Line Spellcheck Suggestion Banner */}
-        {suggestionInfo && autoFusion && (
-          <div className="text-xs bg-white/95 border-l-4 border-purple-600 px-3 py-1.5 rounded shadow-xs flex flex-col gap-0.5 animate-fadeIn">
-            <div className="text-gray-800 font-medium flex items-center gap-1 flex-wrap">
-              Showing results for{" "}
-              <button
-                type="button"
-                onClick={() => {
-                  setMainQuery(suggestionInfo.corrected);
-                  setSuggestionInfo(null);
-                  onChange(suggestionInfo.corrected);
-                }}
-                className="font-bold text-purple-900 italic underline hover:text-purple-700 cursor-pointer max-w-full truncate"
-                title="Click to replace search box text with corrected query"
-              >
-                "{suggestionInfo.corrected}"
-              </button>
-            </div>
-            <div className="text-gray-600 text-[11px] flex items-center gap-1 flex-wrap">
-              Search instead for{" "}
-              <button
-                type="button"
-                onClick={() => {
-                  setForceOriginal(true);
-                  setSuggestionInfo(null);
-                  onChange(suggestionInfo.original);
-                }}
-                className="text-purple-600 hover:text-purple-800 underline font-semibold cursor-pointer max-w-full truncate"
-              >
-                "{suggestionInfo.original}"
-              </button>
-            </div>
-          </div>
-        )}
 
-        {/* Query Expansion Dropdown Cards */}
-        {expansionError && (
-          <div className="text-xs text-red-600 font-semibold bg-red-50 border border-red-200 px-2 py-1 rounded">
-            {expansionError}
-          </div>
-        )}
-
-        {showVariants && (expansionVariants.length > 0 || expansionDetailed) && (
-          <div className="flex flex-col gap-1 bg-white/95 border border-purple-300 p-1.5 rounded-md shadow-xs animate-fadeIn w-full max-w-full min-w-0">
-            <div className="flex items-center justify-between min-w-0 pb-0.5 border-b border-purple-100">
-              <span className="text-[10px] font-extrabold text-purple-900 uppercase tracking-wider flex items-center gap-1 truncate min-w-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-purple-600 shrink-0 inline-block"></span>
-                <span className="truncate">QUERY EXPANSION</span>
-              </span>
-              <button
-                type="button"
-                onClick={() => {
-                  setShowVariants(false);
-                  if (onResetQueryHeight) onResetQueryHeight();
-                }}
-                className="text-[9px] text-gray-500 hover:text-red-600 font-semibold px-1 py-0 rounded bg-gray-100 hover:bg-red-50 shrink-0 cursor-pointer transition-colors border border-gray-200 flex items-center gap-0.5"
-                title="Close Query Expansion"
-              >
-                ✕ Close
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5 pt-0.5 w-full max-w-full min-w-0">
-              {(() => {
-                const boxes = [
-                  {
-                    key: "corrected",
-                    label: "corrected",
-                    sub: "Spell-check",
-                    value: expansionDetailed?.corrected || expansionVariants[0] || "",
-                    badgeColor: "bg-purple-50 hover:bg-purple-100/90 text-purple-950 border-purple-300",
-                    headerColor: "text-purple-800",
-                  },
-                  {
-                    key: "hyde",
-                    label: "vi-hyde",
-                    sub: "Vietnamese HyDE",
-                    value: expansionDetailed?.hyde || expansionVariants[1] || "",
-                    badgeColor: "bg-emerald-50 hover:bg-emerald-100/90 text-emerald-950 border-emerald-300",
-                    headerColor: "text-emerald-800",
-                  },
-                  {
-                    key: "en_hyde",
-                    label: "en-hyde",
-                    sub: "English visual",
-                    value: expansionDetailed?.en_hyde || expansionVariants[2] || "",
-                    badgeColor: "bg-sky-50 hover:bg-sky-100/90 text-sky-950 border-sky-300",
-                    headerColor: "text-sky-800",
-                  },
-                  {
-                    key: "paraphrase",
-                    label: "paraphrase",
-                    sub: "Rewrite & synonyms",
-                    value: expansionDetailed?.paraphrase || expansionVariants[3] || "",
-                    badgeColor: "bg-indigo-50 hover:bg-indigo-100/90 text-indigo-950 border-indigo-300",
-                    headerColor: "text-indigo-800",
-                  },
-                  {
-                    key: "search_keywords",
-                    label: "keywords",
-                    sub: "Hybrid search keywords",
-                    value: expansionDetailed?.search_keywords || expansionVariants[4] || "",
-                    badgeColor: "bg-amber-50 hover:bg-amber-100/90 text-amber-950 border-amber-300",
-                    headerColor: "text-amber-800",
-                  },
-                ];
-
-                return boxes
-                  .filter((b) => b.value && b.value.trim())
-                  .map((box) => (
-                    <button
-                      key={box.key}
-                      type="button"
-                      onClick={() => handleSelectExpansionVariant(box.value)}
-                      className={`w-full max-w-full min-w-0 text-xs p-1.5 rounded-md border transition-all shadow-xs flex flex-col gap-0.5 cursor-pointer text-left hover:shadow-md hover:scale-[1.002] active:scale-98 ${box.badgeColor}`}
-                      title={`Click to search: "${box.value}"`}
-                    >
-                      <div className="flex items-center justify-between w-full min-w-0 border-b border-black/5 pb-0.5">
-                        <div className="flex items-center gap-1 truncate">
-                          <span className={`font-extrabold text-[10px] lowercase font-mono tracking-wide ${box.headerColor}`}>
-                            {box.label}:
-                          </span>
-                          <span className="text-[9px] text-gray-500 font-normal hidden sm:inline truncate">
-                            • {box.sub}
-                          </span>
-                        </div>
-                        <span className="text-[9px] text-gray-500 hover:text-gray-800 font-semibold shrink-0">
-                          Search ↵
-                        </span>
-                      </div>
-                      <div className="w-full text-[11px] font-medium leading-snug max-h-14 overflow-y-auto whitespace-normal break-words scrollbar-thin pr-1">
-                        "{box.value}"
-                      </div>
-                    </button>
-                  ));
-              })()}
-            </div>
-          </div>
-        )}
 
         {/* Minimal Compact Interactive Temporal Multi-Step Inputs */}
         {hasTemporal && (

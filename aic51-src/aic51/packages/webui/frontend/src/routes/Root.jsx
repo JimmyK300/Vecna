@@ -301,8 +301,6 @@ export default function Root() {
                 <SearchParams
                   ocrWeight={ocrWeight}
                   asrWeight={asrWeight}
-                  ocrAlpha={ocrAlpha}
-                  asrAlpha={asrAlpha}
                   setWeights={(ocr, asr) => {
                     setOcrWeight(ocr);
                     setAsrWeight(asr);
@@ -315,14 +313,6 @@ export default function Root() {
                   setAsrWeight={(w) => {
                     setAsrWeight(w);
                     triggerParamsChange({ asrWeight: w });
-                  }}
-                  setOcrAlpha={(a) => {
-                    setOcrAlpha(a);
-                    triggerParamsChange({ ocrAlpha: a });
-                  }}
-                  setAsrAlpha={(a) => {
-                    setAsrAlpha(a);
-                    triggerParamsChange({ asrAlpha: a });
                   }}
                   nprobe={nprobe}
                   setNprobe={(n) => {
