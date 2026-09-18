@@ -1,7 +1,10 @@
+import os
 import re
+import sqlite3
 from copy import deepcopy
 from functools import lru_cache
-from deep_translator import GoogleTranslator
+import requests
+from deep_translator import GoogleTranslator, MyMemoryTranslator
 
 from aic51.packages.logger import logger
 import aic51.packages.constant as global_constant
@@ -27,20 +30,189 @@ def _is_translation_error(text: str) -> bool:
   return any(sig in lower for sig in ERROR_SIGNATURES)
 
 
-@lru_cache(maxsize=1024)
+_CACHE_DB_PATH = None
+
+
+def _get_cache_db_path() -> str:
+  global _CACHE_DB_PATH
+  if _CACHE_DB_PATH is not None:
+    return _CACHE_DB_PATH
+
+  env_path = os.environ.get("AIC51_TRANSLATION_CACHE_DIR")
+  if env_path:
+    base_dir = env_path
+  elif os.path.exists("workspace"):
+    base_dir = os.path.join("workspace", "cache")
+  else:
+    base_dir = os.path.join(".cache", "aic51")
+
+  try:
+    os.makedirs(base_dir, exist_ok=True)
+    db_path = os.path.join(base_dir, "translations.db")
+    with sqlite3.connect(db_path, timeout=5.0) as conn:
+      conn.execute(
+          "CREATE TABLE IF NOT EXISTS translations ("
+          "source_lang TEXT, target_lang TEXT, source_text TEXT, translated_text TEXT, "
+          "PRIMARY KEY (source_lang, target_lang, source_text))"
+      )
+      conn.execute("PRAGMA journal_mode=WAL")
+    _CACHE_DB_PATH = db_path
+  except Exception:
+    _CACHE_DB_PATH = ""
+  return _CACHE_DB_PATH
+
+
+def _get_persistent_cache(source_lang: str, target_lang: str, text: str) -> str | None:
+  db_path = _get_cache_db_path()
+  if not db_path:
+    return None
+  try:
+    with sqlite3.connect(db_path, timeout=2.0) as conn:
+      cur = conn.cursor()
+      cur.execute(
+          "SELECT translated_text FROM translations WHERE source_lang=? AND target_lang=? AND source_text=?",
+          (source_lang, target_lang, text),
+      )
+      row = cur.fetchone()
+      if row and row[0] and not _is_translation_error(row[0]):
+        return row[0]
+  except Exception:
+    pass
+  return None
+
+
+def _save_persistent_cache(source_lang: str, target_lang: str, text: str, translated: str):
+  db_path = _get_cache_db_path()
+  if not db_path or not translated or _is_translation_error(translated):
+    return
+  try:
+    with sqlite3.connect(db_path, timeout=2.0) as conn:
+      conn.execute(
+          "INSERT OR REPLACE INTO translations VALUES (?, ?, ?, ?)",
+          (source_lang, target_lang, text, translated),
+      )
+  except Exception:
+    pass
+
+
+def _parse_dict_chrome_response(data) -> str:
+  if isinstance(data, str):
+    return data.strip()
+  if isinstance(data, list):
+    if not data:
+      return ""
+    if isinstance(data[0], str):
+      return " ".join(part.strip() for part in data if isinstance(part, str) and part.strip()).strip()
+    if isinstance(data[0], list):
+      parts = []
+      for item in data:
+        if isinstance(item, list) and len(item) > 0 and isinstance(item[0], str):
+          parts.append(item[0].strip())
+        elif isinstance(item, str):
+          parts.append(item.strip())
+      return " ".join(p for p in parts if p).strip()
+  return str(data).strip()
+
+
+_CHROME_TRANSLATE_HOSTS = (
+    "clients5.google.com",
+    "translate.googleapis.com",
+)
+
+_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+}
+
+
+def _translate_via_chrome_api(text: str, source: str, target: str) -> str:
+  sl = source if source != "auto" else "auto"
+  tl = target
+  for host in _CHROME_TRANSLATE_HOSTS:
+    try:
+      url = f"https://{host}/translate_a/t"
+      if len(text) < 500:
+        resp = requests.get(
+            url,
+            params={"client": "dict-chrome-ex", "sl": sl, "tl": tl, "q": text},
+            headers=_HEADERS,
+            timeout=4.0,
+        )
+      else:
+        resp = requests.post(
+            url,
+            params={"client": "dict-chrome-ex", "sl": sl, "tl": tl},
+            data={"q": text},
+            headers=_HEADERS,
+            timeout=5.0,
+        )
+      if resp.status_code == 200:
+        result = _parse_dict_chrome_response(resp.json())
+        if result and not _is_translation_error(result):
+          return result
+    except Exception:
+      continue
+  raise RuntimeError("Chrome translate API failed or unreachable")
+
+
+def _translate_via_mymemory(text: str, source: str, target: str) -> str:
+  sl_map = {"vi": "vi-VN", "en": "en-GB", "auto": "vi-VN"}
+  tl_map = {"vi": "vi-VN", "en": "en-GB"}
+  s = sl_map.get(source, "vi-VN")
+  t = tl_map.get(target, "en-GB")
+  res = MyMemoryTranslator(source=s, target=t).translate(text)
+  if res and not _is_translation_error(res):
+    return res.strip()
+  raise RuntimeError("MyMemoryTranslator returned empty/invalid response")
+
+
+def _translate_via_google_scraper(text: str, source: str, target: str) -> str:
+  res = GoogleTranslator(source=source, target=target).translate(text)
+  if res and not _is_translation_error(res):
+    return res.strip()
+  raise RuntimeError("GoogleTranslator returned empty/invalid response")
+
+
+def _translate_with_fallbacks(text: str, source: str, target: str) -> str:
+  cached = _get_persistent_cache(source, target, text)
+  if cached and not _is_translation_error(cached):
+    return cached
+
+  last_err = None
+  # Tier 1: Google Chrome Extension API (official browser endpoint, fast JSON, no 429 captcha)
+  try:
+    translated = _translate_via_chrome_api(text, source, target)
+    _save_persistent_cache(source, target, text, translated)
+    return translated
+  except Exception as e:
+    last_err = e
+
+  # Tier 2: MyMemoryTranslator (secondary free online service)
+  try:
+    translated = _translate_via_mymemory(text, source, target)
+    _save_persistent_cache(source, target, text, translated)
+    return translated
+  except Exception as e:
+    last_err = e
+
+  # Tier 3: DeepTranslator GoogleTranslator (fallback web scraper)
+  try:
+    translated = _translate_via_google_scraper(text, source, target)
+    _save_persistent_cache(source, target, text, translated)
+    return translated
+  except Exception as e:
+    last_err = e
+
+  raise ValueError(f"All translation engines failed. Last error: {last_err}")
+
+
+@lru_cache(maxsize=4096)
 def _raw_translate_vi_to_en(inner_text: str) -> str:
-  translated = GoogleTranslator(source="auto", target="en").translate(inner_text)
-  if _is_translation_error(translated):
-    raise ValueError(f"GoogleTranslator returned error/invalid response: '{translated}'")
-  return translated
+  return _translate_with_fallbacks(inner_text, source="vi", target="en")
 
 
-@lru_cache(maxsize=1024)
+@lru_cache(maxsize=4096)
 def _raw_translate_en_to_vi(inner_text: str) -> str:
-  translated = GoogleTranslator(source="auto", target="vi").translate(inner_text)
-  if _is_translation_error(translated):
-    raise ValueError(f"GoogleTranslator returned error/invalid response: '{translated}'")
-  return translated
+  return _translate_with_fallbacks(inner_text, source="en", target="vi")
 
 
 def translate_vi_to_en_with_status(text: str) -> tuple[str, bool]:
