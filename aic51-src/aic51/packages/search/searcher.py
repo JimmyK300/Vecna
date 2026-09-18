@@ -671,10 +671,12 @@ class Searcher(object):
         # Store entity data for each frame_id
         entity_data = {}
 
-        # 1. CLIP Search (using general "text" query or translated English "text_en" query)
+        # 1. Visual Search (RRF across OpenCLIP, SigLIP, Qwen-VL with model-aware query routing)
         clip_weight = 1.0 - ocr_weight - asr_weight
         clip_req_count = 0
         clip_query_text = query_features.get("text_en", query_features.get("text", ""))
+        visual_subquery_limit = max(subquery_limit * 2, 200)
+
         if clip_query_text and clip_weight > 0:
             text_embeddings = {}
             for target_name in target_features:
@@ -683,29 +685,37 @@ class Searcher(object):
                     logger.warning(f"searcher: {target_name} is invalid feature")
                     continue
 
+                # Model-aware query selection: Qwen-VL excels with natural Vietnamese; OpenCLIP/SigLIP prefer English
+                if "qwen" in target_name.lower():
+                    model_query_text = query_features.get("text", query_features.get("text_vi", clip_query_text))
+                else:
+                    model_query_text = clip_query_text
+
                 m = self._features[target_name]
-                if m not in text_embeddings:
+                cache_key = f"{m}::{model_query_text}"
+                if cache_key not in text_embeddings:
                     _check_cancelled(cancel_event)
-                    text_embeddings[m] = (
-                        self._extractors[m]["feature_extractor"].get_text_features(clip_query_text).tolist()[0]
+                    text_embeddings[cache_key] = (
+                        self._extractors[m]["feature_extractor"].get_text_features(model_query_text).tolist()[0]
                     )
 
                 _check_cancelled(cancel_event)
                 search_results = self._database.search(
-                    data=[text_embeddings[m]],
+                    data=[text_embeddings[cache_key]],
                     filter=video_filter,
                     offset=0,
-                    limit=subquery_limit,
+                    limit=visual_subquery_limit,
                     anns_field=target_name,
                     search_params={"nprobe": nprobe, "metric_type": "COSINE"},
                 )
                 clip_req_count += 1
 
                 if search_results and len(search_results) > 0:
-                    for hit in search_results[0]:
+                    for rank, hit in enumerate(search_results[0], start=1):
                         fid = hit["entity"]["frame_id"]
                         all_frame_ids.add(fid)
-                        clip_raw_scores[fid] = clip_raw_scores.get(fid, 0) + hit["distance"]
+                        # Reciprocal Rank Fusion (RRF) with standard smoothing k=60
+                        clip_raw_scores[fid] = clip_raw_scores.get(fid, 0.0) + (1.0 / (60.0 + rank))
                         if fid not in entity_data:
                             entity_data[fid] = hit["entity"]
 
