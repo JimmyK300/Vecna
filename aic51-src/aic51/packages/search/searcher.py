@@ -1031,13 +1031,19 @@ class Searcher(object):
         else:
             st = time.time()
             results_list = []
+            # The old temporal path searched only ``temporal_k`` frames per
+            # clause (200 by default).  That makes temporal retrieval very
+            # brittle: a video can disappear before the temporal combiner has
+            # a chance to inspect it.  Use a larger coarse pool, then reduce
+            # it by segment/video diversity before combining sequences.
+            temporal_candidate_k = max(int(temporal_k), 1000)
             for q in query.data:
                 _check_cancelled(cancel_event)
                 results = self._similarity_search(
                     q["features"],
                     query.include_video_ids,
                     0,
-                    temporal_k,
+                    temporal_candidate_k,
                     target_features,
                     ocr_weight=ocr_weight,
                     asr_weight=asr_weight,
@@ -1048,6 +1054,27 @@ class Searcher(object):
                     cancel_event=cancel_event,
                 )
                 results_list.append(results)
+
+            candidate_videos = self._select_temporal_candidate_videos(
+                results_list,
+                max_videos=max(20, min(50, int(limit) * 2)),
+                cancel_event=cancel_event,
+            )
+            if candidate_videos:
+                candidate_set = set(candidate_videos)
+                results_list = [
+                    [
+                        result
+                        for result in clause_results
+                        if self._result_video_id(result) in candidate_set
+                    ]
+                    for clause_results in results_list
+                ]
+                logger.info(
+                    "searcher: temporal coarse pool=%d, selected candidate videos=%d",
+                    temporal_candidate_k,
+                    len(candidate_videos),
+                )
 
             en = time.time()
             logger.info(f"searcher: Take {en-st:.4f} seconds to search results")
@@ -1072,6 +1099,90 @@ class Searcher(object):
             "offset": offset,
         }
         return res
+
+    @staticmethod
+    def _result_video_id(result: dict) -> str:
+        frame_id = str(result.get("entity", {}).get("frame_id", ""))
+        return frame_id.split("#", 1)[0] if "#" in frame_id else frame_id
+
+    def _select_temporal_candidate_videos(
+        self,
+        results_list: list[list[dict]],
+        max_videos: int = 50,
+        cancel_event: threading.Event | Callable = None,
+    ) -> list[str]:
+        """Select diverse video candidates before temporal sequence joining.
+
+        This is deliberately a coarse stage.  Each clause is still searched
+        independently, but segment clustering prevents one clause from
+        contributing hundreds of near-duplicate frames from the same shot.
+        A video is ranked using both clause coverage and its best score for
+        each clause.  We do not require every clause to be present here: a
+        missed clause must be recoverable by the later temporal stage.
+        """
+        _check_cancelled(cancel_event)
+        if not results_list:
+            return []
+
+        clause_count = len(results_list)
+        per_clause_video_scores: list[dict[str, float]] = []
+
+        for clause_results in results_list:
+            _check_cancelled(cancel_event)
+            # Diversify only for candidate discovery.  The raw results remain
+            # available for the temporal combiner after video selection.
+            diverse_results = self._clustering.diversify(clause_results)
+            scores: dict[str, float] = {}
+            for result in diverse_results:
+                video_id = self._result_video_id(result)
+                if not video_id:
+                    continue
+                score = float(result.get("distance", 0.0) or 0.0)
+                scores[video_id] = max(scores.get(video_id, 0.0), score)
+            per_clause_video_scores.append(scores)
+
+        # Clauses that hit almost every video are less useful for candidate
+        # discovery than distinctive clauses.  This is an IDF-like weight,
+        # computed only from the coarse result pool and requiring no training.
+        video_universe = set()
+        for scores in per_clause_video_scores:
+            video_universe.update(scores)
+        if not video_universe:
+            return []
+
+        idf_weights = []
+        universe_size = len(video_universe)
+        for scores in per_clause_video_scores:
+            document_frequency = len(scores)
+            idf_weights.append(
+                np.log((universe_size + 1.0) / (document_frequency + 1.0))
+            )
+        weight_sum = float(sum(idf_weights))
+        if weight_sum <= 0:
+            normalized_weights = [1.0 / clause_count] * clause_count
+        else:
+            normalized_weights = [float(w / weight_sum) for w in idf_weights]
+
+        ranked = []
+        for video_id in video_universe:
+            _check_cancelled(cancel_event)
+            available = 0
+            weighted_score = 0.0
+            for clause_idx, scores in enumerate(per_clause_video_scores):
+                if video_id not in scores:
+                    continue
+                available += 1
+                weighted_score += normalized_weights[clause_idx] * scores[video_id]
+
+            coverage = available / max(1, clause_count)
+            # Coverage is a soft bonus, not a hard filter.  This preserves a
+            # video whose one clause was missed while preferring videos with
+            # evidence for more of the ordered query.
+            final_score = weighted_score + 0.25 * coverage
+            ranked.append((final_score, coverage, video_id))
+
+        ranked.sort(key=lambda item: (item[0], item[1]), reverse=True)
+        return [video_id for _, _, video_id in ranked[:max_videos]]
 
     def _combine_temporal_results(self, results_list: list, max_interval: int, cancel_event: threading.Event | Callable = None):
         _check_cancelled(cancel_event)

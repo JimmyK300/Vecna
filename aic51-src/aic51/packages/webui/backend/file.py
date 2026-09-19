@@ -17,8 +17,11 @@ app = create_app()
 
 @app.get(constant.HEALTH_ENDPOINT + "/{video_id}/{frame_id}")
 async def frame_health(request: Request, video_id: str, frame_id: str):
-    file_path = Path.cwd() / f"{constant.THUMBNAIL_DIR}/{video_id}/{frame_id}{constant.IMAGE_EXTENSION}"
-    if file_path.exists() and not file_path.is_dir():
+    # A keyframe is a valid fallback when a separately generated thumbnail is missing.
+    file_path = _find_image_file(constant.THUMBNAIL_DIR, video_id, frame_id)
+    if file_path is None:
+        file_path = _find_image_file(constant.KEYFRAME_DIR, video_id, frame_id)
+    if file_path is not None and file_path.exists() and not file_path.is_dir():
         return JSONResponse(status_code=200, content=jsonable_encoder({constant.MESSAGE_KEY: "available"}))
     else:
         return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
@@ -87,6 +90,10 @@ def _find_image_file(folder_name: str, video_id: str, frame_id: str) -> Path | N
 @app.get(constant.FILE_ENDPOINT + "/{video_id}/{frame_id}")
 async def get_file(request: Request, video_id: str, frame_id: str):
     file_path = _find_image_file(constant.THUMBNAIL_DIR, video_id, frame_id)
+    if file_path is None:
+        keyframe_path = _find_image_file(constant.KEYFRAME_DIR, video_id, frame_id)
+        if keyframe_path is not None:
+            file_path = keyframe_path
     if file_path:
         return FileResponse(file_path)
     else:
