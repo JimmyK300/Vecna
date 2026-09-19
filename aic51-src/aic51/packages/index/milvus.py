@@ -319,6 +319,19 @@ class MilvusDatabase(object):
         ]
         subprocess.run(compose_cmd)
 
+        logger.info("Waiting for Milvus server on localhost:19530 to become ready...")
+        start_time = time.time()
+        timeout = 60
+        while time.time() - start_time < timeout:
+            try:
+                client = MilvusClient()
+                client.close()
+                logger.info("Milvus server is ready.")
+                return
+            except Exception:
+                time.sleep(2)
+        logger.warning("Timed out waiting for Milvus server to become ready.")
+
     @classmethod
     def stop_server(cls):
         compose_file = resources.MILVUS_FILE_PATH / "milvus-standalone-docker-compose.yaml"
