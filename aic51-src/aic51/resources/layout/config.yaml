@@ -213,8 +213,13 @@ searcher:
 
   reranker:
     enable: true
-    model: "BAAI/bge-reranker-v2-m3"
+    type: "qwen_vl"
+    model: "Qwen/Qwen3-VL-Reranker-2B"
     top_k: 20
+    batch_size: 8
+    local_files_only: true        # Chạy offline hoàn toàn, không kết nối internet
+    use_text_context: true        # Kết hợp cả hình ảnh và văn bản (ASR/OCR)
+    prompt: "Retrieve images or text relevant to the user's query."
 
   # Groq LLM Query Expansion (bắt chước 100% caube gpt-oss-120b / llama3-70b)
   llm:

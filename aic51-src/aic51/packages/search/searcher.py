@@ -888,7 +888,7 @@ class Searcher(object):
        # ====== RERANK Ở ĐÂY ======
         if self._reranker is not None and raw_query:
             _check_cancelled(cancel_event)
-            rerank_k = max(limit, self._reranker_top_k)
+            rerank_k = int(self._reranker_top_k or 20)
             results = self._rerank_candidates(raw_query, results, top_k=rerank_k, cancel_event=cancel_event)
 
         # ====== CLUSTERING: Diversify trên pool gốc (ranking ổn định) ======
@@ -907,6 +907,171 @@ class Searcher(object):
         return res
 
     def _rerank_candidates(self, query_text: str, candidates: list, top_k: int = 50, cancel_event: threading.Event | Callable = None) -> list:
+        """Dispatch reranking to the appropriate backend based on reranker type."""
+        _check_cancelled(cancel_event)
+        if self._reranker is None or not query_text or not candidates:
+            return candidates
+
+        if self._reranker_type == "qwen_vl":
+            return self._rerank_candidates_multimodal(query_text, candidates, top_k, cancel_event)
+        else:
+            return self._rerank_candidates_text(query_text, candidates, top_k, cancel_event)
+
+    def _resolve_image_path(self, item) -> Path | None:
+        """Resolve đường dẫn thumbnail/keyframe từ item entity.
+        Ưu tiên thumbnail (nhỏ hơn, nhanh hơn cho reranker).
+        Hỗ trợ đa dạng cấu trúc thư mục (workspace, dataset, cwd).
+        """
+        fid_full = item.get("entity", {}).get("frame_id", "")
+        if "#" not in fid_full:
+            return None
+
+        video_id, frame_id = fid_full.split("#", 1)
+
+        # Định dạng frame_id
+        fmt_list = [frame_id]
+        if frame_id.isdigit():
+            val = int(frame_id)
+            fmt_list.extend([f"{val:06d}", f"{val:05d}"])
+
+        # Danh sách các thư mục gốc có thể chứa data
+        cwd = Path.cwd()
+        script_dir = Path(__file__).resolve().parent
+        repo_root = script_dir.parents[3]
+
+        for folder in [constant.THUMBNAIL_DIR, constant.KEYFRAME_DIR]:
+            is_thumb = "thumb" in folder.lower()
+            dataset_sub = "thumbnails" if is_thumb else "keyframes"
+
+            candidate_bases = [
+                cwd / folder,
+                cwd / "workspace" / folder,
+                cwd / "dataset" / dataset_sub,
+                repo_root / "dataset" / dataset_sub,
+                repo_root / "workspace" / folder,
+                Path("E:/Projects/Vecna/dataset") / dataset_sub,
+            ]
+
+            for base_dir in candidate_bases:
+                if not base_dir.exists():
+                    continue
+                for fmt in fmt_list:
+                    p = base_dir / video_id / f"{fmt}{constant.IMAGE_EXTENSION}"
+                    if p.exists() and not p.is_dir():
+                        return p
+        return None
+
+    def _rerank_candidates_multimodal(self, query_text: str, candidates: list, top_k: int = 50, cancel_event: threading.Event | Callable = None) -> list:
+        """
+        Rerank bằng Qwen-VL Multimodal Reranker:
+        - Hỗ trợ cả 3 trường hợp:
+          1. Multimodal: Cả ảnh keyframe + text (ASR/OCR) nếu có
+          2. Pure visual: Chỉ có ảnh keyframe
+          3. Pure text: Chỉ có text (fallback khi thiếu file ảnh)
+        - Giữ nguyên cấu trúc: candidates được rerank -> unrerankable -> remaining.
+        """
+        _check_cancelled(cancel_event)
+
+        rerank_limit = min(
+            top_k,
+            len(candidates),
+        )
+
+        rerank_pool = candidates[:rerank_limit]
+        remaining = candidates[rerank_limit:]
+
+        documents = []
+        valid_items = []
+        use_text_context = getattr(self, "_reranker_use_text_context", True)
+
+        for item in rerank_pool:
+            img_path = self._resolve_image_path(item)
+            entity = item.get("entity", {})
+            doc_parts = []
+            asr = entity.get("asr")
+            if isinstance(asr, str) and asr.strip():
+                doc_parts.append(asr.strip())
+            ocr = entity.get("ocr")
+            if isinstance(ocr, str) and ocr.strip():
+                doc_parts.append(ocr.strip())
+            doc_text = " ".join(doc_parts).strip()
+
+            if img_path is not None and doc_text and use_text_context:
+                # Multimodal format: cả ảnh lẫn ngữ cảnh văn bản ASR + OCR
+                documents.append({"image": str(img_path), "text": doc_text})
+                valid_items.append(item)
+            elif img_path is not None:
+                # Pure visual format: đường dẫn ảnh
+                documents.append(str(img_path))
+                valid_items.append(item)
+            elif doc_text:
+                # Pure text format (khi không tìm thấy ảnh nhưng có ASR/OCR)
+                documents.append(doc_text)
+                valid_items.append(item)
+
+        if not documents:
+            return candidates
+
+        _check_cancelled(cancel_event)
+        rerank_prompt = getattr(self, "_reranker_prompt", "Retrieve images or text relevant to the user's query.")
+        t0 = time.time()
+        dev_name = getattr(getattr(self._reranker, "model", None), "device", getattr(self._reranker, "device", "unknown"))
+        logger.info(f"searcher: Qwen-VL reranking top {len(documents)} candidates on {dev_name} (batch_size={self._reranker_batch_size})...")
+        try:
+            rankings = self._reranker.rank(
+                query_text,
+                documents,
+                batch_size=self._reranker_batch_size,
+                show_progress_bar=False,
+                prompt=rerank_prompt,
+            )
+        except TypeError:
+            # Fallback nếu phiên bản CrossEncoder không nhận tham số prompt
+            try:
+                rankings = self._reranker.rank(
+                    query_text,
+                    documents,
+                    batch_size=self._reranker_batch_size,
+                    show_progress_bar=False,
+                )
+            except Exception as e:
+                logger.error(f"searcher: Qwen-VL Reranker rank() failed: {e}")
+                return candidates
+        except Exception as e:
+            logger.error(f"searcher: Qwen-VL Reranker prediction failed: {e}")
+            return candidates
+
+        logger.info(f"searcher: Qwen-VL rerank completed for {len(documents)} candidates in {time.time() - t0:.2f}s")
+
+        # Map ranking kết quả: corpus_id -> score
+        score_map = {r["corpus_id"]: r["score"] for r in rankings}
+
+        # Gán điểm reranker cho các item hợp lệ
+        for idx, item in enumerate(valid_items):
+            score = score_map.get(idx, 0.0)
+            item.setdefault("scores", {})
+            item["scores"]["hybrid"] = item["distance"]
+            item["scores"]["rerank"] = float(score)
+            item["distance"] = float(score)
+
+        valid_ids = {id(item) for item in valid_items}
+        reranked_items = [
+            item for item in rerank_pool
+            if id(item) in valid_ids
+        ]
+        unreranked_items = [
+            item for item in rerank_pool
+            if id(item) not in valid_ids
+        ]
+
+        reranked_items.sort(
+            key=lambda x: x["scores"]["rerank"],
+            reverse=True
+        )
+
+        return reranked_items + unreranked_items + remaining
+
+    def _rerank_candidates_text(self, query_text: str, candidates: list, top_k: int = 50, cancel_event: threading.Event | Callable = None) -> list:
         """
         Rerank only the selected candidate pool using BGE CrossEncoder.
 
@@ -921,7 +1086,7 @@ class Searcher(object):
 
         # Number of candidates that will actually be reranked
         rerank_limit = min(
-            max(top_k * 2, self._reranker_top_k),
+            top_k,
             len(candidates),
         )
 
@@ -1282,20 +1447,73 @@ class Searcher(object):
         # --- Reranker Initialization ---
         reranker_enable = GlobalConfig.get("searcher", "reranker", "enable")
         if reranker_enable:
-            reranker_model = GlobalConfig.get("searcher", "reranker", "model") or "BAAI/bge-reranker-v2-m3"
-            reranker_device = str(device).split(":")[0]  # "cuda:0" -> "cuda"
+            reranker_type = GlobalConfig.get("searcher", "reranker", "type") or "cross_encoder"
+            reranker_model = GlobalConfig.get("searcher", "reranker", "model") or "Qwen/Qwen3-VL-Reranker-2B"
+            reranker_device = "cuda" if torch.cuda.is_available() else str(device).split(":")[0]
+            self._reranker_top_k = int(GlobalConfig.get("searcher", "reranker", "top_k") or 20)
+            self._reranker_type = reranker_type
+            self._reranker_batch_size = int(GlobalConfig.get("searcher", "reranker", "batch_size") or 4)
+            self._reranker_use_text_context = bool(
+                GlobalConfig.get("searcher", "reranker", "use_text_context")
+                if GlobalConfig.get("searcher", "reranker", "use_text_context") is not None
+                else True
+            )
+            self._reranker_prompt = (
+                GlobalConfig.get("searcher", "reranker", "prompt")
+                or "Retrieve images or text relevant to the user's query."
+            )
+            local_files_only = bool(GlobalConfig.get("searcher", "reranker", "local_files_only") or False)
+
+            # Precision & dtype optimization for GPU
+            if reranker_device == "cuda":
+                dtype = torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16
+            else:
+                dtype = torch.float32
+            model_kwargs = {"torch_dtype": dtype}
+
             try:
-                logger.info(f"searcher: Loading Reranker model: {reranker_model}")
-                self._reranker = CrossEncoder(reranker_model, device=reranker_device)
-                self._reranker_top_k = int(GlobalConfig.get("searcher", "reranker", "top_k") or 50)
-                logger.info(f"searcher: Reranker loaded successfully (top_k={self._reranker_top_k})")
+                logger.info(
+                    f"searcher: Loading Reranker ({reranker_type}): {reranker_model} "
+                    f"on {reranker_device} (dtype={dtype}, local_files_only={local_files_only})"
+                )
+                self._reranker = CrossEncoder(
+                    reranker_model,
+                    device=reranker_device,
+                    trust_remote_code=True,
+                    local_files_only=local_files_only,
+                    model_kwargs=model_kwargs,
+                )
+                logger.info(
+                    f"searcher: Reranker loaded (type={reranker_type}, top_k={self._reranker_top_k}, "
+                    f"batch_size={self._reranker_batch_size}, use_text_context={self._reranker_use_text_context})"
+                )
             except Exception as e:
-                logger.error(f"searcher: Failed to load Reranker: {e}")
-                self._reranker = None
-                self._reranker_top_k = 0
+                # If local_files_only failed, retry online if possible
+                if local_files_only:
+                    logger.warning(f"searcher: local_files_only=True failed ({e}), retrying online load...")
+                    try:
+                        self._reranker = CrossEncoder(
+                            reranker_model,
+                            device=reranker_device,
+                            trust_remote_code=True,
+                            local_files_only=False,
+                            model_kwargs=model_kwargs,
+                        )
+                        logger.info(f"searcher: Reranker loaded on online retry")
+                    except Exception as err:
+                        logger.error(f"searcher: Failed to load Reranker on retry: {err}")
+                        self._reranker = None
+                        self._reranker_top_k = 0
+                        self._reranker_type = None
+                else:
+                    logger.error(f"searcher: Failed to load Reranker: {e}")
+                    self._reranker = None
+                    self._reranker_top_k = 0
+                    self._reranker_type = None
         else:
             self._reranker = None
             self._reranker_top_k = 0
+            self._reranker_type = None
 
         # --- Khởi tạo LLM Query Expander ---
         self._llm_expander = None

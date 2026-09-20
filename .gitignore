@@ -78,3 +78,5 @@ test*/
 .web/
 .secrets
 drive-download*/
+paper/
+.env

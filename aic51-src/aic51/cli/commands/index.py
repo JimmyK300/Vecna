@@ -219,7 +219,8 @@ class IndexCommand(BaseCommand):
                 for feature_name, claims in frame_lineage_claims.items():
                     observed_lineage_claims.setdefault(feature_name, []).extend(claims)
             else:
-                logger.warning(f"Skipping {data['frame_id']}: Lack of features")
+                missing = [f for f in feature_fields if f not in data]
+                logger.warning(f"Skipping {data['frame_id']}: Lack of features {missing}")
 
             update_progress(advance=1)
 

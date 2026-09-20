@@ -34,12 +34,12 @@ features: &analyse_features
     model: "image_clip"
     source: "open_clip"
     arch_name: "PE-Core-L-14-336"
-    pretrained_model: "meta" 
+    pretrained_model: "meta"
     analyse:
       batch_size: 64
     index:
       datatype: "FLOAT_VECTOR"
-      dim: 1024 
+      dim: 1024
       metric_type: "COSINE"
       index_type: "SCANN"
       params:
@@ -73,22 +73,6 @@ features: &analyse_features
       params:
         nlist: 512
 
-
-  # video_clip_pe-l-14-336:
-  #   model: "video_clip"
-  #   source: "open_clip"
-  #   arch_name: "PE-Core-L-14-336"
-  #   pretrained_model: "meta" 
-  #   analyse:
-  #     batch_size: 4
-  #   index:
-  #     datatype: "FLOAT_VECTOR"
-  #     dim: 1024 
-  #     metric_type: "COSINE"
-  #     index_type: "SCANN"
-  #     params:
-  #       nlist: 512
-
   ocr:
     model: "ocr"
     source: "tesseract"
@@ -109,7 +93,7 @@ features: &analyse_features
     source: "whisperx"
     arch_name: "large-v3-turbo"
     analyse:
-      batch_size: 16   # đây là batch_size nội bộ của whisperx.transcribe (chunk theo VAD), KHÔNG phải số clip xử lý song song
+      batch_size: 16
     index:
       default_value: ""
       datatype: "VARCHAR"
@@ -126,10 +110,9 @@ searcher:
       model: "image_clip"
       source: "open_clip"
       arch_name: "PE-Core-L-14-336"
-      pretrained_model: "meta" 
+      pretrained_model: "meta"
       target:
-        - image_clip_pe-l-14-336 
-        # - video_clip_pe-l-14-336 
+        - image_clip_pe-l-14-336
 
     language_siglip_so400m-384:
       model: "image_siglip"
@@ -145,45 +128,38 @@ searcher:
       target:
         - qwen_vl
 
-    language_qwen_vl:
-      model: "qwen_vl_embedding"
-      pretrained_model: "Qwen/Qwen3-VL-Embedding-2B"
-      target:
-        - qwen_vl
-
-    text_bge_m3:
-      model: "text_embedding"
-      source: "hf"
-      pretrained_model: "BAAI/bge-m3"
-      backend: "pytorch"
-      onnx_provider: "auto"
-      target:
-        - ocr_dense
-        - asr_dense
-
   ocr:
     ocr_field: "ocr_sparse"
     enable: true
-    
+
   asr:
     asr_field: "asr_sparse"
     enable: true
 
-  # Groq LLM Query Expansion (bắt chước 100% caube gpt-oss-120b / llama3-70b)
-  llm:
+  # Qwen3-VL Multimodal Reranker (Tối ưu cho cuộc thi offline)
+  reranker:
     enable: true
-    provider: "groq"                      # groq, gemini, hoặc openai
-    model_name: "openai/gpt-oss-120b"     # Mô hình 120B tham số trên Groq Cloud
-    api_key: "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"                           # Để trống để lấy từ GROQ_API_KEY environment variable
+    type: "qwen_vl"
+    model: "Qwen/Qwen3-VL-Reranker-2B"
+    top_k: 20
+    batch_size: 8
+    local_files_only: true        # Chạy offline hoàn toàn, không kết nối internet
+    use_text_context: true        # Kết hợp cả hình ảnh và văn bản (ASR/OCR)
+    prompt: "Retrieve images or text relevant to the user's query."
+
+  # Groq LLM Query Expansion
+  llm:
+    enable: false
+    provider: "groq"
+    model_name: "openai/gpt-oss-120b"
+    api_key: ""
 
   # YOLO Auto-Crop Processor
   yolo:
-    enable: true
+    enable: false
     model_path: "yolov8x.pt"
     conf_threshold: 0.25
     padding: 15
-
-
 
 frontend:
   dev_port: 5173
@@ -211,4 +187,3 @@ backends:
   file:
     port: 4200
     workers: 1
-    
