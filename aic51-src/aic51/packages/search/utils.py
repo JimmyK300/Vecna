@@ -273,8 +273,83 @@ def translate_en_to_vi(text: str) -> str:
       logger.error(f"translate_en_to_vi failed for '{text}': {e}")
     except Exception:
       pass
-    return text
+COMMON_START_WORDS = {
+    "Một", "Hai", "Ba", "Bốn", "Năm", "Sáu", "Bảy", "Tám", "Chín", "Mười",
+    "Người", "Những", "Các", "Đoạn", "Hình", "Video", "Cảnh", "Trong", "Khi",
+    "Tại", "Có", "Không", "Là", "Và", "Đang", "Được", "Bị", "Cho", "Từ", "Đến",
+    "Về", "Với", "Sau", "Trước", "The", "A", "An", "In", "On", "At", "This", "That"
+}
 
+
+def extract_text_entities(text: str) -> list[str]:
+    """Semantic Gate: Extract high-confidence text tokens, numbers, codes, and named entities."""
+    if not text or not text.strip():
+        return []
+    entities = []
+
+    # 1. Quoted phrases: "...", '...', “...”, '...'
+    for m in re.finditer(r'["\'`“]([^"\'`”]+)["\'`”]', text):
+        val = m.group(1).strip()
+        if len(val) >= 2:
+            entities.append(val)
+
+    # 2. Uppercase codes / callsigns (VTV1, HTV9, Q1, A320, 29A-12345, 51F-9999)
+    for m in re.finditer(r'\b(?:[A-Z]{2,}\d*|\d{2,}[A-Z]+[A-Z0-9\-]*|[A-Z]+\d+[A-Z0-9\-]*)\b', text):
+        val = m.group().strip()
+        if len(val) >= 2 and val not in COMMON_START_WORDS:
+            entities.append(val)
+
+    # 3. Significant numeric tokens (e.g. 113, 114, 115, 2024, 2025, 2026, 911)
+    for m in re.finditer(r'\b\d{3,}\b', text):
+        entities.append(m.group().strip())
+
+    # 4. Capitalized named entities / proper nouns (e.g. Hà Nội, Hồ Chí Minh, VinFast, Samsung)
+    words = text.split()
+    i = 0
+    while i < len(words):
+        w = re.sub(r'^[^\w\s]+|[^\w\s]+$', '', words[i])
+        if w and w[0].isupper() and len(w) >= 2:
+            if i == 0 and w in COMMON_START_WORDS:
+                i += 1
+                continue
+            entity_tokens = [w]
+            j = i + 1
+            while j < len(words):
+                next_w = re.sub(r'^[^\w\s]+|[^\w\s]+$', '', words[j])
+                if next_w and next_w[0].isupper() and len(next_w) >= 2:
+                    entity_tokens.append(next_w)
+                    j += 1
+                else:
+                    break
+            phrase = ' '.join(entity_tokens)
+            if phrase not in COMMON_START_WORDS and len(phrase) >= 2:
+                entities.append(phrase)
+            i = j
+        else:
+            i += 1
+
+    # Deduplicate while preserving order
+    raw_entities = []
+    seen = set()
+    for e in entities:
+        norm = e.strip().lower()
+        if norm not in seen and len(norm) >= 2:
+            seen.add(norm)
+            raw_entities.append(e.strip())
+
+    # Filter out tokens that are strict substrings of longer entities
+    result = []
+    for i, e in enumerate(raw_entities):
+        e_lower = e.lower()
+        is_sub = False
+        for j, other in enumerate(raw_entities):
+            if i != j and e_lower in other.lower() and len(other) > len(e):
+                is_sub = True
+                break
+        if not is_sub:
+            result.append(e)
+
+    return result
 
 
 class Query:
@@ -462,6 +537,10 @@ class Query:
       features["ocr"] = ocr_list
       if self._en_to_vi_translate:
         features["ocr_translated"] = [translate_en_to_vi(x) for x in ocr_list]
+    elif len(raw):
+      auto_entities = extract_text_entities(raw)
+      if len(auto_entities):
+        features["auto_ocr"] = auto_entities
 
     if len(asr_list):
       features["asr"] = asr_list

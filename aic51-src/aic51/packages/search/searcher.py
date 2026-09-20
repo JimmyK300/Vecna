@@ -765,6 +765,48 @@ class Searcher(object):
                 asr_raw_scores[fid] = hit["distance"]
                 entity_data[fid] = asr_entities[fid]
 
+        # 4. Auto OCR Intelligent Boosting (Non-Penalizing)
+        # Kích hoạt tự động khi ocr_weight == 0.0 nhưng query có chứa text entities
+        auto_text_boosts = {}
+        auto_ocr_entities = query_features.get("auto_ocr", [])
+
+        if self._ocr_name and ocr_weight == 0.0 and auto_ocr_entities:
+            _check_cancelled(cancel_event)
+            text_query_str = " ".join(auto_ocr_entities)
+            try:
+                auto_search_limit = max(subquery_limit * 2, 200)
+                ocr_bm25_res = self._database.search(
+                    data=[text_query_str],
+                    filter=video_filter,
+                    offset=0,
+                    limit=auto_search_limit,
+                    anns_field=self._ocr_name,
+                    search_params={"metric_type": "BM25"},
+                )
+                if ocr_bm25_res and len(ocr_bm25_res) > 0:
+                    text_field = self._text_field_from_index_field(self._ocr_name)
+                    max_bm25 = max([hit.get("distance", 0.0) for hit in ocr_bm25_res[0]], default=1.0) or 1.0
+                    for hit in ocr_bm25_res[0]:
+                        fid = hit["entity"]["frame_id"]
+                        doc_text = str(hit["entity"].get(text_field, "")).lower()
+                        bm25_score = hit.get("distance", 0.0)
+                        norm_bm25 = bm25_score / max_bm25
+
+                        # Check exact match for any entity (min 2 chars)
+                        exact_match = any(e.lower() in doc_text for e in auto_ocr_entities if len(e) >= 2)
+                        boost = 1.35 if exact_match else (1.0 + 0.20 * norm_bm25)
+
+                        auto_text_boosts[fid] = {
+                            "boost": boost,
+                            "exact": exact_match,
+                            "norm_bm25": norm_bm25,
+                            "entity": hit["entity"],
+                        }
+                        if fid not in entity_data:
+                            entity_data[fid] = hit["entity"]
+            except Exception as e:
+                logger.warning(f"searcher: auto OCR boost search encountered issue: {e}")
+
         # Normalize scores per component
         _check_cancelled(cancel_event)
         clip_norm = self._normalize_scores(clip_raw_scores)
@@ -778,21 +820,51 @@ class Searcher(object):
             ocr_s = ocr_norm.get(fid, 0.0)
             asr_s = asr_norm.get(fid, 0.0)
 
-            final_score = clip_weight * clip_s + ocr_weight * ocr_s + asr_weight * asr_s
+            base_score = clip_weight * clip_s + ocr_weight * ocr_s + asr_weight * asr_s
+
+            # Non-penalizing boost:
+            boost_factor = 1.0
+            if fid in auto_text_boosts:
+                boost_factor = auto_text_boosts[fid]["boost"]
+
+            final_score = base_score * boost_factor
 
             results.append({
                 "entity": entity_data[fid],
                 "distance": final_score,
                 "scores": {
                     "final": round(final_score, 6),
+                    "base": round(base_score, 6),
                     "clip": round(clip_s, 6),
                     "ocr": round(ocr_s, 6),
                     "asr": round(asr_s, 6),
+                    "auto_boost": round(boost_factor, 4),
                     "clip_raw": round(clip_raw_scores.get(fid, 0.0), 6),
                     "ocr_raw": round(ocr_raw_scores.get(fid, 0.0), 6),
                     "asr_raw": round(asr_raw_scores.get(fid, 0.0), 6),
                 },
             })
+
+        # Extra safety: If an exact high-confidence OCR match was not in visual top pool,
+        # grant it entry with a solid floor score
+        for fid, boost_info in auto_text_boosts.items():
+            if fid not in all_frame_ids and boost_info["exact"]:
+                floor_score = 0.55 * boost_info["boost"]
+                results.append({
+                    "entity": boost_info["entity"],
+                    "distance": floor_score,
+                    "scores": {
+                        "final": round(floor_score, 6),
+                        "base": 0.55,
+                        "clip": 0.0,
+                        "ocr": round(boost_info["norm_bm25"], 6),
+                        "asr": 0.0,
+                        "auto_boost": round(boost_info["boost"], 4),
+                        "clip_raw": 0.0,
+                        "ocr_raw": 0.0,
+                        "asr_raw": 0.0,
+                    },
+                })
 
         # Sort by final score descending
         results.sort(key=lambda x: x["distance"], reverse=True)
