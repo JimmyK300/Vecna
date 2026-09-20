@@ -122,14 +122,13 @@ features: &analyse_features
 
 searcher:
   language_models:
-    language_clip_pe-l-14-336:
-      model: "image_clip"
-      source: "open_clip"
-      arch_name: "PE-Core-L-14-336"
-      pretrained_model: "meta" 
-      target:
-        - image_clip_pe-l-14-336 
-        # - video_clip_pe-l-14-336 
+    # language_clip_pe-l-14-336: (TẮT THEO YÊU CẦU)
+    #   model: "image_clip"
+    #   source: "open_clip"
+    #   arch_name: "PE-Core-L-14-336"
+    #   pretrained_model: "meta" 
+    #   target:
+    #     - image_clip_pe-l-14-336 
 
     language_siglip_so400m-384:
       model: "image_siglip"
@@ -144,22 +143,6 @@ searcher:
       pretrained_model: "Qwen/Qwen3-VL-Embedding-2B"
       target:
         - qwen_vl
-
-    language_qwen_vl:
-      model: "qwen_vl_embedding"
-      pretrained_model: "Qwen/Qwen3-VL-Embedding-2B"
-      target:
-        - qwen_vl
-
-    text_bge_m3:
-      model: "text_embedding"
-      source: "hf"
-      pretrained_model: "BAAI/bge-m3"
-      backend: "pytorch"
-      onnx_provider: "auto"
-      target:
-        - ocr_dense
-        - asr_dense
 
   ocr:
     ocr_field: "ocr_sparse"
@@ -204,6 +187,8 @@ backends:
 
   search:
     port: 1337
+    database: "mmap"          # "mmap" (cực nhẹ, không cần Docker) hoặc "milvus"
+    mmap_dir: "workspace/mmap_indices"
     collection: "milvus"
     workers: 1
     gpu: true

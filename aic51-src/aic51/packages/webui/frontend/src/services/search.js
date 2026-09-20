@@ -201,9 +201,14 @@ export async function expandQuery(queryText) {
 }
 
 export async function getVideoTranscript(videoId) {
-  const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/transcript/${videoId}`);
-  const data = res.data;
-  return data;
+  try {
+    const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/transcript/${videoId}`);
+    const data = res.data;
+    return Array.isArray(data) ? data : [];
+  } catch (err) {
+    console.warn(`Failed to fetch transcript for ${videoId}:`, err);
+    return [];
+  }
 }
 
 export async function getVideoKeyframes(videoId) {

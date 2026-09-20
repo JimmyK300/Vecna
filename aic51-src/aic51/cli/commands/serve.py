@@ -58,7 +58,9 @@ class ServeCommand(BaseCommand):
         *args,
         **kwargs,
     ):
-        MilvusDatabase.start_server()
+        db_type = os.getenv("VECNA_DATABASE_ENGINE") or GlobalConfig.get("backends", "search", "database") or "mmap"
+        if str(db_type).lower() == "milvus":
+            MilvusDatabase.start_server()
 
         if do_frontend:
             self._frontend_dir = Path(inspect.getfile(aic51.packages.webui)).parent / "frontend"

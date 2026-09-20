@@ -579,8 +579,16 @@ async def get_video_map_keyframes_around(request: Request, video_id: str, frame_
 
 
 web_dir = Path.cwd() / constant.FRONTEND_DIST_DIR
+if not (web_dir / "dist").exists():
+    for candidate in [
+        Path.cwd() / "workspace" / constant.FRONTEND_DIST_DIR,
+        Path(__file__).resolve().parents[4] / "workspace" / constant.FRONTEND_DIST_DIR,
+    ]:
+        if (candidate / "dist").exists():
+            web_dir = candidate
+            break
 
-if web_dir.exists():
+if (web_dir / "dist").exists():
     app.mount(
         "/assets",
         StaticFiles(directory=web_dir / "dist/assets"),

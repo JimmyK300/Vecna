@@ -16,7 +16,7 @@ from pymilvus import AnnSearchRequest, RRFRanker
 import aic51.packages.constant as constant
 from aic51.packages.analyse import FeatureExtractorFactory
 from aic51.packages.config import GlobalConfig
-from aic51.packages.index import MilvusDatabase
+from aic51.packages.index import MilvusDatabase, MmapDatabase
 from aic51.packages.logger import logger
 
 from . import constants
@@ -218,7 +218,11 @@ class Searcher(object):
     cache = BoundedLRUCache(maxsize=20)
 
     def __init__(self, collection_name: str, device: torch.device = torch.device("cpu")):
-        self._database = MilvusDatabase(collection_name)
+        db_type = os.getenv("VECNA_DATABASE_ENGINE") or GlobalConfig.get("backends", "search", "database") or "mmap"
+        if str(db_type).lower() == "milvus":
+            self._database = MilvusDatabase(collection_name)
+        else:
+            self._database = MmapDatabase(collection_name)
         self._prepare_feature_extractors(device)
         segment_map_path = os.environ.get("SEGMENT_MAP_PATH", "segment_map.json")
         self._clustering = SegmentClustering(segment_map_path)  

@@ -696,7 +696,7 @@ export function VideoPlayer({ frameInfo, onCancel }) {
             <div className="flex justify-between items-center p-2 bg-white border-b border-gray-200 shrink-0">
               <span className="font-bold text-xs text-gray-800 flex items-center gap-1">
                 <span>Live Transcript</span>
-                {transcript.length > 0 && (
+                {(transcript?.length || 0) > 0 && (
                   <span className="text-[10px] text-gray-400 font-mono">({transcript.length})</span>
                 )}
               </span>
@@ -713,12 +713,12 @@ export function VideoPlayer({ frameInfo, onCancel }) {
               ref={transcriptContainerRef}
               className="flex-1 overflow-y-auto p-2 space-y-1.5"
             >
-              {transcript.length === 0 ? (
+              {!transcript || transcript.length === 0 ? (
                 <div className="text-gray-400 text-center py-8 text-xs italic">
                   No transcript available
                 </div>
               ) : (
-                transcript.map((item, idx) => {
+                (transcript || []).map((item, idx) => {
                   const currentTime = frameCounter / fps;
                   const isActive =
                     currentTime >= item.start_time &&
