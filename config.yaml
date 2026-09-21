@@ -45,10 +45,25 @@ features: &analyse_features
       params:
         nlist: 512
 
-  image_siglip_so400m-384:
+  # image_siglip_so400m-384: (TẮT SIGLIP 1 THEO YÊU CẦU)
+  #   model: "image_siglip"
+  #   source: "open_clip"
+  #   arch_name: "ViT-SO400M-14-SigLIP-384"
+  #   pretrained_model: "webli"
+  #   analyse:
+  #     batch_size: 64
+  #   index:
+  #     datatype: "FLOAT_VECTOR"
+  #     dim: 1152
+  #     metric_type: "COSINE"
+  #     index_type: "SCANN"
+  #     params:
+  #       nlist: 512
+
+  image_siglip2_so400m-378:
     model: "image_siglip"
     source: "open_clip"
-    arch_name: "ViT-SO400M-14-SigLIP-384"
+    arch_name: "ViT-SO400M-14-SigLIP2-378"
     pretrained_model: "webli"
     analyse:
       batch_size: 64
@@ -131,13 +146,21 @@ searcher:
     #     - image_clip_pe-l-14-336 
     #     # - video_clip_pe-l-14-336 
 
-    language_siglip_so400m-384:
+    # language_siglip_so400m-384: (TẮT SIGLIP 1 THEO YÊU CẦU)
+    #   model: "image_siglip"
+    #   source: "open_clip"
+    #   arch_name: "ViT-SO400M-14-SigLIP-384"
+    #   pretrained_model: "webli"
+    #   target:
+    #     - image_siglip_so400m-384
+
+    language_siglip2_so400m-378:
       model: "image_siglip"
       source: "open_clip"
-      arch_name: "ViT-SO400M-14-SigLIP-384"
+      arch_name: "ViT-SO400M-14-SigLIP2-378"
       pretrained_model: "webli"
       target:
-        - image_siglip_so400m-384
+        - image_siglip2_so400m-378
 
     language_qwen_vl:
       model: "qwen_vl_embedding"

@@ -241,7 +241,8 @@ export default function SearchParams({
                     const isChecked = selectedFeatures.includes(item);
                     const lower = item.toLowerCase();
                     let displayName = item;
-                    if (lower.includes("siglip")) displayName = "SigLIP";
+                    if (lower.includes("siglip2")) displayName = "SigLIP 2";
+                    else if (lower.includes("siglip")) displayName = "SigLIP";
                     else if (lower.includes("clip")) displayName = "CLIP";
                     else if (lower.includes("qwen")) displayName = "Qwen-VL";
 

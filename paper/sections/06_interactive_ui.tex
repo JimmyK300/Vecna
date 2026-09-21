@@ -1,0 +1,91 @@
+\section{Interactive Retrieval Interface}\label{sec:ui}
+
+In high-stakes multimedia information retrieval, the human-in-the-loop (HITL) paradigm dictates that algorithmic accuracy must be paired with minimal biomechanical latency and low cognitive friction. The design of the client interface fundamentally governs analyst throughput during time-constrained retrieval tasks. We conceptualize the Vecna interface not merely as a presentation viewport, but as an active operational component of the search strategy (Figure~\ref{fig:ui_system}).
+
+\begin{figure*}[!t]
+\centering
+\begin{minipage}[t]{0.488\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{sample1.png}\\[2pt]
+    {\footnotesize (a) \textbf{Query Formulation \& QA Console:} Multi-modal console supporting natural language queries, modal weight allocation (Visual/OCR/ASR), encoder selection (\texttt{SigLIP}, \texttt{OpenCLIP}, \texttt{Qwen-VL}), and left QA inspection panel (\texttt{L21\_V010\#020630}, target answer = 12) with Rank-1 ground-truth target confirmation.}
+    \label{fig:ui_query}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.488\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{sample4.png}\\[2pt]
+    {\footnotesize (b) \textbf{Diversified Result Grid:} High-density keyframe cards (20 items/page) partitioned by moving-average segment clustering to suppress visually redundant consecutive shots for a television interview query (\texttt{L30\_V091\#002720}).}
+    \label{fig:ui_grid}
+\end{minipage}
+
+\vspace{0.25cm}
+
+\begin{minipage}[t]{0.488\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{sample2.png}\\[2pt]
+    {\footnotesize (c) \textbf{Temporal Sequence Alignment \& Ranking:} Grouped sequence rows (\texttt{L26\_V390}, composite score 2.3148 across 8 candidate sequences), component score breakdown (CLIP/OCR/ASR), and video prefix scoping (\texttt{L26\_V390}).}
+    \label{fig:ui_filter}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.488\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{sample3.png}\\[2pt]
+    {\footnotesize (d) \textbf{Precision Video Player \& Target Verification:} Modal inspection with full-width keyframe timeline strip (03:39 / 05:04), synchronized real-time WhisperX ASR transcript tracking, target selection toggles, and submission assembly.}
+    \label{fig:ui_player}
+\end{minipage}
+\vspace{0.15cm}
+\Description{The Vecna interactive retrieval workspace illustrating four core workflows: query formulation, diversified candidate browsing, temporal sequence alignment, and precision video player verification.}
+\caption{The Vecna interactive retrieval workspace illustrating four core human-in-the-loop workflows: (a) Multi-modal query formulation, modality weight balancing, and QA parameter configuration; (b) Diversified result grid browsing with segment clustering; (c) Multi-step temporal sequence alignment and score decomposition; (d) High-precision video player verification with real-time speech transcript tracking and target keyframe assembly.}
+\label{fig:ui_system}
+\vspace{-0.25cm}
+\end{figure*}
+
+\subsection{Multi-Modal Query Formulation and QA Console (Figure~\ref{fig:ui_system}a)}
+The query console serves as the entry point for expressing heterogeneous search intents. Analysts can formulate unbounded natural language descriptions or target questions. The interface exposes immediate controls to adjust modal contribution weights $w_{\text{vis}}$, $w_{\text{ocr}}$, and $w_{\text{asr}}$, dynamically tuning the convex fusion equation (\S\ref{sec:fusion}). Furthermore, operators can dynamically toggle visual representation backends (\texttt{SigLIP}, \texttt{OpenCLIP}, \texttt{Qwen-VL}) and bidirectional translation pipelines ($\text{VI} \rightarrow \text{EN}$ for visual encoders and $\text{EN} \rightarrow \text{VI}$ for OCR/ASR channels). For Question Answering (QA) tasks, the dedicated left panel enables operators to bind candidate video frames (e.g., \texttt{L21\_V010\#020630}) with textual or numeric deductions, confirming Rank-1 targets with high visual salience.
+
+\subsection{Diversified Candidate Browsing via Segment Clustering (Figure~\ref{fig:ui_system}b)}
+The candidate search view presents a high-density, paginated grid rendering 20 keyframe cards per page. Because raw video streams contain extensive temporal redundancy where consecutive frames exhibit near-identical visual representations, the grid is directly filtered through our moving-average segment clustering manifold (\S\ref{sec:diversify}). Each card corresponds to a distinct temporal segment boundary, displaying the segment badge, relative timestamp, and similarity confidence score. Each card equips the analyst with instant operational triggers: sub-frame video playback, localized OCR string inspection, image-to-image nearest-neighbor search, and direct submission staging.
+
+\subsection{Temporal Sequence Refinement and Score Breakdown (Figure~\ref{fig:ui_system}c)}
+For complex temporal activities spanning sequential phases (e.g., the culinary preparation sequence in \texttt{query-p2-3-kis}), the interface switches to a sequence-aligned grouping view. Candidates satisfying the forward temporal constraint are organized by video identifier (e.g., \texttt{L26\_V390} displaying an optimal alignment score of 2.3148 across 8 plausible step trajectories). The card visually unpacks each chronological step (Step 1/4 through Step 4/4), accompanied by decomposed similarity scores for visual semantics, optical text, and speech transcription. This transparent attribution empowers the analyst to verify step-by-step continuity and batch-select verified sequence tuples into the submission queue with a single keystroke.
+
+\subsection{Precision Verification and Synchronized Transcript Tracking (Figure~\ref{fig:ui_system}d)}
+Clicking any candidate activates the precision inspection modal, engineered for zero-latency verification:
+\begin{itemize}
+    \item \textbf{Synchronized Video Player:} Employs a custom HTML5 canvas-accelerated video renderer coupled to a full-width timeline strip. The timeline marks all indexed keyframes, permitting instantaneous scrubbing between global video context and localized micro-events.
+    \item \textbf{Live WhisperX Transcript Scrolling:} The right-hand panel renders timestamped speech transcripts generated by WhisperX Turbo. As the video progresses, the active dialogue segment is dynamically highlighted and auto-scrolled, enabling rapid verification of verbal clues.
+    \item \textbf{Sub-Frame Stepping \& Snapping:} Analysts can execute discrete frame-by-frame steps ($\pm 1/\text{FPS}$) or snap directly to adjacent keyframe boundaries without taking their hands off the keyboard.
+\end{itemize}
+
+\begin{table}[t]
+\centering
+\caption{Taxonomy of Zero-Latency Keyboard Interactions}
+\label{tab:shortcuts}
+\begin{tabular}{ll}
+\toprule
+\textbf{Interaction Modality} & \textbf{Keybinding} \\
+\midrule
+Focus Search Console & \texttt{/} \\
+Instant Inspection (Candidates 1--10) & \texttt{Shift} + \texttt{1..0} \\
+Sub-Frame Stepping ($\pm \frac{1}{\text{FPS}}$) & \texttt{[} / \texttt{]} or \texttt{Shift} + $\leftarrow/\rightarrow$ \\
+Adjacent Keyframe Snapping & \texttt{Ctrl} + $\leftarrow/\rightarrow$ \\
+Playback Modulation (Play/Pause) & \texttt{K} \\
+Playback Speed ($0.25\times$--$4.0\times$) & \texttt{+} / \texttt{-} \\
+Candidate Selection / Toggle & \texttt{S} \\
+Batch Sequence / Payload Submission & \texttt{Shift} + \texttt{Enter} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Keyboard-Driven Navigation and Operational Ergonomics}
+Biomechanical analysis in operational IR environments shows that frequent context switches between keyboard input and mouse manipulation severely degrade retrieval velocity. Vecna formalizes an ergonomic keyboard-first navigation scheme (Table~\ref{tab:shortcuts}). Core temporal primitives, modal inspection, and submission triggers are mapped to zero-latency shortcuts, allowing analysts to iterate through candidate hypotheses without tactile disruption.
+
+\subsection{Four-Tier Operational Escalation Protocol}
+To maximize recall and precision under strict session countdowns, operators adhere to a structured four-tier escalation strategy:
+\begin{enumerate}[label=\textbf{Tier \arabic*:}, leftmargin=*]
+    \item \textbf{Direct Zero-Shot Baseline:} Query the verbatim prompt utilizing automated translation ($\text{VI} \rightarrow \text{EN}$) and dense multi-vector embeddings (OpenCLIP, SigLIP, or Qwen3-VL).
+    \item \textbf{Semantic Decomposition \& Anchor Extraction:} If direct retrieval proves ambiguous, decompose the query into core visual anchors, filtering out background clutter and non-essential grammatical tokens.
+    \item \textbf{Multi-Modal Enrichment via OCR and ASR:} Activate text channels by specifying on-screen text overlays (\texttt{[ocr:...]}) or spoken keywords (\texttt{[asr:...]}), matched against BGE-M3 dense vectors and BM25 inverted indexes.
+    \item \textbf{Domain Batch Priors \& Negative Video Filtering:} Restrict search scope using thematic archive heuristics (e.g., batch \texttt{L26}) and prune non-target video clusters via negative exclusion (\texttt{[!video:L26\_Vxxx]}), while dynamic replenishment continuously backfills valid candidates.
+\end{enumerate}
+
+\subsection{Adaptive Frame Expansion and Provenance Export}
+When target events span ambiguous boundaries, the interface provides dynamic symmetric frame expansion. For focal frame $f^*$, radius $n$, and step magnitude $\delta$, the system deterministically populates the candidate set $\{f^* \pm k\delta\}_{k=1}^n$ within video domain $[0, F_{\max}]$. Finally, all submission payloads are exported as CSV formatted files prepended with the UTF-8 Byte Order Mark (BOM, \texttt{U+FEFF}), ensuring cross-platform character preservation for Vietnamese text during automated evaluation.

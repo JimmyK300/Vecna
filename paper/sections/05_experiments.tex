@@ -1,0 +1,90 @@
+\section{Experimental Evaluation}\label{sec:exp}
+
+To systematically assess the performance of the proposed \textsc{Vecna} system, our experimental evaluation is structured around three primary research questions (RQs):
+\begin{itemize}
+    \item \textbf{RQ1 (Retrieval Effectiveness):} How does the hierarchical multimodal integration in \textsc{Vecna} compare against state-of-the-art single-encoder and baseline ensemble paradigms?
+    \item \textbf{RQ2 (Component Ablation):} What are the individual contributions of factual query expansion, heuristic diversification, and temporal sequence alignment to the overall retrieval accuracy?
+    \item \textbf{RQ3 (System Efficiency):} Does the DirectML-accelerated embedding pipeline provide tangible throughput advantages in a constrained hardware environment?
+\end{itemize}
+
+\subsection{Experimental Setup}
+
+\textbf{Dataset.} The evaluation is conducted on a large-scale, heterogeneous video corpus encompassing over 1,200 hours of diverse content, including urban traffic surveillance, broadcast news, and cultural documentaries. By applying adaptive frame extraction with a maximum temporal stride ($\tau_{\max}$) of 2.0 seconds, approximately 1.4 million keyframes are indexed.
+
+\textbf{Query Benchmark.} We construct a rigorous benchmark comprising 60 expertly annotated queries, categorized into three distinct paradigms to evaluate varying levels of cognitive and semantic complexity:
+\begin{itemize}
+    \item \textit{General Visual (GV, 20 queries):} Purely visual descriptions requiring fine-grained spatial understanding.
+    \item \textit{Multimodal Textual (MT, 20 queries):} Scenarios necessitating the alignment of visual features with scene text (OCR) or spoken dialogue (ASR).
+    \item \textit{Temporal Sequential (TS, 20 queries):} Multi-step, chronological events demanding robust temporal ordering.
+\end{itemize}
+
+\textbf{Evaluation Metrics.} Retrieval efficacy is quantified using standard ranking metrics: Recall@$K$ ($K \in \{1, 5, 20\}$), Mean Reciprocal Rank (MRR), and mean Average Precision (mAP). System responsiveness is measured via the 99th percentile (P99) query latency in milliseconds.
+
+\textbf{Hardware Environment.} All experiments are executed on a consumer-grade workstation equipped with an AMD Ryzen 9 7900X processor, 64GB DDR5 memory, an NVIDIA RTX 4080 (16GB VRAM) GPU, and NVMe PCIe 4.0 storage, running Windows 11.
+
+\subsection{RQ1: Retrieval Effectiveness}
+
+Table~\ref{tab:overall_performance} presents a comprehensive quantitative comparison of seven architectural configurations, illustrating the progressive gains achieved by integrating multiple modalities and retrieval strategies.
+
+\begin{table*}[t]
+\centering
+\caption{Comparative evaluation of retrieval effectiveness and latency across different system configurations. The proposed \textsc{Vecna} (Full) system demonstrates superior accuracy across all metrics while maintaining sub-second latency.}
+\label{tab:overall_performance}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Configuration} & \textbf{R@1} & \textbf{R@5} & \textbf{R@20} & \textbf{MRR} & \textbf{mAP} & \textbf{P99 Latency (ms)} \\
+\midrule
+Single OpenCLIP (PE-Core-L-14) & 0.317 & 0.533 & 0.683 & 0.412 & 0.385 & \textbf{142} \\
+Single SigLIP (SO400M-384) & 0.333 & 0.567 & 0.700 & 0.435 & 0.408 & 168 \\
+Multi-Encoder Ensemble (CLIP + SigLIP + Qwen-VL) & 0.400 & 0.650 & 0.783 & 0.505 & 0.472 & 215 \\
+Ensemble + BM25 Sparse (OCR/ASR) & 0.433 & 0.700 & 0.817 & 0.542 & 0.519 & 285 \\
+Ensemble + Dense-Sparse Hybrid & 0.467 & 0.750 & 0.850 & 0.581 & 0.562 & 340 \\
+\quad + Factual HyDE (w/o Diversification) & 0.517 & 0.800 & 0.883 & 0.632 & 0.607 & 480 \\
+\textbf{\textsc{Vecna} (Full System)} & \textbf{0.550} & \textbf{0.833} & \textbf{0.917} & \textbf{0.668} & \textbf{0.641} & 520 \\
+\bottomrule
+\end{tabular}
+}
+\vspace{-2mm}
+\end{table*}
+
+The empirical results underscore the limitations of relying on a singular foundational model. The single OpenCLIP baseline, while exhibiting a low latency of 142ms, achieves a modest R@20 of 0.683. Transitioning to a multi-encoder ensemble yields a substantial absolute improvement of 10.0\% in R@20, validating the hypothesis that diverse vision-language models capture complementary semantic features. The incorporation of a dense-sparse hybrid paradigm further elevates performance, particularly for MT queries where lexical matching is paramount. Ultimately, the complete \textsc{Vecna} system attains an R@20 of 0.917, representing a remarkable 34.2\% relative improvement over the single OpenCLIP baseline. Crucially, despite the architectural complexity encompassing query expansion, hybrid retrieval, and multi-stage re-ranking, the P99 latency remains bounded at 520ms, comfortably satisfying the sub-second requirement for interactive retrieval environments.
+
+\subsection{RQ2: Ablation Analysis}
+
+To isolate the efficacy of \textsc{Vecna}'s specialized modules, we conduct a series of ablation studies.
+
+\textbf{Query Expansion Strategies.} Table~\ref{tab:ablation_expansion} delineates the impact of various query augmentation techniques. While unconstrained Large Language Model (LLM) generation improves recall, it suffers from a high hallucination rate, introducing spurious visual concepts that degrade precision. The proposed Factual HyDE mechanism in \textsc{Vecna}, structurally constrained by the dataset's ontological boundaries, maximizes R@5 and MRR while suppressing hallucinated elements.
+
+\begin{table}[t]
+\centering
+\caption{Ablation of query expansion strategies.}
+\label{tab:ablation_expansion}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Strategy} & \textbf{R@5} & \textbf{MRR} & \textbf{Hallucination Rate} \\
+\midrule
+Raw Query & 0.750 & 0.581 & 0.0\% \\
+Machine Translation & 0.767 & 0.590 & 2.1\% \\
+Unconstrained LLM & 0.792 & 0.605 & 14.5\% \\
+\textbf{Vecna Factual HyDE} & \textbf{0.833} & \textbf{0.668} & \textbf{3.2\%} \\
+\bottomrule
+\end{tabular}
+\vspace{-2mm}
+\end{table}
+
+\textbf{Heuristic Diversification.} The necessity of visual diversification is evident in densely sampled video corpora. Without the clustering-based diversification module, the retrieval results exhibit extreme redundancy, returning an average of 8.6 visually near-identical frames per query from the same temporal segment. Activating the diversification mechanism reduces this redundancy to 1.2 frames, concurrently increasing the discovery rate of unique, query-relevant scenes by 62\%.
+
+\textbf{Temporal Sequence Alignment.} For Temporal Sequential (TS) queries, naive top-$K$ intersection across sub-queries fails to capture chronological constraints, yielding an R@20 of merely 0.350. The application of the dynamic programming-based temporal alignment (Algorithm 1) dramatically improves R@20 to 0.850 for TS queries. Furthermore, this dynamic programming formulation introduces a negligible computational overhead of only 48ms per query.
+
+\subsection{RQ3: System Efficiency}
+
+Given the sheer volume of the 1.4 million keyframe corpus, computational throughput during dense embedding generation is a critical bottleneck. We evaluate the indexing efficiency of the BGE-M3 model under different execution frameworks. The standard PyTorch CUDA implementation achieves a throughput of 82 instances per second. By contrast, compiling the model to an ONNX runtime backed by the DirectML execution provider elevates the throughput to 412 instances per second. This 5.02$\times$ acceleration fundamentally transforms system maintainability, reducing the wall-clock time required for a full corpus re-indexing operation from 14.5 hours to a highly manageable 2.9 hours on a single consumer GPU.
+
+\subsection{Qualitative Analysis of Real-World Query Cases}
+
+To contextualize empirical performance under challenging real-world retrieval conditions, we examine two representative benchmark queries exhibiting multi-step temporal dependencies and semantic masking:
+
+\textbf{Case 1: Multi-Step Chronological Sequence (\texttt{query-p2-3-kis}).} The query articulates a 4-step culinary sequence: \textit{``A chef sequentially adds ingredients into boiling broth: first orange vegetables (carrots), then tubular ingredients poured from a plate, followed by vegetables and mushrooms, and finally thinly sliced meat.''} Operators structured the query into four chronological stages delimited by \texttt{/} with automated $\text{VI} \rightarrow \text{EN}$ translation enabled (Figure~\ref{fig:ui_system}c). The primary challenge stems from high visual variability and subtle transitions between cooking phases spanning several minutes. Utilizing the dynamic programming temporal search engine with $\Delta t_{\max} = 1000$ frames across SigLIP, OpenCLIP, and Qwen3-VL embeddings, Vecna successfully isolated the ground-truth sequence at \textbf{Rank 1 in video \texttt{L26\_V390}} with a top composite score of $2.3148$ (compared to the runner-up sequence score of $1.7757$ in \texttt{L26\_V286}). The DP alignment effectively suppressed hundreds of isolated cooking shots that matched individual ingredients but lacked chronological coherence.
+
+\textbf{Case 2: Anonymous Masked Entity QA (\texttt{query-p2-30-qa}).} The task requires identifying an unknown animal ingredient $X$: \textit{``A girl in a white apron stands next to a red ginger flower, places four $X$ on a white plate, later picks up two $X$, and converses with someone about today's dish. What animal is $X$?''} Direct verbatim vector search fails because the masked token $X$ cannot be resolved semantically, while rare botanical terms (\textit{``hoa rieng tia''} / red ginger flower) degrade zero-shot embeddings. Following the multi-stage escalation protocol, the query was decomposed into salient visual anchors (\textit{``red flower, girl in white apron, white plate, kitchen counter''}), augmented with an audio dialogue constraint (\texttt{[asr:con]}), scoped to batch \texttt{L26}, and pruned of false positives via negative exclusion (\texttt{[!video:L26\_Vxxx]}). The dynamic candidate replenishment mechanism immediately backfilled valid frames, allowing the operator to verify the cooking counter timeline and successfully determine $X$ (Figure~\ref{fig:ui_system}a).

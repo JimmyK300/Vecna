@@ -32,9 +32,11 @@ Desktop.ini
 .ipynb_checkpoints/
 
 # Datasets & Features (large files)
-dataset/
-data*/
-features*/
+/dataset/
+/data*/
+/features*/
+/workspace/features*/
+map-keyframes/
 *.rar
 *.zip
 *.7z
@@ -64,9 +66,14 @@ features*/
 
 # Provenance & Workspace & Logs
 provenance*/
-workspace/
-aic51-src/workspace
+workspace*/
+aic51-src/workspace*
 **.log
+
+# Environment & Local configs
+.env
+.env.*
+.env*.local
 
 # Testing output
 test*/

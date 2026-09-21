@@ -1,0 +1,64 @@
+% Vecna SOICT 2026 Paper - Springer LNCS Format (Alternative)
+\documentclass[runningheads]{llncs}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\graphicspath{{./}{figures/}{./figures/}}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{subcaption}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, backgrounds}
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+\usepackage{enumitem}
+\setlist{noitemsep, topsep=2pt, parsep=0pt, partopsep=0pt}
+
+\setlength{\textfloatsep}{6pt plus 2pt minus 2pt}
+\setlength{\intextsep}{6pt plus 2pt minus 2pt}
+\setlength{\floatsep}{6pt plus 2pt minus 2pt}
+\setlength{\abovecaptionskip}{4pt plus 1pt minus 1pt}
+\setlength{\belowcaptionskip}{4pt plus 1pt minus 1pt}
+
+\begin{document}
+\raggedbottom
+
+\title{Vecna: Factual Query Expansion, Temporal Dynamic Programming, and Provenance-Aware Retrieval for Large-Scale Multimodal Video Search}
+\titlerunning{Vecna: Multimodal Video Retrieval Framework}
+
+\author{Nguyen Le Minh Hoang\inst{1} \and
+Le Tuan Kiet\inst{1} \and
+Cao Chi Minh\inst{1} \and
+Ngo Dac Minh\inst{1} \and
+Phan Hieu Minh\inst{1}}
+
+\authorrunning{N. L. M. Hoang et al.}
+
+\institute{Faculty of Computer Science and Engineering, \\
+Ho Chi Minh City University of Technology (HCMUT), VNU-HCM, Vietnam \\
+\email{\{nlmhoangdt, letuankiet, caochiminh, ngodacminh, phm221207\}@gmail.com}}
+
+\maketitle
+
+\input{sections/00_abstract}
+
+\keywords{Multimodal Video Retrieval \and Vision-Language Models \and Query Expansion \and Temporal Dynamic Programming \and Data Provenance}
+
+\input{sections/01_introduction}
+\input{sections/02_related_work}
+\input{sections/03_system_architecture}
+\input{sections/04_methodology}
+\input{sections/05_experiments}
+\input{sections/06_interactive_ui}
+\input{sections/07_conclusion}
+
+\bibliographystyle{splncs04}
+\bibliography{references}
+
+\end{document}
