@@ -72,7 +72,8 @@ class SegmentClustering:
                 fid = int(fid_s)
             except ValueError:
                 continue
-            key = (vid, self.seg_of(vid, fid))
+            segment_id = self.seg_of(vid, fid)
+            key = (vid, segment_id if segment_id >= 0 else fid)
             if key in seen:
                 continue
             seen.add(key)
@@ -1040,6 +1041,7 @@ class Searcher(object):
             temporal_results = self.cache[query_hash]
         else:
             st = time.time()
+            temporal_candidate_k = max(int(temporal_k), 1000)
             results_list = []
             for q in query.data:
                 _check_cancelled(cancel_event)
@@ -1047,7 +1049,7 @@ class Searcher(object):
                     q["features"],
                     query.include_video_ids,
                     0,
-                    temporal_k,
+                    temporal_candidate_k,
                     target_features,
                     ocr_weight=ocr_weight,
                     asr_weight=asr_weight,
@@ -1059,15 +1061,64 @@ class Searcher(object):
                 )
                 results_list.append(results)
 
+            # Calibrate every clause independently before video filtering. Raw
+            # similarities from an easy/general clause are otherwise much
+            # larger than those from a difficult clause and dominate the
+            # temporal sum. Reciprocal-rank scores are stable across clauses
+            # and across embedding models.
+            for clause_results in results_list:
+                self._calibrate_temporal_stage_results(clause_results)
+
+            candidate_videos = self._select_temporal_candidate_videos(
+                results_list,
+                # The corpus currently has fewer than 1,000 videos. Keeping the
+                # complete per-clause video union is cheap after segment
+                # deduplication and avoids losing a relevant video whose best
+                # frame has only a middling global rank.
+                max_videos=max(1000, int(temporal_k)),
+                cancel_event=cancel_event,
+            )
+            if candidate_videos:
+                candidate_set = set(candidate_videos)
+                results_list = [
+                    [
+                        result
+                        for result in clause_results
+                        if self._result_video_id(result) in candidate_set
+                    ]
+                    for clause_results in results_list
+                ]
+                logger.info(
+                    "searcher: temporal coarse pool=%d, selected candidate videos=%d",
+                    temporal_candidate_k,
+                    len(candidate_videos),
+                )
+
             en = time.time()
             logger.info(f"searcher: Take {en-st:.4f} seconds to search results")
 
             _check_cancelled(cancel_event)
             st = time.time()
-            temporal_results = self._combine_temporal_results(results_list, max_interval, cancel_event=cancel_event)
+            temporal_results, temporal_debug = self._combine_temporal_results(
+                results_list,
+                max_interval,
+                allow_relaxed_fallback=True,
+                candidate_limit_per_stage=temporal_candidate_k,
+                cancel_event=cancel_event,
+            )
+            if not temporal_results:
+                logger.warning(
+                    "searcher: segment temporal matcher returned no valid timeline (%s)",
+                    temporal_debug.get("failure_reason"),
+                )
+            temporal_results = self._dedupe_temporal_results_by_video(temporal_results)
             temporal_results = self._filter_exclude_videos(temporal_results, query.exclude_video_ids)
             en = time.time()
-            logger.info(f"searcher: Take {en-st:.4f} seconds to combine and filter results")
+            logger.info(
+                "searcher: Take %.4f seconds to combine and filter results; temporal_debug=%s",
+                en - st,
+                temporal_debug,
+            )
 
             self.cache[query_hash] = temporal_results
 
@@ -1083,85 +1134,566 @@ class Searcher(object):
         }
         return res
 
-    def _combine_temporal_results(self, results_list: list, max_interval: int, cancel_event: threading.Event | Callable = None):
+    @staticmethod
+    def _result_video_id(result: dict) -> str:
+        frame_id = str(result.get("entity", {}).get("frame_id", ""))
+        return frame_id.split("#", 1)[0] if "#" in frame_id else frame_id
+
+    @staticmethod
+    def _calibrate_temporal_stage_results(results: list[dict], rrf_k: float = 60.0) -> None:
+        """Attach a clause-local reciprocal-rank score to every frame hit."""
+        for rank, result in enumerate(results, 1):
+            result["_temporal_rank_score"] = float(rrf_k / (rrf_k + rank))
+
+    def _dedupe_temporal_results_by_video(self, results: list[dict]) -> list[dict]:
+        """Keep only the highest-scoring timeline for each video."""
+        best_by_video: dict[str, dict] = {}
+        alternatives_by_video: dict[str, list[dict]] = {}
+        for result in sorted(results or [], key=lambda item: float(item.get("distance", 0.0)), reverse=True):
+            video_id = self._result_video_id(result)
+            if not video_id:
+                continue
+            if video_id not in best_by_video:
+                best_by_video[video_id] = result
+                alternatives_by_video[video_id] = []
+            else:
+                alternatives_by_video[video_id].append(
+                    {
+                        "time_line": list(result.get("time_line", [])),
+                        "time_line_scores": list(result.get("time_line_scores", [])),
+                        "score": float(result.get("distance", 0.0)),
+                    }
+                )
+
+        deduplicated = []
+        for video_id, result in best_by_video.items():
+            temporal = result.setdefault("temporal", {})
+            alternatives = alternatives_by_video.get(video_id, [])
+            if alternatives:
+                temporal["alternative_timelines"] = alternatives[:5]
+            deduplicated.append(result)
+        deduplicated.sort(key=lambda item: float(item.get("distance", 0.0)), reverse=True)
+        return deduplicated
+
+    def _select_temporal_candidate_videos(
+        self,
+        results_list: list[list[dict]],
+        max_videos: int = 50,
+        cancel_event: threading.Event | Callable = None,
+    ) -> list[str]:
+        """Select diverse video candidates before frame-level temporal joining."""
+        _check_cancelled(cancel_event)
+        if not results_list:
+            return []
+
+        clause_count = len(results_list)
+        per_clause_video_scores: list[dict[str, float]] = []
+        for clause_results in results_list:
+            _check_cancelled(cancel_event)
+            diverse_results = self._clustering.diversify(clause_results)
+            scores: dict[str, float] = {}
+            for result in diverse_results:
+                video_id = self._result_video_id(result)
+                if not video_id:
+                    continue
+                score = float(result.get("_temporal_rank_score", 0.0) or 0.0)
+                scores[video_id] = max(scores.get(video_id, 0.0), score)
+            per_clause_video_scores.append(scores)
+
+        video_universe = set()
+        for scores in per_clause_video_scores:
+            video_universe.update(scores)
+        if not video_universe:
+            return []
+
+        ranked = []
+        for video_id in video_universe:
+            _check_cancelled(cancel_event)
+            available = 0
+            score_sum = 0.0
+            for scores in per_clause_video_scores:
+                if video_id not in scores:
+                    continue
+                available += 1
+                score_sum += scores[video_id]
+
+            coverage = available / max(1, clause_count)
+            covered_mean = score_sum / max(1, available)
+            candidate_score = 0.65 * coverage + 0.35 * covered_mean
+            ranked.append((candidate_score, coverage, video_id))
+
+        ranked.sort(key=lambda item: (item[0], item[1]), reverse=True)
+
+        # Guarantee a small candidate quota from every clause before filling
+        # the remaining slots by global coverage score. This prevents a broad
+        # clause from monopolising the shortlist.
+        quota = max(5, max_videos // max(1, clause_count))
+        guaranteed = set()
+        for scores in per_clause_video_scores:
+            guaranteed.update(
+                video_id
+                for video_id, _ in sorted(scores.items(), key=lambda item: item[1], reverse=True)[:quota]
+            )
+
+        rank_lookup = {video_id: (score, coverage) for score, coverage, video_id in ranked}
+        guaranteed_ranked = sorted(
+            guaranteed,
+            key=lambda video_id: rank_lookup.get(video_id, (0.0, 0.0)),
+            reverse=True,
+        )
+        remaining_ranked = [video_id for _, _, video_id in ranked if video_id not in guaranteed]
+        return (guaranteed_ranked + remaining_ranked)[:max_videos]
+
+    def _combine_frame_temporal_results(
+        self,
+        results_list: list,
+        max_interval: int,
+        cancel_event: threading.Event | Callable = None,
+    ):
+        """Original Vecna frame-DP temporal combiner."""
         _check_cancelled(cancel_event)
         best = None
 
-        for i in range(len(results_list)):
-            res = results_list[i]
-            for j in range(len(res)):
-                video_id, frame_id = results_list[i][j]["entity"]["frame_id"].split("#")
-                results_list[i][j]["_id"] = (video_id, int(frame_id))
-                results_list[i][j]["time_line"] = [frame_id]
-                results_list[i][j]["time_line_scores"] = [results_list[i][j].get("scores", {})]
+        for stage_results in results_list:
+            for result in stage_results:
+                video_id, frame_id = result["entity"]["frame_id"].split("#")
+                result["_id"] = (video_id, int(frame_id))
+                result["time_line"] = [frame_id]
+                result["time_line_scores"] = [result.get("scores", {})]
 
-        for i, res in enumerate(results_list[::-1]):
+        for stage_results in reversed(results_list):
             _check_cancelled(cancel_event)
             if best is None:
-                best = res[: constant.TEMPORAL_QUEUE_SIZE]
+                best = stage_results[: constant.TEMPORAL_QUEUE_SIZE]
                 continue
 
-            tmp = []
-            res = sorted(res, key=lambda x: x["_id"])
-            best = sorted(best, key=lambda x: x["_id"])
-            l = 0
-            r = 0
-            for cur in res:
-                cur_vid, cur_fid = cur["_id"]
+            combined = []
+            stage_results = sorted(stage_results, key=lambda result: result["_id"])
+            best = sorted(best, key=lambda result: result["_id"])
+            left = 0
+            right = 0
+            for current in stage_results:
+                video_id, frame_id = current["_id"]
+                low_id = (video_id, frame_id)
+                high_id = (video_id, frame_id + max_interval)
 
-                low_id = (cur_vid, cur_fid)
-                high_id = (cur_vid, cur_fid + max_interval)
+                while left < len(best) and best[left]["_id"] <= low_id:
+                    left += 1
+                while right < len(best) and best[right]["_id"] <= high_id:
+                    right += 1
 
-                cur_fid = int(cur_fid)
-
-                while l < len(best):
-                    next_id = best[l]["_id"]
-
-                    if next_id > low_id:
-                        break
-                    else:
-                        l += 1
-
-                while r < len(best):
-                    next_id = best[r]["_id"]
-
-                    if next_id > high_id:
-                        break
-                    else:
-                        r += 1
-
-                if l < r:
-                    for next in best[l:r]:
-                        _, cur_fid = cur["_id"]
-                        combined_dist = cur["distance"] + next["distance"]
-                        cur_scores = cur.get("scores", {})
-                        next_scores = next.get("scores", {})
-
-                        combined_scores = {
-                            "final": round(combined_dist, 6),
-                            "clip": round(cur_scores.get("clip", 0.0) + next_scores.get("clip", 0.0), 6),
-                            "ocr": round(cur_scores.get("ocr", 0.0) + next_scores.get("ocr", 0.0), 6),
-                            "asr": round(cur_scores.get("asr", 0.0) + next_scores.get("asr", 0.0), 6),
-                            "clip_raw": round(cur_scores.get("clip_raw", 0.0) + next_scores.get("clip_raw", 0.0), 6),
-                            "ocr_raw": round(cur_scores.get("ocr_raw", 0.0) + next_scores.get("ocr_raw", 0.0), 6),
-                            "asr_raw": round(cur_scores.get("asr_raw", 0.0) + next_scores.get("asr_raw", 0.0), 6),
+                for following in best[left:right]:
+                    combined_distance = current["distance"] + following["distance"]
+                    current_scores = current.get("scores", {})
+                    following_scores = following.get("scores", {})
+                    combined_scores = {
+                        "final": round(combined_distance, 6),
+                        "clip": round(current_scores.get("clip", 0.0) + following_scores.get("clip", 0.0), 6),
+                        "ocr": round(current_scores.get("ocr", 0.0) + following_scores.get("ocr", 0.0), 6),
+                        "asr": round(current_scores.get("asr", 0.0) + following_scores.get("asr", 0.0), 6),
+                        "clip_raw": round(current_scores.get("clip_raw", 0.0) + following_scores.get("clip_raw", 0.0), 6),
+                        "ocr_raw": round(current_scores.get("ocr_raw", 0.0) + following_scores.get("ocr_raw", 0.0), 6),
+                        "asr_raw": round(current_scores.get("asr_raw", 0.0) + following_scores.get("asr_raw", 0.0), 6),
+                    }
+                    combined.append(
+                        {
+                            **current,
+                            "distance": combined_distance,
+                            "scores": combined_scores,
+                            "time_line": [*current["time_line"], *following["time_line"]],
+                            "time_line_scores": [
+                                *current.get("time_line_scores", [current_scores]),
+                                *following.get("time_line_scores", [following_scores]),
+                            ],
                         }
-                        cur_tls = cur.get("time_line_scores", [cur_scores])
-                        next_tls = next.get("time_line_scores", [next_scores])
-                        tmp.append(
-                            {
-                                **cur,
-                                "distance": combined_dist,
-                                "scores": combined_scores,
-                                "time_line": [*cur["time_line"], *next["time_line"]],
-                                "time_line_scores": [*cur_tls, *next_tls],
-                            }
-                        )
+                    )
 
-            tmp = sorted(tmp, key=lambda x: x["distance"], reverse=True)
-            best = tmp[: constant.TEMPORAL_QUEUE_SIZE]
+            combined.sort(key=lambda result: result["distance"], reverse=True)
+            best = combined[: constant.TEMPORAL_QUEUE_SIZE]
 
+        return best or []
+
+    @staticmethod
+    def _temporal_hit_score(hit: dict) -> float:
+        """Prefer an explicit RRF score; Vecna normally exposes final score."""
+        if "_temporal_rank_score" in hit:
+            return float(hit.get("_temporal_rank_score") or 0.0)
+        scores = hit.get("scores", {}) or {}
+        for key in ("rrf_score", "rrf", "final"):
+            if key in scores:
+                return float(scores[key] or 0.0)
+        return float(hit.get("rrf_score", hit.get("distance", 0.0)) or 0.0)
+
+    def _cluster_temporal_stage(self, results: list[dict], cancel_event=None) -> tuple[list[dict], int]:
+        """Group frame hits by indexed shot/segment without losing timing choices."""
+        by_video: dict[str, list[dict]] = {}
+        seen_frame_ids = set()
+
+        for hit in results:
+            _check_cancelled(cancel_event)
+            frame_key = str(hit.get("entity", {}).get("frame_id", ""))
+            if "#" not in frame_key or frame_key in seen_frame_ids:
+                continue
+            seen_frame_ids.add(frame_key)
+            video_id, frame_id_text = frame_key.split("#", 1)
+            try:
+                frame_id = int(frame_id_text)
+            except ValueError:
+                continue
+
+            segment_id = self._clustering.seg_of(video_id, frame_id)
+            # Keep the matcher usable for newly-added videos whose segment map
+            # has not been generated yet. A singleton frame is a safe segment;
+            # dropping it would silently destroy temporal recall.
+            if segment_id < 0:
+                segment_id = frame_id
+            by_video.setdefault(video_id, []).append(
+                {
+                    "hit": hit,
+                    "video_id": video_id,
+                    "frame_id": frame_id,
+                    "segment_id": segment_id,
+                    "score": self._temporal_hit_score(hit),
+                    "raw_score": float(hit.get("distance", 0.0) or 0.0),
+                }
+            )
+
+        clusters = []
+        candidate_count = sum(len(hits) for hits in by_video.values())
+        for video_id, hits in by_video.items():
+            _check_cancelled(cancel_event)
+            hits.sort(key=lambda item: (item["segment_id"], -item["score"], item["frame_id"]))
+            current = [hits[0]]
+            for hit in hits[1:]:
+                previous_segment_id = current[-1]["segment_id"]
+                if hit["segment_id"] == previous_segment_id:
+                    current.append(hit)
+                else:
+                    clusters.append(self._build_temporal_cluster(video_id, current))
+                    current = [hit]
+            clusters.append(self._build_temporal_cluster(video_id, current))
+        return clusters, candidate_count
+
+    @staticmethod
+    def _build_temporal_cluster(video_id: str, hits: list[dict]) -> dict:
+        ranked_hits = sorted(hits, key=lambda item: (-item["score"], item["frame_id"]))
+        best_hit = ranked_hits[0]
+        return {
+            "video_id": video_id,
+            "min_segment_id": min(item["segment_id"] for item in hits),
+            "max_segment_id": max(item["segment_id"] for item in hits),
+            "min_frame_id": min(item["frame_id"] for item in hits),
+            "max_frame_id": max(item["frame_id"] for item in hits),
+            "cluster_score": best_hit["score"],
+            "raw_score": best_hit["raw_score"],
+            "best_hit": best_hit,
+            "hits": ranked_hits,
+        }
+
+    def _best_ordered_cluster_sequence(
+        self,
+        selected_stages: list[tuple[int, list[dict]]],
+        max_interval: int,
+        penalty_weight: float,
+        cancel_event=None,
+    ) -> dict | None:
+        """Return the best strictly ordered path for one video using DP."""
+        if not selected_stages or any(not clusters for _, clusters in selected_stages):
+            return None
+
+        def frame_candidates(clusters: list[dict]) -> list[dict]:
+            """Expand segment clusters into stage-specific timed DP states.
+
+            Segment grouping is still used for candidate diversity, but every
+            retrieved hit remains available here. Keeping the frame in the DP
+            state is required because future temporal feasibility depends on
+            its timestamp, not just on the segment containing it.
+            """
+            candidates = []
+            seen_frames = set()
+            for cluster in clusters:
+                for hit in cluster["hits"]:
+                    frame_key = (hit["video_id"], hit["frame_id"])
+                    if frame_key in seen_frames:
+                        continue
+                    seen_frames.add(frame_key)
+                    candidates.append(
+                        {
+                            **cluster,
+                            "cluster_score": hit["score"],
+                            "raw_score": hit["raw_score"],
+                            "best_hit": hit,
+                        }
+                    )
+            return candidates
+
+        # Each state retains only the best path ending at a cluster. Future
+        # feasibility depends solely on that ending cluster, so lower-scoring
+        # paths ending there are safely dominated.
+        target_match_count = len(selected_stages)
+        target_transition_count = max(1, target_match_count - 1)
+
+        def objective(sum_score: float, sum_penalty: float) -> float:
+            return (
+                sum_score / target_match_count
+                - sum_penalty / target_transition_count
+            )
+
+        states = []
+        first_stage_index, first_clusters = selected_stages[0]
+        for cluster in frame_candidates(first_clusters):
+            states.append(
+                {
+                    "last": cluster,
+                    "sequence": [(first_stage_index, cluster)],
+                    "gaps": [],
+                    "sum_score": cluster["cluster_score"],
+                    "sum_penalty": 0.0,
+                }
+            )
+
+        for stage_index, clusters in selected_stages[1:]:
+            _check_cancelled(cancel_event)
+            next_states = []
+            for cluster in frame_candidates(clusters):
+                best_state = None
+                best_objective = float("-inf")
+                for state in states:
+                    previous = state["last"]
+                    previous_frame = previous["best_hit"]["frame_id"]
+                    current_frame = cluster["best_hit"]["frame_id"]
+                    gap = current_frame - previous_frame
+                    if gap <= 0:
+                        continue
+                    if max_interval > 0 and gap > max_interval:
+                        continue
+                    transition_penalty = (
+                        penalty_weight * (gap / max_interval) if max_interval > 0 else 0.0
+                    )
+                    sum_score = state["sum_score"] + cluster["cluster_score"]
+                    sum_penalty = state["sum_penalty"] + transition_penalty
+                    candidate_objective = objective(sum_score, sum_penalty)
+                    if candidate_objective <= best_objective:
+                        continue
+                    best_objective = candidate_objective
+                    best_state = {
+                        "last": cluster,
+                        "sequence": [*state["sequence"], (stage_index, cluster)],
+                        "gaps": [*state["gaps"], gap],
+                        "sum_score": sum_score,
+                        "sum_penalty": sum_penalty,
+                    }
+                if best_state is not None:
+                    next_states.append(best_state)
+            states = next_states
+            if not states:
+                return None
+
+        def final_score(state: dict) -> float:
+            return objective(state["sum_score"], state["sum_penalty"])
+
+        best = max(states, key=final_score)
+        best["path_score"] = final_score(best)
         return best
+
+    def _find_ordered_cluster_sequences(
+        self,
+        video_stages: list[list[dict]],
+        max_sequences: int,
+        cancel_event=None,
+    ) -> list[list[dict]]:
+        """OpenCubee-style DFS/backtracking over strictly ordered clusters."""
+        sequences: list[list[dict]] = []
+        current: list[dict] = []
+
+        def dfs(stage_index: int):
+            _check_cancelled(cancel_event)
+            if len(sequences) >= max_sequences:
+                return
+            if stage_index == len(video_stages):
+                sequences.append(current.copy())
+                return
+            for cluster in video_stages[stage_index]:
+                if current and cluster["min_segment_id"] <= current[-1]["max_segment_id"]:
+                    continue
+                current.append(cluster)
+                dfs(stage_index + 1)
+                current.pop()
+                if len(sequences) >= max_sequences:
+                    return
+
+        dfs(0)
+        return sequences
+
+    def _temporal_sequence_result(
+        self,
+        state: dict,
+        total_stage_count: int,
+    ) -> dict:
+        indexed_sequence = state["sequence"]
+        sequence = [cluster for _, cluster in indexed_sequence]
+        scores = [cluster["cluster_score"] for cluster in sequence]
+        gaps = state["gaps"]
+        total_gap = sum(gaps)
+        average_score = sum(scores) / len(scores)
+        coverage = len(sequence) / total_stage_count
+        # Missing a block is an explicit last-resort fallback and must not beat
+        # a complete timeline with similar evidence.
+        combined_score = state["path_score"] * coverage * coverage
+
+        best_hits = [cluster["best_hit"] for cluster in sequence]
+        score_keys = ("clip", "ocr", "asr", "clip_raw", "ocr_raw", "asr_raw")
+        combined_scores = {
+            "final": round(combined_score, 6),
+            "temporal_average": round(average_score, 6),
+            "temporal_gap": total_gap,
+            "temporal_coverage": round(coverage, 6),
+        }
+        for key in score_keys:
+            combined_scores[key] = round(
+                sum(float(hit["hit"].get("scores", {}).get(key, 0.0) or 0.0) for hit in best_hits) / len(best_hits),
+                6,
+            )
+
+        events = []
+        for stage_index, cluster in indexed_sequence:
+            best = cluster["best_hit"]
+            events.append(
+                {
+                    "stage_index": stage_index,
+                    "segment_start": cluster["min_segment_id"],
+                    "segment_end": cluster["max_segment_id"],
+                    "best_frame": best["hit"]["entity"]["frame_id"],
+                    "score": round(cluster["cluster_score"], 6),
+                }
+            )
+
+        first_hit = best_hits[0]["hit"]
+        def source_frame_id(cluster: dict) -> str:
+            # Preserve the indexed frame-id spelling, including zero padding.
+            # The file service stores e.g. 003945.jpg; converting this to int
+            # and back would make the proxy health check request 3945.jpg.
+            raw_frame_id = str(cluster["best_hit"]["hit"].get("entity", {}).get("frame_id", ""))
+            if "#" in raw_frame_id:
+                return raw_frame_id.split("#", 1)[1]
+            return str(cluster["best_hit"]["frame_id"])
+
+        return {
+            "entity": first_hit["entity"],
+            "distance": combined_score,
+            "scores": combined_scores,
+            "time_line": [source_frame_id(cluster) for cluster in sequence],
+            "time_line_scores": [hit["hit"].get("scores", {}) for hit in best_hits],
+            "temporal": {
+                "video_id": sequence[0]["video_id"],
+                "combined_score": combined_score,
+                "average_score": average_score,
+                "temporal_gap": total_gap,
+                "gaps": gaps,
+                "coverage": coverage,
+                "partial": len(sequence) < total_stage_count,
+                "matched_stage_indices": [stage_index for stage_index, _ in indexed_sequence],
+                "events": events,
+            },
+        }
+
+    def _combine_temporal_results(
+        self,
+        results_list: list[list[dict]],
+        max_interval: int,
+        *,
+        allow_relaxed_fallback: bool = True,
+        penalty_weight: float = 0.05,
+        max_sequences: int = constant.TEMPORAL_QUEUE_SIZE,
+        candidate_limit_per_stage: int | None = None,
+        cancel_event: threading.Event | Callable = None,
+    ) -> tuple[list[dict], dict]:
+        """Rank one best ordered segment timeline per candidate video."""
+        _check_cancelled(cancel_event)
+        debug = {
+            "stage_candidate_counts": [],
+            "stage_cluster_counts": [],
+            "candidate_limit_per_stage": candidate_limit_per_stage,
+            "max_interval": max_interval,
+            "max_interval_enforced": True,
+            "used_relaxed_fallback": False,
+            "full_match_video_count": 0,
+            "partial_match_video_count": 0,
+            "failure_reason": None,
+        }
+        if not results_list:
+            debug["failure_reason"] = "stage_has_no_candidates"
+            return [], debug
+
+        stage_clusters = []
+        for stage_results in results_list:
+            clusters, candidate_count = self._cluster_temporal_stage(stage_results, cancel_event=cancel_event)
+            stage_clusters.append(clusters)
+            debug["stage_candidate_counts"].append(candidate_count)
+            debug["stage_cluster_counts"].append(len(clusters))
+
+        clusters_by_video: dict[str, list[list[dict]]] = {}
+        stage_count = len(stage_clusters)
+        for stage_index, clusters in enumerate(stage_clusters):
+            for cluster in clusters:
+                video_stages = clusters_by_video.setdefault(
+                    cluster["video_id"], [[] for _ in range(stage_count)]
+                )
+                video_stages[stage_index].append(cluster)
+
+        debug["candidate_video_count"] = len(clusters_by_video)
+        debug["eligible_video_count"] = sum(1 for stages in clusters_by_video.values() if all(stages))
+
+        sequences = []
+        for video_id, stages in clusters_by_video.items():
+            _check_cancelled(cancel_event)
+            for stage in stages:
+                stage.sort(key=lambda cluster: (cluster["min_frame_id"], -cluster["cluster_score"]))
+
+            selected_stages = [(index, stage) for index, stage in enumerate(stages)]
+            state = self._best_ordered_cluster_sequence(
+                selected_stages,
+                max_interval,
+                penalty_weight,
+                cancel_event=cancel_event,
+            )
+            if state is not None:
+                debug["full_match_video_count"] += 1
+                sequences.append(self._temporal_sequence_result(state, stage_count))
+                continue
+
+            # For 3+ blocks, tolerate at most one missing block. This catches a
+            # weak visual clause while preserving the order of all matched
+            # clauses. Two-block queries never degrade into a one-frame match.
+            if not allow_relaxed_fallback or stage_count < 3:
+                continue
+            best_partial = None
+            for omitted_stage in range(stage_count):
+                partial_stages = [
+                    (index, stage)
+                    for index, stage in enumerate(stages)
+                    if index != omitted_stage
+                ]
+                partial_state = self._best_ordered_cluster_sequence(
+                    partial_stages,
+                    max_interval,
+                    penalty_weight,
+                    cancel_event=cancel_event,
+                )
+                if partial_state is None:
+                    continue
+                if best_partial is None or partial_state["path_score"] > best_partial["path_score"]:
+                    best_partial = partial_state
+            if best_partial is not None:
+                debug["used_relaxed_fallback"] = True
+                debug["partial_match_video_count"] += 1
+                sequences.append(self._temporal_sequence_result(best_partial, stage_count))
+
+        if not sequences and debug["failure_reason"] is None:
+            debug["failure_reason"] = "no_valid_ordered_sequence"
+
+        sequences.sort(key=lambda result: result["distance"], reverse=True)
+        return sequences[:max_sequences], debug
 
     def _get_videos(
         self,

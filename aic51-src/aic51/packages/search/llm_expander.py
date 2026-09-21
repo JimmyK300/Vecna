@@ -93,7 +93,6 @@ Respond ONLY with a valid JSON object matching this exact schema:
   "search_keywords": "..."
 }}"""
 
-
 class LLMQueryExpander:
     """Bộ mở rộng câu truy vấn bằng LLM qua Groq Cloud / OpenAI API / Gemini API với LRU Cache."""
 

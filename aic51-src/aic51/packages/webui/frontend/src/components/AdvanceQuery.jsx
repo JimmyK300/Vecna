@@ -41,6 +41,19 @@ export const parseSegment = (segmentStr = "") => {
 };
 
 /**
+ * Show the visual text as a fallback in empty OCR/ASR fields.
+ * Explicit OCR/ASR text always takes precedence.
+ */
+export const fillTextChannelFallbacks = ({ visual = "", ocr = "", asr = "" }) => {
+  const fallback = visual.trim();
+  return {
+    visual,
+    ocr: ocr.trim() || fallback,
+    asr: asr.trim() || fallback,
+  };
+};
+
+/**
  * Helper to build a single segment string from { visual, ocr, asr }
  */
 export const buildSegment = ({ visual = "", ocr = "", asr = "" }) => {
@@ -60,12 +73,12 @@ export const buildSegment = ({ visual = "", ocr = "", asr = "" }) => {
 /**
  * Helper to rebuild full multi-segment query from segments array
  */
-export const buildFullQuery = (segments, delimiter = "/") => {
+export const buildFullQuery = (segments, delimiter = "\n") => {
   if (!segments || segments.length === 0) return "";
   if (segments.length === 1) {
     return buildSegment(segments[0]);
   }
-  return segments.map((s) => buildSegment(s)).join(` ${delimiter} `);
+  return segments.map((s) => buildSegment(s)).join(delimiter);
 };
 
 export function AdvanceQueryContainer({
@@ -101,7 +114,7 @@ export function AdvanceQueryContainer({
   }, [translationFailed, autoTranslate]);
 
   // State đóng/mở 2 bộ lọc bên cạnh (OCR/ASR Filters & Video Filters)
-  const [showOcrAsrPanel, setShowOcrAsrPanel] = useState(() => !/[\/\\\\]/.test(q || ""));
+  const [showOcrAsrPanel, setShowOcrAsrPanel] = useState(() => !/\r?\n/.test(q || ""));
   const [showVideoPanel, setShowVideoPanel] = useState(true);
 
   // Main active query string in input box
@@ -113,8 +126,8 @@ export function AdvanceQueryContainer({
     return saved !== null ? JSON.parse(saved) : true;
   });
 
-  // Check if mainQuery has temporal delimiters \ or /
-  const hasTemporal = /[\/\\\\]/.test(mainQuery);
+  // Each non-empty line is one temporal block.
+  const hasTemporal = /\r?\n/.test(mainQuery);
 
   // Auto-close OCR/ASR panel when entering temporal search mode, restore when leaving
   const prevHasTemporalRef = useRef(hasTemporal);
@@ -127,23 +140,22 @@ export function AdvanceQueryContainer({
     prevHasTemporalRef.current = hasTemporal;
   }, [hasTemporal]);
 
-  // Extract delimiter used (/ or \)
-  const temporalDelimiter = useMemo(() => {
-    if (mainQuery.includes("\\")) return "\\";
-    return "/";
-  }, [mainQuery]);
+  const temporalDelimiter = "\n";
 
   // Split mainQuery into parsed segment objects { visual, ocr, asr }
   const temporalSegments = useMemo(() => {
     if (!hasTemporal) {
       return [parseSegment(mainQuery)];
     }
-    const rawSegments = mainQuery.split(/[\/\\\\]/);
-    return rawSegments.map((seg) => parseSegment(seg));
+    const rawSegments = mainQuery.split(/\r?\n/);
+    return rawSegments.map((seg) => fillTextChannelFallbacks(parseSegment(seg)));
   }, [mainQuery, hasTemporal]);
 
   // Global OCR/ASR values for single query mode
-  const singleParsed = useMemo(() => parseSegment(mainQuery), [mainQuery]);
+  const singleParsed = useMemo(
+    () => fillTextChannelFallbacks(parseSegment(mainQuery)),
+    [mainQuery],
+  );
   const [ocrQuery, setOcrQuery] = useState(singleParsed.ocr);
   const [asrQuery, setAsrQuery] = useState(singleParsed.asr);
 
@@ -164,7 +176,7 @@ export function AdvanceQueryContainer({
   // Update a specific field (visual, ocr, asr) of step stepIdx
   const handleUpdateTemporalField = (stepIdx, field, value) => {
     const currentSegments = hasTemporal
-      ? mainQuery.split(/[\/\\\\]/).map((s) => parseSegment(s))
+      ? mainQuery.split(/\r?\n/).map((s) => parseSegment(s))
       : [parseSegment(mainQuery)];
 
     while (currentSegments.length <= stepIdx) {
@@ -289,7 +301,7 @@ export function AdvanceQueryContainer({
   };
 
   const handleMainQueryKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
       triggerManualSearch();
     }
@@ -319,7 +331,7 @@ export function AdvanceQueryContainer({
               title={
                 autoSearch
                   ? "Auto-search enabled (searches 450ms after typing). Click to turn OFF."
-                  : "Manual search enabled (Press Enter to search). Click to turn ON auto-search."
+                  : "Manual search enabled (Press Ctrl+Enter to search). Enter creates a temporal line."
               }
             >
               <span className={`w-2 h-2 rounded-full ${autoSearch ? "bg-white animate-pulse" : "bg-gray-400"}`}></span>
@@ -349,7 +361,7 @@ export function AdvanceQueryContainer({
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
-                  Search (Enter)
+                  Search (Ctrl+Enter)
                 </button>
               )
             )}
@@ -401,7 +413,7 @@ export function AdvanceQueryContainer({
           autoCapitalize="off"
           className="w-full text-xs bg-white text-gray-900 border border-sky-400 rounded p-2 focus:outline-none focus:ring-1 focus:ring-blue-500 font-sans transition-all min-h-[48px] max-h-64 overflow-y-auto leading-relaxed resize-y"
           rows={3}
-          placeholder="Type search text here... (Temporal syntax: '/' or '\' between events, [OCR: text], [asr: speech])"
+          placeholder="Type search text here... (Temporal: one event per line; [OCR: text], [asr: speech])"
           value={mainQuery}
           onChange={(e) => {
             setMainQuery(e.target.value);

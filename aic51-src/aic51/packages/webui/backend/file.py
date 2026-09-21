@@ -17,8 +17,11 @@ app = create_app()
 
 @app.get(constant.HEALTH_ENDPOINT + "/{video_id}/{frame_id}")
 async def frame_health(request: Request, video_id: str, frame_id: str):
-    file_path = Path.cwd() / f"{constant.THUMBNAIL_DIR}/{video_id}/{frame_id}{constant.IMAGE_EXTENSION}"
-    if file_path.exists() and not file_path.is_dir():
+    # Keep health checks consistent with /api/files: temporal search may
+    # return an unpadded numeric frame id (3945) while the stored thumbnail
+    # uses the canonical six-digit filename (003945.jpg).
+    file_path = _find_image_file(constant.THUMBNAIL_DIR, video_id, frame_id)
+    if file_path:
         return JSONResponse(status_code=200, content=jsonable_encoder({constant.MESSAGE_KEY: "available"}))
     else:
         return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))

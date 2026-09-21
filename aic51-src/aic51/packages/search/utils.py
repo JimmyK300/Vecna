@@ -433,7 +433,9 @@ class Query:
     return new_query, asr_list
 
   def _extract_temporal_queries(self):
-    raw_queries = [q.strip() for q in re.split(r"[\\/]", self._query) if q.strip()]
+    # Temporal blocks are entered one per line. Slashes remain part of the
+    # natural-language query instead of acting as delimiters.
+    raw_queries = [q.strip() for q in re.split(r"\r?\n", self._query) if q.strip()]
     self._queries = [{"raw": q} for q in raw_queries]
 
   def _parse_one_query(self, q):
@@ -447,6 +449,16 @@ class Query:
     features = {}
     if len(raw):
       features["text"] = raw
+      # When OCR/ASR is not provided explicitly, use the visual text as a
+      # fallback for those channels. This lets hybrid search work for a
+      # normal visual query while still allowing explicit [OCR:...] and
+      # [asr:...] overrides.
+      fallback_text = raw.lower()
+      if not ocr_list:
+        ocr_list = [fallback_text]
+      if not asr_list:
+        asr_list = [fallback_text]
+
       if self._auto_translate:
         # VI -> EN translation for CLIP
         translated, success = translate_vi_to_en_with_status(raw)

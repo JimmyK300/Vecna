@@ -210,7 +210,6 @@ searcher:
     asr_dense_field: "asr_dense"
     enable: true
     hybrid_alpha: 0.0
-
   reranker:
     enable: true
     model: "BAAI/bge-reranker-v2-m3"
@@ -218,7 +217,7 @@ searcher:
 
   # Groq LLM Query Expansion (bắt chước 100% caube gpt-oss-120b / llama3-70b)
   llm:
-    enable: true
+    enable: false
     provider: "groq"                      # groq, gemini, hoặc openai
     model_name: "openai/gpt-oss-120b"     # Mô hình 120B tham số trên Groq Cloud
     api_key: ""                           # Để trống để tự lấy từ GROQ_API_KEY
