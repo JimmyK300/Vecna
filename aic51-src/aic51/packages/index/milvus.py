@@ -181,6 +181,18 @@ class MilvusDatabase(object):
         res = self._client.get(self._collection_name, ids=[id], output_fields=output_fields)
         return res
 
+    def get_many(self, ids: list[str], output_fields: list[str] | None = None):
+        """Retrieve multiple primary-key records in one Milvus round trip."""
+        if not ids:
+            return []
+        if output_fields is None:
+            output_fields = ["*"]
+        return self._client.get(
+            self._collection_name,
+            ids=list(dict.fromkeys(ids)),
+            output_fields=output_fields,
+        )
+
     def query(self, filter: str, offset: int = 0, limit: int = 50, output_fields: list[str] | None = None):
         limit = min(limit, self.SEARCH_LIMIT)
         if output_fields is None:
