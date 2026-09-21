@@ -196,7 +196,7 @@ export default function SearchParams({
                     ? "bg-blue-600 text-white border-blue-600"
                     : "bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
                 }`}
-                title="Translate Vietnamese query to English for CLIP model"
+                title="Translate Vietnamese query to English for CLIP / Qwen-VL models"
               >
                 VI ➔ EN CLIP
               </button>

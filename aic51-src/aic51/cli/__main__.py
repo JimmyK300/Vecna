@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 from aic51.packages.logger import logger
 
 os.environ["YOLO_VERBOSE"] = "False"
+os.environ["OPENCV_FFMPEG_LOGLEVEL"] = "-8"
+os.environ["OPENCV_LOG_LEVEL"] = "ERROR"
 load_dotenv()
 
 from . import commands

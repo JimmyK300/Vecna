@@ -92,6 +92,14 @@ class AddCommand(BaseCommand):
             action="store_true",
             help="Compress the video right after loading",
         )
+        parser.add_argument(
+            "-min",
+            "--min-scene-length",
+            dest="min_scene_length",
+            type=float,
+            default=None,
+            help="Minimum interval between two consecutive keyframes (in seconds)",
+        )
 
         parser.set_defaults(func=self)
 
@@ -107,6 +115,7 @@ class AddCommand(BaseCommand):
         do_compress: bool,
         do_compress_first: bool,
         verbose: bool,
+        min_scene_length: float | None = None,
         *args,
         **kwargs,
     ):
@@ -139,6 +148,7 @@ class AddCommand(BaseCommand):
             do_compress,
             do_compress_first,
             verbose,
+            min_scene_length,
         )
 
     def _add_videos(
@@ -152,83 +162,109 @@ class AddCommand(BaseCommand):
         do_compress: bool,
         do_compress_first: bool,
         verbose: bool,
+        min_scene_length: float | None = None,
     ):
         max_workers_ratio = GlobalConfig.get("max_workers_ratio") or 0
         max_workers = max(
             1,
             min(int(max_workers_ratio * (os.cpu_count() or 0)), 8),
         )
-        with (
-            Progress(
-                TextColumn("{task.fields[name]}"),
-                TextColumn(":"),
-                SpinnerColumn(),
-                *Progress.get_default_columns(),
-                TimeElapsedColumn(),
-                disable=not verbose,
-                transient=True,
-            ) as progress,
-            ThreadPoolExecutor(max_workers) as executor,
-        ):
+        # Silence C-level stderr (e.g. ffmpeg SEI decoding warnings from OpenCV)
+        devnull_fd = None
+        old_stderr_fd = None
+        try:
+            null_name = "nul" if os.name == "nt" else "/dev/null"
+            devnull_fd = os.open(null_name, os.O_WRONLY)
+            old_stderr_fd = os.dup(2)
+            os.dup2(devnull_fd, 2)
+        except Exception:
+            pass
 
-            def show_progress(task_id):
-                return lambda **kwargs: progress.update(task_id, **kwargs)
+        try:
+            with (
+                Progress(
+                    TextColumn("{task.fields[name]}"),
+                    TextColumn(":"),
+                    SpinnerColumn(),
+                    *Progress.get_default_columns(),
+                    TimeElapsedColumn(),
+                    disable=not verbose,
+                    transient=True,
+                ) as progress,
+                ThreadPoolExecutor(max_workers) as executor,
+            ):
 
-            def add_one_video(video_path: Path):
-                task_id = progress.add_task(
-                    description="Processing...",
-                    name=video_path.name,
-                )
-                try:
-                    status_ok, output_path, video_id = self._load_video(
-                        video_path,
-                        do_move,
-                        do_overwrite,
-                        show_progress(task_id),
+                def show_progress(task_id):
+                    return lambda **kwargs: progress.update(task_id, **kwargs)
+
+                def add_one_video(video_path: Path):
+                    task_id = progress.add_task(
+                        description="Processing...",
+                        name=video_path.name,
                     )
-                    # Register the exact stored bytes before any optional re-encode.
-                    self._provenance.ensure_source(video_id, refresh=True)
-
-                    if do_move:
-                        video_path = output_path
-
-                    if status_ok and do_compress and do_compress_first:
-                        self._compress_video(video_id, show_progress(task_id))
-                        self._extract_video_info(output_path)
-                        self._provenance.ensure_source(video_id, refresh=True)
-
-                    if do_audio:
-                        self._extract_audio(video_path, do_overwrite, show_progress(task_id))
-
-                    if do_keyframe:
-                        self._extract_keyframes(
-                            output_path,
+                    try:
+                        status_ok, output_path, video_id = self._load_video(
                             video_path,
+                            do_move,
                             do_overwrite,
-                            do_audio,
-                            do_clip,
                             show_progress(task_id),
                         )
-
-                    if status_ok and do_compress and not do_compress_first:
-                        self._compress_video(video_id, show_progress(task_id))
-                        self._extract_video_info(output_path)
+                        # Register the exact stored bytes before any optional re-encode.
                         self._provenance.ensure_source(video_id, refresh=True)
-                except Exception as e:
-                    logger.exception(e)
-                    progress.update(
-                        task_id,
-                        description=f"Error: {str(e)}",
-                    )
-                finally:
-                    try:
-                        progress.remove_task(task_id)
-                    except Exception:
-                        pass
 
-            futures = [executor.submit(add_one_video, path) for path in video_paths]
-            for future in futures:
-                future.result()
+                        if do_move:
+                            video_path = output_path
+
+                        if status_ok and do_compress and do_compress_first:
+                            self._compress_video(video_id, show_progress(task_id))
+                            self._extract_video_info(output_path)
+                            self._provenance.ensure_source(video_id, refresh=True)
+
+                        if do_audio:
+                            self._extract_audio(video_path, do_overwrite, show_progress(task_id))
+
+                        if do_keyframe:
+                            self._extract_keyframes(
+                                output_path,
+                                video_path,
+                                do_overwrite,
+                                do_audio,
+                                do_clip,
+                                show_progress(task_id),
+                                min_scene_length=min_scene_length,
+                            )
+
+                        if status_ok and do_compress and not do_compress_first:
+                            self._compress_video(video_id, show_progress(task_id))
+                            self._extract_video_info(output_path)
+                            self._provenance.ensure_source(video_id, refresh=True)
+                    except Exception as e:
+                        logger.exception(e)
+                        progress.update(
+                            task_id,
+                            description=f"Error: {str(e)}",
+                        )
+                    finally:
+                        try:
+                            progress.remove_task(task_id)
+                        except Exception:
+                            pass
+
+                futures = [executor.submit(add_one_video, path) for path in video_paths]
+                for future in futures:
+                    future.result()
+        finally:
+            if old_stderr_fd is not None:
+                try:
+                    os.dup2(old_stderr_fd, 2)
+                    os.close(old_stderr_fd)
+                except Exception:
+                    pass
+            if devnull_fd is not None:
+                try:
+                    os.close(devnull_fd)
+                except Exception:
+                    pass
 
     def _load_video(
         self,
@@ -262,6 +298,7 @@ class AddCommand(BaseCommand):
         *,
         video_fps: float | int,
         max_scene_length_seconds: float,
+        min_scene_length_seconds: float = 0.0,
         keyframe_ratio: float,
         thumbnail_ratio: float,
         default_size: list[int],
@@ -283,6 +320,7 @@ class AddCommand(BaseCommand):
                 "selection_rule": "ffprobe_packet_keyframes_plus_max_scene_gap",
                 "frame_rate_used": video_fps,
                 "max_scene_length_seconds": max_scene_length_seconds,
+                "min_scene_length_seconds": min_scene_length_seconds,
                 "keyframe_resize_ratio": keyframe_ratio,
                 "thumbnail_resize_ratio": thumbnail_ratio,
                 "default_size": default_size,
@@ -299,6 +337,7 @@ class AddCommand(BaseCommand):
         do_audio: bool,
         do_clip: bool,
         update_progress: Callable,
+        min_scene_length: float | None = None,
     ):
         audio_path = self._work_dir / constant.AUDIO_DIR / f"{video_path.stem}.wav"
         keyframe_dir = self._work_dir / constant.KEYFRAME_DIR / video_path.stem
@@ -306,7 +345,7 @@ class AddCommand(BaseCommand):
         video_clips_dir = self._work_dir / constant.VIDEO_CLIP_DIR / video_path.stem
         audio_clips_dir = self._work_dir / constant.AUDIO_CLIP_DIR / video_path.stem
 
-        if keyframe_dir.exists():
+        if keyframe_dir.exists() and any(keyframe_dir.iterdir()):
             if do_overwrite:
                 shutil.rmtree(keyframe_dir)
                 if thumbnail_dir.exists():
@@ -334,6 +373,20 @@ class AddCommand(BaseCommand):
 
         max_scene_length_seconds = GlobalConfig.get("add", "max_scene_length") or 1
         max_scene_length = int(round(max_scene_length_seconds * video_fps))
+
+        min_scene_length_seconds = (
+            min_scene_length
+            if min_scene_length is not None
+            else (GlobalConfig.get("add", "min_scene_length") or 0.0)
+        )
+        min_scene_length_frames = (
+            int(round(min_scene_length_seconds * video_fps))
+            if min_scene_length_seconds > 0
+            else 0
+        )
+        if max_scene_length < min_scene_length_frames:
+            max_scene_length = min_scene_length_frames
+
         keyframe_ratio = GlobalConfig.get("add", "keyframe_resize_ratio") or 0.5
         thumbnail_ratio = GlobalConfig.get("add", "thumbnail_resize_ratio") or 0.25
         clip_length = GlobalConfig.get("add", "clip_length") or 7
@@ -342,15 +395,21 @@ class AddCommand(BaseCommand):
         video_clip_fps = max(1, int(round(1 / (video_length / video_fps)))) if video_length > 0 else 1
         video_clip_interval = max(1, video_length // 7)
 
-        if do_audio:
-            with wave.open(str(audio_path), "rb") as f:
-                wave_params = f.getparams()
-                audio_fps = f.getframerate()
-                audio_frames = f.readframes(f.getnframes())
-                audio_frame_size = f.getsampwidth() * f.getnchannels()
+        if do_audio and audio_path.exists():
+            try:
+                with wave.open(str(audio_path), "rb") as f:
+                    wave_params = f.getparams()
+                    audio_fps = f.getframerate()
+                    audio_frames = f.readframes(f.getnframes())
+                    audio_frame_size = f.getsampwidth() * f.getnchannels()
 
-            audio_length = clip_length * audio_fps
-            audio_clip_interval = audio_length // 7
+                audio_length = clip_length * audio_fps
+                audio_clip_interval = audio_length // 7
+            except Exception as e:
+                logger.warning(f"Could not read audio from {audio_path}: {e}")
+                wave_params = audio_fps = audio_frames = audio_frame_size = audio_length = (
+                    audio_clip_interval
+                ) = None
         else:
             wave_params = audio_fps = audio_frames = audio_frame_size = audio_length = (
                 audio_clip_interval
@@ -375,7 +434,13 @@ class AddCommand(BaseCommand):
                 if not ret:
                     break
 
-                if scene_length >= max_scene_length or frame_counter in keyframes_set:
+                should_save = (
+                    frame_counter == 0
+                    or scene_length >= max_scene_length
+                    or (frame_counter in keyframes_set and scene_length >= min_scene_length_frames)
+                )
+
+                if should_save:
                     if frame.shape[1] == target_w and frame.shape[0] == target_h:
                         current_frame = frame
                     else:
@@ -420,6 +485,7 @@ class AddCommand(BaseCommand):
                 keyframe_dir,
                 video_fps=video_fps,
                 max_scene_length_seconds=max_scene_length_seconds,
+                min_scene_length_seconds=min_scene_length_seconds,
                 keyframe_ratio=keyframe_ratio,
                 thumbnail_ratio=thumbnail_ratio,
                 default_size=default_size,
@@ -450,7 +516,13 @@ class AddCommand(BaseCommand):
             if video_frame_counter in keyframes_set:
                 update_progress(advance=1)
 
-            if scene_length >= max_scene_length or video_frame_counter in keyframes_set:
+            should_save = (
+                video_frame_counter == 0
+                or scene_length >= max_scene_length
+                or (video_frame_counter in keyframes_set and scene_length >= min_scene_length_frames)
+            )
+
+            if should_save:
                 current_frame = video_frames[-video_length]
 
                 if keyframe_ratio == 1.0 or abs(keyframe_ratio - 1.0) < 1e-5:
@@ -492,6 +564,7 @@ class AddCommand(BaseCommand):
             keyframe_dir,
             video_fps=video_fps,
             max_scene_length_seconds=max_scene_length_seconds,
+            min_scene_length_seconds=min_scene_length_seconds,
             keyframe_ratio=keyframe_ratio,
             thumbnail_ratio=thumbnail_ratio,
             default_size=default_size,
@@ -589,6 +662,25 @@ class AddCommand(BaseCommand):
         with open(info_file, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
 
+    def _has_audio(self, video_path: Path) -> bool:
+        cmd = [
+            "ffprobe",
+            "-v",
+            "error",
+            "-select_streams",
+            "a:0",
+            "-show_entries",
+            "stream=codec_name",
+            "-of",
+            "csv=p=0",
+            str(video_path),
+        ]
+        try:
+            res = subprocess.run(cmd, capture_output=True, text=True)
+            return bool(res.stdout.strip())
+        except Exception:
+            return False
+
     def _extract_audio(
         self,
         video_path: Path,
@@ -600,9 +692,12 @@ class AddCommand(BaseCommand):
         if audio_path.exists() and not do_overwrite:
             return
 
-        audio_path.parent.mkdir(parents=True, exist_ok=True)
-
         update_progress(description="Extracting audio", completed=0, total=1)
+        if not self._has_audio(video_path):
+            update_progress(advance=1)
+            return
+
+        audio_path.parent.mkdir(parents=True, exist_ok=True)
         ffmpeg_cmd = (
             ["ffmpeg", "-v", "quiet", "-y"]
             + ["-i", str(video_path)]

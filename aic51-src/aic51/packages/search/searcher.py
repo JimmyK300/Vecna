@@ -671,7 +671,7 @@ class Searcher(object):
         # Store entity data for each frame_id
         entity_data = {}
 
-        # 1. Visual Search (RRF across OpenCLIP, SigLIP, Qwen-VL with model-aware query routing)
+        # 1. Visual Search (RRF across OpenCLIP, SigLIP, Qwen-VL)
         clip_weight = 1.0 - ocr_weight - asr_weight
         clip_req_count = 0
         clip_query_text = query_features.get("text_en", query_features.get("text", ""))
@@ -685,23 +685,16 @@ class Searcher(object):
                     logger.warning(f"searcher: {target_name} is invalid feature")
                     continue
 
-                # Model-aware query selection: Qwen-VL excels with natural Vietnamese; OpenCLIP/SigLIP prefer English
-                if "qwen" in target_name.lower():
-                    model_query_text = query_features.get("text", query_features.get("text_vi", clip_query_text))
-                else:
-                    model_query_text = clip_query_text
-
                 m = self._features[target_name]
-                cache_key = f"{m}::{model_query_text}"
-                if cache_key not in text_embeddings:
+                if m not in text_embeddings:
                     _check_cancelled(cancel_event)
-                    text_embeddings[cache_key] = (
-                        self._extractors[m]["feature_extractor"].get_text_features(model_query_text).tolist()[0]
+                    text_embeddings[m] = (
+                        self._extractors[m]["feature_extractor"].get_text_features(clip_query_text).tolist()[0]
                     )
 
                 _check_cancelled(cancel_event)
                 search_results = self._database.search(
-                    data=[text_embeddings[cache_key]],
+                    data=[text_embeddings[m]],
                     filter=video_filter,
                     offset=0,
                     limit=visual_subquery_limit,
