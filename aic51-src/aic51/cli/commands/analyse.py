@@ -91,6 +91,12 @@ class AnalyseCommand(BaseCommand):
             help="Use BGE-M3 text embedding extractors (ocr_dense / asr_dense)",
         )
         parser.add_argument(
+            "--use-yolo",
+            dest="use_yolo",
+            action="store_true",
+            help="Use YOLO11-seg traffic feature extractor",
+        )
+        parser.add_argument(
             "--keep-going",
             dest="keep_going",
             action="store_true",
@@ -117,6 +123,7 @@ class AnalyseCommand(BaseCommand):
         use_asr: bool = False,
         use_ocr: bool = False,
         use_text_embedding: bool = False,
+        use_yolo: bool = False,
         keep_going: bool = False,
         video_ids_filter: list[str] | None = None,
         *args,
@@ -137,6 +144,7 @@ class AnalyseCommand(BaseCommand):
             or use_asr
             or use_ocr
             or use_text_embedding
+            or use_yolo
         )
         target_models = set()
         if use_image_clip:
@@ -153,6 +161,8 @@ class AnalyseCommand(BaseCommand):
             target_models.add("ocr")
         if use_text_embedding:
             target_models.add("text_embedding")
+        if use_yolo:
+            target_models.add("yolo_traffic")
 
         for feature_name in feature_infos.keys():
             source = GlobalConfig.get("features", feature_name, "source")
@@ -191,6 +201,26 @@ class AnalyseCommand(BaseCommand):
                     "text_source",
                 ):
                     value = GlobalConfig.get("features", feature_name, key)
+                    if value is not None:
+                        init_kwargs[key] = value
+            elif model_name == "ocr":
+                for key in (
+                    "pad_y",
+                    "pad_x",
+                    "det_lang",
+                    "use_angle_cls",
+                    "min_box_size",
+                ):
+                    value = GlobalConfig.get("features", feature_name, "analyse", key)
+                    if value is None:
+                        value = GlobalConfig.get("features", feature_name, key)
+                    if value is not None:
+                        init_kwargs[key] = value
+            elif model_name == "yolo_traffic":
+                for key in ("conf", "min_box_area"):
+                    value = GlobalConfig.get("features", feature_name, "analyse", key)
+                    if value is None:
+                        value = GlobalConfig.get("features", feature_name, key)
                     if value is not None:
                         init_kwargs[key] = value
 

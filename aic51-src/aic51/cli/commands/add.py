@@ -282,10 +282,11 @@ class AddCommand(BaseCommand):
             return 0, output_path, video_id
 
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        if do_move:
-            shutil.move(video_path, output_path)
-        else:
-            shutil.copy(video_path, output_path)
+        if video_path.resolve() != output_path.resolve():
+            if do_move:
+                shutil.move(video_path, output_path)
+            else:
+                shutil.copy(video_path, output_path)
 
         self._extract_video_info(output_path)
         update_progress(advance=1)

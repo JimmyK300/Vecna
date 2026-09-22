@@ -10,6 +10,8 @@ from aic51.packages.logger import logger
 os.environ["YOLO_VERBOSE"] = "False"
 os.environ["OPENCV_FFMPEG_LOGLEVEL"] = "-8"
 os.environ["OPENCV_LOG_LEVEL"] = "ERROR"
+os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 load_dotenv()
 
 from . import commands

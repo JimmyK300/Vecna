@@ -17,10 +17,13 @@ aic51-cli analyse [options]
 | `--no-gpu` | — | Disable GPU usage and fallback to CPU (or MPS if available) |
 | `-o` | `--overwrite` | Overwrite existing feature files instead of skipping already processed keyframes |
 | `--use-image-clip` | — | Run ONLY the Image CLIP feature extractor (if configured) |
+| `--use-image-siglip` | — | Run ONLY the Image SigLIP feature extractor (if configured) |
+| `--use-qwen-vl` | — | Run ONLY the Qwen VL embedding feature extractor (CUDA only) |
 | `--use-video-clip` | — | Run ONLY the Video CLIP feature extractor (if configured) |
 | `--use-asr` | — | Run ONLY the ASR (WhisperX) feature extractor (if configured) |
-| `--use-ocr` | — | Run ONLY the OCR (Tesseract) feature extractor (if configured) |
+| `--use-ocr` | — | Run ONLY the OCR feature extractor (if configured) |
 | `--use-text-embedding` | — | Run ONLY BGE-M3 text embedding (`ocr_dense` / `asr_dense`) |
+| `--use-yolo` | — | Run ONLY the YOLO11-seg Traffic feature extractor (if configured) |
 | `--keep-going` | — | Record a video failure and continue the remaining videos |
 | `--video ID` | — | Limit analysis to one or more video IDs (repeatable) |
 

@@ -28,7 +28,8 @@ dependencies = [
   "pytesseract",
   "apscheduler",
   "deep-translator",
-  "omegaconf"
+  "omegaconf",
+  "ultralytics>=8.3.0"
 ]
 
 [project.optional-dependencies]

@@ -1,4 +1,6 @@
-# Vecna - HCMC AI Challenge
+# Vecna - HCMC AI Challenge (`aic51`)
+
+Multimodal Video Retrieval & Traffic Analysis Engine built for the Ho Chi Minh City AI Challenge (HCMC AIC).
 
 ## Contributors
 
@@ -8,17 +10,24 @@
 - Ngô Đắc Minh ([@kinus-is-coding](https://github.com/kinus-is-coding))
 - Phan Hiếu Minh ([@PhanHieuMinh](https://github.com/PhanHieuMinh))
 
-## Dependencies
+---
 
-1. Install [ffmpeg](https://ffmpeg.org/)
+## Dependencies & Prerequisites
 
-2. Install [tesseract](https://github.com/tesseract-ocr/tesseract)
+1. **Python 3.10+ / 3.11** with CUDA support.
+2. **[ffmpeg](https://ffmpeg.org/)** (Required for video decoding and clip generation).
+3. **[tesseract](https://github.com/tesseract-ocr/tesseract)** (Optional, for OCR).
+4. **[Docker Desktop](https://www.docker.com/)** (Running for Milvus Vector Database).
+5. **Model Weights:**
+   - YOLO11-seg: `weights/yolo11m-seg.pt` (Auto-downloaded or pre-placed in `weights/`).
+   - SigLIP 2: OpenCLIP `ViT-SO400M-14-SigLIP2-378` (`webli`).
+   - Qwen VL: `Qwen/Qwen3-VL-Embedding-2B`.
 
-3. Install [Docker](https://www.docker.com/) (running for Milvus Vector Database)
+---
 
-## Guideline
+## Installation
 
-1. Install the repository
+### Clone & Install Editable Package
 
 ```bash
 git clone https://github.com/JimmyK300/Vecna.git
@@ -26,41 +35,76 @@ cd Vecna/aic51-src
 pip install -e .
 ```
 
-or directly via pip:
+Or install directly with dependencies:
 
 ```bash
-pip install git+https://github.com/JimmyK300/Vecna.git#subdirectory=aic51-src
+pip install ultralytics>=8.3.0
 ```
 
-2. Initialize workspace
+---
+
+## Standard CLI Workflow
+
+### 1. Initialize Workspace
 
 ```bash
-mkdir workspace
-cd workspace
 aic51-cli init
 ```
-- Change configuration in `config.yaml` (Optional)
+*(Workspace configuration is managed via `config.yaml` or `workspace/config.yaml`)*
 
-3. Add videos to workspace
+### 2. Add Videos to Workspace
 
-```bash
-aic51-cli add <path/to/videos> -d -kc
-```
-
-4. Analyse videos
+Extract keyframes and prepare metadata:
 
 ```bash
-aic51-cli analyse
+# Add a single video with keyframes (-k)
+aic51-cli add path/to/video.mp4 -k
+
+# Add a directory of videos (-d) with keyframes (-k)
+aic51-cli add path/to/videos_folder -d -k
 ```
 
-5. Index videos
+### 3. Analyse & Extract Features
+
+The analysis pipeline supports modular execution with individual `--use-*` flags:
+
+```bash
+# A. Multimodal Search (SigLIP 2 & Qwen-VL)
+aic51-cli analyse --use-image-siglip --use-qwen-vl
+
+# B. Traffic Camera Analysis (YOLO11-seg)
+# Run specifically for traffic videos (extracts counts, colors, masks, 32-dim vector & JSON)
+aic51-cli analyse --use-yolo --video <traffic_video_id>
+
+# C. Combined Multimodal + Traffic Analysis
+aic51-cli analyse --use-image-siglip --use-qwen-vl --use-yolo --video <video_id>
+
+# D. Re-analyse with Overwrite (-o)
+aic51-cli analyse --use-yolo --video <video_id> -o
+```
+
+#### Available Feature Extractors:
+
+| Flag | Feature Extractor | Output Target |
+|---|---|---|
+| `--use-image-siglip` | SigLIP 2 (`ViT-SO400M-14-SigLIP2-378`) | `features/<video>/<frame>/image_siglip2_so400m-378.npy` |
+| `--use-qwen-vl` | Qwen3 VL Embedding (2B) | `features/<video>/<frame>/qwen_vl.npy` |
+| `--use-yolo` | YOLO11-seg (`yolo11m-seg.pt`) | `features/<video>/<frame>/yolo_traffic.npy` + `.json` |
+| `--use-ocr` | PaddleOCR / Tesseract | `features/<video>/<frame>/ocr.npy` |
+| `--use-asr` | WhisperX ASR | `features/<video>/<frame>/asr.npy` |
+| `--use-text-embedding`| BGE-M3 Dense Text Embedding | `features/<video>/<frame>/ocr_dense.npy` |
+
+> 📖 **Detailed YOLO Traffic Guide:** See [`docs/YOLO_TRAFFIC_GUIDE.md`](../docs/YOLO_TRAFFIC_GUIDE.md) for vector dimensions, color calibration details, and schema definitions.
+
+### 4. Build Milvus Vector Index
 
 ```bash
 aic51-cli index
 ```
 
-6. Run webui
+### 5. Launch Search Engine & Web UI
 
 ```bash
 aic51-cli serve
 ```
+Access the web search interface at `http://localhost:6900`.

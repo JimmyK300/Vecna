@@ -88,6 +88,22 @@ features: &analyse_features
       params:
         nlist: 512
 
+  yolo_traffic:
+    model: "yolo_traffic"
+    arch_name: "yolo11m-seg"
+    pretrained_model: "weights/yolo11m-seg.pt"
+    analyse:
+      batch_size: 16
+      conf: 0.25
+      min_box_area: 1800
+    index:
+      datatype: "FLOAT_VECTOR"
+      dim: 32
+      metric_type: "COSINE"
+      index_type: "SCANN"
+      params:
+        nlist: 64
+
 
   # video_clip_pe-l-14-336:
   #   model: "video_clip"
@@ -167,6 +183,12 @@ searcher:
       pretrained_model: "Qwen/Qwen3-VL-Embedding-2B"
       target:
         - qwen_vl
+
+    language_yolo_traffic:
+      model: "yolo_traffic"
+      pretrained_model: "weights/yolo11m-seg.pt"
+      target:
+        - yolo_traffic
 
   ocr:
     ocr_field: "ocr_sparse"
