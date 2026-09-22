@@ -30,20 +30,20 @@ milvus:
 
 # List of features
 features: &analyse_features
-  image_clip_pe-l-14-336:
-    model: "image_clip"
-    source: "open_clip"
-    arch_name: "PE-Core-L-14-336"
-    pretrained_model: "meta" 
-    analyse:
-      batch_size: 64
-    index:
-      datatype: "FLOAT_VECTOR"
-      dim: 1024 
-      metric_type: "COSINE"
-      index_type: "SCANN"
-      params:
-        nlist: 512
+  # image_clip_pe-l-14-336: (TẮT THEO YÊU CẦU)
+  #   model: "image_clip"
+  #   source: "open_clip"
+  #   arch_name: "PE-Core-L-14-336"
+  #   pretrained_model: "meta" 
+  #   analyse:
+  #     batch_size: 64
+  #   index:
+  #     datatype: "FLOAT_VECTOR"
+  #     dim: 1024 
+  #     metric_type: "COSINE"
+  #     index_type: "SCANN"
+  #     params:
+  #       nlist: 512
 
   # image_siglip_so400m-384: (TẮT SIGLIP 1 THEO YÊU CẦU)
   #   model: "image_siglip"
@@ -66,7 +66,7 @@ features: &analyse_features
     arch_name: "ViT-SO400M-14-SigLIP2-378"
     pretrained_model: "webli"
     analyse:
-      batch_size: 64
+      batch_size: 32
     index:
       datatype: "FLOAT_VECTOR"
       dim: 1152
@@ -106,9 +106,13 @@ features: &analyse_features
 
   ocr:
     model: "ocr"
-    source: "tesseract"
+    source: "paddle_vietocr"
+    pretrained_model: "vgg_transformer"
     analyse:
-      batch_size: 8
+      batch_size: 16
+      pad_y: 6
+      pad_x: 4
+      det_lang: "vi"
     index:
       default_value: ""
       datatype: "VARCHAR"
