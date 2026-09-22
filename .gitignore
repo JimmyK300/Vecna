@@ -64,7 +64,7 @@ features*/
 
 # Provenance & Workspace & Logs
 provenance*/
-workspace/
+workspace*/
 aic51-src/workspace
 **.log
 
