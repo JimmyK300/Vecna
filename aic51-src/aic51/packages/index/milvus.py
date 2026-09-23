@@ -35,6 +35,27 @@ class MilvusDatabase(object):
         logger.info(f'Checking if collection "{collection_name}" exists')
         collection_exists = self._client.has_collection(collection_name)
 
+        if collection_exists and not do_overwrite:
+            schema_mismatch = self._check_schema_mismatch()
+            if schema_mismatch:
+                try:
+                    self._client.load_collection(self._collection_name)
+                    size = self.get_size()
+                except Exception:
+                    size = 0
+
+                if size == 0:
+                    logger.info(
+                        f'Collection "{collection_name}" is empty (size=0) and schema does not match active config. '
+                        f'Recreating collection to match active configuration.'
+                    )
+                    do_overwrite = True
+                else:
+                    logger.warning(
+                        f'Collection "{collection_name}" has {size} entities and schema differs from config. '
+                        f'Existing data will be preserved.'
+                    )
+
         if do_overwrite or not collection_exists:
             if collection_exists:
                 logger.info(f'Deleting collection "{collection_name}"')
@@ -47,6 +68,30 @@ class MilvusDatabase(object):
 
         self._client.load_collection(self._collection_name)
 
+    def _check_schema_mismatch(self) -> bool:
+        try:
+            desc = self._client.describe_collection(self._collection_name)
+            existing_fields = {f.get("name") for f in desc.get("fields", []) if f.get("name")}
+
+            expected_fields = {"frame_id"}
+            fields = GlobalConfig.get("milvus", "fields") or []
+            for f in fields:
+                if "field_name" in f:
+                    expected_fields.add(self.process_field_name(f["field_name"]))
+
+            features = GlobalConfig.get("features") or {}
+            for feat_name, feat_cfg in features.items():
+                if feat_cfg and (not isinstance(feat_cfg, dict) or feat_cfg.get("enable", True)):
+                    expected_fields.add(self.process_field_name(feat_name))
+                    idx_type = GlobalConfig.get("features", feat_name, "index", "index_type")
+                    if idx_type and idx_type.lower() == "bm25":
+                        expected_fields.add(f"{self.process_field_name(feat_name)}_sparse")
+
+            return existing_fields != expected_fields
+        except Exception as e:
+            logger.debug(f'Schema check for "{self._collection_name}" failed: {e}')
+            return False
+
     def process_field_name(self, field_name: str):
         res = field_name.replace("-", "_")
         return res
@@ -56,43 +101,52 @@ class MilvusDatabase(object):
         schema = MilvusClient.create_schema(auto_id=False, enable_dynamic_field=False)
         fields = GlobalConfig.get("milvus", "fields") or []
 
-        features = GlobalConfig.get("features")
+        features = GlobalConfig.get("features") or {}
         feature_fields = []
-        if features:
-            for feature_name in features.keys():
-                datatype = GlobalConfig.get("features", feature_name, "index", "datatype")
-                assert datatype is not None, f"{feature_name} has unspecified datatype"
-                new_field = {"field_name": self.process_field_name(feature_name), "datatype": datatype}
+        for feature_name, feat_cfg in features.items():
+            if not feat_cfg or (isinstance(feat_cfg, dict) and not feat_cfg.get("enable", True)):
+                continue
 
-                default = GlobalConfig.get("features", feature_name, "index", "default_value")
+            datatype = GlobalConfig.get("features", feature_name, "index", "datatype")
+            assert datatype is not None, f"{feature_name} has unspecified datatype"
+            new_field = {"field_name": self.process_field_name(feature_name), "datatype": datatype}
 
-                if default is not None:
-                    new_field["default"] = default
+            default = GlobalConfig.get("features", feature_name, "index", "default_value")
+            if default is not None:
+                new_field["default_value"] = default
 
-                dim = GlobalConfig.get("features", feature_name, "index", "dim")
-                if dim:
-                    new_field["dim"] = dim
+            nullable = GlobalConfig.get("features", feature_name, "index", "nullable")
+            if nullable is not None:
+                new_field["nullable"] = nullable
 
-                max_length = GlobalConfig.get("features", feature_name, "index", "max_length")
-                if max_length:
-                    new_field["max_length"] = max_length
+            dim = GlobalConfig.get("features", feature_name, "index", "dim")
+            if dim:
+                new_field["dim"] = dim
 
-                index_type = GlobalConfig.get("features", feature_name, "index", "index_type")
-                if index_type and index_type.lower() == "bm25":
-                    new_field["enable_analyzer"] = True
-                    bm25_field = {"field_name": f"{feature_name}_sparse", "datatype": "SPARSE_FLOAT_VECTOR"}
+            max_length = GlobalConfig.get("features", feature_name, "index", "max_length")
+            if max_length:
+                new_field["max_length"] = max_length
 
-                    feature_fields.append(bm25_field)
+            index_type = GlobalConfig.get("features", feature_name, "index", "index_type")
+            if index_type and index_type.lower() == "bm25":
+                new_field["enable_analyzer"] = True
+                # Milvus does not allow BM25 function input fields to be nullable
+                new_field["nullable"] = False
+                if "default_value" not in new_field:
+                    new_field["default_value"] = ""
 
-                    bm25_function = Function(
-                        name=f"{feature_name}_bm25_emb",
-                        input_field_names=[feature_name],
-                        output_field_names=[bm25_field["field_name"]],
-                        function_type=FunctionType.BM25,
-                    )
-                    schema.add_function(bm25_function)
+                bm25_field = {"field_name": f"{feature_name}_sparse", "datatype": "SPARSE_FLOAT_VECTOR"}
+                feature_fields.append(bm25_field)
 
-                feature_fields.append(new_field)
+                bm25_function = Function(
+                    name=f"{feature_name}_bm25_emb",
+                    input_field_names=[feature_name],
+                    output_field_names=[bm25_field["field_name"]],
+                    function_type=FunctionType.BM25,
+                )
+                schema.add_function(bm25_function)
+
+            feature_fields.append(new_field)
 
         fields = fields + feature_fields
 
@@ -113,48 +167,69 @@ class MilvusDatabase(object):
 
         index_params = self._client.prepare_index_params()
 
-        features = GlobalConfig.get("features")
-        if features:
-            for feature_name in features.keys():
-                index_type = GlobalConfig.get("features", feature_name, "index", "index_type")
-                if not index_type:
-                    continue
+        features = GlobalConfig.get("features") or {}
+        for feature_name, feat_cfg in features.items():
+            if not feat_cfg or (isinstance(feat_cfg, dict) and not feat_cfg.get("enable", True)):
+                continue
 
-                new_index = {}
+            index_type = GlobalConfig.get("features", feature_name, "index", "index_type")
+            if not index_type:
+                continue
 
-                if index_type.lower() == "bm25":
-                    new_index["field_name"] = f"{self.process_field_name(feature_name)}_sparse"
-                    new_index["index_type"] = "SPARSE_INVERTED_INDEX"
-                    new_index["index_name"] = f"{self.process_field_name(feature_name)}_BM25"
-                    new_index["metric_type"] = f"BM25"
-                else:
-                    new_index["field_name"] = self.process_field_name(feature_name)
-                    new_index["index_type"] = index_type
-                    new_index["index_name"] = f"{self.process_field_name(feature_name)}_{index_type}"
+            new_index = {}
 
-                    metric_type = GlobalConfig.get("features", feature_name, "index", "metric_type")
-                    if metric_type:
-                        new_index["metric_type"] = metric_type
+            if index_type.lower() == "bm25":
+                new_index["field_name"] = f"{self.process_field_name(feature_name)}_sparse"
+                new_index["index_type"] = "SPARSE_INVERTED_INDEX"
+                new_index["index_name"] = f"{self.process_field_name(feature_name)}_BM25"
+                new_index["metric_type"] = f"BM25"
+            else:
+                new_index["field_name"] = self.process_field_name(feature_name)
+                new_index["index_type"] = index_type
+                new_index["index_name"] = f"{self.process_field_name(feature_name)}_{index_type}"
 
-                params = GlobalConfig.get("features", feature_name, "index", "params")
-                if params:
-                    new_index["params"] = params
+                metric_type = GlobalConfig.get("features", feature_name, "index", "metric_type")
+                if metric_type:
+                    new_index["metric_type"] = metric_type
 
-                index_params.add_index(**new_index)
+            params = GlobalConfig.get("features", feature_name, "index", "params")
+            if params:
+                new_index["params"] = params
+
+            index_params.add_index(**new_index)
 
         logger.info(f'"{self._collection_name}": index_params={index_params}')
 
         return index_params
 
     def __del__(self):
-        if hasattr(self, "_client") and self._client is not None:
-            try:
+        try:
+            if hasattr(self, "_client") and self._client is not None:
                 self._client.release_collection(self._collection_name)
                 self._client.close()
-            except Exception:
-                pass
+        except BaseException:
+            pass
 
     def insert(self, data, do_update: bool = False):
+        if not data:
+            return None
+
+        # Fill any missing scalar/varchar fields present in the schema to avoid DataNotMatchException
+        try:
+            desc = self._client.describe_collection(self._collection_name)
+            for f in desc.get("fields", []):
+                fname = f.get("name")
+                ftype = f.get("type")
+                # DataType.VARCHAR enum or int code 21
+                if ftype in (DataType.VARCHAR, 21, "VARCHAR", "VarChar"):
+                    default_val = f.get("default_value")
+                    val = default_val if default_val is not None else ""
+                    for row in data:
+                        if fname not in row:
+                            row[fname] = val
+        except Exception as e:
+            logger.debug(f"Pre-insert schema validation notice: {e}")
+
         if do_update:
             return self._client.upsert(self._collection_name, data)
         else:
@@ -166,12 +241,10 @@ class MilvusDatabase(object):
         features = GlobalConfig.get("features")
         if features:
             for feat_name, feat_cfg in features.items():
-                if isinstance(feat_cfg, dict):
+                if isinstance(feat_cfg, dict) and feat_cfg.get("enable", True):
                     dt = feat_cfg.get("index", {}).get("datatype", "")
                     if dt and ("VECTOR" not in dt.upper()):
                         scalar_fields.append(self.process_field_name(feat_name))
-        else:
-            scalar_fields.extend(["ocr", "asr"])
         return sorted(list(set(scalar_fields)))
 
     def get(self, id, output_fields: list[str] | None = None):

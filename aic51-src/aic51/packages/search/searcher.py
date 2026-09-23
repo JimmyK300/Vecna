@@ -1200,14 +1200,26 @@ class Searcher(object):
     def _prepare_feature_extractors(self, device: torch.device):
         self._extractors = {}
         self._features = {}
-        if GlobalConfig.get("searcher", "ocr", "enable"):
+        has_ocr_feature = bool(GlobalConfig.get("features", "ocr"))
+        has_ocr_searcher = bool(GlobalConfig.get("searcher", "ocr"))
+        ocr_enabled = has_ocr_feature and (
+            GlobalConfig.get("searcher", "ocr", "enable") is True
+            or (has_ocr_searcher and GlobalConfig.get("searcher", "ocr", "enable") is not False)
+        )
+        if ocr_enabled:
             self._ocr_name = GlobalConfig.get("searcher", "ocr", "ocr_field") or "ocr"
             self._ocr_dense_name = GlobalConfig.get("searcher", "ocr", "ocr_dense_field")
         else:
             self._ocr_name = None
             self._ocr_dense_name = None
 
-        if GlobalConfig.get("searcher", "asr", "enable"):
+        has_asr_feature = bool(GlobalConfig.get("features", "asr"))
+        has_asr_searcher = bool(GlobalConfig.get("searcher", "asr"))
+        asr_enabled = has_asr_feature and (
+            GlobalConfig.get("searcher", "asr", "enable") is True
+            or (has_asr_searcher and GlobalConfig.get("searcher", "asr", "enable") is not False)
+        )
+        if asr_enabled:
             self._asr_name = GlobalConfig.get("searcher", "asr", "asr_field") or "asr"
             self._asr_dense_name = GlobalConfig.get("searcher", "asr", "asr_dense_field")
         else:
