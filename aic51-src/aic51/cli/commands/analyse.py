@@ -97,6 +97,13 @@ class AnalyseCommand(BaseCommand):
             help="Use YOLO11-seg traffic feature extractor",
         )
         parser.add_argument(
+            "--use-yolo26x",
+            "--use-yolo26x-seg",
+            dest="use_yolo26x_seg",
+            action="store_true",
+            help="Use YOLO26x-seg traffic feature extractor for every keyframe",
+        )
+        parser.add_argument(
             "--keep-going",
             dest="keep_going",
             action="store_true",
@@ -124,6 +131,7 @@ class AnalyseCommand(BaseCommand):
         use_ocr: bool = False,
         use_text_embedding: bool = False,
         use_yolo: bool = False,
+        use_yolo26x_seg: bool = False,
         keep_going: bool = False,
         video_ids_filter: list[str] | None = None,
         *args,
@@ -145,6 +153,7 @@ class AnalyseCommand(BaseCommand):
             or use_ocr
             or use_text_embedding
             or use_yolo
+            or use_yolo26x_seg
         )
         target_models = set()
         if use_image_clip:
@@ -163,6 +172,8 @@ class AnalyseCommand(BaseCommand):
             target_models.add("text_embedding")
         if use_yolo:
             target_models.add("yolo_traffic")
+        if use_yolo26x_seg:
+            target_models.add("yolo26x_seg")
 
         for feature_name in feature_infos.keys():
             source = GlobalConfig.get("features", feature_name, "source")
@@ -216,7 +227,7 @@ class AnalyseCommand(BaseCommand):
                         value = GlobalConfig.get("features", feature_name, key)
                     if value is not None:
                         init_kwargs[key] = value
-            elif model_name == "yolo_traffic":
+            elif model_name in ("yolo_traffic", "yolo26x_seg"):
                 for key in ("conf", "min_box_area"):
                     value = GlobalConfig.get("features", feature_name, "analyse", key)
                     if value is None:

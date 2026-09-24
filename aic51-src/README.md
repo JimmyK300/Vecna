@@ -20,6 +20,7 @@ Multimodal Video Retrieval & Traffic Analysis Engine built for the Ho Chi Minh C
 4. **[Docker Desktop](https://www.docker.com/)** (Running for Milvus Vector Database).
 5. **Model Weights:**
    - YOLO11-seg: `weights/yolo11m-seg.pt` (Auto-downloaded or pre-placed in `weights/`).
+   - YOLO26x-seg: `yolo26x-seg.pt` (Auto-downloaded or placed in the workspace/repository root).
    - SigLIP 2: OpenCLIP `ViT-SO400M-14-SigLIP2-378` (`webli`).
    - Qwen VL: `Qwen/Qwen3-VL-Embedding-2B`.
 
@@ -38,7 +39,7 @@ pip install -e .
 Or install directly with dependencies:
 
 ```bash
-pip install ultralytics>=8.3.0
+pip install "ultralytics>=8.4.160"
 ```
 
 ---
@@ -76,6 +77,12 @@ aic51-cli analyse --use-image-siglip --use-qwen-vl
 # Run specifically for traffic videos (extracts counts, colors, masks, 32-dim vector & JSON)
 aic51-cli analyse --use-yolo --video <traffic_video_id>
 
+# YOLO26x-seg for every video folder under data/keyframes
+aic51-cli analyse --use-yolo26x-seg
+
+# Split work across machines with repeatable video filters
+aic51-cli analyse --use-yolo26x-seg --video L21_V001 --video L21_V002
+
 # C. Combined Multimodal + Traffic Analysis
 aic51-cli analyse --use-image-siglip --use-qwen-vl --use-yolo --video <video_id>
 
@@ -90,9 +97,17 @@ aic51-cli analyse --use-yolo --video <video_id> -o
 | `--use-image-siglip` | SigLIP 2 (`ViT-SO400M-14-SigLIP2-378`) | `features/<video>/<frame>/image_siglip2_so400m-378.npy` |
 | `--use-qwen-vl` | Qwen3 VL Embedding (2B) | `features/<video>/<frame>/qwen_vl.npy` |
 | `--use-yolo` | YOLO11-seg (`yolo11m-seg.pt`) | `features/<video>/<frame>/yolo_traffic.npy` + `.json` |
+| `--use-yolo26x` / `--use-yolo26x-seg` | YOLO26x-seg (`yolo26x-seg.pt`) | `features/<video>/<frame>/yolo26x_seg.npy` + `.json` |
 | `--use-ocr` | PaddleOCR / Tesseract | `features/<video>/<frame>/ocr.npy` |
 | `--use-asr` | WhisperX ASR | `features/<video>/<frame>/asr.npy` |
 | `--use-text-embedding`| BGE-M3 Dense Text Embedding | `features/<video>/<frame>/ocr_dense.npy` |
+
+For a distributed run, give each teammate a disjoint set of
+`data/keyframes/<video_id>/` folders. They can run `aic51-cli analyse
+--use-yolo26x-seg` without a filter, or use repeatable `--video` flags when the
+shared keyframe tree contains more videos. Merge the resulting `features/`
+trees afterward; outputs are partitioned by video ID and frame ID. Existing
+`.npy` files are skipped, so the command is safe to resume without `-o`.
 
 > 📖 **Detailed YOLO Traffic Guide:** See [`docs/YOLO_TRAFFIC_GUIDE.md`](../docs/YOLO_TRAFFIC_GUIDE.md) for vector dimensions, color calibration details, and schema definitions.
 

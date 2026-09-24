@@ -24,6 +24,7 @@ aic51-cli analyse [options]
 | `--use-ocr` | — | Run ONLY the OCR feature extractor (if configured) |
 | `--use-text-embedding` | — | Run ONLY BGE-M3 text embedding (`ocr_dense` / `asr_dense`) |
 | `--use-yolo` | — | Run ONLY the YOLO11-seg Traffic feature extractor (if configured) |
+| `--use-yolo26x`, `--use-yolo26x-seg` | — | Run ONLY YOLO26x-seg for each image under `data/keyframes/<video>/` |
 | `--keep-going` | — | Record a video failure and continue the remaining videos |
 | `--video ID` | — | Limit analysis to one or more video IDs (repeatable) |
 

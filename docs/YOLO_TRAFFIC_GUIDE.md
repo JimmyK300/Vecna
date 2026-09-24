@@ -111,7 +111,7 @@ features/
         ├── ...
 ```
 
-### Chi tiết tệp `yolo_traffic.json`:
+### Chi tiết tệp `yolo_traffic.json` / `yolo26x_seg.json`:
 ```json
 {
   "video_id": "L21_V001",
@@ -129,16 +129,27 @@ features/
   ],
   "objects": [
     {
-      "class": "car",
-      "subtype": "sedan",
+      "class_id": 2,
+      "class_name": "car",
+      "confidence": 0.892,
       "color": "trắng",
-      "conf": 0.892,
-      "bbox": [210.5, 340.2, 380.0, 470.1],
-      "mask": [[215.0, 345.0], [375.0, 345.0], [378.0, 465.0], [210.5, 460.0]]
+      "bbox": {
+        "x1": 210.5,
+        "y1": 340.2,
+        "x2": 380.0,
+        "y2": 470.1
+      },
+      "mask": {
+        "polygon": [[215.0, 345.0], [375.0, 345.0], [378.0, 465.0], [210.5, 460.0]]
+      },
+      "subtype": "sedan"
     }
   ]
 }
 ```
+
+`color` được ước lượng cho `bicycle`, `car`, `motorcycle`, `bus` và
+`truck`. Các lớp khác vẫn có trường `color` với giá trị `null`.
 
 ---
 

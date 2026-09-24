@@ -21,6 +21,7 @@ COLOR_NAMES = [
     "trắng", "đen", "bạc/xám", "đỏ", "xanh dương", "vàng", "cam", "xanh lá", "tím"
 ]
 COLOR_MAP = {c: i for i, c in enumerate(COLOR_NAMES)}
+VEHICLE_CLASSES = {"bicycle", "car", "motorcycle", "bus", "truck"}
 
 
 def extract_vehicle_color_traffic_cam(img_bgr, bbox):
@@ -104,10 +105,12 @@ def extract_vehicle_color_traffic_cam(img_bgr, bbox):
     return "bạc/xám"
 
 
+@FeatureExtractorFactory.register("yolo26x_seg")
 @FeatureExtractorFactory.register("yolo_traffic")
 class YoloTraffic(FeatureExtractor):
     """
-    Feature Extractor chuẩn AIC51 tích hợp YOLO11-seg cho Video Giao thông.
+    Feature Extractor chuẩn AIC51 tích hợp YOLO-seg cho Video Giao thông.
+    Dùng chung output contract cho YOLO11-seg và YOLO26x-seg.
     - Phát hiện và phân đoạn: Xe ô tô, Xe buýt, Xe tải, Xe máy.
     - Trích xuất màu sắc sơn xe chính xác cao cho camera an ninh.
     - Xuất Vector đặc trưng 32-dim cho Milvus & Metadata JSON chi tiết.
@@ -138,22 +141,27 @@ class YoloTraffic(FeatureExtractor):
 
         self.name = name
         self._batch_size = batch_size
-        self._work_dir = Path(kwargs.get("work_dir", "."))
+        self._work_dir = Path(kwargs.get("work_dir", ".")).resolve()
+        self._pretrained_model = str(pretrained_model)
         self._conf = float(kwargs.get("conf", 0.25))
         self._min_box_area = int(kwargs.get("min_box_area", 1800))
 
         # Tìm model weight: ưu tiên path chỉ định -> weights/ -> root -> auto download
-        model_path = Path(pretrained_model)
-        if not model_path.exists():
-            root_candidate = Path("weights") / model_path.name
-            if root_candidate.exists():
-                model_path = root_candidate
-            elif Path(model_path.name).exists():
-                model_path = Path(model_path.name)
-            else:
-                model_path = Path(model_path.name)  # Ultralytics will auto-download
+        configured_path = Path(pretrained_model)
+        candidates = [
+            configured_path,
+            self._work_dir / configured_path,
+            self._work_dir / "weights" / configured_path.name,
+            self._work_dir.parent / configured_path,
+            self._work_dir.parent / "weights" / configured_path.name,
+        ]
+        model_path = next((path for path in candidates if path.exists()), None)
+        if model_path is None:
+            # A bare official model name lets Ultralytics download the weight.
+            model_path = Path(configured_path.name)
 
-        logger.info(f"YoloTraffic: Loading YOLO11-seg model from {model_path}...")
+        logger.info(f"YoloTraffic: Loading model from {model_path}...")
+        self._model_path = str(model_path)
         self._model = YOLO(str(model_path))
 
         # Thiết lập device
@@ -165,6 +173,15 @@ class YoloTraffic(FeatureExtractor):
             self._device = "0" if torch.cuda.is_available() else "cpu"
 
         super().__init__(name, batch_size, self._device)
+
+    def runtime_semantics(self) -> dict[str, Any]:
+        return {
+            "pretrained_model": self._pretrained_model,
+            "model_file": Path(self._model_path).name,
+            "confidence": self._conf,
+            "min_box_area": self._min_box_area,
+            "vector_schema": "traffic-32-v1",
+        }
 
     def to(self, device: str | torch.device):
         if isinstance(device, torch.device):
@@ -228,60 +245,77 @@ class YoloTraffic(FeatureExtractor):
                         x1, y1, x2, y2 = [round(float(v), 1) for v in box.xyxy[0].tolist()]
                         area = (x2 - x1) * (y2 - y1)
 
+                        poly_pts = []
+                        if has_masks and b_idx < len(masks.xy):
+                            poly = masks.xy[b_idx]
+                            if len(poly) >= 3:
+                                poly_pts = [
+                                    [round(float(pt[0]), 1), round(float(pt[1]), 1)]
+                                    for pt in poly
+                                ]
+
+                        # Ước lượng màu cho phương tiện; object khác vẫn có
+                        # trường color=null để mọi record cùng một schema.
+                        obj_color = None
+                        if cls_name in VEHICLE_CLASSES:
+                            if img_bgr is None:
+                                img_bgr = cv2.imread(img_p)
+                            if img_bgr is not None:
+                                obj_color = extract_vehicle_color_traffic_cam(
+                                    img_bgr,
+                                    [x1, y1, x2, y2],
+                                )
+                                if obj_color in COLOR_MAP:
+                                    color_counts[obj_color] += 1
+
+                        subtype = None
+
                         if cls_name == "motorcycle":
                             motorcycle_count += 1
                         elif cls_name in ["car", "bus", "truck"]:
                             # Bỏ qua xe kích thước quá bé ở đường chân trời
-                            if area < self._min_box_area:
-                                continue
+                            if area >= self._min_box_area:
+                                if cls_name == "car":
+                                    car_count += 1
+                                elif cls_name == "bus":
+                                    bus_count += 1
+                                elif cls_name == "truck":
+                                    truck_count += 1
 
-                            if cls_name == "car":
-                                car_count += 1
-                            elif cls_name == "bus":
-                                bus_count += 1
-                            elif cls_name == "truck":
-                                truck_count += 1
+                                # Ước lượng phân loại chi tiết (Subtype)
+                                aspect_ratio = (y2 - y1) / max(1, (x2 - x1))
+                                if area > 12000 or (aspect_ratio > 1.1 and area > 7000):
+                                    subtype = "van"
+                                    van_count += 1
+                                elif aspect_ratio > 0.85:
+                                    subtype = "suv"
+                                    suv_count += 1
+                                else:
+                                    subtype = "sedan"
+                                    sedan_count += 1
 
-                            # Phân tích màu sắc
-                            if img_bgr is None:
-                                img_bgr = cv2.imread(img_p)
+                                cx = (x1 + x2) / 2.0
+                                cy = (y1 + y2) / 2.0
+                                car_areas.append(area)
+                                car_centers_x.append(cx)
+                                car_centers_y.append(cy)
 
-                            obj_color = extract_vehicle_color_traffic_cam(img_bgr, [x1, y1, x2, y2])
-                            if obj_color in COLOR_MAP:
-                                color_counts[obj_color] += 1
-
-                            # Ước lượng phân loại chi tiết (Subtype)
-                            aspect_ratio = (y2 - y1) / max(1, (x2 - x1))
-                            if area > 12000 or (aspect_ratio > 1.1 and area > 7000):
-                                subtype = "van"
-                                van_count += 1
-                            elif aspect_ratio > 0.85:
-                                subtype = "suv"
-                                suv_count += 1
-                            else:
-                                subtype = "sedan"
-                                sedan_count += 1
-
-                            poly_pts = []
-                            if has_masks and b_idx < len(masks.xy):
-                                poly = masks.xy[b_idx]
-                                if len(poly) >= 3:
-                                    poly_pts = [[round(float(pt[0]), 1), round(float(pt[1]), 1)] for pt in poly]
-
-                            cx = (x1 + x2) / 2.0
-                            cy = (y1 + y2) / 2.0
-                            car_areas.append(area)
-                            car_centers_x.append(cx)
-                            car_centers_y.append(cy)
-
-                            detected_objects.append({
-                                "class": cls_name,
-                                "subtype": subtype,
-                                "color": obj_color,
-                                "conf": round(conf, 3),
-                                "bbox": [x1, y1, x2, y2],
-                                "mask": poly_pts,
-                            })
+                        detected_object = {
+                            "class_id": cls_id,
+                            "class_name": cls_name,
+                            "confidence": round(conf, 5),
+                            "color": obj_color,
+                            "bbox": {
+                                "x1": x1,
+                                "y1": y1,
+                                "x2": x2,
+                                "y2": y2,
+                            },
+                            "mask": {"polygon": poly_pts},
+                        }
+                        if subtype is not None:
+                            detected_object["subtype"] = subtype
+                        detected_objects.append(detected_object)
 
                 # Xây dựng vector 32 chiều
                 vec = np.zeros(32, dtype=np.float32)
@@ -320,6 +354,8 @@ class YoloTraffic(FeatureExtractor):
                 meta_payload = {
                     "video_id": video_id,
                     "frame_id": frame_id,
+                    "feature_name": self.name,
+                    "model": Path(self._pretrained_model).name,
                     "car_count": car_count,
                     "bus_count": bus_count,
                     "truck_count": truck_count,

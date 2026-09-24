@@ -104,6 +104,22 @@ features: &analyse_features
       params:
         nlist: 64
 
+  yolo26x_seg:
+    model: "yolo26x_seg"
+    arch_name: "yolo26x-seg"
+    pretrained_model: "yolo26x-seg.pt"
+    analyse:
+      batch_size: 4
+      conf: 0.25
+      min_box_area: 1800
+    index:
+      datatype: "FLOAT_VECTOR"
+      dim: 32
+      metric_type: "COSINE"
+      index_type: "SCANN"
+      params:
+        nlist: 64
+
 
   # video_clip_pe-l-14-336:
   #   model: "video_clip"
@@ -189,6 +205,7 @@ searcher:
       pretrained_model: "weights/yolo11m-seg.pt"
       target:
         - yolo_traffic
+        - yolo26x_seg
 
   ocr:
     ocr_field: "ocr_sparse"
@@ -240,4 +257,3 @@ backends:
   file:
     port: 4200
     workers: 1
-    
