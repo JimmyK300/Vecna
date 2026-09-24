@@ -10,15 +10,15 @@ from fastapi.responses import FileResponse, JSONResponse
 import aic51.packages.constant as constant
 from aic51.packages.logger import logger
 
-from .utils import create_app, get_fps
+from .utils import create_app, get_fps, _get_candidate_roots
 
 app = create_app()
 
 
 @app.get(constant.HEALTH_ENDPOINT + "/{video_id}/{frame_id}")
 async def frame_health(request: Request, video_id: str, frame_id: str):
-    file_path = Path.cwd() / f"{constant.THUMBNAIL_DIR}/{video_id}/{frame_id}{constant.IMAGE_EXTENSION}"
-    if file_path.exists() and not file_path.is_dir():
+    file_path = _find_image_file(constant.THUMBNAIL_DIR, video_id, frame_id)
+    if file_path and file_path.exists() and not file_path.is_dir():
         return JSONResponse(status_code=200, content=jsonable_encoder({constant.MESSAGE_KEY: "available"}))
     else:
         return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
@@ -26,11 +26,11 @@ async def frame_health(request: Request, video_id: str, frame_id: str):
 
 @app.get(constant.HEALTH_ENDPOINT + "/{video_id}")
 async def video_health(request: Request, video_id: str):
-    file_path = Path.cwd() / f"{constant.VIDEO_DIR}/{video_id}{constant.VIDEO_EXTENSION}"
-    if file_path.exists() and not file_path.is_dir():
-        return JSONResponse(status_code=200, content=jsonable_encoder({constant.MESSAGE_KEY: "available"}))
-    else:
-        return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
+    for root in _get_candidate_roots(video_id):
+        file_path = root / f"{constant.VIDEO_DIR}/{video_id}{constant.VIDEO_EXTENSION}"
+        if file_path.exists() and not file_path.is_dir():
+            return JSONResponse(status_code=200, content=jsonable_encoder({constant.MESSAGE_KEY: "available"}))
+    return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
 
 
 @app.get(constant.HEALTH_ENDPOINT)
@@ -58,29 +58,29 @@ async def frame_info(request: Request, video_id: str, frame_id: str):
 
 @app.get("/api/frame/ocr/{video_id}/{frame_id}")
 async def get_frame_ocr(video_id: str, frame_id: str):
-    ocr_file = Path.cwd() / constant.FEATURE_DIR / video_id / str(frame_id) / "ocr.npy"
-    if ocr_file.exists():
-        try:
-            text = str(np.load(ocr_file, allow_pickle=True))
-            return {"video_id": video_id, "frame_id": frame_id, "ocr": text}
-        except Exception as e:
-            logger.error(f"Error reading OCR for {video_id} {frame_id}: {e}")
+    for root in _get_candidate_roots(video_id):
+        ocr_file = root / constant.FEATURE_DIR / video_id / str(frame_id) / "ocr.npy"
+        if ocr_file.exists():
+            try:
+                text = str(np.load(ocr_file, allow_pickle=True))
+                return {"video_id": video_id, "frame_id": frame_id, "ocr": text}
+            except Exception as e:
+                logger.error(f"Error reading OCR for {video_id} {frame_id}: {e}")
     return {"video_id": video_id, "frame_id": frame_id, "ocr": ""}
 
 
 def _find_image_file(folder_name: str, video_id: str, frame_id: str) -> Path | None:
-    base_dir = Path.cwd() / folder_name
-    p1 = base_dir / video_id / f"{frame_id}{constant.IMAGE_EXTENSION}"
-    if p1.exists() and not p1.is_dir():
-        return p1
-    if str(frame_id).isdigit():
-        val = int(frame_id)
-        p2 = base_dir / video_id / f"{val:06d}{constant.IMAGE_EXTENSION}"
-        if p2.exists() and not p2.is_dir():
-            return p2
-        p3 = base_dir / video_id / f"{val:05d}{constant.IMAGE_EXTENSION}"
-        if p3.exists() and not p3.is_dir():
-            return p3
+    for root in _get_candidate_roots(video_id):
+        base_dir = root / folder_name
+        p1 = base_dir / video_id / f"{frame_id}{constant.IMAGE_EXTENSION}"
+        if p1.exists() and not p1.is_dir():
+            return p1
+        if str(frame_id).isdigit():
+            val = int(frame_id)
+            for fmt in (f"{val:06d}", f"{val:05d}"):
+                p = base_dir / video_id / f"{fmt}{constant.IMAGE_EXTENSION}"
+                if p.exists() and not p.is_dir():
+                    return p
     return None
 
 
@@ -110,8 +110,14 @@ CHUNK_SIZE = 1024 * 1024
 
 @app.get(constant.FILE_ENDPOINT + "/{video_id}")
 async def get_video(request: Request, video_id: str, range: str = Header(None)):
-    file_path = Path.cwd() / f"{constant.VIDEO_DIR}/{video_id}{constant.VIDEO_EXTENSION}"
-    if not file_path.exists() or file_path.is_dir():
+    file_path = None
+    for root in _get_candidate_roots(video_id):
+        p = root / f"{constant.VIDEO_DIR}/{video_id}{constant.VIDEO_EXTENSION}"
+        if p.exists() and not p.is_dir():
+            file_path = p
+            break
+
+    if not file_path:
         return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
 
     start, end = range.replace("bytes=", "").split("-")

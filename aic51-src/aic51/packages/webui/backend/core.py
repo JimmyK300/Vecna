@@ -224,6 +224,24 @@ async def target_features():
         )
 
 
+@app.get("/api/collections")
+async def collections():
+    collections_cfg = GlobalConfig.get("backends", "search", "collections") or {}
+    items = []
+    if isinstance(collections_cfg, dict):
+        for alias, col_name in collections_cfg.items():
+            is_b1 = ("1" in alias or "col1" in alias or ("workspace" in alias and "2" not in alias))
+            label = "Batch 1 (L, S, M)" if is_b1 else "Batch 2 (N)"
+            items.append({"alias": alias, "collection_name": col_name, "label": label})
+    elif isinstance(collections_cfg, list):
+        for col_name in collections_cfg:
+            items.append({"alias": col_name, "collection_name": col_name, "label": col_name})
+    else:
+        col_name = GlobalConfig.get("backends", "search", "collection") or "milvus"
+        items.append({"alias": col_name, "collection_name": col_name, "label": col_name})
+    return JSONResponse(status_code=200, content={"collections": items, "default": items[0]["alias"] if items else "testcol1"})
+
+
 @app.get(constant.FILE_INFO_ENDPOINT + "/{video_id}/{frame_id}")
 async def frame_info(request: Request, video_id: str, frame_id: str):
     if len(FILE_SERVERS) == 0:
@@ -400,6 +418,7 @@ async def get_video_transcript(request: Request, video_id: str):
             status_code=500,
             content=jsonable_encoder({constant.MESSAGE_KEY: "get_video_transcript errors"}),
         )
+    return JSONResponse(status_code=200, content=[])
 
 
 @app.get("/api/video/keyframes/{video_id}")
@@ -435,6 +454,7 @@ async def get_video_keyframes(request: Request, video_id: str):
             status_code=500,
             content=jsonable_encoder({constant.MESSAGE_KEY: "get_video_keyframes errors"}),
         )
+    return JSONResponse(status_code=200, content=[])
 
 
 @app.get("/api/frame/ocr/{video_id}/{frame_id}")

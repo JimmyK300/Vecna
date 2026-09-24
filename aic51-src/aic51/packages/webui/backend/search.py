@@ -1,4 +1,5 @@
 import asyncio
+import re
 import threading
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -19,14 +20,31 @@ from aic51.packages.utils import get_device
 from .utils import create_app, process_searcher_results, process_search_results
 
 
-def setup_searcher():
-    collection_name = GlobalConfig.get("backends", "search", "collection") or "milvus"
+internal = {}
+
+
+def setup_searchers():
+    collections_cfg = GlobalConfig.get("backends", "search", "collections")
     do_gpu = GlobalConfig.get("backends", "search", "gpu") or False
     device = get_device(do_gpu)
-    return Searcher(collection_name, device)
 
+    searchers = {}
+    if collections_cfg and isinstance(collections_cfg, dict):
+        for alias, col_name in collections_cfg.items():
+            logger.info(f"Initializing searcher for collection '{col_name}' (alias: '{alias}')...")
+            searchers[alias] = Searcher(col_name, device)
+    elif collections_cfg and isinstance(collections_cfg, list):
+        for col_name in collections_cfg:
+            logger.info(f"Initializing searcher for collection '{col_name}'...")
+            searchers[col_name] = Searcher(col_name, device)
+    else:
+        col_name = GlobalConfig.get("backends", "search", "collection") or "milvus"
+        logger.info(f"Initializing single searcher for collection '{col_name}'...")
+        searchers[col_name] = Searcher(col_name, device)
 
-internal = {}
+    internal["searchers"] = searchers
+    internal["searcher"] = next(iter(searchers.values())) if searchers else None
+    return searchers
 active_search_lock = threading.Lock()
 current_search_cancel_event: threading.Event | None = None
 
@@ -52,7 +70,9 @@ def cancel_active_search_session():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    internal["searcher"] = setup_searcher()
+    searchers = setup_searchers()
+    internal["searchers"] = searchers
+    internal["searcher"] = next(iter(searchers.values())) if searchers else None
     yield
 
 
@@ -76,12 +96,32 @@ async def cancel_search_endpoint():
     )
 
 
+@app.get("/api/collections")
+async def get_collections():
+    searchers = internal.get("searchers", {})
+    collections_cfg = GlobalConfig.get("backends", "search", "collections") or {}
+    items = []
+    if isinstance(collections_cfg, dict):
+        for alias, col_name in collections_cfg.items():
+            is_b1 = ("1" in alias or "col1" in alias or ("workspace" in alias and "2" not in alias))
+            label = "Batch 1 (L, S, M)" if is_b1 else "Batch 2 (N)"
+            items.append({"alias": alias, "collection_name": col_name, "label": label})
+    elif isinstance(collections_cfg, list):
+        for col_name in collections_cfg:
+            items.append({"alias": col_name, "collection_name": col_name, "label": col_name})
+    else:
+        for k in searchers:
+            items.append({"alias": k, "collection_name": k, "label": k})
+    return JSONResponse(status_code=200, content={"collections": items, "default": items[0]["alias"] if items else "testcol1"})
+
+
 @app.get(constant.SEARCH_MULTIMODAL_ENDPOINT)
 async def search_multimodal(
     request: Request,
     q: str,
     offset: int = 0,
     limit: int = 50,
+    collection: str = "",
     target_features: str = "",
     nprobe: int = 32,
     temporal_k: int = 200,
@@ -96,13 +136,53 @@ async def search_multimodal(
     include_videos: str = "",
     exclude_videos: str = "",
 ):
-    if "searcher" not in internal:
+    searchers = internal.get("searchers", {})
+    if not searchers and "searcher" in internal:
+        searchers = {"default": internal["searcher"]}
+    if not searchers:
         return JSONResponse(
             status_code=500,
             content=jsonable_encoder({constant.MESSAGE_KEY: "searcher was not initialized"}),
         )
 
-    searcher = internal["searcher"]
+    # Collection routing: auto, specific collection key, or all
+    target_col = (collection or "").strip().lower()
+    if not target_col or target_col == "auto":
+        inc_str = (include_videos or "").strip().upper()
+        q_upper = q.upper()
+        if inc_str.startswith("N") or re.search(r"\bN\d{2,3}", q_upper):
+            for k in searchers:
+                if "testcol2" in k.lower() or "batch2" in k.lower() or "2" in k.lower() or "workspace2" in k.lower():
+                    target_col = k
+                    break
+        elif any(inc_str.startswith(p) for p in ("S", "L", "M")) or re.search(r"\b[SLM]\d{2,3}", q_upper):
+            for k in searchers:
+                if "testcol1" in k.lower() or "batch1" in k.lower() or "1" in k.lower() or ("workspace" in k.lower() and "2" not in k.lower()):
+                    target_col = k
+                    break
+        else:
+            # Default to the first collection (Batch 1), DO NOT fallback to "all"!
+            target_col = next(iter(searchers.keys())) if searchers else "default"
+
+    selected_searchers = {}
+    if target_col in searchers:
+        selected_searchers[target_col] = searchers[target_col]
+    elif target_col != "all":
+        for k, s in searchers.items():
+            if getattr(getattr(s, "_database", None), "_collection_name", "").lower() == target_col:
+                selected_searchers[k] = s
+                break
+            if target_col in k.lower():
+                selected_searchers[k] = s
+                break
+
+    if not selected_searchers:
+        if target_col == "all":
+            selected_searchers = searchers
+        else:
+            selected_searchers = {next(iter(searchers.keys())): next(iter(searchers.values()))} if searchers else {}
+
+    searcher = next(iter(selected_searchers.values()))
     target_features_list = [f.strip() for f in target_features.split(",") if f.strip()]
 
     cancel_event = begin_search_session()
@@ -121,26 +201,79 @@ async def search_multimodal(
     monitor_task = asyncio.create_task(monitor_disconnect())
 
     try:
-        searcher_res = await asyncio.to_thread(
-            searcher.search_multimodal,
-            q,
-            offset,
-            limit,
-            target_features_list,
-            nprobe=nprobe,
-            temporal_k=temporal_k,
-            ocr_weight=ocr_weight,
-            asr_weight=asr_weight,
-            ocr_alpha=ocr_alpha,
-            asr_alpha=asr_alpha,
-            max_interval=max_interval,
-            selected=selected,
-            auto_translate=auto_translate,
-            en_to_vi_translate=en_to_vi_translate,
-            include_videos=include_videos,
-            exclude_videos=exclude_videos,
-            cancel_event=cancel_event,
-        )
+        if len(selected_searchers) == 1:
+            col_name, s = next(iter(selected_searchers.items()))
+            searcher_res = await asyncio.to_thread(
+                s.search_multimodal,
+                q,
+                offset,
+                limit,
+                target_features_list,
+                nprobe=nprobe,
+                temporal_k=temporal_k,
+                ocr_weight=ocr_weight,
+                asr_weight=asr_weight,
+                ocr_alpha=ocr_alpha,
+                asr_alpha=asr_alpha,
+                max_interval=max_interval,
+                selected=selected,
+                auto_translate=auto_translate,
+                en_to_vi_translate=en_to_vi_translate,
+                include_videos=include_videos,
+                exclude_videos=exclude_videos,
+                cancel_event=cancel_event,
+            )
+            for item in searcher_res.get("results", []):
+                item["collection"] = col_name
+        else:
+            fetch_limit = offset + limit
+            tasks = [
+                asyncio.to_thread(
+                    s.search_multimodal,
+                    q,
+                    0,
+                    fetch_limit,
+                    target_features_list,
+                    nprobe=nprobe,
+                    temporal_k=temporal_k,
+                    ocr_weight=ocr_weight,
+                    asr_weight=asr_weight,
+                    ocr_alpha=ocr_alpha,
+                    asr_alpha=asr_alpha,
+                    max_interval=max_interval,
+                    selected=selected,
+                    auto_translate=auto_translate,
+                    en_to_vi_translate=en_to_vi_translate,
+                    include_videos=include_videos,
+                    exclude_videos=exclude_videos,
+                    cancel_event=cancel_event,
+                )
+                for s in selected_searchers.values()
+            ]
+            all_res = await asyncio.gather(*tasks)
+
+            col_keys = list(selected_searchers.keys())
+            all_lists = []
+            total_count = 0
+            for name, r in zip(col_keys, all_res):
+                res_list = r.get("results", [])
+                for item in res_list:
+                    item["collection"] = name
+                all_lists.append(res_list)
+                total_count += r.get("total", 0)
+
+            interleaved = []
+            max_len = max((len(l) for l in all_lists), default=0)
+            for i in range(max_len):
+                for l in all_lists:
+                    if i < len(l):
+                        interleaved.append(l[i])
+
+            searcher_res = {
+                "results": interleaved[offset : offset + limit],
+                "total": total_count,
+                "offset": offset,
+            }
     except SearchCancelledException:
         logger.info("search backend: Search multimodal was cancelled.")
         return JSONResponse(
@@ -416,14 +549,20 @@ async def expand_query_endpoint(request: Request):
 
 @app.get(constant.TARGET_FEATURES_ENDPOINT)
 async def target_features():
-    if "searcher" not in internal:
+    searchers = internal.get("searchers", {})
+    if not searchers and "searcher" in internal:
+        searchers = {"default": internal["searcher"]}
+    if not searchers:
         return JSONResponse(
             status_code=500,
             content=jsonable_encoder({constant.MESSAGE_KEY: "searcher was not initialized"}),
         )
 
-    searcher = internal["searcher"]
+    all_features = set()
+    for s in searchers.values():
+        all_features.update(s.target_features)
+
     return JSONResponse(
         status_code=200,
-        content=jsonable_encoder({constant.TARGET_FEATURES_KEY: searcher.target_features}),
+        content=jsonable_encoder({constant.TARGET_FEATURES_KEY: sorted(all_features)}),
     )

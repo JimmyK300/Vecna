@@ -214,11 +214,20 @@ class BoundedLRUCache:
             self._cache.clear()
 
 
+_SHARED_EXTRACTORS = {}
+_EXTRACTOR_LOCK = threading.Lock()
+
+
 class Searcher(object):
     cache = BoundedLRUCache(maxsize=20)
 
     def __init__(self, collection_name: str, device: torch.device = torch.device("cpu")):
         self._database = MilvusDatabase(collection_name)
+        try:
+            desc = self._database._client.describe_collection(collection_name)
+            self._collection_fields = {f.get("name") for f in desc.get("fields", []) if f.get("name")}
+        except Exception:
+            self._collection_fields = set()
         self._prepare_feature_extractors(device)
         segment_map_path = os.environ.get("SEGMENT_MAP_PATH", "segment_map.json")
         self._clustering = SegmentClustering(segment_map_path)  
@@ -253,7 +262,6 @@ class Searcher(object):
         offset: int = 0,
         limit: int = 50,
         target_features: list = [],
-        /,
         nprobe: int = 8,
         temporal_k: int = 200,
         ocr_weight: float = 0.0,
@@ -1200,6 +1208,8 @@ class Searcher(object):
     def _prepare_feature_extractors(self, device: torch.device):
         self._extractors = {}
         self._features = {}
+        col_name = getattr(getattr(self, "_database", None), "_collection_name", "unknown")
+
         has_ocr_feature = bool(GlobalConfig.get("features", "ocr"))
         has_ocr_searcher = bool(GlobalConfig.get("searcher", "ocr"))
         ocr_enabled = has_ocr_feature and (
@@ -1207,8 +1217,19 @@ class Searcher(object):
             or (has_ocr_searcher and GlobalConfig.get("searcher", "ocr", "enable") is not False)
         )
         if ocr_enabled:
-            self._ocr_name = GlobalConfig.get("searcher", "ocr", "ocr_field") or "ocr"
-            self._ocr_dense_name = GlobalConfig.get("searcher", "ocr", "ocr_dense_field")
+            candidate_ocr = GlobalConfig.get("searcher", "ocr", "ocr_field") or "ocr"
+            candidate_ocr_dense = GlobalConfig.get("searcher", "ocr", "ocr_dense_field")
+            # If collection has fields, ensure OCR is in collection
+            if self._collection_fields and not (
+                candidate_ocr in self._collection_fields
+                or f"{candidate_ocr}_sparse" in self._collection_fields
+                or candidate_ocr.replace("_sparse", "") in self._collection_fields
+            ):
+                self._ocr_name = None
+                self._ocr_dense_name = None
+            else:
+                self._ocr_name = candidate_ocr
+                self._ocr_dense_name = candidate_ocr_dense
         else:
             self._ocr_name = None
             self._ocr_dense_name = None
@@ -1220,8 +1241,19 @@ class Searcher(object):
             or (has_asr_searcher and GlobalConfig.get("searcher", "asr", "enable") is not False)
         )
         if asr_enabled:
-            self._asr_name = GlobalConfig.get("searcher", "asr", "asr_field") or "asr"
-            self._asr_dense_name = GlobalConfig.get("searcher", "asr", "asr_dense_field")
+            candidate_asr = GlobalConfig.get("searcher", "asr", "asr_field") or "asr"
+            candidate_asr_dense = GlobalConfig.get("searcher", "asr", "asr_dense_field")
+            # If collection has fields, ensure ASR is in collection
+            if self._collection_fields and not (
+                candidate_asr in self._collection_fields
+                or f"{candidate_asr}_sparse" in self._collection_fields
+                or candidate_asr.replace("_sparse", "") in self._collection_fields
+            ):
+                self._asr_name = None
+                self._asr_dense_name = None
+            else:
+                self._asr_name = candidate_asr
+                self._asr_dense_name = candidate_asr_dense
         else:
             self._asr_name = None
             self._asr_dense_name = None
@@ -1238,6 +1270,21 @@ class Searcher(object):
             batch_size = 1
 
             assert model_name is not None
+
+            polite_name = f"{model_name}" + (f' from "{pretrained_model}"' if pretrained_model else "")
+            if target_features is None or len(target_features) == 0:
+                logger.error(f"searcher [{col_name}]: {polite_name} does not have target features")
+                continue
+
+            valid_targets = []
+            for t in target_features:
+                field_norm = self._database.process_field_name(t)
+                if not self._collection_fields or t in self._collection_fields or field_norm in self._collection_fields:
+                    valid_targets.append(t)
+
+            if not valid_targets:
+                logger.info(f"searcher [{col_name}]: Skipping model '{m}' (targets {target_features} not in collection fields)")
+                continue
 
             feature_extractor_cls = FeatureExtractorFactory.get(model_name)
             if feature_extractor_cls:
@@ -1265,37 +1312,54 @@ class Searcher(object):
                         value = GlobalConfig.get("searcher", "language_models", m, key)
                         if value is not None:
                             init_kwargs[key] = value
-                feature_extractor = feature_extractor_cls.from_pretrained(**init_kwargs)
+
+                cache_key = (
+                    model_name,
+                    pretrained_model,
+                    arch_name,
+                    source,
+                    init_kwargs.get("backend"),
+                    init_kwargs.get("onnx_model_path"),
+                    str(device),
+                )
+                with _EXTRACTOR_LOCK:
+                    if cache_key in _SHARED_EXTRACTORS:
+                        feature_extractor = _SHARED_EXTRACTORS[cache_key]
+                        logger.info(f"searcher [{col_name}]: [CACHE HIT] Reusing loaded model '{model_name}' ({pretrained_model or arch_name})")
+                    else:
+                        logger.info(f"searcher [{col_name}]: [LOAD NEW] Loading model '{model_name}' ({pretrained_model or arch_name}) into {device}")
+                        feature_extractor = feature_extractor_cls.from_pretrained(**init_kwargs)
+                        _SHARED_EXTRACTORS[cache_key] = feature_extractor
             else:
                 feature_extractor = None
 
-            polite_name = f"{model_name}" + (f' from "{pretrained_model}"' if pretrained_model else "")
-            if feature_extractor:
-                logger.info(f"searcher: Loaded {polite_name} for searching")
-            else:
-                logger.error(f"searcher: {polite_name}: invalid feature extractor")
+            if not feature_extractor:
+                logger.error(f"searcher [{col_name}]: {polite_name}: invalid feature extractor")
                 continue
 
-            if target_features is None or len(target_features) == 0:
-                logger.error(f"searcher: {polite_name} does not have target features")
-                continue
-
-            for t in target_features:
+            for t in valid_targets:
                 self._features[t] = m
+            self._extractors[m] = {"feature_extractor": feature_extractor, "target_features": valid_targets}
 
-            self._extractors[m] = {"feature_extractor": feature_extractor, "target_features": target_features}
         # --- Reranker Initialization ---
         reranker_enable = GlobalConfig.get("searcher", "reranker", "enable")
         if reranker_enable:
             reranker_model = GlobalConfig.get("searcher", "reranker", "model") or "BAAI/bge-reranker-v2-m3"
             reranker_device = str(device).split(":")[0]  # "cuda:0" -> "cuda"
+            cache_key_reranker = ("reranker", reranker_model, reranker_device)
             try:
-                logger.info(f"searcher: Loading Reranker model: {reranker_model}")
-                self._reranker = CrossEncoder(reranker_model, device=reranker_device)
+                with _EXTRACTOR_LOCK:
+                    if cache_key_reranker in _SHARED_EXTRACTORS:
+                        self._reranker = _SHARED_EXTRACTORS[cache_key_reranker]
+                        logger.info(f"searcher [{col_name}]: [CACHE HIT] Reusing Reranker {reranker_model}")
+                    else:
+                        logger.info(f"searcher [{col_name}]: [LOAD NEW] Loading Reranker model: {reranker_model}")
+                        self._reranker = CrossEncoder(reranker_model, device=reranker_device)
+                        _SHARED_EXTRACTORS[cache_key_reranker] = self._reranker
+                        logger.info(f"searcher: Reranker loaded successfully")
                 self._reranker_top_k = int(GlobalConfig.get("searcher", "reranker", "top_k") or 50)
-                logger.info(f"searcher: Reranker loaded successfully (top_k={self._reranker_top_k})")
             except Exception as e:
-                logger.error(f"searcher: Failed to load Reranker: {e}")
+                logger.error(f"searcher [{col_name}]: Failed to load Reranker: {e}")
                 self._reranker = None
                 self._reranker_top_k = 0
         else:
@@ -1308,21 +1372,28 @@ class Searcher(object):
         llm_enabled = llm_config.get("enable", True)
 
         if llm_enabled:
+            api_key = llm_config.get("api_key")
+            provider = llm_config.get("provider", "groq")
+            model_name_llm = llm_config.get("model_name", "openai/gpt-oss-120b")
+            cache_key_llm = ("llm_expander", provider, model_name_llm)
             try:
                 from aic51.packages.search.llm_expander import LLMQueryExpander
 
-                self._llm_expander = LLMQueryExpander(
-                    api_key=llm_config.get("api_key"),
-                    model_name=llm_config.get("model_name", "openai/gpt-oss-120b"),
-                    provider=llm_config.get("provider", "groq"),
-                )
-                if self._llm_expander.is_available:
-                    logger.info("searcher: LLMQueryExpander loaded successfully")
-                else:
-                    logger.warning("searcher: LLMQueryExpander not available (check GROQ_API_KEY)")
-                    self._llm_expander = None
+                with _EXTRACTOR_LOCK:
+                    if cache_key_llm in _SHARED_EXTRACTORS:
+                        self._llm_expander = _SHARED_EXTRACTORS[cache_key_llm]
+                        logger.info(f"searcher [{col_name}]: [CACHE HIT] Reusing LLMQueryExpander")
+                    else:
+                        self._llm_expander = LLMQueryExpander(
+                            api_key=api_key,
+                            model_name=model_name_llm,
+                            provider=provider,
+                        )
+                        _SHARED_EXTRACTORS[cache_key_llm] = self._llm_expander
+                        if self._llm_expander.is_available:
+                            logger.info("searcher: LLMQueryExpander loaded successfully")
             except Exception as e:
-                logger.warning(f"searcher: Failed to load LLMQueryExpander: {e}")
+                logger.warning(f"searcher [{col_name}]: Failed to load LLMQueryExpander: {e}")
                 self._llm_expander = None
 
     def expand_query_detailed(self, query_text: str) -> dict:

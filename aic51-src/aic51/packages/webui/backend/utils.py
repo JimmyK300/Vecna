@@ -31,34 +31,79 @@ def create_app(*args, **kwargs):
     return app
 
 
-def get_fps(video_id: str) -> float:
-    try:
-        with open(f"{constant.VIDEO_INFO_DIR}/{video_id}.json", "r") as f:
-            data = json.load(f)
-            fps = float(data[constant.FPS_KEY])
-    except:
-        fps = float(constant.DEFAULT_FPS)
+def _get_candidate_roots(video_id: str = ""):
+    v_upper = str(video_id).upper()
+    if v_upper.startswith("N"):
+        return [
+            Path.cwd() / "testcol2",
+            Path.cwd() / "workspace2",
+            Path("testcol2"),
+            Path("workspace2"),
+            Path.cwd() / "testcol1",
+            Path.cwd() / "workspace",
+            Path("testcol1"),
+            Path("workspace"),
+            Path.cwd(),
+        ]
+    elif any(v_upper.startswith(p) for p in ("S", "L", "M")):
+        return [
+            Path.cwd() / "testcol1",
+            Path.cwd() / "workspace",
+            Path("testcol1"),
+            Path("workspace"),
+            Path.cwd() / "testcol2",
+            Path.cwd() / "workspace2",
+            Path("testcol2"),
+            Path("workspace2"),
+            Path.cwd(),
+        ]
+    return [
+        Path.cwd(),
+        Path.cwd() / "testcol1",
+        Path.cwd() / "testcol2",
+        Path.cwd() / "workspace",
+        Path.cwd() / "workspace2",
+        Path("testcol1"),
+        Path("testcol2"),
+        Path("workspace"),
+        Path("workspace2"),
+    ]
 
-    return fps
+
+def get_fps(video_id: str) -> float:
+    for root in _get_candidate_roots(video_id):
+        info_path = root / f"{constant.VIDEO_INFO_DIR}/{video_id}.json"
+        if info_path.exists():
+            try:
+                with open(info_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    return float(data[constant.FPS_KEY])
+            except Exception:
+                pass
+    return float(constant.DEFAULT_FPS)
 
 
 def get_fps_info(video_id: str) -> dict:
-    try:
-        with open(f"{constant.VIDEO_INFO_DIR}/{video_id}.json", "r") as f:
-            data = json.load(f)
-            return {
-                constant.FPS_KEY: float(data.get(constant.FPS_KEY, constant.DEFAULT_FPS)),
-                constant.FPS_FRACTION_KEY: data.get(constant.FPS_FRACTION_KEY),
-                constant.R_FRAME_RATE_KEY: data.get(constant.R_FRAME_RATE_KEY),
-                constant.AVG_FRAME_RATE_KEY: data.get(constant.AVG_FRAME_RATE_KEY),
-            }
-    except:
-        return {
-            constant.FPS_KEY: float(constant.DEFAULT_FPS),
-            constant.FPS_FRACTION_KEY: f"{constant.DEFAULT_FPS}/1",
-            constant.R_FRAME_RATE_KEY: f"{constant.DEFAULT_FPS}/1",
-            constant.AVG_FRAME_RATE_KEY: f"{constant.DEFAULT_FPS}/1",
-        }
+    for root in _get_candidate_roots(video_id):
+        info_path = root / f"{constant.VIDEO_INFO_DIR}/{video_id}.json"
+        if info_path.exists():
+            try:
+                with open(info_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    return {
+                        constant.FPS_KEY: float(data.get(constant.FPS_KEY, constant.DEFAULT_FPS)),
+                        constant.FPS_FRACTION_KEY: data.get(constant.FPS_FRACTION_KEY),
+                        constant.R_FRAME_RATE_KEY: data.get(constant.R_FRAME_RATE_KEY),
+                        constant.AVG_FRAME_RATE_KEY: data.get(constant.AVG_FRAME_RATE_KEY),
+                    }
+            except Exception:
+                pass
+    return {
+        constant.FPS_KEY: float(constant.DEFAULT_FPS),
+        constant.FPS_FRACTION_KEY: f"{constant.DEFAULT_FPS}/1",
+        constant.R_FRAME_RATE_KEY: f"{constant.DEFAULT_FPS}/1",
+        constant.AVG_FRAME_RATE_KEY: f"{constant.DEFAULT_FPS}/1",
+    }
 
 
 def process_searcher_results(
@@ -94,6 +139,7 @@ def process_searcher_results(
             "id": record_id,
             "video_id": video_id,
             "frame_id": frame_id,
+            "collection": record.get("collection", ""),
             "time_line": time_line,
             "time_line_scores": record.get("time_line_scores", [record.get("scores")]),
             "fps": fps,

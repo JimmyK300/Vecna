@@ -59,6 +59,7 @@ export async function loader({ request }) {
   const target_features = searchParams.get("target_features") || "";
   const include_videos = searchParams.get("include_videos") || "";
   const exclude_videos = searchParams.get("exclude_videos") || "";
+  const collection = searchParams.get("collection") || "";
 
   const chunkStart = Math.floor(requestedOffset / CHUNK_SIZE) * CHUNK_SIZE;
   const initialLocalOffset = Math.floor((requestedOffset - chunkStart) / limit) * limit;
@@ -66,7 +67,7 @@ export async function loader({ request }) {
   if (!q && !include_videos && !exclude_videos) {
     return {
       query: { q: "" },
-      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos },
+      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos, collection },
       offset: requestedOffset,
       chunkStart: 0,
       initialLocalOffset: 0,
@@ -92,12 +93,13 @@ export async function loader({ request }) {
       en_to_vi_translate,
       ocr_alpha,
       asr_alpha,
+      collection,
     );
 
     if (res && res.canceled) {
       return {
         query: { q },
-        params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos },
+        params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos, collection },
         offset: requestedOffset,
         chunkStart,
         initialLocalOffset: 0,
@@ -107,7 +109,7 @@ export async function loader({ request }) {
 
     return {
       query: { q },
-      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos },
+      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos, collection },
       offset: requestedOffset,
       chunkStart: res.offset !== undefined ? res.offset : chunkStart,
       initialLocalOffset,
@@ -117,7 +119,7 @@ export async function loader({ request }) {
     console.error("Search failed:", err);
     return {
       query: { q },
-      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos },
+      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos, collection },
       offset: requestedOffset,
       chunkStart,
       initialLocalOffset: 0,
@@ -147,6 +149,9 @@ export default function Search() {
   const playVideo = usePlayVideo();
 
   const [searchQuery, setSearchQuery] = useState(query.q || "");
+  const [collection, setCollection] = useState(
+    () => params.collection || localStorage.getItem("aic51_collection") || "testcol1"
+  );
   const [autoTranslate, setAutoTranslate] = useState(params.auto_translate || false);
   const [enToViTranslate, setEnToViTranslate] = useState(params.en_to_vi_translate || false);
   const [includeVideos, setIncludeVideos] = useState(params.include_videos || "");
@@ -179,6 +184,10 @@ export default function Search() {
     setExcludeVideos(params.exclude_videos || "");
     setAppliedInclude(params.include_videos || "");
     setAppliedExclude(params.exclude_videos || "");
+    if (params.collection) {
+      setCollection(params.collection);
+      localStorage.setItem("aic51_collection", params.collection);
+    }
   }, [query.q, params]);
 
   const handleQueryMouseDown = (e) => {
@@ -216,7 +225,8 @@ export default function Search() {
   const triggerSearch = (
     newQ = searchQuery,
     newInc = includeVideos,
-    newExc = excludeVideos
+    newExc = excludeVideos,
+    newCol = collection
   ) => {
     const activeAutoTranslate = liveAutoTranslate !== undefined ? liveAutoTranslate : autoTranslate;
     const activeEnToViTranslate = liveEnToViTranslate !== undefined ? liveEnToViTranslate : enToViTranslate;
@@ -232,6 +242,7 @@ export default function Search() {
     submit(
       {
         q: newQ,
+        collection: newCol,
         auto_translate: activeAutoTranslate ? "true" : "false",
         en_to_vi_translate: activeEnToViTranslate ? "true" : "false",
         include_videos: newInc,
@@ -249,6 +260,12 @@ export default function Search() {
       },
       { method: "get", action: "/search" }
     );
+  };
+
+  const handleCollectionChange = (newCol) => {
+    setCollection(newCol);
+    localStorage.setItem("aic51_collection", newCol);
+    triggerSearch(searchQuery, includeVideos, excludeVideos, newCol);
   };
 
   const handleAddIncludeVideo = (vid) => {
@@ -502,7 +519,7 @@ export default function Search() {
     if (chunkStart === 0 && safeOffset > 0) {
       setLocalOffset(0);
     } else if (globalItemIndex > 0) {
-      submit({ ...query, ...params, include_videos: includeVideos, exclude_videos: excludeVideos, offset: 0 }, { action: "/search" });
+      submit({ ...query, ...params, collection, include_videos: includeVideos, exclude_videos: excludeVideos, offset: 0 }, { action: "/search" });
     }
   };
 
@@ -515,6 +532,7 @@ export default function Search() {
         {
           ...query,
           ...params,
+          collection,
           include_videos: includeVideos,
           exclude_videos: excludeVideos,
           offset: prevGlobalOffset,
@@ -533,6 +551,7 @@ export default function Search() {
         {
           ...query,
           ...params,
+          collection,
           include_videos: includeVideos,
           exclude_videos: excludeVideos,
           offset: nextGlobalOffset,
@@ -745,6 +764,8 @@ export default function Search() {
           onCancelSearch={handleCancelSearch}
           onResetQueryHeight={handleResetQueryHeight}
           translationFailed={!!data?.translation_failed}
+          collection={collection}
+          onCollectionChange={handleCollectionChange}
         />
       </div>
 
