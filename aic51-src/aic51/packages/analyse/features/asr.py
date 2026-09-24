@@ -213,17 +213,48 @@ class WhisperX(ASR):
         return segments, fps, transcript_meta
 
     def _get_fps(self, video_id: str) -> int:
+        info_file = self._work_dir / constant.VIDEO_INFO_DIR / f"{video_id}.json"
+        if info_file.exists():
+            try:
+                import json
+                with open(info_file, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                fps_val = data.get(constant.FPS_KEY) or data.get("fps") or data.get("frame_rate")
+                if fps_val is not None and float(fps_val) > 0:
+                    return round(float(fps_val))
+            except Exception:
+                pass
+
         video_path = self._work_dir / constant.VIDEO_DIR / f"{video_id}{constant.VIDEO_EXTENSION}"
-        ffprobe_cmd = ["ffprobe", "-v", "quiet", "-of", "compact=p=0"] + [
-            "-select_streams",
-            "0",
-            "-show_entries",
-            "stream=r_frame_rate",
-            str(video_path),
-        ]
-        res = subprocess.run(ffprobe_cmd, capture_output=True, text=True)
-        fraction = str(res.stdout).split("=")[1].split("/")
-        return round(int(fraction[0]) / int(fraction[1]))
+        if video_path.exists():
+            for stream_sel in ["v:0", "0"]:
+                ffprobe_cmd = [
+                    "ffprobe",
+                    "-v",
+                    "quiet",
+                    "-of",
+                    "compact=p=0",
+                    "-select_streams",
+                    stream_sel,
+                    "-show_entries",
+                    "stream=r_frame_rate,avg_frame_rate",
+                    str(video_path),
+                ]
+                try:
+                    res = subprocess.run(ffprobe_cmd, capture_output=True, text=True)
+                    if res.stdout:
+                        for item in res.stdout.strip().replace("stream|", "").split("|"):
+                            if "=" in item:
+                                _, val = item.split("=", 1)
+                                if "/" in val and val != "0/0":
+                                    num_str, den_str = val.split("/", 1)
+                                    num, den = int(num_str), int(den_str)
+                                    if den > 0 and num > 0:
+                                        return round(num / den)
+                except Exception:
+                    pass
+
+        return int(constant.DEFAULT_FPS)
 
     def _find_segment(self, segments: list, timestamp: float):
         if not segments:

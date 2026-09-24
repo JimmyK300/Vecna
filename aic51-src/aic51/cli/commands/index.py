@@ -139,6 +139,8 @@ class IndexCommand(BaseCommand):
                 for feature_name, generation_ids in provider_generations.items():
                     observed_provider_generations.setdefault(feature_name, set()).update(generation_ids)
 
+        database.flush()
+
         feature_fields = self._get_active_feature_fields()
         provider_summary = summarize_provider_generations(feature_fields, observed_provider_generations)
         feature_configs = {name: GlobalConfig.get("features", name) for name in feature_fields}
@@ -164,7 +166,7 @@ class IndexCommand(BaseCommand):
         features_dir = self._work_dir / constant.FEATURE_DIR
 
         video_paths = sorted(
-            [d for d in features_dir.glob("*") if d.is_dir()],
+            [d for d in features_dir.glob("*") if d.is_dir() and d.name != "features"],
             key=lambda path: path.stem,
         )
         return video_paths
@@ -225,6 +227,13 @@ class IndexCommand(BaseCommand):
                 if claims:
                     frame_lineage_claims.setdefault(feature_name, []).extend(claims)
 
+            # Fallback to configured default_value (e.g. "" for empty asr/ocr) if missing
+            for f in feature_fields:
+                if f not in data:
+                    default_val = GlobalConfig.get("features", f, "index", "default_value")
+                    if default_val is not None:
+                        data[f] = default_val
+
             if all([f in data for f in feature_fields]):
                 data_list.append({database.process_field_name(k): v for k, v in data.items()})
                 for feature_name, provider_ids in frame_provider_generations.items():
@@ -232,7 +241,8 @@ class IndexCommand(BaseCommand):
                 for feature_name, claims in frame_lineage_claims.items():
                     observed_lineage_claims.setdefault(feature_name, []).extend(claims)
             else:
-                logger.warning(f"Skipping {data['frame_id']}: Lack of features")
+                missing_feats = [f for f in feature_fields if f not in data]
+                logger.warning(f"Skipping {data['frame_id']}: Missing features {missing_feats}")
 
             update_progress(advance=1)
 

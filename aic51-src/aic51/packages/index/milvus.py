@@ -64,7 +64,12 @@ class MilvusDatabase(object):
             schema = self._create_schema()
             index_params = self._create_indices()
 
-            self._client.create_collection(collection_name, schema=schema, index_params=index_params)
+            self._client.create_collection(
+                collection_name,
+                schema=schema,
+                index_params=index_params,
+                properties={"mmap.enabled": True},
+            )
 
         self._client.load_collection(self._collection_name)
         try:
@@ -244,6 +249,12 @@ class MilvusDatabase(object):
             else:
                 res = self._client.insert(self._collection_name, batch)
         return res
+
+    def flush(self):
+        try:
+            self._client.flush(self._collection_name)
+        except Exception as e:
+            logger.warning(f"Failed to flush collection: {e}")
 
     def get_scalar_output_fields(self) -> list[str]:
         """Returns non-vector fields (e.g. frame_id, ocr, asr) to avoid transferring heavy vectors into RAM."""

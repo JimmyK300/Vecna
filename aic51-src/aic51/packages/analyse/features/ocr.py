@@ -293,12 +293,8 @@ class PaddleVietOCR(OCR):
 
                 return (img_idx, input_path, input_sha256, img_width, img_height, crop_bottom, img_crops)
 
-            # 1. Multi-threaded CPU detection pass across the batch
-            if len(batch_images) > 1:
-                with ThreadPoolExecutor(max_workers=min(max_workers, len(batch_images))) as executor:
-                    det_results = list(executor.map(process_detection, enumerate(batch_images)))
-            else:
-                det_results = [process_detection((0, batch_images[0]))]
+            # 1. Sequential CPU detection pass across the batch (PaddleOCR C++ AnalysisPredictor is not thread-safe)
+            det_results = [process_detection((img_idx, img_item)) for img_idx, img_item in enumerate(batch_images)]
 
             # Sort back by original image index
             det_results.sort(key=lambda x: x[0])

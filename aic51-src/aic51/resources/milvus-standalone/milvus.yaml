@@ -1,3 +1,7 @@
 proxy:
   maxVectorFieldNum: 10
 
+queryNode:
+  mmap:
+    mmapEnabled: true
+
