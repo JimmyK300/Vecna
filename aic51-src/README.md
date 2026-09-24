@@ -83,6 +83,9 @@ aic51-cli analyse --use-yolo26x-seg
 # Split work across machines with repeatable video filters
 aic51-cli analyse --use-yolo26x-seg --video L21_V001 --video L21_V002
 
+# Read a separate flat frame folder or a root containing <video_id>/ subfolders
+aic51-cli analyse --use-yolo26x-seg --input-folder path/to/assigned-keyframes
+
 # C. Combined Multimodal + Traffic Analysis
 aic51-cli analyse --use-image-siglip --use-qwen-vl --use-yolo --video <video_id>
 

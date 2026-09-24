@@ -22,6 +22,7 @@ COLOR_NAMES = [
 ]
 COLOR_MAP = {c: i for i, c in enumerate(COLOR_NAMES)}
 VEHICLE_CLASSES = {"bicycle", "car", "motorcycle", "bus", "truck"}
+IMAGE_EXTENSIONS = {".bmp", ".jpeg", ".jpg", ".png", ".tif", ".tiff", ".webp"}
 
 
 def extract_vehicle_color_traffic_cam(img_bgr, bbox):
@@ -142,6 +143,16 @@ class YoloTraffic(FeatureExtractor):
         self.name = name
         self._batch_size = batch_size
         self._work_dir = Path(kwargs.get("work_dir", ".")).resolve()
+        raw_input_dir = kwargs.get("input_dir")
+        self._input_dir = None
+        if raw_input_dir is not None:
+            input_dir = Path(raw_input_dir).expanduser()
+            if not input_dir.is_absolute():
+                input_dir = self._work_dir / input_dir
+            self._input_dir = input_dir.resolve()
+            if not self._input_dir.is_dir():
+                raise ValueError(f"YOLO input folder does not exist: {self._input_dir}")
+        self.custom_input_configured = self._input_dir is not None
         self._pretrained_model = str(pretrained_model)
         self._conf = float(kwargs.get("conf", 0.25))
         self._min_box_area = int(kwargs.get("min_box_area", 1800))
@@ -173,6 +184,58 @@ class YoloTraffic(FeatureExtractor):
             self._device = "0" if torch.cuda.is_available() else "cpu"
 
         super().__init__(name, batch_size, self._device)
+
+    @staticmethod
+    def _image_files(directory: Path) -> list[Path]:
+        if not directory.is_dir():
+            return []
+        return sorted(
+            path
+            for path in directory.iterdir()
+            if path.is_file()
+            and not path.name.startswith(".")
+            and path.suffix.lower() in IMAGE_EXTENSIONS
+        )
+
+    def discover_video_ids(self, work_dir: Path | str) -> list[str]:
+        if self._input_dir is None:
+            return []
+        video_ids = []
+        if self._image_files(self._input_dir):
+            video_ids.append(self._input_dir.name)
+        video_ids.extend(
+            directory.name
+            for directory in sorted(self._input_dir.iterdir())
+            if directory.is_dir()
+            and not directory.name.startswith(".")
+            and self._image_files(directory)
+        )
+        return video_ids
+
+    def _input_video_dir(self, video_id: str) -> Path:
+        if self._input_dir is None:
+            return self._work_dir / constant.KEYFRAME_DIR / video_id
+        if video_id == self._input_dir.name and self._image_files(self._input_dir):
+            return self._input_dir
+        return self._input_dir / video_id
+
+    def discover_frame_ids(self, work_dir: Path | str, video_id: str) -> list[str]:
+        if self._input_dir is None:
+            return []
+        return [path.stem for path in self._image_files(self._input_video_dir(video_id))]
+
+    def input_paths_for_frames(
+        self,
+        work_dir: Path | str,
+        video_id: str,
+        frame_ids: list[str],
+    ) -> list[Path]:
+        if self._input_dir is None:
+            input_dir = Path(work_dir) / constant.KEYFRAME_DIR / video_id
+        else:
+            input_dir = self._input_video_dir(video_id)
+        wanted = set(frame_ids)
+        return [path for path in self._image_files(input_dir) if path.stem in wanted]
 
     def runtime_semantics(self) -> dict[str, Any]:
         return {

@@ -37,10 +37,13 @@ class Yolo26xFeatureTest(unittest.TestCase):
         subparsers = parser.add_subparsers(dest="command")
         AnalyseCommand(Path.cwd()).add_args(subparsers)
 
-        short = parser.parse_args(["analyse", "--use-yolo26x"])
+        short = parser.parse_args(
+            ["analyse", "--use-yolo26x", "--input-folder", "frames"]
+        )
         explicit = parser.parse_args(["analyse", "--use-yolo26x-seg"])
 
         self.assertTrue(short.use_yolo26x_seg)
+        self.assertEqual(short.input_folder, "frames")
         self.assertTrue(explicit.use_yolo26x_seg)
 
     def test_yolo26x_alias_writes_per_frame_metadata(self):
@@ -71,6 +74,36 @@ class Yolo26xFeatureTest(unittest.TestCase):
                     batch_size=2,
                     device="cpu",
                     work_dir=work_dir,
+                    input_dir=frame_dir.parent,
+                )
+                self.assertEqual(extractor.discover_video_ids(work_dir), ["V001"])
+                self.assertEqual(
+                    extractor.discover_frame_ids(work_dir, "V001"),
+                    ["000001", "000002"],
+                )
+                self.assertEqual(
+                    [
+                        path.name
+                        for path in extractor.input_paths_for_frames(
+                            work_dir,
+                            "V001",
+                            ["000002"],
+                        )
+                    ],
+                    ["000002.jpg"],
+                )
+                extractor._input_dir = frame_dir
+                self.assertEqual(extractor.discover_video_ids(work_dir), ["V001"])
+                self.assertEqual(
+                    [
+                        path.name
+                        for path in extractor.input_paths_for_frames(
+                            work_dir,
+                            "V001",
+                            ["000001"],
+                        )
+                    ],
+                    ["000001.jpg"],
                 )
                 vectors = extractor.get_features(frame_paths)
 

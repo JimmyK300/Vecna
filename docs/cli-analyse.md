@@ -27,6 +27,7 @@ aic51-cli analyse [options]
 | `--use-yolo26x`, `--use-yolo26x-seg` | — | Run ONLY YOLO26x-seg for each image under `data/keyframes/<video>/` |
 | `--keep-going` | — | Record a video failure and continue the remaining videos |
 | `--video ID` | — | Limit analysis to one or more video IDs (repeatable) |
+| `--input-folder PATH`, `--input-dir PATH` | — | Read YOLO26x frames from a flat folder or `<video_id>/<frame>` folder tree |
 
 ONNX text-embedding progress lines include a representative document and the
 live batch width, e.g. `ocr_dense infer: batch=2500/L25_V048_ocr n=64 pad=32`.
