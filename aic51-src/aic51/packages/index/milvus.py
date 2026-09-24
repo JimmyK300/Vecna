@@ -67,6 +67,11 @@ class MilvusDatabase(object):
             self._client.create_collection(collection_name, schema=schema, index_params=index_params)
 
         self._client.load_collection(self._collection_name)
+        try:
+            desc = self._client.describe_collection(self._collection_name)
+            self._existing_fields = {f.get("name") for f in desc.get("fields", []) if f.get("name")}
+        except Exception:
+            self._existing_fields = None
 
     def _check_schema_mismatch(self) -> bool:
         try:
@@ -230,10 +235,15 @@ class MilvusDatabase(object):
         except Exception as e:
             logger.debug(f"Pre-insert schema validation notice: {e}")
 
-        if do_update:
-            return self._client.upsert(self._collection_name, data)
-        else:
-            return self._client.insert(self._collection_name, data)
+        res = None
+        batch_size = 500
+        for i in range(0, len(data), batch_size):
+            batch = data[i : i + batch_size]
+            if do_update:
+                res = self._client.upsert(self._collection_name, batch)
+            else:
+                res = self._client.insert(self._collection_name, batch)
+        return res
 
     def get_scalar_output_fields(self) -> list[str]:
         """Returns non-vector fields (e.g. frame_id, ocr, asr) to avoid transferring heavy vectors into RAM."""
@@ -244,7 +254,9 @@ class MilvusDatabase(object):
                 if isinstance(feat_cfg, dict) and feat_cfg.get("enable", True):
                     dt = feat_cfg.get("index", {}).get("datatype", "")
                     if dt and ("VECTOR" not in dt.upper()):
-                        scalar_fields.append(self.process_field_name(feat_name))
+                        fname = self.process_field_name(feat_name)
+                        if self._existing_fields is None or fname in self._existing_fields:
+                            scalar_fields.append(fname)
         return sorted(list(set(scalar_fields)))
 
     def get(self, id, output_fields: list[str] | None = None):
