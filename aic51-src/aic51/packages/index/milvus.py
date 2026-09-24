@@ -402,7 +402,7 @@ class MilvusDatabase(object):
         return res[0]["count(*)"]
 
     @classmethod
-    def start_server(cls):
+    def start_server(cls, timeout: int = 90):
         compose_file = resources.MILVUS_FILE_PATH / "milvus-standalone-docker-compose.yaml"
 
         compose_cmd = [
@@ -414,6 +414,19 @@ class MilvusDatabase(object):
             "-d",
         ]
         subprocess.run(compose_cmd)
+
+        logger.info("Waiting for Milvus server to be ready...")
+        start_time = time.time()
+        while time.time() - start_time < timeout:
+            try:
+                client = MilvusClient(timeout=2)
+                client.list_collections()
+                client.close()
+                logger.info("Milvus server is ready.")
+                return
+            except Exception:
+                time.sleep(2)
+        logger.warning("Milvus server did not respond within timeout, proceeding anyway...")
 
     @classmethod
     def stop_server(cls):
