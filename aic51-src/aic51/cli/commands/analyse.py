@@ -255,7 +255,15 @@ class AnalyseCommand(BaseCommand):
                     if value is not None:
                         init_kwargs[key] = value
             elif model_name in ("yolo_traffic", "yolo26x_seg"):
-                for key in ("conf", "min_box_area"):
+                for key in (
+                    "conf",
+                    "min_box_area",
+                    "relation_conf",
+                    "relation_horizontal",
+                    "relation_vertical",
+                    "relation_near",
+                    "max_relation_objects",
+                ):
                     value = GlobalConfig.get("features", feature_name, "analyse", key)
                     if value is None:
                         value = GlobalConfig.get("features", feature_name, key)

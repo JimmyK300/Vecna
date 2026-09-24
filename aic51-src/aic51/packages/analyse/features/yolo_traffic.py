@@ -1,7 +1,9 @@
 import json
+import math
 import os
 import re
 from collections import Counter
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Callable, Optional
 
@@ -23,6 +25,162 @@ COLOR_NAMES = [
 COLOR_MAP = {c: i for i, c in enumerate(COLOR_NAMES)}
 VEHICLE_CLASSES = {"bicycle", "car", "motorcycle", "bus", "truck"}
 IMAGE_EXTENSIONS = {".bmp", ".jpeg", ".jpg", ".png", ".tif", ".tiff", ".webp"}
+RELATION_ARRAY_CAPACITY = 4096
+RELATION_COLOR_MAP = {
+    "trắng": "white",
+    "đen": "black",
+    "bạc/xám": "gray",
+    "xám": "gray",
+    "đỏ": "red",
+    "xanh dương": "blue",
+    "vàng": "yellow",
+    "cam": "orange",
+    "xanh lá": "green",
+    "tím": "purple",
+}
+RELATION_PALETTE = {
+    "red", "orange", "yellow", "green", "blue", "purple",
+    "black", "white", "gray", "unknown",
+}
+
+
+@dataclass(frozen=True)
+class RelationThresholds:
+    horizontal: float = 0.08
+    vertical: float = 0.08
+    near: float = 0.25
+
+
+@dataclass(frozen=True)
+class RelationDetection:
+    class_name: str
+    color: str
+    bbox: tuple[float, float, float, float]
+    confidence: float
+
+    @property
+    def cx(self) -> float:
+        return (self.bbox[0] + self.bbox[2]) / 2.0
+
+    @property
+    def cy(self) -> float:
+        return (self.bbox[1] + self.bbox[3]) / 2.0
+
+    @property
+    def object_key(self) -> str:
+        return f"{self.color}:{self.class_name}"
+
+
+def _relation_token(value: Any) -> str:
+    value = str(value or "").strip().lower().replace(":", "_")
+    value = {"motorbike": "motorcycle"}.get(value, value)
+    return re.sub(r"\s+", "_", value)
+
+
+def _relation_color(value: Any) -> str:
+    value = str(value or "").strip().lower()
+    value = RELATION_COLOR_MAP.get(value, value)
+    return value if value in RELATION_PALETTE else "unknown"
+
+
+def _relation_variants(
+    left: RelationDetection,
+    relation: str,
+    right: RelationDetection,
+) -> set[str]:
+    return {
+        f"{left.color}:{left.class_name}:{relation}:{right.color}:{right.class_name}",
+        f"{left.class_name}:{relation}:{right.color}:{right.class_name}",
+        f"{left.color}:{left.class_name}:{relation}:{right.class_name}",
+        f"{left.class_name}:{relation}:{right.class_name}",
+    }
+
+
+def _relation_keys(
+    detections: list[RelationDetection],
+    frame_width: int,
+    frame_height: int,
+    thresholds: RelationThresholds,
+) -> list[str]:
+    keys: set[str] = set()
+    for index, left in enumerate(detections):
+        for right in detections[index + 1 :]:
+            dx = (left.cx - right.cx) / frame_width
+            dy = (left.cy - right.cy) / frame_height
+            if abs(dx) >= thresholds.horizontal:
+                if dx < 0:
+                    keys.update(_relation_variants(left, "left_of", right))
+                    keys.update(_relation_variants(right, "right_of", left))
+                else:
+                    keys.update(_relation_variants(left, "right_of", right))
+                    keys.update(_relation_variants(right, "left_of", left))
+            if abs(dy) >= thresholds.vertical:
+                if dy < 0:
+                    keys.update(_relation_variants(left, "above", right))
+                    keys.update(_relation_variants(right, "below", left))
+                else:
+                    keys.update(_relation_variants(left, "below", right))
+                    keys.update(_relation_variants(right, "above", left))
+            if math.hypot(dx, dy) <= thresholds.near:
+                keys.update(_relation_variants(left, "near", right))
+                keys.update(_relation_variants(right, "near", left))
+    return sorted(keys)
+
+
+def derive_relation_arrays_from_objects(
+    raw_objects: list[dict[str, Any]],
+    frame_width: int,
+    frame_height: int,
+    confidence_threshold: float,
+    thresholds: RelationThresholds,
+    max_relation_objects: int,
+) -> tuple[list[str], list[str], dict[str, int]]:
+    detections = []
+    for raw in raw_objects:
+        confidence = float(raw.get("confidence", 0.0))
+        bbox = raw.get("bbox") or {}
+        try:
+            coords = tuple(float(bbox[key]) for key in ("x1", "y1", "x2", "y2"))
+        except (KeyError, TypeError, ValueError):
+            continue
+        class_name = _relation_token(raw.get("class_name"))
+        if (
+            confidence < confidence_threshold
+            or not class_name
+            or coords[2] <= coords[0]
+            or coords[3] <= coords[1]
+        ):
+            continue
+        detections.append(
+            RelationDetection(
+                class_name=class_name,
+                color=_relation_color(raw.get("color")),
+                bbox=coords,
+                confidence=confidence,
+            )
+        )
+
+    if detections:
+        frame_width = max(frame_width, math.ceil(max(item.bbox[2] for item in detections)))
+        frame_height = max(frame_height, math.ceil(max(item.bbox[3] for item in detections)))
+    frame_width, frame_height = max(frame_width, 1), max(frame_height, 1)
+    selected = sorted(detections, key=lambda item: item.confidence, reverse=True)[
+        :max_relation_objects
+    ]
+    while True:
+        relation_keys = _relation_keys(selected, frame_width, frame_height, thresholds)
+        if len(relation_keys) <= RELATION_ARRAY_CAPACITY:
+            break
+        selected.pop()
+    return (
+        sorted({item.object_key for item in detections}),
+        relation_keys,
+        {
+            "eligible_instances": len(detections),
+            "relation_instances": len(selected),
+            "truncated_instances": len(detections) - len(selected),
+        },
+    )
 
 
 def extract_vehicle_color_traffic_cam(img_bgr, bbox):
@@ -156,6 +314,13 @@ class YoloTraffic(FeatureExtractor):
         self._pretrained_model = str(pretrained_model)
         self._conf = float(kwargs.get("conf", 0.25))
         self._min_box_area = int(kwargs.get("min_box_area", 1800))
+        self._relation_conf = float(kwargs.get("relation_conf", 0.4))
+        self._relation_thresholds = RelationThresholds(
+            horizontal=float(kwargs.get("relation_horizontal", 0.08)),
+            vertical=float(kwargs.get("relation_vertical", 0.08)),
+            near=float(kwargs.get("relation_near", 0.25)),
+        )
+        self._max_relation_objects = int(kwargs.get("max_relation_objects", 32))
 
         # Tìm model weight: ưu tiên path chỉ định -> weights/ -> root -> auto download
         configured_path = Path(pretrained_model)
@@ -244,6 +409,9 @@ class YoloTraffic(FeatureExtractor):
             "confidence": self._conf,
             "min_box_area": self._min_box_area,
             "vector_schema": "traffic-32-v1",
+            "relation_confidence": self._relation_conf,
+            "relation_thresholds": asdict(self._relation_thresholds),
+            "max_relation_objects": self._max_relation_objects,
         }
 
     def to(self, device: str | torch.device):
@@ -414,6 +582,23 @@ class YoloTraffic(FeatureExtractor):
                 out_dir = self._work_dir / constant.FEATURE_DIR / video_id / frame_id
                 out_dir.mkdir(parents=True, exist_ok=True)
                 json_path = out_dir / f"{self.name}.json"
+                orig_shape = getattr(res, "orig_shape", None)
+                if orig_shape is not None and len(orig_shape) >= 2:
+                    frame_height, frame_width = int(orig_shape[0]), int(orig_shape[1])
+                elif img_bgr is not None:
+                    frame_height, frame_width = img_bgr.shape[:2]
+                else:
+                    frame_height, frame_width = 0, 0
+                object_keys, relation_keys, relation_stats = (
+                    derive_relation_arrays_from_objects(
+                        detected_objects,
+                        frame_width=frame_width,
+                        frame_height=frame_height,
+                        confidence_threshold=self._relation_conf,
+                        thresholds=self._relation_thresholds,
+                        max_relation_objects=self._max_relation_objects,
+                    )
+                )
                 meta_payload = {
                     "video_id": video_id,
                     "frame_id": frame_id,
@@ -426,6 +611,13 @@ class YoloTraffic(FeatureExtractor):
                     "total_cars": car_count + bus_count + truck_count,
                     "colors": list(color_counts.elements()),
                     "objects": detected_objects,
+                    "object_keys": object_keys,
+                    "relation_keys": relation_keys,
+                    "relation_metadata": {
+                        "confidence_threshold": self._relation_conf,
+                        "thresholds": asdict(self._relation_thresholds),
+                        **relation_stats,
+                    },
                 }
                 with open(json_path, "w", encoding="utf-8") as f_json:
                     json.dump(meta_payload, f_json, ensure_ascii=False, indent=2)
