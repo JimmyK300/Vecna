@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DRES Submission Portal - AI Challenge 2026</title>
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-card: #1e293b;
+      --bg-input: #0f172a;
+      --border-color: #334155;
+      --border-focus: #38bdf8;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-blue: #0284c7;
+      --accent-hover: #0369a1;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      --accent-amber: #f59e0b;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      padding: 24px 16px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Header */
+    header {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .header-title h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #38bdf8;
+      letter-spacing: -0.5px;
+    }
+
+    .header-title p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 600;
+      background: #334155;
+      color: #e2e8f0;
+      border: 1px solid var(--border-color);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent-amber);
+    }
+    .status-dot.connected { background: var(--accent-green); box-shadow: 0 0 8px var(--accent-green); }
+    .status-dot.error { background: var(--accent-red); box-shadow: 0 0 8px var(--accent-red); }
+
+    /* Warning Banner for file:/// */
+    .banner-warning {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid var(--accent-amber);
+      color: #fde68a;
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      display: none;
+      line-height: 1.6;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px 24px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #e2e8f0;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 640px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Form inputs */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="number"],
+    select {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 1px var(--border-focus);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--accent-blue);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background: #334155;
+      color: #f1f5f9;
+    }
+    .btn-secondary:hover {
+      background: #475569;
+    }
+
+    .btn-danger {
+      background: var(--accent-red);
+      color: #fff;
+    }
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      color: #fff;
+      font-size: 16px;
+      padding: 14px 28px;
+      width: 100%;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+    }
+    .btn-submit:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+    }
+
+    /* Tabs */
+    .tabs-nav {
+      display: flex;
+      gap: 8px;
+      border-bottom: 2px solid var(--border-color);
+      margin-bottom: 20px;
+    }
+
+    .tab-button {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 10px 20px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+    }
+
+    .tab-button:hover {
+      color: #e2e8f0;
+    }
+
+    .tab-button.active {
+      color: #38bdf8;
+      border-bottom-color: #38bdf8;
+    }
+
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Live Preview Box */
+    .preview-box {
+      background: #090d16;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      color: #38bdf8;
+      white-space: pre-wrap;
+      word-break: break-all;
+      margin-top: 14px;
+    }
+
+    .preview-header {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Alert Banner */
+    .alert-penalty {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fbbf24;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Result Box */
+    .result-box {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 8px;
+      display: none;
+      font-size: 14px;
+    }
+    .result-box.success {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid var(--accent-green);
+      color: #34d399;
+      display: block;
+    }
+    .result-box.error {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid var(--accent-red);
+      color: #f87171;
+      display: block;
+    }
+
+    /* History Table */
+    .table-container {
+      overflow-x: auto;
+      margin-top: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    th {
+      color: var(--text-muted);
+      font-weight: 600;
+      background: rgba(15, 23, 42, 0.4);
+    }
+
+    tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .badge-kis { background: #0369a1; color: #e0f2fe; }
+    .badge-qa { background: #7c3aed; color: #ede9fe; }
+    .badge-trake { background: #059669; color: #ecfdf5; }
+    .badge-success { background: #065f46; color: #a7f3d0; }
+    .badge-fail { background: #991b1b; color: #fecaca; }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 16px;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      max-width: 520px;
+      width: 100%;
+      padding: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #f87171;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .modal-body {
+      font-size: 13px;
+      color: #cbd5e1;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-title">
+      <h1>Cổng Nộp Bài DRES - AI Challenge 2026</h1>
+      <p>Giao diện nộp bài thi Chung kết chuẩn quốc tế VBS / DRES Protocol</p>
+    </div>
+    <div class="status-badge" id="status-pill">
+      <span class="status-dot" id="status-dot"></span>
+      <span id="status-text">Đang kết nối...</span>
+    </div>
+  </header>
+
+  <!-- BANNER CẢNH BÁO MỞ BẰNG FILE:/// -->
+  <div class="banner-warning" id="file-protocol-warning">
+    <strong>⚠️ CHÚ Ý: BẠN ĐANG MỞ TRỰC TIẾP FILE HTML (file:///)</strong><br>
+    Trình duyệt có cơ chế bảo mật chặn kết nối mạng (CORS). Để nộp bài trơn tru và không bao giờ bị lỗi kết nối:<br>
+    👉 Hãy <strong>click đúp vào file <code>open_submitter.bat</code></strong> trong thư mục để tự động khởi chạy máy chủ cục bộ tại <code>http://localhost:8080</code>!
+  </div>
+
+  <!-- PHẦN 1: CẤU HÌNH KẾT NỐI, SESSION & ĐĂNG NHẬP -->
+  <div class="card">
+    <div class="card-title">
+      <span>1. Cấu hình Kết nối & Phiên thi</span>
+      <button class="btn btn-secondary" onclick="checkConnection()" style="font-size: 12px; padding: 6px 12px;">
+        🔄 Kiểm tra & Tải Evaluation
+      </button>
+    </div>
+
+    <div class="grid-2">
+      <div class="form-group">
+        <label for="server-url">Server DRES URL:</label>
+        <input type="text" id="server-url" value="https://eventretrieval.one" placeholder="https://eventretrieval.one">
+      </div>
+      <div class="form-group">
+        <label for="session-id">Session ID (Token đội thi):</label>
+        <input type="text" id="session-id" value="l0hjIyK0GRkr1AcVTgmyNy67cRkD_yCh" placeholder="Nhập sessionId hoặc đăng nhập bên dưới...">
+      </div>
+    </div>
+
+    <!-- KHUNG ĐĂNG NHẬP NHANH (NẾU SESSION ID HẾT HẠN) -->
+    <div style="margin-top: 4px; margin-bottom: 14px; padding: 14px; background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-color); border-radius: 8px;">
+      <div style="font-size: 13px; font-weight: 700; color: #38bdf8; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+        <span>🔑 Đăng nhập trực tiếp (Cấp Session ID mới khi token hết hạn)</span>
+      </div>
+      <div class="grid-2">
+        <div class="form-group" style="margin-bottom: 6px;">
+          <label for="login-username">Tên đăng nhập (Username):</label>
+          <input type="text" id="login-username" value="team_631" placeholder="Ví dụ: team_631">
+        </div>
+        <div class="form-group" style="margin-bottom: 6px;">
+          <label for="login-password">Mật khẩu (Password do BTC cấp):</label>
+          <input type="password" id="login-password" placeholder="Nhập mật khẩu...">
+        </div>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center; margin-top: 10px;">
+        <button class="btn btn-primary" onclick="doLogin()" style="font-size: 13px; padding: 8px 18px;">
+          🔑 Đăng nhập lấy Session ID mới
+        </button>
+        <span id="login-status-text" style="font-size: 13px; color: var(--text-muted);"></span>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top: 6px;">
+      <div class="form-group">
+        <label for="evaluation-select">Phiên thi (Evaluation ID):</label>
+        <select id="evaluation-select" onchange="fetchCurrentTask()">
+          <option value="">-- Đang tải danh sách... --</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="custom-eval-id">Hoặc nhập Evaluation ID tùy chỉnh (nếu có):</label>
+        <input type="text" id="custom-eval-id" placeholder="Tự động lấy theo danh sách nếu để trống" oninput="fetchCurrentTask()">
+      </div>
+    </div>
+
+    <div id="user-info-text" style="font-size: 13px; color: #38bdf8; margin-top: 8px; padding: 8px 12px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 6px; display: none;"></div>
+
+    <!-- WIDGET THÔNG TIN TASK / CÂU HỎI HIỆN TẠI -->
+    <div style="margin-top: 10px; padding: 12px 16px; background: rgba(30, 41, 59, 0.8); border: 1px solid #38bdf8; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <div style="font-size: 13px; font-weight: 700; color: #38bdf8; display: flex; align-items: center; gap: 8px;">
+          <span>🎯 Task hiện tại trên server:</span>
+          <span id="current-task-name" style="color: #f1f5f9; font-weight: 600;">(Chưa kiểm tra)</span>
+        </div>
+        <div id="current-task-detail" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
+          Bấm "Lấy thông tin Task" hoặc xem màn hình Viewer trực tiếp của BTC.
+        </div>
+      </div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="btn btn-secondary" onclick="fetchCurrentTask()" style="font-size: 12px; padding: 6px 12px;">
+          🎯 Lấy thông tin Task
+        </button>
+        <a href="https://eventretrieval.one/viewer" target="_blank" class="btn btn-primary" style="font-size: 12px; padding: 6px 14px; text-decoration: none;">
+          👁️ Mở Viewer BTC (Xem gợi ý/video)
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHẦN 2: CHỌN LOẠI CÂU HỎI & NHẬP ĐÁP ÁN -->
+  <div class="card">
+    <div class="card-title">
+      <span>2. Nhập Đáp án theo Thể thức Chung kết</span>
+    </div>
+
+    <!-- Alert cảnh báo trừ điểm -->
+    <div class="alert-penalty">
+      <span style="font-size: 20px;">⚠️</span>
+      <div>
+        <strong>Quy định phạt điểm:</strong> Mỗi lần nộp SAI trước lần đúng đầu tiên sẽ bị <strong>trừ 10 điểm</strong>. Không nộp trùng kết quả cho cùng một truy vấn! Hãy kiểm tra kỹ trước khi bấm nộp.
+      </div>
+    </div>
+
+    <!-- TABS NAVIGATION -->
+    <div class="tabs-nav">
+      <button class="tab-button active" onclick="switchTab('kis')">Textual / Video KIS</button>
+      <button class="tab-button" onclick="switchTab('qa')">Q&A (Hỏi - Đáp)</button>
+      <button class="tab-button" onclick="switchTab('trake')">TRAKE (Chuỗi Keyframe)</button>
+    </div>
+
+    <!-- TAB 1: KIS -->
+    <div id="tab-kis" class="tab-content active">
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="kis-video">Tên Video (MediaItemName):</label>
+          <input type="text" id="kis-video" placeholder="Ví dụ: L01_V001 (tự động cắt đuôi .mp4)" oninput="updatePreviews()">
+        </div>
+        <div class="form-group">
+          <label>Đơn vị thời gian:</label>
+          <div style="display: flex; gap: 20px; align-items: center; height: 42px;">
+            <label style="font-weight: normal; cursor: pointer; color: #fff;">
+              <input type="radio" name="kis-time-unit" value="ms" checked onchange="updatePreviews()"> Mili-giây (ms)
+            </label>
+            <label style="font-weight: normal; cursor: pointer; color: #fff;">
+              <input type="radio" name="kis-time-unit" value="s" onchange="updatePreviews()"> Giây (s)
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="kis-start">Thời gian bắt đầu (Start):</label>
+          <input type="number" id="kis-start" placeholder="Ví dụ: 15200 (ms) hoặc 15.2 (s)" oninput="updatePreviews()">
+        </div>
+        <div class="form-group">
+          <label for="kis-end">Thời gian kết thúc (End - tùy chọn):</label>
+          <input type="number" id="kis-end" placeholder="Để trống nếu bằng Start (nộp 1 keyframe)" oninput="updatePreviews()">
+        </div>
+      </div>
+
+      <div class="preview-header">Dữ liệu JSON sẽ nộp lên server (Payload Preview):</div>
+      <div class="preview-box" id="kis-preview">...</div>
+    </div>
+
+    <!-- TAB 2: QA -->
+    <div id="tab-qa" class="tab-content">
+      <div class="form-group">
+        <label for="qa-answer">Câu trả lời (Answer):</label>
+        <input type="text" id="qa-answer" placeholder="Ví dụ: red car, blue bus, 25..." oninput="updatePreviews()">
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="qa-video">Tên Video (MediaItemName):</label>
+          <input type="text" id="qa-video" placeholder="Ví dụ: L01_V001 (tự động cắt đuôi .mp4)" oninput="updatePreviews()">
+        </div>
+        <div class="form-group">
+          <label for="qa-time">Thời gian xuất hiện (ms):</label>
+          <input type="number" id="qa-time" placeholder="Ví dụ: 15200 (mili-giây)" oninput="updatePreviews()">
+        </div>
+      </div>
+
+      <div class="preview-header">Chuỗi text quy định: QA-&lt;ANSWER&gt;-&lt;VIDEO_ID&gt;-&lt;TIME(ms)&gt;</div>
+      <div class="preview-box" id="qa-text-preview" style="color: #34d399; margin-bottom: 8px;">...</div>
+
+      <div class="preview-header">Dữ liệu JSON sẽ nộp lên server (Payload Preview):</div>
+      <div class="preview-box" id="qa-preview">...</div>
+    </div>
+
+    <!-- TAB 3: TRAKE -->
+    <div id="tab-trake" class="tab-content">
+      <div class="form-group">
+        <label for="trake-video">Tên Video (MediaItemName):</label>
+        <input type="text" id="trake-video" placeholder="Ví dụ: L01_V001 (tự động cắt đuôi .mp4)" oninput="updatePreviews()">
+      </div>
+
+      <div class="form-group">
+        <label for="trake-frames">Danh sách ID Keyframes (theo thứ tự sự kiện, cách nhau bằng dấu phẩy):</label>
+        <input type="text" id="trake-frames" placeholder="Ví dụ: 1250, 3400, 8920" oninput="updatePreviews()">
+      </div>
+
+      <div class="preview-header">Chuỗi text quy định: TR-&lt;VIDEO_ID&gt;-&lt;FRAME_ID1&gt;,&lt;FRAME_ID2&gt;,...</div>
+      <div class="preview-box" id="trake-text-preview" style="color: #34d399; margin-bottom: 8px;">...</div>
+
+      <div class="preview-header">Dữ liệu JSON sẽ nộp lên server (Payload Preview):</div>
+      <div class="preview-box" id="trake-preview">...</div>
+    </div>
+
+    <!-- SUBMIT ACTIONS -->
+    <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 14px;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <input type="checkbox" id="dry-run-check" style="width: 18px; height: 18px; cursor: pointer;">
+        <label for="dry-run-check" style="color: #fbbf24; cursor: pointer; font-size: 14px;">
+          Chế độ chạy thử giả lập (Dry-Run: kiểm tra định dạng và cấu trúc, không nộp thật lên server)
+        </label>
+      </div>
+
+      <button class="btn btn-submit" id="submit-btn" onclick="openConfirmModal()">
+        🚀 BẤM NỘP BÀI VÀO DRES
+      </button>
+    </div>
+
+    <!-- KẾT QUẢ PHẢN HỒI -->
+    <div id="result-box" class="result-box"></div>
+  </div>
+
+  <!-- PHẦN 3: LỊCH SỬ NỘP BÀI -->
+  <div class="card">
+    <div class="card-title">
+      <span>3. Lịch sử Nộp bài (Audit Log)</span>
+      <div style="display: flex; gap: 8px;">
+        <button class="btn btn-secondary" onclick="exportHistoryCSV()" style="font-size: 12px; padding: 4px 10px;">
+          📥 Tải CSV
+        </button>
+        <button class="btn btn-secondary" onclick="clearHistory()" style="font-size: 12px; padding: 4px 10px;">
+          🗑️ Xóa Lịch sử
+        </button>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Thời gian</th>
+            <th>Dạng câu</th>
+            <th>Video</th>
+            <th>Thông tin chi tiết</th>
+            <th>Kết quả BTC</th>
+            <th>Ghi chú</th>
+          </tr>
+        </thead>
+        <tbody id="history-tbody">
+          <tr>
+            <td colspan="7" style="text-align: center; color: var(--text-muted);">Chưa có lượt nộp bài nào.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- CONFIRMATION MODAL -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal-card">
+    <div class="modal-title">
+      <span>⚠️ XÁC NHẬN NỘP BÀI</span>
+    </div>
+    <div class="modal-body">
+      <p style="margin-bottom: 12px; font-weight: 600; color: #f87171;">
+        CẢNH BÁO PHẠT ĐIỂM: Bạn có chắc chắn muốn nộp câu trả lời này không? Nộp sai trước lần đúng đầu tiên sẽ bị trừ 10 điểm!
+      </p>
+      <div style="background: #090d16; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px; color: #38bdf8; max-height: 180px; overflow-y: auto;" id="modal-payload-preview">
+        ...
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeConfirmModal()">Hủy bỏ</button>
+      <button class="btn btn-danger" onclick="executeSubmission()">Đồng ý nộp ngay</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentTab = 'kis';
+  let submissionHistory = [];
+
+  // Khởi tạo
+  window.addEventListener('DOMContentLoaded', () => {
+    if (location.protocol === 'file:') {
+      document.getElementById('file-protocol-warning').style.display = 'block';
+    }
+
+    const savedSession = localStorage.getItem('dres_session_id');
+    if (savedSession) {
+      document.getElementById('session-id').value = savedSession;
+    }
+    const savedUrl = localStorage.getItem('dres_server_url');
+    if (savedUrl) {
+      document.getElementById('server-url').value = savedUrl;
+    }
+    const savedHistory = localStorage.getItem('dres_submission_history');
+    if (savedHistory) {
+      try {
+        submissionHistory = JSON.parse(savedHistory);
+        renderHistory();
+      } catch (e) {}
+    }
+
+    updatePreviews();
+    checkConnection();
+  });
+
+  function cleanVideoId(vid) {
+    if (!vid) return '';
+    return String(vid).trim().replace(/\.(mp4|webm|avi|mkv|mov|flv)$/i, '');
+  }
+
+  // Hàm gọi API thông minh: Tự động điều hướng qua Proxy cục bộ nếu bị chặn CORS
+  async function dresFetch(path, options = {}) {
+    const serverUrl = document.getElementById('server-url').value.trim().replace(/\/$/, '');
+    const isFile = location.protocol === 'file:';
+
+    // Nếu đang chạy trên localhost của submitter_server.py
+    if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+      try {
+        const resp = await fetch(`/proxy${path}`, options);
+        return resp;
+      } catch (e) {
+        return await fetch(`${serverUrl}${path}`, options);
+      }
+    }
+
+    // Nếu mở dạng file:/// thì ưu tiên thử qua proxy localhost:8080 trước
+    if (isFile) {
+      try {
+        const resp = await fetch(`http://127.0.0.1:8080/proxy${path}`, options);
+        return resp;
+      } catch (proxyErr) {
+        // Fallback gửi trực tiếp (có thể bị trình duyệt chặn CORS)
+        return await fetch(`${serverUrl}${path}`, options);
+      }
+    }
+
+    // Mặc định gọi trực tiếp server BTC
+    return await fetch(`${serverUrl}${path}`, options);
+  }
+
+  // Đăng nhập để nhận Session ID mới
+  async function doLogin() {
+    const username = document.getElementById('login-username').value.trim();
+    const password = document.getElementById('login-password').value;
+    const statusEl = document.getElementById('login-status-text');
+
+    if (!username || !password) {
+      alert("Vui lòng nhập Username và Password do BTC cung cấp!");
+      return;
+    }
+
+    statusEl.style.color = '#38bdf8';
+    statusEl.textContent = 'Đang gửi thông tin đăng nhập...';
+
+    try {
+      const resp = await dresFetch('/api/v2/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      let data = {};
+      try { data = await resp.json(); } catch(e) {}
+
+      if (resp.ok && data.sessionId) {
+        document.getElementById('session-id').value = data.sessionId;
+        localStorage.setItem('dres_session_id', data.sessionId);
+        statusEl.style.color = '#34d399';
+        statusEl.textContent = `✅ Đăng nhập thành công! Token: ${data.sessionId.slice(0, 10)}...`;
+        await checkConnection();
+      } else {
+        statusEl.style.color = '#f87171';
+        statusEl.textContent = `❌ Đăng nhập thất bại: ${data.description || 'Mật khẩu không đúng'}`;
+      }
+    } catch (err) {
+      statusEl.style.color = '#f87171';
+      statusEl.textContent = `❌ Lỗi kết nối: ${err.message}. Hãy mở bằng file open_submitter.bat!`;
+    }
+  }
+
+  function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+    if (tab === 'kis') {
+      document.querySelector('.tab-button:nth-child(1)').classList.add('active');
+      document.getElementById('tab-kis').classList.add('active');
+    } else if (tab === 'qa') {
+      document.querySelector('.tab-button:nth-child(2)').classList.add('active');
+      document.getElementById('tab-qa').classList.add('active');
+    } else if (tab === 'trake') {
+      document.querySelector('.tab-button:nth-child(3)').classList.add('active');
+      document.getElementById('tab-trake').classList.add('active');
+    }
+
+    updatePreviews();
+  }
+
+  // Cập nhật Live Previews
+  function updatePreviews() {
+    // 1. KIS Preview
+    const kisVid = cleanVideoId(document.getElementById('kis-video').value);
+    const kisUnit = document.querySelector('input[name="kis-time-unit"]:checked')?.value || 'ms';
+    let rawStart = parseFloat(document.getElementById('kis-start').value) || 0;
+    let rawEnd = parseFloat(document.getElementById('kis-end').value);
+
+    let startMs = kisUnit === 's' ? Math.round(rawStart * 1000) : Math.round(rawStart);
+    let endMs = isNaN(rawEnd) ? startMs : (kisUnit === 's' ? Math.round(rawEnd * 1000) : Math.round(rawEnd));
+
+    const kisPayload = {
+      answerSets: [{
+        answers: [{
+          mediaItemName: kisVid || "<VIDEO_ID>",
+          start: startMs,
+          end: endMs
+        }]
+      }]
+    };
+    document.getElementById('kis-preview').textContent = JSON.stringify(kisPayload, null, 2);
+
+    // 2. QA Preview
+    const qaVid = cleanVideoId(document.getElementById('qa-video').value);
+    let rawAns = (document.getElementById('qa-answer').value || "").trim();
+    if (rawAns.toUpperCase().startsWith('QA-')) rawAns = rawAns.substring(3).trim();
+    let qaTime = Math.round(parseFloat(document.getElementById('qa-time').value) || 0);
+
+    const qaFormatted = `QA-${rawAns || '<ANSWER>'}-${qaVid || '<VIDEO_ID>'}-${qaTime}`;
+    document.getElementById('qa-text-preview').textContent = qaFormatted;
+
+    const qaPayload = {
+      answerSets: [{
+        answers: [{
+          text: qaFormatted
+        }]
+      }]
+    };
+    document.getElementById('qa-preview').textContent = JSON.stringify(qaPayload, null, 2);
+
+    // 3. TRAKE Preview
+    const trakeVid = cleanVideoId(document.getElementById('trake-video').value);
+    const rawFrames = document.getElementById('trake-frames').value || "";
+    const frameList = rawFrames.split(/[,;\s]+/).map(f => f.trim()).filter(Boolean);
+    const framesStr = frameList.length > 0 ? frameList.join(',') : '<FRAME_ID1>,<FRAME_ID2>,...';
+
+    const trakeFormatted = `TR-${trakeVid || '<VIDEO_ID>'}-${framesStr}`;
+    document.getElementById('trake-text-preview').textContent = trakeFormatted;
+
+    const trakePayload = {
+      answerSets: [{
+        answers: [{
+          text: trakeFormatted
+        }]
+      }]
+    };
+    document.getElementById('trake-preview').textContent = JSON.stringify(trakePayload, null, 2);
+  }
+
+  // Kiểm tra kết nối và tải danh sách evaluation
+  async function checkConnection() {
+    const serverUrl = document.getElementById('server-url').value.trim().replace(/\/$/, '');
+    const sessionId = document.getElementById('session-id').value.trim();
+
+    localStorage.setItem('dres_server_url', serverUrl);
+    localStorage.setItem('dres_session_id', sessionId);
+
+    const statusDot = document.getElementById('status-dot');
+    const statusText = document.getElementById('status-text');
+    const userInfoText = document.getElementById('user-info-text');
+    const evalSelect = document.getElementById('evaluation-select');
+
+    statusDot.className = 'status-dot';
+    statusText.textContent = 'Đang kiểm tra...';
+
+    try {
+      // 1. Kiểm tra User info
+      const userRes = await dresFetch(`/api/v2/user?session=${sessionId}`);
+      if (userRes.ok) {
+        const userData = await userRes.json();
+        userInfoText.style.display = 'block';
+        userInfoText.textContent = `✅ Đội thi: ${userData.username || 'N/A'} | Vai trò: ${userData.role || 'N/A'} | ID: ${userData.id || ''}`;
+      } else if (userRes.status === 401) {
+        userInfoText.style.display = 'block';
+        userInfoText.textContent = `⚠️ Session ID đã hết hạn (Mã lỗi 401). Vui lòng điền Username & Password ở khung bên trên rồi bấm "Đăng nhập lấy Session ID mới".`;
+        statusDot.className = 'status-dot error';
+        statusText.textContent = 'Token hết hạn (401)';
+        return;
+      }
+
+      // 2. Lấy danh sách Evaluation
+      const evalRes = await dresFetch(`/api/v2/client/evaluation/list?session=${sessionId}`);
+      if (evalRes.ok) {
+        const evals = await evalRes.json();
+        evalSelect.innerHTML = '';
+
+        let activeEvalId = null;
+        if (Array.isArray(evals) && evals.length > 0) {
+          evals.forEach(ev => {
+            const opt = document.createElement('option');
+            opt.value = ev.id;
+            const isActive = String(ev.status).toUpperCase() === 'ACTIVE';
+            opt.textContent = `${ev.name || ev.id} [${ev.status}]`;
+            if (isActive && !activeEvalId) {
+              activeEvalId = ev.id;
+              opt.selected = true;
+            }
+            evalSelect.appendChild(opt);
+          });
+        } else {
+          evalSelect.innerHTML = '<option value="">(Hiện chưa có evaluation nào được mở)</option>';
+        }
+
+        statusDot.className = 'status-dot connected';
+        statusText.textContent = activeEvalId ? 'Đã kết nối (Có phiên thi ACTIVE)' : 'Đã kết nối server DRES';
+        if (activeEvalId) {
+          fetchCurrentTask();
+        }
+      } else {
+        throw new Error(`Mã phản hồi HTTP: ${evalRes.status}`);
+      }
+    } catch (err) {
+      statusDot.className = 'status-dot error';
+      statusText.textContent = 'Lỗi kết nối';
+      userInfoText.style.display = 'block';
+
+      if (location.protocol === 'file:') {
+        userInfoText.textContent = `❌ Lỗi: ${err.message}. Do bạn đang mở file trực tiếp bằng trình duyệt, hãy click đúp vào file "open_submitter.bat" để mở qua http://localhost:8080.`;
+      } else {
+        userInfoText.textContent = `❌ Lỗi kết nối: ${err.message}. Vui lòng kiểm tra lại URL server hoặc kết nối mạng.`;
+      }
+    }
+  }
+
+  function getTargetEvaluationId() {
+    const custom = document.getElementById('custom-eval-id').value.trim();
+    if (custom) return custom;
+    const selected = document.getElementById('evaluation-select').value.trim();
+    return selected;
+  }
+
+  async function fetchCurrentTask() {
+    const evalId = getTargetEvaluationId();
+    const sessionId = document.getElementById('session-id').value.trim();
+    const nameEl = document.getElementById('current-task-name');
+    const detailEl = document.getElementById('current-task-detail');
+
+    if (!evalId) {
+      nameEl.textContent = "(Chưa chọn Evaluation ID)";
+      detailEl.textContent = "Vui lòng chọn hoặc nhập Evaluation ID ở trên để kiểm tra.";
+      return;
+    }
+
+    nameEl.textContent = "Đang kiểm tra...";
+    try {
+      const resp = await dresFetch(`/api/v2/client/evaluation/currentTask/${evalId}?session=${sessionId}`);
+      if (resp.ok) {
+        const taskInfo = await resp.json();
+        nameEl.textContent = `${taskInfo.name || 'Không rõ tên'} [${taskInfo.taskGroup || 'General'}]`;
+        const durationSec = taskInfo.duration ? Math.round(taskInfo.duration / 1000) : 0;
+        detailEl.innerHTML = `Nhóm bài: <strong>${taskInfo.taskGroup || 'N/A'}</strong> | Loại: <strong>${taskInfo.taskType || 'N/A'}</strong> | Thời lượng: <strong>${durationSec}s</strong> (${Math.round(durationSec/60)} phút).<br>👉 Gợi ý câu hỏi/video phát trực tiếp tại <a href="https://eventretrieval.one/viewer" target="_blank" style="color:#38bdf8; font-weight:bold; text-decoration:underline;">Viewer của BTC</a>.`;
+
+        // Tự động chuyển tab tương ứng với câu hỏi
+        const grp = String(taskInfo.taskGroup || taskInfo.taskType || '').toUpperCase();
+        if (grp.includes('QA')) switchTab('qa');
+        else if (grp.includes('TRAKE')) switchTab('trake');
+        else switchTab('kis');
+      } else if (resp.status === 404) {
+        nameEl.textContent = "Chưa có task nào đang chạy";
+        detailEl.innerHTML = `BTC chưa bấm bắt đầu câu hỏi cho phiên thi này. Hãy theo dõi trên <a href="https://eventretrieval.one/viewer" target="_blank" style="color:#38bdf8;">màn hình Viewer của BTC</a>.`;
+      } else {
+        nameEl.textContent = `Server trả về mã ${resp.status}`;
+        detailEl.textContent = "Không thể lấy thông tin task hiện tại.";
+      }
+    } catch (err) {
+      nameEl.textContent = "Lỗi kết nối";
+      detailEl.textContent = err.message;
+    }
+  }
+
+  function getCurrentSubmissionPayload() {
+    if (currentTab === 'kis') {
+      const vid = cleanVideoId(document.getElementById('kis-video').value);
+      const kisUnit = document.querySelector('input[name="kis-time-unit"]:checked')?.value || 'ms';
+      let rawStart = parseFloat(document.getElementById('kis-start').value) || 0;
+      let rawEnd = parseFloat(document.getElementById('kis-end').value);
+
+      let startMs = kisUnit === 's' ? Math.round(rawStart * 1000) : Math.round(rawStart);
+      let endMs = isNaN(rawEnd) ? startMs : (kisUnit === 's' ? Math.round(rawEnd * 1000) : Math.round(rawEnd));
+
+      return {
+        type: 'KIS',
+        video: vid,
+        details: `Start: ${startMs}ms, End: ${endMs}ms`,
+        payload: {
+          answerSets: [{
+            answers: [{
+              mediaItemName: vid,
+              start: startMs,
+              end: endMs
+            }]
+          }]
+        }
+      };
+    } else if (currentTab === 'qa') {
+      const vid = cleanVideoId(document.getElementById('qa-video').value);
+      let rawAns = (document.getElementById('qa-answer').value || "").trim();
+      if (rawAns.toUpperCase().startsWith('QA-')) rawAns = rawAns.substring(3).trim();
+      let qaTime = Math.round(parseFloat(document.getElementById('qa-time').value) || 0);
+
+      const formatted = `QA-${rawAns}-${vid}-${qaTime}`;
+      return {
+        type: 'QA',
+        video: vid,
+        details: `Ans: "${rawAns}", Time: ${qaTime}ms`,
+        payload: {
+          answerSets: [{
+            answers: [{
+              text: formatted
+            }]
+          }]
+        }
+      };
+    } else {
+      const vid = cleanVideoId(document.getElementById('trake-video').value);
+      const rawFrames = document.getElementById('trake-frames').value || "";
+      const frameList = rawFrames.split(/[,;\s]+/).map(f => f.trim()).filter(Boolean);
+      const formatted = `TR-${vid}-${frameList.join(',')}`;
+
+      return {
+        type: 'TRAKE',
+        video: vid,
+        details: `Frames: [${frameList.join(', ')}]`,
+        payload: {
+          answerSets: [{
+            answers: [{
+              text: formatted
+            }]
+          }]
+        }
+      };
+    }
+  }
+
+  function openConfirmModal() {
+    const sub = getCurrentSubmissionPayload();
+    if (!sub.video) {
+      alert("Vui lòng nhập tên Video trước khi nộp!");
+      return;
+    }
+
+    const evalId = getTargetEvaluationId();
+    const isDryRun = document.getElementById('dry-run-check').checked;
+
+    if (!isDryRun && !evalId) {
+      alert("Chưa có Evaluation ID hợp lệ! Vui lòng bấm 'Kiểm tra & Tải Evaluation' hoặc nhập ID tùy chỉnh.");
+      return;
+    }
+
+    document.getElementById('modal-payload-preview').textContent = JSON.stringify(sub.payload, null, 2);
+    document.getElementById('confirm-modal').classList.add('active');
+  }
+
+  function closeConfirmModal() {
+    document.getElementById('confirm-modal').classList.remove('active');
+  }
+
+  async function executeSubmission() {
+    closeConfirmModal();
+
+    const sub = getCurrentSubmissionPayload();
+    const sessionId = document.getElementById('session-id').value.trim();
+    const evalId = getTargetEvaluationId();
+    const isDryRun = document.getElementById('dry-run-check').checked;
+
+    const resultBox = document.getElementById('result-box');
+    resultBox.className = 'result-box';
+    resultBox.style.display = 'block';
+    resultBox.innerHTML = '⏳ Đang gửi đáp án lên server DRES...';
+
+    const timestamp = new Date().toLocaleTimeString();
+
+    if (isDryRun) {
+      resultBox.className = 'result-box success';
+      resultBox.innerHTML = `<strong>[DRY-RUN THÀNH CÔNG]</strong> Định dạng payload chuẩn 100% theo PDF BTC:<br><pre style="margin-top:8px;">${JSON.stringify(sub.payload, null, 2)}</pre>`;
+
+      addHistoryEntry({
+        id: submissionHistory.length + 1,
+        time: timestamp,
+        type: sub.type,
+        video: sub.video,
+        details: sub.details,
+        verdict: 'DRY-RUN',
+        note: 'Kiểm tra giả lập'
+      });
+      return;
+    }
+
+    try {
+      const resp = await dresFetch(`/api/v2/submit/${evalId}?session=${sessionId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(sub.payload)
+      });
+
+      let resData = {};
+      try {
+        resData = await resp.json();
+      } catch (e) {
+        resData = { description: await resp.text() };
+      }
+
+      if (resp.ok) {
+        const isCorrect = resData.submission === 'CORRECT';
+        resultBox.className = isCorrect ? 'result-box success' : 'result-box error';
+        resultBox.innerHTML = `<strong>KẾT QUẢ TỪ SERVER:</strong> ${resData.submission || 'OK'}<br>Mô tả: ${resData.description || 'Đã nộp thành công'}`;
+
+        addHistoryEntry({
+          id: submissionHistory.length + 1,
+          time: timestamp,
+          type: sub.type,
+          video: sub.video,
+          details: sub.details,
+          verdict: resData.submission || 'SUCCESS',
+          note: resData.description || ''
+        });
+      } else {
+        resultBox.className = 'result-box error';
+        resultBox.innerHTML = `<strong>LỖI (${resp.status}):</strong> ${resData.description || 'Không thể gửi đáp án'}`;
+
+        addHistoryEntry({
+          id: submissionHistory.length + 1,
+          time: timestamp,
+          type: sub.type,
+          video: sub.video,
+          details: sub.details,
+          verdict: `ERROR ${resp.status}`,
+          note: resData.description || ''
+        });
+      }
+    } catch (err) {
+      resultBox.className = 'result-box error';
+      resultBox.innerHTML = `<strong>LỖI KẾT NỐI:</strong> ${err.message}`;
+
+      addHistoryEntry({
+        id: submissionHistory.length + 1,
+        time: timestamp,
+        type: sub.type,
+        video: sub.video,
+        details: sub.details,
+        verdict: 'FAILED',
+        note: err.message
+      });
+    }
+  }
+
+  function addHistoryEntry(entry) {
+    submissionHistory.unshift(entry);
+    localStorage.setItem('dres_submission_history', JSON.stringify(submissionHistory));
+    renderHistory();
+  }
+
+  function renderHistory() {
+    const tbody = document.getElementById('history-tbody');
+    if (!submissionHistory || submissionHistory.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">Chưa có lượt nộp bài nào.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = submissionHistory.map(item => {
+      let typeBadge = `<span class="badge badge-kis">${item.type}</span>`;
+      if (item.type === 'QA') typeBadge = `<span class="badge badge-qa">${item.type}</span>`;
+      if (item.type === 'TRAKE') typeBadge = `<span class="badge badge-trake">${item.type}</span>`;
+
+      let verdictBadge = `<span class="badge badge-success">${item.verdict}</span>`;
+      if (String(item.verdict).includes('WRONG') || String(item.verdict).includes('ERROR') || String(item.verdict).includes('FAIL')) {
+        verdictBadge = `<span class="badge badge-fail">${item.verdict}</span>`;
+      }
+
+      return `
+        <tr>
+          <td><strong>#${item.id}</strong></td>
+          <td>${item.time}</td>
+          <td>${typeBadge}</td>
+          <td><code>${item.video}</code></td>
+          <td>${item.details}</td>
+          <td>${verdictBadge}</td>
+          <td style="color: var(--text-muted); font-size: 12px;">${item.note || ''}</td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function clearHistory() {
+    if (confirm("Bạn có chắc chắn muốn xóa toàn bộ lịch sử nộp bài?")) {
+      submissionHistory = [];
+      localStorage.removeItem('dres_submission_history');
+      renderHistory();
+    }
+  }
+
+  function exportHistoryCSV() {
+    if (submissionHistory.length === 0) {
+      alert("Chưa có lịch sử để xuất!");
+      return;
+    }
+
+    let csv = "ID,Time,Type,Video,Details,Verdict,Note\n";
+    submissionHistory.forEach(item => {
+      csv += `"${item.id}","${item.time}","${item.type}","${item.video}","${(item.details||'').replace(/"/g, '""')}","${item.verdict}","${(item.note||'').replace(/"/g, '""')}"\n`;
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `dres_submission_history_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+</script>
+
+</body>
+</html>

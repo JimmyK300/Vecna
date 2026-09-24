@@ -30,7 +30,7 @@ milvus:
 
 # List of features
 features: &analyse_features
-  # image_clip_pe-l-14-336: (TẮT THEO YÊU CẦU)
+  # image_clip_pe-l-14-336:
   #   model: "image_clip"
   #   source: "open_clip"
   #   arch_name: "PE-Core-L-14-336"
@@ -45,7 +45,7 @@ features: &analyse_features
   #     params:
   #       nlist: 512
 
-  # image_siglip_so400m-384: (TẮT SIGLIP 1 THEO YÊU CẦU)
+  # image_siglip_so400m-384:
   #   model: "image_siglip"
   #   source: "open_clip"
   #   arch_name: "ViT-SO400M-14-SigLIP-384"
@@ -141,7 +141,7 @@ features: &analyse_features
 
 searcher:
   language_models:
-    # language_clip_pe-l-14-336: (TẮT THEO YÊU CẦU)
+    # language_clip_pe-l-14-336:
     #   model: "image_clip"
     #   source: "open_clip"
     #   arch_name: "PE-Core-L-14-336"
@@ -150,13 +150,19 @@ searcher:
     #     - image_clip_pe-l-14-336 
     #     # - video_clip_pe-l-14-336 
 
-    # language_siglip_so400m-384: (TẮT SIGLIP 1 THEO YÊU CẦU)
+    # language_siglip_so400m-384:
     #   model: "image_siglip"
     #   source: "open_clip"
     #   arch_name: "ViT-SO400M-14-SigLIP-384"
     #   pretrained_model: "webli"
     #   target:
     #     - image_siglip_so400m-384
+
+    language_qwen_vl:
+      model: "qwen_vl_embedding"
+      pretrained_model: "Qwen/Qwen3-VL-Embedding-2B"
+      target:
+        - qwen_vl
 
     language_siglip2_so400m-378:
       model: "image_siglip"
@@ -166,11 +172,15 @@ searcher:
       target:
         - image_siglip2_so400m-378
 
-    language_qwen_vl:
-      model: "qwen_vl_embedding"
-      pretrained_model: "Qwen/Qwen3-VL-Embedding-2B"
-      target:
-        - qwen_vl
+    # text_bge_m3:
+    #   model: "text_embedding"
+    #   source: "hf"
+    #   pretrained_model: "BAAI/bge-m3"
+    #   backend: "pytorch"
+    #   onnx_provider: "auto"
+    #   target:
+    #     - ocr_dense
+    #     - asr_dense
 
   ocr:
     ocr_field: "ocr_sparse"
@@ -182,14 +192,14 @@ searcher:
 
   # Groq LLM Query Expansion (bắt chước 100% caube gpt-oss-120b / llama3-70b)
   llm:
-    enable: true
+    enable: false
     provider: "groq"                      # groq, gemini, hoặc openai
     model_name: "openai/gpt-oss-120b"     # Mô hình 120B tham số trên Groq Cloud
     api_key: "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"                           # Để trống để lấy từ GROQ_API_KEY environment variable
 
   # YOLO Auto-Crop Processor
   yolo:
-    enable: true
+    enable: false
     model_path: "yolov8x.pt"
     conf_threshold: 0.25
     padding: 15
@@ -215,7 +225,9 @@ backends:
 
   search:
     port: 1337
-    collection: "milvus"
+    collections:
+      workspace: "workspace_col"
+      workspace2: "workspace2_col"
     workers: 1
     gpu: true
 

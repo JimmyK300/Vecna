@@ -73,8 +73,12 @@ export default function AuthProvider({ children }) {
       return;
     }
     const res = await submitAnswerAPI(sessionId.current, answer);
-    alert(res.data["description"]);
-    if (res.status === 200) {
+    const msg =
+      res?.data?.description ||
+      res?.data?.message ||
+      (res?.status ? `Status: ${res.status}` : "Lỗi khi nộp bài");
+    alert(msg);
+    if (res && res.status === 200 && res.data) {
       fetcher.submit(
         { correct: 0 + (res.data["submission"] !== "WRONG"), ...answer },
         { method: "POST", action: "/answers" },

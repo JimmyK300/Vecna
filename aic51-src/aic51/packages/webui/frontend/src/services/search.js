@@ -20,6 +20,15 @@ export function cancelCurrentSearch() {
   cancelSearchBackend();
 }
 
+export async function getCollections() {
+  try {
+    const res = await axios.get(`http://127.0.0.1:${PORT}/api/collections`);
+    return res.data;
+  } catch (e) {
+    return { collections: [], default: "testcol1" };
+  }
+}
+
 export async function search(
   q,
   offset,
@@ -37,6 +46,7 @@ export async function search(
   en_to_vi_translate,
   ocr_alpha,
   asr_alpha,
+  collection,
 ) {
   // Cancel any previously running search on both client and backend
   if (currentSearchAbortController) {
@@ -60,6 +70,10 @@ export async function search(
     asr_weight: asr_weight,
     max_interval: max_interval,
   };
+
+  if (collection) {
+    params.collection = collection;
+  }
 
   if (ocr_alpha !== undefined && ocr_alpha !== null) {
     params.ocr_alpha = ocr_alpha;
@@ -201,9 +215,14 @@ export async function expandQuery(queryText) {
 }
 
 export async function getVideoTranscript(videoId) {
-  const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/transcript/${videoId}`);
-  const data = res.data;
-  return data;
+  try {
+    const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/transcript/${videoId}`);
+    const data = res.data;
+    return Array.isArray(data) ? data : (data?.transcript || []);
+  } catch (err) {
+    console.warn(`Failed to fetch transcript for ${videoId}:`, err);
+    return [];
+  }
 }
 
 export async function getVideoKeyframes(videoId) {
