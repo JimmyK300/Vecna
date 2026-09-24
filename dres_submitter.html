@@ -92,6 +92,18 @@
     .status-dot.connected { background: var(--accent-green); box-shadow: 0 0 8px var(--accent-green); }
     .status-dot.error { background: var(--accent-red); box-shadow: 0 0 8px var(--accent-red); }
 
+    /* Warning Banner for file:/// */
+    .banner-warning {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid var(--accent-amber);
+      color: #fde68a;
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      display: none;
+      line-height: 1.6;
+    }
+
     /* Cards */
     .card {
       background: var(--bg-secondary);
@@ -139,6 +151,7 @@
     }
 
     input[type="text"],
+    input[type="password"],
     input[type="number"],
     select {
       width: 100%;
@@ -408,11 +421,18 @@
     </div>
     <div class="status-badge" id="status-pill">
       <span class="status-dot" id="status-dot"></span>
-      <span id="status-text">Chưa kết nối</span>
+      <span id="status-text">Đang kết nối...</span>
     </div>
   </header>
 
-  <!-- PHẦN 1: CẤU HÌNH KẾT NỐI & SESSION -->
+  <!-- BANNER CẢNH BÁO MỞ BẰNG FILE:/// -->
+  <div class="banner-warning" id="file-protocol-warning">
+    <strong>⚠️ CHÚ Ý: BẠN ĐANG MỞ TRỰC TIẾP FILE HTML (file:///)</strong><br>
+    Trình duyệt có cơ chế bảo mật chặn kết nối mạng (CORS). Để nộp bài trơn tru và không bao giờ bị lỗi kết nối:<br>
+    👉 Hãy <strong>click đúp vào file <code>open_submitter.bat</code></strong> trong thư mục để tự động khởi chạy máy chủ cục bộ tại <code>http://localhost:8080</code>!
+  </div>
+
+  <!-- PHẦN 1: CẤU HÌNH KẾT NỐI, SESSION & ĐĂNG NHẬP -->
   <div class="card">
     <div class="card-title">
       <span>1. Cấu hình Kết nối & Phiên thi</span>
@@ -428,7 +448,30 @@
       </div>
       <div class="form-group">
         <label for="session-id">Session ID (Token đội thi):</label>
-        <input type="text" id="session-id" value="l0hjIyK0GRkr1AcVTgmyNy67cRkD_yCh" placeholder="Nhập sessionId...">
+        <input type="text" id="session-id" value="l0hjIyK0GRkr1AcVTgmyNy67cRkD_yCh" placeholder="Nhập sessionId hoặc đăng nhập bên dưới...">
+      </div>
+    </div>
+
+    <!-- KHUNG ĐĂNG NHẬP NHANH (NẾU SESSION ID HẾT HẠN) -->
+    <div style="margin-top: 4px; margin-bottom: 14px; padding: 14px; background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-color); border-radius: 8px;">
+      <div style="font-size: 13px; font-weight: 700; color: #38bdf8; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+        <span>🔑 Đăng nhập trực tiếp (Cấp Session ID mới khi token hết hạn)</span>
+      </div>
+      <div class="grid-2">
+        <div class="form-group" style="margin-bottom: 6px;">
+          <label for="login-username">Tên đăng nhập (Username):</label>
+          <input type="text" id="login-username" value="team_631" placeholder="Ví dụ: team_631">
+        </div>
+        <div class="form-group" style="margin-bottom: 6px;">
+          <label for="login-password">Mật khẩu (Password do BTC cấp):</label>
+          <input type="password" id="login-password" placeholder="Nhập mật khẩu...">
+        </div>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center; margin-top: 10px;">
+        <button class="btn btn-primary" onclick="doLogin()" style="font-size: 13px; padding: 8px 18px;">
+          🔑 Đăng nhập lấy Session ID mới
+        </button>
+        <span id="login-status-text" style="font-size: 13px; color: var(--text-muted);"></span>
       </div>
     </div>
 
@@ -436,7 +479,7 @@
       <div class="form-group">
         <label for="evaluation-select">Phiên thi (Evaluation ID):</label>
         <select id="evaluation-select">
-          <option value="">-- Bấm "Kiểm tra" để tải danh sách --</option>
+          <option value="">-- Đang tải danh sách... --</option>
         </select>
       </div>
       <div class="form-group">
@@ -445,7 +488,7 @@
       </div>
     </div>
 
-    <div id="user-info-text" style="font-size: 13px; color: #38bdf8; margin-top: 6px; display: none;"></div>
+    <div id="user-info-text" style="font-size: 13px; color: #38bdf8; margin-top: 8px; padding: 8px 12px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 6px; display: none;"></div>
   </div>
 
   <!-- PHẦN 2: CHỌN LOẠI CÂU HỎI & NHẬP ĐÁP ÁN -->
@@ -456,7 +499,7 @@
 
     <!-- Alert cảnh báo trừ điểm -->
     <div class="alert-penalty">
-      <span style="font-size: 18px;">⚠️</span>
+      <span style="font-size: 20px;">⚠️</span>
       <div>
         <strong>Quy định phạt điểm:</strong> Mỗi lần nộp SAI trước lần đúng đầu tiên sẽ bị <strong>trừ 10 điểm</strong>. Không nộp trùng kết quả cho cùng một truy vấn! Hãy kiểm tra kỹ trước khi bấm nộp.
       </div>
@@ -629,8 +672,12 @@
   let currentTab = 'kis';
   let submissionHistory = [];
 
-  // Khởi tạo & nạp dữ liệu từ localStorage
+  // Khởi tạo
   window.addEventListener('DOMContentLoaded', () => {
+    if (location.protocol === 'file:') {
+      document.getElementById('file-protocol-warning').style.display = 'block';
+    }
+
     const savedSession = localStorage.getItem('dres_session_id');
     if (savedSession) {
       document.getElementById('session-id').value = savedSession;
@@ -654,6 +701,76 @@
   function cleanVideoId(vid) {
     if (!vid) return '';
     return String(vid).trim().replace(/\.(mp4|webm|avi|mkv|mov|flv)$/i, '');
+  }
+
+  // Hàm gọi API thông minh: Tự động điều hướng qua Proxy cục bộ nếu bị chặn CORS
+  async function dresFetch(path, options = {}) {
+    const serverUrl = document.getElementById('server-url').value.trim().replace(/\/$/, '');
+    const isFile = location.protocol === 'file:';
+
+    // Nếu đang chạy trên localhost của submitter_server.py
+    if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+      try {
+        const resp = await fetch(`/proxy${path}`, options);
+        return resp;
+      } catch (e) {
+        return await fetch(`${serverUrl}${path}`, options);
+      }
+    }
+
+    // Nếu mở dạng file:/// thì ưu tiên thử qua proxy localhost:8080 trước
+    if (isFile) {
+      try {
+        const resp = await fetch(`http://127.0.0.1:8080/proxy${path}`, options);
+        return resp;
+      } catch (proxyErr) {
+        // Fallback gửi trực tiếp (có thể bị trình duyệt chặn CORS)
+        return await fetch(`${serverUrl}${path}`, options);
+      }
+    }
+
+    // Mặc định gọi trực tiếp server BTC
+    return await fetch(`${serverUrl}${path}`, options);
+  }
+
+  // Đăng nhập để nhận Session ID mới
+  async function doLogin() {
+    const username = document.getElementById('login-username').value.trim();
+    const password = document.getElementById('login-password').value;
+    const statusEl = document.getElementById('login-status-text');
+
+    if (!username || !password) {
+      alert("Vui lòng nhập Username và Password do BTC cung cấp!");
+      return;
+    }
+
+    statusEl.style.color = '#38bdf8';
+    statusEl.textContent = 'Đang gửi thông tin đăng nhập...';
+
+    try {
+      const resp = await dresFetch('/api/v2/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      let data = {};
+      try { data = await resp.json(); } catch(e) {}
+
+      if (resp.ok && data.sessionId) {
+        document.getElementById('session-id').value = data.sessionId;
+        localStorage.setItem('dres_session_id', data.sessionId);
+        statusEl.style.color = '#34d399';
+        statusEl.textContent = `✅ Đăng nhập thành công! Token: ${data.sessionId.slice(0, 10)}...`;
+        await checkConnection();
+      } else {
+        statusEl.style.color = '#f87171';
+        statusEl.textContent = `❌ Đăng nhập thất bại: ${data.description || 'Mật khẩu không đúng'}`;
+      }
+    } catch (err) {
+      statusEl.style.color = '#f87171';
+      statusEl.textContent = `❌ Lỗi kết nối: ${err.message}. Hãy mở bằng file open_submitter.bat!`;
+    }
   }
 
   function switchTab(tab) {
@@ -752,18 +869,21 @@
 
     try {
       // 1. Kiểm tra User info
-      const userRes = await fetch(`${serverUrl}/api/v2/user?session=${sessionId}`);
+      const userRes = await dresFetch(`/api/v2/user?session=${sessionId}`);
       if (userRes.ok) {
         const userData = await userRes.json();
         userInfoText.style.display = 'block';
         userInfoText.textContent = `✅ Đội thi: ${userData.username || 'N/A'} | Vai trò: ${userData.role || 'N/A'} | ID: ${userData.id || ''}`;
-      } else {
+      } else if (userRes.status === 401) {
         userInfoText.style.display = 'block';
-        userInfoText.textContent = `⚠️ Kiểm tra user trả về mã: ${userRes.status}`;
+        userInfoText.textContent = `⚠️ Session ID đã hết hạn (Mã lỗi 401). Vui lòng điền Username & Password ở khung bên trên rồi bấm "Đăng nhập lấy Session ID mới".`;
+        statusDot.className = 'status-dot error';
+        statusText.textContent = 'Token hết hạn (401)';
+        return;
       }
 
       // 2. Lấy danh sách Evaluation
-      const evalRes = await fetch(`${serverUrl}/api/v2/client/evaluation/list?session=${sessionId}`);
+      const evalRes = await dresFetch(`/api/v2/client/evaluation/list?session=${sessionId}`);
       if (evalRes.ok) {
         const evals = await evalRes.json();
         evalSelect.innerHTML = '';
@@ -788,13 +908,18 @@
         statusDot.className = 'status-dot connected';
         statusText.textContent = activeEvalId ? 'Đã kết nối (Có phiên thi ACTIVE)' : 'Đã kết nối server DRES';
       } else {
-        throw new Error(`Mã lỗi HTTP: ${evalRes.status}`);
+        throw new Error(`Mã phản hồi HTTP: ${evalRes.status}`);
       }
     } catch (err) {
       statusDot.className = 'status-dot error';
       statusText.textContent = 'Lỗi kết nối';
       userInfoText.style.display = 'block';
-      userInfoText.textContent = `❌ Lỗi: ${err.message}. Nếu mở trực tiếp bằng file:///, hãy khởi chạy bằng "python -m http.server 8000" để tránh chặn CORS.`;
+
+      if (location.protocol === 'file:') {
+        userInfoText.textContent = `❌ Lỗi: ${err.message}. Do bạn đang mở file trực tiếp bằng trình duyệt, hãy click đúp vào file "open_submitter.bat" để mở qua http://localhost:8080.`;
+      } else {
+        userInfoText.textContent = `❌ Lỗi kết nối: ${err.message}. Vui lòng kiểm tra lại URL server hoặc kết nối mạng.`;
+      }
     }
   }
 
@@ -896,7 +1021,6 @@
     closeConfirmModal();
 
     const sub = getCurrentSubmissionPayload();
-    const serverUrl = document.getElementById('server-url').value.trim().replace(/\/$/, '');
     const sessionId = document.getElementById('session-id').value.trim();
     const evalId = getTargetEvaluationId();
     const isDryRun = document.getElementById('dry-run-check').checked;
@@ -925,8 +1049,7 @@
     }
 
     try {
-      const submitUrl = `${serverUrl}/api/v2/submit/${evalId}?session=${sessionId}`;
-      const resp = await fetch(submitUrl, {
+      const resp = await dresFetch(`/api/v2/submit/${evalId}?session=${sessionId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
