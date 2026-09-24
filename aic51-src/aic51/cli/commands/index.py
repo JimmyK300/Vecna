@@ -1,6 +1,7 @@
 import json
 import os
 import subprocess
+from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Callable
@@ -25,6 +26,8 @@ from .command import BaseCommand
 
 
 class IndexCommand(BaseCommand):
+    COLLECTION_NAMES = ["general", "cctv"]
+
     def __init__(self, *args, **kwargs):
         super(IndexCommand, self).__init__(*args, **kwargs)
         GlobalConfig.set_work_dir(self._work_dir)
@@ -32,14 +35,6 @@ class IndexCommand(BaseCommand):
     def add_args(self, subparser):
         parser = subparser.add_parser("index", help="Index features")
 
-        parser.add_argument(
-            "-c",
-            "--collection",
-            dest="collection_name",
-            type=str,
-            default=None,
-            help="Name of collection to index",
-        )
         parser.add_argument(
             "-o",
             "--overwrite",
@@ -57,35 +52,43 @@ class IndexCommand(BaseCommand):
         parser.set_defaults(func=self)
 
     @staticmethod
-    def _get_active_feature_fields() -> list[str]:
-        feature_list = GlobalConfig.get("features") or {}
+    def _get_active_feature_fields(collection_name: str) -> list[str]:
+        """Feature names that belong to this specific collection (not the global union)."""
+        feature_names = GlobalConfig.get("milvus", "collections", collection_name, "features")
+        if feature_names is None:
+            # Fallback for old-style flat config: every top-level feature belongs to every collection.
+            feature_names = list((GlobalConfig.get("features") or {}).keys())
+
         feature_fields = []
-        for feature_name, feat_cfg in feature_list.items():
+        for feature_name in feature_names:
+            feat_cfg = GlobalConfig.get("features", feature_name)
             if feat_cfg and (not isinstance(feat_cfg, dict) or feat_cfg.get("enable", True)):
                 feature_fields.append(feature_name)
         return feature_fields
 
-    def __call__(self, collection_name: str | None, do_overwrite: bool, do_update: bool, verbose: bool, *args, **kwargs):
+    def __call__(self, do_overwrite: bool, do_update: bool, verbose: bool, *args, **kwargs):
         GlobalConfig.set_work_dir(self._work_dir)
-        if not collection_name:
-            collection_name = (
-                GlobalConfig.get("backends", "search", "collection")
-                or GlobalConfig.get("milvus", "collection")
-                or "milvus"
-            )
-
         MilvusDatabase.start_server()
 
-        # Invalidate attribution before any collection mutation. If indexing then
-        # crashes, search remains truthful (`unavailable`) instead of silently
-        # attaching the previous generation to a changed collection.
-        invalidate_current_index_generation(self._work_dir, collection_name)
-        database = MilvusDatabase(collection_name, do_overwrite)
+        databases = {name: MilvusDatabase(name, do_overwrite) for name in self.COLLECTION_NAMES}
+        feature_fields_by_collection = {
+            name: self._get_active_feature_fields(name) for name in self.COLLECTION_NAMES
+        }
 
-        total_inserted = 0
-        observed_provider_generations: dict[str, set[str]] = {}
-        indexed_video_lineage: dict[str, dict[str, object]] = {}
-        failed_videos: list[str] = []
+        for name in self.COLLECTION_NAMES:
+            # Invalidate attribution before any collection mutation. If indexing then
+            # crashes, search remains truthful (`unavailable`) instead of silently
+            # attaching the previous generation to a changed collection.
+            invalidate_current_index_generation(self._work_dir, name)
+
+        total_inserted: dict[str, int] = defaultdict(int)
+        observed_provider_generations: dict[str, dict[str, set[str]]] = {
+            name: {} for name in self.COLLECTION_NAMES
+        }
+        indexed_video_lineage: dict[str, dict[str, dict[str, object]]] = {
+            name: {} for name in self.COLLECTION_NAMES
+        }
+        failed_videos: dict[str, list[str]] = defaultdict(list)
         artifact_provenance = load_analysis_artifact_provenance(self._work_dir)
 
         max_workers_ratio = GlobalConfig.get("max_workers_ratio") or 0
@@ -106,10 +109,12 @@ class IndexCommand(BaseCommand):
 
             def index_one_video(video_id):
                 task_id = progress.add_task(description="Processing", name=video_id)
+                collection_name = self._get_collection_name(video_id)
                 try:
                     res = self._index_one_video(
-                        database,
+                        databases[collection_name],
                         video_id,
+                        feature_fields_by_collection[collection_name],
                         do_update,
                         update_progress(task_id),
                         artifact_provenance,
@@ -120,7 +125,7 @@ class IndexCommand(BaseCommand):
                     logger.exception(e)
                     progress.update(task_id, description=f"Error: {str(e)}")
 
-                return res
+                return collection_name, res
 
             futures = []
             video_paths = self._get_videos()
@@ -130,35 +135,40 @@ class IndexCommand(BaseCommand):
                 futures.append(executor.submit(index_one_video, video_id))
 
             for future in futures:
-                inserted, provider_generations, video_lineage, failed_video = future.result()
-                total_inserted += inserted
+                collection_name, (inserted, provider_generations, video_lineage, failed_video) = future.result()
+                total_inserted[collection_name] += inserted
                 if failed_video:
-                    failed_videos.append(failed_video)
+                    failed_videos[collection_name].append(failed_video)
                     continue
-                indexed_video_lineage[video_lineage["video_id"]] = video_lineage["features"]
+                indexed_video_lineage[collection_name][video_lineage["video_id"]] = video_lineage["features"]
                 for feature_name, generation_ids in provider_generations.items():
-                    observed_provider_generations.setdefault(feature_name, set()).update(generation_ids)
+                    observed_provider_generations[collection_name].setdefault(feature_name, set()).update(
+                        generation_ids
+                    )
 
-        feature_fields = self._get_active_feature_fields()
-        provider_summary = summarize_provider_generations(feature_fields, observed_provider_generations)
-        feature_configs = {name: GlobalConfig.get("features", name) for name in feature_fields}
-        generation = record_index_generation(
-            self._work_dir,
-            collection_name=collection_name,
-            feature_fields=feature_fields,
-            feature_configs=feature_configs,
-            provider_generations=provider_summary,
-            video_lineage=indexed_video_lineage,
-            inserted_entities=total_inserted,
-            do_overwrite=do_overwrite,
-            do_update=do_update,
-            failed_videos=failed_videos,
-        )
+        for name in self.COLLECTION_NAMES:
+            feature_fields = feature_fields_by_collection[name]
+            provider_summary = summarize_provider_generations(
+                feature_fields, observed_provider_generations[name]
+            )
+            feature_configs = {fname: GlobalConfig.get("features", fname) for fname in feature_fields}
+            generation = record_index_generation(
+                self._work_dir,
+                collection_name=name,
+                feature_fields=feature_fields,
+                feature_configs=feature_configs,
+                provider_generations=provider_summary,
+                video_lineage=indexed_video_lineage[name],
+                inserted_entities=total_inserted[name],
+                do_overwrite=do_overwrite,
+                do_update=do_update,
+                failed_videos=failed_videos[name],
+            )
 
-        logger.info(
-            f"Inserted {total_inserted} entities; index_generation_id={generation['index_generation_id']}; "
-            f"status={generation['status']}"
-        )
+            logger.info(
+                f'"{name}": Inserted {total_inserted[name]} entities; '
+                f"index_generation_id={generation['index_generation_id']}; status={generation['status']}"
+            )
 
     def _get_videos(self):
         features_dir = self._work_dir / constant.FEATURE_DIR
@@ -173,6 +183,7 @@ class IndexCommand(BaseCommand):
         self,
         database: MilvusDatabase,
         video_id: str,
+        feature_fields: list[str],
         do_update: bool,
         update_progress: Callable,
         artifact_provenance: dict[str, list[dict[str, str]]],
@@ -182,7 +193,6 @@ class IndexCommand(BaseCommand):
         data_list = []
         observed_provider_generations: dict[str, set[str]] = {}
         observed_lineage_claims: dict[str, list[dict[str, str]]] = {}
-        feature_fields = self._get_active_feature_fields()
 
         frame_features_paths = [x for x in video_features_dir.glob("*") if x.is_dir()]
 
@@ -197,6 +207,7 @@ class IndexCommand(BaseCommand):
             frame_lineage_claims: dict[str, list[dict[str, str]]] = {}
             for feature_path in frame_features_path.glob("*"):
                 feature_name = feature_path.stem
+
                 if feature_name not in feature_fields:
                     continue
                 if feature_path.is_dir():
@@ -225,18 +236,24 @@ class IndexCommand(BaseCommand):
                 if claims:
                     frame_lineage_claims.setdefault(feature_name, []).extend(claims)
 
-            if all([f in data for f in feature_fields]):
-                data_list.append({database.process_field_name(k): v for k, v in data.items()})
-                for feature_name, provider_ids in frame_provider_generations.items():
-                    observed_provider_generations.setdefault(feature_name, set()).update(provider_ids)
-                for feature_name, claims in frame_lineage_claims.items():
-                    observed_lineage_claims.setdefault(feature_name, []).extend(claims)
-            else:
-                logger.warning(f"Skipping {data['frame_id']}: Lack of features")
+            missing_features = [f for f in feature_fields if f not in data]
+
+        if not missing_features:
+            data_list.append({database.process_field_name(k): v for k, v in data.items()})
+            for feature_name, provider_ids in frame_provider_generations.items():
+                observed_provider_generations.setdefault(feature_name, set()).update(provider_ids)
+            for feature_name, claims in frame_lineage_claims.items():
+                observed_lineage_claims.setdefault(feature_name, []).extend(claims)
+        else:
+            logger.warning(
+                f"Skipping {data['frame_id']}: Missing features: {', '.join(missing_features)}"
+            )
 
             update_progress(advance=1)
 
-        database.insert(data_list, do_update)
+        if data_list:
+            database.insert(data_list, do_update)
+
         return (
             len(data_list),
             observed_provider_generations,
@@ -246,3 +263,9 @@ class IndexCommand(BaseCommand):
             },
             None,
         )
+
+    def _get_collection_name(self, video_id: str) -> str:
+        if video_id.startswith("N"):
+            return "cctv"
+
+        return "general"

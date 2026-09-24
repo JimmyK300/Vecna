@@ -217,9 +217,14 @@ class BoundedLRUCache:
 class Searcher(object):
     cache = BoundedLRUCache(maxsize=20)
 
-    def __init__(self, collection_name: str, device: torch.device = torch.device("cpu")):
+    def __init__(self, 
+            collection_name: str, 
+            device: torch.device = torch.device("cpu"),
+            allowed_features: set[str] | None = None,):
         self._database = MilvusDatabase(collection_name)
+        self._allowed_features = allowed_features
         self._prepare_feature_extractors(device)
+
         segment_map_path = os.environ.get("SEGMENT_MAP_PATH", "segment_map.json")
         self._clustering = SegmentClustering(segment_map_path)  
 
