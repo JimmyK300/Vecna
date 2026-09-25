@@ -42,7 +42,8 @@ dependencies = [
   "groq",
   "apscheduler",
   "deep-translator",
-  "omegaconf"
+  "omegaconf",
+  "ultralytics>=8.4.160"
 ]
 
 [project.optional-dependencies]

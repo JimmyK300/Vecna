@@ -10,6 +10,7 @@ for _module in (
     "ocr",
     "asr",
     "qwen_vl",
+    "yolo_traffic",
 ):
     try:
         __import__(f"{__name__}.{_module}", fromlist=["*"])

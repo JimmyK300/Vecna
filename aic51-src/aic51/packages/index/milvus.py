@@ -86,11 +86,14 @@ class MilvusDatabase(object):
 
             features = GlobalConfig.get("features") or {}
             for feat_name, feat_cfg in features.items():
-                if feat_cfg and (not isinstance(feat_cfg, dict) or feat_cfg.get("enable", True)):
-                    expected_fields.add(self.process_field_name(feat_name))
-                    idx_type = GlobalConfig.get("features", feat_name, "index", "index_type")
-                    if idx_type and idx_type.lower() == "bm25":
-                        expected_fields.add(f"{self.process_field_name(feat_name)}_sparse")
+                if not feat_cfg or (isinstance(feat_cfg, dict) and not feat_cfg.get("enable", True)):
+                    continue
+                if isinstance(feat_cfg, dict) and not feat_cfg.get("index", {}).get("enable", True):
+                    continue
+                expected_fields.add(self.process_field_name(feat_name))
+                idx_type = GlobalConfig.get("features", feat_name, "index", "index_type")
+                if idx_type and idx_type.lower() == "bm25":
+                    expected_fields.add(f"{self.process_field_name(feat_name)}_sparse")
 
             return existing_fields != expected_fields
         except Exception as e:
@@ -101,6 +104,19 @@ class MilvusDatabase(object):
         res = field_name.replace("-", "_")
         return res
 
+    def require_fields(self, field_names: list[str]):
+        """Fail early instead of silently dropping metadata required by the active config."""
+        if self._existing_fields is None:
+            return
+
+        required = {self.process_field_name(name) for name in field_names}
+        missing = sorted(required - self._existing_fields)
+        if missing:
+            raise RuntimeError(
+                f'Collection "{self._collection_name}" is missing required fields: {missing}. '
+                "Create a new collection or rerun index with --overwrite after backing up existing data."
+            )
+
     def _create_schema(self):
         logger.info(f'"{self._collection_name}": Creating schema')
         schema = MilvusClient.create_schema(auto_id=False, enable_dynamic_field=False)
@@ -110,6 +126,8 @@ class MilvusDatabase(object):
         feature_fields = []
         for feature_name, feat_cfg in features.items():
             if not feat_cfg or (isinstance(feat_cfg, dict) and not feat_cfg.get("enable", True)):
+                continue
+            if isinstance(feat_cfg, dict) and not feat_cfg.get("index", {}).get("enable", True):
                 continue
 
             datatype = GlobalConfig.get("features", feature_name, "index", "datatype")
@@ -175,6 +193,8 @@ class MilvusDatabase(object):
         features = GlobalConfig.get("features") or {}
         for feature_name, feat_cfg in features.items():
             if not feat_cfg or (isinstance(feat_cfg, dict) and not feat_cfg.get("enable", True)):
+                continue
+            if isinstance(feat_cfg, dict) and not feat_cfg.get("index", {}).get("enable", True):
                 continue
 
             index_type = GlobalConfig.get("features", feature_name, "index", "index_type")
@@ -248,10 +268,20 @@ class MilvusDatabase(object):
     def get_scalar_output_fields(self) -> list[str]:
         """Returns non-vector fields (e.g. frame_id, ocr, asr) to avoid transferring heavy vectors into RAM."""
         scalar_fields = ["frame_id"]
+        for field in GlobalConfig.get("milvus", "fields") or []:
+            field_name = field.get("field_name")
+            datatype = str(field.get("datatype", ""))
+            if field_name and "VECTOR" not in datatype.upper():
+                field_name = self.process_field_name(field_name)
+                if self._existing_fields is None or field_name in self._existing_fields:
+                    scalar_fields.append(field_name)
+
         features = GlobalConfig.get("features")
         if features:
             for feat_name, feat_cfg in features.items():
                 if isinstance(feat_cfg, dict) and feat_cfg.get("enable", True):
+                    if not feat_cfg.get("index", {}).get("enable", True):
+                        continue
                     dt = feat_cfg.get("index", {}).get("datatype", "")
                     if dt and ("VECTOR" not in dt.upper()):
                         fname = self.process_field_name(feat_name)
