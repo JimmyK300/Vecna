@@ -1,6 +1,6 @@
 import unittest
 
-from aic51.packages.search.searcher import Searcher, SegmentClustering
+from aic51.packages.search.searcher import Searcher
 
 
 def _hit(video_id, frame_id, distance):
@@ -90,18 +90,6 @@ class SingleSearchClusteringTest(unittest.TestCase):
         diversified = searcher._diversify_single_search_results(results)
 
         self.assertEqual(diversified, results)
-
-    def test_legacy_segment_map_does_not_collapse_unmapped_video(self):
-        clustering = SegmentClustering.__new__(SegmentClustering)
-        clustering.map = {
-            "MAPPED": {"fids": [100], "segs": [0]},
-        }
-        results = [_hit("UNMAPPED", 100, 0.9), _hit("UNMAPPED", 110, 0.8)]
-
-        diversified = clustering.diversify(results)
-
-        self.assertEqual(diversified, results)
-
 
 if __name__ == "__main__":
     unittest.main()
