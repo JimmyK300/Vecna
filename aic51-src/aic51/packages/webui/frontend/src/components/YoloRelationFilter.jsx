@@ -68,12 +68,12 @@ export default function YoloRelationFilter({ value = "", onChange, collection })
   const objectChoices = OBJECTS.map((item) => [item, item.replaceAll("_", " ")]);
   const preview = parts.every(Boolean)
     ? `${parts[0]} ${parts[1].replaceAll("_", " ")} ${RELATIONS.find(([key]) => key === parts[2])?.[1] || parts[2]} ${parts[3]} ${parts[4].replaceAll("_", " ")}`
-    : "Choose all five fields to filter results";
+    : "Choose all five fields to boost matching results";
 
   return (
-    <div className="w-full lg:w-72 shrink-0 flex flex-col gap-1.5 bg-white border border-indigo-300 p-2 rounded shadow-sm self-start">
+    <div className="w-full lg:w-64 shrink-0 flex flex-col gap-1.5 bg-white border border-indigo-300 p-2 rounded shadow-sm self-start">
       <div className="flex items-center justify-between border-b border-gray-100 pb-1">
-        <span className="text-xs font-bold text-gray-800">Object relation · Batch 2</span>
+        <span className="text-xs font-bold text-gray-800">Object relation boost · Batch 2</span>
         <button type="button" onClick={clear} className="text-[10px] font-bold text-indigo-700 hover:text-indigo-900">Clear</button>
       </div>
       <div className="grid grid-cols-2 gap-1.5">

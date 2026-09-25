@@ -291,11 +291,18 @@ class MilvusDatabase(object):
         if features:
             for feat_name, feat_cfg in features.items():
                 if isinstance(feat_cfg, dict) and feat_cfg.get("enable", True):
-                    if not feat_cfg.get("index", {}).get("enable", True):
-                        continue
-                    dt = feat_cfg.get("index", {}).get("datatype", "")
-                    if dt and ("VECTOR" not in dt.upper()):
-                        fname = self.process_field_name(feat_name)
+                    index_cfg = feat_cfg.get("index", {})
+                    if index_cfg.get("enable", True):
+                        dt = index_cfg.get("datatype", "")
+                        if dt and ("VECTOR" not in dt.upper()):
+                            fname = self.process_field_name(feat_name)
+                            if self._existing_fields is None or fname in self._existing_fields:
+                                scalar_fields.append(fname)
+
+                    # Metadata-only features can contribute scalar arrays such as
+                    # yolo_relations even when their embedding index is disabled.
+                    for metadata_field in (index_cfg.get("metadata_fields") or {}).values():
+                        fname = self.process_field_name(metadata_field)
                         if self._existing_fields is None or fname in self._existing_fields:
                             scalar_fields.append(fname)
         return sorted(list(set(scalar_fields)))

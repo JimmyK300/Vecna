@@ -4,6 +4,7 @@ import os
 import shutil
 import subprocess
 import sys
+import time
 from concurrent.futures import ThreadPoolExecutor
 from multiprocessing import Process
 from pathlib import Path
@@ -69,7 +70,7 @@ class ServeCommand(BaseCommand):
 
         try:
             while True:
-                pass
+                time.sleep(1)
         except KeyboardInterrupt:
             pass
 

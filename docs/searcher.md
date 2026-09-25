@@ -73,6 +73,10 @@ Queries passed to `search_multimodal` are parsed by the `Query` helper class int
 | `en_to_vi_translate` | `bool` | `False` | Forces EN $\rightarrow$ VI translation for OCR/ASR text matching |
 | `include_videos` | `str` | `""` | Optional comma/space separated list of video IDs to restrict search to |
 | `exclude_videos` | `str` | `""` | Optional comma/space separated list of video IDs to exclude from search |
+| `road_type` | `str` | `""` | Batch 2 camera filter: `three_way`, `four_way`, `roundabout`, or `bridge` |
+| `lighting` | `str` | `""` | Batch 2 time-based lighting estimate: `day`, `night`, or `unknown` |
+
+Batch 2 camera filters read `camera_info_workspace2_road_classification.json` from the project root. Set `AIC51_CAMERA_METADATA_PATH` to use a different file. The road type comes from `intersection_type`; lighting is estimated from the OCR hour (06–17: day, 18–23: night, other or unreadable: unknown). An explicit `lighting_label` value in a row overrides the estimate. Lighting values should be treated as time-based estimates until image labels are reviewed. Both filters are applied in Milvus before result pagination and can be combined with video and relation selection.
 
 ## Response Structure
 

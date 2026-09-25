@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import YoloRelationFilter from "./YoloRelationFilter.jsx";
+import CameraSceneFilter from "./CameraSceneFilter.jsx";
 
 const VIDEO_PREFIX_OPTIONS = [
   { prefix: "L21", name: "L21: HTV 60 Seconds (P1)" },
@@ -89,6 +90,9 @@ export function AdvanceQueryContainer({
   onCollectionChange,
   yoloRelation = "",
   onYoloRelationChange,
+  roadType = "",
+  lighting = "",
+  onCameraSceneChange,
 }) {
   const [showPrefixMenu, setShowPrefixMenu] = useState(false);
 
@@ -554,7 +558,7 @@ export function AdvanceQueryContainer({
       <div className="flex flex-wrap gap-2 items-start">
       {/* Dedicated OCR & ASR Filters Panel */}
       {showOcrAsrPanel && (
-        <div className="w-full lg:w-56 shrink-0 flex flex-col gap-1.5 bg-white border border-sky-300 p-2 rounded shadow-sm self-start animate-fadeIn">
+        <div className="w-full lg:w-48 shrink-0 flex flex-col gap-1.5 bg-white border border-sky-300 p-2 rounded shadow-sm self-start animate-fadeIn">
           <div className="flex items-center justify-between border-b border-gray-100 pb-1">
             <label className="text-xs font-bold text-gray-800 flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-amber-500"></span>
@@ -604,9 +608,16 @@ export function AdvanceQueryContainer({
         collection={collection}
       />
 
+      <CameraSceneFilter
+        collection={collection}
+        roadType={roadType}
+        lighting={lighting}
+        onChange={onCameraSceneChange}
+      />
+
       {/* Dedicated Include / Exclude Video Filter Panel with Header Menu */}
       {showVideoPanel && (
-        <div className="w-full lg:w-56 shrink-0 flex flex-col gap-1.5 bg-white border border-sky-300 p-2 rounded shadow-sm relative self-start animate-fadeIn">
+        <div className="w-full lg:w-48 shrink-0 flex flex-col gap-1.5 bg-white border border-sky-300 p-2 rounded shadow-sm relative self-start animate-fadeIn">
           {/* Header Line with Prefix Menu Button Right Beside Video Filters */}
           <div className="flex items-center justify-between border-b border-gray-100 pb-1">
             <label className="text-xs font-bold text-gray-800 flex items-center gap-1">

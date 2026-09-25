@@ -163,6 +163,7 @@ _EXTRACTOR_LOCK = threading.Lock()
 
 
 class Searcher(object):
+    YOLO_RELATION_BOOST = 1.10
     cache = BoundedLRUCache(maxsize=20)
 
     def __init__(self, collection_name: str, device: torch.device = torch.device("cpu")):
@@ -248,6 +249,42 @@ class Searcher(object):
             raise ValueError("Invalid YOLO relation key")
         return f"ARRAY_CONTAINS(yolo_relations, {json.dumps(relation_key)})"
 
+    @classmethod
+    def _apply_yolo_relation_boost(cls, results: list[dict], relation_key: str) -> list[dict]:
+        """Apply a small ranking boost to matching candidates without filtering results."""
+        if not relation_key:
+            return results
+
+        for result in results:
+            entity = result.get("entity", {})
+            relations = entity.get("yolo_relations", [])
+            if isinstance(relations, str):
+                relations = [relations]
+            if relation_key not in relations:
+                continue
+
+            base_score = float(result.get("distance", 0.0) or 0.0)
+            boost_delta = max(abs(base_score) * (cls.YOLO_RELATION_BOOST - 1.0), 0.01)
+            boosted_score = base_score + boost_delta
+            result["distance"] = boosted_score
+            scores = result.setdefault("scores", {})
+            scores["pre_yolo_relation"] = round(base_score, 6)
+            scores["yolo_relation_boost"] = cls.YOLO_RELATION_BOOST
+            scores["final"] = round(boosted_score, 6)
+            if "rerank" in scores:
+                scores["rerank"] = round(boosted_score, 6)
+
+        # Keep reranked candidates ahead of candidates without reranker scores;
+        # their distance values come from different score scales.
+        results.sort(
+            key=lambda item: (
+                "rerank" in item.get("scores", {}),
+                item.get("distance", 0.0),
+            ),
+            reverse=True,
+        )
+        return results
+
     @staticmethod
     def _combine_filters(*filters: str) -> str:
         return " && ".join(f"({filter_expr})" for filter_expr in filters if filter_expr)
@@ -272,6 +309,7 @@ class Searcher(object):
         include_videos: str = "",
         exclude_videos: str = "",
         yolo_relation: str = "",
+        camera_filter: str = "",
         cancel_event: threading.Event | Callable = None,
     ):
         _check_cancelled(cancel_event)
@@ -286,13 +324,19 @@ class Searcher(object):
             include_videos=include_videos,
             exclude_videos=exclude_videos,
         )
-        relation_filter = self._get_relation_filter(yolo_relation)
+        if yolo_relation:
+            # Reuse validation and ensure this collection has the relation field.
+            self._get_relation_filter(yolo_relation)
 
         if query.simple:
             logger.info(f"searcher: get include_video_ids={query.include_video_ids}, exclude_video_ids={query.exclude_video_ids}")
-            if relation_filter:
-                res = self._get_relation_matches(
-                    query.include_video_ids, query.exclude_video_ids, relation_filter,
+            browse_filter = self._combine_filters(
+                camera_filter,
+                self._get_relation_filter(yolo_relation) if yolo_relation else "",
+            )
+            if browse_filter:
+                res = self._get_camera_matches(
+                    query.include_video_ids, query.exclude_video_ids, browse_filter,
                     offset, limit, cancel_event=cancel_event,
                 )
             else:
@@ -309,7 +353,8 @@ class Searcher(object):
                 ocr_alpha=ocr_alpha,
                 asr_alpha=asr_alpha,
                 nprobe=nprobe,
-                relation_filter=relation_filter,
+                yolo_relation=yolo_relation,
+                camera_filter=camera_filter,
                 cancel_event=cancel_event,
             )
         else:
@@ -326,7 +371,8 @@ class Searcher(object):
                 nprobe=nprobe,
                 temporal_k=temporal_k,
                 max_interval=max_interval,
-                relation_filter=relation_filter,
+                yolo_relation=yolo_relation,
+                camera_filter=camera_filter,
                 cancel_event=cancel_event,
             )
 
@@ -656,7 +702,8 @@ class Searcher(object):
         hybrid_alpha: float | None = None,
         nprobe: int = 8,
         exclude_video_ids: list[str] = [],
-        relation_filter: str = "",
+        yolo_relation: str = "",
+        camera_filter: str = "",
         cancel_event: threading.Event | Callable = None,
     ):
         _check_cancelled(cancel_event)
@@ -667,7 +714,7 @@ class Searcher(object):
         asr_weight = max(0, min(1 - ocr_weight, asr_weight))
         ocr_alpha = max(0.0, min(1.0, float(ocr_alpha)))
         asr_alpha = max(0.0, min(1.0, float(asr_alpha)))
-        video_filter = self._combine_filters(self._get_video_filter(video_ids), relation_filter)
+        video_filter = self._combine_filters(self._get_video_filter(video_ids), camera_filter)
 
         subquery_limit = offset + limit
         if exclude_video_ids and len(exclude_video_ids) > 0:
@@ -875,6 +922,7 @@ class Searcher(object):
                 })
 
         # Sort by final score descending
+        results = self._apply_yolo_relation_boost(results, yolo_relation)
         results.sort(key=lambda x: x["distance"], reverse=True)
 
         # Fast Python Post-Filtering for Exclude Videos (Hybrid Strategy for Maximum Speed)
@@ -895,7 +943,8 @@ class Searcher(object):
         asr_alpha: float = 0.0,
         hybrid_alpha: float | None = None,
         nprobe: int = 8,
-        relation_filter: str = "",
+        yolo_relation: str = "",
+        camera_filter: str = "",
         cancel_event: threading.Event | Callable = None,
     ):
         _check_cancelled(cancel_event)
@@ -926,7 +975,8 @@ class Searcher(object):
                 asr_alpha=asr_alpha,
                 nprobe=nprobe,
                 exclude_video_ids=query.exclude_video_ids,
-                relation_filter=relation_filter,
+                yolo_relation="",
+                camera_filter=camera_filter,
                 cancel_event=cancel_event,
             )
             total = len(results)
@@ -937,7 +987,7 @@ class Searcher(object):
                 else max(200, offset + limit)
             )
 
-            db_size = self._database.count(relation_filter) if relation_filter else self._database.get_size()
+            db_size = self._database.count(camera_filter) if camera_filter else self._database.get_size()
 
             while True:
                 _check_cancelled(cancel_event)
@@ -953,7 +1003,8 @@ class Searcher(object):
                     asr_alpha=asr_alpha,
                     nprobe=nprobe,
                     exclude_video_ids=query.exclude_video_ids,
-                    relation_filter=relation_filter,
+                    yolo_relation="",
+                    camera_filter=camera_filter,
                     cancel_event=cancel_event,
                 )
 
@@ -973,6 +1024,8 @@ class Searcher(object):
             _check_cancelled(cancel_event)
             rerank_k = max(limit, self._reranker_top_k)
             results = self._rerank_candidates(raw_query, results, top_k=rerank_k, cancel_event=cancel_event)
+
+        results = self._apply_yolo_relation_boost(results, yolo_relation)
 
         # ====== ONLINE VISUAL DEDUP: same video + nearby + visually similar ======
         TOP_DIVERSE = min(len(results), max(200, (offset + limit) * 4))
@@ -1207,7 +1260,8 @@ class Searcher(object):
         nprobe: int = 8,
         temporal_k: int = 200,
         max_interval: int = 1000,
-        relation_filter: str = "",
+        yolo_relation: str = "",
+        camera_filter: str = "",
         cancel_event: threading.Event | Callable = None,
     ):
         _check_cancelled(cancel_event)
@@ -1226,10 +1280,12 @@ class Searcher(object):
             "nprobe": nprobe,
             "temporal_k": temporal_k,
             "max_interval": max_interval,
-            "relation_filter": relation_filter,
+            "yolo_relation": yolo_relation,
+            "camera_filter": camera_filter,
+            "yolo_relation_boost": self.YOLO_RELATION_BOOST,
             # Bump this when temporal candidate/DP semantics change so stale
             # in-memory results are not reused after a backend reload.
-            "temporal_algorithm": "frame_dp_no_shot_clustering_v3_clause_quota",
+            "temporal_algorithm": "frame_dp_no_shot_clustering_v4_relation_boost_clause_quota",
         }
         query_str = f"{constants.CACHE_TEMPORAL_SEARCH}:{repr(params)}"
         query_hash = hashlib.sha256(query_str.encode("utf-8")).hexdigest()
@@ -1254,7 +1310,8 @@ class Searcher(object):
                     asr_alpha=asr_alpha,
                     nprobe=nprobe,
                     exclude_video_ids=query.exclude_video_ids,
-                    relation_filter=relation_filter,
+                    yolo_relation=yolo_relation,
+                    camera_filter=camera_filter,
                     cancel_event=cancel_event,
                 )
                 self._calibrate_temporal_stage_results(results)
@@ -1680,17 +1737,17 @@ class Searcher(object):
         results.sort(key=lambda result: float(result.get("distance", 0.0)), reverse=True)
         return results[:max_sequences], debug
 
-    def _get_relation_matches(
+    def _get_camera_matches(
         self,
         include_video_ids: list[str],
         exclude_video_ids: list[str],
-        relation_filter: str,
+        camera_filter: str,
         offset: int,
         limit: int,
         cancel_event: threading.Event | Callable = None,
     ) -> dict:
         _check_cancelled(cancel_event)
-        filter_parts = [relation_filter, self._get_video_filter(include_video_ids)]
+        filter_parts = [camera_filter, self._get_video_filter(include_video_ids)]
         for video_id in exclude_video_ids:
             if re.fullmatch(r"[A-Za-z0-9_-]{1,64}", video_id):
                 filter_parts.append(f"!(frame_id like {json.dumps(video_id + '%')})")

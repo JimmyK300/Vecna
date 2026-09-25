@@ -121,6 +121,8 @@ export default function Root() {
     const exclude_videos = currentParams.get("exclude_videos") || "";
     const collection = currentParams.get("collection") || "workspace";
     const yolo_relation = currentParams.get("yolo_relation") || "";
+    const road_type = currentParams.get("road_type") || "";
+    const lighting = currentParams.get("lighting") || "";
 
     const nextAutoTranslate = updatedObj.autoTranslate !== undefined ? updatedObj.autoTranslate : autoTranslate;
     const nextEnToViTranslate = updatedObj.enToViTranslate !== undefined ? updatedObj.enToViTranslate : enToViTranslate;
@@ -133,6 +135,8 @@ export default function Root() {
       exclude_videos,
       collection,
       yolo_relation,
+      road_type,
+      lighting,
       ocr_weight: updatedObj.ocrWeight !== undefined ? updatedObj.ocrWeight : ocrWeight,
       asr_weight: updatedObj.asrWeight !== undefined ? updatedObj.asrWeight : asrWeight,
       ocr_alpha: updatedObj.ocrAlpha !== undefined ? updatedObj.ocrAlpha : ocrAlpha,

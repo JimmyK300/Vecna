@@ -61,14 +61,17 @@ export async function loader({ request }) {
   const exclude_videos = searchParams.get("exclude_videos") || "";
   const collection = searchParams.get("collection") || "";
   const yolo_relation = searchParams.get("yolo_relation") || "";
+  const road_type = searchParams.get("road_type") || "";
+  const lighting = searchParams.get("lighting") || "";
+  const cameraParams = { road_type, lighting };
 
   const chunkStart = Math.floor(requestedOffset / CHUNK_SIZE) * CHUNK_SIZE;
   const initialLocalOffset = Math.floor((requestedOffset - chunkStart) / limit) * limit;
 
-  if (!q && !include_videos && !exclude_videos && !yolo_relation) {
+  if (!q && !include_videos && !exclude_videos && !yolo_relation && !road_type && !lighting) {
     return {
       query: { q: "" },
-      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos, collection, yolo_relation },
+      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos, collection, yolo_relation, ...cameraParams },
       offset: requestedOffset,
       chunkStart: 0,
       initialLocalOffset: 0,
@@ -96,12 +99,14 @@ export async function loader({ request }) {
       asr_alpha,
       collection,
       yolo_relation,
+      road_type,
+      lighting,
     );
 
     if (res && res.canceled) {
       return {
         query: { q },
-        params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos, collection, yolo_relation },
+        params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos, collection, yolo_relation, ...cameraParams },
         offset: requestedOffset,
         chunkStart,
         initialLocalOffset: 0,
@@ -111,7 +116,7 @@ export async function loader({ request }) {
 
     return {
       query: { q },
-      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos, collection, yolo_relation },
+      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos, collection, yolo_relation, ...cameraParams },
       offset: requestedOffset,
       chunkStart: res.offset !== undefined ? res.offset : chunkStart,
       initialLocalOffset,
@@ -121,7 +126,7 @@ export async function loader({ request }) {
     console.error("Search failed:", err);
     return {
       query: { q },
-      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos, collection, yolo_relation },
+      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos, collection, yolo_relation, ...cameraParams },
       offset: requestedOffset,
       chunkStart,
       initialLocalOffset: 0,
@@ -159,6 +164,8 @@ export default function Search() {
   });
   const [autoTranslate, setAutoTranslate] = useState(params.auto_translate || false);
   const [yoloRelation, setYoloRelation] = useState(params.yolo_relation || "");
+  const [roadType, setRoadType] = useState(params.road_type || "");
+  const [lighting, setLighting] = useState(params.lighting || "");
   const [enToViTranslate, setEnToViTranslate] = useState(params.en_to_vi_translate || false);
   const [includeVideos, setIncludeVideos] = useState(params.include_videos || "");
   const [excludeVideos, setExcludeVideos] = useState(params.exclude_videos || "");
@@ -187,13 +194,16 @@ export default function Search() {
     setAutoTranslate(params.auto_translate || false);
     setEnToViTranslate(params.en_to_vi_translate || false);
     setYoloRelation(params.yolo_relation || "");
+    setRoadType(params.road_type || "");
+    setLighting(params.lighting || "");
     setIncludeVideos(params.include_videos || "");
     setExcludeVideos(params.exclude_videos || "");
     setAppliedInclude(params.include_videos || "");
     setAppliedExclude(params.exclude_videos || "");
     if (params.collection) {
-      setCollection(params.collection);
-      localStorage.setItem("aic51_collection", params.collection);
+      const normalizedCollection = params.collection === "testcol1" ? "workspace" : params.collection === "testcol2" ? "workspace2" : params.collection;
+      setCollection(normalizedCollection);
+      localStorage.setItem("aic51_collection", normalizedCollection);
     }
   }, [query.q, params]);
 
@@ -234,7 +244,9 @@ export default function Search() {
     newInc = includeVideos,
     newExc = excludeVideos,
     newCol = collection,
-    newRelation = yoloRelation
+    newRelation = yoloRelation,
+    newRoadType = roadType,
+    newLighting = lighting,
   ) => {
     const activeAutoTranslate = liveAutoTranslate !== undefined ? liveAutoTranslate : autoTranslate;
     const activeEnToViTranslate = liveEnToViTranslate !== undefined ? liveEnToViTranslate : enToViTranslate;
@@ -252,6 +264,8 @@ export default function Search() {
         q: newQ,
         collection: newCol,
         yolo_relation: newCol === "workspace2" ? newRelation : "",
+        road_type: newCol === "workspace2" ? newRoadType : "",
+        lighting: newCol === "workspace2" ? newLighting : "",
         auto_translate: activeAutoTranslate ? "true" : "false",
         en_to_vi_translate: activeEnToViTranslate ? "true" : "false",
         include_videos: newInc,
@@ -273,9 +287,13 @@ export default function Search() {
 
   const handleCollectionChange = (newCol) => {
     setCollection(newCol);
-    if (newCol !== "workspace2") setYoloRelation("");
+    if (newCol !== "workspace2") {
+      setYoloRelation("");
+      setRoadType("");
+      setLighting("");
+    }
     localStorage.setItem("aic51_collection", newCol);
-    triggerSearch(searchQuery, includeVideos, excludeVideos, newCol, newCol === "workspace2" ? yoloRelation : "");
+    triggerSearch(searchQuery, includeVideos, excludeVideos, newCol, newCol === "workspace2" ? yoloRelation : "", newCol === "workspace2" ? roadType : "", newCol === "workspace2" ? lighting : "");
   };
 
   const handleAddIncludeVideo = (vid) => {
@@ -780,6 +798,13 @@ export default function Search() {
           onYoloRelationChange={(relationKey) => {
             setYoloRelation(relationKey);
             triggerSearch(searchQuery, includeVideos, excludeVideos, collection, relationKey);
+          }}
+          roadType={roadType}
+          lighting={lighting}
+          onCameraSceneChange={(nextRoadType, nextLighting) => {
+            setRoadType(nextRoadType);
+            setLighting(nextLighting);
+            triggerSearch(searchQuery, includeVideos, excludeVideos, collection, yoloRelation, nextRoadType, nextLighting);
           }}
         />
       </div>

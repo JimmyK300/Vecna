@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { AuthContext } from "./AuthProvider.jsx";
 import { useSelected } from "./SelectedProvider.jsx";
 import { getFrameInfo, getVideoTranscript, getVideoThumbnails, getVideoKeyframes, getVideoMapKeyframes } from "../services/search.js";
+import { frameIndexAtTime, timeAtFrameIndex } from "../services/frameTime.js";
 import {
   DEFAULT_DRES_URL,
   DRES_SERVER_KEY,
@@ -73,6 +74,7 @@ export function VideoPlayer({ frameInfo, onCancel }) {
   const fetcher = useFetcher({ key: "answers" });
   const videoElementRef = useRef(null);
   const videoWrapperRef = useRef(null);
+  const showDresModalRef = useRef(false);
 
   const [frameCounter, setFrameCounter] = useState(0);
   const [seekStep, setSeekStep] = useState(2);
@@ -143,6 +145,7 @@ export function VideoPlayer({ frameInfo, onCancel }) {
 
   // Load Official BTC Map-Keyframes Data
   const [mapBTCKeyframes, setMapBTCKeyframes] = useState([]);
+  const [mapLoadedVideoId, setMapLoadedVideoId] = useState(null);
   const mapBTCKeyframesRef = useRef([]);
 
   useEffect(() => {
@@ -151,15 +154,26 @@ export function VideoPlayer({ frameInfo, onCancel }) {
 
   useEffect(() => {
     if (!frameInfo?.video_id) return;
+    let cancelled = false;
+    setMapBTCKeyframes([]);
+    setMapLoadedVideoId(null);
     getVideoMapKeyframes(frameInfo.video_id)
       .then((res) => {
+        if (cancelled) return;
         if (res && res.available && Array.isArray(res.keyframes)) {
-          setMapBTCKeyframes(res.keyframes);
+          setMapBTCKeyframes([...res.keyframes].sort((a, b) => a.raw_idx - b.raw_idx));
         } else {
           setMapBTCKeyframes([]);
         }
+        setMapLoadedVideoId(frameInfo.video_id);
       })
-      .catch(() => setMapBTCKeyframes([]));
+      .catch(() => {
+        if (!cancelled) {
+          setMapBTCKeyframes([]);
+          setMapLoadedVideoId(frameInfo.video_id);
+        }
+      });
+    return () => { cancelled = true; };
   }, [frameInfo?.video_id]);
 
 
@@ -271,9 +285,12 @@ export function VideoPlayer({ frameInfo, onCancel }) {
   // YouTube Hotkeys & Video Playback Controls
   useEffect(() => {
     const videoElement = videoElementRef.current;
-    if (!videoElement) return;
+    if (!videoElement || mapLoadedVideoId !== frameInfo.video_id) return;
 
-    const targetSeek = Math.max(0, (frameInfo.time || parseInt(frameInfo.frame_id, 10) / fps) - 0.5);
+    const initialFrame = parseInt(frameInfo.frame_id, 10);
+    const targetSeek = Math.max(0, frameInfo.time != null && Number.isFinite(Number(frameInfo.time))
+      ? Number(frameInfo.time)
+      : timeAtFrameIndex(initialFrame, mapBTCKeyframes, fps));
     const doSeek = () => {
       try {
         videoElement.currentTime = targetSeek;
@@ -473,14 +490,14 @@ export function VideoPlayer({ frameInfo, onCancel }) {
       document.removeEventListener("keydown", handleKeyDown, true);
       clearInterval(id);
     };
-  }, [fps, frameInfo, onCancel]);
+  }, [fps, frameInfo, onCancel, mapBTCKeyframes, mapLoadedVideoId]);
 
   const curTime = videoElementRef.current ? videoElementRef.current.currentTime : (frameCounter / fps);
 
   // Precision snapping threshold (< 0.4 of a single frame duration)
   // Ensures keyframe IDs match when directly on keyframes, but releases immediately on single-frame stepping
   const snapThreshold = Math.min(0.015, 0.4 / fps);
-  let activeFrameNum = Math.round(curTime * fps);
+  let activeFrameNum = frameIndexAtTime(curTime, safeMapBTCKeyframes, fps);
   if (safeMapBTCKeyframes.length > 0) {
     const matchedKf = safeMapBTCKeyframes.find((kf) => Math.abs(kf.pts_time - curTime) <= snapThreshold);
     if (matchedKf) {
@@ -505,14 +522,8 @@ export function VideoPlayer({ frameInfo, onCancel }) {
   const jumpToFrame = (frameNum) => {
     if (videoElementRef.current) {
       const parsedNum = parseInt(frameNum, 10);
-      if (safeMapBTCKeyframes.length > 0) {
-        const matchedKf = safeMapBTCKeyframes.find((kf) => kf.raw_idx === parsedNum);
-        if (matchedKf) {
-          videoElementRef.current.currentTime = matchedKf.pts_time;
-          return;
-        }
-      }
-      videoElementRef.current.currentTime = parsedNum / fps;
+      if (!Number.isFinite(parsedNum)) return;
+      videoElementRef.current.currentTime = timeAtFrameIndex(parsedNum, safeMapBTCKeyframes, fps);
     }
   };
 

@@ -13,6 +13,7 @@ import aic51.packages.constant as constant
 from aic51.packages.config import GlobalConfig
 from aic51.packages.logger import logger
 from aic51.packages.search import Searcher, SearchCancelledException
+from aic51.packages.search.camera_metadata import build_camera_filter
 from aic51.packages.search.traceability import build_search_trace
 from aic51.packages.search.utils import Query as ParsedQuery
 from aic51.packages.utils import get_device
@@ -136,6 +137,8 @@ async def search_multimodal(
     include_videos: str = "",
     exclude_videos: str = "",
     yolo_relation: str = "",
+    road_type: str = "",
+    lighting: str = "",
 ):
     searchers = internal.get("searchers", {})
     if not searchers and "searcher" in internal:
@@ -209,6 +212,14 @@ async def search_multimodal(
             searcher._get_relation_filter(yolo_relation)
         except ValueError as exc:
             return JSONResponse(status_code=400, content={constant.MESSAGE_KEY: str(exc)})
+    camera_filter = ""
+    if road_type or lighting:
+        if len(selected_searchers) != 1 or next(iter(selected_searchers)) != "workspace2":
+            return JSONResponse(status_code=400, content={constant.MESSAGE_KEY: "Camera filters are only available for Batch 2"})
+        try:
+            camera_filter = build_camera_filter(road_type, lighting)
+        except ValueError as exc:
+            return JSONResponse(status_code=400, content={constant.MESSAGE_KEY: str(exc)})
     target_features_list = [f.strip() for f in target_features.split(",") if f.strip()]
 
     cancel_event = begin_search_session()
@@ -248,6 +259,7 @@ async def search_multimodal(
                 include_videos=include_videos,
                 exclude_videos=exclude_videos,
                 yolo_relation=yolo_relation,
+                camera_filter=camera_filter,
                 cancel_event=cancel_event,
             )
             for item in searcher_res.get("results", []):
@@ -274,6 +286,7 @@ async def search_multimodal(
                     include_videos=include_videos,
                     exclude_videos=exclude_videos,
                     yolo_relation=yolo_relation,
+                    camera_filter=camera_filter,
                     cancel_event=cancel_event,
                 )
                 for s in selected_searchers.values()
@@ -394,6 +407,8 @@ async def search_multimodal(
         "include_videos": include_videos,
         "exclude_videos": exclude_videos,
         "yolo_relation": yolo_relation,
+        "road_type": road_type,
+        "lighting": lighting,
     }
     response.update(
         build_search_trace(
