@@ -197,22 +197,10 @@ class Searcher(object):
             )
             self._single_search_cluster_similarity = 0.95
 
-        configured_cluster_field = os.environ.get("SINGLE_SEARCH_CLUSTER_VECTOR_FIELD")
-        if configured_cluster_field:
-            self._single_search_cluster_vector_field = configured_cluster_field
-        else:
-            # The temporal branch used legacy CLIP. New collections use
-            # SigLIP2, so select the first visual field the collection has.
-            compatible_fields = (
-                "image_clip_pe_l_14_336",
-                "image_siglip2_so400m_378",
-                "image_siglip_so400m_384",
-                "qwen_vl",
-            )
-            self._single_search_cluster_vector_field = next(
-                (field for field in compatible_fields if field in self._collection_fields),
-                compatible_fields[0],
-            )
+        # Single-search shot clustering always compares SigLIP2 vectors.
+        # If a collection has no SigLIP2 field, vector retrieval fails open
+        # and search results are returned without clustering.
+        self._single_search_cluster_vector_field = "image_siglip2_so400m_378"
         logger.info(
             "searcher [%s]: single-search visual clustering field=%s "
             "similarity>=%.3f frame_gap<=%d",
