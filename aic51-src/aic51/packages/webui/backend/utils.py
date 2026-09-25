@@ -209,6 +209,8 @@ def process_searcher_results(
             "ocr": data.get("ocr", ""),
             "asr": data.get("asr", ""),
         }
+        if record.get("temporal") is not None:
+            frame["temporal"] = record["temporal"]
         if include_traceability:
             frame["traceability"] = build_result_traceability(
                 resolved_work_dir,

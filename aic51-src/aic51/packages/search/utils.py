@@ -508,7 +508,9 @@ class Query:
     return new_query, asr_list
 
   def _extract_temporal_queries(self):
-    raw_queries = [q.strip() for q in re.split(r"[\\/]", self._query) if q.strip()]
+    # Each non-empty line is one temporal event. Slashes remain ordinary
+    # natural-language characters instead of ambiguous delimiters.
+    raw_queries = [q.strip() for q in re.split(r"\r?\n", self._query) if q.strip()]
     self._queries = [{"raw": q} for q in raw_queries]
 
   def _parse_one_query(self, q):
