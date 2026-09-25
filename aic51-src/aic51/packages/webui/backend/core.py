@@ -1,10 +1,12 @@
 import asyncio
 import logging
+import json
+import urllib.parse
 from contextlib import asynccontextmanager
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -23,7 +25,7 @@ SEARCH_REQUEST_TIMEOUT = GlobalConfig.get("backends", "core", "search_proxy", "r
 SEARCH_MAX_CREQUESTS = int(GlobalConfig.get("backends", "core", "search_proxy", "max_concurrent_requests") or 1)
 
 FILE_SERVERS = GlobalConfig.get("backends", "core", "file_proxy", "servers") or []
-FILE_REQUEST_TIMEOUT = GlobalConfig.get("backends", "core", "search_proxy", "request_timeout")
+FILE_REQUEST_TIMEOUT = float(GlobalConfig.get("backends", "core", "file_proxy", "request_timeout") or 30.0)
 FILE_MAX_REQUESTS = int(GlobalConfig.get("backends", "core", "file_proxy", "max_concurrent_requests") or 1)
 
 TARGET_FEATURES_SYNC_INTEVAL = int(GlobalConfig.get("backends", "core", "search_proxy", "sync_interval") or 15)
@@ -255,7 +257,7 @@ async def frame_info(request: Request, video_id: str, frame_id: str):
         GetRequest(
             urljoin(ss["host"], f"{constant.HEALTH_ENDPOINT}/{video_id}"),
             params=request.query_params,
-            timeout=FILE_MAX_REQUESTS,
+            timeout=FILE_REQUEST_TIMEOUT,
         )
         for ss in FILE_SERVERS
     ]
@@ -290,7 +292,7 @@ async def get_frame(request: Request, video_id: str, frame_id: str):
         GetRequest(
             urljoin(ss["host"], f"{constant.HEALTH_ENDPOINT}/{video_id}/{frame_id}"),
             params=request.query_params,
-            timeout=FILE_MAX_REQUESTS,
+            timeout=FILE_REQUEST_TIMEOUT,
         )
         for ss in FILE_SERVERS
     ]
@@ -304,7 +306,7 @@ async def get_frame(request: Request, video_id: str, frame_id: str):
 
                 parsed_url = urlparse(res.url)
                 redirected_url = parsed_url._replace(path=request.url.path).geturl()
-                return RedirectResponse(redirected_url)
+                return RedirectResponse(redirected_url, headers={"Cache-Control": "public, max-age=86400"})
     except:
         return JSONResponse(
             status_code=500,
@@ -325,7 +327,7 @@ async def get_keyframe(request: Request, video_id: str, frame_id: str):
         GetRequest(
             urljoin(ss["host"], f"{constant.HEALTH_ENDPOINT}/{video_id}/{frame_id}"),
             params=request.query_params,
-            timeout=FILE_MAX_REQUESTS,
+            timeout=FILE_REQUEST_TIMEOUT,
         )
         for ss in FILE_SERVERS
     ]
@@ -339,7 +341,7 @@ async def get_keyframe(request: Request, video_id: str, frame_id: str):
 
                 parsed_url = urlparse(res.url)
                 redirected_url = parsed_url._replace(path=request.url.path).geturl()
-                return RedirectResponse(redirected_url)
+                return RedirectResponse(redirected_url, headers={"Cache-Control": "public, max-age=86400"})
     except:
         return JSONResponse(
             status_code=500,
@@ -347,7 +349,42 @@ async def get_keyframe(request: Request, video_id: str, frame_id: str):
         )
 
 
-CHUNK_SIZE = 1024 * 1024
+@app.get("/api/thumbnails/{video_id}/{frame_id}")
+async def get_thumbnail(request: Request, video_id: str, frame_id: str):
+    if len(FILE_SERVERS) == 0:
+        return JSONResponse(
+            status_code=404,
+            content=jsonable_encoder({constant.MESSAGE_KEY: "file function is not supported"}),
+        )
+
+    crequest = CRequestPool(FILE_MAX_REQUESTS)
+    health_requests = [
+        GetRequest(
+            urljoin(ss["host"], f"/api/thumbnails/{video_id}/{frame_id}"),
+            params=request.query_params,
+            timeout=FILE_REQUEST_TIMEOUT,
+        )
+        for ss in FILE_SERVERS
+    ]
+    crequest.map(health_requests)
+
+    try:
+        for future in crequest.as_completed():
+            res = future.result()
+            if res and res.ok:
+                crequest.cancel_all()
+
+                parsed_url = urlparse(res.url)
+                redirected_url = parsed_url._replace(path=request.url.path).geturl()
+                return RedirectResponse(redirected_url, headers={"Cache-Control": "public, max-age=86400"})
+    except:
+        return JSONResponse(
+            status_code=500,
+            content=jsonable_encoder({constant.MESSAGE_KEY: "get_thumbnail errors"}),
+        )
+
+
+CHUNK_SIZE = 4 * 1024 * 1024
 
 
 @app.get(constant.FILE_ENDPOINT + "/{video_id}")
@@ -363,7 +400,7 @@ async def get_video(request: Request, video_id: str):
         GetRequest(
             urljoin(ss["host"], f"{constant.HEALTH_ENDPOINT}/{video_id}"),
             params=request.query_params,
-            timeout=FILE_MAX_REQUESTS,
+            timeout=FILE_REQUEST_TIMEOUT,
         )
         for ss in FILE_SERVERS
     ]
@@ -377,7 +414,7 @@ async def get_video(request: Request, video_id: str):
 
                 parsed_url = urlparse(res.url)
                 redirected_url = parsed_url._replace(path=request.url.path).geturl()
-                return RedirectResponse(redirected_url)
+                return RedirectResponse(redirected_url, headers={"Cache-Control": "public, max-age=86400"})
     except:
         return JSONResponse(
             status_code=500,
@@ -398,7 +435,7 @@ async def get_video_transcript(request: Request, video_id: str):
         GetRequest(
             urljoin(ss["host"], f"/api/video/transcript/{video_id}"),
             params=request.query_params,
-            timeout=FILE_MAX_REQUESTS,
+            timeout=FILE_REQUEST_TIMEOUT,
         )
         for ss in FILE_SERVERS
     ]
@@ -434,7 +471,7 @@ async def get_video_keyframes(request: Request, video_id: str):
         GetRequest(
             urljoin(ss["host"], f"/api/video/keyframes/{video_id}"),
             params=request.query_params,
-            timeout=FILE_MAX_REQUESTS,
+            timeout=FILE_REQUEST_TIMEOUT,
         )
         for ss in FILE_SERVERS
     ]
@@ -457,6 +494,42 @@ async def get_video_keyframes(request: Request, video_id: str):
     return JSONResponse(status_code=200, content=[])
 
 
+@app.get("/api/video/thumbnails/{video_id}")
+async def get_video_thumbnails(request: Request, video_id: str):
+    if len(FILE_SERVERS) == 0:
+        return JSONResponse(
+            status_code=404,
+            content=jsonable_encoder({constant.MESSAGE_KEY: "file function is not supported"}),
+        )
+
+    crequest = CRequestPool(FILE_MAX_REQUESTS)
+    health_requests = [
+        GetRequest(
+            urljoin(ss["host"], f"/api/video/thumbnails/{video_id}"),
+            params=request.query_params,
+            timeout=FILE_REQUEST_TIMEOUT,
+        )
+        for ss in FILE_SERVERS
+    ]
+    crequest.map(health_requests)
+
+    try:
+        for future in crequest.as_completed():
+            res = future.result()
+            if res and res.ok:
+                crequest.cancel_all()
+
+                parsed_url = urlparse(res.url)
+                redirected_url = parsed_url._replace(path=request.url.path).geturl()
+                return RedirectResponse(redirected_url)
+    except:
+        return JSONResponse(
+            status_code=500,
+            content=jsonable_encoder({constant.MESSAGE_KEY: "get_video_thumbnails errors"}),
+        )
+    return JSONResponse(status_code=200, content=[])
+
+
 @app.get("/api/frame/ocr/{video_id}/{frame_id}")
 async def get_frame_ocr(request: Request, video_id: str, frame_id: str):
     if len(FILE_SERVERS) == 0:
@@ -470,7 +543,7 @@ async def get_frame_ocr(request: Request, video_id: str, frame_id: str):
         GetRequest(
             urljoin(ss["host"], f"/api/frame/ocr/{video_id}/{frame_id}"),
             params=request.query_params,
-            timeout=FILE_MAX_REQUESTS,
+            timeout=FILE_REQUEST_TIMEOUT,
         )
         for ss in FILE_SERVERS
     ]
@@ -505,7 +578,7 @@ async def get_video_map_keyframes(request: Request, video_id: str):
         GetRequest(
             urljoin(ss["host"], f"/api/video/map-keyframes/{video_id}"),
             params=request.query_params,
-            timeout=FILE_MAX_REQUESTS,
+            timeout=FILE_REQUEST_TIMEOUT,
         )
         for ss in FILE_SERVERS
     ]
@@ -540,7 +613,7 @@ async def get_video_max_frame(request: Request, video_id: str):
         GetRequest(
             urljoin(ss["host"], f"/api/video/max-frame/{video_id}"),
             params=request.query_params,
-            timeout=FILE_MAX_REQUESTS,
+            timeout=FILE_REQUEST_TIMEOUT,
         )
         for ss in FILE_SERVERS
     ]
@@ -575,7 +648,7 @@ async def get_video_map_keyframes_around(request: Request, video_id: str, frame_
         GetRequest(
             urljoin(ss["host"], f"/api/video/map-keyframes-around/{video_id}/{frame_id}"),
             params=request.query_params,
-            timeout=FILE_MAX_REQUESTS,
+            timeout=FILE_REQUEST_TIMEOUT,
         )
         for ss in FILE_SERVERS
     ]
@@ -596,6 +669,60 @@ async def get_video_map_keyframes_around(request: Request, video_id: str, frame_
             content=jsonable_encoder({constant.MESSAGE_KEY: "get_video_map_keyframes_around errors"}),
         )
 
+
+@app.api_route("/api/dres-proxy/{path:path}", methods=["GET", "POST", "OPTIONS"])
+async def dres_proxy(request: Request, path: str):
+    if request.method == "OPTIONS":
+        return Response(
+            status_code=200,
+            headers={
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+                "Access-Control-Allow-Headers": "*",
+            },
+        )
+
+    target_server = request.headers.get("x-dres-server-url") or request.query_params.get("dres_server") or "https://eventretrieval.one"
+    target_server = str(target_server).rstrip("/")
+    target_url = f"{target_server}/{path.lstrip('/')}"
+
+    query_params = dict(request.query_params)
+    query_params.pop("dres_server", None)
+    if query_params:
+        target_url = f"{target_url}?{urllib.parse.urlencode(query_params)}"
+
+    body = await request.body()
+    headers = {
+        "User-Agent": "VECNA-DRES-Proxy/1.0",
+    }
+    if "content-type" in request.headers:
+        headers["Content-Type"] = request.headers["content-type"]
+
+    def _do_request():
+        try:
+            resp = requests.request(
+                method=request.method,
+                url=target_url,
+                data=body if body else None,
+                headers=headers,
+                timeout=15,
+            )
+            return resp.status_code, resp.content, resp.headers.get("Content-Type", "application/json")
+        except Exception as e:
+            err_data = json.dumps({"status": False, "description": f"Proxy Error: {str(e)}"}).encode()
+            return 502, err_data, "application/json"
+
+    status_code, content, content_type = await asyncio.to_thread(_do_request)
+    return Response(
+        content=content,
+        status_code=status_code,
+        media_type=content_type,
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers": "*",
+        },
+    )
 
 
 web_dir = Path.cwd() / constant.FRONTEND_DIST_DIR

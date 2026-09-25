@@ -135,6 +135,7 @@ async def search_multimodal(
     en_to_vi_translate: bool = False,
     include_videos: str = "",
     exclude_videos: str = "",
+    yolo_relation: str = "",
 ):
     searchers = internal.get("searchers", {})
     if not searchers and "searcher" in internal:
@@ -201,6 +202,13 @@ async def search_multimodal(
             selected_searchers = {next(iter(searchers.keys())): next(iter(searchers.values()))} if searchers else {}
 
     searcher = next(iter(selected_searchers.values()))
+    if yolo_relation:
+        if len(selected_searchers) != 1 or next(iter(selected_searchers)) != "workspace2":
+            return JSONResponse(status_code=400, content={constant.MESSAGE_KEY: "YOLO relation filter is only available for Batch 2"})
+        try:
+            searcher._get_relation_filter(yolo_relation)
+        except ValueError as exc:
+            return JSONResponse(status_code=400, content={constant.MESSAGE_KEY: str(exc)})
     target_features_list = [f.strip() for f in target_features.split(",") if f.strip()]
 
     cancel_event = begin_search_session()
@@ -239,6 +247,7 @@ async def search_multimodal(
                 en_to_vi_translate=en_to_vi_translate,
                 include_videos=include_videos,
                 exclude_videos=exclude_videos,
+                yolo_relation=yolo_relation,
                 cancel_event=cancel_event,
             )
             for item in searcher_res.get("results", []):
@@ -264,6 +273,7 @@ async def search_multimodal(
                     en_to_vi_translate=en_to_vi_translate,
                     include_videos=include_videos,
                     exclude_videos=exclude_videos,
+                    yolo_relation=yolo_relation,
                     cancel_event=cancel_event,
                 )
                 for s in selected_searchers.values()
@@ -383,6 +393,7 @@ async def search_multimodal(
         "en_to_vi_translate": en_to_vi_translate,
         "include_videos": include_videos,
         "exclude_videos": exclude_videos,
+        "yolo_relation": yolo_relation,
     }
     response.update(
         build_search_trace(

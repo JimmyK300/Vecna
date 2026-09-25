@@ -119,6 +119,8 @@ export default function Root() {
     const q = currentParams.get("q") || "";
     const include_videos = currentParams.get("include_videos") || "";
     const exclude_videos = currentParams.get("exclude_videos") || "";
+    const collection = currentParams.get("collection") || "workspace";
+    const yolo_relation = currentParams.get("yolo_relation") || "";
 
     const nextAutoTranslate = updatedObj.autoTranslate !== undefined ? updatedObj.autoTranslate : autoTranslate;
     const nextEnToViTranslate = updatedObj.enToViTranslate !== undefined ? updatedObj.enToViTranslate : enToViTranslate;
@@ -129,6 +131,8 @@ export default function Root() {
       en_to_vi_translate: nextEnToViTranslate ? "true" : "false",
       include_videos,
       exclude_videos,
+      collection,
+      yolo_relation,
       ocr_weight: updatedObj.ocrWeight !== undefined ? updatedObj.ocrWeight : ocrWeight,
       asr_weight: updatedObj.asrWeight !== undefined ? updatedObj.asrWeight : asrWeight,
       ocr_alpha: updatedObj.ocrAlpha !== undefined ? updatedObj.ocrAlpha : ocrAlpha,

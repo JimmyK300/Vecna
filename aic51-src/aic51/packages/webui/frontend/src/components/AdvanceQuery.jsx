@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
+import YoloRelationFilter from "./YoloRelationFilter.jsx";
 
 const VIDEO_PREFIX_OPTIONS = [
   { prefix: "L21", name: "L21: HTV 60 Seconds (P1)" },
@@ -86,6 +87,8 @@ export function AdvanceQueryContainer({
   translationFailed = false,
   collection = "workspace",
   onCollectionChange,
+  yoloRelation = "",
+  onYoloRelationChange,
 }) {
   const [showPrefixMenu, setShowPrefixMenu] = useState(false);
 
@@ -298,7 +301,7 @@ export function AdvanceQueryContainer({
   };
 
   return (
-    <div className="w-full flex flex-col lg:flex-row gap-2 bg-sky-200 border border-sky-300 p-2 rounded-lg shadow-sm mb-2">
+    <div className="w-full flex flex-col gap-2 bg-sky-200 border border-sky-300 p-2 rounded-lg shadow-sm mb-2">
       {/* Primary Text Search Query Box */}
       <div className="flex-1 flex flex-col gap-1.5 min-w-0">
         <div className="flex items-center justify-between">
@@ -552,6 +555,7 @@ export function AdvanceQueryContainer({
         )}
       </div>
 
+      <div className="flex flex-wrap gap-2 items-start">
       {/* Dedicated OCR & ASR Filters Panel */}
       {showOcrAsrPanel && (
         <div className="w-full lg:w-56 shrink-0 flex flex-col gap-1.5 bg-white border border-sky-300 p-2 rounded shadow-sm self-start animate-fadeIn">
@@ -597,6 +601,12 @@ export function AdvanceQueryContainer({
           </div>
         </div>
       )}
+
+      <YoloRelationFilter
+        value={yoloRelation}
+        onChange={onYoloRelationChange}
+        collection={collection}
+      />
 
       {/* Dedicated Include / Exclude Video Filter Panel with Header Menu */}
       {showVideoPanel && (
@@ -744,6 +754,7 @@ export function AdvanceQueryContainer({
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

@@ -256,6 +256,24 @@ class Searcher(object):
     def support_asr(self):
         return self._asr_name is not None
 
+    def _get_relation_filter(self, relation_key: str) -> str:
+        if not relation_key:
+            return ""
+        if "yolo_relations" not in self._collection_fields:
+            raise ValueError("This collection does not contain YOLO relations")
+        parts = relation_key.split(":")
+        if (
+            len(parts) != 5
+            or parts[2] not in {"left_of", "right_of", "above", "below", "near"}
+            or any(not re.fullmatch(r"[a-z0-9_]{1,64}", part) for part in parts)
+        ):
+            raise ValueError("Invalid YOLO relation key")
+        return f"ARRAY_CONTAINS(yolo_relations, {json.dumps(relation_key)})"
+
+    @staticmethod
+    def _combine_filters(*filters: str) -> str:
+        return " && ".join(f"({filter_expr})" for filter_expr in filters if filter_expr)
+
     def search_multimodal(
         self,
         q: str,
@@ -275,6 +293,7 @@ class Searcher(object):
         en_to_vi_translate: bool = False,
         include_videos: str = "",
         exclude_videos: str = "",
+        yolo_relation: str = "",
         cancel_event: threading.Event | Callable = None,
     ):
         _check_cancelled(cancel_event)
@@ -289,10 +308,17 @@ class Searcher(object):
             include_videos=include_videos,
             exclude_videos=exclude_videos,
         )
+        relation_filter = self._get_relation_filter(yolo_relation)
 
         if query.simple:
             logger.info(f"searcher: get include_video_ids={query.include_video_ids}, exclude_video_ids={query.exclude_video_ids}")
-            res = self._get_videos(query.include_video_ids, query.exclude_video_ids, offset, limit, selected, cancel_event=cancel_event)
+            if relation_filter:
+                res = self._get_relation_matches(
+                    query.include_video_ids, query.exclude_video_ids, relation_filter,
+                    offset, limit, cancel_event=cancel_event,
+                )
+            else:
+                res = self._get_videos(query.include_video_ids, query.exclude_video_ids, offset, limit, selected, cancel_event=cancel_event)
         elif query.advance and not query.temporal:
             logger.info(f"searcher: advance_search query={query.data}")
             res = self._advance_search(
@@ -305,6 +331,7 @@ class Searcher(object):
                 ocr_alpha=ocr_alpha,
                 asr_alpha=asr_alpha,
                 nprobe=nprobe,
+                relation_filter=relation_filter,
                 cancel_event=cancel_event,
             )
         else:
@@ -321,6 +348,7 @@ class Searcher(object):
                 nprobe=nprobe,
                 temporal_k=temporal_k,
                 max_interval=max_interval,
+                relation_filter=relation_filter,
                 cancel_event=cancel_event,
             )
 
@@ -650,6 +678,7 @@ class Searcher(object):
         hybrid_alpha: float | None = None,
         nprobe: int = 8,
         exclude_video_ids: list[str] = [],
+        relation_filter: str = "",
         cancel_event: threading.Event | Callable = None,
     ):
         _check_cancelled(cancel_event)
@@ -660,7 +689,7 @@ class Searcher(object):
         asr_weight = max(0, min(1 - ocr_weight, asr_weight))
         ocr_alpha = max(0.0, min(1.0, float(ocr_alpha)))
         asr_alpha = max(0.0, min(1.0, float(asr_alpha)))
-        video_filter = self._get_video_filter(video_ids)
+        video_filter = self._combine_filters(self._get_video_filter(video_ids), relation_filter)
 
         subquery_limit = offset + limit
         if exclude_video_ids and len(exclude_video_ids) > 0:
@@ -888,6 +917,7 @@ class Searcher(object):
         asr_alpha: float = 0.0,
         hybrid_alpha: float | None = None,
         nprobe: int = 8,
+        relation_filter: str = "",
         cancel_event: threading.Event | Callable = None,
     ):
         _check_cancelled(cancel_event)
@@ -918,6 +948,7 @@ class Searcher(object):
                 asr_alpha=asr_alpha,
                 nprobe=nprobe,
                 exclude_video_ids=query.exclude_video_ids,
+                relation_filter=relation_filter,
                 cancel_event=cancel_event,
             )
             total = len(results)
@@ -928,7 +959,7 @@ class Searcher(object):
                 else max(200, offset + limit)
             )
 
-            db_size = self._database.get_size()
+            db_size = self._database.count(relation_filter) if relation_filter else self._database.get_size()
 
             while True:
                 _check_cancelled(cancel_event)
@@ -944,6 +975,7 @@ class Searcher(object):
                     asr_alpha=asr_alpha,
                     nprobe=nprobe,
                     exclude_video_ids=query.exclude_video_ids,
+                    relation_filter=relation_filter,
                     cancel_event=cancel_event,
                 )
 
@@ -1087,6 +1119,7 @@ class Searcher(object):
         nprobe: int = 8,
         temporal_k: int = 200,
         max_interval: int = 1000,
+        relation_filter: str = "",
         cancel_event: threading.Event | Callable = None,
     ):
         _check_cancelled(cancel_event)
@@ -1105,6 +1138,7 @@ class Searcher(object):
             "nprobe": nprobe,
             "temporal_k": temporal_k,
             "max_interval": max_interval,
+            "relation_filter": relation_filter,
         }
         query_str = f"{constants.CACHE_TEMPORAL_SEARCH}:{repr(params)}"
         query_hash = hashlib.sha256(query_str.encode("utf-8")).hexdigest()
@@ -1128,6 +1162,7 @@ class Searcher(object):
                     asr_alpha=asr_alpha,
                     nprobe=nprobe,
                     exclude_video_ids=query.exclude_video_ids,
+                    relation_filter=relation_filter,
                     cancel_event=cancel_event,
                 )
                 results_list.append(results)
@@ -1235,6 +1270,30 @@ class Searcher(object):
             best = tmp[: constant.TEMPORAL_QUEUE_SIZE]
 
         return best
+
+    def _get_relation_matches(
+        self,
+        include_video_ids: list[str],
+        exclude_video_ids: list[str],
+        relation_filter: str,
+        offset: int,
+        limit: int,
+        cancel_event: threading.Event | Callable = None,
+    ) -> dict:
+        _check_cancelled(cancel_event)
+        filter_parts = [relation_filter, self._get_video_filter(include_video_ids)]
+        for video_id in exclude_video_ids:
+            if re.fullmatch(r"[A-Za-z0-9_-]{1,64}", video_id):
+                filter_parts.append(f"!(frame_id like {json.dumps(video_id + '%')})")
+        filter_expr = self._combine_filters(*filter_parts)
+        total = self._database.count(filter_expr)
+        _check_cancelled(cancel_event)
+        rows = self._database.query(filter_expr, offset, limit)
+        return {
+            "results": [{"entity": row} for row in rows],
+            "total": total,
+            "offset": offset,
+        }
 
     def _get_videos(
         self,

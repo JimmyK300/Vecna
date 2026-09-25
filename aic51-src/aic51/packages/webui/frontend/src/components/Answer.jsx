@@ -15,6 +15,7 @@ import { AuthContext } from "./AuthProvider.jsx";
 import { getCSV, getCSVAsync, getAnswersByIds, extractAnswerFrameItems, extractQAAnswers, clearAllAnswers, formatCleanInteger, exportAllAnswersCSV, exportZipAllAnswers } from "../services/answer.js";
 import { getBlob, downloadFile } from "../utils/files.js";
 import { getFrameInfo } from "../services/search.js";
+import DresSubmitPanel from "./DresSubmitPanel.jsx";
 
 const QUERY_ID_OPTIONS = [
   { id: "TKIS", name: "TKIS" },
@@ -539,8 +540,8 @@ function SelectedFramesPreview() {
   };
 
   return (
-    <div className="p-1.5 bg-green-50 border border-green-300 rounded mb-1 text-xs w-full overflow-hidden">
-      <div className="font-bold text-green-900 mb-1 text-[11px] flex justify-between items-center">
+    <div className="p-2 bg-emerald-50/80 border border-emerald-300 rounded-lg mb-1 text-xs w-full overflow-hidden shadow-2xs animate-fadeIn">
+      <div className="font-bold text-emerald-950 mb-1.5 text-[11px] flex justify-between items-center">
         <div className="flex items-center gap-1.5">
           <span>Selected Frames ({selected.length}):</span>
           <div ref={confirmRef} className="inline-flex items-center gap-1">
@@ -598,14 +599,14 @@ function SelectedFramesPreview() {
             )}
           </div>
         </div>
-        <span className="text-[9px] text-green-700 font-normal">Click item to play</span>
+        <span className="text-[10px] text-emerald-700 font-normal">Click item to play</span>
       </div>
-      <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto">
+      <div className="flex flex-wrap gap-1 max-h-28 overflow-y-auto">
         {selected.map((frameId, index) => (
           <span
             key={frameId}
             onClick={() => handlePlayFrame(frameId)}
-            className="inline-flex items-center gap-1 bg-white hover:bg-emerald-100 text-green-900 border border-green-400 hover:border-green-600 rounded px-1.5 py-0.5 text-[10px] font-mono cursor-pointer shadow-sm truncate max-w-full transition-colors group"
+            className="inline-flex items-center gap-1 bg-white hover:bg-emerald-100 text-emerald-900 border border-emerald-300 hover:border-emerald-500 rounded px-1.5 py-0.5 text-[11px] font-mono cursor-pointer shadow-2xs truncate max-w-full transition-colors group"
             title="Click to open video player"
           >
             <span className="font-bold text-gray-400 text-[9px]">#{index + 1}</span>
@@ -616,7 +617,7 @@ function SelectedFramesPreview() {
                 e.stopPropagation();
                 removeSelected(frameId);
               }}
-              className="text-red-500 hover:text-red-700 font-bold shrink-0 px-0.5 hover:bg-red-100 rounded"
+              className="text-red-500 hover:text-red-700 font-bold shrink-0 px-0.5 hover:bg-red-100 rounded ml-0.5"
               title="Remove frame"
             >
               ✕
@@ -1050,6 +1051,8 @@ export default function AnswerSidebar() {
   const [previousSelectedSnapshot, setPreviousSelectedSnapshot] = useState(null);
   const [previousLoadedAnswerSnapshot, setPreviousLoadedAnswerSnapshot] = useState(null);
 
+  const [dresFillData, setDresFillData] = useState(null);
+
   // Default N = 100, STEP = 10
   const [downloadN, setDownloadN] = useState(100);
   const [downloadStep, setDownloadStep] = useState(10);
@@ -1092,6 +1095,7 @@ export default function AnswerSidebar() {
   };
 
   const handleOnSubmitAnswer = async (a) => {
+    setDresFillData(a);
     if (submitAnswer) {
       submitAnswer(a);
     }
@@ -1133,6 +1137,12 @@ export default function AnswerSidebar() {
 
   return (
     <div className="w-full flex flex-col gap-1 p-1 box-border overflow-hidden">
+      {/* DRES API Submission Panel */}
+      <DresSubmitPanel externalFillData={dresFillData} />
+
+      {/* Selected Frames Preview - PLACED DIRECTLY UNDER DRES SUBMITTER */}
+      <SelectedFramesPreview />
+
       {/* N: and STEP: Parameters Header Bar */}
       <div className="flex items-center justify-between bg-blue-50 border border-blue-200 rounded p-1.5 text-xs mb-1">
         <div className="flex items-center gap-1.5 font-bold text-gray-700">
@@ -1162,7 +1172,6 @@ export default function AnswerSidebar() {
 
       {/* Answer Form */}
       <AnswerHeader loadedAnswer={loadedAnswer} />
-      <SelectedFramesPreview />
 
       {/* Saved Answers Header with ZIP and Reset All Buttons */}
       {fetcher.data && fetcher.data.length > 0 && (

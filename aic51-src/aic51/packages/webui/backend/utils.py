@@ -1,4 +1,7 @@
+import sys
+import asyncio
 import concurrent.futures
+import csv
 import json
 import logging
 from pathlib import Path
@@ -16,6 +19,15 @@ from aic51.packages.search.traceability import (
 )
 
 
+def _silence_winerror_10054(loop, context):
+    exc = context.get("exception")
+    if isinstance(exc, (ConnectionResetError, BrokenPipeError)):
+        return
+    if getattr(exc, "winerror", None) in (10054, 10053):
+        return
+    loop.default_exception_handler(context)
+
+
 def create_app(*args, **kwargs):
     app = FastAPI(*args, **kwargs)
     origins = [
@@ -28,6 +40,16 @@ def create_app(*args, **kwargs):
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    @app.on_event("startup")
+    async def _setup_event_loop_handler():
+        if sys.platform.startswith("win"):
+            try:
+                loop = asyncio.get_running_loop()
+                loop.set_exception_handler(_silence_winerror_10054)
+            except Exception:
+                pass
+
     return app
 
 
@@ -77,9 +99,27 @@ def get_fps(video_id: str) -> float:
             try:
                 with open(info_path, "r", encoding="utf-8") as f:
                     data = json.load(f)
-                    return float(data[constant.FPS_KEY])
+                    val = float(data[constant.FPS_KEY])
+                    if val > 0:
+                        return val
             except Exception:
                 pass
+
+        # Also check map-keyframes CSV for true FPS
+        for sub in ["map-keyframes", "data/map-keyframes", "workspace/map-keyframes"]:
+            csv_path = root / sub / f"{video_id}.csv"
+            if csv_path.exists():
+                try:
+                    with open(csv_path, "r", encoding="utf-8") as f:
+                        reader = csv.DictReader(f)
+                        first_row = next(reader, None)
+                        if first_row and "fps" in first_row and first_row["fps"]:
+                            val = float(first_row["fps"])
+                            if val > 0:
+                                return val
+                except Exception:
+                    pass
+
     return float(constant.DEFAULT_FPS)
 
 
@@ -98,6 +138,27 @@ def get_fps_info(video_id: str) -> dict:
                     }
             except Exception:
                 pass
+
+        # Also check map-keyframes CSV
+        for sub in ["map-keyframes", "data/map-keyframes", "workspace/map-keyframes"]:
+            csv_path = root / sub / f"{video_id}.csv"
+            if csv_path.exists():
+                try:
+                    with open(csv_path, "r", encoding="utf-8") as f:
+                        reader = csv.DictReader(f)
+                        first_row = next(reader, None)
+                        if first_row and "fps" in first_row and first_row["fps"]:
+                            val = float(first_row["fps"])
+                            if val > 0:
+                                return {
+                                    constant.FPS_KEY: val,
+                                    constant.FPS_FRACTION_KEY: f"{int(val)}/1",
+                                    constant.R_FRAME_RATE_KEY: f"{int(val)}/1",
+                                    constant.AVG_FRAME_RATE_KEY: f"{int(val)}/1",
+                                }
+                except Exception:
+                    pass
+
     return {
         constant.FPS_KEY: float(constant.DEFAULT_FPS),
         constant.FPS_FRACTION_KEY: f"{constant.DEFAULT_FPS}/1",
@@ -116,11 +177,12 @@ def process_searcher_results(
 ):
     resolved_work_dir = Path(work_dir) if work_dir is not None else Path.cwd()
     index_generation = None
-    if include_traceability and traceability_collection:
-        index_generation = load_current_index_generation(
-            resolved_work_dir,
-            traceability_collection,
-        )
+    if include_traceability:
+        if traceability_collection:
+            index_generation = load_current_index_generation(
+                resolved_work_dir,
+                traceability_collection,
+            )
 
     frames = []
     for record in searcher_res["results"]:

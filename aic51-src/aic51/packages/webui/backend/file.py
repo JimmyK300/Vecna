@@ -1,6 +1,9 @@
 from pathlib import Path
 import re
 import csv
+import json
+import asyncio
+from functools import lru_cache
 import numpy as np
 
 from fastapi import Header, Request, Response
@@ -13,6 +16,9 @@ from aic51.packages.logger import logger
 from .utils import create_app, get_fps, _get_candidate_roots
 
 app = create_app()
+
+IMAGE_CACHE_HEADERS = {"Cache-Control": "public, max-age=31536000, immutable"}
+VIDEO_CACHE_HEADERS = {"Cache-Control": "public, max-age=86400"}
 
 
 @app.get(constant.HEALTH_ENDPOINT + "/{video_id}/{frame_id}")
@@ -70,25 +76,55 @@ async def get_frame_ocr(video_id: str, frame_id: str):
 
 
 def _find_image_file(folder_name: str, video_id: str, frame_id: str) -> Path | None:
+    variants = [video_id]
+    if "_" in video_id:
+        variants.append(video_id.replace("_", "-"))
+    if "-" in video_id:
+        variants.append(video_id.replace("-", "_"))
+
+    dir_names = [folder_name]
+    if folder_name == constant.THUMBNAIL_DIR:
+        dir_names = [constant.THUMBNAIL_DIR, "thumbnails", "data/thumbnails"]
+    elif folder_name == constant.KEYFRAME_DIR:
+        dir_names = [constant.KEYFRAME_DIR, "keyframes", "data/keyframes"]
+
     for root in _get_candidate_roots(video_id):
-        base_dir = root / folder_name
-        p1 = base_dir / video_id / f"{frame_id}{constant.IMAGE_EXTENSION}"
-        if p1.exists() and not p1.is_dir():
-            return p1
-        if str(frame_id).isdigit():
-            val = int(frame_id)
-            for fmt in (f"{val:06d}", f"{val:05d}"):
-                p = base_dir / video_id / f"{fmt}{constant.IMAGE_EXTENSION}"
-                if p.exists() and not p.is_dir():
-                    return p
+        for d_name in dir_names:
+            base_dir = root / d_name
+            for v_id in variants:
+                target_dir = base_dir / v_id
+                if not target_dir.exists() or not target_dir.is_dir():
+                    continue
+                p1 = target_dir / f"{frame_id}{constant.IMAGE_EXTENSION}"
+                if p1.exists() and not p1.is_dir():
+                    return p1
+                if str(frame_id).isdigit():
+                    val = int(frame_id)
+                    for fmt in (f"{val:06d}", f"{val:05d}"):
+                        p = target_dir / f"{fmt}{constant.IMAGE_EXTENSION}"
+                        if p.exists() and not p.is_dir():
+                            return p
     return None
 
 
 @app.get(constant.FILE_ENDPOINT + "/{video_id}/{frame_id}")
 async def get_file(request: Request, video_id: str, frame_id: str):
     file_path = _find_image_file(constant.THUMBNAIL_DIR, video_id, frame_id)
+    if not file_path:
+        file_path = _find_image_file(constant.KEYFRAME_DIR, video_id, frame_id)
     if file_path:
-        return FileResponse(file_path)
+        return FileResponse(file_path, headers=IMAGE_CACHE_HEADERS)
+    else:
+        return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
+
+
+@app.get("/api/thumbnails/{video_id}/{frame_id}")
+async def get_thumbnail(request: Request, video_id: str, frame_id: str):
+    file_path = _find_image_file(constant.THUMBNAIL_DIR, video_id, frame_id)
+    if not file_path:
+        file_path = _find_image_file(constant.KEYFRAME_DIR, video_id, frame_id)
+    if file_path:
+        return FileResponse(file_path, headers=IMAGE_CACHE_HEADERS)
     else:
         return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
 
@@ -96,42 +132,64 @@ async def get_file(request: Request, video_id: str, frame_id: str):
 @app.get("/api/keyframes/{video_id}/{frame_id}")
 async def get_keyframe(request: Request, video_id: str, frame_id: str):
     file_path = _find_image_file(constant.KEYFRAME_DIR, video_id, frame_id)
+    if not file_path:
+        file_path = _find_image_file(constant.THUMBNAIL_DIR, video_id, frame_id)
     if file_path:
-        return FileResponse(file_path)
+        return FileResponse(file_path, headers=IMAGE_CACHE_HEADERS)
     else:
-        file_path_thumb = _find_image_file(constant.THUMBNAIL_DIR, video_id, frame_id)
-        if file_path_thumb:
-            return FileResponse(file_path_thumb)
         return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
 
 
-CHUNK_SIZE = 1024 * 1024
+CHUNK_SIZE = 4 * 1024 * 1024  # 4 MB chunk for optimal seek balance and low abort rate
 
 
 @app.get(constant.FILE_ENDPOINT + "/{video_id}")
 async def get_video(request: Request, video_id: str, range: str = Header(None)):
     file_path = None
     for root in _get_candidate_roots(video_id):
-        p = root / f"{constant.VIDEO_DIR}/{video_id}{constant.VIDEO_EXTENSION}"
-        if p.exists() and not p.is_dir():
-            file_path = p
+        for sub in [
+            constant.VIDEO_DIR,
+            "data/videos",
+            "videos",
+            "workspace/data/videos",
+            "data/compressed_videos",
+            "workspace/data/compressed_videos",
+        ]:
+            p = root / sub / f"{video_id}{constant.VIDEO_EXTENSION}"
+            if p.exists() and not p.is_dir():
+                file_path = p
+                break
+        if file_path:
             break
 
     if not file_path:
         return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
 
-    start, end = range.replace("bytes=", "").split("-")
-    start = int(start)
-    end = int(end) if end else start + CHUNK_SIZE
+    filesize = file_path.stat().st_size
+    if not range:
+        return FileResponse(file_path, headers=VIDEO_CACHE_HEADERS, media_type=constant.VIDEO_MEDIA_TYPE)
 
+    try:
+        clean_range = range.replace("bytes=", "").strip()
+        parts = clean_range.split("-")
+        start = int(parts[0]) if parts[0] else 0
+        end = int(parts[1]) if len(parts) > 1 and parts[1] else min(start + CHUNK_SIZE - 1, filesize - 1)
+        end = min(end, filesize - 1)
+    except Exception:
+        start = 0
+        end = min(CHUNK_SIZE - 1, filesize - 1)
+
+    chunk_length = max(0, end - start + 1)
     with open(file_path, "rb") as video:
         video.seek(start)
-        data = video.read(end - start)
-        filesize = file_path.stat().st_size
-        headers = {
-            "Content-Range": f"bytes {str(start)}-{str(min(end, filesize-1))}/{str(filesize)}",
-            "Accept-Ranges": "bytes",
-        }
+        data = video.read(chunk_length)
+
+    headers = {
+        "Content-Range": f"bytes {start}-{end}/{filesize}",
+        "Accept-Ranges": "bytes",
+        "Content-Length": str(len(data)),
+        "Cache-Control": "public, max-age=86400",
+    }
     return Response(data, status_code=206, headers=headers, media_type=constant.VIDEO_MEDIA_TYPE)
 
 
@@ -187,13 +245,18 @@ def split_into_sentences(segment):
     return sub_segments
 
 
-@app.get("/api/video/transcript/{video_id}")
-async def get_video_transcript(video_id: str):
-    fps = get_fps(video_id)
-    features_path = Path.cwd() / constant.FEATURE_DIR / video_id
-    if not features_path.exists():
-        return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
-    
+_TRANSCRIPT_CACHE: dict[str, list] = {}
+
+
+def _load_transcript_sync(features_path: Path, fps: float, video_id: str) -> list:
+    cache_file = features_path / "_transcript_cache.json"
+    if cache_file.exists():
+        try:
+            with open(cache_file, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception as e:
+            logger.warning(f"Error reading transcript disk cache for {video_id}: {e}")
+
     transcript = []
     # Find all frame directories
     frame_dirs = sorted(features_path.glob("*"))
@@ -202,19 +265,17 @@ async def get_video_transcript(video_id: str):
             asr_file = d / "asr.npy"
             if asr_file.exists():
                 try:
-                    # load whisper text
                     text = str(np.load(asr_file, allow_pickle=True))
                     frame_id = int(d.name)
-                    # compute timestamp
                     timestamp = frame_id / fps if fps else 0.0
                     transcript.append({
                         "frame_id": frame_id,
                         "timestamp": timestamp,
-                        "text": text
+                        "text": text,
                     })
                 except Exception as e:
                     logger.error(f"Error reading ASR for {video_id} {d.name}: {e}")
-    
+
     # Group consecutive identical texts to produce clean transcript segments
     grouped_transcript = []
     current_segment = None
@@ -228,7 +289,7 @@ async def get_video_transcript(video_id: str):
                 "start_time": entry["timestamp"],
                 "end_frame": entry["frame_id"],
                 "end_time": entry["timestamp"],
-                "text": text
+                "text": text,
             }
         elif current_segment["text"] == text:
             current_segment["end_frame"] = entry["frame_id"]
@@ -240,32 +301,122 @@ async def get_video_transcript(video_id: str):
                 "start_time": entry["timestamp"],
                 "end_frame": entry["frame_id"],
                 "end_time": entry["timestamp"],
-                "text": text
+                "text": text,
             }
     if current_segment is not None:
         grouped_transcript.append(current_segment)
-        
+
     # Split large aggregated segments into sentence-level segments
     final_transcript = []
     for segment in grouped_transcript:
         final_transcript.extend(split_into_sentences(segment))
-        
+
+    # Save to disk cache for sub-millisecond future loads
+    try:
+        with open(cache_file, "w", encoding="utf-8") as f:
+            json.dump(final_transcript, f, ensure_ascii=False)
+    except Exception as e:
+        logger.warning(f"Error writing transcript disk cache for {video_id}: {e}")
+
     return final_transcript
 
 
-def _get_existing_frame_indices(video_id: str) -> list[int]:
+@app.get("/api/video/transcript/{video_id}")
+async def get_video_transcript(video_id: str):
+    if video_id in _TRANSCRIPT_CACHE:
+        return _TRANSCRIPT_CACHE[video_id]
+
+    fps = get_fps(video_id)
+    variants = [video_id]
+    if "_" in video_id:
+        variants.append(video_id.replace("_", "-"))
+    if "-" in video_id:
+        variants.append(video_id.replace("-", "_"))
+
+    features_path = None
+    for root in _get_candidate_roots(video_id):
+        for v_id in variants:
+            p = root / constant.FEATURE_DIR / v_id
+            if p.exists() and p.is_dir():
+                features_path = p
+                break
+            p2 = root / "features" / v_id
+            if p2.exists() and p2.is_dir():
+                features_path = p2
+                break
+        if features_path:
+            break
+
+    if not features_path or not features_path.exists():
+        return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
+
+    # Offload heavy synchronous disk reads to a thread pool so we NEVER block the FastAPI event loop!
+    final_transcript = await asyncio.to_thread(_load_transcript_sync, features_path, fps, video_id)
+    _TRANSCRIPT_CACHE[video_id] = final_transcript
+    return final_transcript
+
+
+@lru_cache(maxsize=128)
+def _get_existing_thumbnail_indices(video_id: str) -> tuple[int, ...]:
+    variants = [video_id]
+    if "_" in video_id:
+        variants.append(video_id.replace("_", "-"))
+    if "-" in video_id:
+        variants.append(video_id.replace("-", "_"))
+
     indices = set()
-    for dir_name in [constant.KEYFRAME_DIR, constant.THUMBNAIL_DIR, constant.FEATURE_DIR]:
-        folder = Path.cwd() / dir_name / video_id
-        if folder.exists() and folder.is_dir():
-            for p in folder.iterdir():
-                if p.is_file() and p.suffix.lower() == constant.IMAGE_EXTENSION:
-                    stem = p.stem
-                    if stem.isdigit():
-                        indices.add(int(stem))
-                elif p.is_dir() and p.name.isdigit():
-                    indices.add(int(p.name))
-    return sorted(list(indices))
+    for root in _get_candidate_roots(video_id):
+        for dir_name in [constant.THUMBNAIL_DIR, "thumbnails", "data/thumbnails"]:
+            base_dir = root / dir_name
+            for v_id in variants:
+                folder = base_dir / v_id
+                if folder.exists() and folder.is_dir():
+                    for p in folder.iterdir():
+                        if p.is_file() and p.suffix.lower() == constant.IMAGE_EXTENSION:
+                            stem = p.stem
+                            if stem.isdigit():
+                                indices.add(int(stem))
+                    if indices:
+                        return tuple(sorted(list(indices)))
+    return tuple(sorted(list(indices)))
+
+
+@lru_cache(maxsize=128)
+def _get_existing_frame_indices(video_id: str) -> tuple[int, ...]:
+    variants = [video_id]
+    if "_" in video_id:
+        variants.append(video_id.replace("_", "-"))
+    if "-" in video_id:
+        variants.append(video_id.replace("-", "_"))
+
+    indices = set()
+    for root in _get_candidate_roots(video_id):
+        for dir_name in [constant.KEYFRAME_DIR, constant.THUMBNAIL_DIR, "thumbnails", "keyframes", "data/thumbnails", "data/keyframes", constant.FEATURE_DIR]:
+            base_dir = root / dir_name
+            for v_id in variants:
+                folder = base_dir / v_id
+                if folder.exists() and folder.is_dir():
+                    for p in folder.iterdir():
+                        if p.is_file() and p.suffix.lower() == constant.IMAGE_EXTENSION:
+                            stem = p.stem
+                            if stem.isdigit():
+                                indices.add(int(stem))
+                        elif p.is_dir() and p.name.isdigit():
+                            indices.add(int(p.name))
+                    if indices:
+                        return tuple(sorted(list(indices)))
+    return tuple(sorted(list(indices)))
+
+
+@app.get("/api/video/thumbnails/{video_id}")
+async def get_video_thumbnails(video_id: str):
+    indices = _get_existing_thumbnail_indices(video_id)
+    if indices:
+        return [f"{idx:06d}" for idx in indices]
+    indices = _get_existing_frame_indices(video_id)
+    if indices:
+        return [f"{idx:06d}" for idx in indices]
+    return []
 
 
 @app.get("/api/video/keyframes/{video_id}")
@@ -277,14 +428,27 @@ async def get_video_keyframes(video_id: str):
 
 
 def _get_map_keyframes_path(video_id: str) -> Path | None:
-    candidates = [
-        Path.cwd() / "workspace" / "map-keyframes" / f"{video_id}.csv",
-        Path.cwd() / "map-keyframes" / f"{video_id}.csv",
-        Path.cwd().parent / "workspace" / "map-keyframes" / f"{video_id}.csv",
-    ]
-    for p in candidates:
-        if p.exists() and p.is_file():
-            return p
+    variants = [video_id]
+    if "_" in video_id:
+        variants.append(video_id.replace("_", "-"))
+    if "-" in video_id:
+        variants.append(video_id.replace("-", "_"))
+
+    for root in _get_candidate_roots(video_id):
+        for sub in ["map-keyframes", "data/map-keyframes", "workspace/map-keyframes"]:
+            for v_id in variants:
+                p = root / sub / f"{v_id}.csv"
+                if p.exists() and p.is_file():
+                    return p
+    for v_id in variants:
+        candidates = [
+            Path.cwd() / "workspace" / "map-keyframes" / f"{v_id}.csv",
+            Path.cwd() / "map-keyframes" / f"{v_id}.csv",
+            Path.cwd().parent / "workspace" / "map-keyframes" / f"{v_id}.csv",
+        ]
+        for p in candidates:
+            if p.exists() and p.is_file():
+                return p
     return None
 
 

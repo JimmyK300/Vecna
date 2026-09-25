@@ -320,6 +320,14 @@ class MilvusDatabase(object):
         )
         return res
 
+    def count(self, filter: str = "") -> int:
+        rows = self._client.query(
+            self._collection_name,
+            filter=filter,
+            output_fields=["count(*)"],
+        )
+        return int(rows[0]["count(*)"]) if rows else 0
+
     def search(
         self,
         data,
