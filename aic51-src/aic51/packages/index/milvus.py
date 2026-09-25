@@ -86,11 +86,14 @@ class MilvusDatabase(object):
 
             features = GlobalConfig.get("features") or {}
             for feat_name, feat_cfg in features.items():
-                if feat_cfg and (not isinstance(feat_cfg, dict) or feat_cfg.get("enable", True)):
-                    expected_fields.add(self.process_field_name(feat_name))
-                    idx_type = GlobalConfig.get("features", feat_name, "index", "index_type")
-                    if idx_type and idx_type.lower() == "bm25":
-                        expected_fields.add(f"{self.process_field_name(feat_name)}_sparse")
+                if not feat_cfg or (isinstance(feat_cfg, dict) and not feat_cfg.get("enable", True)):
+                    continue
+                if isinstance(feat_cfg, dict) and not feat_cfg.get("index", {}).get("enable", True):
+                    continue
+                expected_fields.add(self.process_field_name(feat_name))
+                idx_type = GlobalConfig.get("features", feat_name, "index", "index_type")
+                if idx_type and idx_type.lower() == "bm25":
+                    expected_fields.add(f"{self.process_field_name(feat_name)}_sparse")
 
             return existing_fields != expected_fields
         except Exception as e:
@@ -123,6 +126,8 @@ class MilvusDatabase(object):
         feature_fields = []
         for feature_name, feat_cfg in features.items():
             if not feat_cfg or (isinstance(feat_cfg, dict) and not feat_cfg.get("enable", True)):
+                continue
+            if isinstance(feat_cfg, dict) and not feat_cfg.get("index", {}).get("enable", True):
                 continue
 
             datatype = GlobalConfig.get("features", feature_name, "index", "datatype")
@@ -188,6 +193,8 @@ class MilvusDatabase(object):
         features = GlobalConfig.get("features") or {}
         for feature_name, feat_cfg in features.items():
             if not feat_cfg or (isinstance(feat_cfg, dict) and not feat_cfg.get("enable", True)):
+                continue
+            if isinstance(feat_cfg, dict) and not feat_cfg.get("index", {}).get("enable", True):
                 continue
 
             index_type = GlobalConfig.get("features", feature_name, "index", "index_type")
@@ -273,6 +280,8 @@ class MilvusDatabase(object):
         if features:
             for feat_name, feat_cfg in features.items():
                 if isinstance(feat_cfg, dict) and feat_cfg.get("enable", True):
+                    if not feat_cfg.get("index", {}).get("enable", True):
+                        continue
                     dt = feat_cfg.get("index", {}).get("datatype", "")
                     if dt and ("VECTOR" not in dt.upper()):
                         fname = self.process_field_name(feat_name)

@@ -3,8 +3,6 @@ import tempfile
 import unittest
 from pathlib import Path
 
-import numpy as np
-
 from aic51.cli.commands.index import IndexCommand
 from aic51.packages.config import GlobalConfig
 
@@ -31,8 +29,7 @@ features:
   yolo26x_seg:
     model: yolo26x_seg
     index:
-      datatype: FLOAT_VECTOR
-      dim: 32
+      enable: false
       metadata_fields:
         object_keys: yolo_objects
         relation_keys: yolo_relations
@@ -82,10 +79,9 @@ features:
         with self.assertRaisesRegex(ValueError, "array of strings"):
             IndexCommand._load_metadata_fields(frame_dir, "yolo26x_seg")
 
-    def test_indexes_npy_vector_and_json_arrays_as_one_row(self):
+    def test_indexes_json_arrays_without_npy_vector(self):
         frame_dir = self.work_dir / "features" / "N001" / "000004"
         frame_dir.mkdir(parents=True)
-        np.save(frame_dir / "yolo26x_seg.npy", np.zeros(32, dtype=np.float32))
         (frame_dir / "yolo26x_seg.json").write_text(
             json.dumps(
                 {
@@ -115,7 +111,15 @@ features:
             database.rows[0]["yolo_relations"],
             ["red:car:left_of:blue:bus"],
         )
-        self.assertEqual(database.rows[0]["yolo26x_seg"].shape, (32,))
+        self.assertNotIn("yolo26x_seg", database.rows[0])
+
+    def test_metadata_only_feature_is_not_a_vector_field(self):
+        self.assertEqual(IndexCommand._get_active_feature_fields(), [])
+        self.assertEqual(IndexCommand._get_metadata_feature_fields(), ["yolo26x_seg"])
+        self.assertEqual(
+            IndexCommand._get_metadata_target_fields(),
+            ["yolo_objects", "yolo_relations"],
+        )
 
 
 if __name__ == "__main__":

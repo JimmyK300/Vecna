@@ -61,14 +61,29 @@ class IndexCommand(BaseCommand):
         feature_list = GlobalConfig.get("features") or {}
         feature_fields = []
         for feature_name, feat_cfg in feature_list.items():
-            if feat_cfg and (not isinstance(feat_cfg, dict) or feat_cfg.get("enable", True)):
-                feature_fields.append(feature_name)
+            if not feat_cfg or (isinstance(feat_cfg, dict) and not feat_cfg.get("enable", True)):
+                continue
+            if isinstance(feat_cfg, dict) and not feat_cfg.get("index", {}).get("enable", True):
+                continue
+            feature_fields.append(feature_name)
         return feature_fields
+
+    @classmethod
+    def _get_metadata_feature_fields(cls) -> list[str]:
+        feature_list = GlobalConfig.get("features") or {}
+        fields = []
+        for feature_name, feat_cfg in feature_list.items():
+            if not feat_cfg or (isinstance(feat_cfg, dict) and not feat_cfg.get("enable", True)):
+                continue
+            mapping = GlobalConfig.get("features", feature_name, "index", "metadata_fields") or {}
+            if mapping:
+                fields.append(feature_name)
+        return fields
 
     @classmethod
     def _get_metadata_target_fields(cls) -> list[str]:
         fields = []
-        for feature_name in cls._get_active_feature_fields():
+        for feature_name in cls._get_metadata_feature_fields():
             mapping = GlobalConfig.get("features", feature_name, "index", "metadata_fields") or {}
             fields.extend(mapping.values())
         return sorted(set(fields))
@@ -218,6 +233,7 @@ class IndexCommand(BaseCommand):
         observed_provider_generations: dict[str, set[str]] = {}
         observed_lineage_claims: dict[str, list[dict[str, str]]] = {}
         feature_fields = self._get_active_feature_fields()
+        metadata_feature_fields = self._get_metadata_feature_fields()
 
         frame_features_paths = [x for x in video_features_dir.glob("*") if x.is_dir()]
 
@@ -230,6 +246,9 @@ class IndexCommand(BaseCommand):
             }
             frame_provider_generations: dict[str, set[str]] = {}
             frame_lineage_claims: dict[str, list[dict[str, str]]] = {}
+            for feature_name in metadata_feature_fields:
+                data.update(self._load_metadata_fields(frame_features_path, feature_name))
+
             for feature_name in feature_fields:
                 # Analyse artifacts use a .npy file for the value indexed as the
                 # feature itself. A same-stem .json file may contain scalar
@@ -246,7 +265,6 @@ class IndexCommand(BaseCommand):
                     feature = feature.astype(np.float32)
 
                 data[feature_name] = feature
-                data.update(self._load_metadata_fields(frame_features_path, feature_name))
                 claims = artifact_provenance_claims(
                     self._work_dir,
                     feature_path,
