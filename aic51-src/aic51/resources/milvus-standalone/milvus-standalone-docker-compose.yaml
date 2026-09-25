@@ -18,7 +18,7 @@ services:
 
   minio:
     container_name: milvus-minio
-    image: quay.io/minio/minio:RELEASE.2024-12-18T13-15-44Z
+    image: elestio/minio:latest
     environment:
       MINIO_ACCESS_KEY: minioadmin
       MINIO_SECRET_KEY: minioadmin
