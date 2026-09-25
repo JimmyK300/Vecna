@@ -215,7 +215,15 @@ export async function expandQuery(queryText) {
 }
 
 export async function getVideoTranscript(videoId) {
+  if (!videoId || videoId === "undefined" || videoId === "null") return [];
   try {
+    try {
+      const relRes = await axios.get(`/api/video/transcript/${videoId}`);
+      if (relRes.data && Array.isArray(relRes.data)) {
+        return relRes.data;
+      }
+    } catch (e) {}
+
     const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/transcript/${videoId}`);
     const data = res.data;
     return Array.isArray(data) ? data : (data?.transcript || []);
