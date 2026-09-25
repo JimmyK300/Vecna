@@ -27,6 +27,16 @@ milvus:
       datatype: "VARCHAR"
       max_length: 32
       is_primary: true
+    - field_name: "yolo_objects"
+      datatype: "ARRAY"
+      element_type: "VARCHAR"
+      max_capacity: 1024
+      max_length: 128
+    - field_name: "yolo_relations"
+      datatype: "ARRAY"
+      element_type: "VARCHAR"
+      max_capacity: 4096
+      max_length: 384
 
 # List of features
 features: &analyse_features
@@ -101,6 +111,9 @@ features: &analyse_features
       dim: 32
       metric_type: "COSINE"
       index_type: "SCANN"
+      metadata_fields:
+        object_keys: "yolo_objects"
+        relation_keys: "yolo_relations"
       params:
         nlist: 64
 
