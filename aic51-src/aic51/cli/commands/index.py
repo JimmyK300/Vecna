@@ -27,6 +27,7 @@ from .command import BaseCommand
 class IndexCommand(BaseCommand):
     def __init__(self, *args, **kwargs):
         super(IndexCommand, self).__init__(*args, **kwargs)
+        GlobalConfig.set_work_dir(self._work_dir)
 
     def add_args(self, subparser):
         parser = subparser.add_parser("index", help="Index features")
@@ -36,7 +37,7 @@ class IndexCommand(BaseCommand):
             "--collection",
             dest="collection_name",
             type=str,
-            default="milvus",
+            default=None,
             help="Name of collection to index",
         )
         parser.add_argument(
@@ -55,7 +56,24 @@ class IndexCommand(BaseCommand):
 
         parser.set_defaults(func=self)
 
-    def __call__(self, collection_name: str, do_overwrite: bool, do_update: bool, verbose: bool, *args, **kwargs):
+    @staticmethod
+    def _get_active_feature_fields() -> list[str]:
+        feature_list = GlobalConfig.get("features") or {}
+        feature_fields = []
+        for feature_name, feat_cfg in feature_list.items():
+            if feat_cfg and (not isinstance(feat_cfg, dict) or feat_cfg.get("enable", True)):
+                feature_fields.append(feature_name)
+        return feature_fields
+
+    def __call__(self, collection_name: str | None, do_overwrite: bool, do_update: bool, verbose: bool, *args, **kwargs):
+        GlobalConfig.set_work_dir(self._work_dir)
+        if not collection_name:
+            collection_name = (
+                GlobalConfig.get("backends", "search", "collection")
+                or GlobalConfig.get("milvus", "collection")
+                or "milvus"
+            )
+
         MilvusDatabase.start_server()
 
         # Invalidate attribution before any collection mutation. If indexing then
@@ -121,8 +139,7 @@ class IndexCommand(BaseCommand):
                 for feature_name, generation_ids in provider_generations.items():
                     observed_provider_generations.setdefault(feature_name, set()).update(generation_ids)
 
-        feature_list = GlobalConfig.get("features") or {}
-        feature_fields = [name for name in feature_list.keys() if GlobalConfig.get("features", name)]
+        feature_fields = self._get_active_feature_fields()
         provider_summary = summarize_provider_generations(feature_fields, observed_provider_generations)
         feature_configs = {name: GlobalConfig.get("features", name) for name in feature_fields}
         generation = record_index_generation(
@@ -165,11 +182,7 @@ class IndexCommand(BaseCommand):
         data_list = []
         observed_provider_generations: dict[str, set[str]] = {}
         observed_lineage_claims: dict[str, list[dict[str, str]]] = {}
-        feature_list = GlobalConfig.get("features") or {}
-        feature_fields = []
-        for feature_name in feature_list.keys():
-            if GlobalConfig.get("features", feature_name):
-                feature_fields.append(feature_name)
+        feature_fields = self._get_active_feature_fields()
 
         frame_features_paths = [x for x in video_features_dir.glob("*") if x.is_dir()]
 

@@ -103,7 +103,9 @@ export function VideoPlayer({ frameInfo, onCancel }) {
   useEffect(() => {
     if (!frameInfo?.video_id) return;
     getVideoTranscript(frameInfo.video_id)
-      .then(setTranscript)
+      .then((data) => {
+        setTranscript(Array.isArray(data) ? data : []);
+      })
       .catch(() => setTranscript([]));
   }, [frameInfo?.video_id]);
 
@@ -181,15 +183,21 @@ export function VideoPlayer({ frameInfo, onCancel }) {
     };
   }, [isScrubbing]);
 
+  // Safe array guards
+  const safeTranscript = Array.isArray(transcript) ? transcript : [];
+  const safeKeyframes = Array.isArray(keyframes) ? keyframes : [];
+  const safeSelected = Array.isArray(selected) ? selected : [];
+  const safeMapBTCKeyframes = Array.isArray(mapBTCKeyframes) ? mapBTCKeyframes : [];
+
   // Sample Keyframes for Timeline Strip
   const targetTimelineCount = 20;
   const sampledKeyframes = [];
-  if (keyframes.length > 0) {
+  if (safeKeyframes.length > 0) {
     for (let i = 0; i < targetTimelineCount; i++) {
       const idx = Math.floor(
-        (i / (targetTimelineCount - 1)) * (keyframes.length - 1)
+        (i / (targetTimelineCount - 1)) * (safeKeyframes.length - 1)
       );
-      sampledKeyframes.push(keyframes[idx]);
+      sampledKeyframes.push(safeKeyframes[idx]);
     }
   }
 
@@ -200,11 +208,11 @@ export function VideoPlayer({ frameInfo, onCancel }) {
 
   // Helper function to get available keyframes list sorted by timestamp
   const getNavKeyframeList = () => {
-    const btcList = mapBTCKeyframesRef.current;
+    const btcList = Array.isArray(mapBTCKeyframesRef.current) ? mapBTCKeyframesRef.current : [];
     if (btcList && btcList.length > 0) {
       return [...btcList].sort((a, b) => a.pts_time - b.pts_time);
     }
-    const kfList = keyframesRef.current;
+    const kfList = Array.isArray(keyframesRef.current) ? keyframesRef.current : [];
     if (kfList && kfList.length > 0) {
       return kfList
         .map((k) => {
@@ -219,10 +227,10 @@ export function VideoPlayer({ frameInfo, onCancel }) {
 
   // Active Transcript Auto-Scroll
   useEffect(() => {
-    if (transcript.length === 0) return;
+    if (safeTranscript.length === 0) return;
     const currentTime = frameCounter / fps;
-    const activeIdx = transcript.findIndex(
-      (item) => currentTime >= item.start_time && currentTime <= item.end_time
+    const activeIdx = safeTranscript.findIndex(
+      (item) => item && currentTime >= item.start_time && currentTime <= item.end_time
     );
     if (activeIdx !== activeSegmentIndex) {
       setActiveSegmentIndex(activeIdx);
@@ -233,7 +241,7 @@ export function VideoPlayer({ frameInfo, onCancel }) {
         }
       }
     }
-  }, [frameCounter, transcript, activeSegmentIndex, fps]);
+  }, [frameCounter, safeTranscript, activeSegmentIndex, fps]);
 
   // YouTube Hotkeys & Video Playback Controls
   useEffect(() => {
@@ -421,13 +429,13 @@ export function VideoPlayer({ frameInfo, onCancel }) {
   // Ensures keyframe IDs match when directly on keyframes, but releases immediately on single-frame stepping
   const snapThreshold = Math.min(0.015, 0.4 / fps);
   let activeFrameNum = Math.round(curTime * fps);
-  if (mapBTCKeyframes && mapBTCKeyframes.length > 0) {
-    const matchedKf = mapBTCKeyframes.find((kf) => Math.abs(kf.pts_time - curTime) <= snapThreshold);
+  if (safeMapBTCKeyframes.length > 0) {
+    const matchedKf = safeMapBTCKeyframes.find((kf) => Math.abs(kf.pts_time - curTime) <= snapThreshold);
     if (matchedKf) {
       activeFrameNum = matchedKf.raw_idx;
     }
-  } else if (keyframes && keyframes.length > 0) {
-    const matchedRaw = keyframes.find((k) => Math.abs(parseInt(k, 10) / fps - curTime) <= snapThreshold);
+  } else if (safeKeyframes.length > 0) {
+    const matchedRaw = safeKeyframes.find((k) => Math.abs(parseInt(k, 10) / fps - curTime) <= snapThreshold);
     if (matchedRaw !== undefined) {
       activeFrameNum = parseInt(matchedRaw, 10);
     }
@@ -435,18 +443,18 @@ export function VideoPlayer({ frameInfo, onCancel }) {
 
   const currentFrameStr = String(activeFrameNum).padStart(6, "0");
   const currentFrameId = `${frameInfo.video_id}#${currentFrameStr}`;
-  const isFrameSelected = selected.includes(currentFrameId);
+  const isFrameSelected = safeSelected.includes(currentFrameId);
 
-  const selectedFramesOfThisVideo = selected
-    .filter((id) => id.startsWith(frameInfo.video_id + "#"))
+  const selectedFramesOfThisVideo = safeSelected
+    .filter((id) => id && id.startsWith(frameInfo.video_id + "#"))
     .map((id) => id.split("#")[1])
     .sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
 
   const jumpToFrame = (frameNum) => {
     if (videoElementRef.current) {
       const parsedNum = parseInt(frameNum, 10);
-      if (mapBTCKeyframes && mapBTCKeyframes.length > 0) {
-        const matchedKf = mapBTCKeyframes.find((kf) => kf.raw_idx === parsedNum);
+      if (safeMapBTCKeyframes.length > 0) {
+        const matchedKf = safeMapBTCKeyframes.find((kf) => kf.raw_idx === parsedNum);
         if (matchedKf) {
           videoElementRef.current.currentTime = matchedKf.pts_time;
           return;
@@ -696,8 +704,8 @@ export function VideoPlayer({ frameInfo, onCancel }) {
             <div className="flex justify-between items-center p-2 bg-white border-b border-gray-200 shrink-0">
               <span className="font-bold text-xs text-gray-800 flex items-center gap-1">
                 <span>Live Transcript</span>
-                {transcript.length > 0 && (
-                  <span className="text-[10px] text-gray-400 font-mono">({transcript.length})</span>
+                {safeTranscript.length > 0 && (
+                  <span className="text-[10px] text-gray-400 font-mono">({safeTranscript.length})</span>
                 )}
               </span>
               <input
@@ -713,12 +721,12 @@ export function VideoPlayer({ frameInfo, onCancel }) {
               ref={transcriptContainerRef}
               className="flex-1 overflow-y-auto p-2 space-y-1.5"
             >
-              {transcript.length === 0 ? (
+              {safeTranscript.length === 0 ? (
                 <div className="text-gray-400 text-center py-8 text-xs italic">
                   No transcript available
                 </div>
               ) : (
-                transcript.map((item, idx) => {
+                safeTranscript.map((item, idx) => {
                   const currentTime = frameCounter / fps;
                   const isActive =
                     currentTime >= item.start_time &&

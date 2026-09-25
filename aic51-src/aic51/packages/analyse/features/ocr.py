@@ -111,7 +111,7 @@ class PaddleVietOCR(OCR):
                 "VietOCR is required for PaddleVietOCR. Please install vietocr."
             ) from e
 
-        # 1. Khß╗ƒi tß║ío PaddleOCR (T├¼m khung - chß║íy CPU nhß║╣ nh├áng, chß╗æng lß╗ùi driver Windows GPU)
+        # 1. Khởi tạo PaddleOCR (Tìm khung - chạy CPU nhẹ nhàng, chống lỗi driver Windows GPU)
         self.det_model = PaddleOCR(
             use_angle_cls=self.use_angle_cls,
             lang=self.det_lang,
@@ -124,7 +124,7 @@ class PaddleVietOCR(OCR):
             l.disabled = True
             l.propagate = False
 
-        # 2. Khß╗ƒi tß║ío VietOCR (─Éß╗ìc chß╗» - chß║íy tr├¬n GPU cuda:0)
+        # 2. Khởi tạo VietOCR (Đọc chữ - chạy trên GPU cuda:0)
         config = Cfg.load_config_from_name(self.pretrained_model)
         config["cnn"]["pretrained"] = False
         config["device"] = self.device
@@ -534,24 +534,16 @@ class Tesseract(OCR):
                 crop_bottom = round(height * 9 / 10)
                 cropped = image.crop((0, 0, width, crop_bottom))
 
-                try:
-                    eng_data = pytesseract.image_to_data(
-                        cropped,
-                        output_type=pytesseract.Output.DICT,
-                        lang="eng",
-                    )
-                    vie_data = pytesseract.image_to_data(
-                        cropped,
-                        output_type=pytesseract.Output.DICT,
-                        lang="vie",
-                    )
-                except pytesseract.TesseractNotFoundError as err:
-                    raise RuntimeError(
-                        "Tesseract OCR executable not found on system PATH.\n"
-                        "To fix this, install Tesseract OCR on Windows (e.g. `winget install UB-Mannheim.TesseractOCR` "
-                        "with Vietnamese traineddata), ensure 'tesseract.exe' is added to PATH, "
-                        "or switch to `source: paddle_vietocr` in config.yaml."
-                    ) from err
+                eng_data = pytesseract.image_to_data(
+                    cropped,
+                    output_type=pytesseract.Output.DICT,
+                    lang="eng",
+                )
+                vie_data = pytesseract.image_to_data(
+                    cropped,
+                    output_type=pytesseract.Output.DICT,
+                    lang="vie",
+                )
 
                 eng_observations = self._observations(eng_data, "eng")
                 vie_observations = self._observations(vie_data, "vie")

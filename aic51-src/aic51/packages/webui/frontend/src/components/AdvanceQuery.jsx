@@ -84,6 +84,8 @@ export function AdvanceQueryContainer({
   onSelectPreset,
   onResetQueryHeight,
   translationFailed = false,
+  collection = "testcol1",
+  onCollectionChange,
 }) {
   const [showPrefixMenu, setShowPrefixMenu] = useState(false);
 
@@ -384,6 +386,48 @@ export function AdvanceQueryContainer({
               <span className={`w-2 h-2 rounded-full ${showVideoPanel ? "bg-white" : "bg-gray-400"}`}></span>
               Video Filters: {showVideoPanel ? "ON" : "OFF"}
             </button>
+
+            {/* Batch Selector (Batch 1: L,S,M vs Batch 2: N vs All) */}
+            <div className="flex items-center bg-gray-100 p-0.5 rounded border border-gray-300 shadow-2xs ml-1 gap-0.5">
+              <button
+                type="button"
+                onClick={() => onCollectionChange && onCollectionChange("testcol1")}
+                className={`px-2 py-0.5 text-[11px] font-bold rounded transition-all cursor-pointer flex items-center gap-1 ${
+                  collection === "testcol1"
+                    ? "bg-blue-600 text-white shadow-xs font-black"
+                    : "text-gray-700 hover:text-blue-700 hover:bg-blue-50"
+                }`}
+                title="Chỉ tìm kiếm trong Batch 1 (Workspace: Video mã L, S, M)"
+              >
+                <span>📦 Batch 1 (L, S, M)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onCollectionChange && onCollectionChange("testcol2")}
+                className={`px-2 py-0.5 text-[11px] font-bold rounded transition-all cursor-pointer flex items-center gap-1 ${
+                  collection === "testcol2"
+                    ? "bg-purple-600 text-white shadow-xs font-black"
+                    : "text-gray-700 hover:text-purple-700 hover:bg-purple-50"
+                }`}
+                title="Chỉ tìm kiếm trong Batch 2 (Workspace 2: Video mã N)"
+              >
+                <span>📦 Batch 2 (N)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onCollectionChange && onCollectionChange("all")}
+                className={`px-2 py-0.5 text-[11px] font-bold rounded transition-all cursor-pointer flex items-center gap-1 ${
+                  collection === "all"
+                    ? "bg-gray-800 text-white shadow-xs font-black"
+                    : "text-gray-500 hover:text-gray-900 hover:bg-gray-200"
+                }`}
+                title="Tìm kiếm cả 2 Batch (Đan xen kết quả)"
+              >
+                <span>🌐 Cả hai</span>
+              </button>
+            </div>
 
             {isSearching && (
               <span className="text-xs text-sky-800 font-semibold animate-pulse ml-1">
