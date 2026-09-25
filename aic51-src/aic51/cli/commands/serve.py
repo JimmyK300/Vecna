@@ -59,13 +59,12 @@ class ServeCommand(BaseCommand):
         *args,
         **kwargs,
     ):
-        MilvusDatabase.start_server()
-
         if do_frontend:
             self._frontend_dir = Path(inspect.getfile(aic51.packages.webui)).parent / "frontend"
             self._frontend_process = self._start_frontend(dev_mode)
 
         if do_backend:
+            MilvusDatabase.start_server()
             self._backend_processes = self._start_backend(dev_mode)
 
         try:
@@ -180,6 +179,9 @@ class ServeCommand(BaseCommand):
             p.terminate()
 
     def _install_frontend(self):
+        node_modules = self._frontend_dir / "node_modules"
+        if node_modules.exists():
+            return
         logger.info("Installing frontend dependencies")
         install_cmd = "npm install"
         subprocess.run(
