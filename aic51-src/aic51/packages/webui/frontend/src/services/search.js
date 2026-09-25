@@ -47,6 +47,7 @@ export async function search(
   ocr_alpha,
   asr_alpha,
   collection,
+  yolo_relation,
 ) {
   // Cancel any previously running search on both client and backend
   if (currentSearchAbortController) {
@@ -73,6 +74,10 @@ export async function search(
 
   if (collection) {
     params.collection = collection;
+  }
+
+  if (yolo_relation) {
+    params.yolo_relation = yolo_relation;
   }
 
   if (ocr_alpha !== undefined && ocr_alpha !== null) {

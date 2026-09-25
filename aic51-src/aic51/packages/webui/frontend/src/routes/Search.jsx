@@ -60,14 +60,15 @@ export async function loader({ request }) {
   const include_videos = searchParams.get("include_videos") || "";
   const exclude_videos = searchParams.get("exclude_videos") || "";
   const collection = searchParams.get("collection") || "";
+  const yolo_relation = searchParams.get("yolo_relation") || "";
 
   const chunkStart = Math.floor(requestedOffset / CHUNK_SIZE) * CHUNK_SIZE;
   const initialLocalOffset = Math.floor((requestedOffset - chunkStart) / limit) * limit;
 
-  if (!q && !include_videos && !exclude_videos) {
+  if (!q && !include_videos && !exclude_videos && !yolo_relation) {
     return {
       query: { q: "" },
-      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos, collection },
+      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos, collection, yolo_relation },
       offset: requestedOffset,
       chunkStart: 0,
       initialLocalOffset: 0,
@@ -94,12 +95,13 @@ export async function loader({ request }) {
       ocr_alpha,
       asr_alpha,
       collection,
+      yolo_relation,
     );
 
     if (res && res.canceled) {
       return {
         query: { q },
-        params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos, collection },
+        params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos, collection, yolo_relation },
         offset: requestedOffset,
         chunkStart,
         initialLocalOffset: 0,
@@ -109,7 +111,7 @@ export async function loader({ request }) {
 
     return {
       query: { q },
-      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos, collection },
+      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos, collection, yolo_relation },
       offset: requestedOffset,
       chunkStart: res.offset !== undefined ? res.offset : chunkStart,
       initialLocalOffset,
@@ -119,7 +121,7 @@ export async function loader({ request }) {
     console.error("Search failed:", err);
     return {
       query: { q },
-      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos, collection },
+      params: { limit, nprobe, temporal_k, ocr_weight, asr_weight, ocr_alpha, asr_alpha, max_interval, auto_translate, en_to_vi_translate, target_features, include_videos, exclude_videos, collection, yolo_relation },
       offset: requestedOffset,
       chunkStart,
       initialLocalOffset: 0,
@@ -156,6 +158,7 @@ export default function Search() {
     return col;
   });
   const [autoTranslate, setAutoTranslate] = useState(params.auto_translate || false);
+  const [yoloRelation, setYoloRelation] = useState(params.yolo_relation || "");
   const [enToViTranslate, setEnToViTranslate] = useState(params.en_to_vi_translate || false);
   const [includeVideos, setIncludeVideos] = useState(params.include_videos || "");
   const [excludeVideos, setExcludeVideos] = useState(params.exclude_videos || "");
@@ -183,6 +186,7 @@ export default function Search() {
     setSearchQuery(query.q || "");
     setAutoTranslate(params.auto_translate || false);
     setEnToViTranslate(params.en_to_vi_translate || false);
+    setYoloRelation(params.yolo_relation || "");
     setIncludeVideos(params.include_videos || "");
     setExcludeVideos(params.exclude_videos || "");
     setAppliedInclude(params.include_videos || "");
@@ -229,7 +233,8 @@ export default function Search() {
     newQ = searchQuery,
     newInc = includeVideos,
     newExc = excludeVideos,
-    newCol = collection
+    newCol = collection,
+    newRelation = yoloRelation
   ) => {
     const activeAutoTranslate = liveAutoTranslate !== undefined ? liveAutoTranslate : autoTranslate;
     const activeEnToViTranslate = liveEnToViTranslate !== undefined ? liveEnToViTranslate : enToViTranslate;
@@ -246,6 +251,7 @@ export default function Search() {
       {
         q: newQ,
         collection: newCol,
+        yolo_relation: newCol === "workspace2" ? newRelation : "",
         auto_translate: activeAutoTranslate ? "true" : "false",
         en_to_vi_translate: activeEnToViTranslate ? "true" : "false",
         include_videos: newInc,
@@ -267,8 +273,9 @@ export default function Search() {
 
   const handleCollectionChange = (newCol) => {
     setCollection(newCol);
+    if (newCol !== "workspace2") setYoloRelation("");
     localStorage.setItem("aic51_collection", newCol);
-    triggerSearch(searchQuery, includeVideos, excludeVideos, newCol);
+    triggerSearch(searchQuery, includeVideos, excludeVideos, newCol, newCol === "workspace2" ? yoloRelation : "");
   };
 
   const handleAddIncludeVideo = (vid) => {
@@ -769,6 +776,11 @@ export default function Search() {
           translationFailed={!!data?.translation_failed}
           collection={collection}
           onCollectionChange={handleCollectionChange}
+          yoloRelation={yoloRelation}
+          onYoloRelationChange={(relationKey) => {
+            setYoloRelation(relationKey);
+            triggerSearch(searchQuery, includeVideos, excludeVideos, collection, relationKey);
+          }}
         />
       </div>
 
