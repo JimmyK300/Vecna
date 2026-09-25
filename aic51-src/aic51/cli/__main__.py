@@ -53,7 +53,10 @@ def main():
     command = args.pop("command")
     user_work_dir = args.pop("work_dir", None)
     if user_work_dir:
-        work_dir = Path(user_work_dir).resolve()
+        candidate = Path(user_work_dir).resolve()
+        if not candidate.exists() and (Path.cwd().parent / user_work_dir).exists():
+            candidate = (Path.cwd().parent / user_work_dir).resolve()
+        work_dir = candidate
     GlobalConfig.set_work_dir(work_dir)
 
     dev_mode = args.get("dev_mode")

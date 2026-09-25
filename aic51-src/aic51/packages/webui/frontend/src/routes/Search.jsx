@@ -149,9 +149,12 @@ export default function Search() {
   const playVideo = usePlayVideo();
 
   const [searchQuery, setSearchQuery] = useState(query.q || "");
-  const [collection, setCollection] = useState(
-    () => params.collection || localStorage.getItem("aic51_collection") || "testcol1"
-  );
+  const [collection, setCollection] = useState(() => {
+    let col = params.collection || localStorage.getItem("aic51_collection") || "workspace";
+    if (col === "testcol1") col = "workspace";
+    if (col === "testcol2") col = "workspace2";
+    return col;
+  });
   const [autoTranslate, setAutoTranslate] = useState(params.auto_translate || false);
   const [enToViTranslate, setEnToViTranslate] = useState(params.en_to_vi_translate || false);
   const [includeVideos, setIncludeVideos] = useState(params.include_videos || "");

@@ -196,6 +196,8 @@ class IndexCommand(BaseCommand):
             frame_provider_generations: dict[str, set[str]] = {}
             frame_lineage_claims: dict[str, list[dict[str, str]]] = {}
             for feature_path in frame_features_path.glob("*"):
+                if feature_path.suffix != ".npy":
+                    continue
                 feature_name = feature_path.stem
                 if feature_name not in feature_fields:
                     continue

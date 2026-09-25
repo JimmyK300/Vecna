@@ -147,6 +147,17 @@ async def search_multimodal(
 
     # Collection routing: auto, specific collection key, or all
     target_col = (collection or "").strip().lower()
+    if target_col in ("testcol1", "col1", "batch1", "b1", "1"):
+        for k in searchers:
+            if "1" in k.lower() or ("workspace" in k.lower() and "2" not in k.lower()):
+                target_col = k
+                break
+    elif target_col in ("testcol2", "col2", "batch2", "b2", "2"):
+        for k in searchers:
+            if "2" in k.lower() or "workspace2" in k.lower():
+                target_col = k
+                break
+
     if not target_col or target_col == "auto":
         inc_str = (include_videos or "").strip().upper()
         q_upper = q.upper()
@@ -169,10 +180,17 @@ async def search_multimodal(
         selected_searchers[target_col] = searchers[target_col]
     elif target_col != "all":
         for k, s in searchers.items():
-            if getattr(getattr(s, "_database", None), "_collection_name", "").lower() == target_col:
+            col_name = getattr(getattr(s, "_database", None), "_collection_name", "").lower()
+            if col_name == target_col or target_col in col_name:
                 selected_searchers[k] = s
                 break
-            if target_col in k.lower():
+            if target_col in k.lower() or k.lower() in target_col:
+                selected_searchers[k] = s
+                break
+            if any(term in target_col for term in ("2", "col2", "batch2")) and ("2" in k.lower() or "workspace2" in k.lower() or "2" in col_name):
+                selected_searchers[k] = s
+                break
+            if any(term in target_col for term in ("1", "col1", "batch1")) and ("1" in k.lower() or ("workspace" in k.lower() and "2" not in k.lower()) or "1" in col_name):
                 selected_searchers[k] = s
                 break
 
