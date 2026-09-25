@@ -1,0 +1,681 @@
+import json
+import math
+import os
+import re
+from collections import Counter
+from dataclasses import asdict, dataclass
+from pathlib import Path
+from typing import Any, Callable, Optional
+
+import cv2
+import numpy as np
+import torch
+from PIL import Image
+
+import aic51.packages.constant as constant
+from aic51.packages.config import GlobalConfig
+from aic51.packages.logger import logger
+
+from .feature_extractor import FeatureExtractor, FeatureExtractorFactory
+
+# Định nghĩa bảng màu nhận diện
+COLOR_NAMES = [
+    "trắng", "đen", "bạc/xám", "đỏ", "xanh dương", "vàng", "cam", "xanh lá", "tím"
+]
+COLOR_MAP = {c: i for i, c in enumerate(COLOR_NAMES)}
+VEHICLE_CLASSES = {"bicycle", "car", "motorcycle", "bus", "truck"}
+IMAGE_EXTENSIONS = {".bmp", ".jpeg", ".jpg", ".png", ".tif", ".tiff", ".webp"}
+RELATION_ARRAY_CAPACITY = 4096
+RELATION_COLOR_MAP = {
+    "trắng": "white",
+    "đen": "black",
+    "bạc/xám": "gray",
+    "xám": "gray",
+    "đỏ": "red",
+    "xanh dương": "blue",
+    "vàng": "yellow",
+    "cam": "orange",
+    "xanh lá": "green",
+    "tím": "purple",
+}
+RELATION_PALETTE = {
+    "red", "orange", "yellow", "green", "blue", "purple",
+    "black", "white", "gray", "unknown",
+}
+
+
+@dataclass(frozen=True)
+class RelationThresholds:
+    horizontal: float = 0.08
+    vertical: float = 0.08
+    near: float = 0.25
+
+
+@dataclass(frozen=True)
+class RelationDetection:
+    class_name: str
+    color: str
+    bbox: tuple[float, float, float, float]
+    confidence: float
+
+    @property
+    def cx(self) -> float:
+        return (self.bbox[0] + self.bbox[2]) / 2.0
+
+    @property
+    def cy(self) -> float:
+        return (self.bbox[1] + self.bbox[3]) / 2.0
+
+    @property
+    def object_key(self) -> str:
+        return f"{self.color}:{self.class_name}"
+
+
+def _relation_token(value: Any) -> str:
+    value = str(value or "").strip().lower().replace(":", "_")
+    value = {"motorbike": "motorcycle"}.get(value, value)
+    return re.sub(r"\s+", "_", value)
+
+
+def _relation_color(value: Any) -> str:
+    value = str(value or "").strip().lower()
+    value = RELATION_COLOR_MAP.get(value, value)
+    return value if value in RELATION_PALETTE else "unknown"
+
+
+def _relation_variants(
+    left: RelationDetection,
+    relation: str,
+    right: RelationDetection,
+) -> set[str]:
+    return {
+        f"{left.color}:{left.class_name}:{relation}:{right.color}:{right.class_name}",
+        f"{left.class_name}:{relation}:{right.color}:{right.class_name}",
+        f"{left.color}:{left.class_name}:{relation}:{right.class_name}",
+        f"{left.class_name}:{relation}:{right.class_name}",
+    }
+
+
+def _relation_keys(
+    detections: list[RelationDetection],
+    frame_width: int,
+    frame_height: int,
+    thresholds: RelationThresholds,
+) -> list[str]:
+    keys: set[str] = set()
+    for index, left in enumerate(detections):
+        for right in detections[index + 1 :]:
+            dx = (left.cx - right.cx) / frame_width
+            dy = (left.cy - right.cy) / frame_height
+            if abs(dx) >= thresholds.horizontal:
+                if dx < 0:
+                    keys.update(_relation_variants(left, "left_of", right))
+                    keys.update(_relation_variants(right, "right_of", left))
+                else:
+                    keys.update(_relation_variants(left, "right_of", right))
+                    keys.update(_relation_variants(right, "left_of", left))
+            if abs(dy) >= thresholds.vertical:
+                if dy < 0:
+                    keys.update(_relation_variants(left, "above", right))
+                    keys.update(_relation_variants(right, "below", left))
+                else:
+                    keys.update(_relation_variants(left, "below", right))
+                    keys.update(_relation_variants(right, "above", left))
+            if math.hypot(dx, dy) <= thresholds.near:
+                keys.update(_relation_variants(left, "near", right))
+                keys.update(_relation_variants(right, "near", left))
+    return sorted(keys)
+
+
+def derive_relation_arrays_from_objects(
+    raw_objects: list[dict[str, Any]],
+    frame_width: int,
+    frame_height: int,
+    confidence_threshold: float,
+    thresholds: RelationThresholds,
+    max_relation_objects: int,
+) -> tuple[list[str], list[str], dict[str, int]]:
+    detections = []
+    for raw in raw_objects:
+        confidence = float(raw.get("confidence", 0.0))
+        bbox = raw.get("bbox") or {}
+        try:
+            coords = tuple(float(bbox[key]) for key in ("x1", "y1", "x2", "y2"))
+        except (KeyError, TypeError, ValueError):
+            continue
+        class_name = _relation_token(raw.get("class_name"))
+        if (
+            confidence < confidence_threshold
+            or not class_name
+            or coords[2] <= coords[0]
+            or coords[3] <= coords[1]
+        ):
+            continue
+        detections.append(
+            RelationDetection(
+                class_name=class_name,
+                color=_relation_color(raw.get("color")),
+                bbox=coords,
+                confidence=confidence,
+            )
+        )
+
+    if detections:
+        frame_width = max(frame_width, math.ceil(max(item.bbox[2] for item in detections)))
+        frame_height = max(frame_height, math.ceil(max(item.bbox[3] for item in detections)))
+    frame_width, frame_height = max(frame_width, 1), max(frame_height, 1)
+    selected = sorted(detections, key=lambda item: item.confidence, reverse=True)[
+        :max_relation_objects
+    ]
+    while True:
+        relation_keys = _relation_keys(selected, frame_width, frame_height, thresholds)
+        if len(relation_keys) <= RELATION_ARRAY_CAPACITY:
+            break
+        selected.pop()
+    return (
+        sorted({item.object_key for item in detections}),
+        relation_keys,
+        {
+            "eligible_instances": len(detections),
+            "relation_instances": len(selected),
+            "truncated_instances": len(detections) - len(selected),
+        },
+    )
+
+
+def extract_vehicle_color_traffic_cam(img_bgr, bbox):
+    """
+    Trích xuất màu sắc thân xe chuẩn xác cho Camera giao thông góc cao:
+    - Tránh bẫy kính chắn gió phản chiếu bầu trời xanh (Windshield Sky Reflection).
+    - Tránh bẫy vệt chói mặt trời trên nóc kính (Sun Glare).
+    - Tránh bẫy lốp xe và bóng tối gầm xe (Undercarriage Shadow).
+    """
+    h_img, w_img = img_bgr.shape[:2]
+    x1, y1, x2, y2 = [int(v) for v in bbox]
+    x1, y1 = max(0, x1), max(0, y1)
+    x2, y2 = min(w_img, x2), min(h_img, y2)
+
+    bw = x2 - x1
+    bh = y2 - y1
+    if bw < 15 or bh < 15:
+        return "không rõ"
+
+    # Lấy mẫu vùng nắp capo / cốp / thân dưới (40% - 82% chiều cao, 15% - 85% chiều rộng)
+    crop = img_bgr[y1:y2, x1:x2]
+    paint_sample = crop[int(bh * 0.40):int(bh * 0.82), int(bw * 0.15):int(bw * 0.85)]
+    if paint_sample.size == 0:
+        paint_sample = crop
+
+    hsv = cv2.cvtColor(paint_sample, cv2.COLOR_BGR2HSV)
+    H = hsv[:, :, 0].flatten()
+    S = hsv[:, :, 1].flatten()
+    V = hsv[:, :, 2].flatten()
+
+    B = paint_sample[:, :, 0].flatten()
+    G = paint_sample[:, :, 1].flatten()
+    R = paint_sample[:, :, 2].flatten()
+
+    valid = (V >= 35) & ~((V > 250) & (S < 20))
+    if np.sum(valid) < 20:
+        return "đen" if np.mean(V < 35) > 0.5 else "không rõ"
+
+    H_v = H[valid]
+    S_v = S[valid]
+    V_v = V[valid]
+    B_v = B[valid]
+    R_v = R[valid]
+
+    mean_v = float(np.mean(V_v))
+    median_v = float(np.median(V_v))
+    mean_s = float(np.mean(S_v))
+    p75_s = float(np.percentile(S_v, 75))
+
+    b_minus_r = float(np.median(B_v) - np.median(R_v))
+    r_minus_b = float(np.median(R_v) - np.median(B_v))
+
+    # 1. Đỏ
+    red_mask = ((H_v <= 12) | (H_v >= 155)) & (S_v >= 45) & (V_v >= 45)
+    if np.sum(red_mask) / len(H_v) >= 0.22 or (r_minus_b >= 16 and np.sum(red_mask) / len(H_v) >= 0.14):
+        return "đỏ"
+
+    # 2. Vàng / Cam
+    yellow_mask = (H_v >= 22) & (H_v <= 42) & (S_v >= 50) & (V_v >= 70)
+    if np.sum(yellow_mask) / len(H_v) >= 0.25:
+        return "vàng"
+    orange_mask = (H_v >= 12) & (H_v < 22) & (S_v >= 50) & (V_v >= 65)
+    if np.sum(orange_mask) / len(H_v) >= 0.25:
+        return "cam"
+
+    # 3. Xanh lá
+    green_mask = (H_v >= 42) & (H_v <= 85) & (S_v >= 45) & (V_v >= 45)
+    if np.sum(green_mask) / len(H_v) >= 0.25:
+        return "xanh lá"
+
+    # 4. Xanh dương
+    blue_mask = (H_v >= 90) & (H_v <= 135) & (S_v >= 60) & (V_v >= 65)
+    if (np.sum(blue_mask) / len(H_v) >= 0.30) and (b_minus_r >= 28) and (median_v >= 75):
+        return "xanh dương"
+
+    # 5. Trung tính: Đen, Trắng, Bạc/Xám
+    if median_v < 78 or (mean_v < 82 and p75_s < 65):
+        return "đen"
+    if (median_v >= 125 and mean_s < 45) or mean_v >= 140:
+        return "trắng"
+    return "bạc/xám"
+
+
+@FeatureExtractorFactory.register("yolo26x_seg")
+@FeatureExtractorFactory.register("yolo_traffic")
+class YoloTraffic(FeatureExtractor):
+    """
+    Feature Extractor chuẩn AIC51 tích hợp YOLO-seg cho Video Giao thông.
+    Dùng chung output contract cho YOLO11-seg và YOLO26x-seg.
+    - Phát hiện và phân đoạn: Xe ô tô, Xe buýt, Xe tải, Xe máy.
+    - Trích xuất màu sắc sơn xe chính xác cao cho camera an ninh.
+    - Xuất Vector đặc trưng 32-dim cho Milvus & Metadata JSON chi tiết.
+    """
+
+    @staticmethod
+    def require_input() -> Any:
+        return constant.KEYFRAME_DIR
+
+    @staticmethod
+    def from_pretrained(
+        pretrained_model: str = "weights/yolo11m-seg.pt",
+        *args,
+        **kwargs,
+    ) -> "YoloTraffic":
+        return YoloTraffic(pretrained_model=pretrained_model, *args, **kwargs)
+
+    def __init__(
+        self,
+        name: str = "yolo_traffic",
+        pretrained_model: str = "weights/yolo11m-seg.pt",
+        batch_size: int = 16,
+        device: str | torch.device = "cuda:0",
+        *args,
+        **kwargs,
+    ):
+        from ultralytics import YOLO
+
+        self.name = name
+        self._batch_size = batch_size
+        self._work_dir = Path(kwargs.get("work_dir", ".")).resolve()
+        raw_input_dir = kwargs.get("input_dir")
+        self._input_dir = None
+        if raw_input_dir is not None:
+            input_dir = Path(raw_input_dir).expanduser()
+            if not input_dir.is_absolute():
+                input_dir = self._work_dir / input_dir
+            self._input_dir = input_dir.resolve()
+            if not self._input_dir.is_dir():
+                raise ValueError(f"YOLO input folder does not exist: {self._input_dir}")
+        self.custom_input_configured = self._input_dir is not None
+        self._pretrained_model = str(pretrained_model)
+        self._conf = float(kwargs.get("conf", 0.25))
+        self._min_box_area = int(kwargs.get("min_box_area", 1800))
+        self._relation_conf = float(kwargs.get("relation_conf", 0.4))
+        self._relation_thresholds = RelationThresholds(
+            horizontal=float(kwargs.get("relation_horizontal", 0.08)),
+            vertical=float(kwargs.get("relation_vertical", 0.08)),
+            near=float(kwargs.get("relation_near", 0.25)),
+        )
+        self._max_relation_objects = int(kwargs.get("max_relation_objects", 32))
+
+        # Tìm model weight: ưu tiên path chỉ định -> weights/ -> root -> auto download
+        configured_path = Path(pretrained_model)
+        candidates = [
+            configured_path,
+            self._work_dir / configured_path,
+            self._work_dir / "weights" / configured_path.name,
+            self._work_dir.parent / configured_path,
+            self._work_dir.parent / "weights" / configured_path.name,
+        ]
+        model_path = next((path for path in candidates if path.exists()), None)
+        if model_path is None:
+            # A bare official model name lets Ultralytics download the weight.
+            model_path = Path(configured_path.name)
+
+        logger.info(f"YoloTraffic: Loading model from {model_path}...")
+        self._model_path = str(model_path)
+        self._model = YOLO(str(model_path))
+
+        # Thiết lập device
+        if isinstance(device, str):
+            self._device = device
+        elif isinstance(device, torch.device):
+            self._device = f"cuda:{device.index}" if device.type == "cuda" and device.index is not None else device.type
+        else:
+            self._device = "0" if torch.cuda.is_available() else "cpu"
+
+        super().__init__(name, batch_size, self._device)
+
+    @staticmethod
+    def _image_files(directory: Path) -> list[Path]:
+        if not directory.is_dir():
+            return []
+        return sorted(
+            path
+            for path in directory.iterdir()
+            if path.is_file()
+            and not path.name.startswith(".")
+            and path.suffix.lower() in IMAGE_EXTENSIONS
+        )
+
+    def discover_video_ids(self, work_dir: Path | str) -> list[str]:
+        if self._input_dir is None:
+            return []
+        video_ids = []
+        if self._image_files(self._input_dir):
+            video_ids.append(self._input_dir.name)
+        video_ids.extend(
+            directory.name
+            for directory in sorted(self._input_dir.iterdir())
+            if directory.is_dir()
+            and not directory.name.startswith(".")
+            and self._image_files(directory)
+        )
+        return video_ids
+
+    def _input_video_dir(self, video_id: str) -> Path:
+        if self._input_dir is None:
+            return self._work_dir / constant.KEYFRAME_DIR / video_id
+        if video_id == self._input_dir.name and self._image_files(self._input_dir):
+            return self._input_dir
+        return self._input_dir / video_id
+
+    def discover_frame_ids(self, work_dir: Path | str, video_id: str) -> list[str]:
+        if self._input_dir is None:
+            return []
+        return [path.stem for path in self._image_files(self._input_video_dir(video_id))]
+
+    def input_paths_for_frames(
+        self,
+        work_dir: Path | str,
+        video_id: str,
+        frame_ids: list[str],
+    ) -> list[Path]:
+        if self._input_dir is None:
+            input_dir = Path(work_dir) / constant.KEYFRAME_DIR / video_id
+        else:
+            input_dir = self._input_video_dir(video_id)
+        wanted = set(frame_ids)
+        return [path for path in self._image_files(input_dir) if path.stem in wanted]
+
+    def runtime_semantics(self) -> dict[str, Any]:
+        return {
+            "pretrained_model": self._pretrained_model,
+            "model_file": Path(self._model_path).name,
+            "confidence": self._conf,
+            "min_box_area": self._min_box_area,
+            "vector_schema": "traffic-32-v1",
+            "relation_confidence": self._relation_conf,
+            "relation_thresholds": asdict(self._relation_thresholds),
+            "max_relation_objects": self._max_relation_objects,
+        }
+
+    def to(self, device: str | torch.device):
+        if isinstance(device, torch.device):
+            self._device = f"cuda:{device.index}" if device.type == "cuda" and device.index is not None else device.type
+        else:
+            self._device = str(device)
+        return self
+
+    def get_features(
+        self,
+        images: list[Path | str] | np.ndarray | torch.Tensor | list[Image.Image],
+        callback: Optional[Callable] = None,
+    ) -> np.ndarray:
+        if len(images) == 0:
+            return np.zeros((0, 32), dtype=np.float32)
+
+        # Chuyển đổi danh sách đường dẫn ảnh
+        image_paths = [str(p) for p in images]
+        total_images = len(image_paths)
+        features_list = []
+
+        for i in range(0, total_images, self._batch_size):
+            batch_paths = image_paths[i : i + self._batch_size]
+            results = self._model.predict(
+                source=batch_paths,
+                conf=self._conf,
+                device=self._device,
+                verbose=False,
+            )
+
+            for img_p, res in zip(batch_paths, results):
+                p_obj = Path(img_p)
+                video_id = p_obj.parent.name
+                frame_id = p_obj.stem
+
+                img_bgr = None
+
+                car_count = 0
+                bus_count = 0
+                truck_count = 0
+                motorcycle_count = 0
+                van_count = 0
+                suv_count = 0
+                sedan_count = 0
+
+                color_counts = Counter()
+                detected_objects = []
+                car_areas = []
+                car_centers_x = []
+                car_centers_y = []
+
+                if res.boxes is not None and len(res.boxes) > 0:
+                    boxes = res.boxes
+                    masks = res.masks
+                    has_masks = masks is not None and len(masks.xy) > 0
+
+                    for b_idx, box in enumerate(boxes):
+                        cls_id = int(box.cls[0])
+                        cls_name = self._model.names[cls_id]
+                        conf = float(box.conf[0])
+                        x1, y1, x2, y2 = [round(float(v), 1) for v in box.xyxy[0].tolist()]
+                        area = (x2 - x1) * (y2 - y1)
+
+                        poly_pts = []
+                        if has_masks and b_idx < len(masks.xy):
+                            poly = masks.xy[b_idx]
+                            if len(poly) >= 3:
+                                poly_pts = [
+                                    [round(float(pt[0]), 1), round(float(pt[1]), 1)]
+                                    for pt in poly
+                                ]
+
+                        # Ước lượng màu cho phương tiện; object khác vẫn có
+                        # trường color=null để mọi record cùng một schema.
+                        obj_color = None
+                        if cls_name in VEHICLE_CLASSES:
+                            if img_bgr is None:
+                                img_bgr = cv2.imread(img_p)
+                            if img_bgr is not None:
+                                obj_color = extract_vehicle_color_traffic_cam(
+                                    img_bgr,
+                                    [x1, y1, x2, y2],
+                                )
+                                if obj_color in COLOR_MAP:
+                                    color_counts[obj_color] += 1
+
+                        subtype = None
+
+                        if cls_name == "motorcycle":
+                            motorcycle_count += 1
+                        elif cls_name in ["car", "bus", "truck"]:
+                            # Bỏ qua xe kích thước quá bé ở đường chân trời
+                            if area >= self._min_box_area:
+                                if cls_name == "car":
+                                    car_count += 1
+                                elif cls_name == "bus":
+                                    bus_count += 1
+                                elif cls_name == "truck":
+                                    truck_count += 1
+
+                                # Ước lượng phân loại chi tiết (Subtype)
+                                aspect_ratio = (y2 - y1) / max(1, (x2 - x1))
+                                if area > 12000 or (aspect_ratio > 1.1 and area > 7000):
+                                    subtype = "van"
+                                    van_count += 1
+                                elif aspect_ratio > 0.85:
+                                    subtype = "suv"
+                                    suv_count += 1
+                                else:
+                                    subtype = "sedan"
+                                    sedan_count += 1
+
+                                cx = (x1 + x2) / 2.0
+                                cy = (y1 + y2) / 2.0
+                                car_areas.append(area)
+                                car_centers_x.append(cx)
+                                car_centers_y.append(cy)
+
+                        detected_object = {
+                            "class_id": cls_id,
+                            "class_name": cls_name,
+                            "confidence": round(conf, 5),
+                            "color": obj_color,
+                            "bbox": {
+                                "x1": x1,
+                                "y1": y1,
+                                "x2": x2,
+                                "y2": y2,
+                            },
+                            "mask": {"polygon": poly_pts},
+                        }
+                        if subtype is not None:
+                            detected_object["subtype"] = subtype
+                        detected_objects.append(detected_object)
+
+                # Xây dựng vector 32 chiều
+                vec = np.zeros(32, dtype=np.float32)
+                vec[0] = min(car_count / 10.0, 1.0)
+                vec[1] = min(bus_count / 5.0, 1.0)
+                vec[2] = min(truck_count / 5.0, 1.0)
+                vec[3] = min(motorcycle_count / 25.0, 1.0)
+                vec[4] = min((car_count + bus_count + truck_count) / 15.0, 1.0)
+
+                # Dải màu (Dim 5-13)
+                for c_name, c_idx in COLOR_MAP.items():
+                    vec[5 + c_idx] = min(color_counts[c_name] / 5.0, 1.0)
+
+                # Thuộc tính không gian (Dim 14-17)
+                if car_areas:
+                    vec[14] = min(float(np.mean(car_areas)) / 25000.0, 1.0)
+                    vec[15] = min(float(np.max(car_areas)) / 50000.0, 1.0)
+                    vec[16] = float(np.mean(car_centers_x)) / 1280.0
+                    vec[17] = float(np.mean(car_centers_y)) / 720.0
+
+                # Dòng xe (Dim 18-20)
+                vec[18] = min(van_count / 5.0, 1.0)
+                vec[19] = min(suv_count / 5.0, 1.0)
+                vec[20] = min(sedan_count / 5.0, 1.0)
+
+                # Chuẩn hóa L2 vector
+                norm = np.linalg.norm(vec)
+                if norm > 0:
+                    vec = vec / norm
+                features_list.append(vec)
+
+                # Lưu đồng thời metadata JSON chi tiết vào thư mục features/<video_id>/<frame_id>/
+                out_dir = self._work_dir / constant.FEATURE_DIR / video_id / frame_id
+                out_dir.mkdir(parents=True, exist_ok=True)
+                json_path = out_dir / f"{self.name}.json"
+                orig_shape = getattr(res, "orig_shape", None)
+                if orig_shape is not None and len(orig_shape) >= 2:
+                    frame_height, frame_width = int(orig_shape[0]), int(orig_shape[1])
+                elif img_bgr is not None:
+                    frame_height, frame_width = img_bgr.shape[:2]
+                else:
+                    frame_height, frame_width = 0, 0
+                object_keys, relation_keys, relation_stats = (
+                    derive_relation_arrays_from_objects(
+                        detected_objects,
+                        frame_width=frame_width,
+                        frame_height=frame_height,
+                        confidence_threshold=self._relation_conf,
+                        thresholds=self._relation_thresholds,
+                        max_relation_objects=self._max_relation_objects,
+                    )
+                )
+                meta_payload = {
+                    "video_id": video_id,
+                    "frame_id": frame_id,
+                    "feature_name": self.name,
+                    "model": Path(self._pretrained_model).name,
+                    "car_count": car_count,
+                    "bus_count": bus_count,
+                    "truck_count": truck_count,
+                    "motorcycle_count": motorcycle_count,
+                    "total_cars": car_count + bus_count + truck_count,
+                    "colors": list(color_counts.elements()),
+                    "objects": detected_objects,
+                    "object_keys": object_keys,
+                    "relation_keys": relation_keys,
+                    "relation_metadata": {
+                        "confidence_threshold": self._relation_conf,
+                        "thresholds": asdict(self._relation_thresholds),
+                        **relation_stats,
+                    },
+                }
+                with open(json_path, "w", encoding="utf-8") as f_json:
+                    json.dump(meta_payload, f_json, ensure_ascii=False, indent=2)
+
+            if callback:
+                callback(self, min(i + self._batch_size, total_images), total_images, features_list)
+
+        return np.vstack(features_list) if features_list else np.zeros((0, 32), dtype=np.float32)
+
+    def get_text_features(
+        self,
+        texts: list[str] | str | np.ndarray,
+        callback: Optional[Callable] = None,
+    ) -> Any:
+        """Chuyển đổi câu truy vấn văn bản sang vector 32 chiều tương thích."""
+        if isinstance(texts, str):
+            texts = [texts]
+
+        query_vectors = []
+        for text in texts:
+            vec = np.zeros(32, dtype=np.float32)
+            t_clean = text.lower()
+
+            # Phân tích số lượng
+            m_count = re.search(r"\b(\d+|một|hai|ba|bốn|năm|sáu|bảy|tám|chín|mười)\b", t_clean)
+            num_val = 1
+            if m_count:
+                c_map = {"một": 1, "hai": 2, "ba": 3, "bốn": 4, "năm": 5, "sáu": 6, "bảy": 7, "tám": 8, "chín": 9, "mười": 10}
+                val_str = m_count.group(1)
+                num_val = int(val_str) if val_str.isdigit() else c_map.get(val_str, 1)
+
+            # Lớp xe
+            if any(k in t_clean for k in ["ô tô", "oto", "car", "xe hơi"]):
+                vec[0] = min(num_val / 10.0, 1.0)
+                vec[4] = min(num_val / 15.0, 1.0)
+            if any(k in t_clean for k in ["buýt", "bus"]):
+                vec[1] = min(num_val / 5.0, 1.0)
+            if any(k in t_clean for k in ["tải", "truck"]):
+                vec[2] = min(num_val / 5.0, 1.0)
+            if any(k in t_clean for k in ["xe máy", "mô tô", "motorcycle"]):
+                vec[3] = min(num_val / 25.0, 1.0)
+
+            # Phân loại chi tiết
+            if any(k in t_clean for k in ["van", "carnival", "transit", "7 chỗ"]):
+                vec[18] = min(num_val / 5.0, 1.0)
+            if any(k in t_clean for k in ["suv", "gầm cao", "cx5", "fortuner"]):
+                vec[19] = min(num_val / 5.0, 1.0)
+            if any(k in t_clean for k in ["sedan", "4 chỗ"]):
+                vec[20] = min(num_val / 5.0, 1.0)
+
+            # Màu sắc
+            for c_name, c_idx in COLOR_MAP.items():
+                if c_name in t_clean:
+                    vec[5 + c_idx] = 1.0
+
+            norm = np.linalg.norm(vec)
+            if norm > 0:
+                vec = vec / norm
+            query_vectors.append(vec)
+
+        return np.vstack(query_vectors)

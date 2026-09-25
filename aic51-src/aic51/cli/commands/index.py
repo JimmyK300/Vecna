@@ -61,9 +61,58 @@ class IndexCommand(BaseCommand):
         feature_list = GlobalConfig.get("features") or {}
         feature_fields = []
         for feature_name, feat_cfg in feature_list.items():
-            if feat_cfg and (not isinstance(feat_cfg, dict) or feat_cfg.get("enable", True)):
-                feature_fields.append(feature_name)
+            if not feat_cfg or (isinstance(feat_cfg, dict) and not feat_cfg.get("enable", True)):
+                continue
+            if isinstance(feat_cfg, dict) and not feat_cfg.get("index", {}).get("enable", True):
+                continue
+            feature_fields.append(feature_name)
         return feature_fields
+
+    @classmethod
+    def _get_metadata_feature_fields(cls) -> list[str]:
+        feature_list = GlobalConfig.get("features") or {}
+        fields = []
+        for feature_name, feat_cfg in feature_list.items():
+            if not feat_cfg or (isinstance(feat_cfg, dict) and not feat_cfg.get("enable", True)):
+                continue
+            mapping = GlobalConfig.get("features", feature_name, "index", "metadata_fields") or {}
+            if mapping:
+                fields.append(feature_name)
+        return fields
+
+    @classmethod
+    def _get_metadata_target_fields(cls) -> list[str]:
+        fields = []
+        for feature_name in cls._get_metadata_feature_fields():
+            mapping = GlobalConfig.get("features", feature_name, "index", "metadata_fields") or {}
+            fields.extend(mapping.values())
+        return sorted(set(fields))
+
+    @staticmethod
+    def _load_metadata_fields(frame_features_path: Path, feature_name: str) -> dict[str, list[str]]:
+        """Load configured string-array fields from a feature JSON sidecar."""
+        metadata_fields = GlobalConfig.get("features", feature_name, "index", "metadata_fields") or {}
+        if not metadata_fields:
+            return {}
+
+        metadata_path = frame_features_path / f"{feature_name}.json"
+        if not metadata_path.exists():
+            logger.warning(f"Missing metadata sidecar: {metadata_path}")
+            return {target_field: [] for target_field in metadata_fields.values()}
+
+        with open(metadata_path, "r", encoding="utf-8") as f:
+            metadata = json.load(f)
+
+        loaded = {}
+        for source_key, target_field in metadata_fields.items():
+            value = metadata.get(source_key, [])
+            if not isinstance(value, list) or not all(isinstance(item, str) for item in value):
+                raise ValueError(
+                    f'{metadata_path}: metadata key "{source_key}" must be an array of strings'
+                )
+            loaded[target_field] = value
+
+        return loaded
 
     def __call__(self, collection_name: str | None, do_overwrite: bool, do_update: bool, verbose: bool, *args, **kwargs):
         GlobalConfig.set_work_dir(self._work_dir)
@@ -81,6 +130,7 @@ class IndexCommand(BaseCommand):
         # attaching the previous generation to a changed collection.
         invalidate_current_index_generation(self._work_dir, collection_name)
         database = MilvusDatabase(collection_name, do_overwrite)
+        database.require_fields(self._get_metadata_target_fields())
 
         total_inserted = 0
         observed_provider_generations: dict[str, set[str]] = {}
@@ -185,6 +235,7 @@ class IndexCommand(BaseCommand):
         observed_provider_generations: dict[str, set[str]] = {}
         observed_lineage_claims: dict[str, list[dict[str, str]]] = {}
         feature_fields = self._get_active_feature_fields()
+        metadata_feature_fields = self._get_metadata_feature_fields()
 
         frame_features_paths = [x for x in video_features_dir.glob("*") if x.is_dir()]
 
@@ -197,14 +248,18 @@ class IndexCommand(BaseCommand):
             }
             frame_provider_generations: dict[str, set[str]] = {}
             frame_lineage_claims: dict[str, list[dict[str, str]]] = {}
-            for feature_path in frame_features_path.glob("*"):
-                feature_name = feature_path.stem
-                if feature_name not in feature_fields:
-                    continue
-                if feature_path.is_dir():
+            for feature_name in metadata_feature_fields:
+                data.update(self._load_metadata_fields(frame_features_path, feature_name))
+
+            for feature_name in feature_fields:
+                # Analyse artifacts use a .npy file for the value indexed as the
+                # feature itself. A same-stem .json file may contain scalar
+                # metadata and must never be passed to np.load().
+                feature_path = frame_features_path / f"{feature_name}.npy"
+                if not feature_path.is_file():
                     continue
 
-                feature = np.load(feature_path)
+                feature = np.load(feature_path, allow_pickle=False)
 
                 if feature.dtype.kind == "U":
                     feature = feature.tolist()

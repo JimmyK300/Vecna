@@ -78,7 +78,7 @@ deep-translator==1.11.4
 groq==1.6.0
 sympy==1.14.0
 APScheduler==3.11.3
-ultralytics==8.4.130
+ultralytics==8.4.160
 scipy==1.17.1
 scikit-learn==1.9.0
 

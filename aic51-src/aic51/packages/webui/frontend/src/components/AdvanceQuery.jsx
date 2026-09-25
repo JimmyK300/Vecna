@@ -84,7 +84,7 @@ export function AdvanceQueryContainer({
   onSelectPreset,
   onResetQueryHeight,
   translationFailed = false,
-  collection = "testcol1",
+  collection = "workspace",
   onCollectionChange,
 }) {
   const [showPrefixMenu, setShowPrefixMenu] = useState(false);
@@ -391,9 +391,9 @@ export function AdvanceQueryContainer({
             <div className="flex items-center bg-gray-100 p-0.5 rounded border border-gray-300 shadow-2xs ml-1 gap-0.5">
               <button
                 type="button"
-                onClick={() => onCollectionChange && onCollectionChange("testcol1")}
+                onClick={() => onCollectionChange && onCollectionChange("workspace")}
                 className={`px-2 py-0.5 text-[11px] font-bold rounded transition-all cursor-pointer flex items-center gap-1 ${
-                  collection === "testcol1"
+                  collection === "workspace" || collection === "testcol1" || collection === "1"
                     ? "bg-blue-600 text-white shadow-xs font-black"
                     : "text-gray-700 hover:text-blue-700 hover:bg-blue-50"
                 }`}
@@ -404,9 +404,9 @@ export function AdvanceQueryContainer({
 
               <button
                 type="button"
-                onClick={() => onCollectionChange && onCollectionChange("testcol2")}
+                onClick={() => onCollectionChange && onCollectionChange("workspace2")}
                 className={`px-2 py-0.5 text-[11px] font-bold rounded transition-all cursor-pointer flex items-center gap-1 ${
-                  collection === "testcol2"
+                  collection === "workspace2" || collection === "testcol2" || collection === "2"
                     ? "bg-purple-600 text-white shadow-xs font-black"
                     : "text-gray-700 hover:text-purple-700 hover:bg-purple-50"
                 }`}

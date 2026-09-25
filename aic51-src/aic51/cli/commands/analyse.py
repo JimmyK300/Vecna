@@ -1,4 +1,5 @@
 import time
+from pathlib import Path
 from queue import Queue
 from threading import Thread
 
@@ -91,6 +92,19 @@ class AnalyseCommand(BaseCommand):
             help="Use BGE-M3 text embedding extractors (ocr_dense / asr_dense)",
         )
         parser.add_argument(
+            "--use-yolo",
+            dest="use_yolo",
+            action="store_true",
+            help="Use YOLO11-seg traffic feature extractor",
+        )
+        parser.add_argument(
+            "--use-yolo26x",
+            "--use-yolo26x-seg",
+            dest="use_yolo26x_seg",
+            action="store_true",
+            help="Use YOLO26x-seg traffic feature extractor for every keyframe",
+        )
+        parser.add_argument(
             "--keep-going",
             dest="keep_going",
             action="store_true",
@@ -102,6 +116,16 @@ class AnalyseCommand(BaseCommand):
             action="append",
             default=None,
             help="Limit analysis to one or more video IDs (repeatable)",
+        )
+        parser.add_argument(
+            "--input-folder",
+            "--input-dir",
+            dest="input_folder",
+            default=None,
+            help=(
+                "Read YOLO26x frames from this folder instead of data/keyframes; "
+                "accepts a flat image folder or <video_id>/<frame> subfolders"
+            ),
         )
         parser.set_defaults(func=self)
 
@@ -117,8 +141,11 @@ class AnalyseCommand(BaseCommand):
         use_asr: bool = False,
         use_ocr: bool = False,
         use_text_embedding: bool = False,
+        use_yolo: bool = False,
+        use_yolo26x_seg: bool = False,
         keep_going: bool = False,
         video_ids_filter: list[str] | None = None,
+        input_folder: str | None = None,
         *args,
         **kwargs,
     ):
@@ -126,6 +153,17 @@ class AnalyseCommand(BaseCommand):
         device = get_device(do_gpu)
         if feature_infos is None:
             raise RuntimeError("Features are not specified. Check your config file.")
+
+        resolved_input_folder = None
+        if input_folder:
+            if not use_yolo26x_seg:
+                raise ValueError("--input-folder/--input-dir requires --use-yolo26x-seg")
+            resolved_input_folder = Path(input_folder).expanduser()
+            if not resolved_input_folder.is_absolute():
+                resolved_input_folder = self._work_dir / resolved_input_folder
+            resolved_input_folder = resolved_input_folder.resolve()
+            if not resolved_input_folder.is_dir():
+                raise ValueError(f"YOLO26x input folder does not exist: {resolved_input_folder}")
 
         logger.info(f"Starting analyse process with (device={device}, allow_gpu={do_gpu})")
 
@@ -137,6 +175,8 @@ class AnalyseCommand(BaseCommand):
             or use_asr
             or use_ocr
             or use_text_embedding
+            or use_yolo
+            or use_yolo26x_seg
         )
         target_models = set()
         if use_image_clip:
@@ -153,6 +193,10 @@ class AnalyseCommand(BaseCommand):
             target_models.add("ocr")
         if use_text_embedding:
             target_models.add("text_embedding")
+        if use_yolo:
+            target_models.add("yolo_traffic")
+        if use_yolo26x_seg:
+            target_models.add("yolo26x_seg")
 
         for feature_name in feature_infos.keys():
             source = GlobalConfig.get("features", feature_name, "source")
@@ -193,6 +237,23 @@ class AnalyseCommand(BaseCommand):
                     value = GlobalConfig.get("features", feature_name, key)
                     if value is not None:
                         init_kwargs[key] = value
+            elif model_name in ("yolo_traffic", "yolo26x_seg"):
+                for key in (
+                    "conf",
+                    "min_box_area",
+                    "relation_conf",
+                    "relation_horizontal",
+                    "relation_vertical",
+                    "relation_near",
+                    "max_relation_objects",
+                ):
+                    value = GlobalConfig.get("features", feature_name, "analyse", key)
+                    if value is None:
+                        value = GlobalConfig.get("features", feature_name, key)
+                    if value is not None:
+                        init_kwargs[key] = value
+                if model_name == "yolo26x_seg" and resolved_input_folder is not None:
+                    init_kwargs["input_dir"] = resolved_input_folder
 
             if feature_extractor_cls:
                 feature_extractor = feature_extractor_cls.from_pretrained(**init_kwargs)
@@ -355,7 +416,7 @@ class AnalyseCommand(BaseCommand):
         discover = getattr(feature_extractor, "discover_video_ids", None) if feature_extractor else None
         if callable(discover):
             found = list(discover(self._work_dir) or [])
-            if found:
+            if found or bool(getattr(feature_extractor, "custom_input_configured", False)):
                 return found
         keyframes_dir = self._work_dir / constant.KEYFRAME_DIR
         if not keyframes_dir.is_dir():
@@ -376,7 +437,7 @@ class AnalyseCommand(BaseCommand):
         discover = getattr(feature_extractor, "discover_frame_ids", None)
         if callable(discover):
             found = list(discover(self._work_dir, video_id) or [])
-            if found:
+            if found or bool(getattr(feature_extractor, "custom_input_configured", False)):
                 return found
         keyframes_dir = self._work_dir / constant.KEYFRAME_DIR / video_id
         if not keyframes_dir.is_dir():
