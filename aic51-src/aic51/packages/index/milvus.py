@@ -30,7 +30,7 @@ class MilvusDatabase(object):
 
     def __init__(self, collection_name: str, do_overwrite: bool = False):
         self._collection_name = collection_name
-        self._client = MilvusClient()
+        self._client = MilvusClient(uri="http://127.0.0.1:19530")
 
         logger.info(f'Checking if collection "{collection_name}" exists')
         collection_exists = self._client.has_collection(collection_name)
@@ -419,7 +419,7 @@ class MilvusDatabase(object):
         start_time = time.time()
         while time.time() - start_time < timeout:
             try:
-                client = MilvusClient(timeout=2)
+                client = MilvusClient(uri="http://127.0.0.1:19530", timeout=2)
                 client.list_collections()
                 client.close()
                 logger.info("Milvus server is ready.")
