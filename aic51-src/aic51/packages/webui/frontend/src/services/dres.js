@@ -207,6 +207,7 @@ export async function resolveTimeFromFrame(videoId, frameId, currentTime = null,
  */
 export async function dresFetch(path, options = {}, customServerUrl = null) {
   const serverUrl = (customServerUrl || localStorage.getItem(DRES_SERVER_KEY) || DEFAULT_DRES_URL).trim().replace(/\/$/, "");
+  const sessionId = (localStorage.getItem(DRES_SESSION_KEY) || "").trim();
   const endpoint = path.startsWith("/") ? path : `/${path}`;
 
   // 1. Try via VECNA backend proxy to bypass CORS
@@ -216,6 +217,9 @@ export async function dresFetch(path, options = {}, customServerUrl = null) {
       ...(options.headers || {}),
       "x-dres-server-url": serverUrl,
     };
+    if (sessionId) {
+      proxyHeaders["x-dres-session"] = sessionId;
+    }
     const resp = await fetch(proxyUrl, {
       ...options,
       headers: proxyHeaders,
@@ -230,6 +234,205 @@ export async function dresFetch(path, options = {}, customServerUrl = null) {
   // 2. Fallback direct fetch
   const directUrl = `${serverUrl}${endpoint}`;
   return await fetch(directUrl, options);
+}
+
+/**
+ * Safely parse seconds from a time value that might be in seconds or milliseconds
+ * Note: DRES timeLeft and duration are in SECONDS (e.g. 257322s = 71h 28m 42s, 300s = 5m).
+ * Only divide by 1000 if it's an epoch timestamp in milliseconds (> 100,000,000).
+ */
+export function parseSecondsFromDres(val) {
+  if (val === null || val === undefined || isNaN(val)) return null;
+  const num = Number(val);
+  if (num < 0) return null; // -1 means no timer running in DRES
+  if (num === 0) return 0;
+  if (num > 100000000) {
+    return Math.round(num / 1000);
+  }
+  return Math.round(num);
+}
+
+/**
+ * Format seconds into mm:ss or hh:mm:ss (identical to DRES viewer)
+ * Example: 257322 -> "71:28:42"
+ *          245    -> "04:05"
+ */
+export function formatDresTime(seconds) {
+  if (seconds === null || seconds === undefined || isNaN(seconds)) return "--:--";
+  const s = Math.max(0, Math.round(Number(seconds)));
+  const hrs = Math.floor(s / 3600);
+  const mins = Math.floor((s % 3600) / 60);
+  const secs = s % 60;
+  if (hrs > 0) {
+    return `${hrs}:${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  }
+  return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+}
+
+/**
+ * Complete Live Evaluation Context Fetcher:
+ * - Validates session
+ * - Fetches evaluations list and auto-discovers active evaluation
+ * - Populates available tasks directly from evaluation taskTemplates
+ * - Queries currently running task
+ * - Queries exact evaluation state (timeLeft in seconds, taskStatus)
+ */
+export async function getLiveEvaluationContext(customSessionId = null, customServerUrl = null, preferredEvalId = null) {
+  const sId = (customSessionId || localStorage.getItem(DRES_SESSION_KEY) || "").trim();
+  const sUrl = (customServerUrl || localStorage.getItem(DRES_SERVER_KEY) || DEFAULT_DRES_URL).trim().replace(/\/$/, "");
+
+  if (!sId) {
+    return {
+      connected: false,
+      error: "Chưa cấu hình Session ID. Vui lòng nhập Session ID hoặc đăng nhập vào hệ thống DRES!",
+      evaluations: [],
+      activeEvaluation: null,
+      currentTask: null,
+      taskStatus: "NO_SESSION",
+      timeLeftSec: null,
+      availableTasks: [],
+    };
+  }
+
+  // 1. List evaluations
+  const evalRes = await getDresEvaluations(sId, sUrl);
+  if (!evalRes.ok || !Array.isArray(evalRes.data)) {
+    const isAuthErr = evalRes.status === 401;
+    return {
+      connected: false,
+      error: isAuthErr
+        ? "Session ID đã hết hạn (401). Vui lòng cập nhật Session ID mới từ DRES!"
+        : `Không thể kết nối máy chủ DRES (${evalRes.status || "Mất mạng"}).`,
+      evaluations: [],
+      activeEvaluation: null,
+      currentTask: null,
+      taskStatus: isAuthErr ? "AUTH_EXPIRED" : "ERROR",
+      timeLeftSec: null,
+      availableTasks: [],
+    };
+  }
+
+  const evaluations = evalRes.data;
+  const savedEvalId = preferredEvalId || localStorage.getItem(DRES_EVAL_KEY) || "";
+
+  // Find target evaluation:
+  // PRIORITY 1: User's explicitly chosen evaluation (preferredEvalId or saved in localStorage)
+  let activeEval = savedEvalId ? evaluations.find((e) => e.id === savedEvalId) : null;
+  // PRIORITY 2: First evaluation with status === 'ACTIVE'
+  if (!activeEval) {
+    activeEval = evaluations.find((e) => String(e.status).toUpperCase() === "ACTIVE");
+  }
+  // PRIORITY 3: Latest evaluation in the array
+  if (!activeEval && evaluations.length > 0) {
+    activeEval = evaluations[evaluations.length - 1];
+  }
+
+  if (activeEval) {
+    localStorage.setItem(DRES_EVAL_KEY, activeEval.id);
+  }
+
+  // Populate tasks from activeEval.taskTemplates
+  let availableTasks = [];
+  if (activeEval && Array.isArray(activeEval.taskTemplates) && activeEval.taskTemplates.length > 0) {
+    availableTasks = activeEval.taskTemplates.map((t) => {
+      const grp = String(t.taskGroup || t.taskType || "").toUpperCase();
+      let type = "KIS";
+      if (grp.includes("QA")) type = "QA";
+      else if (grp.includes("TRAKE") || grp.includes("TR-")) type = "TRAKE";
+
+      return {
+        id: t.name,
+        name: t.name,
+        label: `${t.name} (${t.taskGroup || t.taskType || type})`,
+        type,
+        duration: parseSecondsFromDres(t.duration),
+      };
+    });
+  }
+
+  if (!activeEval) {
+    return {
+      connected: true,
+      error: null,
+      evaluations,
+      activeEvaluation: null,
+      currentTask: null,
+      taskStatus: "NO_EVALUATION",
+      timeLeftSec: null,
+      availableTasks: [],
+    };
+  }
+
+  // 2. Concurrently fetch current task and evaluation state for exact remaining time and status
+  let currentTask = null;
+  let taskStatus = "NO_TASK";
+  let timeLeftSec = null;
+
+  try {
+    const [taskRes, stateRes, infoRes] = await Promise.all([
+      getDresCurrentTask(activeEval.id, sId, sUrl).catch(() => ({ ok: false })),
+      getDresEvaluationState(activeEval.id, sId, sUrl).catch(() => ({ ok: false })),
+      getDresEvaluationInfo(activeEval.id, sId, sUrl).catch(() => ({ ok: false })),
+    ]);
+
+    if (taskRes.ok && taskRes.data) {
+      currentTask = taskRes.data;
+      taskStatus = "RUNNING";
+    }
+
+    if (stateRes.ok && stateRes.data) {
+      const state = stateRes.data;
+      if (state.taskStatus) {
+        taskStatus = state.taskStatus;
+      }
+      const rawLeft = state.timeLeft ?? state.task?.timeLeft ?? state.currentTask?.timeLeft ?? taskRes.data?.timeLeft;
+      if (rawLeft !== undefined && rawLeft !== null) {
+        const parsedLeft = parseSecondsFromDres(rawLeft);
+        if (state.taskStatus === "RUNNING" || (taskRes.ok && state.taskStatus !== "ENDED")) {
+          timeLeftSec = parsedLeft !== null ? Math.max(0, parsedLeft) : null;
+        } else if (state.taskStatus === "ENDED" || state.taskStatus === "IGNORED") {
+          timeLeftSec = 0;
+        } else {
+          timeLeftSec = null;
+        }
+      }
+    } else if (taskRes.ok && taskRes.data?.timeLeft !== undefined && taskRes.data?.timeLeft !== null) {
+      const parsedLeft = parseSecondsFromDres(taskRes.data.timeLeft);
+      timeLeftSec = parsedLeft !== null ? Math.max(0, parsedLeft) : null;
+    }
+
+    // Populate taskTemplates from infoRes if availableTasks was empty
+    if (availableTasks.length === 0 && infoRes.ok && infoRes.data) {
+      const templates = infoRes.data.taskTemplates || infoRes.data.tasks || [];
+      if (Array.isArray(templates) && templates.length > 0) {
+        availableTasks = templates.map((t) => {
+          const grp = String(t.taskGroup || t.taskType || "").toUpperCase();
+          let type = "KIS";
+          if (grp.includes("QA")) type = "QA";
+          else if (grp.includes("TRAKE") || grp.includes("TR-")) type = "TRAKE";
+
+          return {
+            id: t.name,
+            name: t.name,
+            label: `${t.name} (${t.taskGroup || t.taskType || type})`,
+            type,
+            duration: parseSecondsFromDres(t.duration),
+          };
+        });
+      }
+    }
+  } catch (err) {}
+
+  return {
+    connected: true,
+    error: null,
+    evaluations,
+    activeEvaluation: activeEval,
+    currentTask,
+    taskStatus,
+    timeLeftSec,
+    availableTasks,
+  };
 }
 
 /**
@@ -306,41 +509,97 @@ export async function getDresCurrentTask(evaluationId, sessionId, serverUrl = nu
 }
 
 /**
- * 4b. Get Evaluation State (includes timeLeft and taskStatus)
+ * 4b. Get Evaluation State (includes timeLeft in seconds and taskStatus)
+ * Uses DRES official /api/v2/evaluation/state/list
  */
 export async function getDresEvaluationState(evaluationId, sessionId, serverUrl = null) {
-  if (!evaluationId || !sessionId) return { ok: false, status: 400, data: null };
-  const resp = await dresFetch(
-    `/api/v2/evaluation/${encodeURIComponent(evaluationId)}/state?session=${encodeURIComponent(sessionId)}`,
-    {},
-    serverUrl
-  );
-  let data = null;
+  if (!sessionId) return { ok: false, status: 400, data: null };
+
+  // 1. Primary: Official DRES v2 state list endpoint used by DRES viewer
   try {
-    data = await resp.json();
-  } catch (e) {
-    data = null;
+    const resp = await dresFetch(
+      `/api/v2/evaluation/state/list?session=${encodeURIComponent(sessionId)}`,
+      {},
+      serverUrl
+    );
+    if (resp.ok) {
+      const json = await resp.json();
+      if (Array.isArray(json)) {
+        const found = evaluationId
+          ? json.find((s) => s.evaluationId === evaluationId || s.id === evaluationId)
+          : json[0];
+        if (found) {
+          return { ok: true, status: resp.status, data: found };
+        }
+      }
+    }
+  } catch (err) {}
+
+  // 2. Fallback: single evaluation state endpoint if available
+  if (evaluationId) {
+    try {
+      const resp = await dresFetch(
+        `/api/v2/evaluation/${encodeURIComponent(evaluationId)}/state?session=${encodeURIComponent(sessionId)}`,
+        {},
+        serverUrl
+      );
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data && typeof data === "object") {
+          return { ok: true, status: resp.status, data };
+        }
+      }
+    } catch (err) {}
   }
-  return { ok: resp.ok, status: resp.status, data };
+
+  return { ok: false, status: 404, data: null };
 }
 
 /**
  * 4c. Get Evaluation Info (includes taskTemplates list)
+ * Uses DRES official /api/v2/evaluation/info/list
  */
 export async function getDresEvaluationInfo(evaluationId, sessionId, serverUrl = null) {
-  if (!evaluationId || !sessionId) return { ok: false, status: 400, data: null };
-  const resp = await dresFetch(
-    `/api/v2/evaluation/${encodeURIComponent(evaluationId)}/info?session=${encodeURIComponent(sessionId)}`,
-    {},
-    serverUrl
-  );
-  let data = null;
+  if (!sessionId) return { ok: false, status: 400, data: null };
+
+  // 1. Primary: Official DRES v2 info list
   try {
-    data = await resp.json();
-  } catch (e) {
-    data = null;
+    const resp = await dresFetch(
+      `/api/v2/evaluation/info/list?session=${encodeURIComponent(sessionId)}`,
+      {},
+      serverUrl
+    );
+    if (resp.ok) {
+      const json = await resp.json();
+      if (Array.isArray(json)) {
+        const found = evaluationId
+          ? json.find((s) => s.id === evaluationId || s.evaluationId === evaluationId)
+          : json[0];
+        if (found) {
+          return { ok: true, status: resp.status, data: found };
+        }
+      }
+    }
+  } catch (err) {}
+
+  // 2. Fallback: single evaluation info endpoint
+  if (evaluationId) {
+    try {
+      const resp = await dresFetch(
+        `/api/v2/evaluation/${encodeURIComponent(evaluationId)}/info?session=${encodeURIComponent(sessionId)}`,
+        {},
+        serverUrl
+      );
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data && typeof data === "object") {
+          return { ok: true, status: resp.status, data };
+        }
+      }
+    } catch (err) {}
   }
-  return { ok: resp.ok, status: resp.status, data };
+
+  return { ok: false, status: 404, data: null };
 }
 
 /**

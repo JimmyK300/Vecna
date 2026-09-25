@@ -16,6 +16,10 @@ import {
   getDresCurrentTask,
   getDresEvaluationState,
   getDresEvaluationInfo,
+  getDresEvaluations,
+  getLiveEvaluationContext,
+  parseSecondsFromDres,
+  formatDresTime,
   buildPayload,
   parseDresError,
   addSubmissionHistoryEntry,
@@ -84,6 +88,7 @@ export function VideoPlayer({ frameInfo, onCancel }) {
   const transcriptContainerRef = useRef(null);
 
   const timelineRef = useRef(null);
+  const showDresModalRef = useRef(false);
   const [isScrubbing, setIsScrubbing] = useState(false);
   const [thumbnails, setThumbnails] = useState([]);
 
@@ -293,7 +298,13 @@ export function VideoPlayer({ frameInfo, onCancel }) {
       );
 
       switch (e.keyCode) {
-        case 27: // Escape - close video player (or exit fullscreen first)
+        case 27: // Escape - close DRES submit modal first if open, or close video player
+          if (showDresModalRef.current) {
+            e.preventDefault();
+            e.stopPropagation();
+            setShowDresModal(false);
+            return;
+          }
           if (!document.fullscreenElement) {
             onCancel();
           }
@@ -527,38 +538,34 @@ export function VideoPlayer({ frameInfo, onCancel }) {
     setGoToInput("");
   };
 
-  // Default standard AIC tasks presets
+  // Default standard AIC tasks fallback (only when offline or before initial API fetch)
   const DEFAULT_AIC_TASKS = [
-    { id: "tkis-test", name: "tkis-test", label: "tkis-test (Textual KIS)", type: "KIS" },
-    { id: "vkis-test", name: "vkis-test", label: "vkis-test (Visual KIS)", type: "KIS" },
-    { id: "qa-test", name: "qa-test", label: "qa-test (Question Answering)", type: "QA" },
-    { id: "trake-test", name: "trake-test", label: "trake-test (TRAKE)", type: "TRAKE" },
-    { id: "tkis-01", name: "tkis-01", label: "tkis-01 (Textual KIS 1)", type: "KIS" },
-    { id: "tkis-02", name: "tkis-02", label: "tkis-02 (Textual KIS 2)", type: "KIS" },
-    { id: "tkis-03", name: "tkis-03", label: "tkis-03 (Textual KIS 3)", type: "KIS" },
-    { id: "tkis-04", name: "tkis-04", label: "tkis-04 (Textual KIS 4)", type: "KIS" },
-    { id: "tkis-05", name: "tkis-05", label: "tkis-05 (Textual KIS 5)", type: "KIS" },
-    { id: "vkis-01", name: "vkis-01", label: "vkis-01 (Visual KIS 1)", type: "KIS" },
-    { id: "vkis-02", name: "vkis-02", label: "vkis-02 (Visual KIS 2)", type: "KIS" },
-    { id: "vkis-03", name: "vkis-03", label: "vkis-03 (Visual KIS 3)", type: "KIS" },
-    { id: "qa-01", name: "qa-01", label: "qa-01 (Q&A 1)", type: "QA" },
-    { id: "qa-02", name: "qa-02", label: "qa-02 (Q&A 2)", type: "QA" },
-    { id: "qa-03", name: "qa-03", label: "qa-03 (Q&A 3)", type: "QA" },
     { id: "trake-01", name: "trake-01", label: "trake-01 (TRAKE 1)", type: "TRAKE" },
     { id: "trake-02", name: "trake-02", label: "trake-02 (TRAKE 2)", type: "TRAKE" },
+    { id: "tkis-01", name: "tkis-01", label: "tkis-01 (Textual KIS 1)", type: "KIS" },
+    { id: "tkis-02", name: "tkis-02", label: "tkis-02 (Textual KIS 2)", type: "KIS" },
+    { id: "vkis-01", name: "vkis-01", label: "vkis-01 (Visual KIS 1)", type: "KIS" },
+    { id: "qa-01", name: "qa-01", label: "qa-01 (Q&A 1)", type: "QA" },
   ];
 
   // Quick DRES Submit State from Video Player
   const [showDresModal, setShowDresModal] = useState(false);
+  showDresModalRef.current = showDresModal;
+  const [dresEvaluations, setDresEvaluations] = useState([]);
+  const [dresSelectedEvalId, setDresSelectedEvalId] = useState(() => localStorage.getItem(DRES_EVAL_KEY) || "");
+  const [dresActiveEval, setDresActiveEval] = useState(null);
   const [dresActiveTask, setDresActiveTask] = useState(null);
+  const [dresTaskStatus, setDresTaskStatus] = useState("NO_TASK");
   const [dresTaskRemainingSec, setDresTaskRemainingSec] = useState(null);
   const [dresIsRefreshing, setDresIsRefreshing] = useState(false);
-  const [dresSelectedTaskName, setDresSelectedTaskName] = useState("tkis-test");
+  const [dresSyncMessage, setDresSyncMessage] = useState(null);
+  const [dresSelectedTaskName, setDresSelectedTaskName] = useState("");
   const [dresAvailableTasks, setDresAvailableTasks] = useState(DEFAULT_AIC_TASKS);
   const [dresCustomTaskMode, setDresCustomTaskMode] = useState(false);
   const [dresCustomTaskName, setDresCustomTaskName] = useState("");
   const [dresTaskType, setDresTaskType] = useState(selectedQueryId || "KIS");
   const [dresAnswerText, setDresAnswerText] = useState("");
+  const [dresTrakeFramesInput, setDresTrakeFramesInput] = useState("");
   const [dresExactTimeMs, setDresExactTimeMs] = useState(0);
   const [dresTimeSource, setDresTimeSource] = useState("");
   const [dresIsSubmitting, setDresIsSubmitting] = useState(false);
@@ -566,91 +573,196 @@ export function VideoPlayer({ frameInfo, onCancel }) {
   const [dresDryRun, setDresDryRun] = useState(false);
   const [dresCopiedJson, setDresCopiedJson] = useState(false);
 
-  // Countdown Interval for remaining time in modal
+  // Quick Session ID management inside modal
+  const [dresShowSessionInput, setDresShowSessionInput] = useState(false);
+  const [dresQuickSessionVal, setDresQuickSessionVal] = useState(() => localStorage.getItem(DRES_SESSION_KEY) || "");
+
+  // Countdown Interval for remaining time in modal (ticks down by 1s)
   const dresCountdownRef = useRef(null);
   useEffect(() => {
-    if (dresCountdownRef.current) clearInterval(dresCountdownRef.current);
-    if (showDresModal && dresTaskRemainingSec !== null && dresTaskRemainingSec > 0) {
+    const isRunning = showDresModal && dresTaskRemainingSec !== null && dresTaskRemainingSec > 0;
+    if (!isRunning) {
+      if (dresCountdownRef.current) {
+        clearInterval(dresCountdownRef.current);
+        dresCountdownRef.current = null;
+      }
+      return;
+    }
+
+    if (!dresCountdownRef.current) {
       dresCountdownRef.current = setInterval(() => {
         setDresTaskRemainingSec((prev) => {
-          if (prev <= 1) {
+          if (prev === null || prev <= 1) {
             clearInterval(dresCountdownRef.current);
+            dresCountdownRef.current = null;
             return 0;
           }
           return prev - 1;
         });
       }, 1000);
     }
+  }, [showDresModal, dresTaskRemainingSec > 0]);
+
+  useEffect(() => {
     return () => {
       if (dresCountdownRef.current) clearInterval(dresCountdownRef.current);
     };
-  }, [showDresModal, dresTaskRemainingSec]);
+  }, []);
 
-  // Refresh live task info and timer from server
-  const refreshLiveTaskInfo = async () => {
-    const sId = localStorage.getItem(DRES_SESSION_KEY);
-    const eId = localStorage.getItem(DRES_EVAL_KEY);
-    const sUrl = localStorage.getItem(DRES_SERVER_KEY) || DEFAULT_DRES_URL;
+  // Periodic background sync with server while modal is open (every 8s)
+  useEffect(() => {
+    if (!showDresModal) return;
+    const syncInterval = setInterval(() => {
+      refreshLiveTaskInfo(true);
+    }, 8000);
+    return () => clearInterval(syncInterval);
+  }, [showDresModal, dresSelectedEvalId]);
 
-    if (!eId || !sId) return;
+  // Pre-fetch DRES evaluations & live task silently on mount if session exists
+  useEffect(() => {
+    const sId = (localStorage.getItem(DRES_SESSION_KEY) || "").trim();
+    if (sId) {
+      refreshLiveTaskInfo(true);
+    }
+  }, []);
+
+  // Listen to external DRES_EVAL_KEY changes from DresSubmitPanel (cross-tab & in-tab)
+  useEffect(() => {
+    const handleStorage = (e) => {
+      if (e.key === DRES_EVAL_KEY && e.newValue && e.newValue !== dresSelectedEvalId) {
+        setDresSelectedEvalId(e.newValue);
+        refreshLiveTaskInfo(true, e.newValue);
+      }
+    };
+    const handleCustom = (e) => {
+      const newId = e.detail?.evalId;
+      if (newId && newId !== dresSelectedEvalId) {
+        setDresSelectedEvalId(newId);
+        refreshLiveTaskInfo(true, newId);
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+    window.addEventListener("dres_eval_changed", handleCustom);
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+      window.removeEventListener("dres_eval_changed", handleCustom);
+    };
+  }, [dresSelectedEvalId]);
+
+  // Refresh live task info and timer from server API
+  const refreshLiveTaskInfo = async (silent = false, customEvalId = null) => {
+    const sId = (localStorage.getItem(DRES_SESSION_KEY) || "").trim();
+    if (!sId) {
+      if (!silent) {
+        setDresSyncMessage({ type: "error", text: "Chưa có Session ID. Hãy nhập Session ID từ DRES bên dưới!" });
+        setDresShowSessionInput(true);
+      }
+      return;
+    }
+
+    const targetEvalId = customEvalId || dresSelectedEvalId || (localStorage.getItem(DRES_EVAL_KEY) || "").trim();
+
     setDresIsRefreshing(true);
+    if (!silent) setDresSyncMessage(null);
 
     try {
-      // 1. Fetch current task from DRES
-      const taskRes = await getDresCurrentTask(eId, sId, sUrl);
-      if (taskRes.ok && taskRes.data) {
-        setDresActiveTask(taskRes.data);
-        const taskName = taskRes.data.name || "tkis-test";
+      const ctx = await getLiveEvaluationContext(sId, null, targetEvalId);
+      if (!ctx.connected) {
+        if (!silent) {
+          setDresSyncMessage({ type: "error", text: ctx.error || "Không kết nối được server DRES" });
+        }
+        if (ctx.taskStatus === "AUTH_EXPIRED" || ctx.taskStatus === "NO_SESSION") {
+          setDresShowSessionInput(true);
+        }
+        return;
+      }
+
+      if (Array.isArray(ctx.evaluations) && ctx.evaluations.length > 0) {
+        setDresEvaluations(ctx.evaluations);
+      }
+      if (ctx.activeEvaluation) {
+        setDresActiveEval(ctx.activeEvaluation);
+        setDresSelectedEvalId(ctx.activeEvaluation.id);
+        localStorage.setItem(DRES_EVAL_KEY, ctx.activeEvaluation.id);
+      }
+      setDresTaskStatus(ctx.taskStatus);
+
+      // Populate available tasks directly from evaluation taskTemplates
+      if (Array.isArray(ctx.availableTasks) && ctx.availableTasks.length > 0) {
+        setDresAvailableTasks(ctx.availableTasks);
+      }
+
+      // Handle current task from server
+      if (ctx.currentTask) {
+        setDresActiveTask(ctx.currentTask);
+        const taskName = ctx.currentTask.name;
         setDresSelectedTaskName(taskName);
 
         // Auto switch tab (KIS, QA, TRAKE)
-        const grp = String(taskRes.data.taskGroup || taskRes.data.taskType || taskName).toUpperCase();
+        const grp = String(ctx.currentTask.taskGroup || ctx.currentTask.taskType || taskName).toUpperCase();
         if (grp.includes("QA")) setDresTaskType("QA");
         else if (grp.includes("TRAKE") || grp.includes("TR-")) setDresTaskType("TRAKE");
         else setDresTaskType("KIS");
-
-        let durationSec = taskRes.data.duration ? Math.round(taskRes.data.duration / 1000) : 300;
-        setDresTaskRemainingSec(durationSec);
+      } else {
+        setDresActiveTask(null);
+        // If no active task and no task selected yet, pick first available task if any
+        if (!dresSelectedTaskName && ctx.availableTasks && ctx.availableTasks.length > 0) {
+          setDresSelectedTaskName(ctx.availableTasks[0].name);
+          setDresTaskType(ctx.availableTasks[0].type || "KIS");
+        }
       }
 
-      // 2. Fetch evaluation state for exact remaining seconds (timeLeft)
-      try {
-        const stateRes = await getDresEvaluationState(eId, sId, sUrl);
-        if (stateRes.ok && stateRes.data && stateRes.data.timeLeft !== undefined && stateRes.data.timeLeft !== null) {
-          const tLeft = Number(stateRes.data.timeLeft);
-          const sec = tLeft > 1000 ? Math.round(tLeft / 1000) : Math.round(tLeft);
-          if (sec >= 0) setDresTaskRemainingSec(sec);
-        }
-      } catch (err) {}
-
-      // 3. Fetch evaluation info to populate available task list
-      try {
-        const infoRes = await getDresEvaluationInfo(eId, sId, sUrl);
-        if (infoRes.ok && infoRes.data && Array.isArray(infoRes.data.taskTemplates) && infoRes.data.taskTemplates.length > 0) {
-          const loaded = infoRes.data.taskTemplates.map((t) => ({
-            id: t.id || t.name,
-            name: t.name,
-            label: `${t.name} (${t.taskGroup || t.taskType || "Task"})`,
-            type: String(t.taskGroup || t.taskType || "").toUpperCase().includes("QA")
-              ? "QA"
-              : String(t.taskGroup || t.taskType || "").toUpperCase().includes("TRAKE")
-              ? "TRAKE"
-              : "KIS",
-          }));
-          setDresAvailableTasks((prev) => {
-            const merged = [...loaded];
-            DEFAULT_AIC_TASKS.forEach((def) => {
-              if (!merged.some((m) => m.name === def.name)) merged.push(def);
-            });
-            return merged;
+      // Set actual remaining time from server (NO 5-minute fake default!)
+      if (ctx.taskStatus === "RUNNING") {
+        setDresTaskRemainingSec((prev) => {
+          if (ctx.timeLeftSec === null) return null;
+          if (prev === null || Math.abs(prev - ctx.timeLeftSec) > 2) {
+            return Math.max(0, ctx.timeLeftSec);
+          }
+          return prev;
+        });
+        if (!silent) {
+          const tName = ctx.currentTask?.name || "Task";
+          const secText = ctx.timeLeftSec !== null ? formatDresTime(ctx.timeLeftSec) : "đang chạy";
+          setDresSyncMessage({
+            type: "success",
+            text: `Đã đồng bộ API: Đang chạy "${tName}" [${ctx.activeEvaluation?.name || "DRES"}] — Còn ${secText}`,
           });
         }
-      } catch (err) {}
+      } else if (ctx.taskStatus === "ENDED") {
+        setDresTaskRemainingSec(0);
+        if (!silent) {
+          setDresSyncMessage({
+            type: "info",
+            text: `Câu thi trên DRES đã kết thúc thời gian làm bài (00:00).`,
+          });
+        }
+      } else {
+        // NO_TASK / PREPARING / CREATED
+        setDresTaskRemainingSec(null);
+        if (!silent) {
+          setDresSyncMessage({
+            type: "info",
+            text: `Đã kết nối "${ctx.activeEvaluation?.name || "DRES"}". BTC chưa bấm bắt đầu câu hỏi mới.`,
+          });
+        }
+      }
     } catch (err) {
       console.warn("Failed to refresh live task info:", err);
+      if (!silent) {
+        setDresSyncMessage({ type: "error", text: `Lỗi kết nối DRES: ${err.message}` });
+      }
     } finally {
       setDresIsRefreshing(false);
     }
+  };
+
+  const handleSelectEvaluation = (evalId) => {
+    if (!evalId) return;
+    setDresSelectedEvalId(evalId);
+    localStorage.setItem(DRES_EVAL_KEY, evalId);
+    window.dispatchEvent(new CustomEvent("dres_eval_changed", { detail: { evalId } }));
+    refreshLiveTaskInfo(false, evalId);
   };
 
   const handleSelectTask = (taskName) => {
@@ -690,35 +802,63 @@ export function VideoPlayer({ frameInfo, onCancel }) {
         : `tính từ fps ${resolved.fps}`
     );
 
+    // Initial TRAKE frames input from saved frames of this video or current active frame
+    const savedFramesStr =
+      selectedFramesOfThisVideo && selectedFramesOfThisVideo.length > 0
+        ? selectedFramesOfThisVideo.map((f) => parseInt(f, 10)).join(", ")
+        : String(activeFrameNum);
+    setDresTrakeFramesInput(savedFramesStr);
+
+    const savedEval = localStorage.getItem(DRES_EVAL_KEY) || "";
+    setDresSelectedEvalId(savedEval);
+
     setDresResult(null);
     setDresCopiedJson(false);
+    setDresSyncMessage(null);
+    setDresQuickSessionVal(localStorage.getItem(DRES_SESSION_KEY) || "");
     setShowDresModal(true);
 
-    // Refresh live task info and sync timer
-    refreshLiveTaskInfo();
+    // Refresh live task info and sync timer immediately on open
+    refreshLiveTaskInfo(false, savedEval);
   };
 
   const getQuickDresBuiltPayload = () => {
     const cleanVid = cleanVideoId(frameInfo?.video_id);
+    const frameList = (dresTrakeFramesInput || String(activeFrameNum))
+      .split(/[,;\s]+/)
+      .map((f) => f.trim())
+      .filter(Boolean);
     return buildPayload(dresTaskType, {
       videoId: cleanVid,
       startMs: dresExactTimeMs,
       endMs: dresExactTimeMs,
       answerText: dresAnswerText,
-      framesList: [String(activeFrameNum)],
+      framesList: frameList,
     });
   };
 
   const handleQuickDresSubmit = async (forceRealSubmit = false) => {
-    const sId = localStorage.getItem(DRES_SESSION_KEY);
-    const eId = localStorage.getItem(DRES_EVAL_KEY);
+    const sId = (localStorage.getItem(DRES_SESSION_KEY) || "").trim();
+    let eId = dresSelectedEvalId || (localStorage.getItem(DRES_EVAL_KEY) || "").trim();
     const sUrl = localStorage.getItem(DRES_SERVER_KEY) || DEFAULT_DRES_URL;
 
     const runAsDryRun = dresDryRun && !forceRealSubmit;
 
-    if (!runAsDryRun && (!sId || !eId)) {
-      alert("Chưa có Session ID hoặc Evaluation ID! Vui lòng cấu hình ở bảng DRES trên sidebar.");
-      return;
+    if (!runAsDryRun) {
+      if (!sId) {
+        setDresShowSessionInput(true);
+        alert("Chưa có Session ID DRES! Vui lòng nhập Session ID ở ô cấu hình.");
+        return;
+      }
+      if (!eId) {
+        const ctx = await getLiveEvaluationContext(sId, sUrl, dresSelectedEvalId);
+        if (ctx.activeEvaluation) {
+          eId = ctx.activeEvaluation.id;
+        } else {
+          alert("Chưa có Evaluation ID! Vui lòng bấm 'Làm mới' để đồng bộ phiên thi từ DRES.");
+          return;
+        }
+      }
     }
 
     const cleanVid = cleanVideoId(frameInfo.video_id);
@@ -1145,12 +1285,18 @@ export function VideoPlayer({ frameInfo, onCancel }) {
           const quickPayload = getQuickDresBuiltPayload();
           return (
             <div
-              onClick={(e) => e.stopPropagation()}
-              className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-2xs flex items-center justify-center p-4 animate-fadeIn"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowDresModal(false);
+              }}
+              className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-2xs flex items-center justify-center p-2 sm:p-4 overflow-y-auto animate-fadeIn cursor-pointer"
             >
-              <div className="bg-white border border-gray-300 rounded-xl max-w-lg w-full p-4 shadow-2xl flex flex-col gap-3 text-gray-800 text-xs">
-                {/* Header */}
-                <div className="flex items-center justify-between border-b border-gray-200 pb-2">
+              <div
+                onClick={(e) => e.stopPropagation()}
+                className="bg-white border border-gray-300 rounded-xl max-w-lg w-full max-h-[90vh] shadow-2xl flex flex-col text-gray-800 text-xs cursor-default my-auto overflow-hidden"
+              >
+                {/* Header (Sticky) */}
+                <div className="flex items-center justify-between border-b border-gray-200 p-3.5 pb-2.5 shrink-0 bg-white">
                   <div className="flex items-center gap-1.5 font-bold text-blue-700 text-sm">
                     <span>⚡</span>
                     <span>NỘP BÀI DRES TỪ CURRENT FRAME</span>
@@ -1164,13 +1310,120 @@ export function VideoPlayer({ frameInfo, onCancel }) {
                   </button>
                 </div>
 
+                {/* Scrollable Modal Content */}
+                <div className="overflow-y-auto flex-1 p-3.5 pt-2.5 flex flex-col gap-3 min-h-0">
+
+                {/* Sync Notification Banner */}
+                {dresSyncMessage && (
+                  <div
+                    className={classNames("px-2.5 py-1.5 rounded-lg text-[11px] font-medium flex items-center justify-between shadow-2xs animate-fadeIn", {
+                      "bg-emerald-100 text-emerald-900 border border-emerald-300": dresSyncMessage.type === "success",
+                      "bg-rose-100 text-rose-900 border border-rose-300": dresSyncMessage.type === "error",
+                      "bg-blue-100 text-blue-900 border border-blue-300": dresSyncMessage.type === "info",
+                    })}
+                  >
+                    <span className="truncate">{dresSyncMessage.text}</span>
+                    <button
+                      type="button"
+                      onClick={() => setDresSyncMessage(null)}
+                      className="text-gray-500 hover:text-gray-800 font-bold ml-2 cursor-pointer shrink-0"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
+
+                {/* Quick Session ID Box (when needed or toggled) */}
+                {dresShowSessionInput && (
+                  <div className="bg-amber-50 border border-amber-300 p-2.5 rounded-lg flex flex-col gap-1.5 text-amber-900 text-[11px] shadow-2xs">
+                    <div className="flex justify-between items-center font-bold">
+                      <span>🔑 Cấu hình Session ID DRES (Đồng bộ đề & thời gian):</span>
+                      {localStorage.getItem(DRES_SESSION_KEY) && (
+                        <button
+                          type="button"
+                          onClick={() => setDresShowSessionInput(false)}
+                          className="text-gray-400 hover:text-gray-700 font-bold cursor-pointer"
+                        >
+                          ✕ Đóng
+                        </button>
+                      )}
+                    </div>
+                    <div className="flex gap-1.5">
+                      <input
+                        type="text"
+                        placeholder="Dán Session ID từ DRES vào đây (vd: a1b2c3d4...)..."
+                        value={dresQuickSessionVal}
+                        onChange={(e) => setDresQuickSessionVal(e.target.value)}
+                        className="flex-1 bg-white border border-amber-400 rounded px-2 py-1 text-[11px] font-mono text-gray-900 focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (dresQuickSessionVal.trim()) {
+                            localStorage.setItem(DRES_SESSION_KEY, dresQuickSessionVal.trim());
+                            setDresShowSessionInput(false);
+                            refreshLiveTaskInfo(false);
+                          }
+                        }}
+                        className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded font-bold text-[11px] cursor-pointer shrink-0"
+                      >
+                        Lưu & Đồng bộ
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {/* Active Task & Selection Bar with Refresh & Countdown Timer */}
                 <div className="bg-blue-50/80 border border-blue-200 p-2.5 rounded-lg flex flex-col gap-2 text-blue-900 shadow-2xs">
-                  {/* Row 1: Dropdown chọn câu & Nút Làm mới */}
+                  {/* Row 1: Phiên thi (Evaluation ID) & Nút Làm mới */}
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-1.5 flex-1 min-w-0">
                       <span className="font-bold text-[11px] shrink-0 text-blue-800 flex items-center gap-1">
-                        <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.8)]"></span>
+                        <span
+                          className={classNames("inline-block w-2.5 h-2.5 rounded-full shadow-2xs", {
+                            "bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.8)]": dresTaskStatus === "RUNNING",
+                            "bg-amber-500": dresTaskStatus === "NO_TASK" || dresTaskStatus === "PREPARING",
+                            "bg-rose-500": dresTaskStatus === "AUTH_EXPIRED" || dresTaskStatus === "NO_SESSION" || dresTaskStatus === "ERROR",
+                            "bg-gray-400": dresTaskStatus === "ENDED",
+                          })}
+                        ></span>
+                        Phiên thi (Eval):
+                      </span>
+                      <select
+                        value={dresSelectedEvalId}
+                        onChange={(e) => handleSelectEvaluation(e.target.value)}
+                        className="flex-1 bg-white border border-blue-300 rounded px-2 py-1 text-[11px] font-bold text-blue-950 focus:outline-none focus:border-blue-500 shadow-2xs cursor-pointer truncate"
+                        title="Chọn phiên thi (Evaluation) trên máy chủ DRES"
+                      >
+                        {dresEvaluations.length > 0 ? (
+                          dresEvaluations.map((ev) => (
+                            <option key={ev.id} value={ev.id}>
+                              {ev.name || ev.id} [{ev.status}]
+                            </option>
+                          ))
+                        ) : (
+                          <option value={dresSelectedEvalId}>{dresActiveEval?.name || dresSelectedEvalId || "(Chưa có evaluation)"}</option>
+                        )}
+                      </select>
+                    </div>
+
+                    {/* Nút Làm mới */}
+                    <button
+                      type="button"
+                      onClick={() => refreshLiveTaskInfo(false)}
+                      disabled={dresIsRefreshing}
+                      className="px-2.5 py-1 bg-white hover:bg-blue-100 active:bg-blue-200 text-blue-700 border border-blue-300 rounded font-bold text-[11px] flex items-center gap-1 transition-colors cursor-pointer shadow-2xs shrink-0 disabled:opacity-60"
+                      title="Bấm để đồng bộ câu thi và thời gian thực tế từ máy chủ DRES"
+                    >
+                      <span className={dresIsRefreshing ? "animate-spin" : ""}>🔄</span>
+                      <span>{dresIsRefreshing ? "Đang tải..." : "Làm mới"}</span>
+                    </button>
+                  </div>
+
+                  {/* Row 2: Câu thi (Target Task) & Real-time Countdown Timer */}
+                  <div className="flex items-center justify-between gap-2 border-t border-blue-200/60 pt-1.5">
+                    <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                      <span className="font-bold text-[11px] shrink-0 text-blue-800">
                         Đang thi:
                       </span>
 
@@ -1191,6 +1444,11 @@ export function VideoPlayer({ frameInfo, onCancel }) {
                               {dresActiveTask && dresActiveTask.name === task.name ? "⭐ " : ""}{task.label || task.name}
                             </option>
                           ))}
+                          {dresAvailableTasks.length === 0 && (
+                            <option value={dresSelectedTaskName || "trake-01"}>
+                              {dresSelectedTaskName || "trake-01"}
+                            </option>
+                          )}
                           <option value="__CUSTOM__">✏️ Nhập câu khác...</option>
                         </select>
                       ) : (
@@ -1216,7 +1474,7 @@ export function VideoPlayer({ frameInfo, onCancel }) {
                             onClick={() => {
                               setDresCustomTaskMode(false);
                               if (!dresCustomTaskName.trim()) {
-                                setDresSelectedTaskName(dresActiveTask?.name || "tkis-test");
+                                setDresSelectedTaskName(dresActiveTask?.name || "trake-01");
                               }
                             }}
                             className="px-1.5 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded text-[10px] font-bold shrink-0 cursor-pointer"
@@ -1226,32 +1484,21 @@ export function VideoPlayer({ frameInfo, onCancel }) {
                           </button>
                         </div>
                       )}
-                    </div>
 
-                    {/* Nút Làm mới */}
-                    <button
-                      type="button"
-                      onClick={refreshLiveTaskInfo}
-                      disabled={dresIsRefreshing}
-                      className="px-2.5 py-1 bg-white hover:bg-blue-100 active:bg-blue-200 text-blue-700 border border-blue-300 rounded font-bold text-[11px] flex items-center gap-1 transition-colors cursor-pointer shadow-2xs shrink-0 disabled:opacity-60"
-                      title="Bấm để đồng bộ câu thi và thời gian từ máy chủ DRES"
-                    >
-                      <span className={dresIsRefreshing ? "animate-spin" : ""}>🔄</span>
-                      <span>{dresIsRefreshing ? "Đang tải..." : "Làm mới"}</span>
-                    </button>
-                  </div>
-
-                  {/* Row 2: Status & Time Display */}
-                  <div className="flex items-center justify-between text-[11px] border-t border-blue-200/60 pt-1.5">
-                    <div className="flex items-center gap-1.5 truncate">
-                      <span className="text-gray-600 font-mono text-[10px]">
-                        Mục tiêu: <strong className="text-blue-900">{dresSelectedTaskName}</strong>
-                      </span>
                       {dresActiveTask && (
-                        <span className="text-[10px] bg-blue-100 text-blue-800 font-semibold px-1.5 py-0.2 rounded border border-blue-200 shrink-0">
+                        <span className="text-[10px] bg-blue-100 text-blue-800 font-semibold px-1.5 py-0.5 rounded border border-blue-200 shrink-0">
                           {dresActiveTask.taskGroup || dresActiveTask.taskType || "KIS"}
                         </span>
                       )}
+
+                      <button
+                        type="button"
+                        onClick={() => setDresShowSessionInput(!dresShowSessionInput)}
+                        className="text-[10px] text-blue-500 hover:text-blue-800 hover:underline cursor-pointer shrink-0 font-mono"
+                        title="Đổi Session ID hoặc cấu hình kết nối DRES"
+                      >
+                        ⚙️ Token
+                      </button>
                     </div>
 
                     {/* Countdown Timer Badge */}
@@ -1260,20 +1507,32 @@ export function VideoPlayer({ frameInfo, onCancel }) {
                       {dresTaskRemainingSec !== null ? (
                         dresTaskRemainingSec > 60 ? (
                           <span className="px-2 py-0.5 rounded text-[11px] font-extrabold font-mono bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-2xs">
-                            ⏱️ {Math.floor(dresTaskRemainingSec / 60)}:{String(dresTaskRemainingSec % 60).padStart(2, "0")}
+                            ⏱️ {formatDresTime(dresTaskRemainingSec)}
                           </span>
                         ) : dresTaskRemainingSec > 0 ? (
                           <span className="px-2 py-0.5 rounded text-[11px] font-extrabold font-mono bg-rose-100 text-rose-800 border border-rose-300 shadow-2xs animate-pulse">
-                            ⏱️ {Math.floor(dresTaskRemainingSec / 60)}:{String(dresTaskRemainingSec % 60).padStart(2, "0")}
+                            ⏱️ {formatDresTime(dresTaskRemainingSec)}
                           </span>
                         ) : (
                           <span className="px-2 py-0.5 rounded text-[11px] font-extrabold font-mono bg-gray-200 text-gray-700 border border-gray-300">
                             ⏱️ Hết giờ (00:00)
                           </span>
                         )
+                      ) : dresTaskStatus === "RUNNING" ? (
+                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-100 text-amber-800 border border-amber-300">
+                          ⏱️ Đang chạy
+                        </span>
+                      ) : dresTaskStatus === "AUTH_EXPIRED" || dresTaskStatus === "NO_SESSION" ? (
+                        <span
+                          onClick={() => setDresShowSessionInput(true)}
+                          className="px-2 py-0.5 rounded text-[10px] font-mono bg-rose-100 text-rose-700 border border-rose-200 cursor-pointer hover:bg-rose-200"
+                          title="Bấm để nhập Session ID"
+                        >
+                          ⏱️ Chưa đăng nhập
+                        </span>
                       ) : (
                         <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-100 text-blue-700 border border-blue-200">
-                          ⏱️ --:--
+                          ⏱️ Chờ mở đề
                         </span>
                       )}
                     </div>
@@ -1350,8 +1609,55 @@ export function VideoPlayer({ frameInfo, onCancel }) {
 
                 {/* TRAKE Info if TRAKE */}
                 {dresTaskType === "TRAKE" && (
-                  <div className="font-mono text-[10px] text-emerald-700 truncate bg-emerald-50 p-1.5 rounded border border-emerald-200">
-                    Chuỗi: TR-{cleanVideoId(frameInfo.video_id)}-{activeFrameNum}
+                  <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center justify-between">
+                      <label className="text-gray-700 text-[11px] font-bold">
+                        Danh sách Frame IDs (theo thứ tự sự kiện, cách nhau dấu phẩy):
+                      </label>
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const cur = String(activeFrameNum);
+                            if (!dresTrakeFramesInput.trim()) {
+                              setDresTrakeFramesInput(cur);
+                            } else {
+                              const list = dresTrakeFramesInput.split(/[,;\s]+/).map((f) => f.trim()).filter(Boolean);
+                              if (!list.includes(cur)) {
+                                setDresTrakeFramesInput([...list, cur].join(", "));
+                              }
+                            }
+                          }}
+                          className="text-[10px] bg-emerald-100 hover:bg-emerald-200 text-emerald-800 px-1.5 py-0.5 rounded font-semibold border border-emerald-300 cursor-pointer shadow-2xs"
+                          title={`Thêm frame hiện tại (#${activeFrameNum}) vào danh sách`}
+                        >
+                          + Thêm #{activeFrameNum}
+                        </button>
+                        {selectedFramesOfThisVideo && selectedFramesOfThisVideo.length > 0 && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const saved = selectedFramesOfThisVideo.map((f) => parseInt(f, 10)).join(", ");
+                              setDresTrakeFramesInput(saved);
+                            }}
+                            className="text-[10px] bg-blue-100 hover:bg-blue-200 text-blue-800 px-1.5 py-0.5 rounded font-semibold border border-blue-300 cursor-pointer shadow-2xs"
+                            title="Lấy tất cả frame đã bookmark của video này"
+                          >
+                            📋 Lấy {selectedFramesOfThisVideo.length} frame đã lưu
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Ví dụ: 140, 395, 820, 1450..."
+                      value={dresTrakeFramesInput}
+                      onChange={(e) => setDresTrakeFramesInput(e.target.value)}
+                      className="w-full bg-white border border-gray-300 rounded px-2 py-1.5 text-gray-900 font-mono font-semibold text-xs focus:border-blue-500 focus:outline-none shadow-2xs"
+                    />
+                    <div className="font-mono text-[10px] text-emerald-700 truncate bg-emerald-50 p-1.5 rounded border border-emerald-200">
+                      Chuỗi: {quickPayload.formattedText}
+                    </div>
                   </div>
                 )}
 
@@ -1434,9 +1740,10 @@ export function VideoPlayer({ frameInfo, onCancel }) {
                     )}
                   </div>
                 )}
+                </div>
 
-                {/* Action Buttons */}
-                <div className="flex justify-between items-center pt-2 border-t border-gray-200">
+                {/* Action Buttons (Sticky Footer) */}
+                <div className="flex justify-between items-center p-3.5 pt-2.5 border-t border-gray-200 shrink-0 bg-gray-50/90 rounded-b-xl">
                   <button
                     type="button"
                     onClick={() => setShowDresModal(false)}

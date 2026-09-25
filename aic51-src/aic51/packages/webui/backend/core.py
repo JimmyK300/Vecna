@@ -698,6 +698,17 @@ async def dres_proxy(request: Request, path: str):
     if "content-type" in request.headers:
         headers["Content-Type"] = request.headers["content-type"]
 
+    session_id = (
+        request.headers.get("x-dres-session")
+        or request.query_params.get("session")
+        or request.cookies.get("SESSIONID")
+    )
+    if session_id:
+        headers["Cookie"] = f"SESSIONID={session_id}"
+        headers["Authorization"] = f"Bearer {session_id}"
+    elif "cookie" in request.headers:
+        headers["Cookie"] = request.headers["cookie"]
+
     def _do_request():
         try:
             resp = requests.request(
@@ -707,8 +718,10 @@ async def dres_proxy(request: Request, path: str):
                 headers=headers,
                 timeout=15,
             )
+            print(f"[DRES PROXY] {request.method} {target_url} -> {resp.status_code} {resp.text[:300]}")
             return resp.status_code, resp.content, resp.headers.get("Content-Type", "application/json")
         except Exception as e:
+            print(f"[DRES PROXY ERROR] {target_url} -> {e}")
             err_data = json.dumps({"status": False, "description": f"Proxy Error: {str(e)}"}).encode()
             return 502, err_data, "application/json"
 

@@ -13,6 +13,8 @@ import {
   getDresEvaluations,
   getDresCurrentTask,
   getDresEvaluationState,
+  parseSecondsFromDres,
+  formatDresTime,
   submitDresAnswer,
   buildPayload,
   parseDresError,
@@ -87,7 +89,9 @@ export default function DresSubmitPanel({ onLoadedAnswer, externalFillData = nul
   }, [sessionId]);
 
   useEffect(() => {
-    localStorage.setItem(DRES_EVAL_KEY, selectedEvalId);
+    if (selectedEvalId && selectedEvalId.trim()) {
+      localStorage.setItem(DRES_EVAL_KEY, selectedEvalId);
+    }
   }, [selectedEvalId]);
 
   // Initial connection check on mount
@@ -106,24 +110,34 @@ export default function DresSubmitPanel({ onLoadedAnswer, externalFillData = nul
 
   // Handle Countdown Timer for Current Task
   useEffect(() => {
-    if (countdownIntervalRef.current) {
-      clearInterval(countdownIntervalRef.current);
+    const isRunning = taskRemainingSec !== null && taskRemainingSec > 0;
+    if (!isRunning) {
+      if (countdownIntervalRef.current) {
+        clearInterval(countdownIntervalRef.current);
+        countdownIntervalRef.current = null;
+      }
+      return;
     }
-    if (taskRemainingSec !== null && taskRemainingSec > 0) {
+
+    if (!countdownIntervalRef.current) {
       countdownIntervalRef.current = setInterval(() => {
         setTaskRemainingSec((prev) => {
-          if (prev <= 1) {
+          if (prev === null || prev <= 1) {
             clearInterval(countdownIntervalRef.current);
+            countdownIntervalRef.current = null;
             return 0;
           }
           return prev - 1;
         });
       }, 1000);
     }
+  }, [taskRemainingSec > 0]);
+
+  useEffect(() => {
     return () => {
       if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
     };
-  }, [taskRemainingSec]);
+  }, []);
 
   // Check connection and fetch evaluations
   const handleCheckConnection = async () => {
@@ -149,13 +163,13 @@ export default function DresSubmitPanel({ onLoadedAnswer, externalFillData = nul
       const eRes = await getDresEvaluations(sessionId.trim(), serverUrl);
       if (eRes.ok && Array.isArray(eRes.data)) {
         setEvaluations(eRes.data);
-        // Find active evaluation or keep current
-        const activeEval = eRes.data.find((e) => String(e.status).toUpperCase() === "ACTIVE") || eRes.data[0];
-        if (activeEval && (!selectedEvalId || !eRes.data.some((e) => e.id === selectedEvalId))) {
-          setSelectedEvalId(activeEval.id);
-          fetchCurrentTaskInfo(activeEval.id);
-        } else if (selectedEvalId) {
-          fetchCurrentTaskInfo(selectedEvalId);
+        const currentSaved = (selectedEvalId || localStorage.getItem(DRES_EVAL_KEY) || "").trim();
+        const matchedSaved = currentSaved ? eRes.data.find((e) => e.id === currentSaved) : null;
+        const chosenEval = matchedSaved || eRes.data.find((e) => String(e.status).toUpperCase() === "ACTIVE") || eRes.data[0];
+        if (chosenEval) {
+          setSelectedEvalId(chosenEval.id);
+          localStorage.setItem(DRES_EVAL_KEY, chosenEval.id);
+          fetchCurrentTaskInfo(chosenEval.id);
         }
       }
     } catch (err) {
@@ -187,41 +201,109 @@ export default function DresSubmitPanel({ onLoadedAnswer, externalFillData = nul
     }
   };
 
-  // Fetch Current Task details and auto-switch tab
+  // Handle selection of evaluation ID (persist & dispatch event to VideoPlayer)
+  const handleSelectEvalId = (newId) => {
+    if (!newId) return;
+    setSelectedEvalId(newId);
+    localStorage.setItem(DRES_EVAL_KEY, newId);
+    window.dispatchEvent(new CustomEvent("dres_eval_changed", { detail: { evalId: newId } }));
+    fetchCurrentTaskInfo(newId);
+  };
+
+  // Periodic background sync with server for DresSubmitPanel (every 8s)
+  useEffect(() => {
+    if (!sessionId || !selectedEvalId) return;
+    const interval = setInterval(() => {
+      fetchCurrentTaskInfo(selectedEvalId);
+    }, 8000);
+    return () => clearInterval(interval);
+  }, [sessionId, selectedEvalId]);
+
+  // Sync when DRES_EVAL_KEY changes from VideoPlayer (in-tab custom event or cross-tab storage event)
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      if (e.key === DRES_EVAL_KEY && e.newValue && e.newValue !== selectedEvalId) {
+        setSelectedEvalId(e.newValue);
+        fetchCurrentTaskInfo(e.newValue);
+      }
+    };
+    const handleCustomChange = (e) => {
+      const newId = e.detail?.evalId;
+      if (newId && newId !== selectedEvalId) {
+        setSelectedEvalId(newId);
+        fetchCurrentTaskInfo(newId);
+      }
+    };
+    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener("dres_eval_changed", handleCustomChange);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("dres_eval_changed", handleCustomChange);
+    };
+  }, [selectedEvalId]);
+
+  // Fetch Current Task details and auto-switch tab (NEVER blindly reset to 5 minutes!)
   const fetchCurrentTaskInfo = async (evalId = selectedEvalId) => {
     if (!evalId || !sessionId) return;
     try {
-      const res = await getDresCurrentTask(evalId, sessionId, serverUrl);
-      if (res.ok && res.data) {
-        setCurrentTask(res.data);
-        const durationSec = res.data.duration ? Math.round(res.data.duration / 1000) : 300;
-        setTaskRemainingSec(durationSec);
+      const [taskRes, stateRes] = await Promise.all([
+        getDresCurrentTask(evalId, sessionId, serverUrl).catch(() => ({ ok: false })),
+        getDresEvaluationState(evalId, sessionId, serverUrl).catch(() => ({ ok: false })),
+      ]);
 
-        // Fetch exact remaining time
-        try {
-          const stateRes = await getDresEvaluationState(evalId, sessionId, serverUrl);
-          if (stateRes.ok && stateRes.data && stateRes.data.timeLeft !== undefined && stateRes.data.timeLeft !== null) {
-            const tLeft = Number(stateRes.data.timeLeft);
-            const sec = tLeft > 1000 ? Math.round(tLeft / 1000) : Math.round(tLeft);
-            if (sec >= 0) setTaskRemainingSec(sec);
-          }
-        } catch (stateErr) {}
-
+      if (taskRes.ok && taskRes.data) {
+        setCurrentTask(taskRes.data);
         // Auto-switch tab based on task group / task type
-        const grp = String(res.data.taskGroup || res.data.taskType || res.data.name || "").toUpperCase();
+        const grp = String(taskRes.data.taskGroup || taskRes.data.taskType || taskRes.data.name || "").toUpperCase();
         if (grp.includes("QA")) {
           setCurrentTab("qa");
-        } else if (grp.includes("TRAKE")) {
+        } else if (grp.includes("TRAKE") || grp.includes("TR-")) {
           setCurrentTab("trake");
         } else {
           setCurrentTab("kis");
         }
       } else {
         setCurrentTask(null);
+      }
+
+      if (stateRes.ok && stateRes.data) {
+        const state = stateRes.data;
+        const rawLeft = state.timeLeft ?? state.task?.timeLeft ?? state.currentTask?.timeLeft ?? taskRes.data?.timeLeft;
+        if (rawLeft !== undefined && rawLeft !== null) {
+          const sec = parseSecondsFromDres(rawLeft);
+          if (state.taskStatus === "RUNNING" || (taskRes.ok && state.taskStatus !== "ENDED")) {
+            setTaskRemainingSec((prev) => {
+              if (sec === null) return null;
+              if (prev === null || Math.abs(prev - sec) > 2) {
+                return Math.max(0, sec);
+              }
+              return prev;
+            });
+          } else if (state.taskStatus === "ENDED" || state.taskStatus === "IGNORED") {
+            setTaskRemainingSec(0);
+          } else {
+            setTaskRemainingSec(null);
+          }
+        } else if (state.taskStatus === "ENDED") {
+          setTaskRemainingSec(0);
+        } else {
+          setTaskRemainingSec(null);
+        }
+      } else if (taskRes.ok && taskRes.data?.timeLeft !== undefined && taskRes.data?.timeLeft !== null) {
+        const sec = parseSecondsFromDres(taskRes.data.timeLeft);
+        setTaskRemainingSec((prev) => {
+          if (sec === null) return null;
+          if (prev === null || Math.abs(prev - sec) > 2) {
+            return Math.max(0, sec);
+          }
+          return prev;
+        });
+      } else if (!taskRes.ok) {
         setTaskRemainingSec(null);
       }
     } catch (err) {
       setCurrentTask(null);
+      setTaskRemainingSec(null);
     }
   };
 
@@ -561,7 +643,7 @@ export default function DresSubmitPanel({ onLoadedAnswer, externalFillData = nul
         <div className="flex items-center gap-2">
           {currentTask && (
             <span className="text-[10px] bg-blue-100 border border-blue-300 text-blue-800 font-bold px-1.5 py-0.5 rounded shadow-2xs animate-pulse">
-              Task: {currentTask.name || "Active"} {taskRemainingSec !== null && `(${Math.floor(taskRemainingSec / 60)}:${String(taskRemainingSec % 60).padStart(2, "0")})`}
+              Task: {currentTask.name || "Active"} {taskRemainingSec !== null && `(${formatDresTime(taskRemainingSec)})`}
             </span>
           )}
           <span className="text-gray-500 hover:text-gray-800 font-bold text-sm">
@@ -644,10 +726,7 @@ export default function DresSubmitPanel({ onLoadedAnswer, externalFillData = nul
                 <label className="text-[10px] text-gray-600 font-semibold block mb-0.5">Evaluation ID:</label>
                 <select
                   value={selectedEvalId}
-                  onChange={(e) => {
-                    setSelectedEvalId(e.target.value);
-                    fetchCurrentTaskInfo(e.target.value);
-                  }}
+                  onChange={(e) => handleSelectEvalId(e.target.value)}
                   className="w-full bg-white border border-gray-300 rounded px-1.5 py-1 text-gray-800 text-[11px] font-semibold focus:outline-none focus:border-blue-500 shadow-2xs cursor-pointer"
                 >
                   {evaluations.length > 0 ? (
@@ -847,9 +926,30 @@ export default function DresSubmitPanel({ onLoadedAnswer, externalFillData = nul
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] text-gray-600 font-semibold block mb-0.5">
-                    Danh sách Frame IDs (theo thứ tự sự kiện, cách nhau dấu phẩy):
-                  </label>
+                  <div className="flex justify-between items-center mb-0.5">
+                    <label className="text-[10px] text-gray-600 font-semibold">
+                      Danh sách Frame IDs (theo thứ tự sự kiện, cách nhau dấu phẩy):
+                    </label>
+                    {videoInput && (() => {
+                      const cleanVid = cleanVideoId(videoInput);
+                      const matchedBookmarked = (selected || [])
+                        .filter((id) => id && cleanVideoId(id.split("#")[0]) === cleanVid)
+                        .map((id) => parseInt(id.split("#")[1], 10))
+                        .filter((n) => !isNaN(n))
+                        .sort((a, b) => a - b);
+                      if (matchedBookmarked.length === 0) return null;
+                      return (
+                        <button
+                          type="button"
+                          onClick={() => setTrakeFramesInput(matchedBookmarked.join(", "))}
+                          className="text-[9px] bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold px-1.5 py-0.2 rounded border border-blue-200 cursor-pointer shadow-2xs"
+                          title="Lấy các frame đã lưu của video này"
+                        >
+                          📋 Lấy {matchedBookmarked.length} frame đã lưu
+                        </button>
+                      );
+                    })()}
+                  </div>
                   <input
                     type="text"
                     placeholder="Ví dụ: 140, 395, 820, 1450"
@@ -859,7 +959,7 @@ export default function DresSubmitPanel({ onLoadedAnswer, externalFillData = nul
                   />
                 </div>
                 <div className="bg-white border border-gray-300 p-1.5 rounded font-mono text-[10px] text-emerald-700 truncate shadow-2xs">
-                  Chuỗi: TR-{cleanVideoId(videoInput) || "<VID>"}-{trakeFramesInput || "<FRAMES>"}
+                  Chuỗi: TR-{cleanVideoId(videoInput) || "<VID>"}-{trakeFramesInput ? trakeFramesInput.split(/[,;\s]+/).map((f) => f.trim()).filter(Boolean).join(",") : "<FRAMES>"}
                 </div>
               </div>
             )}
