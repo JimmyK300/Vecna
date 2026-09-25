@@ -2457,11 +2457,11 @@
     "date": "15.jun 2026",
     "time_of_day": "07:59:59",
     "status": "success",
-    "road_classification": "3-Way T-Junction (Two-Way Streets)",
-    "intersection_type": "3-Way Intersection",
-    "intersection_subtype": "T-Junction",
+    "road_classification": "4-Way Intersection (Two-Way Streets)",
+    "intersection_type": "4-Way Intersection",
+    "intersection_subtype": "Crossroads",
     "traffic_flow_type": "Two-way",
-    "vietnamese_category": "Ngã 3 (Đường 2 chiều)",
+    "vietnamese_category": "Ngã 4 (Đường 2 chiều)",
     "street_details": [
       {
         "street_name": "Đường Nguyễn Thị Thập",
@@ -2472,7 +2472,7 @@
         "traffic_direction": "Two-way"
       }
     ],
-    "classification_description": "Major 3-way T-junction connecting commercial corridor Nguyễn Thị Thập into arterial Huỳnh Tấn Phát."
+    "classification_description": "Major 4-way signalized intersection (Ngã tư Huỳnh Tấn Phát - Nguyễn Thị Thập) connecting two heavily-trafficked two-way arterial corridors in District 7 towards Phú Mỹ Hưng."
   },
   {
     "video_id": "N019-V002",
@@ -2497,11 +2497,11 @@
     "date": "15.jun 2026",
     "time_of_day": "18:59:59",
     "status": "success",
-    "road_classification": "3-Way T-Junction (Two-Way Streets)",
-    "intersection_type": "3-Way Intersection",
-    "intersection_subtype": "T-Junction",
+    "road_classification": "4-Way Intersection (Two-Way Streets)",
+    "intersection_type": "4-Way Intersection",
+    "intersection_subtype": "Crossroads",
     "traffic_flow_type": "Two-way",
-    "vietnamese_category": "Ngã 3 (Đường 2 chiều)",
+    "vietnamese_category": "Ngã 4 (Đường 2 chiều)",
     "street_details": [
       {
         "street_name": "Đường Nguyễn Thị Thập",
@@ -2512,7 +2512,7 @@
         "traffic_direction": "Two-way"
       }
     ],
-    "classification_description": "Major 3-way T-junction connecting commercial corridor Nguyễn Thị Thập into arterial Huỳnh Tấn Phát."
+    "classification_description": "Major 4-way signalized intersection (Ngã tư Huỳnh Tấn Phát - Nguyễn Thị Thập) connecting two heavily-trafficked two-way arterial corridors in District 7 towards Phú Mỹ Hưng."
   },
   {
     "video_id": "N019-V003",
@@ -2537,11 +2537,11 @@
     "date": "15.jun 2026",
     "time_of_day": "10:59:59",
     "status": "success",
-    "road_classification": "3-Way T-Junction (Two-Way Streets)",
-    "intersection_type": "3-Way Intersection",
-    "intersection_subtype": "T-Junction",
+    "road_classification": "4-Way Intersection (Two-Way Streets)",
+    "intersection_type": "4-Way Intersection",
+    "intersection_subtype": "Crossroads",
     "traffic_flow_type": "Two-way",
-    "vietnamese_category": "Ngã 3 (Đường 2 chiều)",
+    "vietnamese_category": "Ngã 4 (Đường 2 chiều)",
     "street_details": [
       {
         "street_name": "Đường Nguyễn Thị Thập",
@@ -2552,7 +2552,7 @@
         "traffic_direction": "Two-way"
       }
     ],
-    "classification_description": "Major 3-way T-junction connecting commercial corridor Nguyễn Thị Thập into arterial Huỳnh Tấn Phát."
+    "classification_description": "Major 4-way signalized intersection (Ngã tư Huỳnh Tấn Phát - Nguyễn Thị Thập) connecting two heavily-trafficked two-way arterial corridors in District 7 towards Phú Mỹ Hưng."
   },
   {
     "video_id": "N020-V001",
