@@ -16,6 +16,7 @@ import {
   parseTimeToSeconds,
   resolveTimeFromFrame,
   submitDresAnswer,
+  getDresEvaluations,
   getLiveEvaluationContext,
   buildPayload,
   parseDresError,
@@ -569,6 +570,8 @@ export function VideoPlayer({ frameInfo, onCancel }) {
   // Quick DRES Submit State from Video Player
   const [showDresModal, setShowDresModal] = useState(false);
   showDresModalRef.current = showDresModal;
+  const [dresEvaluations, setDresEvaluations] = useState([]);
+  const [dresSelectedEvalId, setDresSelectedEvalId] = useState(() => localStorage.getItem(DRES_EVAL_KEY) || "");
   const [dresActiveTask, setDresActiveTask] = useState(null);
   const [dresTaskRemainingSec, setDresTaskRemainingSec] = useState(null);
   const [dresIsRefreshing, setDresIsRefreshing] = useState(false);
@@ -612,10 +615,49 @@ export function VideoPlayer({ frameInfo, onCancel }) {
     };
   }, [dresTaskRemainingSec > 0]);
 
-  // Refresh live task info and timer from server
-  const refreshLiveTaskInfo = async (silent = false) => {
+  // Fetch Evaluations List for VideoPlayer
+  const fetchDresEvaluationsList = async (targetEvalId = null) => {
     const sId = localStorage.getItem(DRES_SESSION_KEY);
-    const eId = localStorage.getItem(DRES_EVAL_KEY);
+    const sUrl = localStorage.getItem(DRES_SERVER_KEY) || DEFAULT_DRES_URL;
+    if (!sId) return;
+
+    try {
+      const res = await getDresEvaluations(sId, sUrl);
+      if (res.ok && Array.isArray(res.data) && res.data.length > 0) {
+        setDresEvaluations(res.data);
+
+        const currentSaved = targetEvalId || dresSelectedEvalId || localStorage.getItem(DRES_EVAL_KEY);
+        const exists = res.data.some((e) => e.id === currentSaved);
+
+        if (exists) {
+          if (dresSelectedEvalId !== currentSaved) setDresSelectedEvalId(currentSaved);
+        } else {
+          const activeEval = res.data.find((e) => String(e.status).toUpperCase() === "ACTIVE") || res.data[0];
+          if (activeEval) {
+            setDresSelectedEvalId(activeEval.id);
+            localStorage.setItem(DRES_EVAL_KEY, activeEval.id);
+            window.dispatchEvent(new CustomEvent("dres_eval_changed", { detail: { evalId: activeEval.id } }));
+          }
+        }
+      }
+    } catch (err) {
+      console.warn("Failed to fetch DRES evaluations in VideoPlayer:", err);
+    }
+  };
+
+  // Select Evaluation ID
+  const handleSelectEvaluation = (evalId) => {
+    if (!evalId) return;
+    setDresSelectedEvalId(evalId);
+    localStorage.setItem(DRES_EVAL_KEY, evalId);
+    window.dispatchEvent(new CustomEvent("dres_eval_changed", { detail: { evalId } }));
+    refreshLiveTaskInfo(false, evalId);
+  };
+
+  // Refresh live task info and timer from server
+  const refreshLiveTaskInfo = async (silent = false, customEvalId = null) => {
+    const sId = localStorage.getItem(DRES_SESSION_KEY);
+    const eId = customEvalId || dresSelectedEvalId || localStorage.getItem(DRES_EVAL_KEY);
     const sUrl = localStorage.getItem(DRES_SERVER_KEY) || DEFAULT_DRES_URL;
 
     if (!eId || !sId) return;
@@ -623,7 +665,9 @@ export function VideoPlayer({ frameInfo, onCancel }) {
 
     try {
       const context = await getLiveEvaluationContext(eId, sId, sUrl);
-      if (localStorage.getItem(DRES_EVAL_KEY) !== eId) return;
+      const currentStored = localStorage.getItem(DRES_EVAL_KEY);
+      if (currentStored && currentStored !== eId) return;
+
       if (context.task) {
         setDresActiveTask(context.task);
         const taskName = context.task.name || "tkis-test";
@@ -640,24 +684,24 @@ export function VideoPlayer({ frameInfo, onCancel }) {
       const sec = parseSecondsFromDres(context.state?.timeLeft ?? context.task?.duration);
       setDresTaskRemainingSec((prev) => sec === null ? null : prev === null || Math.abs(prev - sec) > 2 ? sec : prev);
 
-      if (context.taskTemplates.length > 0) {
-          const loaded = context.taskTemplates.map((t) => ({
-            id: t.id || t.name,
-            name: t.name,
-            label: `${t.name} (${t.taskGroup || t.taskType || "Task"})`,
-            type: String(t.taskGroup || t.taskType || "").toUpperCase().includes("QA")
-              ? "QA"
-              : String(t.taskGroup || t.taskType || "").toUpperCase().includes("TRAKE")
-              ? "TRAKE"
-              : "KIS",
-          }));
-          setDresAvailableTasks(() => {
-            const merged = [...loaded];
-            DEFAULT_AIC_TASKS.forEach((def) => {
-              if (!merged.some((m) => m.name === def.name)) merged.push(def);
-            });
-            return merged;
+      if (context.taskTemplates && context.taskTemplates.length > 0) {
+        const loaded = context.taskTemplates.map((t) => ({
+          id: t.id || t.name,
+          name: t.name,
+          label: `${t.name} (${t.taskGroup || t.taskType || "Task"})`,
+          type: String(t.taskGroup || t.taskType || "").toUpperCase().includes("QA")
+            ? "QA"
+            : String(t.taskGroup || t.taskType || "").toUpperCase().includes("TRAKE")
+            ? "TRAKE"
+            : "KIS",
+        }));
+        setDresAvailableTasks(() => {
+          const merged = [...loaded];
+          DEFAULT_AIC_TASKS.forEach((def) => {
+            if (!merged.some((m) => m.name === def.name)) merged.push(def);
           });
+          return merged;
+        });
       }
     } catch (err) {
       console.warn("Failed to refresh live task info:", err);
@@ -666,13 +710,43 @@ export function VideoPlayer({ frameInfo, onCancel }) {
     }
   };
 
+  const handleRefreshAll = async () => {
+    setDresIsRefreshing(true);
+    try {
+      await fetchDresEvaluationsList();
+      await refreshLiveTaskInfo(true);
+    } finally {
+      setDresIsRefreshing(false);
+    }
+  };
+
   useEffect(() => {
-    if (localStorage.getItem(DRES_SESSION_KEY)) refreshLiveTaskInfo(true);
-    const poll = setInterval(() => refreshLiveTaskInfo(true), 8000);
-    const onEvaluationChange = () => refreshLiveTaskInfo(true);
-    const onStorage = (event) => {
-      if ([DRES_EVAL_KEY, DRES_SESSION_KEY, DRES_SERVER_KEY].includes(event.key)) refreshLiveTaskInfo(true);
+    const onEvaluationChange = (event) => {
+      const newId = event.detail?.evalId;
+      if (newId) {
+        setDresSelectedEvalId(newId);
+        refreshLiveTaskInfo(true, newId);
+      }
     };
+    const onStorage = (event) => {
+      if (event.key === DRES_EVAL_KEY && event.newValue) {
+        setDresSelectedEvalId(event.newValue);
+        refreshLiveTaskInfo(true, event.newValue);
+      } else if ([DRES_SESSION_KEY, DRES_SERVER_KEY].includes(event.key)) {
+        fetchDresEvaluationsList();
+        refreshLiveTaskInfo(true);
+      }
+    };
+
+    if (localStorage.getItem(DRES_SESSION_KEY)) {
+      fetchDresEvaluationsList();
+      refreshLiveTaskInfo(true);
+    }
+
+    const poll = setInterval(() => {
+      refreshLiveTaskInfo(true);
+    }, 8000);
+
     window.addEventListener("dres_eval_changed", onEvaluationChange);
     window.addEventListener("storage", onStorage);
     return () => {
@@ -724,8 +798,14 @@ export function VideoPlayer({ frameInfo, onCancel }) {
     setDresFramesInput(String(activeFrameNum));
     setShowDresModal(true);
 
-    // Refresh live task info and sync timer
-    refreshLiveTaskInfo();
+    const savedEval = localStorage.getItem(DRES_EVAL_KEY);
+    if (savedEval && savedEval !== dresSelectedEvalId) {
+      setDresSelectedEvalId(savedEval);
+    }
+
+    // Refresh live task info and fetch evaluations
+    fetchDresEvaluationsList(savedEval);
+    refreshLiveTaskInfo(false, savedEval);
   };
 
   const getQuickDresBuiltPayload = () => {
@@ -741,13 +821,13 @@ export function VideoPlayer({ frameInfo, onCancel }) {
 
   const handleQuickDresSubmit = async (forceRealSubmit = false, forceDryRun = false) => {
     const sId = localStorage.getItem(DRES_SESSION_KEY);
-    const eId = localStorage.getItem(DRES_EVAL_KEY);
+    const eId = dresSelectedEvalId || localStorage.getItem(DRES_EVAL_KEY);
     const sUrl = localStorage.getItem(DRES_SERVER_KEY) || DEFAULT_DRES_URL;
 
     const runAsDryRun = forceDryRun || (dresDryRun && !forceRealSubmit);
 
     if (!runAsDryRun && (!sId || !eId)) {
-      alert("Chưa có Session ID hoặc Evaluation ID! Vui lòng cấu hình ở bảng DRES trên sidebar.");
+      alert("Chưa có Session ID hoặc Evaluation ID! Vui lòng chọn phiên thi hoặc cấu hình ở bảng DRES trên sidebar.");
       return;
     }
 
@@ -1205,8 +1285,46 @@ export function VideoPlayer({ frameInfo, onCancel }) {
 
                 {/* Active Task & Selection Bar with Refresh & Countdown Timer */}
                 <div className="bg-blue-50/80 border border-blue-200 p-2.5 rounded-lg flex flex-col gap-2 text-blue-900 shadow-2xs">
-                  {/* Row 1: Dropdown chọn câu & Nút Làm mới */}
+                  {/* Row 1: Dropdown chọn Phiên thi (Evaluation ID) & Nút Làm mới */}
                   <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                      <span className="font-bold text-[11px] shrink-0 text-blue-800 flex items-center gap-1">
+                        <span className="inline-block w-2.5 h-2.5 rounded-full bg-blue-600 shadow-[0_0_6px_rgba(37,99,235,0.8)]"></span>
+                        Phiên thi:
+                      </span>
+                      <select
+                        value={dresSelectedEvalId}
+                        onChange={(e) => handleSelectEvaluation(e.target.value)}
+                        className="flex-1 bg-white border border-blue-300 rounded px-2 py-1 text-[11px] font-bold text-blue-950 focus:outline-none focus:border-blue-500 shadow-2xs cursor-pointer truncate"
+                        title="Chọn phiên thi (Evaluation ID) trên DRES"
+                      >
+                        {dresEvaluations.length > 0 ? (
+                          dresEvaluations.map((ev) => (
+                            <option key={ev.id} value={ev.id}>
+                              {ev.name || ev.id} [{ev.status}]
+                            </option>
+                          ))
+                        ) : (
+                          <option value={dresSelectedEvalId}>{dresSelectedEvalId || "(Chưa có phiên thi)"}</option>
+                        )}
+                      </select>
+                    </div>
+
+                    {/* Nút Làm mới */}
+                    <button
+                      type="button"
+                      onClick={handleRefreshAll}
+                      disabled={dresIsRefreshing}
+                      className="px-2.5 py-1 bg-white hover:bg-blue-100 active:bg-blue-200 text-blue-700 border border-blue-300 rounded font-bold text-[11px] flex items-center gap-1 transition-colors cursor-pointer shadow-2xs shrink-0 disabled:opacity-60"
+                      title="Bấm để đồng bộ phiên thi, câu thi và thời gian từ máy chủ DRES"
+                    >
+                      <span className={dresIsRefreshing ? "animate-spin" : ""}>🔄</span>
+                      <span>{dresIsRefreshing ? "Đang tải..." : "Làm mới"}</span>
+                    </button>
+                  </div>
+
+                  {/* Row 2: Dropdown chọn câu & Đồng hồ đếm ngược */}
+                  <div className="flex items-center justify-between gap-2 border-t border-blue-200/60 pt-2">
                     <div className="flex items-center gap-1.5 flex-1 min-w-0">
                       <span className="font-bold text-[11px] shrink-0 text-blue-800 flex items-center gap-1">
                         <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.8)]"></span>
@@ -1267,35 +1385,8 @@ export function VideoPlayer({ frameInfo, onCancel }) {
                       )}
                     </div>
 
-                    {/* Nút Làm mới */}
-                    <button
-                      type="button"
-                      onClick={() => refreshLiveTaskInfo()}
-                      disabled={dresIsRefreshing}
-                      className="px-2.5 py-1 bg-white hover:bg-blue-100 active:bg-blue-200 text-blue-700 border border-blue-300 rounded font-bold text-[11px] flex items-center gap-1 transition-colors cursor-pointer shadow-2xs shrink-0 disabled:opacity-60"
-                      title="Bấm để đồng bộ câu thi và thời gian từ máy chủ DRES"
-                    >
-                      <span className={dresIsRefreshing ? "animate-spin" : ""}>🔄</span>
-                      <span>{dresIsRefreshing ? "Đang tải..." : "Làm mới"}</span>
-                    </button>
-                  </div>
-
-                  {/* Row 2: Status & Time Display */}
-                  <div className="flex items-center justify-between text-[11px] border-t border-blue-200/60 pt-1.5">
-                    <div className="flex items-center gap-1.5 truncate">
-                      <span className="text-gray-600 font-mono text-[10px]">
-                        Mục tiêu: <strong className="text-blue-900">{dresSelectedTaskName}</strong>
-                      </span>
-                      {dresActiveTask && (
-                        <span className="text-[10px] bg-blue-100 text-blue-800 font-semibold px-1.5 py-0.2 rounded border border-blue-200 shrink-0">
-                          {dresActiveTask.taskGroup || dresActiveTask.taskType || "KIS"}
-                        </span>
-                      )}
-                    </div>
-
                     {/* Countdown Timer Badge */}
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      <span className="text-gray-500 text-[10px]">Thời gian:</span>
+                    <div className="flex items-center gap-1 shrink-0">
                       {dresTaskRemainingSec !== null ? (
                         dresTaskRemainingSec > 60 ? (
                           <span className="px-2 py-0.5 rounded text-[11px] font-extrabold font-mono bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-2xs">
@@ -1313,6 +1404,20 @@ export function VideoPlayer({ frameInfo, onCancel }) {
                       ) : (
                         <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-100 text-blue-700 border border-blue-200">
                           ⏱️ --:--
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Row 3: Status & Target Display */}
+                  <div className="flex items-center justify-between text-[11px] border-t border-blue-200/60 pt-1.5">
+                    <div className="flex items-center gap-1.5 truncate">
+                      <span className="text-gray-600 font-mono text-[10px]">
+                        Mục tiêu: <strong className="text-blue-900">{dresSelectedTaskName}</strong>
+                      </span>
+                      {dresActiveTask && (
+                        <span className="text-[10px] bg-blue-100 text-blue-800 font-semibold px-1.5 py-0.2 rounded border border-blue-200 shrink-0">
+                          {dresActiveTask.taskGroup || dresActiveTask.taskType || "KIS"}
                         </span>
                       )}
                     </div>

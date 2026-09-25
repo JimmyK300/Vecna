@@ -88,13 +88,18 @@ export default function DresSubmitPanel({ onLoadedAnswer, externalFillData = nul
   }, [sessionId]);
 
   useEffect(() => {
-    localStorage.setItem(DRES_EVAL_KEY, selectedEvalId);
-    window.dispatchEvent(new CustomEvent("dres_eval_changed", { detail: { evalId: selectedEvalId } }));
+    if (selectedEvalId) {
+      localStorage.setItem(DRES_EVAL_KEY, selectedEvalId);
+      window.dispatchEvent(new CustomEvent("dres_eval_changed", { detail: { evalId: selectedEvalId } }));
+    }
   }, [selectedEvalId]);
 
   useEffect(() => {
     const syncEvaluation = (evalId) => {
-      if (evalId && evalId !== selectedEvalId) setSelectedEvalId(evalId);
+      if (evalId && evalId !== selectedEvalId) {
+        setSelectedEvalId(evalId);
+        fetchCurrentTaskInfo(evalId);
+      }
     };
     const onEvaluationChange = (event) => syncEvaluation(event.detail?.evalId);
     const onStorage = (event) => {
@@ -171,13 +176,17 @@ export default function DresSubmitPanel({ onLoadedAnswer, externalFillData = nul
       const eRes = await getDresEvaluations(sessionId.trim(), serverUrl);
       if (eRes.ok && Array.isArray(eRes.data)) {
         setEvaluations(eRes.data);
-        // Find active evaluation or keep current
-        const activeEval = eRes.data.find((e) => String(e.status).toUpperCase() === "ACTIVE") || eRes.data[0];
-        if (activeEval && (!selectedEvalId || !eRes.data.some((e) => e.id === selectedEvalId))) {
-          setSelectedEvalId(activeEval.id);
-          fetchCurrentTaskInfo(activeEval.id);
-        } else if (selectedEvalId) {
-          fetchCurrentTaskInfo(selectedEvalId);
+        const currentSaved = localStorage.getItem(DRES_EVAL_KEY) || selectedEvalId;
+        const exists = eRes.data.some((e) => e.id === currentSaved);
+        if (exists) {
+          if (selectedEvalId !== currentSaved) setSelectedEvalId(currentSaved);
+          fetchCurrentTaskInfo(currentSaved);
+        } else {
+          const activeEval = eRes.data.find((e) => String(e.status).toUpperCase() === "ACTIVE") || eRes.data[0];
+          if (activeEval) {
+            setSelectedEvalId(activeEval.id);
+            fetchCurrentTaskInfo(activeEval.id);
+          }
         }
       }
     } catch (err) {
@@ -214,7 +223,8 @@ export default function DresSubmitPanel({ onLoadedAnswer, externalFillData = nul
     if (!evalId || !sessionId) return;
     try {
       const context = await getLiveEvaluationContext(evalId, sessionId, serverUrl);
-      if (localStorage.getItem(DRES_EVAL_KEY) !== String(evalId)) return;
+      const currentStored = localStorage.getItem(DRES_EVAL_KEY);
+      if (currentStored && currentStored !== String(evalId)) return;
       if (context.task) {
         setCurrentTask(context.task);
         const sec = parseSecondsFromDres(context.state?.timeLeft ?? context.task.duration);
@@ -667,8 +677,11 @@ export default function DresSubmitPanel({ onLoadedAnswer, externalFillData = nul
                 <select
                   value={selectedEvalId}
                   onChange={(e) => {
-                    setSelectedEvalId(e.target.value);
-                    fetchCurrentTaskInfo(e.target.value);
+                    const newId = e.target.value;
+                    setSelectedEvalId(newId);
+                    localStorage.setItem(DRES_EVAL_KEY, newId);
+                    window.dispatchEvent(new CustomEvent("dres_eval_changed", { detail: { evalId: newId } }));
+                    fetchCurrentTaskInfo(newId);
                   }}
                   className="w-full bg-white border border-gray-300 rounded px-1.5 py-1 text-gray-800 text-[11px] font-semibold focus:outline-none focus:border-blue-500 shadow-2xs cursor-pointer"
                 >
