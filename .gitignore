@@ -85,3 +85,6 @@ test*/
 .web/
 .secrets
 drive-download*/
+
+# Local paper drafts and figures
+/paper/
