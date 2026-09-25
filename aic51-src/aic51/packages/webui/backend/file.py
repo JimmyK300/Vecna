@@ -10,7 +10,7 @@ from fastapi.responses import FileResponse, JSONResponse
 import aic51.packages.constant as constant
 from aic51.packages.logger import logger
 
-from .utils import create_app, get_fps, _get_candidate_roots
+from .utils import create_app, get_fps, _get_candidate_roots, open_video_in_mpc
 
 app = create_app()
 
@@ -405,4 +405,32 @@ async def get_video_map_keyframes_around(video_id: str, frame_id: str):
         "curr": _enrich_item(curr_item),
         "next": _enrich_item(next_item),
     }))
+
+
+@app.api_route("/api/video/open-mpc", methods=["GET", "POST"])
+async def open_mpc_endpoint(request: Request):
+    video_id = None
+    frame_id = 0
+    if request.method == "POST":
+        try:
+            data = await request.json()
+            video_id = data.get("video_id")
+            frame_id = data.get("frame_id", 0)
+        except Exception:
+            pass
+    if not video_id:
+        video_id = request.query_params.get("video_id")
+        frame_id = request.query_params.get("frame_id", 0)
+
+    if not video_id:
+        return JSONResponse(
+            status_code=400,
+            content=jsonable_encoder({"status": "error", "message": "Missing video_id"}),
+        )
+
+    res = open_video_in_mpc(video_id, frame_id)
+    if res.get("status") == "error":
+        return JSONResponse(status_code=404, content=jsonable_encoder(res))
+    return JSONResponse(status_code=200, content=jsonable_encoder(res))
+
 

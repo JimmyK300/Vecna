@@ -5,6 +5,9 @@ from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
 import requests
+import subprocess
+import sys
+import shutil
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -37,8 +40,10 @@ def _get_candidate_roots(video_id: str = ""):
         return [
             Path.cwd() / "testcol2",
             Path.cwd() / "workspace2",
+            Path.cwd() / "workspace_2",
             Path("testcol2"),
             Path("workspace2"),
+            Path("workspace_2"),
             Path.cwd() / "testcol1",
             Path.cwd() / "workspace",
             Path("testcol1"),
@@ -53,8 +58,10 @@ def _get_candidate_roots(video_id: str = ""):
             Path("workspace"),
             Path.cwd() / "testcol2",
             Path.cwd() / "workspace2",
+            Path.cwd() / "workspace_2",
             Path("testcol2"),
             Path("workspace2"),
+            Path("workspace_2"),
             Path.cwd(),
         ]
     return [
@@ -63,10 +70,12 @@ def _get_candidate_roots(video_id: str = ""):
         Path.cwd() / "testcol2",
         Path.cwd() / "workspace",
         Path.cwd() / "workspace2",
+        Path.cwd() / "workspace_2",
         Path("testcol1"),
         Path("testcol2"),
         Path("workspace"),
         Path("workspace2"),
+        Path("workspace_2"),
     ]
 
 
@@ -181,3 +190,107 @@ def process_frame_info(request, frame):
         video_uri = urlparse(frame["video_uri"])
         frame["video_uri"] = urljoin(domain, video_uri.path)
     return frame
+
+
+MPC_CANDIDATE_PATHS = [
+    r"E:\Apps\MPC-HC\mpc-hc64.exe",
+    r"C:\Program Files\MPC-HC\mpc-hc64.exe",
+    r"C:\Program Files (x86)\MPC-HC\mpc-hc.exe",
+    r"C:\Program Files\K-Lite Codec Pack\MPC-HC64\mpc-hc64.exe",
+    r"C:\Program Files (x86)\K-Lite Codec Pack\MPC-HC64\mpc-hc64.exe",
+]
+
+
+def find_mpc_executable() -> Path | None:
+    for p_str in MPC_CANDIDATE_PATHS:
+        p = Path(p_str)
+        if p.exists() and p.is_file():
+            return p
+    which_mpc = shutil.which("mpc-hc64.exe") or shutil.which("mpc-hc.exe")
+    if which_mpc:
+        return Path(which_mpc)
+    return None
+
+
+def find_local_video_file(video_id: str) -> Path | None:
+    for root in _get_candidate_roots(video_id):
+        for sub in [
+            constant.VIDEO_DIR,
+            "data/videos",
+            "videos",
+            "workspace/data/videos",
+            "data/compressed_videos",
+            "workspace/data/compressed_videos",
+        ]:
+            p = root / sub / f"{video_id}{constant.VIDEO_EXTENSION}"
+            if p.exists() and p.is_file():
+                return p.resolve()
+        direct = root / f"{video_id}{constant.VIDEO_EXTENSION}"
+        if direct.exists() and direct.is_file():
+            return direct.resolve()
+    return None
+
+
+def open_video_in_mpc(video_id: str, frame_id: str | int) -> dict:
+    mpc_path = find_mpc_executable()
+    if not mpc_path:
+        return {"status": "error", "message": "Không tìm thấy phần mềm MPC-HC trên máy."}
+
+    video_path = find_local_video_file(video_id)
+    if not video_path:
+        return {"status": "error", "message": f"Không tìm thấy file video {video_id} trên ổ đĩa."}
+
+    try:
+        frame_num = int(str(frame_id).strip())
+    except (ValueError, TypeError):
+        frame_num = 0
+
+    # Ensure accurate FPS: all S01 videos are 30.0 FPS
+    v_upper = str(video_id).upper()
+    if v_upper.startswith("S01") or v_upper.startswith("S"):
+        fps = 30.0
+    else:
+        fps = get_fps(video_id) or float(constant.DEFAULT_FPS)
+
+    total_seconds = max(0.0, frame_num / fps)
+    time_ms = int(total_seconds * 1000)
+
+    hours = int(total_seconds // 3600)
+    minutes = int((total_seconds % 3600) // 60)
+    seconds = int(total_seconds % 60)
+    startpos_str = f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+
+    creation_flags = 0
+    if sys.platform.startswith("win"):
+        creation_flags = subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP
+        # Close any previous instance to avoid MPC-HC ignoring /startpos in single-instance mode
+        try:
+            subprocess.run(
+                ["taskkill", "/F", "/IM", "mpc-hc64.exe"],
+                capture_output=True,
+                creationflags=subprocess.CREATE_NO_WINDOW,
+            )
+        except Exception:
+            pass
+
+    try:
+        subprocess.Popen(
+            [str(mpc_path), "/fixedsize", "1600,900", "/startpos", startpos_str, str(video_path)],
+            creationflags=creation_flags,
+            close_fds=True,
+        )
+        return {
+            "status": "ok",
+            "video_id": video_id,
+            "frame_id": frame_num,
+            "fps": fps,
+            "time_ms": time_ms,
+            "startpos": startpos_str,
+            "video_path": str(video_path),
+            "mpc_path": str(mpc_path),
+        }
+    except Exception as e:
+        logger.error(f"Failed to spawn MPC-HC: {e}")
+        return {"status": "error", "message": str(e)}
+
+

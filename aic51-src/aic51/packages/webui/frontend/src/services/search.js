@@ -300,3 +300,20 @@ export async function getMapKeyframesAround(videoId, frameId) {
   }
 }
 
+export async function openInMpcHc(videoId, frameId) {
+  try {
+    const res = await axios.post(`http://127.0.0.1:${PORT}/api/video/open-mpc`, {
+      video_id: videoId,
+      frame_id: String(frameId),
+    });
+    return res.data;
+  } catch (err) {
+    console.error(`Failed to open in MPC-HC for ${videoId} ${frameId}:`, err);
+    return {
+      status: "error",
+      message: err.response?.data?.message || err.message || "Lỗi khi mở MPC-HC",
+    };
+  }
+}
+
+

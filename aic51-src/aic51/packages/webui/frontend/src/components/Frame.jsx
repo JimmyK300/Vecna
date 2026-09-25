@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelected } from "./SelectedProvider.jsx";
-import { getVideoKeyframes, getFrameOcr, getMapKeyframesAround } from "../services/search.js";
+import { getVideoKeyframes, getFrameOcr, getMapKeyframesAround, openInMpcHc } from "../services/search.js";
 
 export function FrameItem({
   id,
@@ -83,6 +83,22 @@ export function FrameItem({
       } finally {
         setLoadingMap(false);
       }
+    }
+  };
+
+  const [isOpeningMpc, setIsOpeningMpc] = useState(false);
+  const handleOpenMpc = async (e) => {
+    if (e && e.stopPropagation) e.stopPropagation();
+    setIsOpeningMpc(true);
+    try {
+      const res = await openInMpcHc(video_id, frame_id);
+      if (res && res.status === "error") {
+        alert(res.message || "Không thể mở video bằng MPC-HC");
+      }
+    } catch (err) {
+      alert("Lỗi kết nối khi gọi mở MPC-HC: " + (err.message || err));
+    } finally {
+      setIsOpeningMpc(false);
     }
   };
 
@@ -270,11 +286,30 @@ export function FrameItem({
             <button
               onClick={onPlay}
               className="p-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-all shadow-sm hover:scale-105 active:scale-95 flex items-center justify-center shrink-0"
-              title="Play video at frame"
+              title="Play video on web"
             >
               <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7z" />
               </svg>
+            </button>
+
+            {/* 1b. Open MPC-HC Local Player Button */}
+            <button
+              onClick={handleOpenMpc}
+              disabled={isOpeningMpc}
+              className="p-1 bg-purple-600 hover:bg-purple-700 text-white rounded-md transition-all shadow-sm hover:scale-105 active:scale-95 flex items-center justify-center shrink-0 disabled:opacity-50"
+              title="Mở ngay bằng MPC-HC tại frame này"
+            >
+              {isOpeningMpc ? (
+                <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                </svg>
+              ) : (
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              )}
             </button>
 
             {/* 2. Nearby Keyframes Icon Button (2nd Priority) */}

@@ -106,13 +106,9 @@ features: &analyse_features
 
   ocr:
     model: "ocr"
-    source: "paddle_vietocr"
-    pretrained_model: "vgg_transformer"
+    source: "tesseract"
     analyse:
-      batch_size: 16
-      pad_y: 6
-      pad_x: 4
-      det_lang: "vi"
+      batch_size: 8
     index:
       default_value: ""
       datatype: "VARCHAR"

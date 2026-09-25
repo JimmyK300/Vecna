@@ -44,6 +44,10 @@ map-keyframes/
 *.gz
 *.tgz
 *.bz2
+*.mp4
+*.mkv
+*.avi
+*.webm
 
 # Model weights & Large Binaries
 *.bin

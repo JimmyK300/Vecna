@@ -3,7 +3,7 @@ import { createContext, useEffect, useContext, useState, useRef } from "react";
 import classNames from "classnames";
 import { AuthContext } from "./AuthProvider.jsx";
 import { useSelected } from "./SelectedProvider.jsx";
-import { getFrameInfo, getVideoTranscript, getVideoKeyframes, getVideoMapKeyframes } from "../services/search.js";
+import { getFrameInfo, getVideoTranscript, getVideoKeyframes, getVideoMapKeyframes, openInMpcHc } from "../services/search.js";
 
 export const VideoContext = createContext({ playVideo: null });
 
@@ -531,6 +531,21 @@ export function VideoPlayer({ frameInfo, onCancel }) {
               title="Fullscreen Video + Diagram (Hotkey: F)"
             >
               ⛶ Fullscreen (F)
+            </button>
+
+            {/* Open in MPC-HC Button */}
+            <button
+              type="button"
+              onClick={async () => {
+                const res = await openInMpcHc(frameInfo.video_id, currentFrameStr);
+                if (res && res.status === "error") {
+                  alert(res.message || "Không thể mở video bằng MPC-HC");
+                }
+              }}
+              className="px-2 py-1 text-xs font-bold rounded-lg border border-purple-300 bg-purple-100 hover:bg-purple-200 text-purple-800 transition-colors shadow-sm flex items-center gap-1"
+              title="Mở ngay bằng MPC-HC tại frame này trên máy"
+            >
+              🖥️ Mở MPC-HC
             </button>
 
             {/* Saved in this video pills with remove (x) buttons */}

@@ -16,7 +16,7 @@ from aic51.packages.config import GlobalConfig
 from aic51.packages.logger import logger
 
 from .request import CRequestPool, GetRequest
-from .utils import create_app
+from .utils import create_app, open_video_in_mpc
 
 SEARCH_SERVERS = GlobalConfig.get("backends", "core", "search_proxy", "servers") or []
 SEARCH_REQUEST_TIMEOUT = GlobalConfig.get("backends", "core", "search_proxy", "request_timeout")
@@ -595,6 +595,33 @@ async def get_video_map_keyframes_around(request: Request, video_id: str, frame_
             status_code=500,
             content=jsonable_encoder({constant.MESSAGE_KEY: "get_video_map_keyframes_around errors"}),
         )
+
+
+@app.api_route("/api/video/open-mpc", methods=["GET", "POST"])
+async def open_mpc_endpoint(request: Request):
+    video_id = None
+    frame_id = 0
+    if request.method == "POST":
+        try:
+            data = await request.json()
+            video_id = data.get("video_id")
+            frame_id = data.get("frame_id", 0)
+        except Exception:
+            pass
+    if not video_id:
+        video_id = request.query_params.get("video_id")
+        frame_id = request.query_params.get("frame_id", 0)
+
+    if not video_id:
+        return JSONResponse(
+            status_code=400,
+            content=jsonable_encoder({"status": "error", "message": "Missing video_id"}),
+        )
+
+    res = open_video_in_mpc(video_id, frame_id)
+    if res.get("status") == "error":
+        return JSONResponse(status_code=404, content=jsonable_encoder(res))
+    return JSONResponse(status_code=200, content=jsonable_encoder(res))
 
 
 
