@@ -1,6 +1,9 @@
 from pathlib import Path
 import re
 import csv
+import json
+import asyncio
+from functools import lru_cache
 import numpy as np
 
 from fastapi import Header, Request, Response
@@ -13,6 +16,9 @@ from aic51.packages.logger import logger
 from .utils import create_app, get_fps, _get_candidate_roots
 
 app = create_app()
+
+IMAGE_CACHE_HEADERS = {"Cache-Control": "public, max-age=31536000, immutable"}
+VIDEO_CACHE_HEADERS = {"Cache-Control": "public, max-age=86400"}
 
 
 @app.get(constant.HEALTH_ENDPOINT + "/{video_id}/{frame_id}")
@@ -107,7 +113,7 @@ async def get_file(request: Request, video_id: str, frame_id: str):
     if not file_path:
         file_path = _find_image_file(constant.KEYFRAME_DIR, video_id, frame_id)
     if file_path:
-        return FileResponse(file_path)
+        return FileResponse(file_path, headers=IMAGE_CACHE_HEADERS)
     else:
         return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
 
@@ -118,7 +124,7 @@ async def get_thumbnail(request: Request, video_id: str, frame_id: str):
     if not file_path:
         file_path = _find_image_file(constant.KEYFRAME_DIR, video_id, frame_id)
     if file_path:
-        return FileResponse(file_path)
+        return FileResponse(file_path, headers=IMAGE_CACHE_HEADERS)
     else:
         return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
 
@@ -129,38 +135,61 @@ async def get_keyframe(request: Request, video_id: str, frame_id: str):
     if not file_path:
         file_path = _find_image_file(constant.THUMBNAIL_DIR, video_id, frame_id)
     if file_path:
-        return FileResponse(file_path)
+        return FileResponse(file_path, headers=IMAGE_CACHE_HEADERS)
     else:
         return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
 
 
-CHUNK_SIZE = 1024 * 1024
+CHUNK_SIZE = 4 * 1024 * 1024  # 4 MB chunk for optimal seek balance and low abort rate
 
 
 @app.get(constant.FILE_ENDPOINT + "/{video_id}")
 async def get_video(request: Request, video_id: str, range: str = Header(None)):
     file_path = None
     for root in _get_candidate_roots(video_id):
-        p = root / f"{constant.VIDEO_DIR}/{video_id}{constant.VIDEO_EXTENSION}"
-        if p.exists() and not p.is_dir():
-            file_path = p
+        for sub in [
+            constant.VIDEO_DIR,
+            "data/videos",
+            "videos",
+            "workspace/data/videos",
+            "data/compressed_videos",
+            "workspace/data/compressed_videos",
+        ]:
+            p = root / sub / f"{video_id}{constant.VIDEO_EXTENSION}"
+            if p.exists() and not p.is_dir():
+                file_path = p
+                break
+        if file_path:
             break
 
     if not file_path:
         return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
 
-    start, end = range.replace("bytes=", "").split("-")
-    start = int(start)
-    end = int(end) if end else start + CHUNK_SIZE
+    filesize = file_path.stat().st_size
+    if not range:
+        return FileResponse(file_path, headers=VIDEO_CACHE_HEADERS, media_type=constant.VIDEO_MEDIA_TYPE)
 
+    try:
+        clean_range = range.replace("bytes=", "").strip()
+        parts = clean_range.split("-")
+        start = int(parts[0]) if parts[0] else 0
+        end = int(parts[1]) if len(parts) > 1 and parts[1] else min(start + CHUNK_SIZE - 1, filesize - 1)
+        end = min(end, filesize - 1)
+    except Exception:
+        start = 0
+        end = min(CHUNK_SIZE - 1, filesize - 1)
+
+    chunk_length = max(0, end - start + 1)
     with open(file_path, "rb") as video:
         video.seek(start)
-        data = video.read(end - start)
-        filesize = file_path.stat().st_size
-        headers = {
-            "Content-Range": f"bytes {str(start)}-{str(min(end, filesize-1))}/{str(filesize)}",
-            "Accept-Ranges": "bytes",
-        }
+        data = video.read(chunk_length)
+
+    headers = {
+        "Content-Range": f"bytes {start}-{end}/{filesize}",
+        "Accept-Ranges": "bytes",
+        "Content-Length": str(len(data)),
+        "Cache-Control": "public, max-age=86400",
+    }
     return Response(data, status_code=206, headers=headers, media_type=constant.VIDEO_MEDIA_TYPE)
 
 
@@ -216,8 +245,87 @@ def split_into_sentences(segment):
     return sub_segments
 
 
+_TRANSCRIPT_CACHE: dict[str, list] = {}
+
+
+def _load_transcript_sync(features_path: Path, fps: float, video_id: str) -> list:
+    cache_file = features_path / "_transcript_cache.json"
+    if cache_file.exists():
+        try:
+            with open(cache_file, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception as e:
+            logger.warning(f"Error reading transcript disk cache for {video_id}: {e}")
+
+    transcript = []
+    # Find all frame directories
+    frame_dirs = sorted(features_path.glob("*"))
+    for d in frame_dirs:
+        if d.is_dir() and d.name.isdigit():
+            asr_file = d / "asr.npy"
+            if asr_file.exists():
+                try:
+                    text = str(np.load(asr_file, allow_pickle=True))
+                    frame_id = int(d.name)
+                    timestamp = frame_id / fps if fps else 0.0
+                    transcript.append({
+                        "frame_id": frame_id,
+                        "timestamp": timestamp,
+                        "text": text,
+                    })
+                except Exception as e:
+                    logger.error(f"Error reading ASR for {video_id} {d.name}: {e}")
+
+    # Group consecutive identical texts to produce clean transcript segments
+    grouped_transcript = []
+    current_segment = None
+    for entry in transcript:
+        text = entry["text"].strip()
+        if not text:
+            continue
+        if current_segment is None:
+            current_segment = {
+                "start_frame": entry["frame_id"],
+                "start_time": entry["timestamp"],
+                "end_frame": entry["frame_id"],
+                "end_time": entry["timestamp"],
+                "text": text,
+            }
+        elif current_segment["text"] == text:
+            current_segment["end_frame"] = entry["frame_id"]
+            current_segment["end_time"] = entry["timestamp"]
+        else:
+            grouped_transcript.append(current_segment)
+            current_segment = {
+                "start_frame": entry["frame_id"],
+                "start_time": entry["timestamp"],
+                "end_frame": entry["frame_id"],
+                "end_time": entry["timestamp"],
+                "text": text,
+            }
+    if current_segment is not None:
+        grouped_transcript.append(current_segment)
+
+    # Split large aggregated segments into sentence-level segments
+    final_transcript = []
+    for segment in grouped_transcript:
+        final_transcript.extend(split_into_sentences(segment))
+
+    # Save to disk cache for sub-millisecond future loads
+    try:
+        with open(cache_file, "w", encoding="utf-8") as f:
+            json.dump(final_transcript, f, ensure_ascii=False)
+    except Exception as e:
+        logger.warning(f"Error writing transcript disk cache for {video_id}: {e}")
+
+    return final_transcript
+
+
 @app.get("/api/video/transcript/{video_id}")
 async def get_video_transcript(video_id: str):
+    if video_id in _TRANSCRIPT_CACHE:
+        return _TRANSCRIPT_CACHE[video_id]
+
     fps = get_fps(video_id)
     variants = [video_id]
     if "_" in video_id:
@@ -241,67 +349,15 @@ async def get_video_transcript(video_id: str):
 
     if not features_path or not features_path.exists():
         return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
-    
-    transcript = []
-    # Find all frame directories
-    frame_dirs = sorted(features_path.glob("*"))
-    for d in frame_dirs:
-        if d.is_dir() and d.name.isdigit():
-            asr_file = d / "asr.npy"
-            if asr_file.exists():
-                try:
-                    # load whisper text
-                    text = str(np.load(asr_file, allow_pickle=True))
-                    frame_id = int(d.name)
-                    # compute timestamp
-                    timestamp = frame_id / fps if fps else 0.0
-                    transcript.append({
-                        "frame_id": frame_id,
-                        "timestamp": timestamp,
-                        "text": text
-                    })
-                except Exception as e:
-                    logger.error(f"Error reading ASR for {video_id} {d.name}: {e}")
-    
-    # Group consecutive identical texts to produce clean transcript segments
-    grouped_transcript = []
-    current_segment = None
-    for entry in transcript:
-        text = entry["text"].strip()
-        if not text:
-            continue
-        if current_segment is None:
-            current_segment = {
-                "start_frame": entry["frame_id"],
-                "start_time": entry["timestamp"],
-                "end_frame": entry["frame_id"],
-                "end_time": entry["timestamp"],
-                "text": text
-            }
-        elif current_segment["text"] == text:
-            current_segment["end_frame"] = entry["frame_id"]
-            current_segment["end_time"] = entry["timestamp"]
-        else:
-            grouped_transcript.append(current_segment)
-            current_segment = {
-                "start_frame": entry["frame_id"],
-                "start_time": entry["timestamp"],
-                "end_frame": entry["frame_id"],
-                "end_time": entry["timestamp"],
-                "text": text
-            }
-    if current_segment is not None:
-        grouped_transcript.append(current_segment)
-        
-    # Split large aggregated segments into sentence-level segments
-    final_transcript = []
-    for segment in grouped_transcript:
-        final_transcript.extend(split_into_sentences(segment))
-        
+
+    # Offload heavy synchronous disk reads to a thread pool so we NEVER block the FastAPI event loop!
+    final_transcript = await asyncio.to_thread(_load_transcript_sync, features_path, fps, video_id)
+    _TRANSCRIPT_CACHE[video_id] = final_transcript
     return final_transcript
 
 
-def _get_existing_thumbnail_indices(video_id: str) -> list[int]:
+@lru_cache(maxsize=128)
+def _get_existing_thumbnail_indices(video_id: str) -> tuple[int, ...]:
     variants = [video_id]
     if "_" in video_id:
         variants.append(video_id.replace("_", "-"))
@@ -321,11 +377,12 @@ def _get_existing_thumbnail_indices(video_id: str) -> list[int]:
                             if stem.isdigit():
                                 indices.add(int(stem))
                     if indices:
-                        return sorted(list(indices))
-    return sorted(list(indices))
+                        return tuple(sorted(list(indices)))
+    return tuple(sorted(list(indices)))
 
 
-def _get_existing_frame_indices(video_id: str) -> list[int]:
+@lru_cache(maxsize=128)
+def _get_existing_frame_indices(video_id: str) -> tuple[int, ...]:
     variants = [video_id]
     if "_" in video_id:
         variants.append(video_id.replace("_", "-"))
@@ -347,8 +404,8 @@ def _get_existing_frame_indices(video_id: str) -> list[int]:
                         elif p.is_dir() and p.name.isdigit():
                             indices.add(int(p.name))
                     if indices:
-                        return sorted(list(indices))
-    return sorted(list(indices))
+                        return tuple(sorted(list(indices)))
+    return tuple(sorted(list(indices)))
 
 
 @app.get("/api/video/thumbnails/{video_id}")

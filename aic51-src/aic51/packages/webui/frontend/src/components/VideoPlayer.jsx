@@ -273,8 +273,18 @@ export function VideoPlayer({ frameInfo, onCancel }) {
     const videoElement = videoElementRef.current;
     if (!videoElement) return;
 
-    videoElement.currentTime =
-      frameInfo.time || parseInt(frameInfo.frame_id, 10) / fps - 0.5;
+    const targetSeek = Math.max(0, (frameInfo.time || parseInt(frameInfo.frame_id, 10) / fps) - 0.5);
+    const doSeek = () => {
+      try {
+        videoElement.currentTime = targetSeek;
+      } catch (err) {}
+    };
+
+    if (videoElement.readyState >= 1) {
+      doSeek();
+    } else {
+      videoElement.addEventListener("loadedmetadata", doSeek, { once: true });
+    }
     videoElement.focus();
 
     const handleKeyDown = (e) => {
@@ -1007,6 +1017,7 @@ export function VideoPlayer({ frameInfo, onCancel }) {
               id="playing-video"
               controls
               autoPlay
+              preload="metadata"
               className="w-full flex-1 min-h-0 max-h-[calc(100%-4.5rem)] object-contain bg-black rounded-lg"
             >
               <source src={frameInfo.video_uri} type="video/mp4" />

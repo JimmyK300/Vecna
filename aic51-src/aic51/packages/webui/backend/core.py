@@ -25,7 +25,7 @@ SEARCH_REQUEST_TIMEOUT = GlobalConfig.get("backends", "core", "search_proxy", "r
 SEARCH_MAX_CREQUESTS = int(GlobalConfig.get("backends", "core", "search_proxy", "max_concurrent_requests") or 1)
 
 FILE_SERVERS = GlobalConfig.get("backends", "core", "file_proxy", "servers") or []
-FILE_REQUEST_TIMEOUT = GlobalConfig.get("backends", "core", "search_proxy", "request_timeout")
+FILE_REQUEST_TIMEOUT = float(GlobalConfig.get("backends", "core", "file_proxy", "request_timeout") or 30.0)
 FILE_MAX_REQUESTS = int(GlobalConfig.get("backends", "core", "file_proxy", "max_concurrent_requests") or 1)
 
 TARGET_FEATURES_SYNC_INTEVAL = int(GlobalConfig.get("backends", "core", "search_proxy", "sync_interval") or 15)
@@ -257,7 +257,7 @@ async def frame_info(request: Request, video_id: str, frame_id: str):
         GetRequest(
             urljoin(ss["host"], f"{constant.HEALTH_ENDPOINT}/{video_id}"),
             params=request.query_params,
-            timeout=FILE_MAX_REQUESTS,
+            timeout=FILE_REQUEST_TIMEOUT,
         )
         for ss in FILE_SERVERS
     ]
@@ -292,7 +292,7 @@ async def get_frame(request: Request, video_id: str, frame_id: str):
         GetRequest(
             urljoin(ss["host"], f"{constant.HEALTH_ENDPOINT}/{video_id}/{frame_id}"),
             params=request.query_params,
-            timeout=FILE_MAX_REQUESTS,
+            timeout=FILE_REQUEST_TIMEOUT,
         )
         for ss in FILE_SERVERS
     ]
@@ -306,7 +306,7 @@ async def get_frame(request: Request, video_id: str, frame_id: str):
 
                 parsed_url = urlparse(res.url)
                 redirected_url = parsed_url._replace(path=request.url.path).geturl()
-                return RedirectResponse(redirected_url)
+                return RedirectResponse(redirected_url, headers={"Cache-Control": "public, max-age=86400"})
     except:
         return JSONResponse(
             status_code=500,
@@ -327,7 +327,7 @@ async def get_keyframe(request: Request, video_id: str, frame_id: str):
         GetRequest(
             urljoin(ss["host"], f"{constant.HEALTH_ENDPOINT}/{video_id}/{frame_id}"),
             params=request.query_params,
-            timeout=FILE_MAX_REQUESTS,
+            timeout=FILE_REQUEST_TIMEOUT,
         )
         for ss in FILE_SERVERS
     ]
@@ -341,7 +341,7 @@ async def get_keyframe(request: Request, video_id: str, frame_id: str):
 
                 parsed_url = urlparse(res.url)
                 redirected_url = parsed_url._replace(path=request.url.path).geturl()
-                return RedirectResponse(redirected_url)
+                return RedirectResponse(redirected_url, headers={"Cache-Control": "public, max-age=86400"})
     except:
         return JSONResponse(
             status_code=500,
@@ -362,7 +362,7 @@ async def get_thumbnail(request: Request, video_id: str, frame_id: str):
         GetRequest(
             urljoin(ss["host"], f"/api/thumbnails/{video_id}/{frame_id}"),
             params=request.query_params,
-            timeout=FILE_MAX_REQUESTS,
+            timeout=FILE_REQUEST_TIMEOUT,
         )
         for ss in FILE_SERVERS
     ]
@@ -376,7 +376,7 @@ async def get_thumbnail(request: Request, video_id: str, frame_id: str):
 
                 parsed_url = urlparse(res.url)
                 redirected_url = parsed_url._replace(path=request.url.path).geturl()
-                return RedirectResponse(redirected_url)
+                return RedirectResponse(redirected_url, headers={"Cache-Control": "public, max-age=86400"})
     except:
         return JSONResponse(
             status_code=500,
@@ -384,7 +384,7 @@ async def get_thumbnail(request: Request, video_id: str, frame_id: str):
         )
 
 
-CHUNK_SIZE = 1024 * 1024
+CHUNK_SIZE = 4 * 1024 * 1024
 
 
 @app.get(constant.FILE_ENDPOINT + "/{video_id}")
@@ -400,7 +400,7 @@ async def get_video(request: Request, video_id: str):
         GetRequest(
             urljoin(ss["host"], f"{constant.HEALTH_ENDPOINT}/{video_id}"),
             params=request.query_params,
-            timeout=FILE_MAX_REQUESTS,
+            timeout=FILE_REQUEST_TIMEOUT,
         )
         for ss in FILE_SERVERS
     ]
@@ -414,7 +414,7 @@ async def get_video(request: Request, video_id: str):
 
                 parsed_url = urlparse(res.url)
                 redirected_url = parsed_url._replace(path=request.url.path).geturl()
-                return RedirectResponse(redirected_url)
+                return RedirectResponse(redirected_url, headers={"Cache-Control": "public, max-age=86400"})
     except:
         return JSONResponse(
             status_code=500,
@@ -435,7 +435,7 @@ async def get_video_transcript(request: Request, video_id: str):
         GetRequest(
             urljoin(ss["host"], f"/api/video/transcript/{video_id}"),
             params=request.query_params,
-            timeout=FILE_MAX_REQUESTS,
+            timeout=FILE_REQUEST_TIMEOUT,
         )
         for ss in FILE_SERVERS
     ]
@@ -471,7 +471,7 @@ async def get_video_keyframes(request: Request, video_id: str):
         GetRequest(
             urljoin(ss["host"], f"/api/video/keyframes/{video_id}"),
             params=request.query_params,
-            timeout=FILE_MAX_REQUESTS,
+            timeout=FILE_REQUEST_TIMEOUT,
         )
         for ss in FILE_SERVERS
     ]
@@ -507,7 +507,7 @@ async def get_video_thumbnails(request: Request, video_id: str):
         GetRequest(
             urljoin(ss["host"], f"/api/video/thumbnails/{video_id}"),
             params=request.query_params,
-            timeout=FILE_MAX_REQUESTS,
+            timeout=FILE_REQUEST_TIMEOUT,
         )
         for ss in FILE_SERVERS
     ]
@@ -543,7 +543,7 @@ async def get_frame_ocr(request: Request, video_id: str, frame_id: str):
         GetRequest(
             urljoin(ss["host"], f"/api/frame/ocr/{video_id}/{frame_id}"),
             params=request.query_params,
-            timeout=FILE_MAX_REQUESTS,
+            timeout=FILE_REQUEST_TIMEOUT,
         )
         for ss in FILE_SERVERS
     ]
@@ -578,7 +578,7 @@ async def get_video_map_keyframes(request: Request, video_id: str):
         GetRequest(
             urljoin(ss["host"], f"/api/video/map-keyframes/{video_id}"),
             params=request.query_params,
-            timeout=FILE_MAX_REQUESTS,
+            timeout=FILE_REQUEST_TIMEOUT,
         )
         for ss in FILE_SERVERS
     ]
@@ -613,7 +613,7 @@ async def get_video_max_frame(request: Request, video_id: str):
         GetRequest(
             urljoin(ss["host"], f"/api/video/max-frame/{video_id}"),
             params=request.query_params,
-            timeout=FILE_MAX_REQUESTS,
+            timeout=FILE_REQUEST_TIMEOUT,
         )
         for ss in FILE_SERVERS
     ]
@@ -648,7 +648,7 @@ async def get_video_map_keyframes_around(request: Request, video_id: str, frame_
         GetRequest(
             urljoin(ss["host"], f"/api/video/map-keyframes-around/{video_id}/{frame_id}"),
             params=request.query_params,
-            timeout=FILE_MAX_REQUESTS,
+            timeout=FILE_REQUEST_TIMEOUT,
         )
         for ss in FILE_SERVERS
     ]

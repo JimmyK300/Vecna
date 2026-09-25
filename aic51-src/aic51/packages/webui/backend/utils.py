@@ -1,3 +1,5 @@
+import sys
+import asyncio
 import concurrent.futures
 import csv
 import json
@@ -13,6 +15,15 @@ import aic51.packages.constant as constant
 from aic51.packages.logger import logger
 
 
+def _silence_winerror_10054(loop, context):
+    exc = context.get("exception")
+    if isinstance(exc, (ConnectionResetError, BrokenPipeError)):
+        return
+    if getattr(exc, "winerror", None) in (10054, 10053):
+        return
+    loop.default_exception_handler(context)
+
+
 def create_app(*args, **kwargs):
     app = FastAPI(*args, **kwargs)
     origins = [
@@ -25,6 +36,16 @@ def create_app(*args, **kwargs):
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    @app.on_event("startup")
+    async def _setup_event_loop_handler():
+        if sys.platform.startswith("win"):
+            try:
+                loop = asyncio.get_running_loop()
+                loop.set_exception_handler(_silence_winerror_10054)
+            except Exception:
+                pass
+
     return app
 
 
