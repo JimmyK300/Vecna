@@ -70,23 +70,53 @@ async def get_frame_ocr(video_id: str, frame_id: str):
 
 
 def _find_image_file(folder_name: str, video_id: str, frame_id: str) -> Path | None:
+    variants = [video_id]
+    if "_" in video_id:
+        variants.append(video_id.replace("_", "-"))
+    if "-" in video_id:
+        variants.append(video_id.replace("-", "_"))
+
+    dir_names = [folder_name]
+    if folder_name == constant.THUMBNAIL_DIR:
+        dir_names = [constant.THUMBNAIL_DIR, "thumbnails", "data/thumbnails"]
+    elif folder_name == constant.KEYFRAME_DIR:
+        dir_names = [constant.KEYFRAME_DIR, "keyframes", "data/keyframes"]
+
     for root in _get_candidate_roots(video_id):
-        base_dir = root / folder_name
-        p1 = base_dir / video_id / f"{frame_id}{constant.IMAGE_EXTENSION}"
-        if p1.exists() and not p1.is_dir():
-            return p1
-        if str(frame_id).isdigit():
-            val = int(frame_id)
-            for fmt in (f"{val:06d}", f"{val:05d}"):
-                p = base_dir / video_id / f"{fmt}{constant.IMAGE_EXTENSION}"
-                if p.exists() and not p.is_dir():
-                    return p
+        for d_name in dir_names:
+            base_dir = root / d_name
+            for v_id in variants:
+                target_dir = base_dir / v_id
+                if not target_dir.exists() or not target_dir.is_dir():
+                    continue
+                p1 = target_dir / f"{frame_id}{constant.IMAGE_EXTENSION}"
+                if p1.exists() and not p1.is_dir():
+                    return p1
+                if str(frame_id).isdigit():
+                    val = int(frame_id)
+                    for fmt in (f"{val:06d}", f"{val:05d}"):
+                        p = target_dir / f"{fmt}{constant.IMAGE_EXTENSION}"
+                        if p.exists() and not p.is_dir():
+                            return p
     return None
 
 
 @app.get(constant.FILE_ENDPOINT + "/{video_id}/{frame_id}")
 async def get_file(request: Request, video_id: str, frame_id: str):
     file_path = _find_image_file(constant.THUMBNAIL_DIR, video_id, frame_id)
+    if not file_path:
+        file_path = _find_image_file(constant.KEYFRAME_DIR, video_id, frame_id)
+    if file_path:
+        return FileResponse(file_path)
+    else:
+        return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
+
+
+@app.get("/api/thumbnails/{video_id}/{frame_id}")
+async def get_thumbnail(request: Request, video_id: str, frame_id: str):
+    file_path = _find_image_file(constant.THUMBNAIL_DIR, video_id, frame_id)
+    if not file_path:
+        file_path = _find_image_file(constant.KEYFRAME_DIR, video_id, frame_id)
     if file_path:
         return FileResponse(file_path)
     else:
@@ -96,12 +126,11 @@ async def get_file(request: Request, video_id: str, frame_id: str):
 @app.get("/api/keyframes/{video_id}/{frame_id}")
 async def get_keyframe(request: Request, video_id: str, frame_id: str):
     file_path = _find_image_file(constant.KEYFRAME_DIR, video_id, frame_id)
+    if not file_path:
+        file_path = _find_image_file(constant.THUMBNAIL_DIR, video_id, frame_id)
     if file_path:
         return FileResponse(file_path)
     else:
-        file_path_thumb = _find_image_file(constant.THUMBNAIL_DIR, video_id, frame_id)
-        if file_path_thumb:
-            return FileResponse(file_path_thumb)
         return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
 
 
@@ -190,8 +219,27 @@ def split_into_sentences(segment):
 @app.get("/api/video/transcript/{video_id}")
 async def get_video_transcript(video_id: str):
     fps = get_fps(video_id)
-    features_path = Path.cwd() / constant.FEATURE_DIR / video_id
-    if not features_path.exists():
+    variants = [video_id]
+    if "_" in video_id:
+        variants.append(video_id.replace("_", "-"))
+    if "-" in video_id:
+        variants.append(video_id.replace("-", "_"))
+
+    features_path = None
+    for root in _get_candidate_roots(video_id):
+        for v_id in variants:
+            p = root / constant.FEATURE_DIR / v_id
+            if p.exists() and p.is_dir():
+                features_path = p
+                break
+            p2 = root / "features" / v_id
+            if p2.exists() and p2.is_dir():
+                features_path = p2
+                break
+        if features_path:
+            break
+
+    if not features_path or not features_path.exists():
         return JSONResponse(status_code=404, content=jsonable_encoder({constant.MESSAGE_KEY: "unavailable"}))
     
     transcript = []
@@ -253,19 +301,65 @@ async def get_video_transcript(video_id: str):
     return final_transcript
 
 
-def _get_existing_frame_indices(video_id: str) -> list[int]:
+def _get_existing_thumbnail_indices(video_id: str) -> list[int]:
+    variants = [video_id]
+    if "_" in video_id:
+        variants.append(video_id.replace("_", "-"))
+    if "-" in video_id:
+        variants.append(video_id.replace("-", "_"))
+
     indices = set()
-    for dir_name in [constant.KEYFRAME_DIR, constant.THUMBNAIL_DIR, constant.FEATURE_DIR]:
-        folder = Path.cwd() / dir_name / video_id
-        if folder.exists() and folder.is_dir():
-            for p in folder.iterdir():
-                if p.is_file() and p.suffix.lower() == constant.IMAGE_EXTENSION:
-                    stem = p.stem
-                    if stem.isdigit():
-                        indices.add(int(stem))
-                elif p.is_dir() and p.name.isdigit():
-                    indices.add(int(p.name))
+    for root in _get_candidate_roots(video_id):
+        for dir_name in [constant.THUMBNAIL_DIR, "thumbnails", "data/thumbnails"]:
+            base_dir = root / dir_name
+            for v_id in variants:
+                folder = base_dir / v_id
+                if folder.exists() and folder.is_dir():
+                    for p in folder.iterdir():
+                        if p.is_file() and p.suffix.lower() == constant.IMAGE_EXTENSION:
+                            stem = p.stem
+                            if stem.isdigit():
+                                indices.add(int(stem))
+                    if indices:
+                        return sorted(list(indices))
     return sorted(list(indices))
+
+
+def _get_existing_frame_indices(video_id: str) -> list[int]:
+    variants = [video_id]
+    if "_" in video_id:
+        variants.append(video_id.replace("_", "-"))
+    if "-" in video_id:
+        variants.append(video_id.replace("-", "_"))
+
+    indices = set()
+    for root in _get_candidate_roots(video_id):
+        for dir_name in [constant.KEYFRAME_DIR, constant.THUMBNAIL_DIR, "thumbnails", "keyframes", "data/thumbnails", "data/keyframes", constant.FEATURE_DIR]:
+            base_dir = root / dir_name
+            for v_id in variants:
+                folder = base_dir / v_id
+                if folder.exists() and folder.is_dir():
+                    for p in folder.iterdir():
+                        if p.is_file() and p.suffix.lower() == constant.IMAGE_EXTENSION:
+                            stem = p.stem
+                            if stem.isdigit():
+                                indices.add(int(stem))
+                        elif p.is_dir() and p.name.isdigit():
+                            indices.add(int(p.name))
+                    if indices:
+                        return sorted(list(indices))
+    return sorted(list(indices))
+
+
+@app.get("/api/video/thumbnails/{video_id}")
+async def get_video_thumbnails(video_id: str):
+    indices = _get_existing_thumbnail_indices(video_id)
+    if indices:
+        return [f"{idx:06d}" for idx in indices]
+    indices = _get_existing_frame_indices(video_id)
+    if indices:
+        return [f"{idx:06d}" for idx in indices]
+    return []
 
 
 @app.get("/api/video/keyframes/{video_id}")
@@ -277,14 +371,27 @@ async def get_video_keyframes(video_id: str):
 
 
 def _get_map_keyframes_path(video_id: str) -> Path | None:
-    candidates = [
-        Path.cwd() / "workspace" / "map-keyframes" / f"{video_id}.csv",
-        Path.cwd() / "map-keyframes" / f"{video_id}.csv",
-        Path.cwd().parent / "workspace" / "map-keyframes" / f"{video_id}.csv",
-    ]
-    for p in candidates:
-        if p.exists() and p.is_file():
-            return p
+    variants = [video_id]
+    if "_" in video_id:
+        variants.append(video_id.replace("_", "-"))
+    if "-" in video_id:
+        variants.append(video_id.replace("-", "_"))
+
+    for root in _get_candidate_roots(video_id):
+        for sub in ["map-keyframes", "data/map-keyframes", "workspace/map-keyframes"]:
+            for v_id in variants:
+                p = root / sub / f"{v_id}.csv"
+                if p.exists() and p.is_file():
+                    return p
+    for v_id in variants:
+        candidates = [
+            Path.cwd() / "workspace" / "map-keyframes" / f"{v_id}.csv",
+            Path.cwd() / "map-keyframes" / f"{v_id}.csv",
+            Path.cwd().parent / "workspace" / "map-keyframes" / f"{v_id}.csv",
+        ]
+        for p in candidates:
+            if p.exists() and p.is_file():
+                return p
     return None
 
 

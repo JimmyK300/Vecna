@@ -1,10 +1,12 @@
 import asyncio
 import logging
+import json
+import urllib.parse
 from contextlib import asynccontextmanager
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -347,6 +349,41 @@ async def get_keyframe(request: Request, video_id: str, frame_id: str):
         )
 
 
+@app.get("/api/thumbnails/{video_id}/{frame_id}")
+async def get_thumbnail(request: Request, video_id: str, frame_id: str):
+    if len(FILE_SERVERS) == 0:
+        return JSONResponse(
+            status_code=404,
+            content=jsonable_encoder({constant.MESSAGE_KEY: "file function is not supported"}),
+        )
+
+    crequest = CRequestPool(FILE_MAX_REQUESTS)
+    health_requests = [
+        GetRequest(
+            urljoin(ss["host"], f"/api/thumbnails/{video_id}/{frame_id}"),
+            params=request.query_params,
+            timeout=FILE_MAX_REQUESTS,
+        )
+        for ss in FILE_SERVERS
+    ]
+    crequest.map(health_requests)
+
+    try:
+        for future in crequest.as_completed():
+            res = future.result()
+            if res and res.ok:
+                crequest.cancel_all()
+
+                parsed_url = urlparse(res.url)
+                redirected_url = parsed_url._replace(path=request.url.path).geturl()
+                return RedirectResponse(redirected_url)
+    except:
+        return JSONResponse(
+            status_code=500,
+            content=jsonable_encoder({constant.MESSAGE_KEY: "get_thumbnail errors"}),
+        )
+
+
 CHUNK_SIZE = 1024 * 1024
 
 
@@ -453,6 +490,42 @@ async def get_video_keyframes(request: Request, video_id: str):
         return JSONResponse(
             status_code=500,
             content=jsonable_encoder({constant.MESSAGE_KEY: "get_video_keyframes errors"}),
+        )
+    return JSONResponse(status_code=200, content=[])
+
+
+@app.get("/api/video/thumbnails/{video_id}")
+async def get_video_thumbnails(request: Request, video_id: str):
+    if len(FILE_SERVERS) == 0:
+        return JSONResponse(
+            status_code=404,
+            content=jsonable_encoder({constant.MESSAGE_KEY: "file function is not supported"}),
+        )
+
+    crequest = CRequestPool(FILE_MAX_REQUESTS)
+    health_requests = [
+        GetRequest(
+            urljoin(ss["host"], f"/api/video/thumbnails/{video_id}"),
+            params=request.query_params,
+            timeout=FILE_MAX_REQUESTS,
+        )
+        for ss in FILE_SERVERS
+    ]
+    crequest.map(health_requests)
+
+    try:
+        for future in crequest.as_completed():
+            res = future.result()
+            if res and res.ok:
+                crequest.cancel_all()
+
+                parsed_url = urlparse(res.url)
+                redirected_url = parsed_url._replace(path=request.url.path).geturl()
+                return RedirectResponse(redirected_url)
+    except:
+        return JSONResponse(
+            status_code=500,
+            content=jsonable_encoder({constant.MESSAGE_KEY: "get_video_thumbnails errors"}),
         )
     return JSONResponse(status_code=200, content=[])
 
@@ -596,6 +669,60 @@ async def get_video_map_keyframes_around(request: Request, video_id: str, frame_
             content=jsonable_encoder({constant.MESSAGE_KEY: "get_video_map_keyframes_around errors"}),
         )
 
+
+@app.api_route("/api/dres-proxy/{path:path}", methods=["GET", "POST", "OPTIONS"])
+async def dres_proxy(request: Request, path: str):
+    if request.method == "OPTIONS":
+        return Response(
+            status_code=200,
+            headers={
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+                "Access-Control-Allow-Headers": "*",
+            },
+        )
+
+    target_server = request.headers.get("x-dres-server-url") or request.query_params.get("dres_server") or "https://eventretrieval.one"
+    target_server = str(target_server).rstrip("/")
+    target_url = f"{target_server}/{path.lstrip('/')}"
+
+    query_params = dict(request.query_params)
+    query_params.pop("dres_server", None)
+    if query_params:
+        target_url = f"{target_url}?{urllib.parse.urlencode(query_params)}"
+
+    body = await request.body()
+    headers = {
+        "User-Agent": "VECNA-DRES-Proxy/1.0",
+    }
+    if "content-type" in request.headers:
+        headers["Content-Type"] = request.headers["content-type"]
+
+    def _do_request():
+        try:
+            resp = requests.request(
+                method=request.method,
+                url=target_url,
+                data=body if body else None,
+                headers=headers,
+                timeout=15,
+            )
+            return resp.status_code, resp.content, resp.headers.get("Content-Type", "application/json")
+        except Exception as e:
+            err_data = json.dumps({"status": False, "description": f"Proxy Error: {str(e)}"}).encode()
+            return 502, err_data, "application/json"
+
+    status_code, content, content_type = await asyncio.to_thread(_do_request)
+    return Response(
+        content=content,
+        status_code=status_code,
+        media_type=content_type,
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers": "*",
+        },
+    )
 
 
 web_dir = Path.cwd() / constant.FRONTEND_DIST_DIR

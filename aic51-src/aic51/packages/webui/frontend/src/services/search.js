@@ -225,8 +225,46 @@ export async function getVideoTranscript(videoId) {
   }
 }
 
-export async function getVideoKeyframes(videoId) {
+export async function getVideoThumbnails(videoId) {
+  if (!videoId || videoId === "undefined" || videoId === "null") return [];
   try {
+    try {
+      const relRes = await axios.get(`/api/video/thumbnails/${videoId}`);
+      if (relRes.data && Array.isArray(relRes.data) && relRes.data.length > 0) {
+        return relRes.data;
+      }
+    } catch (e) {}
+
+    const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/thumbnails/${videoId}`);
+    const data = res.data;
+    if (Array.isArray(data) && data.length > 0) return data;
+    if (Array.isArray(data?.thumbnails) && data.thumbnails.length > 0) return data.thumbnails;
+  } catch (err) {
+    console.warn(`Failed to fetch thumbnails for ${videoId}, falling back to keyframes:`, err);
+  }
+
+  // Fallback to map-keyframes if thumbnails endpoint returns empty
+  try {
+    const mapData = await getVideoMapKeyframes(videoId);
+    if (mapData && mapData.available && Array.isArray(mapData.keyframes) && mapData.keyframes.length > 0) {
+      return mapData.keyframes.map((k) => k.frame_idx || String(k.raw_idx).padStart(6, "0"));
+    }
+  } catch (e) {}
+
+  // Fallback to keyframes if thumbnails endpoint not found or returns empty
+  return getVideoKeyframes(videoId);
+}
+
+export async function getVideoKeyframes(videoId) {
+  if (!videoId || videoId === "undefined" || videoId === "null") return [];
+  try {
+    try {
+      const relRes = await axios.get(`/api/video/keyframes/${videoId}`);
+      if (relRes.data && Array.isArray(relRes.data) && relRes.data.length > 0) {
+        return relRes.data;
+      }
+    } catch (e) {}
+
     const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/keyframes/${videoId}`);
     const data = res.data;
     return Array.isArray(data) ? data : (data?.keyframes || []);
@@ -281,7 +319,15 @@ export async function getFrameOcr(videoId, frameId) {
 }
 
 export async function getVideoMapKeyframes(videoId) {
+  if (!videoId) return { available: false, keyframes: [] };
   try {
+    try {
+      const relRes = await axios.get(`/api/video/map-keyframes/${videoId}`);
+      if (relRes.data && relRes.data.available) {
+        return relRes.data;
+      }
+    } catch (e) {}
+
     const res = await axios.get(`http://127.0.0.1:${PORT}/api/video/map-keyframes/${videoId}`);
     return res.data;
   } catch (err) {

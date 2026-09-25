@@ -3,7 +3,23 @@ import { createContext, useEffect, useContext, useState, useRef } from "react";
 import classNames from "classnames";
 import { AuthContext } from "./AuthProvider.jsx";
 import { useSelected } from "./SelectedProvider.jsx";
-import { getFrameInfo, getVideoTranscript, getVideoKeyframes, getVideoMapKeyframes } from "../services/search.js";
+import { getFrameInfo, getVideoTranscript, getVideoThumbnails, getVideoKeyframes, getVideoMapKeyframes } from "../services/search.js";
+import {
+  DEFAULT_DRES_URL,
+  DRES_SERVER_KEY,
+  DRES_SESSION_KEY,
+  DRES_EVAL_KEY,
+  cleanVideoId,
+  parseTimeToSeconds,
+  resolveTimeFromFrame,
+  submitDresAnswer,
+  getDresCurrentTask,
+  getDresEvaluationState,
+  getDresEvaluationInfo,
+  buildPayload,
+  parseDresError,
+  addSubmissionHistoryEntry,
+} from "../services/dres.js";
 
 export const VideoContext = createContext({ playVideo: null });
 
@@ -69,7 +85,7 @@ export function VideoPlayer({ frameInfo, onCancel }) {
 
   const timelineRef = useRef(null);
   const [isScrubbing, setIsScrubbing] = useState(false);
-  const [keyframes, setKeyframes] = useState([]);
+  const [thumbnails, setThumbnails] = useState([]);
 
   const displayEvaluationIds = [
     { id: "TKIS", name: "TKIS" },
@@ -109,21 +125,21 @@ export function VideoPlayer({ frameInfo, onCancel }) {
       .catch(() => setTranscript([]));
   }, [frameInfo?.video_id]);
 
-  // Load Keyframes Timeline Strip
+  // Load Thumbnails Timeline Strip
   useEffect(() => {
     if (!frameInfo?.video_id) return;
-    getVideoKeyframes(frameInfo.video_id)
+    getVideoThumbnails(frameInfo.video_id)
       .then((res) => {
-        const list = Array.isArray(res) ? res : (res?.keyframes || []);
-        setKeyframes(list);
+        const list = Array.isArray(res) ? res : (res?.thumbnails || res?.keyframes || []);
+        setThumbnails(list);
       })
-      .catch(() => setKeyframes([]));
+      .catch(() => setThumbnails([]));
   }, [frameInfo?.video_id]);
 
-  const keyframesRef = useRef([]);
+  const thumbnailsRef = useRef([]);
   useEffect(() => {
-    keyframesRef.current = keyframes;
-  }, [keyframes]);
+    thumbnailsRef.current = thumbnails;
+  }, [thumbnails]);
 
   // Load Official BTC Map-Keyframes Data
   const [mapBTCKeyframes, setMapBTCKeyframes] = useState([]);
@@ -185,19 +201,28 @@ export function VideoPlayer({ frameInfo, onCancel }) {
 
   // Safe array guards
   const safeTranscript = Array.isArray(transcript) ? transcript : [];
-  const safeKeyframes = Array.isArray(keyframes) ? keyframes : [];
+  const safeThumbnails = Array.isArray(thumbnails) ? thumbnails : [];
   const safeSelected = Array.isArray(selected) ? selected : [];
   const safeMapBTCKeyframes = Array.isArray(mapBTCKeyframes) ? mapBTCKeyframes : [];
 
-  // Sample Keyframes for Timeline Strip
+  // Source list for Timeline Strip (prioritize thumbnails, fallback to map-keyframes)
+  const timelineFrames = safeThumbnails.length > 0
+    ? safeThumbnails
+    : safeMapBTCKeyframes.map((k) => k.frame_idx || String(k.raw_idx).padStart(6, "0"));
+
+  // Sample Thumbnails for Timeline Strip
   const targetTimelineCount = 20;
-  const sampledKeyframes = [];
-  if (safeKeyframes.length > 0) {
-    for (let i = 0; i < targetTimelineCount; i++) {
-      const idx = Math.floor(
-        (i / (targetTimelineCount - 1)) * (safeKeyframes.length - 1)
-      );
-      sampledKeyframes.push(safeKeyframes[idx]);
+  const sampledThumbnails = [];
+  if (timelineFrames.length > 0) {
+    if (timelineFrames.length <= targetTimelineCount) {
+      sampledThumbnails.push(...timelineFrames);
+    } else {
+      for (let i = 0; i < targetTimelineCount; i++) {
+        const idx = Math.floor(
+          (i / (targetTimelineCount - 1)) * (timelineFrames.length - 1)
+        );
+        sampledThumbnails.push(timelineFrames[idx]);
+      }
     }
   }
 
@@ -206,15 +231,15 @@ export function VideoPlayer({ frameInfo, onCancel }) {
   const currentPercentage =
     duration > 0 ? (frameCounter / fps / duration) * 100 : 0;
 
-  // Helper function to get available keyframes list sorted by timestamp
+  // Helper function to get available keyframes/thumbnails list sorted by timestamp
   const getNavKeyframeList = () => {
     const btcList = Array.isArray(mapBTCKeyframesRef.current) ? mapBTCKeyframesRef.current : [];
     if (btcList && btcList.length > 0) {
       return [...btcList].sort((a, b) => a.pts_time - b.pts_time);
     }
-    const kfList = Array.isArray(keyframesRef.current) ? keyframesRef.current : [];
-    if (kfList && kfList.length > 0) {
-      return kfList
+    const thumbList = Array.isArray(thumbnailsRef.current) ? thumbnailsRef.current : [];
+    if (thumbList && thumbList.length > 0) {
+      return thumbList
         .map((k) => {
           const idx = parseInt(k, 10);
           return isNaN(idx) ? null : { raw_idx: idx, pts_time: idx / fps };
@@ -390,8 +415,18 @@ export function VideoPlayer({ frameInfo, onCancel }) {
           }
           return;
 
-        case 83: // S - Toggle select frame
+        case 71: // G - Focus Go To input
           if (!isInInput) {
+            e.preventDefault();
+            document.getElementById("goto-input")?.focus();
+          }
+          return;
+
+        case 83: // S - Toggle select frame, or Shift+S for Quick DRES Submit
+          if (e.shiftKey) {
+            e.preventDefault();
+            handleOpenDresModal();
+          } else if (!isInInput) {
             e.preventDefault();
             document.getElementById("toggle-select-frame-btn")?.click();
           }
@@ -434,8 +469,8 @@ export function VideoPlayer({ frameInfo, onCancel }) {
     if (matchedKf) {
       activeFrameNum = matchedKf.raw_idx;
     }
-  } else if (safeKeyframes.length > 0) {
-    const matchedRaw = safeKeyframes.find((k) => Math.abs(parseInt(k, 10) / fps - curTime) <= snapThreshold);
+  } else if (safeThumbnails.length > 0) {
+    const matchedRaw = safeThumbnails.find((k) => Math.abs(parseInt(k, 10) / fps - curTime) <= snapThreshold);
     if (matchedRaw !== undefined) {
       activeFrameNum = parseInt(matchedRaw, 10);
     }
@@ -461,6 +496,282 @@ export function VideoPlayer({ frameInfo, onCancel }) {
         }
       }
       videoElementRef.current.currentTime = parsedNum / fps;
+    }
+  };
+
+  // Go To State (Frame or Time)
+  const [goToMode, setGoToMode] = useState("frame"); // 'frame' | 'time'
+  const [goToInput, setGoToInput] = useState("");
+
+  const handleGoTo = (e) => {
+    if (e) e.preventDefault();
+    if (!goToInput.trim() || !videoElementRef.current) return;
+
+    if (goToMode === "frame") {
+      jumpToFrame(goToInput.trim());
+    } else {
+      const targetSec = parseTimeToSeconds(goToInput.trim());
+      const maxDuration = videoElementRef.current.duration || 999999;
+      videoElementRef.current.currentTime = Math.max(0, Math.min(targetSec, maxDuration));
+    }
+    setGoToInput("");
+  };
+
+  // Default standard AIC tasks presets
+  const DEFAULT_AIC_TASKS = [
+    { id: "tkis-test", name: "tkis-test", label: "tkis-test (Textual KIS)", type: "KIS" },
+    { id: "vkis-test", name: "vkis-test", label: "vkis-test (Visual KIS)", type: "KIS" },
+    { id: "qa-test", name: "qa-test", label: "qa-test (Question Answering)", type: "QA" },
+    { id: "trake-test", name: "trake-test", label: "trake-test (TRAKE)", type: "TRAKE" },
+    { id: "tkis-01", name: "tkis-01", label: "tkis-01 (Textual KIS 1)", type: "KIS" },
+    { id: "tkis-02", name: "tkis-02", label: "tkis-02 (Textual KIS 2)", type: "KIS" },
+    { id: "tkis-03", name: "tkis-03", label: "tkis-03 (Textual KIS 3)", type: "KIS" },
+    { id: "tkis-04", name: "tkis-04", label: "tkis-04 (Textual KIS 4)", type: "KIS" },
+    { id: "tkis-05", name: "tkis-05", label: "tkis-05 (Textual KIS 5)", type: "KIS" },
+    { id: "vkis-01", name: "vkis-01", label: "vkis-01 (Visual KIS 1)", type: "KIS" },
+    { id: "vkis-02", name: "vkis-02", label: "vkis-02 (Visual KIS 2)", type: "KIS" },
+    { id: "vkis-03", name: "vkis-03", label: "vkis-03 (Visual KIS 3)", type: "KIS" },
+    { id: "qa-01", name: "qa-01", label: "qa-01 (Q&A 1)", type: "QA" },
+    { id: "qa-02", name: "qa-02", label: "qa-02 (Q&A 2)", type: "QA" },
+    { id: "qa-03", name: "qa-03", label: "qa-03 (Q&A 3)", type: "QA" },
+    { id: "trake-01", name: "trake-01", label: "trake-01 (TRAKE 1)", type: "TRAKE" },
+    { id: "trake-02", name: "trake-02", label: "trake-02 (TRAKE 2)", type: "TRAKE" },
+  ];
+
+  // Quick DRES Submit State from Video Player
+  const [showDresModal, setShowDresModal] = useState(false);
+  const [dresActiveTask, setDresActiveTask] = useState(null);
+  const [dresTaskRemainingSec, setDresTaskRemainingSec] = useState(null);
+  const [dresIsRefreshing, setDresIsRefreshing] = useState(false);
+  const [dresSelectedTaskName, setDresSelectedTaskName] = useState("tkis-test");
+  const [dresAvailableTasks, setDresAvailableTasks] = useState(DEFAULT_AIC_TASKS);
+  const [dresCustomTaskMode, setDresCustomTaskMode] = useState(false);
+  const [dresCustomTaskName, setDresCustomTaskName] = useState("");
+  const [dresTaskType, setDresTaskType] = useState(selectedQueryId || "KIS");
+  const [dresAnswerText, setDresAnswerText] = useState("");
+  const [dresExactTimeMs, setDresExactTimeMs] = useState(0);
+  const [dresTimeSource, setDresTimeSource] = useState("");
+  const [dresIsSubmitting, setDresIsSubmitting] = useState(false);
+  const [dresResult, setDresResult] = useState(null);
+  const [dresDryRun, setDresDryRun] = useState(false);
+  const [dresCopiedJson, setDresCopiedJson] = useState(false);
+
+  // Countdown Interval for remaining time in modal
+  const dresCountdownRef = useRef(null);
+  useEffect(() => {
+    if (dresCountdownRef.current) clearInterval(dresCountdownRef.current);
+    if (showDresModal && dresTaskRemainingSec !== null && dresTaskRemainingSec > 0) {
+      dresCountdownRef.current = setInterval(() => {
+        setDresTaskRemainingSec((prev) => {
+          if (prev <= 1) {
+            clearInterval(dresCountdownRef.current);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => {
+      if (dresCountdownRef.current) clearInterval(dresCountdownRef.current);
+    };
+  }, [showDresModal, dresTaskRemainingSec]);
+
+  // Refresh live task info and timer from server
+  const refreshLiveTaskInfo = async () => {
+    const sId = localStorage.getItem(DRES_SESSION_KEY);
+    const eId = localStorage.getItem(DRES_EVAL_KEY);
+    const sUrl = localStorage.getItem(DRES_SERVER_KEY) || DEFAULT_DRES_URL;
+
+    if (!eId || !sId) return;
+    setDresIsRefreshing(true);
+
+    try {
+      // 1. Fetch current task from DRES
+      const taskRes = await getDresCurrentTask(eId, sId, sUrl);
+      if (taskRes.ok && taskRes.data) {
+        setDresActiveTask(taskRes.data);
+        const taskName = taskRes.data.name || "tkis-test";
+        setDresSelectedTaskName(taskName);
+
+        // Auto switch tab (KIS, QA, TRAKE)
+        const grp = String(taskRes.data.taskGroup || taskRes.data.taskType || taskName).toUpperCase();
+        if (grp.includes("QA")) setDresTaskType("QA");
+        else if (grp.includes("TRAKE") || grp.includes("TR-")) setDresTaskType("TRAKE");
+        else setDresTaskType("KIS");
+
+        let durationSec = taskRes.data.duration ? Math.round(taskRes.data.duration / 1000) : 300;
+        setDresTaskRemainingSec(durationSec);
+      }
+
+      // 2. Fetch evaluation state for exact remaining seconds (timeLeft)
+      try {
+        const stateRes = await getDresEvaluationState(eId, sId, sUrl);
+        if (stateRes.ok && stateRes.data && stateRes.data.timeLeft !== undefined && stateRes.data.timeLeft !== null) {
+          const tLeft = Number(stateRes.data.timeLeft);
+          const sec = tLeft > 1000 ? Math.round(tLeft / 1000) : Math.round(tLeft);
+          if (sec >= 0) setDresTaskRemainingSec(sec);
+        }
+      } catch (err) {}
+
+      // 3. Fetch evaluation info to populate available task list
+      try {
+        const infoRes = await getDresEvaluationInfo(eId, sId, sUrl);
+        if (infoRes.ok && infoRes.data && Array.isArray(infoRes.data.taskTemplates) && infoRes.data.taskTemplates.length > 0) {
+          const loaded = infoRes.data.taskTemplates.map((t) => ({
+            id: t.id || t.name,
+            name: t.name,
+            label: `${t.name} (${t.taskGroup || t.taskType || "Task"})`,
+            type: String(t.taskGroup || t.taskType || "").toUpperCase().includes("QA")
+              ? "QA"
+              : String(t.taskGroup || t.taskType || "").toUpperCase().includes("TRAKE")
+              ? "TRAKE"
+              : "KIS",
+          }));
+          setDresAvailableTasks((prev) => {
+            const merged = [...loaded];
+            DEFAULT_AIC_TASKS.forEach((def) => {
+              if (!merged.some((m) => m.name === def.name)) merged.push(def);
+            });
+            return merged;
+          });
+        }
+      } catch (err) {}
+    } catch (err) {
+      console.warn("Failed to refresh live task info:", err);
+    } finally {
+      setDresIsRefreshing(false);
+    }
+  };
+
+  const handleSelectTask = (taskName) => {
+    if (taskName === "__CUSTOM__") {
+      setDresCustomTaskMode(true);
+      return;
+    }
+    setDresCustomTaskMode(false);
+    setDresSelectedTaskName(taskName);
+
+    const found = dresAvailableTasks.find((t) => t.name === taskName);
+    if (found && found.type) {
+      setDresTaskType(found.type);
+    } else {
+      const upper = String(taskName).toUpperCase();
+      if (upper.includes("QA")) setDresTaskType("QA");
+      else if (upper.includes("TRAKE") || upper.includes("TR-")) setDresTaskType("TRAKE");
+      else setDresTaskType("KIS");
+    }
+  };
+
+  const handleOpenDresModal = async () => {
+    if (videoElementRef.current && !videoElementRef.current.paused) {
+      videoElementRef.current.pause();
+    }
+    const cleanVid = cleanVideoId(frameInfo.video_id);
+    const resolved = await resolveTimeFromFrame(
+      cleanVid,
+      activeFrameNum,
+      videoElementRef.current?.currentTime,
+      fps
+    );
+    setDresExactTimeMs(resolved.time_ms);
+    setDresTimeSource(
+      resolved.source.includes("map-keyframes")
+        ? `map-keyframes (pts: ${resolved.pts_time.toFixed(3)}s, ${resolved.fps}fps)`
+        : `tính từ fps ${resolved.fps}`
+    );
+
+    setDresResult(null);
+    setDresCopiedJson(false);
+    setShowDresModal(true);
+
+    // Refresh live task info and sync timer
+    refreshLiveTaskInfo();
+  };
+
+  const getQuickDresBuiltPayload = () => {
+    const cleanVid = cleanVideoId(frameInfo?.video_id);
+    return buildPayload(dresTaskType, {
+      videoId: cleanVid,
+      startMs: dresExactTimeMs,
+      endMs: dresExactTimeMs,
+      answerText: dresAnswerText,
+      framesList: [String(activeFrameNum)],
+    });
+  };
+
+  const handleQuickDresSubmit = async (forceRealSubmit = false) => {
+    const sId = localStorage.getItem(DRES_SESSION_KEY);
+    const eId = localStorage.getItem(DRES_EVAL_KEY);
+    const sUrl = localStorage.getItem(DRES_SERVER_KEY) || DEFAULT_DRES_URL;
+
+    const runAsDryRun = dresDryRun && !forceRealSubmit;
+
+    if (!runAsDryRun && (!sId || !eId)) {
+      alert("Chưa có Session ID hoặc Evaluation ID! Vui lòng cấu hình ở bảng DRES trên sidebar.");
+      return;
+    }
+
+    const cleanVid = cleanVideoId(frameInfo.video_id);
+    const built = getQuickDresBuiltPayload();
+
+    setDresIsSubmitting(true);
+
+    if (runAsDryRun) {
+      setTimeout(() => {
+        setDresIsSubmitting(false);
+        setDresResult({
+          status: "dry_run",
+          title: "DRY-RUN THÀNH CÔNG (GIẢ LẬP)",
+          message: "Format JSON payload hợp lệ 100%! Bạn có thể bấm 'Xác nhận nộp thật' bên dưới.",
+        });
+        addSubmissionHistoryEntry({
+          task: dresSelectedTaskName,
+          type: built.type,
+          video: cleanVid,
+          details: built.formattedText,
+          verdict: "DRY-RUN",
+          note: "Quick submit from player",
+        });
+      }, 300);
+      return;
+    }
+
+    try {
+      const res = await submitDresAnswer(eId, sId, built.payload, sUrl);
+      if (res.ok) {
+        const isCorrect = res.data && res.data.submission === "CORRECT";
+        const isWrong = res.data && res.data.submission === "WRONG";
+        setDresResult({
+          status: isCorrect ? "success" : isWrong ? "wrong" : "pending",
+          title: `KẾT QUẢ: ${res.data.submission || "OK"}`,
+          message: res.data.description || (isCorrect ? "Chính xác! Điểm đã được ghi nhận." : "Sai - Bị trừ 10 điểm!"),
+        });
+
+        addSubmissionHistoryEntry({
+          task: dresSelectedTaskName,
+          type: built.type,
+          video: cleanVid,
+          details: built.formattedText,
+          verdict: res.data.submission || "SUCCESS",
+          note: res.data.description || "",
+        });
+      } else {
+        const errMsg = parseDresError(res);
+        setDresResult({
+          status: "error",
+          title: `LỖI TỪ SERVER (${res.status})`,
+          message: errMsg,
+          rawDescription: res.data?.description,
+        });
+      }
+    } catch (err) {
+      setDresResult({
+        status: "error",
+        title: "LỖI KẾT NỐI",
+        message: err.message,
+      });
+    } finally {
+      setDresIsSubmitting(false);
     }
   };
 
@@ -531,6 +842,45 @@ export function VideoPlayer({ frameInfo, onCancel }) {
               title="Fullscreen Video + Diagram (Hotkey: F)"
             >
               ⛶ Fullscreen (F)
+            </button>
+
+            {/* Go To Control (Frame or Time) */}
+            <form
+              onSubmit={handleGoTo}
+              className="flex items-center gap-1 bg-white border border-gray-300 px-1.5 py-0.5 rounded-lg shadow-sm"
+            >
+              <button
+                type="button"
+                onClick={() => setGoToMode(goToMode === "frame" ? "time" : "frame")}
+                className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 select-none cursor-pointer"
+                title="Click để chuyển giữa chế độ Frame hoặc Giây (Time)"
+              >
+                {goToMode === "frame" ? "🎬 Frame" : "⏱️ Time (s)"}
+              </button>
+              <input
+                id="goto-input"
+                type="text"
+                placeholder={goToMode === "frame" ? "Nhập frame (G)..." : "Giây / MM:SS (G)..."}
+                value={goToInput}
+                onChange={(e) => setGoToInput(e.target.value)}
+                className="w-24 text-xs font-mono font-semibold px-1 py-0.5 focus:outline-none bg-transparent"
+              />
+              <button
+                type="submit"
+                className="text-[10px] font-bold px-2 py-0.5 bg-blue-600 hover:bg-blue-700 text-white rounded shadow-xs cursor-pointer"
+              >
+                Go
+              </button>
+            </form>
+
+            {/* Direct DRES Submit from Video Player */}
+            <button
+              type="button"
+              onClick={handleOpenDresModal}
+              className="px-2.5 py-1 text-xs font-bold rounded-lg bg-gradient-to-r from-sky-600 to-blue-700 hover:from-sky-500 hover:to-blue-600 text-white shadow-sm flex items-center gap-1 transition-all select-none cursor-pointer"
+              title="Nộp trực tiếp frame hiện tại lên máy chủ DRES (Phím tắt: Shift + S)"
+            >
+              <span>⚡ Submit DRES</span>
             </button>
 
             {/* Saved in this video pills with remove (x) buttons */}
@@ -662,12 +1012,12 @@ export function VideoPlayer({ frameInfo, onCancel }) {
               <source src={frameInfo.video_uri} type="video/mp4" />
             </video>
 
-            {/* CapCut Style Timeline Keyframe Diagram Strip (Gắn liền dưới Video cả ở chế độ Fullscreen!) */}
+            {/* CapCut Style Timeline Thumbnail Diagram Strip (Gắn liền dưới Video cả ở chế độ Fullscreen!) */}
             <div
               ref={timelineRef}
               onMouseDown={handleMouseDown}
               className="mt-1.5 flex flex-row w-full py-0.5 items-center h-16 bg-gray-900 rounded border border-gray-700 overflow-hidden relative select-none cursor-ew-resize shadow-md shrink-0"
-              title="CapCut Timeline Keyframe Strip - Click or drag to scrub video"
+              title="CapCut Timeline Thumbnail Strip - Click or drag to scrub video"
             >
               {/* Red Playhead Line */}
               {videoElementRef.current && (
@@ -677,19 +1027,25 @@ export function VideoPlayer({ frameInfo, onCancel }) {
                 />
               )}
 
-              {sampledKeyframes.length === 0 ? (
+              {sampledThumbnails.length === 0 ? (
                 <div className="text-gray-400 text-xs text-center w-full py-4 pointer-events-none">
-                  Loading timeline keyframes...
+                  Loading timeline thumbnails...
                 </div>
               ) : (
-                sampledKeyframes.map((kf, i) => (
+                sampledThumbnails.map((thumb, i) => (
                   <div
-                    key={kf + "-" + i}
+                    key={thumb + "-" + i}
                     className="flex-1 h-14 relative group overflow-hidden pointer-events-none border-r border-gray-800"
                   >
                     <img
-                      src={`http://127.0.0.1:6900/api/files/${frameInfo.video_id}/${kf}`}
-                      alt={kf}
+                      src={`/api/files/${frameInfo.video_id}/${thumb}`}
+                      onError={(e) => {
+                        if (!e.target.dataset.triedFallback) {
+                          e.target.dataset.triedFallback = "true";
+                          e.target.src = `http://127.0.0.1:6900/api/files/${frameInfo.video_id}/${thumb}`;
+                        }
+                      }}
+                      alt={thumb}
                       loading="lazy"
                       className="h-full w-full object-cover bg-black"
                     />
@@ -772,6 +1128,360 @@ export function VideoPlayer({ frameInfo, onCancel }) {
             </div>
           </div>
         </div>
+
+        {/* Quick DRES Submission Modal from Video Player (Màu trắng đồng bộ) */}
+        {showDresModal && (() => {
+          const quickPayload = getQuickDresBuiltPayload();
+          return (
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-2xs flex items-center justify-center p-4 animate-fadeIn"
+            >
+              <div className="bg-white border border-gray-300 rounded-xl max-w-lg w-full p-4 shadow-2xl flex flex-col gap-3 text-gray-800 text-xs">
+                {/* Header */}
+                <div className="flex items-center justify-between border-b border-gray-200 pb-2">
+                  <div className="flex items-center gap-1.5 font-bold text-blue-700 text-sm">
+                    <span>⚡</span>
+                    <span>NỘP BÀI DRES TỪ CURRENT FRAME</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowDresModal(false)}
+                    className="text-gray-400 hover:text-gray-700 font-bold text-sm px-1.5 cursor-pointer"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                {/* Active Task & Selection Bar with Refresh & Countdown Timer */}
+                <div className="bg-blue-50/80 border border-blue-200 p-2.5 rounded-lg flex flex-col gap-2 text-blue-900 shadow-2xs">
+                  {/* Row 1: Dropdown chọn câu & Nút Làm mới */}
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                      <span className="font-bold text-[11px] shrink-0 text-blue-800 flex items-center gap-1">
+                        <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.8)]"></span>
+                        Đang thi:
+                      </span>
+
+                      {!dresCustomTaskMode ? (
+                        <select
+                          value={dresSelectedTaskName}
+                          onChange={(e) => handleSelectTask(e.target.value)}
+                          className="flex-1 bg-white border border-blue-300 rounded px-2 py-1 text-[11px] font-bold text-blue-950 focus:outline-none focus:border-blue-500 shadow-2xs cursor-pointer truncate"
+                          title="Chọn câu thi trên hệ thống DRES"
+                        >
+                          {dresActiveTask && !dresAvailableTasks.some((t) => t.name === dresActiveTask.name) && (
+                            <option value={dresActiveTask.name}>
+                              ⭐ {dresActiveTask.name} (Đang diễn ra trên DRES)
+                            </option>
+                          )}
+                          {dresAvailableTasks.map((task) => (
+                            <option key={task.id || task.name} value={task.name}>
+                              {dresActiveTask && dresActiveTask.name === task.name ? "⭐ " : ""}{task.label || task.name}
+                            </option>
+                          ))}
+                          <option value="__CUSTOM__">✏️ Nhập câu khác...</option>
+                        </select>
+                      ) : (
+                        <div className="flex items-center gap-1 flex-1 min-w-0">
+                          <input
+                            type="text"
+                            placeholder="Nhập tên câu (vd: tkis-06, qa-04)..."
+                            value={dresCustomTaskName}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setDresCustomTaskName(val);
+                              setDresSelectedTaskName(val);
+                              const upper = String(val).toUpperCase();
+                              if (upper.includes("QA")) setDresTaskType("QA");
+                              else if (upper.includes("TRAKE") || upper.includes("TR-")) setDresTaskType("TRAKE");
+                              else setDresTaskType("KIS");
+                            }}
+                            autoFocus
+                            className="flex-1 bg-white border border-blue-400 rounded px-2 py-1 text-[11px] font-bold text-blue-950 focus:outline-none shadow-2xs truncate"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setDresCustomTaskMode(false);
+                              if (!dresCustomTaskName.trim()) {
+                                setDresSelectedTaskName(dresActiveTask?.name || "tkis-test");
+                              }
+                            }}
+                            className="px-1.5 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded text-[10px] font-bold shrink-0 cursor-pointer"
+                            title="Quay lại danh sách câu có sẵn"
+                          >
+                            ✕ Huỷ
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Nút Làm mới */}
+                    <button
+                      type="button"
+                      onClick={refreshLiveTaskInfo}
+                      disabled={dresIsRefreshing}
+                      className="px-2.5 py-1 bg-white hover:bg-blue-100 active:bg-blue-200 text-blue-700 border border-blue-300 rounded font-bold text-[11px] flex items-center gap-1 transition-colors cursor-pointer shadow-2xs shrink-0 disabled:opacity-60"
+                      title="Bấm để đồng bộ câu thi và thời gian từ máy chủ DRES"
+                    >
+                      <span className={dresIsRefreshing ? "animate-spin" : ""}>🔄</span>
+                      <span>{dresIsRefreshing ? "Đang tải..." : "Làm mới"}</span>
+                    </button>
+                  </div>
+
+                  {/* Row 2: Status & Time Display */}
+                  <div className="flex items-center justify-between text-[11px] border-t border-blue-200/60 pt-1.5">
+                    <div className="flex items-center gap-1.5 truncate">
+                      <span className="text-gray-600 font-mono text-[10px]">
+                        Mục tiêu: <strong className="text-blue-900">{dresSelectedTaskName}</strong>
+                      </span>
+                      {dresActiveTask && (
+                        <span className="text-[10px] bg-blue-100 text-blue-800 font-semibold px-1.5 py-0.2 rounded border border-blue-200 shrink-0">
+                          {dresActiveTask.taskGroup || dresActiveTask.taskType || "KIS"}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Countdown Timer Badge */}
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <span className="text-gray-500 text-[10px]">Thời gian:</span>
+                      {dresTaskRemainingSec !== null ? (
+                        dresTaskRemainingSec > 60 ? (
+                          <span className="px-2 py-0.5 rounded text-[11px] font-extrabold font-mono bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-2xs">
+                            ⏱️ {Math.floor(dresTaskRemainingSec / 60)}:{String(dresTaskRemainingSec % 60).padStart(2, "0")}
+                          </span>
+                        ) : dresTaskRemainingSec > 0 ? (
+                          <span className="px-2 py-0.5 rounded text-[11px] font-extrabold font-mono bg-rose-100 text-rose-800 border border-rose-300 shadow-2xs animate-pulse">
+                            ⏱️ {Math.floor(dresTaskRemainingSec / 60)}:{String(dresTaskRemainingSec % 60).padStart(2, "0")}
+                          </span>
+                        ) : (
+                          <span className="px-2 py-0.5 rounded text-[11px] font-extrabold font-mono bg-gray-200 text-gray-700 border border-gray-300">
+                            ⏱️ Hết giờ (00:00)
+                          </span>
+                        )
+                      ) : (
+                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-100 text-blue-700 border border-blue-200">
+                          ⏱️ --:--
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Warning Banner */}
+                {dresDryRun ? (
+                  <div className="bg-amber-50 border border-amber-300 p-2.5 rounded-lg text-amber-900 text-[11px] leading-relaxed">
+                    <strong>CHẾ ĐỘ DRY-RUN:</strong> Hệ thống sẽ tạo và kiểm tra cấu trúc JSON chuẩn trước. Bạn có thể xem trước JSON bên dưới và quyết định nộp thật!
+                  </div>
+                ) : (
+                  <div className="bg-rose-50 border border-rose-300 p-2.5 rounded-lg text-rose-900 text-[11px] leading-relaxed">
+                    <strong>⚠️ CẢNH BÁO PHẠT ĐIỂM:</strong> Nộp sai trước lần đúng đầu tiên sẽ bị <strong>trừ 10 điểm</strong>! Vui lòng kiểm tra kỹ trước khi bấm nộp.
+                  </div>
+                )}
+
+                {/* Video & Time Info Card */}
+                <div className="bg-gray-50 p-2.5 rounded-lg border border-gray-200 flex flex-col gap-1 font-mono text-[11px]">
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Video ID:</span>
+                    <strong className="text-blue-700">{cleanVideoId(frameInfo.video_id)}</strong>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Current Frame:</span>
+                    <strong className="text-emerald-700">#{activeFrameNum}</strong>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Thời gian quy đổi:</span>
+                    <strong className="text-purple-700">
+                      {dresExactTimeMs.toLocaleString()} ms ({dresTimeSource})
+                    </strong>
+                  </div>
+                </div>
+
+                {/* Task Type Switcher */}
+                <div className="flex items-center gap-1.5">
+                  <label className="text-gray-700 text-[11px] font-bold">Loại Task:</label>
+                  <div className="flex gap-1 flex-1">
+                    {["KIS", "QA", "TRAKE"].map((t) => (
+                      <button
+                        key={t}
+                        type="button"
+                        onClick={() => setDresTaskType(t)}
+                        className={`flex-1 py-1 rounded font-bold text-[11px] transition-colors cursor-pointer border ${
+                          dresTaskType === t
+                            ? "bg-blue-600 text-white border-blue-700 shadow-2xs"
+                            : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200"
+                        }`}
+                      >
+                        {t}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* QA Answer Input if QA */}
+                {dresTaskType === "QA" && (
+                  <div className="flex flex-col gap-1">
+                    <label className="text-gray-700 text-[11px] font-bold">Câu trả lời (QA Answer):</label>
+                    <input
+                      type="text"
+                      placeholder="Ví dụ: red car, blue bus, 42..."
+                      value={dresAnswerText}
+                      onChange={(e) => setDresAnswerText(e.target.value)}
+                      autoFocus
+                      className="w-full bg-white border border-gray-300 rounded px-2 py-1.5 text-gray-900 font-semibold text-xs focus:border-blue-500 focus:outline-none shadow-2xs"
+                    />
+                    <div className="font-mono text-[10px] text-emerald-700 truncate bg-emerald-50 p-1.5 rounded border border-emerald-200">
+                      Chuỗi: QA-{dresAnswerText || "<ANS>"}-{cleanVideoId(frameInfo.video_id)}-{dresExactTimeMs}
+                    </div>
+                  </div>
+                )}
+
+                {/* TRAKE Info if TRAKE */}
+                {dresTaskType === "TRAKE" && (
+                  <div className="font-mono text-[10px] text-emerald-700 truncate bg-emerald-50 p-1.5 rounded border border-emerald-200">
+                    Chuỗi: TR-{cleanVideoId(frameInfo.video_id)}-{activeFrameNum}
+                  </div>
+                )}
+
+                {/* Live JSON Payload Box */}
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center justify-between text-[11px] font-semibold text-gray-600">
+                    <span>Cấu trúc JSON Payload gửi đi:</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(JSON.stringify(quickPayload.payload, null, 2));
+                        setDresCopiedJson(true);
+                        setTimeout(() => setDresCopiedJson(false), 2000);
+                      }}
+                      className="text-blue-600 hover:text-blue-800 text-[10px] font-bold flex items-center gap-1 cursor-pointer"
+                    >
+                      {dresCopiedJson ? "✓ Đã chép!" : "📋 Sao chép JSON"}
+                    </button>
+                  </div>
+                  <div className="bg-gray-50 border border-gray-300 p-2 rounded-lg font-mono text-[11px] text-gray-900 max-h-28 overflow-y-auto shadow-inner">
+                    <pre>{JSON.stringify(quickPayload.payload, null, 2)}</pre>
+                  </div>
+                </div>
+
+                {/* Dry-Run Checkbox Option */}
+                <div className="flex items-center justify-between pt-0.5">
+                  <label className="flex items-center gap-1.5 cursor-pointer text-[11px] text-amber-800 font-semibold select-none">
+                    <input
+                      type="checkbox"
+                      checked={dresDryRun}
+                      onChange={(e) => setDresDryRun(e.target.checked)}
+                      className="rounded text-amber-600 focus:ring-0 cursor-pointer"
+                    />
+                    <span>Chạy thử giả lập (Dry-Run)</span>
+                  </label>
+                </div>
+
+                {/* Live Result if any */}
+                {dresResult && (
+                  <div
+                    className={`p-2.5 rounded-lg border text-xs font-semibold flex flex-col gap-1 shadow-2xs ${
+                      dresResult.status === "success"
+                        ? "bg-emerald-50 border-emerald-300 text-emerald-900"
+                        : dresResult.status === "wrong"
+                        ? "bg-rose-50 border-rose-300 text-rose-900"
+                        : dresResult.status === "dry_run"
+                        ? "bg-sky-50 border-sky-300 text-sky-900"
+                        : "bg-rose-50 border-rose-400 text-rose-900"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span>{dresResult.title}</span>
+                      {dresResult.status === "dry_run" && (
+                        <button
+                          type="button"
+                          onClick={() => handleQuickDresSubmit(true)}
+                          className="text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-bold px-2 py-0.5 rounded shadow-2xs cursor-pointer"
+                        >
+                          🚀 Nộp thật ngay
+                        </button>
+                      )}
+                    </div>
+                    <div className="text-[11px] font-normal leading-relaxed">{dresResult.message}</div>
+                    {dresResult.rawDescription && (
+                      <div className="text-[10px] text-gray-600 font-mono bg-white/70 p-1 rounded border border-gray-200">
+                        {dresResult.rawDescription}
+                      </div>
+                    )}
+                    {dresResult.message && dresResult.message.includes("yêu cầu định dạng TEXT") && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setDresTaskType("QA");
+                          setDresResult(null);
+                        }}
+                        className="mt-1 text-[11px] bg-blue-600 hover:bg-blue-700 text-white font-bold px-2 py-1 rounded shadow-2xs cursor-pointer self-start"
+                      >
+                        Chuyển sang tab Q&A ngay
+                      </button>
+                    )}
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex justify-between items-center pt-2 border-t border-gray-200">
+                  <button
+                    type="button"
+                    onClick={() => setShowDresModal(false)}
+                    className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold text-xs border border-gray-300 cursor-pointer"
+                  >
+                    Đóng
+                  </button>
+
+                  <div className="flex items-center gap-2">
+                    {dresDryRun ? (
+                      <>
+                        <button
+                          type="button"
+                          disabled={dresIsSubmitting}
+                          onClick={() => handleQuickDresSubmit(false)}
+                          className="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-bold text-xs shadow-xs cursor-pointer"
+                        >
+                          {dresIsSubmitting ? "⏳ Đang thử..." : "🧪 Chạy Dry-Run"}
+                        </button>
+                        <button
+                          type="button"
+                          disabled={dresIsSubmitting}
+                          onClick={() => handleQuickDresSubmit(true)}
+                          className="px-4 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg font-bold text-xs shadow-md shadow-blue-500/20 cursor-pointer"
+                        >
+                          {dresIsSubmitting ? "⏳ Đang nộp..." : "🚀 Xác nhận Nộp Thật Ngay"}
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setDresDryRun(true);
+                            handleQuickDresSubmit(false);
+                          }}
+                          className="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-bold text-xs shadow-xs cursor-pointer"
+                        >
+                          🧪 Đổi sang Dry-Run
+                        </button>
+                        <button
+                          type="button"
+                          disabled={dresIsSubmitting}
+                          onClick={() => handleQuickDresSubmit(false)}
+                          className="px-4 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg font-bold text-xs shadow-md shadow-blue-500/20 cursor-pointer"
+                        >
+                          {dresIsSubmitting ? "⏳ Đang nộp..." : "🚀 Nộp ngay"}
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
       </div>
     </div>
   );
