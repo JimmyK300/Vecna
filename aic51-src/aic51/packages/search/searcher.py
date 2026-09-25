@@ -72,7 +72,8 @@ class SegmentClustering:
                 fid = int(fid_s)
             except ValueError:
                 continue
-            key = (vid, self.seg_of(vid, fid))
+            segment_id = self.seg_of(vid, fid)
+            key = (vid, segment_id if segment_id >= 0 else fid)
             if key in seen:
                 continue
             seen.add(key)
@@ -230,7 +231,55 @@ class Searcher(object):
             self._collection_fields = set()
         self._prepare_feature_extractors(device)
         segment_map_path = os.environ.get("SEGMENT_MAP_PATH", "segment_map.json")
-        self._clustering = SegmentClustering(segment_map_path)  
+        self._clustering = SegmentClustering(segment_map_path)
+        try:
+            self._single_search_cluster_frame_gap = max(
+                0,
+                int(os.environ.get("SINGLE_SEARCH_CLUSTER_FRAME_GAP", "150")),
+            )
+        except ValueError:
+            logger.warning(
+                "Invalid SINGLE_SEARCH_CLUSTER_FRAME_GAP; falling back to 150 frames"
+            )
+            self._single_search_cluster_frame_gap = 150
+        try:
+            self._single_search_cluster_similarity = min(
+                1.0,
+                max(
+                    -1.0,
+                    float(os.environ.get("SINGLE_SEARCH_CLUSTER_SIMILARITY", "0.95")),
+                ),
+            )
+        except ValueError:
+            logger.warning(
+                "Invalid SINGLE_SEARCH_CLUSTER_SIMILARITY; falling back to 0.95"
+            )
+            self._single_search_cluster_similarity = 0.95
+
+        configured_cluster_field = os.environ.get("SINGLE_SEARCH_CLUSTER_VECTOR_FIELD")
+        if configured_cluster_field:
+            self._single_search_cluster_vector_field = configured_cluster_field
+        else:
+            # The temporal branch used legacy CLIP. New collections use
+            # SigLIP2, so select the first visual field the collection has.
+            compatible_fields = (
+                "image_clip_pe_l_14_336",
+                "image_siglip2_so400m_378",
+                "image_siglip_so400m_384",
+                "qwen_vl",
+            )
+            self._single_search_cluster_vector_field = next(
+                (field for field in compatible_fields if field in self._collection_fields),
+                compatible_fields[0],
+            )
+        logger.info(
+            "searcher [%s]: single-search visual clustering field=%s "
+            "similarity>=%.3f frame_gap<=%d",
+            collection_name,
+            self._single_search_cluster_vector_field,
+            self._single_search_cluster_similarity,
+            self._single_search_cluster_frame_gap,
+        )
 
     def to(self, device):
         self._device = torch.device(device)
@@ -892,10 +941,13 @@ class Searcher(object):
             rerank_k = max(limit, self._reranker_top_k)
             results = self._rerank_candidates(raw_query, results, top_k=rerank_k, cancel_event=cancel_event)
 
-        # ====== CLUSTERING: Diversify trên pool gốc (ranking ổn định) ======
+        # ====== ONLINE VISUAL DEDUP: same video + nearby + visually similar ======
         TOP_DIVERSE = min(len(results), max(200, (offset + limit) * 4))
         results_top = results[:TOP_DIVERSE]
-        results_diverse = self._clustering.diversify(results_top)
+        results_diverse = self._diversify_single_search_results(
+            results_top,
+            cancel_event=cancel_event,
+        )
         results_remaining = results[TOP_DIVERSE:]
         results = results_diverse + results_remaining
 
@@ -906,6 +958,113 @@ class Searcher(object):
             "offset": offset,
         }
         return res
+
+    def _diversify_single_search_results(
+        self,
+        results: list[dict],
+        cancel_event: threading.Event | Callable = None,
+    ) -> list[dict]:
+        """Suppress lower-ranked nearby visual duplicates.
+
+        Frames are compared only within the same video and temporal window.
+        Missing vectors and Milvus failures fail open so clustering never
+        destroys retrieval recall.
+        """
+        if not results:
+            return []
+
+        _check_cancelled(cancel_event)
+        vector_field = self._database.process_field_name(
+            self._single_search_cluster_vector_field
+        )
+        frame_ids = [
+            str(result.get("entity", {}).get("frame_id", ""))
+            for result in results
+        ]
+        frame_ids = [frame_id for frame_id in frame_ids if frame_id]
+
+        try:
+            rows = self._database.get_many(
+                frame_ids,
+                output_fields=["frame_id", vector_field],
+            )
+        except Exception as exc:
+            logger.warning(
+                "searcher: online single-search clustering disabled for this query; "
+                "cannot fetch %s vectors: %s",
+                vector_field,
+                exc,
+            )
+            return results
+
+        embeddings = {}
+        for row in rows or []:
+            frame_id = str(row.get("frame_id", ""))
+            vector = row.get(vector_field)
+            if not frame_id or vector is None:
+                continue
+            embedding = np.asarray(vector, dtype=np.float32)
+            if embedding.ndim != 1 or embedding.size == 0:
+                continue
+            norm = float(np.linalg.norm(embedding))
+            if not np.isfinite(norm) or norm <= 1e-9:
+                continue
+            embeddings[frame_id] = embedding / norm
+
+        if not embeddings:
+            logger.warning(
+                "searcher: online single-search clustering skipped; no %s vectors returned",
+                vector_field,
+            )
+            return results
+
+        kept_by_video = {}
+        diversified = []
+        suppressed = 0
+
+        # Input is already rank ordered, so the first frame accepted in each
+        # visual neighbourhood is its highest-ranked representative.
+        for result in results:
+            _check_cancelled(cancel_event)
+            frame_id = str(result.get("entity", {}).get("frame_id", ""))
+            embedding = embeddings.get(frame_id)
+            if "#" not in frame_id or embedding is None:
+                diversified.append(result)
+                continue
+
+            video_id, frame_number_text = frame_id.split("#", 1)
+            try:
+                frame_number = int(frame_number_text)
+            except ValueError:
+                diversified.append(result)
+                continue
+
+            is_duplicate = False
+            for kept_frame_number, kept_embedding in kept_by_video.get(video_id, []):
+                if abs(frame_number - kept_frame_number) > self._single_search_cluster_frame_gap:
+                    continue
+                similarity = float(np.dot(embedding, kept_embedding))
+                if similarity >= self._single_search_cluster_similarity:
+                    is_duplicate = True
+                    break
+
+            if is_duplicate:
+                suppressed += 1
+                continue
+
+            diversified.append(result)
+            kept_by_video.setdefault(video_id, []).append((frame_number, embedding))
+
+        logger.info(
+            "searcher: online visual clustering kept=%d suppressed=%d field=%s "
+            "similarity>=%.3f frame_gap<=%d",
+            len(diversified),
+            suppressed,
+            vector_field,
+            self._single_search_cluster_similarity,
+            self._single_search_cluster_frame_gap,
+        )
+        return diversified
 
     def _rerank_candidates(self, query_text: str, candidates: list, top_k: int = 50, cancel_event: threading.Event | Callable = None) -> list:
         """
