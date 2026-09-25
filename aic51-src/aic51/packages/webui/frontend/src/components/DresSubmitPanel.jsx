@@ -6,13 +6,14 @@ import {
   DRES_EVAL_KEY,
   cleanVideoId,
   formatMsToTime,
+  formatDresTime,
+  parseSecondsFromDres,
   parseTimeToSeconds,
   resolveTimeFromFrame,
   loginDres,
   getDresUser,
   getDresEvaluations,
-  getDresCurrentTask,
-  getDresEvaluationState,
+  getLiveEvaluationContext,
   submitDresAnswer,
   buildPayload,
   parseDresError,
@@ -88,6 +89,23 @@ export default function DresSubmitPanel({ onLoadedAnswer, externalFillData = nul
 
   useEffect(() => {
     localStorage.setItem(DRES_EVAL_KEY, selectedEvalId);
+    window.dispatchEvent(new CustomEvent("dres_eval_changed", { detail: { evalId: selectedEvalId } }));
+  }, [selectedEvalId]);
+
+  useEffect(() => {
+    const syncEvaluation = (evalId) => {
+      if (evalId && evalId !== selectedEvalId) setSelectedEvalId(evalId);
+    };
+    const onEvaluationChange = (event) => syncEvaluation(event.detail?.evalId);
+    const onStorage = (event) => {
+      if (event.key === DRES_EVAL_KEY) syncEvaluation(event.newValue);
+    };
+    window.addEventListener("dres_eval_changed", onEvaluationChange);
+    window.addEventListener("storage", onStorage);
+    return () => {
+      window.removeEventListener("dres_eval_changed", onEvaluationChange);
+      window.removeEventListener("storage", onStorage);
+    };
   }, [selectedEvalId]);
 
   // Initial connection check on mount
@@ -106,24 +124,28 @@ export default function DresSubmitPanel({ onLoadedAnswer, externalFillData = nul
 
   // Handle Countdown Timer for Current Task
   useEffect(() => {
-    if (countdownIntervalRef.current) {
-      clearInterval(countdownIntervalRef.current);
-    }
     if (taskRemainingSec !== null && taskRemainingSec > 0) {
-      countdownIntervalRef.current = setInterval(() => {
+      if (!countdownIntervalRef.current) countdownIntervalRef.current = setInterval(() => {
         setTaskRemainingSec((prev) => {
-          if (prev <= 1) {
+          if (prev === null || prev <= 1) {
             clearInterval(countdownIntervalRef.current);
+            countdownIntervalRef.current = null;
             return 0;
           }
           return prev - 1;
         });
       }, 1000);
+    } else if (countdownIntervalRef.current) {
+      clearInterval(countdownIntervalRef.current);
+      countdownIntervalRef.current = null;
     }
     return () => {
-      if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
+      if (countdownIntervalRef.current) {
+        clearInterval(countdownIntervalRef.current);
+        countdownIntervalRef.current = null;
+      }
     };
-  }, [taskRemainingSec]);
+  }, [taskRemainingSec > 0]);
 
   // Check connection and fetch evaluations
   const handleCheckConnection = async () => {
@@ -188,33 +210,26 @@ export default function DresSubmitPanel({ onLoadedAnswer, externalFillData = nul
   };
 
   // Fetch Current Task details and auto-switch tab
-  const fetchCurrentTaskInfo = async (evalId = selectedEvalId) => {
+  const fetchCurrentTaskInfo = async (evalId = selectedEvalId, autoSelectTab = true) => {
     if (!evalId || !sessionId) return;
     try {
-      const res = await getDresCurrentTask(evalId, sessionId, serverUrl);
-      if (res.ok && res.data) {
-        setCurrentTask(res.data);
-        const durationSec = res.data.duration ? Math.round(res.data.duration / 1000) : 300;
-        setTaskRemainingSec(durationSec);
-
-        // Fetch exact remaining time
-        try {
-          const stateRes = await getDresEvaluationState(evalId, sessionId, serverUrl);
-          if (stateRes.ok && stateRes.data && stateRes.data.timeLeft !== undefined && stateRes.data.timeLeft !== null) {
-            const tLeft = Number(stateRes.data.timeLeft);
-            const sec = tLeft > 1000 ? Math.round(tLeft / 1000) : Math.round(tLeft);
-            if (sec >= 0) setTaskRemainingSec(sec);
-          }
-        } catch (stateErr) {}
+      const context = await getLiveEvaluationContext(evalId, sessionId, serverUrl);
+      if (localStorage.getItem(DRES_EVAL_KEY) !== String(evalId)) return;
+      if (context.task) {
+        setCurrentTask(context.task);
+        const sec = parseSecondsFromDres(context.state?.timeLeft ?? context.task.duration);
+        setTaskRemainingSec((prev) => sec === null ? null : prev === null || Math.abs(prev - sec) > 2 ? sec : prev);
 
         // Auto-switch tab based on task group / task type
-        const grp = String(res.data.taskGroup || res.data.taskType || res.data.name || "").toUpperCase();
-        if (grp.includes("QA")) {
-          setCurrentTab("qa");
-        } else if (grp.includes("TRAKE")) {
-          setCurrentTab("trake");
-        } else {
-          setCurrentTab("kis");
+        const grp = String(context.task.taskGroup || context.task.taskType || context.task.name || "").toUpperCase();
+        if (autoSelectTab) {
+          if (grp.includes("QA")) {
+            setCurrentTab("qa");
+          } else if (grp.includes("TRAKE")) {
+            setCurrentTab("trake");
+          } else {
+            setCurrentTab("kis");
+          }
         }
       } else {
         setCurrentTask(null);
@@ -224,6 +239,13 @@ export default function DresSubmitPanel({ onLoadedAnswer, externalFillData = nul
       setCurrentTask(null);
     }
   };
+
+  useEffect(() => {
+    if (!selectedEvalId || !sessionId) return;
+    fetchCurrentTaskInfo(selectedEvalId);
+    const poll = setInterval(() => fetchCurrentTaskInfo(selectedEvalId, false), 8000);
+    return () => clearInterval(poll);
+  }, [selectedEvalId, sessionId, serverUrl]);
 
   // Auto-fill from external data or selected frame
   const applyFillData = async (data) => {
@@ -285,7 +307,7 @@ export default function DresSubmitPanel({ onLoadedAnswer, externalFillData = nul
 
     // Collect all frame IDs if user selected multiple frames (useful for TRAKE)
     const allFrames = selected
-      .map((s) => (typeof s === "string" && s.includes("#") ? s.split("#")[1] : null))
+      .map((s) => (typeof s === "string" && cleanVideoId(s.split("#")[0]) === cleanVideoId(vId) && s.includes("#") ? s.split("#")[1] : null))
       .filter(Boolean);
 
     await applyFillData({
@@ -561,7 +583,7 @@ export default function DresSubmitPanel({ onLoadedAnswer, externalFillData = nul
         <div className="flex items-center gap-2">
           {currentTask && (
             <span className="text-[10px] bg-blue-100 border border-blue-300 text-blue-800 font-bold px-1.5 py-0.5 rounded shadow-2xs animate-pulse">
-              Task: {currentTask.name || "Active"} {taskRemainingSec !== null && `(${Math.floor(taskRemainingSec / 60)}:${String(taskRemainingSec % 60).padStart(2, "0")})`}
+              Task: {currentTask.name || "Active"} {taskRemainingSec !== null && `(${formatDresTime(taskRemainingSec)})`}
             </span>
           )}
           <span className="text-gray-500 hover:text-gray-800 font-bold text-sm">
@@ -859,7 +881,7 @@ export default function DresSubmitPanel({ onLoadedAnswer, externalFillData = nul
                   />
                 </div>
                 <div className="bg-white border border-gray-300 p-1.5 rounded font-mono text-[10px] text-emerald-700 truncate shadow-2xs">
-                  Chuỗi: TR-{cleanVideoId(videoInput) || "<VID>"}-{trakeFramesInput || "<FRAMES>"}
+                  Chuỗi: {trakeFramesInput.trim() ? buildPayload("TRAKE", { videoId: videoInput, framesList: trakeFramesInput }).formattedText : `TR-${cleanVideoId(videoInput) || "<VID>"}-<FRAMES>`}
                 </div>
               </div>
             )}

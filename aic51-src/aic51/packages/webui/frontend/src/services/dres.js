@@ -7,6 +7,26 @@ export const DRES_SESSION_KEY = "dres_session_id";
 export const DRES_EVAL_KEY = "dres_eval_id";
 export const DRES_HISTORY_KEY = "dres_submission_history";
 
+// DRES timeLeft and task duration are seconds. Only epoch-like millisecond values
+// need conversion; ordinary long-running tasks must keep their full duration.
+export function parseSecondsFromDres(value) {
+  if (value === null || value === undefined || value === "" || !Number.isFinite(Number(value))) return null;
+  const seconds = Number(value);
+  if (seconds < 0) return null;
+  return Math.round(seconds > 100000000 ? seconds / 1000 : seconds);
+}
+
+export function formatDresTime(seconds) {
+  if (seconds === null || seconds === undefined || seconds === "" || !Number.isFinite(Number(seconds))) return "--:--";
+  const value = Math.max(0, Math.round(Number(seconds)));
+  const hours = Math.floor(value / 3600);
+  const minutes = Math.floor((value % 3600) / 60);
+  const remainder = value % 60;
+  return hours > 0
+    ? `${hours}:${String(minutes).padStart(2, "0")}:${String(remainder).padStart(2, "0")}`
+    : `${String(minutes).padStart(2, "0")}:${String(remainder).padStart(2, "0")}`;
+}
+
 /**
  * Clean video ID: removes video extensions (.mp4, .mkv, .webm, etc.)
  */
@@ -341,6 +361,39 @@ export async function getDresEvaluationInfo(evaluationId, sessionId, serverUrl =
     data = null;
   }
   return { ok: resp.ok, status: resp.status, data };
+}
+
+/** Fetch the complete evaluation definitions used to populate task templates. */
+export async function getDresEvaluationInfoList(sessionId, serverUrl = null) {
+  if (!sessionId) return { ok: false, status: 400, data: [] };
+  const resp = await dresFetch(`/api/v2/evaluation/info/list?session=${encodeURIComponent(sessionId)}`, {}, serverUrl);
+  let data = [];
+  try {
+    data = await resp.json();
+  } catch {
+    return { ok: false, status: resp.status, data: [] };
+  }
+  return { ok: resp.ok, status: resp.status, data: Array.isArray(data) ? data : [] };
+}
+
+export async function getLiveEvaluationContext(evaluationId, sessionId, serverUrl = null) {
+  const [task, state, info, infoList] = await Promise.allSettled([
+    getDresCurrentTask(evaluationId, sessionId, serverUrl),
+    getDresEvaluationState(evaluationId, sessionId, serverUrl),
+    getDresEvaluationInfo(evaluationId, sessionId, serverUrl),
+    getDresEvaluationInfoList(sessionId, serverUrl),
+  ]);
+  const result = (entry) => entry.status === "fulfilled" && entry.value.ok ? entry.value.data : null;
+  const listedInfo = (result(infoList) || []).find((item) => String(item.id) === String(evaluationId));
+  const evaluationInfo = result(info) || listedInfo;
+  return {
+    task: result(task),
+    state: result(state),
+    info: evaluationInfo,
+    taskTemplates: evaluationInfo?.taskTemplates?.length
+      ? evaluationInfo.taskTemplates
+      : listedInfo?.taskTemplates || [],
+  };
 }
 
 /**
