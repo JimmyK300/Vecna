@@ -3,6 +3,7 @@ import re
 import csv
 import json
 import asyncio
+from collections import OrderedDict
 from functools import lru_cache
 import numpy as np
 
@@ -245,7 +246,15 @@ def split_into_sentences(segment):
     return sub_segments
 
 
-_TRANSCRIPT_CACHE: dict[str, list] = {}
+_TRANSCRIPT_CACHE_MAXSIZE = 64
+_TRANSCRIPT_CACHE: OrderedDict[str, list] = OrderedDict()
+
+
+def _cache_transcript(video_id: str, transcript: list) -> None:
+    _TRANSCRIPT_CACHE[video_id] = transcript
+    _TRANSCRIPT_CACHE.move_to_end(video_id)
+    if len(_TRANSCRIPT_CACHE) > _TRANSCRIPT_CACHE_MAXSIZE:
+        _TRANSCRIPT_CACHE.popitem(last=False)
 
 
 def _load_transcript_sync(features_path: Path, fps: float, video_id: str) -> list:
@@ -324,6 +333,7 @@ def _load_transcript_sync(features_path: Path, fps: float, video_id: str) -> lis
 @app.get("/api/video/transcript/{video_id}")
 async def get_video_transcript(video_id: str):
     if video_id in _TRANSCRIPT_CACHE:
+        _TRANSCRIPT_CACHE.move_to_end(video_id)
         return _TRANSCRIPT_CACHE[video_id]
 
     fps = get_fps(video_id)
@@ -352,7 +362,7 @@ async def get_video_transcript(video_id: str):
 
     # Offload heavy synchronous disk reads to a thread pool so we NEVER block the FastAPI event loop!
     final_transcript = await asyncio.to_thread(_load_transcript_sync, features_path, fps, video_id)
-    _TRANSCRIPT_CACHE[video_id] = final_transcript
+    _cache_transcript(video_id, final_transcript)
     return final_transcript
 
 
@@ -456,6 +466,18 @@ def _load_map_keyframes_data(video_id: str):
     csv_path = _get_map_keyframes_path(video_id)
     if not csv_path:
         return None
+
+    try:
+        stat = csv_path.stat()
+        items = _load_map_keyframes_csv(str(csv_path.resolve()), stat.st_mtime_ns, stat.st_size)
+        return list(items) if items is not None else None
+    except OSError as e:
+        logger.error(f"Failed reading map-keyframes for {video_id}: {e}")
+        return None
+
+
+@lru_cache(maxsize=128)
+def _load_map_keyframes_csv(csv_path: str, mtime_ns: int, size: int):
     items = []
     try:
         with open(csv_path, mode="r", encoding="utf-8") as f:
@@ -473,9 +495,9 @@ def _load_map_keyframes_data(video_id: str):
                 except (ValueError, KeyError):
                     continue
         items.sort(key=lambda x: (x["pts_time"], x["raw_idx"]))
-        return items
+        return tuple(items)
     except Exception as e:
-        logger.error(f"Failed reading map-keyframes for {video_id}: {e}")
+        logger.error(f"Failed reading map-keyframes from {csv_path}: {e}")
         return None
 
 

@@ -42,8 +42,15 @@ def lighting_from_ocr(time_of_day: str) -> str:
     return "unknown"
 
 
-@lru_cache(maxsize=4)
 def load_camera_metadata(path: str) -> dict[str, dict]:
+    source = Path(path).resolve()
+    stat = source.stat()
+    return _load_camera_metadata(str(source), stat.st_mtime_ns, stat.st_size)
+
+
+@lru_cache(maxsize=4)
+def _load_camera_metadata(path: str, mtime_ns: int, size: int) -> dict[str, dict]:
+    # The version arguments invalidate cached classifications when the JSON is updated.
     with open(path, encoding="utf-8") as handle:
         rows = json.load(handle)
     metadata = {}

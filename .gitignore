@@ -45,6 +45,20 @@ map-keyframes/
 *.tgz
 *.bz2
 
+# Media & Videos (large binaries)
+*.mp4
+*.avi
+*.mkv
+*.mov
+*.webm
+*.flv
+*.wmv
+
+# Temporary & backup files
+*.bak
+*.backup
+*.pre-single-collection-backup
+
 # Model weights & Large Binaries
 *.bin
 *.pt

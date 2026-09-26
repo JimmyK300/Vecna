@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -34,6 +35,27 @@ class CameraMetadataTest(unittest.TestCase):
             camera_metadata.build_camera_filter("roundabout && true")
         with self.assertRaisesRegex(ValueError, "Invalid lighting filter"):
             camera_metadata.build_camera_filter("", "sunset")
+
+    def test_updated_metadata_file_invalidates_cache(self):
+        with tempfile.TemporaryDirectory() as directory:
+            metadata_path = Path(directory) / "camera.json"
+            row = {"video_id": "N019-V001", "intersection_type": "3-Way Intersection", "time_of_day": "07:59:59"}
+            metadata_path.write_text(json.dumps([row]), encoding="utf-8")
+            self.assertIn("N019-V001", camera_metadata.build_camera_filter("three_way", path=metadata_path))
+            row["intersection_type"] = "4-Way Intersection"
+            metadata_path.write_text(json.dumps([row]), encoding="utf-8")
+            stat = metadata_path.stat()
+            os.utime(metadata_path, ns=(stat.st_atime_ns, stat.st_mtime_ns + 1_000_000_000))
+            self.assertIn("N019-V001", camera_metadata.build_camera_filter("four_way", path=metadata_path))
+            self.assertNotIn("N019-V001", camera_metadata.build_camera_filter("three_way", path=metadata_path))
+
+    def test_main_dataset_classifies_n019_as_four_way(self):
+        metadata_path = Path(__file__).resolve().parents[2] / "camera_info_workspace2_road_classification.json"
+        data = camera_metadata.load_camera_metadata(str(metadata_path))
+        for video_id in ("N019-V001", "N019-V002", "N019-V003"):
+            self.assertEqual(data[video_id]["road_type"], "4-Way Intersection")
+            self.assertIn(video_id, camera_metadata.build_camera_filter("four_way", path=metadata_path))
+            self.assertNotIn(video_id, camera_metadata.build_camera_filter("three_way", path=metadata_path))
 
 
 if __name__ == "__main__":

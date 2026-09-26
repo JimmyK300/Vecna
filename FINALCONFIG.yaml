@@ -34,27 +34,12 @@ features: &analyse_features
   #   model: "image_clip"
   #   source: "open_clip"
   #   arch_name: "PE-Core-L-14-336"
-  #   pretrained_model: "meta" 
+  #   pretrained_model: "meta"
   #   analyse:
   #     batch_size: 64
   #   index:
   #     datatype: "FLOAT_VECTOR"
-  #     dim: 1024 
-  #     metric_type: "COSINE"
-  #     index_type: "SCANN"
-  #     params:
-  #       nlist: 512
-
-  # image_siglip_so400m-384:
-  #   model: "image_siglip"
-  #   source: "open_clip"
-  #   arch_name: "ViT-SO400M-14-SigLIP-384"
-  #   pretrained_model: "webli"
-  #   analyse:
-  #     batch_size: 64
-  #   index:
-  #     datatype: "FLOAT_VECTOR"
-  #     dim: 1152
+  #     dim: 1024
   #     metric_type: "COSINE"
   #     index_type: "SCANN"
   #     params:
@@ -88,27 +73,15 @@ features: &analyse_features
       params:
         nlist: 512
 
-
-  # video_clip_pe-l-14-336:
-  #   model: "video_clip"
-  #   source: "open_clip"
-  #   arch_name: "PE-Core-L-14-336"
-  #   pretrained_model: "meta" 
-  #   analyse:
-  #     batch_size: 4
-  #   index:
-  #     datatype: "FLOAT_VECTOR"
-  #     dim: 1024 
-  #     metric_type: "COSINE"
-  #     index_type: "SCANN"
-  #     params:
-  #       nlist: 512
-
   ocr:
     model: "ocr"
-    source: "tesseract"
+    source: "paddle_vietocr"
+    pretrained_model: "vgg_transformer"
     analyse:
-      batch_size: 8
+      batch_size: 16
+      pad_y: 6
+      pad_x: 4
+      det_lang: "vi"
     index:
       default_value: ""
       datatype: "VARCHAR"
@@ -124,7 +97,7 @@ features: &analyse_features
     source: "whisperx"
     arch_name: "large-v3-turbo"
     analyse:
-      batch_size: 16   # đây là batch_size nội bộ của whisperx.transcribe (chunk theo VAD), KHÔNG phải số clip xử lý song song
+      batch_size: 16
     index:
       default_value: ""
       datatype: "VARCHAR"
@@ -141,24 +114,9 @@ searcher:
     #   model: "image_clip"
     #   source: "open_clip"
     #   arch_name: "PE-Core-L-14-336"
-    #   pretrained_model: "meta" 
+    #   pretrained_model: "meta"
     #   target:
-    #     - image_clip_pe-l-14-336 
-    #     # - video_clip_pe-l-14-336 
-
-    # language_siglip_so400m-384:
-    #   model: "image_siglip"
-    #   source: "open_clip"
-    #   arch_name: "ViT-SO400M-14-SigLIP-384"
-    #   pretrained_model: "webli"
-    #   target:
-    #     - image_siglip_so400m-384
-
-    language_qwen_vl:
-      model: "qwen_vl_embedding"
-      pretrained_model: "Qwen/Qwen3-VL-Embedding-2B"
-      target:
-        - qwen_vl
+    #     - image_clip_pe-l-14-336
 
     language_siglip2_so400m-378:
       model: "image_siglip"
@@ -168,39 +126,17 @@ searcher:
       target:
         - image_siglip2_so400m-378
 
-    # text_bge_m3:
-    #   model: "text_embedding"
-    #   source: "hf"
-    #   pretrained_model: "BAAI/bge-m3"
-    #   backend: "pytorch"
-    #   onnx_provider: "auto"
-    #   target:
-    #     - ocr_dense
-    #     - asr_dense
+    language_qwen_vl:
+      model: "qwen_vl_embedding"
+      pretrained_model: "Qwen/Qwen3-VL-Embedding-2B"
+      target:
+        - qwen_vl
 
   ocr:
     ocr_field: "ocr_sparse"
-    enable: true
-    
+
   asr:
     asr_field: "asr_sparse"
-    enable: true
-
-  # Groq LLM Query Expansion (bắt chước 100% caube gpt-oss-120b / llama3-70b)
-  llm:
-    enable: false
-    provider: "groq"                      # groq, gemini, hoặc openai
-    model_name: "openai/gpt-oss-120b"     # Mô hình 120B tham số trên Groq Cloud
-    api_key: "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"                           # Để trống để lấy từ GROQ_API_KEY environment variable
-
-  # YOLO Auto-Crop Processor
-  yolo:
-    enable: false
-    model_path: "yolov8x.pt"
-    conf_threshold: 0.25
-    padding: 15
-
-
 
 frontend:
   dev_port: 5173
@@ -221,13 +157,10 @@ backends:
 
   search:
     port: 1337
-    collections:
-      workspace: "workspace_col"
-      workspace2: "workspace2_col"
+    collection: "workspace_col"
     workers: 1
     gpu: true
 
   file:
     port: 4200
     workers: 1
-    

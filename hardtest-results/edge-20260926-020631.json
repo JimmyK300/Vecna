@@ -1,0 +1,224 @@
+{
+  "finished_at": "2026-09-26T02:07:19.277715",
+  "edge_cases": [
+    {
+      "name": "empty",
+      "status": 200,
+      "seconds": 0.397,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "whitespace",
+      "status": 200,
+      "seconds": 0.292,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "special_0",
+      "status": 200,
+      "seconds": 2.874,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "special_1",
+      "status": 200,
+      "seconds": 0.959,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "special_2",
+      "status": 200,
+      "seconds": 0.861,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "special_3",
+      "status": 200,
+      "seconds": 0.898,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "special_4",
+      "status": 200,
+      "seconds": 0.892,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "special_5",
+      "status": 200,
+      "seconds": 0.902,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "special_6",
+      "status": 200,
+      "seconds": 0.894,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "special_7",
+      "status": 200,
+      "seconds": 0.867,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "special_8",
+      "status": 200,
+      "seconds": 0.894,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "long_500_words",
+      "status": 200,
+      "seconds": 1.512,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "unclosed_quote",
+      "status": 200,
+      "seconds": 0.974,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "nested_quotes",
+      "status": 200,
+      "seconds": 1.006,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "diacritics",
+      "status": 200,
+      "seconds": 1.042,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "no_diacritics",
+      "status": 200,
+      "seconds": 0.971,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "temporal_2",
+      "status": 200,
+      "seconds": 1.73,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "temporal_5",
+      "status": 200,
+      "seconds": 3.047,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "temporal_missing_first",
+      "status": 200,
+      "seconds": 1.441,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "temporal_missing_middle",
+      "status": 200,
+      "seconds": 1.518,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "temporal_interval_0",
+      "status": 200,
+      "seconds": 1.109,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "temporal_interval_100000",
+      "status": 200,
+      "seconds": 1.081,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "yolo_invalid",
+      "status": 400,
+      "seconds": 0.056,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "yolo_colons",
+      "status": 400,
+      "seconds": 0.026,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "yolo_injection",
+      "status": 400,
+      "seconds": 0.022,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "yolo_batch1",
+      "status": 400,
+      "seconds": 0.019,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "camera_invalid",
+      "status": 400,
+      "seconds": 0.032,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "lighting_invalid",
+      "status": 400,
+      "seconds": 0.022,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "alias_batch1",
+      "status": 200,
+      "seconds": 0.878,
+      "canceled": null,
+      "error": null
+    },
+    {
+      "name": "alias_batch2",
+      "status": 200,
+      "seconds": 1.581,
+      "canceled": null,
+      "error": null
+    }
+  ],
+  "concurrent_200": {
+    "count": 200,
+    "statuses": {
+      "200": 200
+    },
+    "canceled": 178,
+    "max_seconds": 1.431,
+    "errors": []
+  }
+}
