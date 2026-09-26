@@ -305,6 +305,12 @@ class MilvusDatabase(object):
                         fname = self.process_field_name(metadata_field)
                         if self._existing_fields is None or fname in self._existing_fields:
                             scalar_fields.append(fname)
+
+        # Include structured metadata array fields when present in the collection
+        for meta_field in ("yolo_relations", "yolo_objects"):
+            if self._existing_fields is None or meta_field in self._existing_fields:
+                scalar_fields.append(meta_field)
+
         return sorted(list(set(scalar_fields)))
 
     def get(self, id, output_fields: list[str] | None = None):

@@ -242,11 +242,19 @@ class Searcher(object):
         if "yolo_relations" not in self._collection_fields:
             raise ValueError("This collection does not contain YOLO relations")
         parts = relation_key.split(":")
-        if (
-            len(parts) != 5
-            or parts[2] not in {"left_of", "right_of", "above", "below", "near"}
-            or any(not re.fullmatch(r"[a-z0-9_]{1,64}", part) for part in parts)
-        ):
+        valid_relations = {"left_of", "right_of", "above", "below", "near"}
+        valid = False
+        if len(parts) == 3:
+            # object1:relation:object2
+            valid = parts[1] in valid_relations
+        elif len(parts) == 4:
+            # color1:object1:relation:object2 or object1:relation:color2:object2
+            valid = parts[2] in valid_relations or parts[1] in valid_relations
+        elif len(parts) == 5:
+            # color1:object1:relation:color2:object2
+            valid = parts[2] in valid_relations
+
+        if not valid or any(not re.fullmatch(r"[a-z0-9_]{1,64}", part) for part in parts):
             raise ValueError("Invalid YOLO relation key")
         return f"ARRAY_CONTAINS(yolo_relations, {json.dumps(relation_key)})"
 
@@ -264,16 +272,22 @@ class Searcher(object):
             if relation_key not in relations:
                 continue
 
+            scores = result.setdefault("scores", {})
             base_score = float(result.get("distance", 0.0) or 0.0)
+
+            # Avoid redundant boost on the same stage score
+            if scores.get("yolo_relation_boost") and not ("rerank" in scores and not scores.get("rerank_boosted")):
+                continue
+
             boost_delta = max(abs(base_score) * (cls.YOLO_RELATION_BOOST - 1.0), 0.01)
             boosted_score = base_score + boost_delta
             result["distance"] = boosted_score
-            scores = result.setdefault("scores", {})
             scores["pre_yolo_relation"] = round(base_score, 6)
             scores["yolo_relation_boost"] = cls.YOLO_RELATION_BOOST
             scores["final"] = round(boosted_score, 6)
             if "rerank" in scores:
                 scores["rerank"] = round(boosted_score, 6)
+                scores["rerank_boosted"] = True
 
         # Keep reranked candidates ahead of candidates without reranker scores;
         # their distance values come from different score scales.
@@ -976,17 +990,18 @@ class Searcher(object):
                 asr_alpha=asr_alpha,
                 nprobe=nprobe,
                 exclude_video_ids=query.exclude_video_ids,
-                yolo_relation="",
+                yolo_relation=yolo_relation,
                 camera_filter=camera_filter,
                 cancel_event=cancel_event,
             )
             total = len(results)
         else:
-            candidate_limit = (
+            base_limit = (
                 max(300, (offset + limit) * 3)
                 if len(query.exclude_video_ids) > 0
                 else max(200, offset + limit)
             )
+            candidate_limit = max(400 if yolo_relation else 200, base_limit)
 
             db_size = self._database.count(camera_filter) if camera_filter else self._database.get_size()
 
@@ -1004,7 +1019,7 @@ class Searcher(object):
                     asr_alpha=asr_alpha,
                     nprobe=nprobe,
                     exclude_video_ids=query.exclude_video_ids,
-                    yolo_relation="",
+                    yolo_relation=yolo_relation,
                     camera_filter=camera_filter,
                     cancel_event=cancel_event,
                 )
