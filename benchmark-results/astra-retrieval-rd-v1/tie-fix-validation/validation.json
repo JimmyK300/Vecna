@@ -1,0 +1,50 @@
+{
+  "disposable_final_head": "0ee966b8ddfe367fbf5a9bb4ba8301c2d43b5e54",
+  "disposable_head_unchanged": true,
+  "execution_base": "0ee966b8ddfe367fbf5a9bb4ba8301c2d43b5e54",
+  "fixtures": 13,
+  "ground_truth_read": false,
+  "hash_seeds": [
+    0,
+    1,
+    82
+  ],
+  "models_loaded": false,
+  "native_head_after": "fd879fb0529165a441745374ab72244df8aadd5e",
+  "native_head_before": "fd879fb0529165a441745374ab72244df8aadd5e",
+  "native_status_sha256_after": "76ef21e3e9467fee7e692332ed5f9884e9d2f3cab0e92f9328214370926f9c66",
+  "native_status_sha256_before": "76ef21e3e9467fee7e692332ed5f9884e9d2f3cab0e92f9328214370926f9c66",
+  "native_unchanged": true,
+  "platform": "Windows",
+  "python": "3.12.1",
+  "retrieval_calls": 0,
+  "returncode": 0,
+  "schema": "vecna89-tie-fix-validation-v1",
+  "source_commit": "fc91800b9bb1c280696fe81dbfb76e38598b798e",
+  "source_files": {
+    "aic51-src/aic51/packages/search/searcher.py": {
+      "bytes": 51822,
+      "sha256": "58c053467b1c0fb68090dd2bfb2c3f3352be282c2c5d4d42b060649dbc656764"
+    },
+    "aic51-src/tests/test_text_tie_order.py": {
+      "bytes": 14150,
+      "sha256": "4853fe1f7fcedf330fc09292ff3619e90d5af7fa1d6af68a010278e399b4e0ef"
+    },
+    "docs/deterministic-text-ties.md": {
+      "bytes": 3652,
+      "sha256": "c45350000518ff679bf6bdf302329aabc5ff5730574ff76537f1bcb5f6f5abe9"
+    }
+  },
+  "status": "passed",
+  "stderr": {
+    "bytes": 3636,
+    "sha256": "f815d853fd770252776cf1ec258cf0b4e733f7cedf0a993efdc8cace4ff7cbd1"
+  },
+  "stdout": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "tests": 9,
+  "timestamp_utc": "2026-09-16T15:03:41.164455+00:00",
+  "wall_seconds": 5.573394300001382
+}
