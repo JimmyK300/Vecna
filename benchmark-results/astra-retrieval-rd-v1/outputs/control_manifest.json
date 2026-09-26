@@ -1,0 +1,846 @@
+{
+  "authority": {
+    "dataset_main_at_start": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local_checkout_is_not_truth_authority": true,
+    "truth_projection_ref": "f0b0f4707ceab91ba7e266f72fa982dce3ae1c4b",
+    "vecna_main_at_start": "95d63a6abf10c598e0e54af7d2071bedbe542d1e"
+  },
+  "baseline_lineage": {
+    "legacy_baseline_sources": {
+      "frozen_headless_vnext_scored_combined": 78,
+      "p3_qwen_only_v1": 35
+    },
+    "legacy_path": "inputs/legacy_temporal_control_113.jsonl",
+    "legacy_sha256": "91f61d16a0930222af2450da127352c25825ba9b46faf546e475b2769c5a22a8",
+    "packet_authority": {
+      "A": "new matched run required; legacy cached scores are not the current baseline",
+      "B_and_C": "current115 Qwen top100 export"
+    },
+    "reuse_boundary": "Frame caches may be reused only after exact video/frame/decoder/transform identity; legacy scores are not globally interchangeable.",
+    "same_113_query_ids_and_text": true,
+    "status": "resolved_distinct_baseline_lineages",
+    "temporal_top3_candidate_identity": {
+      "p0_q22": {
+        "top3_candidate_set_equal": true,
+        "top3_order_equal": true
+      },
+      "p0_q23": {
+        "top3_candidate_set_equal": true,
+        "top3_order_equal": true
+      },
+      "p0_q24": {
+        "top3_candidate_set_equal": true,
+        "top3_order_equal": true
+      },
+      "p1_q25": {
+        "top3_candidate_set_equal": true,
+        "top3_order_equal": true
+      },
+      "p2_q29": {
+        "top3_candidate_set_equal": true,
+        "top3_order_equal": true
+      },
+      "p2_q30": {
+        "top3_candidate_set_equal": true,
+        "top3_order_equal": true
+      },
+      "p3_q21": {
+        "top3_candidate_set_equal": true,
+        "top3_order_equal": true
+      },
+      "p3_q34": {
+        "top3_candidate_set_equal": true,
+        "top3_order_equal": false
+      }
+    },
+    "top20_changed_query_ids": [
+      "p0_q01",
+      "p0_q02",
+      "p0_q03",
+      "p0_q04",
+      "p0_q05",
+      "p0_q06",
+      "p0_q07",
+      "p0_q08",
+      "p0_q09",
+      "p0_q10",
+      "p0_q11",
+      "p0_q12",
+      "p0_q13",
+      "p0_q14",
+      "p0_q16",
+      "p0_q17",
+      "p0_q18",
+      "p0_q19",
+      "p0_q20",
+      "p0_q21",
+      "p0_q22",
+      "p0_q23",
+      "p0_q24",
+      "p1_q01",
+      "p1_q02",
+      "p1_q04",
+      "p1_q05",
+      "p1_q06",
+      "p1_q07",
+      "p1_q08",
+      "p1_q09",
+      "p1_q10",
+      "p1_q11",
+      "p1_q12",
+      "p1_q13",
+      "p1_q14",
+      "p1_q15",
+      "p1_q16",
+      "p1_q17",
+      "p1_q18",
+      "p1_q19",
+      "p1_q20",
+      "p1_q21",
+      "p1_q22",
+      "p1_q23",
+      "p1_q24",
+      "p1_q25",
+      "p2_q01",
+      "p2_q02",
+      "p2_q03",
+      "p2_q04",
+      "p2_q05",
+      "p2_q06",
+      "p2_q07",
+      "p2_q08",
+      "p2_q09",
+      "p2_q10",
+      "p2_q11",
+      "p2_q12",
+      "p2_q13",
+      "p2_q14",
+      "p2_q15",
+      "p2_q16",
+      "p2_q18",
+      "p2_q19",
+      "p2_q21",
+      "p2_q22",
+      "p2_q23",
+      "p2_q24",
+      "p2_q25",
+      "p2_q26",
+      "p2_q27",
+      "p2_q28",
+      "p2_q29",
+      "p2_q30",
+      "p3_q02",
+      "p3_q03",
+      "p3_q05",
+      "p3_q06",
+      "p3_q07",
+      "p3_q08",
+      "p3_q11",
+      "p3_q12",
+      "p3_q13",
+      "p3_q14",
+      "p3_q15",
+      "p3_q16",
+      "p3_q17",
+      "p3_q18",
+      "p3_q19",
+      "p3_q21",
+      "p3_q22",
+      "p3_q23",
+      "p3_q24",
+      "p3_q25",
+      "p3_q26",
+      "p3_q27",
+      "p3_q28",
+      "p3_q29",
+      "p3_q30",
+      "p3_q31",
+      "p3_q32",
+      "p3_q33",
+      "p3_q34",
+      "p3_q35"
+    ],
+    "top20_order_or_membership_differs_count": 105
+  },
+  "candidate_surface": {
+    "baseline_input_depth": 100,
+    "duplicate_occurrences_preserved": {
+      "baseline": {
+        "p0_q06": 49,
+        "p1_q18": 85,
+        "p2_q03": 47,
+        "p3_q13": 18,
+        "p3_q16": 58,
+        "p3_q36": 61
+      },
+      "reranker": {
+        "p0_q06": 12,
+        "p1_q18": 18,
+        "p2_q03": 8,
+        "p3_q13": 2,
+        "p3_q16": 11,
+        "p3_q36": 12
+      }
+    },
+    "empty_queries_remain_in_denominator": true,
+    "empty_query_ids": [
+      "p2_q17"
+    ],
+    "full_top100_reranker_scores_saved": false,
+    "limitation": "Saved top20 cannot support a new blend requiring scores for all100 candidates.",
+    "nonempty_query_rows": 114,
+    "query_rows": 115,
+    "reranked_candidates_verified_in_frozen_pool": 2280,
+    "reranker_input_depth": 100,
+    "reranker_saved_output_depth": 20
+  },
+  "controls": {
+    "historical_trake_note": "Strict all-events coverage; P3 retains its own fractional event metric.",
+    "metrics": {
+      "baseline": {
+        "count": 113,
+        "mrr_at_20": 0.4243397949150161,
+        "recall_at_1": 41.0,
+        "recall_at_10": 65.0,
+        "recall_at_20": 68.0,
+        "recall_at_5": 56.0
+      },
+      "reranker": {
+        "count": 113,
+        "mrr_at_20": 0.4320209888728889,
+        "recall_at_1": 40.0,
+        "recall_at_10": 64.0,
+        "recall_at_20": 76.0,
+        "recall_at_5": 61.0
+      }
+    },
+    "per_query_count": 113,
+    "per_query_semantic_sha256": "21fcf6a07f4c1e5dc1f21213df192b91769ec3b8b1d93f75ac091f58a362fff2",
+    "scoring_contract": {
+      "excluded": [
+        "p0_q15",
+        "p3_q09"
+      ],
+      "historical_non_trake": "correct video AND inclusive overlap with accepted range",
+      "historical_trake": "all required TRAKE events covered by K; strict query success",
+      "join": "operational phase + numeric query number for historical rows",
+      "ks": [
+        1,
+        5,
+        10,
+        20
+      ],
+      "p3": "current headless_benchmark retrieval semantics; P3 event recall remains fractional"
+    },
+    "status": "reproduced_from_canonical_truth_and_saved_rankings"
+  },
+  "invariants": {
+    "full_corpus_reembedding": false,
+    "ground_truth_role": "scoring_only",
+    "new_model_inference": false,
+    "production_changes": false,
+    "query_text_transformed_here": false
+  },
+  "issue": "JimmyK300/Vecna#82",
+  "legacy_checksum_reconciliation": {
+    "historical_manifest": {
+      "git_lf_sha256": "5ef034fd275baaabab1dee04148302e99b4e24ad4a1accc6169b6c070baaf223",
+      "legacy_raw_sha256": "09df9bdbd9782492dcf81e8da3fad5e07a1ae25b2bc7aeca9cd2cda4045be9bd",
+      "status": "line_endings_only"
+    },
+    "older_comparison_recorded_reranker_checksum": {
+      "scope": "Stored P3 metrics are reproduced exactly; this older input checksum is not claimed to identify current raw bytes.",
+      "sha256": "e2b790e4530a3c33a4a1a6532d209912961180571c5038373a4d00c8f22524b0",
+      "status": "older_byte_identity_unverified"
+    },
+    "p3_comparison": {
+      "git_lf_sha256": "2837b36d8fbaf94dc0d7ee3f5e028a87367e9a81c80273381fef633250b8ff31",
+      "legacy_raw_sha256": "3edc6bf2dccb5a5db8041e3d5560a3a002ac02ef8c471846678ec4e2293eca04",
+      "status": "line_endings_only"
+    },
+    "reranker": {
+      "archive_git_blob_sha": "71b751c36cbf5cab6611b10ab5edf391ee078e0f",
+      "archive_path": "experiments/vecna-reranker-fusion-v1-20260914/inputs/evaluation/headless-current-p0-p1-p2-p3-qwen-only-top100-v0/qwen3_vl_reranker_2b_top100.json",
+      "canonical_json_sha256": "8fc5975882740ab8386fda5789878a7745378f38cf4eceaf47f3910b21d10116",
+      "evidence_sha256": "953585b9174024dfbfb0689657b2bbcc9d4fd2831108b8505214d662797ac1ea",
+      "git_lf_sha256": "4e949d95916c9fed7b11327ace67e207eb9238bb9f3beb4e66ff4873cb3ec8be",
+      "legacy_raw_sha256": "9cc4d5cc7a8432aa36f3cc3ac8d08dabc4b17ab35c195d1344e6f6afa4c4d0b4",
+      "source_url": "https://github.com/JimmyK300/ai-routing-hub/issues/1#issuecomment-5696731774",
+      "status": "line_endings_only_host_lf_normalization_and_json_verified"
+    }
+  },
+  "model_index_surface": {
+    "active_vector_text_fields": null,
+    "baseline_model": "Qwen/Qwen3-VL-Embedding-2B",
+    "collection_row_count": null,
+    "current_package_versions": null,
+    "historical_surface_status": "saved_experiment_evidence; not a current loaded-model or index proof",
+    "historical_temporal_surface": {
+      "anns_field": "qwen_vl",
+      "collection": "official_l21_l30_all_v2",
+      "device": "cpu",
+      "elapsed_s": 1434.819,
+      "event_queries": 42,
+      "instruction": "Retrieve images or text relevant to the user's query.",
+      "model_config_sha256": "9172f55b0b9cce70b7f67b10c58a408ccf3ec15c587e6efd4d5f41631237fded",
+      "model_snapshot": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--Qwen--Qwen3-VL-Embedding-2B\\snapshots\\9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda",
+      "production_retrieval_rewrite": false,
+      "pymilvus": "3.0.1",
+      "reembedding": false,
+      "torch": "2.4.1+cpu",
+      "transformers": "4.57.1"
+    },
+    "host_observations": {
+      "evidence_path": "inputs/host_preflight.json",
+      "evidence_sha256": "21b1c27d01e22985e5a4419766907fc87089aebfcef3375c36ce5b00cf0d3fb9",
+      "frozen_embedding_snapshot_config_identity_verified": true,
+      "loaded_model_index_parity": "unverified",
+      "model_snapshots": [
+        {
+          "files": [
+            {
+              "bytes": 707,
+              "exists": true,
+              "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Embedding-2B/snapshots/9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda/added_tokens.json",
+              "sha256": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680"
+            },
+            {
+              "bytes": 1570,
+              "exists": true,
+              "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Embedding-2B/snapshots/9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda/config.json",
+              "sha256": "9172f55b0b9cce70b7f67b10c58a408ccf3ec15c587e6efd4d5f41631237fded"
+            },
+            {
+              "bytes": 238,
+              "exists": true,
+              "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Embedding-2B/snapshots/9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda/config_sentence_transformers.json",
+              "sha256": "ab0d95430e4a88750bf613c7bea69cf878818a77c4047150599e1b586a7e8ab0"
+            },
+            {
+              "bytes": 429,
+              "exists": true,
+              "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Embedding-2B/snapshots/9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda/modules.json",
+              "sha256": "fa7d796a215e1b2416773062891923b191fc5a4849bc44e322997433c90f459c"
+            },
+            {
+              "bytes": 783,
+              "exists": true,
+              "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Embedding-2B/snapshots/9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda/preprocessor_config.json",
+              "sha256": "d75c1f9f474add87cb0188d43c4fbf5c232d2af64f156fcefc5311089049100d"
+            },
+            {
+              "bytes": 770,
+              "exists": true,
+              "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Embedding-2B/snapshots/9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda/sentence_bert_config.json",
+              "sha256": "2c9dac0bf11e4282254502891eb84082debd7a68a775564c75303392f63787f8"
+            },
+            {
+              "bytes": 613,
+              "exists": true,
+              "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Embedding-2B/snapshots/9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda/special_tokens_map.json",
+              "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+            },
+            {
+              "bytes": 11423705,
+              "exists": true,
+              "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Embedding-2B/snapshots/9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda/tokenizer.json"
+            },
+            {
+              "bytes": 5404,
+              "exists": true,
+              "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Embedding-2B/snapshots/9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda/tokenizer_config.json",
+              "sha256": "355f2b4e5bad7b01f11ef6cb68ebc176f61b95c3276092ea225b1bea0e01e95c"
+            },
+            {
+              "bytes": 817,
+              "exists": true,
+              "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Embedding-2B/snapshots/9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda/video_preprocessor_config.json",
+              "sha256": "59c5c9eb52182eb14c06ffb10ca9effd29adce5f238a95de23ca14a38dbd2cb1"
+            },
+            {
+              "bytes": 2776833,
+              "exists": true,
+              "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Embedding-2B/snapshots/9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda/vocab.json",
+              "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+            }
+          ],
+          "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Embedding-2B/snapshots/9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda"
+        },
+        {
+          "files": [
+            {
+              "bytes": 707,
+              "exists": true,
+              "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Reranker-2B/snapshots/4bd860ac4f15ad1897a214615cccc700f8f71818/added_tokens.json",
+              "sha256": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680"
+            },
+            {
+              "bytes": 1652,
+              "exists": true,
+              "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Reranker-2B/snapshots/4bd860ac4f15ad1897a214615cccc700f8f71818/config.json",
+              "sha256": "82d38a8f803e38e13986fdd622114a6fec12a834adbd3cee9253d757a257d23d"
+            },
+            {
+              "bytes": 294,
+              "exists": true,
+              "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Reranker-2B/snapshots/4bd860ac4f15ad1897a214615cccc700f8f71818/config_sentence_transformers.json",
+              "sha256": "5583a19d9f4d7e6e91f44b1181b107de6f7f887822bfc3d9e8286f0f8ac579f2"
+            },
+            {
+              "bytes": 213,
+              "exists": true,
+              "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Reranker-2B/snapshots/4bd860ac4f15ad1897a214615cccc700f8f71818/generation_config.json",
+              "sha256": "7940a14042d126a31694c75bd8a020b668745a11867a394f19e9d26b5eccf2de"
+            },
+            {
+              "bytes": 280,
+              "exists": true,
+              "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Reranker-2B/snapshots/4bd860ac4f15ad1897a214615cccc700f8f71818/modules.json",
+              "sha256": "6f13b6b4a89e577b591b2077bca40c67c26541a6740a8809267cb474f90806a9"
+            },
+            {
+              "bytes": 628,
+              "exists": true,
+              "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Reranker-2B/snapshots/4bd860ac4f15ad1897a214615cccc700f8f71818/preprocessor_config.json",
+              "sha256": "fd32af55c2d3846adb0bc46df8eb07c92c332b31b34c338ae85259f3f3951f24"
+            },
+            {
+              "bytes": 756,
+              "exists": true,
+              "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Reranker-2B/snapshots/4bd860ac4f15ad1897a214615cccc700f8f71818/sentence_bert_config.json",
+              "sha256": "729676c811dadb5cf2cefdfcfca1bd04de40d0f0caed8a6482016d8a2937341d"
+            },
+            {
+              "bytes": 613,
+              "exists": true,
+              "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Reranker-2B/snapshots/4bd860ac4f15ad1897a214615cccc700f8f71818/special_tokens_map.json",
+              "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+            },
+            {
+              "bytes": 11422654,
+              "exists": true,
+              "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Reranker-2B/snapshots/4bd860ac4f15ad1897a214615cccc700f8f71818/tokenizer.json"
+            },
+            {
+              "bytes": 5445,
+              "exists": true,
+              "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Reranker-2B/snapshots/4bd860ac4f15ad1897a214615cccc700f8f71818/tokenizer_config.json",
+              "sha256": "81ec7bb9530159b326c0bef1d0b6c33d392090524014ea3f0123a3c1eb9c2af5"
+            },
+            {
+              "bytes": 817,
+              "exists": true,
+              "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Reranker-2B/snapshots/4bd860ac4f15ad1897a214615cccc700f8f71818/video_preprocessor_config.json",
+              "sha256": "59c5c9eb52182eb14c06ffb10ca9effd29adce5f238a95de23ca14a38dbd2cb1"
+            },
+            {
+              "bytes": 2776833,
+              "exists": true,
+              "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Reranker-2B/snapshots/4bd860ac4f15ad1897a214615cccc700f8f71818/vocab.json",
+              "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+            }
+          ],
+          "path": "/mnt/c/Users/minhc/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Reranker-2B/snapshots/4bd860ac4f15ad1897a214615cccc700f8f71818"
+        }
+      ],
+      "repository_observations": [
+        {
+          "git_status": 0,
+          "head": "fd879fb0529165a441745374ab72244df8aadd5e",
+          "repo": "/mnt/c/Users/minhc/Code/Vecna"
+        },
+        {
+          "git_status": 0,
+          "head": "3b60117609bea3a8992bb59608870156e1897b27",
+          "repo": "/mnt/d/Official-Dataset"
+        }
+      ],
+      "repository_status_note": "git_status is a process exit code, not evidence that the checkout is clean.",
+      "source_url": "https://github.com/JimmyK300/ai-routing-hub/issues/1#issuecomment-5696698290",
+      "status": "snapshot_config_files_observed",
+      "weight_file_hashes": "not_observed"
+    },
+    "index_fingerprint": null,
+    "query_transformation_gates": {
+      "required_off": [
+        "query_expansion",
+        "translation",
+        "reranking",
+        "yolo_text_transformation"
+      ],
+      "status": "pending_exact_export_code_config_and_run_evidence_for_new_retrieval"
+    },
+    "reranker_model": "Qwen/Qwen3-VL-Reranker-2B"
+  },
+  "packet_readiness": {
+    "0_saved_control": {
+      "retrieval_results_changed": false,
+      "status": "verified"
+    },
+    "A_native_multi_image": {
+      "blocker": "Installed native-image support, matched representations and bounded inference proof are separate gates.",
+      "status": "requires_packet_A_runtime_and_matched_candidate_manifest"
+    },
+    "B_provider_fusion": {
+      "blocker": "Frozen raw per-provider lists, exact current fusion replay and model/index transformation parity are separate gates.",
+      "status": "requires_packet_B_provider_manifest"
+    },
+    "C_saved_reranker": {
+      "scope": "Saved candidates, existing reranker scores and archived latency only; no new inference.",
+      "status": "ready"
+    },
+    "D_failure_ledger": {
+      "limit": "A/B failures or pending evidence must remain explicit, not inferred.",
+      "status": "ready_for_saved_control_and_C_evidence"
+    },
+    "E_next_proposal": {
+      "status": "requires_failure_ledger"
+    }
+  },
+  "preflight_code_sha256": "cf4a19b8d7e349b8e2566286882076c3a0eeff7307c431a7c4804aeeef25fb47",
+  "query_surface": {
+    "all_surface_query_ids_and_text_equal": true,
+    "excluded_ids": [
+      "p0_q15",
+      "p3_q09"
+    ],
+    "excluded_source_keys": {
+      "p0_q15": "query-p0-21-kis",
+      "p3_q09": "p3_q09"
+    },
+    "phase_counts": {
+      "P0": 24,
+      "P1": 25,
+      "P2": 30,
+      "P3": 36
+    },
+    "query_text_encoding": "UTF-8 compact sorted-key JSON list of {query_id,query}, ordered by query_id; exact text; no normalization",
+    "query_text_sha256": "bd15d05f6c8f00597cced4f50914547ca0b3de75a9e57ee262a4f4ba292485aa",
+    "scoreable": 113,
+    "scoreable_ids": [
+      "p0_q01",
+      "p0_q02",
+      "p0_q03",
+      "p0_q04",
+      "p0_q05",
+      "p0_q06",
+      "p0_q07",
+      "p0_q08",
+      "p0_q09",
+      "p0_q10",
+      "p0_q11",
+      "p0_q12",
+      "p0_q13",
+      "p0_q14",
+      "p0_q16",
+      "p0_q17",
+      "p0_q18",
+      "p0_q19",
+      "p0_q20",
+      "p0_q21",
+      "p0_q22",
+      "p0_q23",
+      "p0_q24",
+      "p1_q01",
+      "p1_q02",
+      "p1_q03",
+      "p1_q04",
+      "p1_q05",
+      "p1_q06",
+      "p1_q07",
+      "p1_q08",
+      "p1_q09",
+      "p1_q10",
+      "p1_q11",
+      "p1_q12",
+      "p1_q13",
+      "p1_q14",
+      "p1_q15",
+      "p1_q16",
+      "p1_q17",
+      "p1_q18",
+      "p1_q19",
+      "p1_q20",
+      "p1_q21",
+      "p1_q22",
+      "p1_q23",
+      "p1_q24",
+      "p1_q25",
+      "p2_q01",
+      "p2_q02",
+      "p2_q03",
+      "p2_q04",
+      "p2_q05",
+      "p2_q06",
+      "p2_q07",
+      "p2_q08",
+      "p2_q09",
+      "p2_q10",
+      "p2_q11",
+      "p2_q12",
+      "p2_q13",
+      "p2_q14",
+      "p2_q15",
+      "p2_q16",
+      "p2_q17",
+      "p2_q18",
+      "p2_q19",
+      "p2_q20",
+      "p2_q21",
+      "p2_q22",
+      "p2_q23",
+      "p2_q24",
+      "p2_q25",
+      "p2_q26",
+      "p2_q27",
+      "p2_q28",
+      "p2_q29",
+      "p2_q30",
+      "p3_q01",
+      "p3_q02",
+      "p3_q03",
+      "p3_q04",
+      "p3_q05",
+      "p3_q06",
+      "p3_q07",
+      "p3_q08",
+      "p3_q10",
+      "p3_q11",
+      "p3_q12",
+      "p3_q13",
+      "p3_q14",
+      "p3_q15",
+      "p3_q16",
+      "p3_q17",
+      "p3_q18",
+      "p3_q19",
+      "p3_q20",
+      "p3_q21",
+      "p3_q22",
+      "p3_q23",
+      "p3_q24",
+      "p3_q25",
+      "p3_q26",
+      "p3_q27",
+      "p3_q28",
+      "p3_q29",
+      "p3_q30",
+      "p3_q31",
+      "p3_q32",
+      "p3_q33",
+      "p3_q34",
+      "p3_q35",
+      "p3_q36"
+    ],
+    "scoreable_phase_counts": {
+      "P0": 23,
+      "P1": 25,
+      "P2": 30,
+      "P3": 35
+    },
+    "total": 115
+  },
+  "schema": "vecna82-control-manifest-v1",
+  "source_manifest_sha256": "7488129146304b8ef626dfa2459e159d05efcca958bcece40a7d6d6ff6dafdc1",
+  "sources": [
+    {
+      "blob_sha": "7a1ea48bff3d33336ff37f3fb51da699c4e701c0",
+      "bytes": 278815,
+      "commit": "f0b0f4707ceab91ba7e266f72fa982dce3ae1c4b",
+      "git_blob_verified": true,
+      "local": "inputs/canonical_truth.jsonl",
+      "path": "benchmark-results/issue34-current-115/ground_truth_current_115.jsonl",
+      "repository": "JimmyK300/Vecna",
+      "sha256": "63f80eb6ff54ef3c623f6ae4926eba404dac8bb5543b86e31f8fa0da842b4c9f"
+    },
+    {
+      "blob_sha": "33a8ef21dc9f76539b3fc73c12c8da2b5ed2ed56",
+      "bytes": 1659,
+      "commit": "f0b0f4707ceab91ba7e266f72fa982dce3ae1c4b",
+      "git_blob_verified": true,
+      "local": "inputs/canonical_truth.meta.json",
+      "path": "benchmark-results/issue34-current-115/ground_truth_current_115.meta.json",
+      "repository": "JimmyK300/Vecna",
+      "sha256": "813db77fef4da90a218716cc8c4807589820b52ceafa03462f6d1e1c97d755f6"
+    },
+    {
+      "blob_sha": "c11838cc259f28afef1d40a486deb6d342f26d9d",
+      "bytes": 18696,
+      "commit": "f0b0f4707ceab91ba7e266f72fa982dce3ae1c4b",
+      "git_blob_verified": true,
+      "local": "reference/build_issue34_current_115_truth.py",
+      "path": "aic51-src/script/build_issue34_current_115_truth.py",
+      "repository": "JimmyK300/Vecna",
+      "sha256": "298ace0bd0c1a1ea1f962e6dc887319e4b04d8cf95d19ef707e7e4f444799a82"
+    },
+    {
+      "blob_sha": "396fcc70df9a0af14e705720104f38bb2dd47828",
+      "bytes": 212093,
+      "commit": "e0981b9022723f0a8bb20d4ccb108f725f4f2e50",
+      "git_blob_verified": true,
+      "local": "inputs/historical_manifest.json",
+      "path": "benchmark-results/headless-vnext-p0-p1-p2-v1/manifest.json",
+      "repository": "JimmyK300/Vecna",
+      "sha256": "5ef034fd275baaabab1dee04148302e99b4e24ad4a1accc6169b6c070baaf223"
+    },
+    {
+      "blob_sha": "207476ce2f6ba6121e1a5255448138c702b47fb1",
+      "bytes": 1306086,
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "git_blob_verified": true,
+      "local": "inputs/qwen_only_top100.jsonl",
+      "path": "evaluation/headless-current-p0-p1-p2-p3-qwen-only-top100-v0/qwen_only_top100.jsonl",
+      "repository": "JimmyK300/official-dataset-control",
+      "sha256": "85d5dd169bcd6934ebfa8435b6aee82ce9bc149bac3a704afbdbcb4b986568f0"
+    },
+    {
+      "blob_sha": "71b751c36cbf5cab6611b10ab5edf391ee078e0f",
+      "bytes": 498366,
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "git_blob_verified": true,
+      "local": "inputs/qwen3_vl_reranker_2b_top100.json",
+      "path": "evaluation/headless-current-p0-p1-p2-p3-qwen-only-top100-v0/qwen3_vl_reranker_2b_top100.json",
+      "repository": "JimmyK300/official-dataset-control",
+      "sha256": "4e949d95916c9fed7b11327ace67e207eb9238bb9f3beb4e66ff4873cb3ec8be"
+    },
+    {
+      "blob_sha": "b9ab1328a7ee9f7339e69ba24fc5edcc59657d1a",
+      "bytes": 162656,
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "git_blob_verified": true,
+      "local": "inputs/comparison_qwen_vs_reranker.json",
+      "path": "evaluation/headless-current-p0-p1-p2-p3-qwen-only-top100-v0/comparison_qwen_vs_reranker.json",
+      "repository": "JimmyK300/official-dataset-control",
+      "sha256": "2837b36d8fbaf94dc0d7ee3f5e028a87367e9a81c80273381fef633250b8ff31"
+    },
+    {
+      "blob_sha": "797fe9ef462fffa32e86af4419f0fb69e916293b",
+      "bytes": 231543,
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "git_blob_verified": true,
+      "local": "inputs/original_truth_ledger.jsonl",
+      "path": "evaluation/headless-current-p0-p1-p2-p3-qwen-only-top100-v0/ground_truth_current_115.jsonl",
+      "repository": "JimmyK300/official-dataset-control",
+      "sha256": "79393a95aae8e51b6b475e1b35f3b5ccfef278ee05a3f444eaedc0b0f4f90819"
+    },
+    {
+      "blob_sha": "f8a506439d813d780e44db1288ac95efa373bf06",
+      "bytes": 58774,
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "git_blob_verified": true,
+      "local": "inputs/reranker.stdout.log",
+      "path": "evaluation/headless-current-p0-p1-p2-p3-qwen-only-top100-v0/reranker.stdout.log",
+      "repository": "JimmyK300/official-dataset-control",
+      "sha256": "5b0b9d94ec231d50176b5643648002b42c11bd8a6870e9da37d6f66ef9a54ed5"
+    },
+    {
+      "blob_sha": "1c47b0abe5d81730e33f10d9c33d627d50cae58c",
+      "bytes": 18734,
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "git_blob_verified": true,
+      "local": "reference/evaluate_reranker_fusion.py",
+      "path": "experiments/vecna-reranker-fusion-v1-20260914/code/aic51-src/script/evaluate_reranker_fusion.py",
+      "repository": "JimmyK300/official-dataset-control",
+      "sha256": "82cbc5d7f5b6309f747165f8f278d4c3b66e9db83092c1808d2f72d1f8e76316"
+    },
+    {
+      "blob_sha": "e52e2afc351afac0fc6cf32cd89540a45f1bfb6e",
+      "bytes": 86941,
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "git_blob_verified": true,
+      "local": "inputs/previous_controls.json",
+      "path": "experiments/vecna-reranker-fusion-v1-20260914/artifacts/controls/controls.json",
+      "repository": "JimmyK300/official-dataset-control",
+      "sha256": "ee7e3430742d6cc1b37aa8c87d07c91bacc378874fc5add0fb93fbfe64202d50"
+    },
+    {
+      "blob_sha": "84e1b7efbb28f814d682fd389924c60ca99a7208",
+      "bytes": 603,
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "git_blob_verified": true,
+      "local": "inputs/temporal_surface.json",
+      "path": "experiments/temporal-sequence-retrieval-v1/surface_manifest.json",
+      "repository": "JimmyK300/official-dataset-control",
+      "sha256": "be0ee966df4e8510064e26ce3d32768613384c00420423bfe3572f2512ff50db"
+    },
+    {
+      "blob_sha": "28cc572e6baf01f1382b39cdc872b975b402f99e",
+      "bytes": 1353,
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "git_blob_verified": true,
+      "local": "inputs/temporal_control_manifest.json",
+      "path": "experiments/temporal-sequence-retrieval-v1/control_manifest.json",
+      "repository": "JimmyK300/official-dataset-control",
+      "sha256": "632a1a35e3fafc167049f9be902e38619899181c723889bcb85f52282d9dd7a8"
+    },
+    {
+      "blob_sha": "2e56403a52c4fc49d2aadb87196bef646ed5556e",
+      "bytes": 14706,
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "git_blob_verified": true,
+      "local": "inputs/capability_p0.jsonl",
+      "path": "evaluation/queries/benchmark/capability-decomposition-v0/p0.jsonl",
+      "repository": "JimmyK300/official-dataset-control",
+      "sha256": "c5ac1d260b7d5868622122aa7346ed49843c099633797e020e250e460fa79d63"
+    },
+    {
+      "blob_sha": "a2668984dc020619989efcf6c146e0ed6300a535",
+      "bytes": 15235,
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "git_blob_verified": true,
+      "local": "inputs/capability_p1.jsonl",
+      "path": "evaluation/queries/benchmark/capability-decomposition-v0/p1.jsonl",
+      "repository": "JimmyK300/official-dataset-control",
+      "sha256": "bf5f9b7c58797bdcba552de6754cdf12f5e9da44c1b69674ccb66b1a5d593d86"
+    },
+    {
+      "blob_sha": "80ecd87d9ddb8b44033c07f11193bb53593d0117",
+      "bytes": 18230,
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "git_blob_verified": true,
+      "local": "inputs/capability_p2.jsonl",
+      "path": "evaluation/queries/benchmark/capability-decomposition-v0/p2.jsonl",
+      "repository": "JimmyK300/official-dataset-control",
+      "sha256": "515fa14039e9f62e1751c3ffcc9aad1e03da42fbaa020429936caa539b39344c"
+    },
+    {
+      "blob_sha": "1e28904f7f8537592e4617b8f16e55c4df81e02c",
+      "bytes": 26394,
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "git_blob_verified": true,
+      "local": "inputs/capability_p3.jsonl",
+      "path": "evaluation/queries/benchmark/capability-decomposition-v0/p3.jsonl",
+      "repository": "JimmyK300/official-dataset-control",
+      "sha256": "a5d6497f0efa721fc0d4666387a32b66f1066881c9f0d4d9f01192bea4187096"
+    },
+    {
+      "blob_sha": "12cd9b33fec74ace71c6dabd1d83b2b593ac0b8d",
+      "bytes": 649393,
+      "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+      "git_blob_verified": true,
+      "local": "inputs/legacy_temporal_control_113.jsonl",
+      "path": "experiments/temporal-sequence-retrieval-v1/control_113.jsonl",
+      "repository": "JimmyK300/official-dataset-control",
+      "sha256": "91f61d16a0930222af2450da127352c25825ba9b46faf546e475b2769c5a22a8"
+    }
+  ],
+  "truth_surface": {
+    "canonical_path": "inputs/canonical_truth.jsonl",
+    "canonical_sha256": "63f80eb6ff54ef3c623f6ae4926eba404dac8bb5543b86e31f8fa0da842b4c9f",
+    "historical_count": 78,
+    "historical_projection_semantic_sha256": "b59467d21569f2d17971c583a62589e851474d21762af6d0f9440b0403b7dc5d",
+    "historical_range_count": 72,
+    "historical_trake_count": 6,
+    "historical_truth_sha256": "5ef034fd275baaabab1dee04148302e99b4e24ad4a1accc6169b6c070baaf223",
+    "join": "(canonical_round, canonical_source_key), supported by source provenance; query text checked separately",
+    "p3_and_identity_ledger_sha256": "79393a95aae8e51b6b475e1b35f3b5ccfef278ee05a3f444eaedc0b0f4f90819",
+    "p3_projection_semantic_sha256": "2e9058d07747db4dfec61ba34473f147e19032d5acd1cb1ad6dc1ac15be013c0",
+    "p3_provisional_count": 35,
+    "p3_trake_count": 2,
+    "projection_reproduced_byte_for_byte": true,
+    "truth_limitations": [
+      "Six historical TRAKE rows retain submission-derived event-window proxies.",
+      "35 scoreable P3 rows retain provisional source-text truth requiring corpus validation."
+    ]
+  }
+}

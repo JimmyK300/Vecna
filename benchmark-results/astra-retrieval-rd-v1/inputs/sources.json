@@ -1,0 +1,128 @@
+[
+  {
+    "blob_sha": "7a1ea48bff3d33336ff37f3fb51da699c4e701c0",
+    "commit": "f0b0f4707ceab91ba7e266f72fa982dce3ae1c4b",
+    "local": "inputs/canonical_truth.jsonl",
+    "path": "benchmark-results/issue34-current-115/ground_truth_current_115.jsonl",
+    "repository": "JimmyK300/Vecna"
+  },
+  {
+    "blob_sha": "33a8ef21dc9f76539b3fc73c12c8da2b5ed2ed56",
+    "commit": "f0b0f4707ceab91ba7e266f72fa982dce3ae1c4b",
+    "local": "inputs/canonical_truth.meta.json",
+    "path": "benchmark-results/issue34-current-115/ground_truth_current_115.meta.json",
+    "repository": "JimmyK300/Vecna"
+  },
+  {
+    "blob_sha": "c11838cc259f28afef1d40a486deb6d342f26d9d",
+    "commit": "f0b0f4707ceab91ba7e266f72fa982dce3ae1c4b",
+    "local": "reference/build_issue34_current_115_truth.py",
+    "path": "aic51-src/script/build_issue34_current_115_truth.py",
+    "repository": "JimmyK300/Vecna"
+  },
+  {
+    "blob_sha": "396fcc70df9a0af14e705720104f38bb2dd47828",
+    "commit": "e0981b9022723f0a8bb20d4ccb108f725f4f2e50",
+    "local": "inputs/historical_manifest.json",
+    "path": "benchmark-results/headless-vnext-p0-p1-p2-v1/manifest.json",
+    "repository": "JimmyK300/Vecna"
+  },
+  {
+    "blob_sha": "207476ce2f6ba6121e1a5255448138c702b47fb1",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "inputs/qwen_only_top100.jsonl",
+    "path": "evaluation/headless-current-p0-p1-p2-p3-qwen-only-top100-v0/qwen_only_top100.jsonl",
+    "repository": "JimmyK300/official-dataset-control"
+  },
+  {
+    "blob_sha": "71b751c36cbf5cab6611b10ab5edf391ee078e0f",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "inputs/qwen3_vl_reranker_2b_top100.json",
+    "path": "evaluation/headless-current-p0-p1-p2-p3-qwen-only-top100-v0/qwen3_vl_reranker_2b_top100.json",
+    "repository": "JimmyK300/official-dataset-control"
+  },
+  {
+    "blob_sha": "b9ab1328a7ee9f7339e69ba24fc5edcc59657d1a",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "inputs/comparison_qwen_vs_reranker.json",
+    "path": "evaluation/headless-current-p0-p1-p2-p3-qwen-only-top100-v0/comparison_qwen_vs_reranker.json",
+    "repository": "JimmyK300/official-dataset-control"
+  },
+  {
+    "blob_sha": "797fe9ef462fffa32e86af4419f0fb69e916293b",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "inputs/original_truth_ledger.jsonl",
+    "path": "evaluation/headless-current-p0-p1-p2-p3-qwen-only-top100-v0/ground_truth_current_115.jsonl",
+    "repository": "JimmyK300/official-dataset-control"
+  },
+  {
+    "blob_sha": "f8a506439d813d780e44db1288ac95efa373bf06",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "inputs/reranker.stdout.log",
+    "path": "evaluation/headless-current-p0-p1-p2-p3-qwen-only-top100-v0/reranker.stdout.log",
+    "repository": "JimmyK300/official-dataset-control"
+  },
+  {
+    "blob_sha": "1c47b0abe5d81730e33f10d9c33d627d50cae58c",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "reference/evaluate_reranker_fusion.py",
+    "path": "experiments/vecna-reranker-fusion-v1-20260914/code/aic51-src/script/evaluate_reranker_fusion.py",
+    "repository": "JimmyK300/official-dataset-control"
+  },
+  {
+    "blob_sha": "e52e2afc351afac0fc6cf32cd89540a45f1bfb6e",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "inputs/previous_controls.json",
+    "path": "experiments/vecna-reranker-fusion-v1-20260914/artifacts/controls/controls.json",
+    "repository": "JimmyK300/official-dataset-control"
+  },
+  {
+    "blob_sha": "84e1b7efbb28f814d682fd389924c60ca99a7208",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "inputs/temporal_surface.json",
+    "path": "experiments/temporal-sequence-retrieval-v1/surface_manifest.json",
+    "repository": "JimmyK300/official-dataset-control"
+  },
+  {
+    "blob_sha": "28cc572e6baf01f1382b39cdc872b975b402f99e",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "inputs/temporal_control_manifest.json",
+    "path": "experiments/temporal-sequence-retrieval-v1/control_manifest.json",
+    "repository": "JimmyK300/official-dataset-control"
+  },
+  {
+    "blob_sha": "2e56403a52c4fc49d2aadb87196bef646ed5556e",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "inputs/capability_p0.jsonl",
+    "path": "evaluation/queries/benchmark/capability-decomposition-v0/p0.jsonl",
+    "repository": "JimmyK300/official-dataset-control"
+  },
+  {
+    "blob_sha": "a2668984dc020619989efcf6c146e0ed6300a535",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "inputs/capability_p1.jsonl",
+    "path": "evaluation/queries/benchmark/capability-decomposition-v0/p1.jsonl",
+    "repository": "JimmyK300/official-dataset-control"
+  },
+  {
+    "blob_sha": "80ecd87d9ddb8b44033c07f11193bb53593d0117",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "inputs/capability_p2.jsonl",
+    "path": "evaluation/queries/benchmark/capability-decomposition-v0/p2.jsonl",
+    "repository": "JimmyK300/official-dataset-control"
+  },
+  {
+    "blob_sha": "1e28904f7f8537592e4617b8f16e55c4df81e02c",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "local": "inputs/capability_p3.jsonl",
+    "path": "evaluation/queries/benchmark/capability-decomposition-v0/p3.jsonl",
+    "repository": "JimmyK300/official-dataset-control"
+  },
+  {
+    "repository": "JimmyK300/official-dataset-control",
+    "commit": "1f1ad1baef1e1d31817f6c5a12d4d94133611038",
+    "path": "experiments/temporal-sequence-retrieval-v1/control_113.jsonl",
+    "local": "inputs/legacy_temporal_control_113.jsonl",
+    "blob_sha": "12cd9b33fec74ace71c6dabd1d83b2b593ac0b8d"
+  }
+]
