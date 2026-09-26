@@ -256,6 +256,12 @@ export function FrameItem({
                 <span>ASR:</span>
                 <span className="font-bold text-purple-400">{scores.asr?.toFixed(4) ?? "-"}</span>
               </div>
+              {scores.yolo_relation_boost && (
+                <div className="flex justify-between">
+                  <span>YOLO:</span>
+                  <span className="font-bold text-amber-400">+{((scores.yolo_relation_boost - 1) * 100).toFixed(0)}%</span>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -459,6 +465,11 @@ export function FrameItem({
                   )}
                   {scores.asr !== undefined && (
                     <span>ASR: <strong className="text-purple-400">{scores.asr?.toFixed(4)}</strong></span>
+                  )}
+                  {scores.yolo_relation_boost && (
+                    <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-semibold border border-amber-500/40">
+                      YOLO Boost +{((scores.yolo_relation_boost - 1) * 100).toFixed(0)}%
+                    </span>
                   )}
                 </div>
               )}
