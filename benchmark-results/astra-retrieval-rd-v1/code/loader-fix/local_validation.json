@@ -1,0 +1,24 @@
+{
+  "status": "PASSED",
+  "tests": 12,
+  "command": [
+    "python",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "aic51-src/tests",
+    "-p",
+    "test_qwen_vl_checkpoint.py",
+    "-v"
+  ],
+  "isolated_actual_production_layout": true,
+  "production_patch_applied_to_original": true,
+  "real_weight_validation_report": "outputs/fusion/qwen-repair-verification-v1/verification.json",
+  "files": {
+    "qwen_vl.py": "18900a46da79c9738c7225f2993955f3c9e02030487b7cedffab0ddcf9f7d177",
+    "qwen_vl_checkpoint.py": "c1b0335ee855c5aaf8d33f688c28a351a2e8f93f3778e78316cf1ef0087b8169",
+    "test_qwen_vl_checkpoint.py": "5ec2fb7828d69579ffbd0d005d8ea55a268db7306f1055541e7bd2170df631de",
+    "qwen3_vl_2b_loading_schema.json": "82d1293c34d073c15b502b3a0a80dd3b64a57547f795be2bdf3747daf7841e7d"
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "schema": "vecna86-verified-loader-publication-v1",
+  "repository": "JimmyK300/Vecna",
+  "branch": "btl/issue-86-qwen-checkpoint-loading",
+  "base_commit": "6127a9ec38cd9143beaa535050fa653ea9ab95b5",
+  "base_tree": "afff69e42b80518f480e1edac72a987e476b1ed2",
+  "production_deployed": false,
+  "merge_performed": false,
+  "validation": {
+    "report": "outputs/fusion/qwen-repair-verification-v1/verification.json",
+    "sha256": "8f459c0f25c62a712acea1ef59e4855e0d8d7428dc8623407ec6db9300790eb8",
+    "tensor_count": 625,
+    "element_count": 2127532032,
+    "loading_discrepancy_counts": {
+      "missing_keys": 0,
+      "unexpected_keys": 0,
+      "mismatched_keys": 0,
+      "error_msgs": 0
+    },
+    "checkpoint_sha256": "c73fa9caeddeb3ff831d46c085a7a5708343248ca777e90f2d486964464509c1",
+    "versions": {
+      "torch": "2.8.0",
+      "transformers": "4.57.6",
+      "sentence-transformers": "5.4.0",
+      "safetensors": "0.8.0"
+    },
+    "scope": "Exact repaired CPUfloat32 constructor and checkpoint only; no corpus/index or historical loader certification."
+  },
+  "local_tests": {
+    "passed": 12,
+    "actual_production_import_paths": true
+  },
+  "files": [
+    {
+      "repository_path": "aic51-src/aic51/packages/analyse/features/qwen_vl.py",
+      "bytes": 6325,
+      "sha256": "18900a46da79c9738c7225f2993955f3c9e02030487b7cedffab0ddcf9f7d177",
+      "git_blob_sha": "45e95ed2546ba3c878c6a9700b53df3ab11c5100"
+    },
+    {
+      "repository_path": "aic51-src/aic51/packages/analyse/features/qwen_vl_checkpoint.py",
+      "bytes": 8212,
+      "sha256": "c1b0335ee855c5aaf8d33f688c28a351a2e8f93f3778e78316cf1ef0087b8169",
+      "git_blob_sha": "cf2f8387de3fda7aa4edd32b92428d468442d708"
+    },
+    {
+      "repository_path": "aic51-src/tests/test_qwen_vl_checkpoint.py",
+      "bytes": 13393,
+      "sha256": "5ec2fb7828d69579ffbd0d005d8ea55a268db7306f1055541e7bd2170df631de",
+      "git_blob_sha": "898673564b72034d409c6f27e6f580c799bd41e7"
+    },
+    {
+      "repository_path": "aic51-src/tests/fixtures/qwen3_vl_2b_loading_schema.json",
+      "bytes": 234946,
+      "sha256": "82d1293c34d073c15b502b3a0a80dd3b64a57547f795be2bdf3747daf7841e7d",
+      "git_blob_sha": "bea5d552b1e69494f40d3a662360d85e5a332859"
+    },
+    {
+      "repository_path": "docs/qwen3-vl-checkpoint-loading.md",
+      "bytes": 5971,
+      "sha256": "763a79715616878f1fc73e95f65dd1802ce6a5fa4ed7b36d5d61fb79e2ece66c",
+      "git_blob_sha": "985092c259d86eb9303002ac3c7b6fd304e0fd2b"
+    },
+    {
+      "repository_path": "benchmark-results/astra-retrieval-rd-v1/code/audit_qwen_loading.py",
+      "bytes": 10360,
+      "sha256": "104d5c47b12bd28e0e87c421c824b984508c9f4da806f9c3a78d661de9aaf487",
+      "git_blob_sha": "36a3be7a40335a396b02270bb903479497b1356c"
+    },
+    {
+      "repository_path": "benchmark-results/astra-retrieval-rd-v1/code/verify_qwen_loading.py",
+      "bytes": 13616,
+      "sha256": "29a0906f49d4f506fd943dad99e64c951022400943df3abd62f6f8da8d1713cf",
+      "git_blob_sha": "157e7ab379a447bea977d6dcfcde457fe76ca185"
+    },
+    {
+      "repository_path": "benchmark-results/astra-retrieval-rd-v1/inputs/qwen_repair_verification_broker.json",
+      "bytes": 3244,
+      "sha256": "a75e809a9a973e69f46c6e8f806e07c2fb4df937c54706e4d22aa0a76bb58278",
+      "git_blob_sha": "799e03dd580c1a086aa265c716d3eed963a73dcf"
+    },
+    {
+      "repository_path": "benchmark-results/astra-retrieval-rd-v1/code/loader-fix/local_validation.json",
+      "bytes": 803,
+      "sha256": "4a27d973eb6de89571b5b070c4be58a8cae527e7a571fadd1975d2e2b72342a0",
+      "git_blob_sha": "4a36bc5ecfdd276e2eb9e2e6e467b3768787f80a"
+    },
+    {
+      "repository_path": "benchmark-results/astra-retrieval-rd-v1/code/loader-fix/publication_manifest.json",
+      "bytes": 2372,
+      "sha256": "f88377db0a9f7f08e8d420a1452e58da295b3ace20cdd803dea6f96a95f2bb60",
+      "git_blob_sha": "1193713661b66f46a5e9a4e3eb3069906f9894fc"
+    },
+    {
+      "repository_path": "benchmark-results/astra-retrieval-rd-v1/outputs/fusion/qwen-repair-verification-v1/checkpoint_state_schema.json",
+      "bytes": 90566,
+      "sha256": "b4f417040f3a8abf845e16451c17fc90170997316e3dd73bc1088fefea6ed9d8",
+      "git_blob_sha": "616beb6be88116826d33e72210ff582046281228"
+    },
+    {
+      "repository_path": "benchmark-results/astra-retrieval-rd-v1/outputs/fusion/qwen-repair-verification-v1/expected_state_schema.json",
+      "bytes": 106716,
+      "sha256": "dba5edc95363d064f484b67c75708372b52fd1b9acdc873b938fe8de66442718",
+      "git_blob_sha": "bd643202a3418f30ac5a155c9e02685960d63ed8"
+    },
+    {
+      "repository_path": "benchmark-results/astra-retrieval-rd-v1/outputs/fusion/qwen-repair-verification-v1/verification.json",
+      "bytes": 4078,
+      "sha256": "8f459c0f25c62a712acea1ef59e4855e0d8d7428dc8623407ec6db9300790eb8",
+      "git_blob_sha": "e2b4236dddce0df1b240a0803f6ca92ba40ae5fc"
+    },
+    {
+      "repository_path": "benchmark-results/astra-retrieval-rd-v1/outputs/fusion/qwen-repair-supervision-v1/stderr.txt",
+      "bytes": 50,
+      "sha256": "aaa09aab886de1f83917ae74ece127a8014d80045ef3ee7b773ad46683d03832",
+      "git_blob_sha": "994c585de57dc526b249738c47e55b6c339149b4"
+    },
+    {
+      "repository_path": "benchmark-results/astra-retrieval-rd-v1/outputs/fusion/qwen-repair-supervision-v1/stdout.txt",
+      "bytes": 1443,
+      "sha256": "b11d60aba9c5e485365623818854b47185847acca240c4aea0d463a3f91c6520",
+      "git_blob_sha": "ecb0266957b730e5da1c2cda244039d23b0751fa"
+    }
+  ],
+  "scope": "Exact production/test/docs mapping plus supervised repaired-checkpoint evidence; prior diagnostics retained in the base tree. The manifest does not hash itself."
+}
