@@ -10,6 +10,7 @@ import {
 
 import Root, { loader as RootLoader } from "./routes/Root.jsx";
 import Search, { loader as SearchLoader } from "./routes/Search.jsx";
+import AsrSearch from "./routes/AsrSearch.jsx";
 import { loader as SearchSimilarLoader } from "./routes/SearchSimilar.jsx";
 import {
   action as AnswerAction,
@@ -26,6 +27,7 @@ const router = createBrowserRouter(
       <Route index element={<Search />} loader={SearchLoader} />
       <Route path="search" element={<Search />} loader={SearchLoader} />
       <Route path="similar" element={<Search />} loader={SearchSimilarLoader} />
+      <Route path="asr" element={<AsrSearch />} />
     </Route>,
     <Route path="answers" action={AnswerAction} loader={AnswerLoader}>
       <Route path=":answerId">
