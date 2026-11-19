@@ -1,0 +1,31 @@
+{
+  "status": "complete",
+  "started_at": "2026-09-14T01:53:22.189935+00:00",
+  "updated_at": "2026-09-14T01:54:35.416618+00:00",
+  "query_count": 115,
+  "completed_query_count": 115,
+  "current_round_counts": {
+    "p0": 24,
+    "p1": 25,
+    "p2": 30,
+    "p3": 36
+  },
+  "candidate_k": 100,
+  "collection": "official_l21_l30_all_v2",
+  "target_features": [
+    "qwen_vl"
+  ],
+  "reranking": false,
+  "device_requested": "cpu (launcher metadata; backend auto-selected DirectML)",
+  "device_effective": "privateuseone:0 (AMD Radeon RX 6900 XT; DirectML)",
+  "device_evidence": "export.stdout.log: Using DirectML device: AMD Radeon RX 6900 XT; Qwen-VL embedding backend: privateuseone:0",
+  "ground_truth_status": "candidate_export_only; scoring authority is not bundled for P0-P2",
+  "source_files": {
+    "D:\\Official-Dataset\\Official-Queries\\current-rounds\\p0.md": "9b6995db3f453130d91b1cfa23d2234dee588092c96f60a2873a468930f80c03",
+    "D:\\Official-Dataset\\Official-Queries\\current-rounds\\p1.md": "5cd3052083ed5ba0663a9586891a84709cb90e2041f2d9c40e64ac80dbe496e1",
+    "D:\\Official-Dataset\\Official-Queries\\current-rounds\\p2.md": "c0d1828688005556675e6d31c1c395b57275b692d40f56385a4826fdc29048cd",
+    "D:\\Official-Dataset\\evaluation\\queries\\p3-round3-benchmark-v1\\p3_headless_queries.csv": "a82749284c911f665edeef6c1494351b94ce78945a7b5d9f6a3c9cb7c4854c5f"
+  },
+  "output": "D:\\Official-Dataset\\evaluation\\headless-current-p0-p1-p2-p3-qwen-only-top100-v0\\qwen_only_top100.jsonl",
+  "completed_at": "2026-09-14T01:54:35.416618+00:00"
+}

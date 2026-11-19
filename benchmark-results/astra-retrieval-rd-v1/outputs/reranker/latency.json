@@ -1,0 +1,50 @@
+{
+  "all_exported_queries_including_one_empty_pool": {
+    "count": 115,
+    "mean_ms": 27973.242260869563,
+    "p50_ms": 28047.53,
+    "p95_ms": 30710.924,
+    "min_ms": 0.0,
+    "max_ms": 36761.1,
+    "sum_seconds": 3216.9228599999997
+  },
+  "actual_nonempty_reranks": {
+    "count": 114,
+    "mean_ms": 28218.621578947368,
+    "p50_ms": 28049.42,
+    "p95_ms": 30742.083,
+    "min_ms": 25262.47,
+    "max_ms": 36761.1,
+    "sum_seconds": 3216.9228599999997
+  },
+  "scoreable_nonempty_reranks": {
+    "count": 112,
+    "mean_ms": 28225.127410714285,
+    "p50_ms": 28049.42,
+    "p95_ms": 30804.400999999994,
+    "min_ms": 25262.47,
+    "max_ms": 36761.1,
+    "sum_seconds": 3161.21427
+  },
+  "first_nonempty_query_ms": 27062.35,
+  "subsequent_nonempty_queries": {
+    "count": 113,
+    "mean_ms": 28228.854070796464,
+    "p50_ms": 28051.31,
+    "p95_ms": 30773.241999999995,
+    "min_ms": 25262.47,
+    "max_ms": 36761.1,
+    "sum_seconds": 3189.8605100000004
+  },
+  "stored_summary_mean_ms": 27973.2,
+  "stored_summary_matches_all115_mean_to_0_1ms": true,
+  "stored_summary_matches_nonempty_mean_to_0_1ms": false,
+  "parsed_log_queries": 115,
+  "printed_completed_latencies": 115,
+  "log_json_discrepancy_query_ids": [],
+  "load_duration_ms": null,
+  "model_load_vs_steady_state": "Log states one model load before query loop, but has no timed load interval; first query is not a measured cold-load latency.",
+  "measurement_scope": "Stored per-query rerank wall time for the 100-candidate input; no baseline search latency or end-to-end user latency recorded here.",
+  "runtime_evidence": "stdout names AMD RX 6900 XT / DirectML. Comparison JSON reports repeat_interleave CPU fallback from a separately cited stderr log; not remeasured.",
+  "quantiles": "linear interpolation at (n-1)*p"
+}

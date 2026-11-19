@@ -1,0 +1,15 @@
+{
+  "anns_field": "qwen_vl",
+  "collection": "official_l21_l30_all_v2",
+  "device": "cpu",
+  "elapsed_s": 1434.819,
+  "event_queries": 42,
+  "instruction": "Retrieve images or text relevant to the user's query.",
+  "model_config_sha256": "9172f55b0b9cce70b7f67b10c58a408ccf3ec15c587e6efd4d5f41631237fded",
+  "model_snapshot": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--Qwen--Qwen3-VL-Embedding-2B\\snapshots\\9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda",
+  "production_retrieval_rewrite": false,
+  "pymilvus": "3.0.1",
+  "reembedding": false,
+  "torch": "2.4.1+cpu",
+  "transformers": "4.57.1"
+}

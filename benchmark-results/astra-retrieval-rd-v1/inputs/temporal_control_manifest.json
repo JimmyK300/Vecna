@@ -1,0 +1,22 @@
+{
+  "control_count": 113,
+  "decomposition_count": 113,
+  "eligible_count": 57,
+  "event_count": 354,
+  "excluded": [
+    "p0_q15",
+    "p3_q09"
+  ],
+  "experiment": "temporal-sequence-retrieval-v1",
+  "ground_truth_used_for_decomposition": false,
+  "historical_count": 78,
+  "input_sha256": {
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\evaluation\\headless-current-p0-p1-p2-p3-qwen-only-top100-v0\\ground_truth_current_115.jsonl": "79393a95aae8e51b6b475e1b35f3b5ccfef278ee05a3f444eaedc0b0f4f90819",
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\evaluation\\headless-current-p0-p1-p2-p3-qwen-only-top100-v0\\qwen_only_top100.jsonl": "85d5dd169bcd6934ebfa8435b6aee82ce9bc149bac3a704afbdbcb4b986568f0",
+    "C:\\Users\\minhc\\Code\\Official-Dataset\\evaluation\\queries\\p3-round3-benchmark-v1\\baselines-20260913\\qwen_only_v1.jsonl": "bd7ae6589996bc35d880df8160dabf40626c55c2b6796f86d7a6ccaedfd1e338",
+    "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\shot-clustering\\benchmark-results\\headless-vnext-p0-p1-p2-v1\\manifest.json": "09df9bdbd9782492dcf81e8da3fad5e07a1ae25b2bc7aeca9cd2cda4045be9bd",
+    "C:\\Users\\minhc\\Code\\Vecna\\.worktrees\\shot-clustering\\benchmark-results\\headless-vnext-p0-p1-p2-v1\\scored-combined\\scored.jsonl": "314c451c6bfb750d9e2cbf8657d312ec7792a3a22ba1a8904e6c48fa001d1bb6"
+  },
+  "issue": 79,
+  "p3_count": 35
+}

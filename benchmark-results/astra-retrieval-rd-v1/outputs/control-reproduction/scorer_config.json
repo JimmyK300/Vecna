@@ -1,0 +1,57 @@
+{
+  "schema": "reranker-fusion-v1/authoritative-113-scorer-v1",
+  "scoring_contract": {
+    "historical_non_trake": "correct video AND inclusive overlap with accepted range",
+    "historical_trake": "all required TRAKE events covered by K; strict query success",
+    "p3": "current headless_benchmark retrieval semantics; P3 event recall remains fractional",
+    "join": "operational phase + numeric query number for historical rows",
+    "excluded": [
+      "p0_q15",
+      "p3_q09"
+    ],
+    "ks": [
+      1,
+      5,
+      10,
+      20
+    ]
+  },
+  "inputs": {
+    "baseline": {
+      "path": "inputs/qwen_only_top100.jsonl",
+      "sha256": "85d5dd169bcd6934ebfa8435b6aee82ce9bc149bac3a704afbdbcb4b986568f0"
+    },
+    "reranker": {
+      "path": "inputs/qwen3_vl_reranker_2b_top100.json",
+      "sha256": "4e949d95916c9fed7b11327ace67e207eb9238bb9f3beb4e66ff4873cb3ec8be"
+    },
+    "truth": {
+      "path": "inputs/original_truth_ledger.jsonl",
+      "sha256": "79393a95aae8e51b6b475e1b35f3b5ccfef278ee05a3f444eaedc0b0f4f90819"
+    },
+    "historical_manifest": {
+      "path": "inputs/historical_manifest.json",
+      "sha256": "5ef034fd275baaabab1dee04148302e99b4e24ad4a1accc6169b6c070baaf223"
+    },
+    "p3_comparison": {
+      "path": "inputs/comparison_qwen_vs_reranker.json",
+      "sha256": "2837b36d8fbaf94dc0d7ee3f5e028a87367e9a81c80273381fef633250b8ff31"
+    }
+  },
+  "expected_controls": {
+    "baseline": {
+      "recall_at_1": 41,
+      "recall_at_5": 56,
+      "recall_at_10": 65,
+      "recall_at_20": 68,
+      "mrr_at_20": 0.42434
+    },
+    "reranker": {
+      "recall_at_1": 40,
+      "recall_at_5": 61,
+      "recall_at_10": 64,
+      "recall_at_20": 76,
+      "mrr_at_20": 0.432021
+    }
+  }
+}

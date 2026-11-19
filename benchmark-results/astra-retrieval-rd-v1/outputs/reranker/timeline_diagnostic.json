@@ -1,0 +1,1398 @@
+{
+  "status": "diagnostic_only; original frozen comparison remains authoritative",
+  "restoration": "Reattach original baseline time_line at verified original_baseline_rank; preserve the retained reranker order and its 20-row truncation.",
+  "affected_queries": [
+    "p0_q06",
+    "p1_q18",
+    "p2_q03",
+    "p3_q13",
+    "p3_q16",
+    "p3_q36"
+  ],
+  "reranker_metrics_changed_queries": [],
+  "baseline_frame_only_metrics_changed_queries": [
+    "p3_q36"
+  ],
+  "per_query": [
+    {
+      "query_id": "p0_q06",
+      "canonical_source_key": "query-p0-8-kis",
+      "phase": "P0",
+      "task_type": "kis",
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "scoreable": true,
+      "effective_truth_basis": "frozen_headless_benchmark_truth",
+      "capability_source_query_id": "p0-q8",
+      "primary_challenge": "fine_visual_grounding",
+      "capability_tags": [
+        "VIS_OBJ",
+        "VIS_ATTR",
+        "ENTITY",
+        "SCENE",
+        "SPATIAL"
+      ],
+      "query_summary": "Japanese food festival; girl wearing red octopus/squid; paper bag",
+      "baseline_candidate_count": 100,
+      "retained_reranker_candidate_count": 20,
+      "ranking_changed": true,
+      "baseline_top1": [
+        "l22_v030",
+        18327
+      ],
+      "reranker_top1": [
+        "l22_v030",
+        18327
+      ],
+      "timeline_diagnostic": {
+        "retained_candidates_losing_timeline": 20,
+        "changes_frozen_metrics": false,
+        "changes_baseline_metrics_if_frame_only": false
+      },
+      "frozen": {
+        "baseline": {
+          "family": "historical_range",
+          "retained_depth": 20,
+          "first_success_rank": 1,
+          "rank_status": "observed",
+          "target_first_ranks": [
+            1
+          ],
+          "metrics": {
+            "R@1": 1.0,
+            "R@5": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "MRR@20": 1.0
+          },
+          "target_coverage_at_depth": 1.0,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "all_required_targets_present": true
+        },
+        "reranker": {
+          "family": "historical_range",
+          "retained_depth": 20,
+          "first_success_rank": 1,
+          "rank_status": "observed",
+          "target_first_ranks": [
+            1
+          ],
+          "metrics": {
+            "R@1": 1.0,
+            "R@5": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "MRR@20": 1.0
+          },
+          "target_coverage_at_depth": 1.0,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "all_required_targets_present": true
+        },
+        "delta": {
+          "R@1": 0.0,
+          "R@5": 0.0,
+          "R@10": 0.0,
+          "R@20": 0.0,
+          "MRR@20": 0.0
+        }
+      },
+      "video": {
+        "baseline": {
+          "first_success_rank": 1,
+          "retained_depth": 20,
+          "rank_status": "observed",
+          "metrics": {
+            "R@1": 1.0,
+            "R@5": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "MRR@20": 1.0
+          }
+        },
+        "reranker": {
+          "first_success_rank": 1,
+          "retained_depth": 20,
+          "rank_status": "observed",
+          "metrics": {
+            "R@1": 1.0,
+            "R@5": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "MRR@20": 1.0
+          }
+        },
+        "delta": {
+          "R@1": 0.0,
+          "R@5": 0.0,
+          "R@10": 0.0,
+          "R@20": 0.0,
+          "MRR@20": 0.0
+        }
+      },
+      "matched_timeline": {
+        "baseline": {
+          "family": "historical_range",
+          "retained_depth": 20,
+          "first_success_rank": 1,
+          "rank_status": "observed",
+          "target_first_ranks": [
+            1
+          ],
+          "metrics": {
+            "R@1": 1.0,
+            "R@5": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "MRR@20": 1.0
+          },
+          "target_coverage_at_depth": 1.0,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "all_required_targets_present": true
+        },
+        "reranker": {
+          "family": "historical_range",
+          "retained_depth": 20,
+          "first_success_rank": 1,
+          "rank_status": "observed",
+          "target_first_ranks": [
+            1
+          ],
+          "metrics": {
+            "R@1": 1.0,
+            "R@5": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "MRR@20": 1.0
+          },
+          "target_coverage_at_depth": 1.0,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "all_required_targets_present": true
+        },
+        "delta": {
+          "R@1": 0.0,
+          "R@5": 0.0,
+          "R@10": 0.0,
+          "R@20": 0.0,
+          "MRR@20": 0.0
+        }
+      },
+      "frame_only": {
+        "baseline": {
+          "family": "historical_range",
+          "retained_depth": 20,
+          "first_success_rank": 1,
+          "rank_status": "observed",
+          "target_first_ranks": [
+            1
+          ],
+          "metrics": {
+            "R@1": 1.0,
+            "R@5": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "MRR@20": 1.0
+          },
+          "target_coverage_at_depth": 1.0,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "all_required_targets_present": true
+        },
+        "reranker": {
+          "family": "historical_range",
+          "retained_depth": 20,
+          "first_success_rank": 1,
+          "rank_status": "observed",
+          "target_first_ranks": [
+            1
+          ],
+          "metrics": {
+            "R@1": 1.0,
+            "R@5": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "MRR@20": 1.0
+          },
+          "target_coverage_at_depth": 1.0,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "all_required_targets_present": true
+        },
+        "delta": {
+          "R@1": 0.0,
+          "R@5": 0.0,
+          "R@10": 0.0,
+          "R@20": 0.0,
+          "MRR@20": 0.0
+        }
+      },
+      "candidate_pool": {
+        "video_first_rank_at_100": 1,
+        "target_first_ranks_at_100": [
+          1
+        ],
+        "all_required_targets_present": true,
+        "frozen_contract_coverage_at_100": 1.0,
+        "target_coverage_at_100": 1.0,
+        "first_frame_only_coverage_at_100": 1.0,
+        "coverage_ceiling_note": "Observed pool coverage, not reranker rank >20 or an achievable production oracle."
+      },
+      "classification": {
+        "retrieval_evidence": "all_required_targets_available_in_top100",
+        "observed_effects": [
+          "rank_order_change_without_recall_change"
+        ],
+        "semantic_cause": "unresolved_without_frame_or_clip_review",
+        "capability_labels_are": "pre-existing query annotations, not diagnosed causes",
+        "metadata_loss_effect": false
+      }
+    },
+    {
+      "query_id": "p1_q18",
+      "canonical_source_key": "query-p1-23-kis",
+      "phase": "P1",
+      "task_type": "kis",
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "scoreable": true,
+      "effective_truth_basis": "frozen_headless_benchmark_truth",
+      "capability_source_query_id": "p1-q23",
+      "primary_challenge": "structured_slide_understanding",
+      "capability_tags": [
+        "SLIDE",
+        "OCR",
+        "SPATIAL",
+        "VIS_ATTR"
+      ],
+      "query_summary": "male teacher + distinctive 3-tier block diagram on styled slide",
+      "baseline_candidate_count": 100,
+      "retained_reranker_candidate_count": 20,
+      "ranking_changed": true,
+      "baseline_top1": [
+        "l25_v002",
+        300
+      ],
+      "reranker_top1": [
+        "l25_v051",
+        13700
+      ],
+      "timeline_diagnostic": {
+        "retained_candidates_losing_timeline": 20,
+        "changes_frozen_metrics": false,
+        "changes_baseline_metrics_if_frame_only": false
+      },
+      "frozen": {
+        "baseline": {
+          "family": "historical_range",
+          "retained_depth": 20,
+          "first_success_rank": null,
+          "rank_status": "not_observed_within_20",
+          "target_first_ranks": [
+            null
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          },
+          "target_coverage_at_depth": 0.0,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "all_required_targets_present": false
+        },
+        "reranker": {
+          "family": "historical_range",
+          "retained_depth": 20,
+          "first_success_rank": null,
+          "rank_status": "not_observed_within_20",
+          "target_first_ranks": [
+            null
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          },
+          "target_coverage_at_depth": 0.0,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "all_required_targets_present": false
+        },
+        "delta": {
+          "R@1": 0.0,
+          "R@5": 0.0,
+          "R@10": 0.0,
+          "R@20": 0.0,
+          "MRR@20": 0.0
+        }
+      },
+      "video": {
+        "baseline": {
+          "first_success_rank": null,
+          "retained_depth": 20,
+          "rank_status": "not_observed_within_20",
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          }
+        },
+        "reranker": {
+          "first_success_rank": null,
+          "retained_depth": 20,
+          "rank_status": "not_observed_within_20",
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          }
+        },
+        "delta": {
+          "R@1": 0.0,
+          "R@5": 0.0,
+          "R@10": 0.0,
+          "R@20": 0.0,
+          "MRR@20": 0.0
+        }
+      },
+      "matched_timeline": {
+        "baseline": {
+          "family": "historical_range",
+          "retained_depth": 20,
+          "first_success_rank": null,
+          "rank_status": "not_observed_within_20",
+          "target_first_ranks": [
+            null
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          },
+          "target_coverage_at_depth": 0.0,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "all_required_targets_present": false
+        },
+        "reranker": {
+          "family": "historical_range",
+          "retained_depth": 20,
+          "first_success_rank": null,
+          "rank_status": "not_observed_within_20",
+          "target_first_ranks": [
+            null
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          },
+          "target_coverage_at_depth": 0.0,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "all_required_targets_present": false
+        },
+        "delta": {
+          "R@1": 0.0,
+          "R@5": 0.0,
+          "R@10": 0.0,
+          "R@20": 0.0,
+          "MRR@20": 0.0
+        }
+      },
+      "frame_only": {
+        "baseline": {
+          "family": "historical_range",
+          "retained_depth": 20,
+          "first_success_rank": null,
+          "rank_status": "not_observed_within_20",
+          "target_first_ranks": [
+            null
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          },
+          "target_coverage_at_depth": 0.0,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "all_required_targets_present": false
+        },
+        "reranker": {
+          "family": "historical_range",
+          "retained_depth": 20,
+          "first_success_rank": null,
+          "rank_status": "not_observed_within_20",
+          "target_first_ranks": [
+            null
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          },
+          "target_coverage_at_depth": 0.0,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "all_required_targets_present": false
+        },
+        "delta": {
+          "R@1": 0.0,
+          "R@5": 0.0,
+          "R@10": 0.0,
+          "R@20": 0.0,
+          "MRR@20": 0.0
+        }
+      },
+      "candidate_pool": {
+        "video_first_rank_at_100": null,
+        "target_first_ranks_at_100": [
+          null
+        ],
+        "all_required_targets_present": false,
+        "frozen_contract_coverage_at_100": 0.0,
+        "target_coverage_at_100": 0.0,
+        "first_frame_only_coverage_at_100": 0.0,
+        "coverage_ceiling_note": "Observed pool coverage, not reranker rank >20 or an achievable production oracle."
+      },
+      "classification": {
+        "retrieval_evidence": "accepted_video_absent_from_top100",
+        "observed_effects": [
+          "rank_order_change_without_recall_change"
+        ],
+        "semantic_cause": "unresolved_without_frame_or_clip_review",
+        "capability_labels_are": "pre-existing query annotations, not diagnosed causes",
+        "metadata_loss_effect": false
+      }
+    },
+    {
+      "query_id": "p2_q03",
+      "canonical_source_key": "query-p2-3-kis",
+      "phase": "P2",
+      "task_type": "kis",
+      "truth_tier": "frozen_headless_benchmark_truth",
+      "scoreable": true,
+      "effective_truth_basis": "frozen_headless_benchmark_truth",
+      "capability_source_query_id": "p2-q3",
+      "primary_challenge": "action_recognition",
+      "capability_tags": [
+        "ACT",
+        "VIS_OBJ",
+        "VIS_ATTR",
+        "SPATIAL"
+      ],
+      "query_summary": "yellow lion/dragon drops or jumps near small blue ship model",
+      "baseline_candidate_count": 100,
+      "retained_reranker_candidate_count": 20,
+      "ranking_changed": true,
+      "baseline_top1": [
+        "l24_v021",
+        11354
+      ],
+      "reranker_top1": [
+        "l24_v032",
+        13392
+      ],
+      "timeline_diagnostic": {
+        "retained_candidates_losing_timeline": 20,
+        "changes_frozen_metrics": false,
+        "changes_baseline_metrics_if_frame_only": false
+      },
+      "frozen": {
+        "baseline": {
+          "family": "historical_range",
+          "retained_depth": 20,
+          "first_success_rank": null,
+          "rank_status": "not_observed_within_20",
+          "target_first_ranks": [
+            null
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          },
+          "target_coverage_at_depth": 0.0,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "all_required_targets_present": false
+        },
+        "reranker": {
+          "family": "historical_range",
+          "retained_depth": 20,
+          "first_success_rank": null,
+          "rank_status": "not_observed_within_20",
+          "target_first_ranks": [
+            null
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          },
+          "target_coverage_at_depth": 0.0,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "all_required_targets_present": false
+        },
+        "delta": {
+          "R@1": 0.0,
+          "R@5": 0.0,
+          "R@10": 0.0,
+          "R@20": 0.0,
+          "MRR@20": 0.0
+        }
+      },
+      "video": {
+        "baseline": {
+          "first_success_rank": null,
+          "retained_depth": 20,
+          "rank_status": "not_observed_within_20",
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          }
+        },
+        "reranker": {
+          "first_success_rank": null,
+          "retained_depth": 20,
+          "rank_status": "not_observed_within_20",
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          }
+        },
+        "delta": {
+          "R@1": 0.0,
+          "R@5": 0.0,
+          "R@10": 0.0,
+          "R@20": 0.0,
+          "MRR@20": 0.0
+        }
+      },
+      "matched_timeline": {
+        "baseline": {
+          "family": "historical_range",
+          "retained_depth": 20,
+          "first_success_rank": null,
+          "rank_status": "not_observed_within_20",
+          "target_first_ranks": [
+            null
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          },
+          "target_coverage_at_depth": 0.0,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "all_required_targets_present": false
+        },
+        "reranker": {
+          "family": "historical_range",
+          "retained_depth": 20,
+          "first_success_rank": null,
+          "rank_status": "not_observed_within_20",
+          "target_first_ranks": [
+            null
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          },
+          "target_coverage_at_depth": 0.0,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "all_required_targets_present": false
+        },
+        "delta": {
+          "R@1": 0.0,
+          "R@5": 0.0,
+          "R@10": 0.0,
+          "R@20": 0.0,
+          "MRR@20": 0.0
+        }
+      },
+      "frame_only": {
+        "baseline": {
+          "family": "historical_range",
+          "retained_depth": 20,
+          "first_success_rank": null,
+          "rank_status": "not_observed_within_20",
+          "target_first_ranks": [
+            null
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          },
+          "target_coverage_at_depth": 0.0,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "all_required_targets_present": false
+        },
+        "reranker": {
+          "family": "historical_range",
+          "retained_depth": 20,
+          "first_success_rank": null,
+          "rank_status": "not_observed_within_20",
+          "target_first_ranks": [
+            null
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          },
+          "target_coverage_at_depth": 0.0,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "all_required_targets_present": false
+        },
+        "delta": {
+          "R@1": 0.0,
+          "R@5": 0.0,
+          "R@10": 0.0,
+          "R@20": 0.0,
+          "MRR@20": 0.0
+        }
+      },
+      "candidate_pool": {
+        "video_first_rank_at_100": null,
+        "target_first_ranks_at_100": [
+          null
+        ],
+        "all_required_targets_present": false,
+        "frozen_contract_coverage_at_100": 0.0,
+        "target_coverage_at_100": 0.0,
+        "first_frame_only_coverage_at_100": 0.0,
+        "coverage_ceiling_note": "Observed pool coverage, not reranker rank >20 or an achievable production oracle."
+      },
+      "classification": {
+        "retrieval_evidence": "accepted_video_absent_from_top100",
+        "observed_effects": [
+          "rank_order_change_without_recall_change"
+        ],
+        "semantic_cause": "unresolved_without_frame_or_clip_review",
+        "capability_labels_are": "pre-existing query annotations, not diagnosed causes",
+        "metadata_loss_effect": false
+      }
+    },
+    {
+      "query_id": "p3_q13",
+      "canonical_source_key": "p3_q13",
+      "phase": "P3",
+      "task_type": "tkis",
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+      "scoreable": true,
+      "effective_truth_basis": "provisional_source_text_verified_needs_corpus_validation",
+      "capability_source_query_id": "p3-q13",
+      "primary_challenge": "counting_and_exact_multiplicity",
+      "capability_tags": [
+        "COUNT",
+        "FINE",
+        "SCENE",
+        "VIS_OBJ"
+      ],
+      "query_summary": "hundreds of woven bamboo fish traps/baskets along Mekong riverside with coconuts/boats",
+      "baseline_candidate_count": 100,
+      "retained_reranker_candidate_count": 20,
+      "ranking_changed": true,
+      "baseline_top1": [
+        "l29_v017",
+        2066
+      ],
+      "reranker_top1": [
+        "l28_v005",
+        351
+      ],
+      "timeline_diagnostic": {
+        "retained_candidates_losing_timeline": 20,
+        "changes_frozen_metrics": false,
+        "changes_baseline_metrics_if_frame_only": false
+      },
+      "frozen": {
+        "baseline": {
+          "family": "p3_range",
+          "retained_depth": 20,
+          "first_success_rank": null,
+          "rank_status": "not_observed_within_20",
+          "target_first_ranks": [
+            null
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          },
+          "target_coverage_at_depth": 0.0,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "all_required_targets_present": false
+        },
+        "reranker": {
+          "family": "p3_range",
+          "retained_depth": 20,
+          "first_success_rank": null,
+          "rank_status": "not_observed_within_20",
+          "target_first_ranks": [
+            null
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          },
+          "target_coverage_at_depth": 0.0,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "all_required_targets_present": false
+        },
+        "delta": {
+          "R@1": 0.0,
+          "R@5": 0.0,
+          "R@10": 0.0,
+          "R@20": 0.0,
+          "MRR@20": 0.0
+        }
+      },
+      "video": {
+        "baseline": {
+          "first_success_rank": null,
+          "retained_depth": 20,
+          "rank_status": "not_observed_within_20",
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          }
+        },
+        "reranker": {
+          "first_success_rank": 14,
+          "retained_depth": 20,
+          "rank_status": "observed",
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 1.0,
+            "MRR@20": 0.07142857142857142
+          }
+        },
+        "delta": {
+          "R@1": 0.0,
+          "R@5": 0.0,
+          "R@10": 0.0,
+          "R@20": 1.0,
+          "MRR@20": 0.07142857142857142
+        }
+      },
+      "matched_timeline": {
+        "baseline": {
+          "family": "p3_range",
+          "retained_depth": 20,
+          "first_success_rank": null,
+          "rank_status": "not_observed_within_20",
+          "target_first_ranks": [
+            null
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          },
+          "target_coverage_at_depth": 0.0,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "all_required_targets_present": false
+        },
+        "reranker": {
+          "family": "p3_range",
+          "retained_depth": 20,
+          "first_success_rank": null,
+          "rank_status": "not_observed_within_20",
+          "target_first_ranks": [
+            null
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          },
+          "target_coverage_at_depth": 0.0,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "all_required_targets_present": false
+        },
+        "delta": {
+          "R@1": 0.0,
+          "R@5": 0.0,
+          "R@10": 0.0,
+          "R@20": 0.0,
+          "MRR@20": 0.0
+        }
+      },
+      "frame_only": {
+        "baseline": {
+          "family": "p3_range",
+          "retained_depth": 20,
+          "first_success_rank": null,
+          "rank_status": "not_observed_within_20",
+          "target_first_ranks": [
+            null
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          },
+          "target_coverage_at_depth": 0.0,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "all_required_targets_present": false
+        },
+        "reranker": {
+          "family": "p3_range",
+          "retained_depth": 20,
+          "first_success_rank": null,
+          "rank_status": "not_observed_within_20",
+          "target_first_ranks": [
+            null
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          },
+          "target_coverage_at_depth": 0.0,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "all_required_targets_present": false
+        },
+        "delta": {
+          "R@1": 0.0,
+          "R@5": 0.0,
+          "R@10": 0.0,
+          "R@20": 0.0,
+          "MRR@20": 0.0
+        }
+      },
+      "candidate_pool": {
+        "video_first_rank_at_100": 24,
+        "target_first_ranks_at_100": [
+          null
+        ],
+        "all_required_targets_present": false,
+        "frozen_contract_coverage_at_100": 0.0,
+        "target_coverage_at_100": 0.0,
+        "first_frame_only_coverage_at_100": 0.0,
+        "coverage_ceiling_note": "Observed pool coverage, not reranker rank >20 or an achievable production oracle."
+      },
+      "classification": {
+        "retrieval_evidence": "required_range_or_events_missing_from_top100",
+        "observed_effects": [
+          "video_rescue_at_20",
+          "video_mrr_improvement"
+        ],
+        "semantic_cause": "unresolved_without_frame_or_clip_review",
+        "capability_labels_are": "pre-existing query annotations, not diagnosed causes",
+        "metadata_loss_effect": false
+      }
+    },
+    {
+      "query_id": "p3_q16",
+      "canonical_source_key": "p3_q16",
+      "phase": "P3",
+      "task_type": "tkis",
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+      "scoreable": true,
+      "effective_truth_basis": "provisional_source_text_verified_needs_corpus_validation",
+      "capability_source_query_id": "p3-q16",
+      "primary_challenge": "fine_grained_visual_classification",
+      "capability_tags": [
+        "SEQ",
+        "ACT",
+        "OCR",
+        "FINE"
+      ],
+      "query_summary": "red/green ingredient stirred in glass pot; then 1.5L liquid + salt/sugar/bone-seasoning amounts",
+      "baseline_candidate_count": 100,
+      "retained_reranker_candidate_count": 20,
+      "ranking_changed": true,
+      "baseline_top1": [
+        "l26_v438",
+        4352
+      ],
+      "reranker_top1": [
+        "l26_v438",
+        4343
+      ],
+      "timeline_diagnostic": {
+        "retained_candidates_losing_timeline": 20,
+        "changes_frozen_metrics": false,
+        "changes_baseline_metrics_if_frame_only": false
+      },
+      "frozen": {
+        "baseline": {
+          "family": "p3_range",
+          "retained_depth": 20,
+          "first_success_rank": null,
+          "rank_status": "not_observed_within_20",
+          "target_first_ranks": [
+            null
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          },
+          "target_coverage_at_depth": 0.0,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "all_required_targets_present": false
+        },
+        "reranker": {
+          "family": "p3_range",
+          "retained_depth": 20,
+          "first_success_rank": 3,
+          "rank_status": "observed",
+          "target_first_ranks": [
+            3
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "MRR@20": 0.3333333333333333
+          },
+          "target_coverage_at_depth": 1.0,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "all_required_targets_present": true
+        },
+        "delta": {
+          "R@1": 0.0,
+          "R@5": 1.0,
+          "R@10": 1.0,
+          "R@20": 1.0,
+          "MRR@20": 0.3333333333333333
+        }
+      },
+      "video": {
+        "baseline": {
+          "first_success_rank": null,
+          "retained_depth": 20,
+          "rank_status": "not_observed_within_20",
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          }
+        },
+        "reranker": {
+          "first_success_rank": 3,
+          "retained_depth": 20,
+          "rank_status": "observed",
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "MRR@20": 0.3333333333333333
+          }
+        },
+        "delta": {
+          "R@1": 0.0,
+          "R@5": 1.0,
+          "R@10": 1.0,
+          "R@20": 1.0,
+          "MRR@20": 0.3333333333333333
+        }
+      },
+      "matched_timeline": {
+        "baseline": {
+          "family": "p3_range",
+          "retained_depth": 20,
+          "first_success_rank": null,
+          "rank_status": "not_observed_within_20",
+          "target_first_ranks": [
+            null
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          },
+          "target_coverage_at_depth": 0.0,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "all_required_targets_present": false
+        },
+        "reranker": {
+          "family": "p3_range",
+          "retained_depth": 20,
+          "first_success_rank": 3,
+          "rank_status": "observed",
+          "target_first_ranks": [
+            3
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "MRR@20": 0.3333333333333333
+          },
+          "target_coverage_at_depth": 1.0,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "all_required_targets_present": true
+        },
+        "delta": {
+          "R@1": 0.0,
+          "R@5": 1.0,
+          "R@10": 1.0,
+          "R@20": 1.0,
+          "MRR@20": 0.3333333333333333
+        }
+      },
+      "frame_only": {
+        "baseline": {
+          "family": "p3_range",
+          "retained_depth": 20,
+          "first_success_rank": null,
+          "rank_status": "not_observed_within_20",
+          "target_first_ranks": [
+            null
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 0.0,
+            "MRR@20": 0.0
+          },
+          "target_coverage_at_depth": 0.0,
+          "frozen_contract_coverage_at_depth": 0.0,
+          "all_required_targets_present": false
+        },
+        "reranker": {
+          "family": "p3_range",
+          "retained_depth": 20,
+          "first_success_rank": 3,
+          "rank_status": "observed",
+          "target_first_ranks": [
+            3
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "MRR@20": 0.3333333333333333
+          },
+          "target_coverage_at_depth": 1.0,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "all_required_targets_present": true
+        },
+        "delta": {
+          "R@1": 0.0,
+          "R@5": 1.0,
+          "R@10": 1.0,
+          "R@20": 1.0,
+          "MRR@20": 0.3333333333333333
+        }
+      },
+      "candidate_pool": {
+        "video_first_rank_at_100": 39,
+        "target_first_ranks_at_100": [
+          39
+        ],
+        "all_required_targets_present": true,
+        "frozen_contract_coverage_at_100": 1.0,
+        "target_coverage_at_100": 1.0,
+        "first_frame_only_coverage_at_100": 1.0,
+        "coverage_ceiling_note": "Observed pool coverage, not reranker rank >20 or an achievable production oracle."
+      },
+      "classification": {
+        "retrieval_evidence": "all_required_targets_available_in_top100",
+        "observed_effects": [
+          "video_rescue_at_5",
+          "video_rescue_at_10",
+          "video_rescue_at_20",
+          "video_mrr_improvement",
+          "frozen_rescue_at_5",
+          "frozen_rescue_at_10",
+          "frozen_rescue_at_20",
+          "frozen_mrr_improvement"
+        ],
+        "semantic_cause": "unresolved_without_frame_or_clip_review",
+        "capability_labels_are": "pre-existing query annotations, not diagnosed causes",
+        "metadata_loss_effect": false
+      }
+    },
+    {
+      "query_id": "p3_q36",
+      "canonical_source_key": "p3_q36",
+      "phase": "P3",
+      "task_type": "tkis",
+      "truth_tier": "provisional_source_text_verified_needs_corpus_validation",
+      "scoreable": true,
+      "effective_truth_basis": "provisional_source_text_verified_needs_corpus_validation",
+      "capability_source_query_id": "p3-q36",
+      "primary_challenge": "fine_grained_visual_classification",
+      "capability_tags": [
+        "ACT",
+        "SEQ",
+        "FINE",
+        "ENTITY"
+      ],
+      "query_summary": "slow pan from photo of person shaking hands with Hồ Chí Minh to artisan drawing that person using special pen/material",
+      "baseline_candidate_count": 100,
+      "retained_reranker_candidate_count": 20,
+      "ranking_changed": true,
+      "baseline_top1": [
+        "l28_v010",
+        14495
+      ],
+      "reranker_top1": [
+        "l30_v052",
+        3088
+      ],
+      "timeline_diagnostic": {
+        "retained_candidates_losing_timeline": 20,
+        "changes_frozen_metrics": false,
+        "changes_baseline_metrics_if_frame_only": true
+      },
+      "frozen": {
+        "baseline": {
+          "family": "p3_range",
+          "retained_depth": 20,
+          "first_success_rank": 1,
+          "rank_status": "observed",
+          "target_first_ranks": [
+            1
+          ],
+          "metrics": {
+            "R@1": 1.0,
+            "R@5": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "MRR@20": 1.0
+          },
+          "target_coverage_at_depth": 1.0,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "all_required_targets_present": true
+        },
+        "reranker": {
+          "family": "p3_range",
+          "retained_depth": 20,
+          "first_success_rank": 2,
+          "rank_status": "observed",
+          "target_first_ranks": [
+            2
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "MRR@20": 0.5
+          },
+          "target_coverage_at_depth": 1.0,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "all_required_targets_present": true
+        },
+        "delta": {
+          "R@1": -1.0,
+          "R@5": 0.0,
+          "R@10": 0.0,
+          "R@20": 0.0,
+          "MRR@20": -0.5
+        }
+      },
+      "video": {
+        "baseline": {
+          "first_success_rank": 1,
+          "retained_depth": 20,
+          "rank_status": "observed",
+          "metrics": {
+            "R@1": 1.0,
+            "R@5": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "MRR@20": 1.0
+          }
+        },
+        "reranker": {
+          "first_success_rank": 2,
+          "retained_depth": 20,
+          "rank_status": "observed",
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "MRR@20": 0.5
+          }
+        },
+        "delta": {
+          "R@1": -1.0,
+          "R@5": 0.0,
+          "R@10": 0.0,
+          "R@20": 0.0,
+          "MRR@20": -0.5
+        }
+      },
+      "matched_timeline": {
+        "baseline": {
+          "family": "p3_range",
+          "retained_depth": 20,
+          "first_success_rank": 1,
+          "rank_status": "observed",
+          "target_first_ranks": [
+            1
+          ],
+          "metrics": {
+            "R@1": 1.0,
+            "R@5": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "MRR@20": 1.0
+          },
+          "target_coverage_at_depth": 1.0,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "all_required_targets_present": true
+        },
+        "reranker": {
+          "family": "p3_range",
+          "retained_depth": 20,
+          "first_success_rank": 2,
+          "rank_status": "observed",
+          "target_first_ranks": [
+            2
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "MRR@20": 0.5
+          },
+          "target_coverage_at_depth": 1.0,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "all_required_targets_present": true
+        },
+        "delta": {
+          "R@1": -1.0,
+          "R@5": 0.0,
+          "R@10": 0.0,
+          "R@20": 0.0,
+          "MRR@20": -0.5
+        }
+      },
+      "frame_only": {
+        "baseline": {
+          "family": "p3_range",
+          "retained_depth": 20,
+          "first_success_rank": 14,
+          "rank_status": "observed",
+          "target_first_ranks": [
+            14
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 0.0,
+            "R@10": 0.0,
+            "R@20": 1.0,
+            "MRR@20": 0.07142857142857142
+          },
+          "target_coverage_at_depth": 1.0,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "all_required_targets_present": true
+        },
+        "reranker": {
+          "family": "p3_range",
+          "retained_depth": 20,
+          "first_success_rank": 2,
+          "rank_status": "observed",
+          "target_first_ranks": [
+            2
+          ],
+          "metrics": {
+            "R@1": 0.0,
+            "R@5": 1.0,
+            "R@10": 1.0,
+            "R@20": 1.0,
+            "MRR@20": 0.5
+          },
+          "target_coverage_at_depth": 1.0,
+          "frozen_contract_coverage_at_depth": 1.0,
+          "all_required_targets_present": true
+        },
+        "delta": {
+          "R@1": 0.0,
+          "R@5": 1.0,
+          "R@10": 1.0,
+          "R@20": 0.0,
+          "MRR@20": 0.4285714285714286
+        }
+      },
+      "candidate_pool": {
+        "video_first_rank_at_100": 1,
+        "target_first_ranks_at_100": [
+          1
+        ],
+        "all_required_targets_present": true,
+        "frozen_contract_coverage_at_100": 1.0,
+        "target_coverage_at_100": 1.0,
+        "first_frame_only_coverage_at_100": 1.0,
+        "coverage_ceiling_note": "Observed pool coverage, not reranker rank >20 or an achievable production oracle."
+      },
+      "classification": {
+        "retrieval_evidence": "all_required_targets_available_in_top100",
+        "observed_effects": [
+          "video_regression_at_1",
+          "video_mrr_regression",
+          "frozen_regression_at_1",
+          "frozen_mrr_regression"
+        ],
+        "semantic_cause": "unresolved_without_frame_or_clip_review",
+        "capability_labels_are": "pre-existing query annotations, not diagnosed causes",
+        "metadata_loss_effect": false
+      }
+    }
+  ]
+}
