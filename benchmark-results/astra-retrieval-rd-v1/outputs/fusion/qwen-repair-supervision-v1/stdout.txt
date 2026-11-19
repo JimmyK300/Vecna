@@ -1,0 +1,15 @@
+[20:15:11] INFO     Loading SentenceTransformer model from         model.py:968
+                    Qwen/Qwen3-VL-Embedding-2B.                                
+           WARNING  `torch_dtype` is deprecated! Use `dtype`     logging.py:328
+                    instead!                                                   
+[20:15:18] INFO     Loaded 1 prompt with these keys: ['default']   model.py:253
+           WARNING  Default prompt name is set to 'default'.     logging.py:328
+                    This prompt will be applied to all inference               
+                    calls, except if a `prompt` or `prompt_name`               
+                    parameter is provided.                                     
+[20:15:28] WARNING  Qwen-VL embedding backend: CPU. This is       qwen_vl.py:94
+                    supported, but Qwen3-VL-Embedding-2B                       
+                    inference is expected to be slow.                          
+           WARNING  Qwen-VL embedding moved to CPU; inference is qwen_vl.py:165
+                    supported but expected to be slow.                         
+{"status": "verified", "load_calls": 1, "checkpoint_tensor_equality_verified": true, "report": "C:\\Users\\minhc\\AppData\\Local\\Temp\\ai-broker-vecna86-verify-repaired-qwen-checkpoint-20260916-dbsh4tzz\\worktree\\benchmark-results\\astra-retrieval-rd-v1\\outputs\\fusion\\qwen-repair-verification-v1\\verification.json"}

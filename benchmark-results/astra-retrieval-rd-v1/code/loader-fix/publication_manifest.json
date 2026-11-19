@@ -1,0 +1,62 @@
+{
+  "schema": "vecna-qwen-loader-fix-publication-v1",
+  "original_blob_sha": "6b0299b95b848ad5f459b8158bb0f0bb183261c1",
+  "production_deployed": false,
+  "real_weight_validation": "verified",
+  "local_unit_tests": {
+    "passed": 12,
+    "actual_production_import_paths": true
+  },
+  "files": [
+    {
+      "repository_path": "aic51-src/aic51/packages/analyse/features/qwen_vl.py",
+      "local_source": "code/loader-fix/qwen_vl.py",
+      "sha256": "18900a46da79c9738c7225f2993955f3c9e02030487b7cedffab0ddcf9f7d177",
+      "bytes": 6325
+    },
+    {
+      "repository_path": "aic51-src/aic51/packages/analyse/features/qwen_vl_checkpoint.py",
+      "local_source": "code/loader-fix/qwen_vl_checkpoint.py",
+      "sha256": "c1b0335ee855c5aaf8d33f688c28a351a2e8f93f3778e78316cf1ef0087b8169",
+      "bytes": 8212
+    },
+    {
+      "repository_path": "aic51-src/tests/test_qwen_vl_checkpoint.py",
+      "local_source": "code/loader-fix/test_qwen_vl_checkpoint.py",
+      "sha256": "5ec2fb7828d69579ffbd0d005d8ea55a268db7306f1055541e7bd2170df631de",
+      "bytes": 13393
+    },
+    {
+      "repository_path": "aic51-src/tests/fixtures/qwen3_vl_2b_loading_schema.json",
+      "local_source": "code/loader-fix/qwen3_vl_2b_loading_schema.json",
+      "sha256": "82d1293c34d073c15b502b3a0a80dd3b64a57547f795be2bdf3747daf7841e7d",
+      "bytes": 234946
+    },
+    {
+      "repository_path": "docs/qwen3-vl-checkpoint-loading.md",
+      "local_source": "code/loader-fix/FIX_PROPOSAL.md",
+      "sha256": "763a79715616878f1fc73e95f65dd1802ce6a5fa4ed7b36d5d61fb79e2ece66c",
+      "bytes": 5971
+    }
+  ],
+  "real_weight_validation_evidence": {
+    "report": "outputs/fusion/qwen-repair-verification-v1/verification.json",
+    "sha256": "8f459c0f25c62a712acea1ef59e4855e0d8d7428dc8623407ec6db9300790eb8",
+    "tensor_count": 625,
+    "element_count": 2127532032,
+    "loading_discrepancy_counts": {
+      "missing_keys": 0,
+      "unexpected_keys": 0,
+      "mismatched_keys": 0,
+      "error_msgs": 0
+    },
+    "checkpoint_sha256": "c73fa9caeddeb3ff831d46c085a7a5708343248ca777e90f2d486964464509c1",
+    "versions": {
+      "torch": "2.8.0",
+      "transformers": "4.57.6",
+      "sentence-transformers": "5.4.0",
+      "safetensors": "0.8.0"
+    },
+    "scope": "Exact repaired CPUfloat32 constructor and checkpoint only; no corpus/index or historical loader certification."
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "schema": "vecna82-qwen-repair-verification-v1",
+  "status": "verified",
+  "load_calls": [
+    {
+      "model_class": "transformers.models.qwen3_vl.modeling_qwen3_vl.Qwen3VLModel",
+      "loading_info": {
+        "missing_keys": [],
+        "unexpected_keys": [],
+        "mismatched_keys": [],
+        "error_msgs": []
+      },
+      "expected_state_schema": {
+        "path": "expected_state_schema.json",
+        "tensor_count": 625,
+        "sha256": "dba5edc95363d064f484b67c75708372b52fd1b9acdc873b938fe8de66442718"
+      },
+      "model_source": {
+        "path": "C:\\Users\\minhc\\Code\\Vecna\\.venv\\Lib\\site-packages\\transformers\\models\\qwen3_vl\\modeling_qwen3_vl.py",
+        "sha256": "dd63ed3b124232735b3dca1bfa28f9d6b0d3f7182afcb75dde8f3e724b2b22da",
+        "lf_sha256": "dd63ed3b124232735b3dca1bfa28f9d6b0d3f7182afcb75dde8f3e724b2b22da"
+      },
+      "resolved_commit_hash": "9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda",
+      "safe_loader_kwargs": {
+        "torch_dtype": "torch.float32",
+        "revision": null,
+        "key_mapping": {
+          "^model\\.(language_model|visual)\\.": "\\1."
+        },
+        "local_files_only": false
+      }
+    }
+  ],
+  "model_inference": false,
+  "database_access": false,
+  "audit_changes_checkpoint_mapping": false,
+  "checkpoint_tensor_equality_verified": true,
+  "expected_tensor_count": 625,
+  "checkpoint": {
+    "path": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--Qwen--Qwen3-VL-Embedding-2B\\snapshots\\9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda\\model.safetensors",
+    "bytes": 4255140312,
+    "sha256": "c73fa9caeddeb3ff831d46c085a7a5708343248ca777e90f2d486964464509c1",
+    "header_sha256": "a4c22c14e0d987dd572a283e92643374babeccc2f86cf2f8020e6144389c3f4d",
+    "tensor_count": 625
+  },
+  "checkpoint_state_schema": {
+    "path": "checkpoint_state_schema.json",
+    "tensor_count": 625,
+    "sha256": "b4f417040f3a8abf845e16451c17fc90170997316e3dd73bc1088fefea6ed9d8"
+  },
+  "audit_sources": {
+    "verify_qwen_loading.py": "29a0906f49d4f506fd943dad99e64c951022400943df3abd62f6f8da8d1713cf",
+    "audit_qwen_loading.py": "104d5c47b12bd28e0e87c421c824b984508c9f4da806f9c3a78d661de9aaf487"
+  },
+  "declared_source_lf_sha256": {
+    "qwen_vl.py": "18900a46da79c9738c7225f2993955f3c9e02030487b7cedffab0ddcf9f7d177",
+    "qwen_vl_checkpoint.py": "c1b0335ee855c5aaf8d33f688c28a351a2e8f93f3778e78316cf1ef0087b8169"
+  },
+  "versions": {
+    "torch": "2.8.0",
+    "transformers": "4.57.6",
+    "sentence-transformers": "5.4.0",
+    "safetensors": "0.8.0"
+  },
+  "st_transformer_source": {
+    "path": "C:\\Users\\minhc\\Code\\Vecna\\.venv\\Lib\\site-packages\\sentence_transformers\\base\\modules\\transformer.py",
+    "sha256": "84d2cd999678e2acf8bc803001d50128dd7f21c145fd14b3119919b174ff75cf",
+    "lf_sha256": "72f81977845250ac3da432c6201b19a5d6b24c13250c32bb5d1e5c80da95d61a"
+  },
+  "threads": {
+    "intraop": 6,
+    "interop": 14
+  },
+  "runtime_config_sha256": "d8a5fbc1ec0eff59e6beb134656c9449c9bb0eab264f8639653cc31f893adba8",
+  "declaration": {
+    "model": "qwen_vl_embedding",
+    "pretrained_model": "Qwen/Qwen3-VL-Embedding-2B",
+    "target": [
+      "qwen_vl"
+    ]
+  },
+  "checkpoint_validation": {
+    "status": "VERIFIED_ALL_CHECKPOINT_TENSORS",
+    "tensor_count": 625,
+    "element_count": 2127532032,
+    "checkpoint_directory": "C:\\Users\\minhc\\.cache\\huggingface\\hub\\models--Qwen--Qwen3-VL-Embedding-2B\\snapshots\\9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda",
+    "checkpoint_files": [
+      "model.safetensors"
+    ],
+    "checkpoint_revision": "9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda",
+    "helper_source_sha256": "25db0baef4c782e5620ee4efafde8557c3df50c709f4af77cd76d26953e50e45",
+    "mapping_sha256": "a5838db688286ac3feb5bc65ea20f343490feb65e532491d21198bbdaf7a6389",
+    "comparison": "every tensor value equals checkpoint after casting to loaded dtype",
+    "second_model_loaded": false
+  },
+  "validity_scope": "All625 loaded values equal the actual hashed checkpoint after dtype cast; unchanged ST pipeline. No index lineage or historical C loader claim."
+}
