@@ -1,0 +1,54 @@
+{
+  "actions_run": "https://github.com/JimmyK300/ai-routing-hub/actions/runs/35112693086",
+  "base_main": "95d63a6abf10c598e0e54af7d2071bedbe542d1e",
+  "broker_patch_bytes": 6231,
+  "broker_patch_sha256": "5d7b8c129c893bc84b06c177ec9d33d0d6edf323e3bd76fdf278e001742cfe1e",
+  "dispatch_comment": "https://github.com/JimmyK300/ai-routing-hub/issues/1#issuecomment-5699664388",
+  "files": [
+    {
+      "bytes": 1719,
+      "path": "benchmark-results/astra-retrieval-rd-v1/tie-fix-validation/validation.json",
+      "sha256": "31074dcd679e762be155ef94901ffb4c3f6b7eb9bd941f4077e323a1fe29dbe1"
+    },
+    {
+      "bytes": 0,
+      "path": "benchmark-results/astra-retrieval-rd-v1/tie-fix-validation/stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 3636,
+      "path": "benchmark-results/astra-retrieval-rd-v1/tie-fix-validation/stderr.txt",
+      "sha256": "f815d853fd770252776cf1ec258cf0b4e733f7cedf0a993efdc8cace4ff7cbd1"
+    },
+    {
+      "bytes": 6664,
+      "path": "benchmark-results/astra-retrieval-rd-v1/tie-fix-validation/broker-result.json",
+      "sha256": "acb206bc44c513ebe83d5f9b321290f195d7dea9c4cf119a92ea908efc8f439a"
+    },
+    {
+      "bytes": 5708,
+      "path": "benchmark-results/astra-retrieval-rd-v1/tie-fix-validation/dispatch.json",
+      "sha256": "d11fea63a931d7af87a5facb1c81ec0cded9e3d031f72eb2d140ad46c3fe25ab"
+    },
+    {
+      "bytes": 4604,
+      "path": "docs/deterministic-text-ties.md",
+      "sha256": "f59a3efc661952b11948aecca51554b2a402789ac36c75afd66e58f76e9be3b7"
+    }
+  ],
+  "fixture_count": 13,
+  "hash_seeds": [
+    0,
+    1,
+    82
+  ],
+  "main_merge": false,
+  "recovery": "Full broker JSON extracted from the authenticated result comment. Test stdout/stderr reconstructed exactly from its escaped UTF-8 strings and verified against host byte counts/SHA256. validation.json is a sorted-key pretty serialization of the unchanged broker proof object. No model or test rerun for recovery.",
+  "result_comment": "https://github.com/JimmyK300/ai-routing-hub/issues/1#issuecomment-5699675835",
+  "schema": "vecna89-tie-fix-validation-publication-v1",
+  "source_and_tests_changed_by_publication": false,
+  "source_commit": "fc91800b9bb1c280696fe81dbfb76e38598b798e",
+  "source_tree": "56750cb42c8668a0d8f18e1b05fb79c819ac42b8",
+  "status": "PASSED",
+  "test_count": 9
+}
